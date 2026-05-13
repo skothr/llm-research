@@ -317,6 +317,7 @@
       "activation-reconstructor",
       "activation-steering",
       "activation-verbalizer",
+      "alignment-faking",
       "attention-weights",
       "attribution-graph",
       "attribution-patching",
@@ -335,6 +336,7 @@
       "direction-ablation",
       "dola",
       "dpo",
+      "evaluation-awareness",
       "expansion-factor",
       "feature",
       "ffn",
@@ -396,10 +398,7 @@
       "value",
       "vocabulary"
     ],
-    "sections_modified": [
-      "03-lens-techniques.tex",
-      "13-scaling-and-snapshot.tex"
-    ]
+    "sections_modified": []
   },
   "paper-5": {
     "keys_used": [

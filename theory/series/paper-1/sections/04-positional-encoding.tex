@@ -302,8 +302,8 @@ Long-context extrapolation method comparison is contested as of
 2026-05. Three competing positions: (a) \glsterm{rope}{RoPE}-only with NTK-aware base
 scaling is sufficient for the $\le 4\times$ extension regime (e.g.\
 LLaMA-3's bump from 8K to 128K); (b) \glsterm{yarn}{YaRN} with a per-frequency
-schedule is required for the $\sim 10\times$ regime
-(\deepencite{peng2023-yarn}); (c) per-position search (LongRoPE2) and
+schedule is required for the $\sim 10\times$
+regime\deepencite{peng2023-yarn (Peng et al.\ 2023, arXiv 2309.00071) --- not yet in references.bib}; (c) per-position search (LongRoPE2) and
 mixed \glsterm{rope}{RoPE}/\glsterm{nope}{NoPE} layers (\glsterm{irope}{iRoPE}) are required for the $\ge 40\times$
 regime~\citep{longrope2-2025, meta-llama4}. The benchmarks backing
 each are largely single-source: Meta reports \glsterm{irope}{iRoPE} at 10M, Microsoft

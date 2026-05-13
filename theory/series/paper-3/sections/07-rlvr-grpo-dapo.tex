@@ -121,9 +121,10 @@ and \emph{\glsterm{group-normalized-advantage}{group-normalized advantage}}
 \hat{A}_{i,t} \;=\; \tilde{A}_i \;=\; \frac{R_i \,-\, \mathrm{mean}\!\big(\{R_1, \ldots, R_G\}\big)}{\mathrm{std}\!\big(\{R_1, \ldots, R_G\}\big)},
 \label{eq:grpo-advantage}
 \end{equation}
-constant in $t$ across the trajectory \citep[\S 4.1, Eq.\ verified
-against R1 \S 2.1 Eq.\ 3]{shao2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1}.}
+constant in $t$ across the trajectory \citep[\S 4.1, Eq.\ 3]{shao2024}.\footnote{KB excerpt:
+\texttt{kb/excerpts/shao2024.md\#sec-4-1}. DeepSeek-R1 restates the
+same advantage as a sequence-level shorthand in \S 2.1 Eq.\ 1
+\citep[\S 2.1, Eq.\ 1]{deepseek-r1}.}
 
 \paragraph{Symbol table.} $q$ is the prompt; $G$ the group size,
 typically $8$--$64$ ($G = 16$ in \glsterm{r1-zero}{R1-Zero} \citep[\S

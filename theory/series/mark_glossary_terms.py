@@ -353,17 +353,28 @@ def wrap_body(
 # ---------------------------------------------------------------------------
 
 def _format_kb_cite(kb_cite: str | None) -> str:
-    """`shazeer2019 §2.4` -> ` \\citep[\\S 2.4]{shazeer2019}`. Returns '' if None."""
+    """`shazeer2019 §2.4` -> ` \\citep[\\S 2.4]{shazeer2019}`. Returns '' if None.
+
+    Multi-segment cites separated by `;` (e.g. `paperkey §X;
+    kb/excerpts/paperkey#sec-X` or `paperkey §X; otherkey §Y`) use only
+    the FIRST segment for the rendered inline citation. The remaining
+    segments are KB-anchor pointers and secondary references — they
+    belong in the KB-substrate metadata, not in the rendered \\citep
+    optnote. Putting them there caused literal text like
+    "kojima2022 §3" to leak into the rendered PDF parens.
+    """
     if not kb_cite:
         return ""
-    m = re.match(r"^([A-Za-z][A-Za-z0-9-]*)\s*§\s*(.+)$", kb_cite.strip())
+    # Take only the first semicolon-delimited segment for the cite.
+    first_segment = kb_cite.split(";")[0].strip()
+    m = re.match(r"^([A-Za-z][A-Za-z0-9-]*)\s*§\s*(.+)$", first_segment)
     if m:
         key, sec = m.group(1), m.group(2).strip()
         # Escape # (TeX macro parameter marker) inside optional arg text.
         sec = sec.replace("#", r"\#")
         return rf" \citep[\S {sec}]{{{key}}}"
     # Fallback: bracket-only form; also escape # for safety.
-    sec = kb_cite.replace("#", r"\#")
+    sec = first_segment.replace("#", r"\#")
     return f" [{sec}]"
 
 

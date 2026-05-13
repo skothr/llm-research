@@ -19,31 +19,31 @@
 -- Lin et al. 2023. Per-channel weight scaling driven by *activation* magnitudes (preserving ~1% salient channels at higher precision); reorder-free, no backward pass. Strong W4A16 baseline alongside GPTQ. [kb/notes/inference/quantization\#§3.2]
 
 \item[\glsanchor{bitlinear}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{BitLinear}}}]
--- BitNet's drop-in replacement for \texttt{nn.Linear}: weights quantized to $\{-1,0,+1\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition. \citep[\S 2.1; kb/excerpts/ma2024-bitnet\#bitlinear]{ma2024-bitnet}
+-- BitNet's drop-in replacement for \texttt{nn.Linear}: weights quantized to $\{-1,0,+1\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition. \citep[\S 2.1]{ma2024-bitnet}
 
 \item[\glsanchor{bpe}{\hyperref[sec:tok-bpe]{\textcolor{glscolor}{BPE}}} (Byte Pair Encoding)]
 -- Subword tokenization algorithm that iteratively merges the most frequent adjacent character pairs to build a vocabulary.
 
 \item[\glsanchor{chain-of-thought}{\hyperref[sec:multi-token-output]{\textcolor{glscolor}{Chain-of-thought}}} (CoT)]
--- A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. \citep[\S 1; kojima2022 §3]{wei2022-cot}
+-- A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. \citep[\S 1]{wei2022-cot}
 
 \item[\glsanchor{circuit}{\hyperref[sec:attention-kv-sharing]{\textcolor{glscolor}{Circuit}}}]
--- a sub-graph $C$ of a model's computational graph $M$ that, when used in place of $M$ via knockouts of $M \setminus C$, approximately reproduces $M$'s behavior on a target task \citep[\S 2; kb/excerpts/wang2022-ioi\#sec-2-definition]{wang2022-ioi}
+-- a sub-graph $C$ of a model's computational graph $M$ that, when used in place of $M$ via knockouts of $M \setminus C$, approximately reproduces $M$'s behavior on a target task \citep[\S 2]{wang2022-ioi}
 
 \item[\glsanchor{claude}{\hyperref[sec:introduction]{\textcolor{glscolor}{Claude}}}]
 -- Anthropic's proprietary decoder-only LLM family. No public architecture paper; structural family shares the decoder-only Transformer lineage.
 
 \item[\glsanchor{compressed-fsm-2}{\hyperref[sec:attention-kv-sharing]{\textcolor{glscolor}{Compressed FSM}}} (SGLang)]
--- FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar deterministically forces a literal substring (e.g., \texttt{\{"summary": "} in a JSON schema). \citep[\S 4; kb/excerpts/zheng2024-sglang\#sec-4]{zheng2024-sglang}
+-- FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar deterministically forces a literal substring (e.g., \texttt{\{"summary": "} in a JSON schema). \citep[\S 4]{zheng2024-sglang}
 
 \item[\glsanchor{constrained-decoding-2}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{Constrained decoding}}}]
--- Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. \citep[\S 3; kb/excerpts/willard2023-outlines\#sec-3]{willard2023-outlines}
+-- Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. \citep[\S 3]{willard2023-outlines}
 
 \item[\glsanchor{context-extension}{\hyperref[sec:introduction]{\textcolor{glscolor}{Context extension}}}]
 -- Sub-stage of late-stage pre-training that increases trained sequence length (e.g., 4 K $\to$ 32 K $\to$ 128 K) by adjusting RoPE scaling and continuing on long-context data. \citep[\S 1]{deepseek-v3}
 
 \item[\glsanchor{context-independent-context-dependent-vocabulary-split}{\hyperref[sec:introduction]{\textcolor{glscolor}{Context-independent / context-dependent vocabulary split}}} (XGrammar)]
--- XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (~99% of vocab); compute at runtime only the small remainder (~1%) that depends on the active context. Brings constrained-decoding overhead from ms/token to $\mu$s/token. [xgrammar2024; kb/notes/inference/structured-output\#§3]
+-- XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (~99% of vocab); compute at runtime only the small remainder (~1%) that depends on the active context. Brings constrained-decoding overhead from ms/token to $\mu$s/token. [xgrammar2024]
 
 \item[\glsanchor{cross-attention}{\hyperref[sec:introduction]{\textcolor{glscolor}{cross-attention}}}]
 -- Attention where Q comes from the decoder and K, V come from the encoder output. Removed in decoder-only models.
@@ -67,7 +67,7 @@
 -- Exact attention computed with re-organized memory access: tile $K, V$ into SRAM-resident blocks and use **online softmax** to combine block results, never materializing the $N \times N$ attention matrix in HBM. Forward + backward IO complexity $\Theta(N^2 d^2 M^{-1})$ vs.\ $\Theta(N d + N^2)$ for the standard implementation \citep[\S 3]{dao2022}
 
 \item[\glsanchor{fp8}{\hyperref[sec:introduction]{\textcolor{glscolor}{FP8}}} (E4M3 / E5M2)]
--- IEEE-style 8-bit floating-point. E4M3: 4-exp / 3-mantissa, narrower range / better resolution (typical for activations). E5M2: 5-exp / 2-mantissa, wider range (typical for gradients). Production choice from H100 onward. \citep[\S 1; kb/notes/inference/quantization\#§4]{shah2024}
+-- IEEE-style 8-bit floating-point. E4M3: 4-exp / 3-mantissa, narrower range / better resolution (typical for activations). E5M2: 5-exp / 2-mantissa, wider range (typical for gradients). Production choice from H100 onward. \citep[\S 1]{shah2024}
 
 \item[\glsanchor{gbnf}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{GBNF}}} (GGML BNF)]
 -- llama.cpp's grammar specification format. An extended BNF used to define constrained-decoding grammars.
@@ -85,7 +85,7 @@
 -- $\mathrm{GLU}(x, W, V) = \sigma(xW) \otimes (xV)$, the elementwise product of a sigmoid-gated and an identity-gated linear projection. Building block for FFN-GLU variants. \citep[\S 2 Eq.4]{shazeer2020}
 
 \item[\glsanchor{gptq}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{GPTQ}}}]
--- Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit. \citep[\S 3; kb/notes/inference/quantization\#§3.1]{frantar2022}
+-- Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit. \citep[\S 3]{frantar2022}
 
 \item[\glsanchor{gqa}{\hyperref[sec:introduction]{\textcolor{glscolor}{GQA}}} (Grouped-Query Attention)]
 -- Interpolation between MHA and MQA: query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements \citep[\S 2.2]{ainslie2023}
@@ -109,7 +109,7 @@
 -- Projected representation of positions being "queried" against. The Q$\cdot$K dot product determines attention weights.
 
 \item[\glsanchor{kv-cache}{\hyperref[sec:attention-kv-sharing]{\textcolor{glscolor}{KV cache}}}]
--- The per-layer cache of key/value tensors $K_{1:t}, V_{1:t}$ produced during autoregressive decoding so each new token's attention is $O(t)$ rather than $O(t^2)$. Size per token per layer is $2 \cdot n_{\text{kv}} \cdot d_h \cdot \text{bytes}$. \citep[\S 2; kb/notes/inference/kv-cache-management\#§1]{kwon2023}
+-- The per-layer cache of key/value tensors $K_{1:t}, V_{1:t}$ produced during autoregressive decoding so each new token's attention is $O(t)$ rather than $O(t^2)$. Size per token per layer is $2 \cdot n_{\text{kv}} \cdot d_h \cdot \text{bytes}$. \citep[\S 2]{kwon2023}
 
 \item[\glsanchor{layer-normalization}{\hyperref[sec:introduction]{\textcolor{glscolor}{Layer Normalization}}} (LayerNorm)]
 -- Normalizes across the feature dimension per position: subtract mean, divide by standard deviation, apply learned scale ($\gamma$) and bias ($\beta$).
@@ -133,13 +133,13 @@
 -- Open-weights decoder-only LLM family from Mistral AI (Jiang et al., 2023). 7B variant uses sliding-window attention and grouped-query attention on top of the LLaMA-style architecture.
 
 \item[\glsanchor{mqa}{\hyperref[sec:introduction]{\textcolor{glscolor}{MQA}}} (Multi-Query Attention)]
--- Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of capacity and stability \citep[\S 2.4; kb/notes/architecture/attention-mechanism.md\#sec-3-1]{shazeer2019}
+-- Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of capacity and stability \citep[\S 2.4]{shazeer2019}
 
 \item[\glsanchor{multi-head-attention}{\hyperref[sec:prequel-and-canonical]{\textcolor{glscolor}{multi-head attention}}}]
 -- Running $h$ parallel attention operations on different learned projections, then concatenating and projecting the results. Allows attending to different representation subspaces simultaneously.
 
 \item[\glsanchor{multi-head-latent-attention}{\hyperref[sec:introduction]{\textcolor{glscolor}{Multi-head Latent Attention}}} (MLA)]
--- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1; kb/notes/inference/kv-cache-management\#§2]{deepseek-v2}
+-- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
 
 \item[\glsanchor{multi-token-prediction}{\hyperref[sec:introduction]{\textcolor{glscolor}{Multi-token prediction}}} (MTP)]
 -- Training objective + architectural feature: in addition to the standard next-token head, the model has auxiliary heads predicting tokens at offsets $t+2, t+3, \ldots, t+k$. Used by DeepSeek-V3. \citep[\S 2.3]{deepseek-v3}
@@ -160,7 +160,7 @@
 -- Numerically stable streaming softmax: maintain running max $m$ and normalizer $\ell$ across blocks; when a new block arrives, rescale the existing partial sum by $e^{m_\text{old} - m_\text{new}}$ before adding the block's contribution. Enables block-wise softmax without seeing the full row \citep[\S 3.1]{dao2022}
 
 \item[\glsanchor{pagedattention}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{PagedAttention}}}]
--- vLLM's KV-cache layout: KV is stored in fixed-size **blocks** (typically 16 tokens), each sequence holds a per-layer **block table** mapping logical block indices to physical blocks, and attention is computed block-wise per Eq.4. Eliminates the contiguous-allocation requirement that produced 50–90% wasted KV memory in pre-vLLM serving stacks. \citep[\S 4.1, Eq.4; kb/excerpts/kwon2023\#paged-attention]{kwon2023}
+-- vLLM's KV-cache layout: KV is stored in fixed-size **blocks** (typically 16 tokens), each sequence holds a per-layer **block table** mapping logical block indices to physical blocks, and attention is computed block-wise per Eq.4. Eliminates the contiguous-allocation requirement that produced 50–90% wasted KV memory in pre-vLLM serving stacks. \citep[\S 4.1, Eq.4]{kwon2023}
 
 \item[\glsanchor{palm}{\hyperref[sec:attention-kv-sharing]{\textcolor{glscolor}{PaLM}}}]
 -- Google's 540B-parameter decoder-only LLM (Chowdhery et al., 2022). Uses SwiGLU, RoPE, parallel attention/FFN layers. Reference point for scaling experiments.
@@ -190,7 +190,7 @@
 -- Projected representation of the position that is "asking" for information in attention.
 
 \item[\glsanchor{radixattention}{\hyperref[sec:inference-adjuncts]{\textcolor{glscolor}{RadixAttention}}}]
--- SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate. \citep[\S 3, Theorem 3.1; kb/excerpts/zheng2024-sglang\#radix]{zheng2024-sglang}
+-- SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate. \citep[\S 3, Theorem 3.1]{zheng2024-sglang}
 
 \item[\glsanchor{recall-bottleneck}{\hyperref[sec:state-space-and-hybrids]{\textcolor{glscolor}{Recall bottleneck}}}]
 -- SSM weakness: fixed-size state $\boldsymbol{h}_t$ cannot store every prior token's exact features, so exact-retrieval tasks (copy, NIAH) underperform attention. Primary motivation for hybrids.
@@ -244,7 +244,7 @@
 -- Converts logits to a probability distribution: $P(j) = e^{z_j} / \sum_k e^{z_k}$.
 
 \item[\glsanchor{speedup-theorem}{\hyperref[sec:multi-token-output]{\textcolor{glscolor}{Speedup theorem}}} (Leviathan)]
--- $\mathbb{E}[\text{tokens per cycle}] = (1-\alpha^{\gamma+1})/(1-\alpha)$ (Eq.1, capped geometric). Walltime improvement $= [(1-\alpha^{\gamma+1})/(1-\alpha)] / (c\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8). \citep[\S 3.2, Eq.1, Theorem 3.8; kb/excerpts/leviathan2023\#theorems]{leviathan2023}
+-- $\mathbb{E}[\text{tokens per cycle}] = (1-\alpha^{\gamma+1})/(1-\alpha)$ (Eq.1, capped geometric). Walltime improvement $= [(1-\alpha^{\gamma+1})/(1-\alpha)] / (c\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8). \citep[\S 3.2, Eq.1, Theorem 3.8]{leviathan2023}
 
 \item[\glsanchor{state-space-duality}{\hyperref[sec:state-space-and-hybrids]{\textcolor{glscolor}{State Space Duality}}} (SSD)]
 -- Mamba-2's framing: selective SSMs and a structurally-restricted form of attention compute the same function. The restriction: attention matrix is lower-triangular semi-separable with rank $\le d$. [mamba2]
@@ -271,10 +271,10 @@
 -- Neural network architecture introduced by Vaswani et al. (2017) that replaces recurrence with self-attention, allowing parallel processing of sequences.
 
 \item[\glsanchor{tree-attention}{\hyperref[sec:multi-token-output]{\textcolor{glscolor}{Tree attention}}} (Medusa/EAGLE)]
--- A draft tree of token candidates verified in one target forward pass via a custom attention mask that lets every node attend only to its ancestors. Enables draft-width $> 1$ per position. \citep[\S 2.2; kb/excerpts/cai2024-medusa\#tree-attention]{cai2024-medusa}
+-- A draft tree of token candidates verified in one target forward pass via a custom attention mask that lets every node attend only to its ancestors. Enables draft-width $> 1$ per position. \citep[\S 2.2]{cai2024-medusa}
 
 \item[\glsanchor{typical-acceptance}{\hyperref[sec:multi-token-output]{\textcolor{glscolor}{Typical acceptance}}}]
--- Medusa's quality–throughput knob: accept any draft token whose probability under the target exceeds $\min(\epsilon, \delta \cdot \exp(-H(p)))$. Trades exact-distribution preservation for higher acceptance and longer accepted runs. \citep[\S 2.4; kb/excerpts/cai2024-medusa\#typical-acceptance]{cai2024-medusa}
+-- Medusa's quality–throughput knob: accept any draft token whose probability under the target exceeds $\min(\epsilon, \delta \cdot \exp(-H(p)))$. Trades exact-distribution preservation for higher acceptance and longer accepted runs. \citep[\S 2.4]{cai2024-medusa}
 
 \item[\glsanchor{uptraining}{\hyperref[sec:attention-kv-sharing]{\textcolor{glscolor}{Uptraining}}}]
 -- The Ainslie 2023 recipe for converting an existing MHA checkpoint to GQA/MQA: mean-pool the $W^K, W^V$ matrices within each group, then continue pre-training for $\alpha \approx 5\%$ of the original budget \citep[\S 2.1]{ainslie2023}

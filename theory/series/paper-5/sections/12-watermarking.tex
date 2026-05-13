@@ -55,9 +55,11 @@ $(1 - \gamma)|V|$.
 \item Sample $s^{(t)}$ from the modified distribution.
 \end{enumerate}
 
-The default settings reported in the paper are $\gamma = 0.25$ and
+The default settings reported in the paper are $\gamma = 0.5$ and
 $\delta = 2.0$%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-greenred}.}.
+\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-greenred}.
+$\gamma = 0.5$ is the primary experimental configuration (Table~1, Table~2,
+Figure~6 unattacked baseline); $\gamma = 0.25$ appears only in parameter sweeps.}.
 Three properties of this construction are load-bearing for everything
 that follows. First, the partition $G_t$ depends only on the keyed hash
 of a small recent window, so generation has $O(|V|)$ overhead per step
@@ -98,10 +100,10 @@ one-sided z-score%
 z \;=\; \frac{|s|_G - \gamma T}{\sqrt{T \gamma (1 - \gamma)}}.
 \]
 A large $z$ rejects the null with a one-sided $p$-\glsterm{value}{value} computed
-directly from the normal CDF. At $\gamma = 0.25$, a span of $T = 200$
-tokens with $|s|_G = 100$ greens (against a null mean of $50$) yields
-$z = (100 - 50)/\sqrt{200 \cdot 0.25 \cdot 0.75} \approx 8.16$,
-corresponding to a one-sided $p < 10^{-15}$ --- comfortably below any
+directly from the normal CDF. At $\gamma = 0.5$, a span of $T = 200$
+tokens with $|s|_G = 150$ greens (against a null mean of $100$) yields
+$z = (150 - 100)/\sqrt{200 \cdot 0.5 \cdot 0.5} \approx 7.07$,
+corresponding to a one-sided $p < 10^{-12}$ --- comfortably below any
 deployment-relevant false-positive budget. The paper exposes the
 $p$-\glsterm{value}{value} as the deployment knob: a publisher willing to tolerate one
 false positive in $10^6$ pieces of long-form content sets the
@@ -210,7 +212,7 @@ all three by accepting a quantitative tradeoff: larger $\delta$ gives
 a stronger \glsterm{watermark}{watermark} per token but introduces a measurable bias in
 the marginal output distribution. The paper reports
 ``negligible impact on text quality'' at the default
-$(\gamma, \delta) = (0.25, 2.0)$
+$(\gamma, \delta) = (0.5, 2.0)$
 \citep[\S{}abstract]{kirchenbauer2023-watermark}; deployment is a
 choice of where to sit on this curve.
 
@@ -308,7 +310,7 @@ omits the sampler breaks the \glsterm{watermark}{watermark} trivially).
 \textbf{Collusion attacks} mix watermarked outputs with unwatermarked
 text from another source, diluting the green-token rate below the
 detection threshold. The detector's z-score is the per-token statistic
-of \cref{sec:watermarking-detection}: at $\gamma = 0.25$, a $50$/$50$
+of \cref{sec:watermarking-detection}: at $\gamma = 0.5$, a $50$/$50$
 mix of watermarked and unwatermarked text has expected green rate
 $0.5 \cdot E_{\mathrm{wm}} + 0.5 \cdot \gamma$, where $E_{\mathrm{wm}}$
 is the \glsterm{watermark}{watermark}'s natural green rate. The detector applied to the

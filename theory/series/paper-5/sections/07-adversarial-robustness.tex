@@ -276,7 +276,8 @@ techniques on the AdvBench subset dataset, achieving 29-61\%
 higher performance on GPT-4 and 49-71\% on Gemini-Pro.
 \end{quote}
 
-The 29--71\% \glsterm{asr}{ASR} \emph{uplift} over single-turn baselines ---
+The 29--61\% \glsterm{asr}{ASR} \emph{uplift} on GPT-4 and 49--71\% on Gemini-Pro
+over single-turn baselines ---
 measured on the AdvBench subset \deepencite{zou2023-advbench,
 citation-pending} under \glsterm{crescendomation}{Crescendomation}, the automated
 implementation of the manual escalation strategy --- is not a new
@@ -304,10 +305,10 @@ back to it as commitments it has already made. The
 social-engineering literature predicts exactly this: each
 acceded-to small request raises the conditional probability of
 acceding to the next, larger one. Returning to canonical form: the
-29--71\% \glsterm{asr}{ASR} uplift is the quantitative measurement of how much
-prior-self-reference shifts the refusal probability under the same
-$(\mathcal{B}, V, \pi)$, with $\mathcal{A}$ as the only term that
-varies.
+29--61\% \glsterm{asr}{ASR} uplift on GPT-4 (49--71\% on Gemini-Pro) is the
+quantitative measurement of how much prior-self-reference shifts the
+refusal probability under the same $(\mathcal{B}, V, \pi)$, with
+$\mathcal{A}$ as the only term that varies.
 \end{analogy}
 
 The 2026 multi-turn picture: no equivalent of \glsterm{harmbench-2}{HarmBench} or
@@ -374,7 +375,8 @@ information without $(\mathcal{B}, \mathcal{A}, V, \pi)$.
 \citet{harmbench2024} and \citet{chao2024-jailbreakbench} respond
 with substrate standardization inside their own frames; neither
 substrate is field-wide, and the two are not interoperable.
-\citet{russinovich2024-crescendo} document a 29--71\% uplift when
+\citet{russinovich2024-crescendo} document a 29--61\% uplift on
+GPT-4 and 49--71\% on Gemini-Pro when
 the attack family $\mathcal{A}$ alone shifts from single-turn to
 multi-turn, holding everything else approximately fixed --- which
 demonstrates exactly how much of the headline \glsterm{asr}{ASR} is determined by

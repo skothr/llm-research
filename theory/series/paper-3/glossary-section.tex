@@ -22,7 +22,7 @@
 -- The empirical finding that RLVR improves $\mathrm{pass}@1$ on problems the base model could already solve at $\mathrm{pass}@k$ for some $k$, but does not expand the set of solvable problems. Set at pre-training. \citep[\S 3]{rlvr-limits-2025}
 
 \item[\glsanchor{chain-of-thought}{\hyperref[sec:introduction]{\textcolor{glscolor}{Chain-of-thought}}} (CoT)]
--- A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. \citep[\S 1; kojima2022 §3]{wei2022-cot}
+-- A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. \citep[\S 1]{wei2022-cot}
 
 \item[\glsanchor{circuit-tracing}{\hyperref[sec:cot-faithfulness]{\textcolor{glscolor}{Circuit tracing}}}]
 -- Anthropic's 2025 methodology: replace MLPs with cross-layer transcoders, then compute attribution graphs by Jacobian back-attribution from a target node. Synthesis of SAE feature decomposition + activation patching causal intervention. [lindsey2025-circuit-tracing FORUM-SIGNAL — HTML-only]
@@ -34,10 +34,10 @@
 -- A small-scale ($\sim 10^4$ examples) SFT pass on long-CoT exemplars, run before RL to fix readability problems of pure-RL outputs (R1-Zero). Does not change asymptotic capability but improves trace coherence. \citep[\S 2.2.4]{deepseek-r1}
 
 \item[\glsanchor{constrained-decoding-2}{\hyperref[sec:self-consistency]{\textcolor{glscolor}{Constrained decoding}}}]
--- Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. \citep[\S 3; kb/excerpts/willard2023-outlines\#sec-3]{willard2023-outlines}
+-- Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. \citep[\S 3]{willard2023-outlines}
 
 \item[\glsanchor{cot-faithfulness-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{CoT faithfulness}}}]
--- The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. [chen2026-faithfulness-scaling, arXiv 2601.06423; chen2025-faithcot-bench, arXiv 2510.04040]
+-- The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. [chen2026-faithfulness-scaling, arXiv 2601.06423]
 
 \item[\glsanchor{dapo-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{DAPO}}}]
 -- ByteDance's GRPO variant. Four modifications: clip-higher (asymmetric clip), dynamic sampling (drop zero-variance groups), token-level loss (vs sequence-level), overlong reward shaping. AIME 2024 50pts on Qwen2.5-32B. \citep[\S 2]{dapo2025}
@@ -73,19 +73,19 @@
 -- Selecting the highest-probability token at each step.
 
 \item[\glsanchor{group-normalized-advantage}{\hyperref[sec:rlvr-grpo-dapo]{\textcolor{glscolor}{Group-normalized advantage}}}]
--- In GRPO, $\tilde{A}_i = (R_i - \mathrm{mean}(\{R_j\}))/\mathrm{std}(\{R_j\})$, broadcast to every token of trajectory $o_i$. Replaces GAE-derived per-token advantages \citep[\S 4.1; deepseek-r1 §2.1 Eq.3]{shao2024}
+-- In GRPO, $\tilde{A}_i = (R_i - \mathrm{mean}(\{R_j\}))/\mathrm{std}(\{R_j\})$, broadcast to every token of trajectory $o_i$. Replaces GAE-derived per-token advantages \citep[\S 4.1]{shao2024}
 
 \item[\glsanchor{grpo}{\hyperref[sec:rlvr-grpo-dapo]{\textcolor{glscolor}{GRPO}}} (Group Relative Policy Optimization)]
--- Critic-free PPO variant: replaces the value model with a group-mean reward baseline. Sample $G$ trajectories per prompt, normalize rewards within the group, use the standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR \citep[\S 4.1; deepseek-r1 §2.1 Eq.1]{shao2024}
+-- Critic-free PPO variant: replaces the value model with a group-mean reward baseline. Sample $G$ trajectories per prompt, normalize rewards within the group, use the standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR \citep[\S 4.1]{shao2024}
 
 \item[\glsanchor{grpo-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{GRPO}}} (Group Relative Policy Optimisation)]
--- Critic-free PPO variant (Shao 2024). Per-prompt group of $G$ samples; advantage is each sample's reward minus group mean, divided by group std. Eliminates the value-network requirement. \citep[\S 4.1; deepseek-r1 §2.1]{shao2024}
+-- Critic-free PPO variant (Shao 2024). Per-prompt group of $G$ samples; advantage is each sample's reward minus group mean, divided by group std. Eliminates the value-network requirement. \citep[\S 4.1]{shao2024}
 
 \item[\glsanchor{inference-time-search}{\hyperref[sec:tree-search]{\textcolor{glscolor}{Inference-time search}}}]
 -- TTC family that constructs and explores a tree (or DAG) of partial reasoning prefixes, using a verifier or value function to direct expansion. Beam / BFS / MCTS variants. \citep[\S 3]{rstar-math2025}
 
 \item[\glsanchor{kv-cache}{\hyperref[sec:introduction]{\textcolor{glscolor}{KV cache}}}]
--- The per-layer cache of key/value tensors $K_{1:t}, V_{1:t}$ produced during autoregressive decoding so each new token's attention is $O(t)$ rather than $O(t^2)$. Size per token per layer is $2 \cdot n_{\text{kv}} \cdot d_h \cdot \text{bytes}$. \citep[\S 2; kb/notes/inference/kv-cache-management\#§1]{kwon2023}
+-- The per-layer cache of key/value tensors $K_{1:t}, V_{1:t}$ produced during autoregressive decoding so each new token's attention is $O(t)$ rather than $O(t^2)$. Size per token per layer is $2 \cdot n_{\text{kv}} \cdot d_h \cdot \text{bytes}$. \citep[\S 2]{kwon2023}
 
 \item[\glsanchor{llm}{\hyperref[sec:inference-compute-scaling]{\textcolor{glscolor}{LLM}}}]
 -- Large Language Model. A neural network with billions of parameters trained on large text corpora to predict and generate language.
@@ -97,7 +97,7 @@
 -- MCTS extended over retrieval decisions in addition to reasoning steps. Bridges search-based TTC and retrieval-augmented generation. [mcts-rag-2025, arXiv 2503.20757]
 
 \item[\glsanchor{multi-head-latent-attention}{\hyperref[sec:r1-family]{\textcolor{glscolor}{Multi-head Latent Attention}}} (MLA)]
--- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1; kb/notes/inference/kv-cache-management\#§2]{deepseek-v2}
+-- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
 
 \item[\glsanchor{n-gram-overlap}{\hyperref[sec:r1-family]{\textcolor{glscolor}{N-gram overlap}}}]
 -- Standard contamination-detection method (Brown et al. 2020 GPT-3 §C): flag training documents containing benchmark n-grams of length $\geq$13. Cheap; misses paraphrase contamination.
@@ -142,7 +142,7 @@
 -- Monte Carlo Tree Search where actions are next-step reasoning generations and the value function is a PRM. Selection-expansion-simulation-backup loop, UCT-style exploration. \citep[\S 3]{rstar-math2025}
 
 \item[\glsanchor{reasoning-model}{\hyperref[sec:introduction]{\textcolor{glscolor}{Reasoning model}}}]
--- An LLM trained (typically with RL on verifiable rewards) to produce long-form chain-of-thought before its final answer. o1, DeepSeek-R1, Qwen3-thinking-mode, Gemini 2.5-thinking-mode are exemplars [deepseek-r1; kb/index/papers.json\#deepseek-r1]
+-- An LLM trained (typically with RL on verifiable rewards) to produce long-form chain-of-thought before its final answer. o1, DeepSeek-R1, Qwen3-thinking-mode, Gemini 2.5-thinking-mode are exemplars [deepseek-r1]
 
 \item[\glsanchor{rejection-sampling-sft}{\hyperref[sec:introduction]{\textcolor{glscolor}{rejection-sampling SFT}}}]
 -- Generate candidate solutions with the current policy, filter by verifier (and optional quality filter), SFT on the survivors. Used as Stage 3 of the R1 pipeline. \citep[\S 2.3.3]{deepseek-r1}
@@ -175,7 +175,7 @@
 -- An empirical or theoretical functional relationship between a measure of model performance (typically cross-entropy loss) and one or more "scale" inputs: parameters $N$, training tokens $D$, training compute $C$, or test-time compute $N_{\text{test}}$. Canonical reference: \texttt{kaplan2020}.
 
 \item[\glsanchor{scheming}{\hyperref[sec:cot-faithfulness]{\textcolor{glscolor}{Scheming}}}]
--- A model schemes when, instructed to pursue a goal $G$, it strategically takes actions that conceal its capabilities or manipulate its oversight in service of $G$, rather than pursuing $G$ by direct means. Operational definition from Apollo Research. \citep[\S abstract; kb/excerpts/meinke2024-apollo-scheming\#abstract]{meinke2024-apollo-scheming}
+-- A model schemes when, instructed to pursue a goal $G$, it strategically takes actions that conceal its capabilities or manipulate its oversight in service of $G$, rather than pursuing $G$ by direct means. Operational definition from Apollo Research. \citep[\S abstract]{meinke2024-apollo-scheming}
 
 \item[\glsanchor{self-consistency-2}{\hyperref[sec:self-consistency]{\textcolor{glscolor}{Self-consistency}}}]
 -- Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers. Wang et al. 2022. Cheap baseline that requires no verifier.
@@ -187,13 +187,13 @@
 -- $\mathrm{FFN}_{\mathrm{SwiGLU}}(x) = (\mathrm{Swish}_1(xW) \otimes xV) W_2$. Three-matrix FFN with Swish gating. Universal in modern decoder-only LLMs. \citep[\S 2 Eq.6]{shazeer2020}
 
 \item[\glsanchor{sycophancy}{\hyperref[sec:cot-faithfulness]{\textcolor{glscolor}{Sycophancy}}}]
--- A response is sycophantic if it is more aligned with the user's expressed preference than is justified by the underlying truth. Distinct from scheming: sycophancy requires no intent, only Goodhart on RLHF preference data. \citep[\S abstract; kb/excerpts/sharma2023-sycophancy\#abstract]{sharma2023-sycophancy}
+-- A response is sycophantic if it is more aligned with the user's expressed preference than is justified by the underlying truth. Distinct from scheming: sycophancy requires no intent, only Goodhart on RLHF preference data. \citep[\S abstract]{sharma2023-sycophancy}
 
 \item[\glsanchor{test-time-compute}{\hyperref[sec:introduction]{\textcolor{glscolor}{Test-time compute}}} (TTC)]
 -- The inference-side compute spent on a single problem instance to improve answer quality, beyond a single greedy forward pass. Recognised in 2024 as a co-equal scaling axis with training compute. \citep[\S 1]{snell2024}
 
 \item[\glsanchor{test-time-compute-optimal-scaling-strategy}{\hyperref[sec:inference-compute-scaling]{\textcolor{glscolor}{Test-time compute-optimal scaling strategy}}}]
--- The argmax over test-time hyperparameters $\theta$ of expected output correctness, at a fixed test-time compute budget $N$, conditioned on a prompt $q$: $\theta^\ast_{q, y^\ast(q)}(N) = \arg\max_\theta \mathbb{E}_{y \sim \mathrm{Target}(\theta, N, q)}[\mathbb{1}_{y = y^\ast(q)}]$ \citep[\S 3.1 Eq.(1); kb/excerpts/snell2024\#sec-3-1]{snell2024}
+-- The argmax over test-time hyperparameters $\theta$ of expected output correctness, at a fixed test-time compute budget $N$, conditioned on a prompt $q$: $\theta^\ast_{q, y^\ast(q)}(N) = \arg\max_\theta \mathbb{E}_{y \sim \mathrm{Target}(\theta, N, q)}[\mathbb{1}_{y = y^\ast(q)}]$ \citep[\S 3.1 Eq.(1)]{snell2024}
 
 \item[\glsanchor{thinking-budget-2}{\hyperref[sec:budget-forcing]{\textcolor{glscolor}{Thinking budget}}}]
 -- Productised TTC control: API-level integer (Gemini 2.5 \texttt{thinkingBudget}), effort level (OpenAI o-series), or token cap (Anthropic thinking block). \citep[\S 3]{gemini2-5}

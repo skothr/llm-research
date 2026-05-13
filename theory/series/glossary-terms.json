@@ -5117,7 +5117,7 @@
       "primary_form": "Crescendo (multi-turn jailbreak)",
       "aliases": [],
       "short_def": "Russinovich et al. 2024 attack: gradually escalate over multiple benign-seeming turns, exploiting the LM's tendency to over-weight its own…",
-      "full_def": "Russinovich et al. 2024 attack: gradually escalate over multiple benign-seeming turns, exploiting the LM's tendency to over-weight its own prior committed responses. Achieves 29-71% ASR uplift over single-turn baselines on AdvBench against GPT-4 / Gemini-Pro. Documents that single-turn evals systematically underestimate the attack surface",
+      "full_def": "Russinovich et al. 2024 attack: gradually escalate over multiple benign-seeming turns, exploiting the LM's tendency to over-weight its own prior committed responses. Achieves 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro over single-turn baselines on AdvBench. Documents that single-turn evals systematically underestimate the attack surface",
       "case_strict": false,
       "kb_cite": "russinovich2024-crescendo §abstract"
     },
@@ -5126,9 +5126,9 @@
       "primary_form": "Crescendomation",
       "aliases": [],
       "short_def": "The automated implementation of Crescendo: an attacker LLM generates the escalation chain.",
-      "full_def": "The automated implementation of Crescendo: an attacker LLM generates the escalation chain. The 29-71% ASR uplift number refers to Crescendomation specifically",
+      "full_def": "The automated implementation of Crescendo: an attacker LLM generates the escalation chain. The 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro refers to Crescendomation specifically, measured on the AdvBench subset against state-of-the-art single-turn baselines",
       "case_strict": false,
-      "kb_cite": "russinovich2024-crescendo §sec-asr-uplift"
+      "kb_cite": "russinovich2024-crescendo §sec-5-2-results"
     },
     {
       "key": "competing-objectives-jailbreak-failure-mode",

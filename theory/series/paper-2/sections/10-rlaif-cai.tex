@@ -26,9 +26,9 @@ in a strong sense: the Bradley--Terry \glsterm{reward-model}{reward model}
 the four-model PPO infrastructure, the closed-form RL optimum
 \cref{eq:rlhf-optimum} — all unchanged. Only the preference source
 moves, from a human labeler with implicit values to an AI labeler with
-explicit principles. The \glsterm{constitution}{constitution} is the \emph{only} human-authored
-alignment input; everything downstream, including all harm labels, is
-AI-generated \citep[\S abstract]{bai2022-cai}.
+explicit principles. The \glsterm{constitution}{constitution} and the helpfulness-preference
+dataset used to train $\pi^{\mathrm{H}}$ are the only human-authored
+alignment inputs; all harm labels are AI-generated \citep[\S abstract, \S 4]{bai2022-cai}.
 
 \subsection{The RLAIF objective and AI preference distribution}
 \label{sec:rlaif-objective}

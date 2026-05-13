@@ -197,21 +197,19 @@ accuracy gains and faithfulness gains decoupled?%
 \texttt{kb/excerpts/mehta2026-faithfulness-scaling.md} is abstract-only
 as of 2026-05; \deepencite{mehta2026-faithfulness-scaling abstract,
 citation-pending}} The study runs four frontier models
-(\textbf{GPT-5.2, \glsterm{claude}{Claude} Opus 4.5, Gemini-3-flash-preview,
-\glsterm{precision-pinning}{DeepSeek-v3}.2}) on $100$ GSM8K problems at varying \glsterm{self-consistency-2}{self-consistency}
+\deepencite{model names must be verified against the primary PDF of Mehta et al.\ 2026 (arXiv 2601.06423) before being asserted; the previous draft listed GPT-5.2, Claude Opus~4.5, Gemini-3-flash-preview, and DeepSeek-v3.2, none of which appear in any 2026-Q2 public model lineup and are presumed hallucinated; replace with the four names as they appear in the paper's Table~1 or equivalent} on $100$ GSM8K problems at varying \glsterm{self-consistency-2}{self-consistency}
 budgets and measures both task accuracy and a per-trajectory
 faithfulness score in parallel.
 
 The headline result is non-monotonic: \textbf{inference scaling does
 not uniformly improve faithfulness}
-\citep[abstract]{mehta2026-faithfulness-scaling}. The \glsterm{claude}{Claude} Opus 4.5
+\citep[abstract]{mehta2026-faithfulness-scaling}. One model
 configuration provides the cleanest illustration: accuracy
 \emph{decreases} from $78\% \to 74.3\%$ while measured faithfulness
 \emph{rises} from $0.270 \to 0.891$ at
 $N = 5$.\footnote{KB index:
 \texttt{kb/index/papers.json} — abstract.
-\deepencite{mehta2026-faithfulness-scaling §4 (or wherever the per-model
-table lives in the PDF; section anchor pending population), citation-pending}}
+\deepencite{mehta2026-faithfulness-scaling: the specific model name for this configuration (previously listed as ``Claude Opus~4.5'') is unverified against the primary PDF; confirm the correct model name and per-model table location (section anchor pending population), citation-pending}}
 For \cref{eq:cot-decode}'s reading of \glsterm{self-consistency-2}{self-consistency} this is a
 puzzle: more samples should average out per-sample noise in the
 \emph{trace} channel, leaving the conditional $p_\theta(y \mid x, z)$

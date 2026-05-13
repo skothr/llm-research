@@ -174,7 +174,7 @@ about the field's coverage trajectory.
 \subsection{Production interpretability pipelines, 2026}
 \label{sec:scaling-pipelines}
 
-Three pipelines are in active use as of 2026, each anchored on one of
+Four pipelines are in active use as of 2026, each anchored on one of
 the methods above.
 
 \begin{forumsignal}
@@ -216,10 +216,21 @@ benchmarks.}
 The \glsterm{jumprelu-sae}{JumpReLU SAE} family of \citet{rajamanoharan2024-jumprelu}, the
 Gemma Scope open release of \citet{gemma-scope-2024}, and the Gemma 2
 2B/9B/27B coverage make this the most externally-reproducible pipeline
-of the three. The tuned-lens benchmarks of
+of the four. The tuned-lens benchmarks of
 \citet{belrose2023-tuned-lens}, retargeted across the Gemma family,
 provide the cross-method readout layer the lens-as-decoder framing
 needs.
+
+\paragraph{Anthropic --- NLAs in pre-deployment audit.}
+A second Anthropic pipeline, distinct from the \glsterm{circuit}{circuit}-tracer line, is
+the natural-language autoencoder (\glsterm{activation-verbalizer}{AV} + \glsterm{activation-reconstructor}{AR} pair) of
+\citet{anthropic2026-nla}, used in the pre-deployment audit of \glsterm{claude}{Claude}
+Opus 4.6 to surface unverbalized \glsterm{evaluation-awareness}{evaluation awareness} and
+\glsterm{alignment-faking}{alignment-faking}-adjacent cognition. Output modality is free-form natural
+language rather than \glsterm{logits}{logits} or sparse-\glsterm{feature}{feature} dictionaries; the
+round-trip \glsterm{fraction-of-variance-explained}{FVE} score serves as a confabulation gate
+(\S\ref{sec:nla}). No external reproduction as of 2026-Q2; the
+methodology is reported only on the Anthropic-internal Opus 4.6 audit.
 
 \subsection{Snapshot table}
 \label{sec:scaling-snapshot-table}
@@ -308,8 +319,8 @@ The table makes the asymmetry explicit. The methods with the most
 favorable scaling --- probes and SAEs --- have the most external
 reproduction; the method with the strongest substantive findings on a
 production frontier model --- attribution graphs --- has none. Three
-of the nine rows depend on tooling or claims that are HTML-only or
-released-but-not-yet-reproduced; the remaining six form a defensible
+of the ten rows depend on tooling or claims that are HTML-only or
+released-but-not-yet-reproduced; the remaining seven form a defensible
 shared methodological substrate.
 
 \begin{intuition}

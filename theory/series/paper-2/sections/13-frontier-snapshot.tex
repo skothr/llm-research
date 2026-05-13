@@ -57,7 +57,7 @@ paper or model card reports.
 \glsterm{precision-pinning}{DeepSeek-V3} \citep{deepseek-v3} &
 diverse $14.8$T tok; high-qual mix &
 $D / N_{\text{act}} \!\approx\! 400$ MoE; \glsterm{adamw}{AdamW}; WSD-cooldown &
-ZeRO-1 + \glsterm{expert-parallel}{EP}$\,16$ + \glsterm{pipeline-parallel}{PP}$\,16$ \glsterm{dualpipe}{DualPipe}, \emph{no} \glsterm{tensor-parallel}{TP}; \textbf{\glsterm{fp8}{FP8}} fine-grained &
+ZeRO-1 + \glsterm{expert-parallel}{EP}$\,64$ + \glsterm{pipeline-parallel}{PP}$\,16$ \glsterm{dualpipe}{DualPipe}, \emph{no} \glsterm{tensor-parallel}{TP}; \textbf{\glsterm{fp8}{FP8}} fine-grained &
 $1.5$M instruct + reasoning &
 \emph{group-relative} (\glsterm{grpo-2}{GRPO} \citep{shao2024}) directly &
 \glsterm{rlvr-3}{RLVR} via \glsterm{grpo-2}{GRPO}; merging not used \\
@@ -310,7 +310,7 @@ question and remains unanswered.
 \paragraph{TP-yes-vs-TP-no.}
 Llama 3 \citep{meta-llama3} runs \glsterm{tensor-parallel}{TP}$\,8$ inside-node plus \glsterm{pipeline-parallel}{PP} plus \glsterm{data-parallel}{DP} plus
 \glsterm{context-parallel}{CP} --- heavy multi-axis parallelism. \glsterm{precision-pinning}{DeepSeek-V3} \citep{deepseek-v3}
-runs ZeRO-1 + \glsterm{expert-parallel}{EP}$\,16$ + \glsterm{pipeline-parallel}{PP}$\,16$ \glsterm{dualpipe}{DualPipe} with \emph{no} \glsterm{tensor-parallel}{TP}, and
+runs ZeRO-1 + \glsterm{expert-parallel}{EP}$\,64$ + \glsterm{pipeline-parallel}{PP}$\,16$ \glsterm{dualpipe}{DualPipe} with \emph{no} \glsterm{tensor-parallel}{TP}, and
 explicitly argues that fine-grained \glsterm{fp8}{FP8} plus \glsterm{dualpipe}{DualPipe} and the
 cross-node all-to-all kernel relieves enough activation pressure that
 \glsterm{tensor-parallel}{TP} becomes unnecessary \citep[\S 3.2.2]{deepseek-v3}. The two
