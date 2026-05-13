@@ -27,7 +27,7 @@ specialists rather than jointly trained.
 \citet{hu2021-lora} parameterize the update to a frozen pretrained
 linear-layer weight $W_0 \in \R^{d \times k}$ as a low-rank
 decomposition\footnote{KB excerpt:
-\texttt{kb/excerpts/hu2021-lora.md\#sec-3}.}:
+\nolinkurl{kb/excerpts/hu2021-lora.md#sec-3}.}:
 \begin{equation}
 W = W_0 + \Delta W = W_0 + B A,
 \quad
@@ -84,7 +84,7 @@ exploit (cross-ref Paper~1's serving discussion).
 \citet{dettmers2023-qlora} extend \glsterm{lora}{LoRA} by quantizing the frozen base
 $W_0$ to four bits while keeping the \glsterm{lora}{LoRA} factors in BF16. The headline
 \citep[abstract]{dettmers2023-qlora}\footnote{KB excerpt:
-\texttt{kb/excerpts/dettmers2023-qlora.md\#abstract}.} is a 65B-parameter
+\nolinkurl{kb/excerpts/dettmers2023-qlora.md#abstract}.} is a 65B-parameter
 fine-tune fitting on a single 48~GB GPU at full 16-bit task
 performance. Three innovations carry the result:
 
@@ -93,7 +93,7 @@ performance. Three innovations carry the result:
 quantiles of a standard normal distribution, then assigns each weight
 to its nearest bin. Pretrained weights are empirically near-Gaussian
 per block \citep[\S 3]{dettmers2023-qlora}\footnote{KB excerpt:
-\texttt{kb/excerpts/dettmers2023-qlora.md\#sec-3-nf4}.}, so \glsterm{nf4}{NF4}'s bin
+\nolinkurl{kb/excerpts/dettmers2023-qlora.md#sec-3-nf4}.}, so \glsterm{nf4}{NF4}'s bin
 spacing is information-theoretically near-optimal in this regime.
 Concretely: bin centers are
 \begin{equation}
@@ -118,13 +118,13 @@ lookup. The GEMM itself runs in BF16.
 themselves quantized to 8-bit with a second-level scale, dropping the
 average overhead from $\sim\!0.5$~bits/parameter to $\sim\!0.37$~bits
 \citep[\S 3]{dettmers2023-qlora}\footnote{KB excerpt:
-\texttt{kb/excerpts/dettmers2023-qlora.md\#sec-3-doublequant}.}. At
+\nolinkurl{kb/excerpts/dettmers2023-qlora.md#sec-3-doublequant}.}. At
 65B \glsterm{parameters}{parameters} the saving is $\sim\!1$~GB.
 
 \paragraph{Paged optimizers.} Optimizer state for the \glsterm{lora}{LoRA} factors is
 allocated in NVIDIA unified-memory pages that swap to CPU under GPU
 pressure \citep[\S 3]{dettmers2023-qlora}\footnote{KB excerpt:
-\texttt{kb/excerpts/dettmers2023-qlora.md\#sec-3-paged}.}. Long-sequence
+\nolinkurl{kb/excerpts/dettmers2023-qlora.md#sec-3-paged}.}. Long-sequence
 batches that would OOM the 48~GB GPU instead spill to host RAM at a
 small bandwidth cost.
 
@@ -139,7 +139,7 @@ would otherwise be infeasible on commodity hardware.
 \citet{ilharco2022-task-vectors} reframe a fine-tune as a vector in
 weight space. Given a pretrained $\theta_0 \in \R^P$ and a fine-tune
 $\theta_T$ on task $T$, the \emph{\glsterm{task-vector}{task vector}} is\footnote{KB excerpt:
-\texttt{kb/excerpts/ilharco2022-task-vectors.md\#sec-2}.}
+\nolinkurl{kb/excerpts/ilharco2022-task-vectors.md#sec-2}.}
 \begin{equation}
 \tau_T = \theta_T - \theta_0 \in \R^P
 \label{eq:task-vector}
@@ -168,7 +168,7 @@ assumption of basin-sharing — in \cref{sec:adapt-lmc}.
 \label{sec:adapt-soups}
 
 \citet{wortsman2022-model-soups}\footnote{KB excerpt:
-\texttt{kb/excerpts/wortsman2022-model-soups.md\#sec-3}.} address the
+\nolinkurl{kb/excerpts/wortsman2022-model-soups.md#sec-3}.} address the
 hyperparameter-sweep waste problem. The conventional recipe trains $K$
 fine-tunes with different hyperparameters, picks the best on
 validation, and discards the rest \citep[\S 1]{wortsman2022-model-soups}.
@@ -202,7 +202,7 @@ connectivity assumption taken up in \cref{sec:adapt-lmc}.
 
 Naive task-vector summation suffers \emph{interference}
 \citep[abstract]{yadav2023-ties-merging}\footnote{KB excerpt:
-\texttt{kb/excerpts/yadav2023-ties-merging.md\#sec-3}.}: when two
+\nolinkurl{kb/excerpts/yadav2023-ties-merging.md#sec-3}.}: when two
 fine-tunes update the same coordinate in opposite directions, plain
 addition cancels both. \citet{yadav2023-ties-merging} introduce a
 three-step procedure that removes redundant low-magnitude updates and

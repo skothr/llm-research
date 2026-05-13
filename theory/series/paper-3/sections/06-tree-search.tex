@@ -24,7 +24,7 @@ or level-order expansion, and Monte-Carlo Tree Search. This section
 formalises the search-tree datastructure, transcribes the canonical
 \glsterm{reasoning-mcts}{reasoning-MCTS} recurrence from
 \citet{rstar-math2025},\footnote{KB excerpt:
-\texttt{kb/excerpts/rstar-math2025.md\#sec-3-mcts}.} walks the four
+\nolinkurl{kb/excerpts/rstar-math2025.md#sec-3-mcts}.} walks the four
 phases of an MCTS iteration, situates ReST-MCTS\textsuperscript{*}
 \citep{zhang2024-rest-mcts} as the AlphaZero-shaped reasoning loop,
 notes \glsterm{mcts-rag}{MCTS-RAG} \citep{hu2025-mcts-rag} as the retrieval-extended
@@ -40,7 +40,7 @@ partial reasoning trace decomposed into $t$ steps, with each step
 $s_i$ a contiguous span of trace tokens (a sentence, an equation
 line, a bullet)%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/inference-time-search.md\#1-formal-definition}.}.
+\nolinkurl{kb/notes/reasoning/inference-time-search.md#1-formal-definition}.}.
 The \textbf{search tree} has nodes indexed by partial traces $z_{1:t}$
 and edges labelled by the next step $s_{t+1}$, with the root at
 $z_{1:0} = \varnothing$. Three signals attach to the tree:
@@ -109,7 +109,7 @@ each candidate, sample $M$ proposals from the next step, resulting in
 a total of $N/M \times M$ candidate prefixes again. Then repeat steps
 2--4''
 \citep[\S 5.2]{snell2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-5-2-search}.} BFS-V differs from
+\nolinkurl{kb/excerpts/snell2024.md#sec-5-2-search}.} BFS-V differs from
 classical beam only in the per-step scoring object: the \glsterm{process-reward-model}{PRM}'s
 reward-to-go on $s_{1:t}$ replaces the language-model log-likelihood,
 and the level-order structure means every depth-$t$ node is fully
@@ -144,16 +144,16 @@ used to bias future expansion via an exploration--exploitation rule.
 mechanism --- ``a math policy SLM performs test-time search guided by
 an SLM-based process \glsterm{reward-model}{reward model}''
 \citep[abstract]{rstar-math2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/rstar-math2025.md\#abstract}.} --- and report 7B
+\nolinkurl{kb/excerpts/rstar-math2025.md#abstract}.} --- and report 7B
 policies reaching $90.0\%$ on MATH and $53.3\%$ on AIME 2024 after
 four rounds of self-evolution
 \citep[headline numbers]{rstar-math2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/rstar-math2025.md\#headline}.}
+\nolinkurl{kb/excerpts/rstar-math2025.md#headline}.}
 
 \paragraph{The PUCT selection rule.} At each iteration, descend the tree
 from the root by repeatedly choosing the child $s$ that maximises%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/inference-time-search.md\#2-2-mcts-over-reasoning-steps-rstar-math}.}
+\nolinkurl{kb/notes/reasoning/inference-time-search.md#2-2-mcts-over-reasoning-steps-rstar-math}.}
 \begin{equation}
   U(s) \;=\; Q(s) \;+\; c_\text{puct}\;
               \pi_\theta\!\bigl(s \,\big|\, \text{parent}(s)\bigr)\;
@@ -272,7 +272,7 @@ mechanism to a \emph{training-data generator}.\deepencite{zhang2024-rest-mcts
 The protocol, drawn from the inference-time-search KB note's
 treatment%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/inference-time-search.md\#2-3-rest-mcts}.}:
+\nolinkurl{kb/notes/reasoning/inference-time-search.md#2-3-rest-mcts}.}:
 \begin{enumerate}
 \item Run MCTS with the current policy $\pi_\theta^{(r)}$ and \glsterm{process-reward-model}{PRM}
 $V_\phi^{(r)}$ to solve a batch of training problems.
@@ -288,7 +288,7 @@ trajectory distribution and the trajectory-correctness labels.
 The structural identity with AlphaZero
 \deepencite{silver2017-alphazero \S algorithm (canonical citation
 pending; KB note:
-\texttt{kb/notes/reasoning/inference-time-search.md\#7-intuitions-and-analogies})}
+\nolinkurl{kb/notes/reasoning/inference-time-search.md#7-intuitions-and-analogies})}
 is exact:
 \begin{itemize}
 \item self-play games $\leftrightarrow$ MCTS rollouts on math problems;
@@ -305,7 +305,7 @@ across four self-evolution rounds, with one important variation: the
 from preferences over MCTS-discovered step-pairs rather than from
 absolute step-level scores
 \citep[\S 3]{rstar-math2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/rstar-math2025.md\#sec-3}.} The choice trades
+\nolinkurl{kb/excerpts/rstar-math2025.md#sec-3}.} The choice trades
 absolute calibration for a more robust pairwise signal that does not
 require pinning the verifier's score scale; the structural role
 inside the MCTS loop is unchanged.
@@ -372,7 +372,7 @@ the small-policy-with-heavy-MCTS extreme: a 7B policy plus four rounds
 of MCTS self-evolution reaches 90.0\% on MATH and 53.3\% on AIME 2024,
 matching or exceeding o1-preview at much smaller policy
 scale.\footnote{KB excerpt:
-\texttt{kb/excerpts/rstar-math2025.md\#headline}.} \citet{deepseek-r1}
+\nolinkurl{kb/excerpts/rstar-math2025.md#headline}.} \citet{deepseek-r1}
 demonstrate the opposite extreme: a large policy with \glsterm{rlvr-3}{RLVR}-trained
 long \glsterm{chain-of-thought}{CoT} and \emph{no} explicit \glsterm{inference-time-search}{inference-time search} reaches
 77.9\% pass@1 on AIME 2024 and 86.7\% with \glsterm{self-consistency-2}{self-consistency}, on the
@@ -383,7 +383,7 @@ inference-time-compute profiles.
 
 The clean reading%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/inference-time-search.md\#5-the-search-vs-trained-\glsterm{chain-of-thought}{cot}-\glsterm{debate}{debate}}.}
+\nolinkurl{kb/notes/reasoning/inference-time-search.md#5-the-search-vs-trained-cot-debate}.}
 is that explicit search is most valuable where the policy is weak
 (small model, narrow domain, hard tail). At strong policy plus
 standard distributions, internalised search via long \glsterm{chain-of-thought}{CoT} is
@@ -399,7 +399,7 @@ beam-with-\glsterm{process-reward-model}{PRM} of \cref{sec:tree-beam}) competiti
 better than alternative search strategies at matched compute on the
 MATH benchmark with \glsterm{palm}{PaLM}~2-S\* as the base model
 \citep[\S 5.2]{snell2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-5-2-search}.} The implication
+\nolinkurl{kb/excerpts/snell2024.md#sec-5-2-search}.} The implication
 is that the extra MCTS machinery (UCT bookkeeping, rollout-derived
 $Q(s)$ updates, PUCT exploration constant $c_\text{puct}$) does not
 necessarily pay for itself at fixed test-time FLOPs. \citet{rstar-math2025}'s

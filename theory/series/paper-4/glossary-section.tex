@@ -73,7 +73,7 @@
 -- *Decoding by Contrasting Layers*: an inference-time application of lens analysis. The decoded logits are $\text{logit}^{(L)}(t) - \text{logit}^{(\ell^*)}(t)$ for an adaptively chosen early layer $\ell^*$, improving factuality. Chuang et al. 2023.
 
 \item[\glsanchor{dpo}{\hyperref[sec:rome]{\textcolor{glscolor}{DPO}}} (Direct Preference Optimization)]
--- Closed-form, classification-loss reformulation of RLHF: trains the policy directly on preference pairs by inverting the closed-form RL optimum. No reward model, no on-policy sampling, no PPO loop \citep[\S 4 Eq.7]{rafailov2023-dpo}
+-- Closed-form, classification-loss re\-for\-mu\-la\-tion of RLHF: trains the policy directly on preference pairs by inverting the closed-form RL optimum. No reward model, no on-policy sampling, no PPO loop \citep[\S 4 Eq.7]{rafailov2023-dpo}
 
 \item[\glsanchor{expansion-factor}{\hyperref[sec:sparse-autoencoders]{\textcolor{glscolor}{Expansion factor}}}]
 -- the ratio $M / n$ of dictionary size to activation dimension. Typical values 8–1000.
@@ -88,7 +88,7 @@
 -- NLA quality metric: $\mathrm{FVE} = 1 - \mathcal{L}/\mathbb{E}\lVert h_\ell - \bar h_\ell\rVert^2$ where $\mathcal{L}$ is the round-trip MSE. FVE = 1 is a lossless natural-language code; FVE = 0 means the explanation does no better than the mean activation. \citep[\S method]{anthropic2026-nla}
 
 \item[\glsanchor{gaussian-noising}{\hyperref[sec:patching]{\textcolor{glscolor}{Gaussian Noising}}} (GN) / Symmetric Token Replacement (STR)]
--- the two corruption methods for activation patching. GN adds $\mathcal{N}(0, 3\sigma_\text{textset})$ to subject-token embeddings \texttt{[meng2022-rome §2]}; STR replaces the subject with a similar token (e.g., "Eiffel Tower" $\to$ "Colosseum") preserving sequence length \texttt{[zhang2023-apatching §2.1; kb/excerpts/zhang2023-apatching\#sec-2-1-corruption]}. STR is the recommended default; GN can drive activations off-distribution \citep[\S 1 findings]{zhang2023-apatching}
+-- the two corruption methods for activation patching. GN adds $\mathcal{N}(0, 3\sigma_\text{textset})$ to subject-token embed\-dings \texttt{[meng2022-rome \S2]}; STR replaces the subject with a similar token (e.g., "Eiffel Tower" $\to$ "Colosseum") preserving sequence length \texttt{[zhang2023-apatching \S2.1;}\allowbreak\texttt{kb/excerpts/zhang2023-apatching\#sec-2-1-corruption]}. STR is the recommended default; GN can drive activations off-distribution \citep[\S 1 findings]{zhang2023-apatching}
 
 \item[\glsanchor{gelu}{\hyperref[sec:substrate]{\textcolor{glscolor}{GELU}}} (Gaussian Error Linear Unit)]
 -- Smooth activation $x \cdot \Phi(x)$ where $\Phi$ is the standard normal CDF. Used by GPT-1 (2018).
@@ -187,7 +187,7 @@
 -- the linear data bus running through a decoder-only transformer's layers; every sublayer (attention, MLP) reads from and additively writes to it. The substrate that lens techniques and SAEs decompose. Vocabulary established in Elhage et al. 2021 (Mathematical Framework for Transformer Circuits).
 
 \item[\glsanchor{rlhf}{\hyperref[sec:rome]{\textcolor{glscolor}{RLHF}}} (Reinforcement Learning from Human Feedback)]
--- The 3-stage post-training pipeline: SFT $\to$ reward-model training on pairwise preferences $\to$ PPO with KL anchor against $\pi^{\mathrm{SFT}}$. Canonical reference is InstructGPT \citep[\S 3]{ouyang2022-instructgpt}
+-- The 3-stage post-train\-ing pipeline: SFT $\to$ reward-model training on pairwise preferences $\to$ PPO with KL anchor against $\pi^{\mathrm{SFT}}$. Canonical reference is InstructGPT \citep[\S 3]{ouyang2022-instructgpt}
 
 \item[\glsanchor{rmsnorm}{\hyperref[sec:substrate]{\textcolor{glscolor}{RMSNorm}}} (Root Mean Square Normalization)]
 -- Simplified LayerNorm that drops mean-centering and bias, normalizing only by the RMS of the input. 7–64% faster with comparable quality. Used by LLaMA.

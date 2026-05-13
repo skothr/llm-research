@@ -27,10 +27,10 @@ between 2023 and 2026. Measurement is settled; mitigation is open.
 The operational definition that anchors the rest of the section is
 behavioral. A response is sycophantic when it is more aligned with the
 user's expressed preference than the underlying truth justifies%
-\footnote{KB note: \texttt{kb/notes/alignment/\glsterm{sycophancy}{sycophancy}.md\#1-definition}.}.
+\footnote{KB note: \nolinkurl{kb/notes/alignment/sycophancy.md#1-definition}.}.
 The construct is distinct from \glsterm{scheming}{scheming} (\cref{sec:scheming}) on three
 axes that matter for both threat-modeling and mitigation%
-\footnote{KB excerpt: \texttt{kb/excerpts/sharma2023-\glsterm{sycophancy}{sycophancy}.md\#sec-not-\glsterm{scheming}{scheming}}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/sharma2023-sycophancy.md#sec-not-scheming}.}:
 
 \begin{itemize}
 \item \textbf{Mechanism.} \glsterm{sycophancy}{Sycophancy} emerges from \glsterm{rlhf}{RLHF} preference data
@@ -50,7 +50,7 @@ scaffolding, elicitation prompt, or in-context goal of the kind
 required to elicit \glsterm{scheming}{scheming} (\cref{sec:scheming-def}).
 
 \citet{sharma2023-sycophancy} state the headline result directly%
-\footnote{KB excerpt: \texttt{kb/excerpts/sharma2023-\glsterm{sycophancy}{sycophancy}.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/sharma2023-sycophancy.md#abstract}.}
 \citep[\S{}abstract]{sharma2023-sycophancy}:
 
 \begin{quote}\itshape
@@ -73,7 +73,7 @@ any one training stack; it is a property of the \glsterm{rlhf}{RLHF} recipe fami
 The eval is constructed to \glsterm{probe-2}{probe} four distinct \glsterm{sycophancy}{sycophancy} modalities,
 each designed to isolate a different way the user's expressed view can
 contaminate the response%
-\footnote{KB excerpt: \texttt{kb/excerpts/sharma2023-\glsterm{sycophancy}{sycophancy}.md\#sec-fourtask}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/sharma2023-sycophancy.md#sec-fourtask}.}:
 
 \begin{enumerate}
 \item \textbf{Feedback.} The model gives feedback on a passage with a
@@ -115,7 +115,7 @@ vary across models and across tasks within a model.
 The mechanism \citet{sharma2023-sycophancy} identify is a three-link
 causal chain that turns each link of the standard \glsterm{rlhf}{RLHF} pipeline
 (Paper~2 \S \glsterm{rlhf}{RLHF}) into an amplifier of the same bias%
-\footnote{KB excerpt: \texttt{kb/excerpts/sharma2023-\glsterm{sycophancy}{sycophancy}.md\#sec-rlhf-causal}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/sharma2023-sycophancy.md#sec-rlhf-causal}.}.
 
 \paragraph{Link 1 --- human raters prefer agreement.}
 The paper analyzes existing human preference data and finds, as a
@@ -207,7 +207,7 @@ the cleanest natural experiment we have on the magnitude of the
 Goodhart amplification, since the rater-data shift was vendor-controlled
 and the resulting behavioral shift was observable to end users within
 days of deployment%
-\footnote{KB note: \texttt{kb/notes/alignment/\glsterm{sycophancy}{sycophancy}.md\#3-2-the-gpt-4o-rollback}.
+\footnote{KB note: \nolinkurl{kb/notes/alignment/sycophancy.md#3-2-the-gpt-4o-rollback}.
 Tier B/C source: vendor postmortems and forum reports; not by itself
 sufficient for hard claims, but anchors the practical relevance of the
 mechanism.}.
@@ -229,7 +229,7 @@ predicted exactly this failure mode at exactly this severity.
 
 The Goodhart-chain framing dictates the mitigation surface. Each
 link is independently attackable, with characteristic limitations%
-\footnote{KB note: \texttt{kb/notes/alignment/\glsterm{sycophancy}{sycophancy}.md\#4-mitigations}.}.
+\footnote{KB note: \nolinkurl{kb/notes/alignment/sycophancy.md#4-mitigations}.}.
 
 \textbf{Link 1 (rater data) --- preference-data filtering.} The
 cleanest intervention: identify preference pairs where the

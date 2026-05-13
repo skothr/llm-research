@@ -26,7 +26,7 @@ empirical proof point treated in detail in \cref{sec:r1-protocol} ---
 DeepSeek-\glsterm{r1-zero}{R1-Zero}'s AIME 2024 climb from $15.6\%$ to $77.9\%$ pass@1
 under one continuous \glsterm{grpo-2}{GRPO} run \citep[\S
 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} --- is the cleanest
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} --- is the cleanest
 single number in the reasoning-\glsterm{llm}{LLM} literature, and the central evidence
 that the triangle composes.
 
@@ -37,7 +37,7 @@ six-stage post-training pipeline). The angle here is different: how
 terminal and binary, but the policy that emerges is one whose
 inference-time trace length grows from $\sim\!200$ tokens to
 $\sim\!10^4$ on its own \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} --- the verifier
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} --- the verifier
 contains no length term, but the policy discovers that long traces win
 on math and code. \glsterm{rlvr-3}{RLVR} is the training-time mechanism that ratchets
 the inference-time compute axis upward.
@@ -52,8 +52,8 @@ R_{\mathrm{verifier}}(x, y) \;=\; \mathbb{1}\!\big[\,\mathrm{verify}(x, y) = \ma
 \end{equation}
 where $\mathrm{verify}$ is a deterministic program supplied alongside
 the prompt \citep[\S 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}; KB note:
-\texttt{kb/notes/post-training/\glsterm{capability-ceiling}{rlvr}-and-grpo.md\#1-1}.} The instances
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}; KB note:
+\nolinkurl{kb/notes/post-training/rlvr-and-grpo.md#1-1}.} The instances
 that drive the post-2024 reasoning ecosystem are: \emph{math} ---
 exact-match against the canonical answer after sympy-style
 normalization, on competition benchmarks (AIME, MATH, AMC) whose
@@ -81,7 +81,7 @@ position explicitly: ``we abstain from applying neural reward models
 decision is predicated on our observation that neural reward models are
 susceptible to \glsterm{reward-hacking}{reward hacking} during large-scale reinforcement
 learning.''\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The
 post-training-pipeline framing of why this matters is
 \hyperref[P2-sec:rlvr-grpo]{Paper~2 §11}; the reasoning-triangle framing is that
 \cref{eq:verifier-reward}'s sparseness is what \emph{forces} the policy
@@ -98,12 +98,12 @@ spending more inference-time tokens on the trace.
 sampling of a group of $G$ trajectories, with the group's empirical
 reward distribution as the variance-reducing
 baseline.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1-motivation}.} The token-level
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1-motivation}.} The token-level
 objective \citep[\S 4.1, Eq.\ 3]{shao2024}, which DeepSeek-R1 later
 restates in a sequence-level shorthand at \citet[\S 2.1, Eq.\
 1]{deepseek-r1}\footnote{KB excerpts:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1} and
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-grpo}.}:
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1} and
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-grpo}.}:
 \begin{equation}
 \begin{aligned}
 \mathcal{J}_{\mathrm{GRPO}}(\theta) \;=\; & \E_{q \sim P(Q),\, \{o_i\}_{i=1}^G \sim \pi_{\theta_{\mathrm{old}}}(\cdot \mid q)} \bigg[ \\
@@ -122,14 +122,14 @@ and \emph{\glsterm{group-normalized-advantage}{group-normalized advantage}}
 \label{eq:grpo-advantage}
 \end{equation}
 constant in $t$ across the trajectory \citep[\S 4.1, Eq.\ 3]{shao2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1}. DeepSeek-R1 restates the
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1}. DeepSeek-R1 restates the
 same advantage as a sequence-level shorthand in \S 2.1 Eq.\ 1
 \citep[\S 2.1, Eq.\ 1]{deepseek-r1}.}
 
 \paragraph{Symbol table.} $q$ is the prompt; $G$ the group size,
 typically $8$--$64$ ($G = 16$ in \glsterm{r1-zero}{R1-Zero} \citep[\S
 2.1]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-hp}.}); $o_i$ the $i$-th
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.}); $o_i$ the $i$-th
 sampled trajectory (\glsterm{chain-of-thought}{chain-of-thought} + answer); $R_i \in \{0, 1\}$ the
 verifier reward of \cref{eq:verifier-reward}; $\pi_\mathrm{ref}$ a
 frozen reference (typically the SFT cold-start, see \hyperref[P2-sec:sft]{Paper~2 §SFT});
@@ -145,7 +145,7 @@ load-bearing fact about \glsterm{grpo-2}{GRPO} at \glsterm{llm}{LLM} scale is th
 group's empirical rewards $\{R_1, \ldots, R_G\}$ --- there is no
 $V_\phi(s_t)$. PPO with GAE \citep[\S
 3.5]{ouyang2022-instructgpt}\footnote{KB excerpt:
-\texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-3}.} requires a \glsterm{value}{value}
+\nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-3}.} requires a \glsterm{value}{value}
 network co-sized with the policy, doubling the active parameter count
 and the activation memory of training. \glsterm{grpo-2}{GRPO} removes the second network
 entirely. With \glsterm{value}{value} model: $\sim\!2P$ active \glsterm{parameters}{parameters} and $\sim\!2A$
@@ -160,7 +160,7 @@ The trade is $G$ rollouts of length $\le L_\mathrm{max}$ per prompt
 against the \glsterm{value}{value}-network's parameter and activation footprint, and at
 sparse reward (where $V_\phi$ struggles to learn anyway) it is
 favorable \citep[\S 4.1]{shao2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1-motivation}.} For
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1-motivation}.} For
 reasoning training where $L_\mathrm{max} \in [10^4, 6.5 \times 10^4]$
 \citep[\S 2.1]{deepseek-r1}, this is the difference between fitting the
 training run on a given cluster and not.
@@ -208,7 +208,7 @@ introduce four modifications to \glsterm{grpo-2}{GRPO} that together cut trainin
 count to AIME-2024 score 50 by roughly half on Qwen2.5-32B-base
 relative to the \glsterm{grpo-2}{GRPO} baseline \citep[\S
 4]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-4-headline}.} Each modification
+\nolinkurl{kb/excerpts/dapo2025.md#sec-4-headline}.} Each modification
 addresses a measured failure mode of the \glsterm{grpo-2}{GRPO} recipe under the
 specific demands of long-\glsterm{chain-of-thought}{CoT} training; together they are the canonical
 2025 statement of where the \glsterm{grpo-2}{GRPO} objective leaks gradient signal.
@@ -224,7 +224,7 @@ under-probable exploration tokens at the same rate as it caps
 with $\epsilon_{\mathrm{low}} = 0.2$ kept at the PPO default and
 $\epsilon_{\mathrm{high}}$ enlarged (e.g., $0.28$) \citep[Eq.\
 10]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-clip-higher}.} The asymmetry
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-clip-higher}.} The asymmetry
 permits larger upward updates on under-probable correct tokens and
 prevents collapse onto already-favored trajectories --- collapse being
 the failure mode in which the entropy of the policy at long-\glsterm{chain-of-thought}{CoT}
@@ -242,7 +242,7 @@ gradient. \glsterm{dapo-2}{DAPO} enforces
 \end{equation}
 \citep[Eq.\ 11]{dapo2025}, discarding and re-sampling groups that fail
 the constraint.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-dynamic-sampling}.} Compute
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-dynamic-sampling}.} Compute
 concentrates on informative gradients. The structural reason this
 matters under the reasoning-triangle framing is that as the policy's
 pass@1 climbs through training, the all-correct degenerate group
@@ -259,7 +259,7 @@ this with token-aggregated normalization:
 \end{equation}
 Every token weighs equally regardless of trajectory length
 \citep[Eq.\ 12]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-token-loss}.} This is the
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-token-loss}.} This is the
 modification most directly aligned with the reasoning-triangle thesis
 of this paper: \glsterm{grpo-2}{GRPO}'s per-trajectory normalization systematically
 under-weights the long correct CoTs that
@@ -280,7 +280,7 @@ R_{\mathrm{length}}(o_i) \;=\; \begin{cases}
 \label{eq:dapo-overlong}
 \end{equation}
 \citep[Eq.\ 13]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-overlong}.} Variance from
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-overlong}.} Variance from
 length-truncated samples falls; the genuine signal that overlong
 reasoning is bad is preserved. The interaction with
 \cref{eq:dapo-tokenloss} is structural: without
@@ -324,7 +324,7 @@ subprocess; rollouts dominate wall-clock time.
 
 Two evidence points define the 2025 \glsterm{rlvr-3}{RLVR}-for-reasoning literature.
 First, \citet[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} report that
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} report that
 DeepSeek-\glsterm{r1-zero}{R1-Zero}'s average pass@1 on AIME 2024 climbs from $15.6\%$ to
 $77.9\%$ over one continuous \glsterm{grpo-2}{GRPO} run on the \glsterm{precision-pinning}{DeepSeek-V3} base, with
 $86.7\%$ achieved at majority-vote-over-$64$, ``surpass[ing] the
@@ -339,7 +339,7 @@ the RL leg of the triangle, alone, can produce frontier-grade reasoning
 on verifier-supported domains.
 
 Second, \citet[\S 4]{dapo2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-4-headline}.} reach AIME 2024
+\nolinkurl{kb/excerpts/dapo2025.md#sec-4-headline}.} reach AIME 2024
 score $50$ on Qwen2.5-32B-base in roughly half the training steps
 relative to the \glsterm{grpo-2}{GRPO} baseline using the four modifications of
 \cref{sec:rlvr-dapo}. The training code, curated dataset, and verl
@@ -352,7 +352,7 @@ The \emph{cross-leg} reading of these numbers is the section's thesis:
 the response-length growth observed during the \glsterm{r1-zero}{R1-Zero} run (a few
 hundred tokens early in training to roughly $10{,}000$ tokens at
 convergence \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.}) is, by definition,
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.}) is, by definition,
 movement along the inference-time-compute axis of
 \cref{sec:inference-compute-axis}; and the ``\glsterm{aha-moment}{aha moment}'' --- a sudden
 spike in the policy's use of \texttt{wait} during reflection --- is
@@ -436,6 +436,6 @@ versus inference search versus pretraining? The open answer turns on
 the same empirical anecdotes (\glsterm{dapo-2}{DAPO}'s step efficiency \citep[\S
 4]{dapo2025}, R1's training-token cost \citep[\S 2.3]{deepseek-r1},
 Snell's FLOPs-matched curves \citep[\S 6]{snell2024}\footnote{KB
-excerpt: \texttt{kb/excerpts/snell2024.md\#sec-1-flops-matched}.}) that
+excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.}) that
 \cref{sec:rlvr-empirics} cited as headlines, now read against each
 other rather than in isolation.

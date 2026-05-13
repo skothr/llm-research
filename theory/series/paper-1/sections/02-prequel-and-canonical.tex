@@ -31,7 +31,7 @@ the recurrent \glsterm{encoder-decoder}{encoder-decoder} with attention. Three p
 known well enough to be the abstract of \citet{vaswani2017} itself
 (``dispensing with recurrence and convolutions
 entirely'')%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#abstract}.}
 \citep[abstract]{vaswani2017}.
 
 \paragraph{RNN/LSTM seq2seq: the sequential bottleneck.} The
@@ -137,14 +137,14 @@ The encoder is a stack of $L = 6$ identical layers; each has two
 sublayers, a multi-head \glsterm{self-attention}{self-attention} block and a position-wise
 feed-forward block, with a \glsterm{residual-connection}{residual connection} and layer
 normalization wrapping each sublayer%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-1}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-1}.}.
 The decoder also has $L = 6$ layers but inserts a third sublayer --
 \glsterm{encoder-decoder}{encoder-decoder} \glsterm{cross-attention}{cross-attention} -- between the \glsterm{self-attention}{self-attention} and
 the \glsterm{ffn}{FFN}, and masks the \glsterm{self-attention}{self-attention} so that position $i$ can attend
 only to positions $\leq i$ \citep[\S 3.1]{vaswani2017}. Writing the
 sublayer abstractly as $F$ and its input as $\mathbf{x}$, the
 canonical placement is what \citet{vaswani2017} state verbatim%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-1}, the same anchor as immediately above.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-1}, the same anchor as immediately above.}:
 \begin{equation}
   \mathbf{y} \;=\; \mathrm{LayerNorm}\bigl(\mathbf{x} + F(\mathbf{x})\bigr)
   \tag{Vaswani--\S 3.1}
@@ -168,7 +168,7 @@ recurrent and convolutional baselines. \citet{vaswani2017} define
 \glsterm{scaled-dot-product-attention}{scaled dot-product attention} on per-head matrices
 $Q, K \in \R^{\mathsf{S} \times d_k}$, $V \in \R^{\mathsf{S} \times d_v}$
 as%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-1}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-1}.}
 \begin{equation}
   \mathrm{Attention}(Q, K, V) \;=\;
   \softmax\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V
@@ -205,7 +205,7 @@ function on $D$-dimensional queries, keys, and values,
 \citet{vaswani2017} project them $\mathsf{H}$ times to $d_k$, $d_k$,
 $d_v$ dimensions and run Eq.~\eqref{eq:vaswani-attn} in
 parallel%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-2}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-2}.}:
 \begin{align}
   \mathrm{MultiHead}(Q, K, V)
    &= \mathrm{Concat}(\mathrm{head}_1, \ldots, \mathrm{head}_{\mathsf{H}})\, W^O,
@@ -227,7 +227,7 @@ the total compute matches a single-head full-width attention
 model to jointly attend to information from different
 representation subspaces at different positions; with a single
 attention head, averaging inhibits this''~\citep[\S
-3.2.2]{vaswani2017}\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-2-motivation}.}.
+3.2.2]{vaswani2017}\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-2-motivation}.}.
 After projection the attention tensors carry shape $\BHSdh$; the
 score matrix has shape
 $\mathsf{B}\!\times\!\mathsf{H}\!\times\!\mathsf{S}\!\times\!\mathsf{S}$;
@@ -237,7 +237,7 @@ $\BHSdh$ is the lens the rest of this paper is read through.
 
 \paragraph{Three uses of attention.} The 2017 model uses
 \glsterm{multi-head-attention}{multi-head attention} in three places~\citep[\S
-3.2.3]{vaswani2017}\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-3}.}:
+3.2.3]{vaswani2017}\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-3}.}:
 encoder \glsterm{self-attention}{self-attention} (queries, keys, and values all from the
 previous encoder layer), decoder \emph{masked} \glsterm{self-attention}{self-attention} (same
 sources, but with positions $> i$ masked to $-\infty$ inside the
@@ -253,7 +253,7 @@ onward keep only the second of these three -- masked \glsterm{self-attention}{se
 
 Each block contains a position-wise feed-forward sublayer applied
 identically and independently to each position%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-3}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-3}.}:
 \begin{equation}
   \mathrm{FFN}(\mathbf{x}) \;=\; \max(0, \mathbf{x} W_1 + b_1) \, W_2 + b_2
   \tag{Vaswani--Eq.~2 (FFN)}
@@ -281,7 +281,7 @@ position/channel split survives every variant.
 
 Because the model contains no recurrence or convolution, position
 information must be injected explicitly%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-5}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-5}.}.
 \citet{vaswani2017} add a fixed sinusoidal encoding to the input
 embeddings at the bottom of each stack:
 \begin{equation}
@@ -312,7 +312,7 @@ position injection inside the attention dot product, and is the
 
 The token-ID-to-vector and vector-to-logit interfaces are also
 specified in the paper%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-4}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-4}.}.
 The input embedding $E_{\text{in}} \in \R^{\mathsf{V} \times \mathsf{D}}$
 maps token IDs to $\mathsf{D}$-vectors; the LM head
 $E_{\text{out}} \in \R^{\mathsf{D} \times \mathsf{V}}$ projects the

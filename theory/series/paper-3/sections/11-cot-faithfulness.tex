@@ -41,7 +41,7 @@ Following the protocol shared across
 \citet{arcuschin2025-cot-wild,shen2025-faithcot-bench,
 mehta2026-faithfulness-scaling} and the KB note's framing,%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/\glsterm{chain-of-thought}{chain-of-thought}.md\#4}.} the trace $z$ is
+\nolinkurl{kb/notes/reasoning/chain-of-thought.md#4}.} the trace $z$ is
 \emph{faithful} to the answer $y$ on input $x$ when an intervention on
 $z$ that should change the answer in fact does, and an intervention
 that should not does not. Formally, fix $x$ and let
@@ -65,7 +65,7 @@ variation or the binary indicator $\mathbb{1}[\hat y(z) \neq \hat y(z')]$
 Three intervention families dominate the 2025--2026 literature
 \citep[\S 3]{shen2025-faithcot-bench}:%
 \footnote{Excerpt status:
-\texttt{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
+\nolinkurl{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
 2026-05; \deepencite{shen2025-faithcot-bench §3, citation-pending}}
 \begin{enumerate}
 \item \textbf{Paraphrase $z'$.} Same content, different surface form. A
@@ -110,7 +110,7 @@ the answer distribution.
 \citet{arcuschin2025-cot-wild} run the cleanest naturalistic-prompt
 measurement of unfaithful \glsterm{chain-of-thought}{CoT} to date.%
 \footnote{Excerpt status:
-\texttt{kb/excerpts/arcuschin2025-\glsterm{chain-of-thought}{cot}-wild.md} is abstract-only as of
+\nolinkurl{kb/excerpts/arcuschin2025-cot-wild.md} is abstract-only as of
 2026-05; \deepencite{arcuschin2025-cot-wild abstract,
 citation-pending}} The methodological contribution is to drop the
 artificial-bias scaffolding that earlier faithfulness work
@@ -123,7 +123,7 @@ per-model rationalisation rates: \textbf{GPT-4o-mini 13\%},
 \textbf{R1 0.37\%} on thinking-on configurations
 \citep[abstract]{arcuschin2025-cot-wild}.%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/\glsterm{chain-of-thought}{chain-of-thought}.md\#4.1}.} The
+\nolinkurl{kb/notes/reasoning/chain-of-thought.md#4.1}.} The
 non-thinking-vs-thinking gap is roughly two orders of magnitude in
 measured unfaithfulness rate and is the empirical anchor of the
 faithfulness scaling question \cref{sec:faith-mehta} returns to.
@@ -147,7 +147,7 @@ flow through the trace tokens.
 per-distribution rate to a \textbf{per-instance} discriminative
 problem.%
 \footnote{Excerpt status:
-\texttt{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
+\nolinkurl{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
 2026-05; \deepencite{shen2025-faithcot-bench abstract,
 citation-pending}} Their FINE-\glsterm{chain-of-thought}{CoT} dataset contributes
 $> 1{,}000$ expert-annotated trajectories from four LLMs across four
@@ -194,7 +194,7 @@ compute axis (\cref{sec:test-time-compute}) — specifically,
 \glsterm{self-consistency-2}{self-consistency} at $N > 1$ — \emph{also} improve faithfulness, or are
 accuracy gains and faithfulness gains decoupled?%
 \footnote{Excerpt status:
-\texttt{kb/excerpts/mehta2026-faithfulness-scaling.md} is abstract-only
+\nolinkurl{kb/excerpts/mehta2026-faithfulness-scaling.md} is abstract-only
 as of 2026-05; \deepencite{mehta2026-faithfulness-scaling abstract,
 citation-pending}} The study runs four frontier models
 \deepencite{model names must be verified against the primary PDF of Mehta et al.\ 2026 (arXiv 2601.06423) before being asserted; the previous draft listed GPT-5.2, Claude Opus~4.5, Gemini-3-flash-preview, and DeepSeek-v3.2, none of which appear in any 2026-Q2 public model lineup and are presumed hallucinated; replace with the four names as they appear in the paper's Table~1 or equivalent} on $100$ GSM8K problems at varying \glsterm{self-consistency-2}{self-consistency}
@@ -246,7 +246,7 @@ average response length from $\sim 200$ to $\sim 10{,}000$ tokens%
 \deepencite{deepseek-r1 §2.2 trace-length growth curve, KB excerpt-anchor pending; current anchor covers the rule-based-reward passage}
 with AIME 2024 pass\@1 climbing $15.6\% \to 77.9\%$%
 \footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} a correlation
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} a correlation
 that the simplest reading attributes to the trace's content driving
 the answer's correctness. Yet \citet{arcuschin2025-cot-wild} find R1
 itself exhibits a measurable rationalisation rate of $0.37\%$
@@ -272,7 +272,7 @@ scale by published 2025--2026 ablations
 ablation that varies one of these factors at fixed others has not been
 run at frontier scale.%
 \footnote{KB note:
-\texttt{kb/notes/reasoning/\glsterm{chain-of-thought}{chain-of-thought}.md\#4.1}.} The reason
+\nolinkurl{kb/notes/reasoning/chain-of-thought.md#4.1}.} The reason
 matters: if the gap is \glsterm{rlvr-3}{RLVR}-driven, it is benchmarkable and tunable
 through the training pipeline of \cref{sec:rlvr}; if it is scale-driven,
 faithfulness is on a separate scaling curve from accuracy, and Mehta et

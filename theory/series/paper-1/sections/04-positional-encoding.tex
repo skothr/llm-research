@@ -30,7 +30,7 @@ f_{\{q,k\}}(\boldsymbol{x}_m, m) = \boldsymbol{W}_{\{q,k\}}\,
 \label{eq:pe-additive}
 \end{equation}
 with the sinusoidal choice~\citep[\S 3.5]{vaswani2017}%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-5}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-5}.}
 \begin{equation}
 \begin{aligned}
 PE_{(pos,\,2i)}     &= \sin\!\bigl(pos\,/\,10000^{2i/d_{\text{model}}}\bigr), \\
@@ -111,7 +111,7 @@ attention is asked to handle in modern \glsterm{decoder-only}{decoder-only} trai
 
 \citet{su2021} replace the additive encoding with a multiplicative
 rotation applied to $Q$ and $K$ inside attention.\footnote{KB excerpt:
-\texttt{kb/excerpts/su2021.md\#sec-3-2-2}.} For a residual-stream
+\nolinkurl{kb/excerpts/su2021.md#sec-3-2-2}.} For a residual-stream
 activation $\boldsymbol{x}_m \in \R^{d_h}$ at position $m$ (per head,
 with $d_h$ even):
 \begin{equation}
@@ -221,7 +221,7 @@ b' = b \cdot s^{d_h / (d_h - 2)},
 \end{equation}
 which compresses primarily the low-frequency dimensions while leaving
 high-frequency ones nearly intact~\citep[\S 3.2,
-\texttt{kb/notes/architecture/position-encoding.md\#sec-3-2}]{su2021}.
+\nolinkurl{kb/notes/architecture/position-encoding.md#sec-3-2}]{su2021}.
 
 \paragraph{YaRN.} \deepencite{peng2023-yarn (excerpt not yet in KB;
 cite ``YaRN: Efficient Context Window Extension of Large Language
@@ -313,7 +313,7 @@ context lengths; harder evaluations (RULER, HELMET) show steeper and
 methodologically inconsistent degradation patterns past 32K, making
 ``which extension method is best'' contingent on which long-context
 benchmark is treated as ground truth (see
-\texttt{kb/notes/architecture/long-context.md\#sec-5}).
+\nolinkurl{kb/notes/architecture/long-context.md#sec-5}).
 \end{contradiction}
 
 \subsection{Summary and forward link}

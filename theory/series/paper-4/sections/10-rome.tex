@@ -11,8 +11,8 @@
 \label{sec:rome-corruption-sensitivity}
 
 The activation-patching protocol of \S\ref{sec:patching} is a diagnostic:
-its output is a heatmap of which $(\text{component}, \text{token},
-\text{layer})$ cells are causal mediators for a behavior. ROME
+its output is a heatmap of which (component, token, layer) cells
+are causal mediators for a behavior. ROME
 \citep{meng2022-rome} is the first paper to take that diagnostic and
 turn it into \emph{capability surgery} on the model's weights. The
 argument has two halves. The first half \emph{localizes} factual recall
@@ -41,10 +41,10 @@ sweeping the patched component $C$ over every $(\text{token}, \text{layer})$
 cell of the residual-stream grid and computing the average indirect
 effect $\mathrm{AIE}_C$ from
 Eq.~\eqref{eq:aie}\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2-effects}.}. On 1000 factual
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2-effects}.}. On 1000 factual
 statements, two peaks dominate the
 heatmap\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2-2}.}: a \emph{late site}
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2-2}.}: a \emph{late site}
 near the final-layer prediction (unsurprising; the model commits to
 the answer there), and an \emph{early site} ``at the last token of
 the subject name'' \citep[\S 2.2]{meng2022-rome}, which the authors
@@ -61,7 +61,7 @@ forward.
 That localization motivates the paper's central conjecture, the
 \emph{Localized Factual Association Hypothesis}~\citep[\S
 2.3]{meng2022-rome}\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2-3}.}:
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2-3}.}:
 
 \begin{quote}
 \itshape
@@ -84,7 +84,7 @@ of the paper validates it by intervention.
 
 ROME's intervention rests on a specific reading of the MLP
 sublayer~\citep[\S 3.1]{meng2022-rome}\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-3-1}.}: the second linear
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-3-1}.}: the second linear
 layer of an MLP, $W^{(\ell)}_{\mathrm{proj}}$, is a \emph{linear
 associative memory} in the sense of \citet{kohonen1972-associative}
 and Anderson 1972. Any linear map $W$ can act as a \glsterm{key}{key}--\glsterm{value}{value} store for
@@ -148,7 +148,7 @@ of Eq.~\eqref{eq:rome-edit}, applied at GPT-2 XL's localized layer
 $\ell^* = 15$ at the last subject token, achieves the editing
 results in
 Table~\ref{tab:rome-zsre}~\citep[\S 3.2]{meng2022-rome}\footnote{KB
-excerpt: \texttt{kb/excerpts/meng2022-rome.md\#sec-3-2}.}.
+excerpt: \nolinkurl{kb/excerpts/meng2022-rome.md#sec-3-2}.}.
 
 \begin{table}[h]
 \centering
@@ -224,7 +224,7 @@ ROME paper. The \emph{locus} claim --- ``mid-layer MLPs at the last
 subject token are causal mediators of factual recall in GPT-2 XL''
 --- survives STR re-validation: \citet[\S
 3]{zhang2023-apatching}\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-findings}.} report that
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-findings}.} report that
 GN- and STR-derived heatmaps disagree on per-layer details but agree
 on the broad early-site / late-site decomposition that the
 hypothesis~\citep[\S 2.3]{meng2022-rome} rests on. The \emph{layer-of-edit}

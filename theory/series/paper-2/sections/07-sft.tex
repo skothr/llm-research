@@ -12,7 +12,7 @@ starting point $\pi^{\mathrm{SFT}}$ that every subsequent stage
 (\cref{sec:rlhf} PPO, \cref{sec:dpo} \glsterm{dpo}{DPO}, \cref{sec:rlvr-grpo} \glsterm{grpo-2}{GRPO})
 takes as both initialization and KL anchor
 \citep[\S 3]{ouyang2022-instructgpt}.\footnote{KB excerpt:
-\texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-3}.} The thesis of
+\nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-3}.} The thesis of
 this section is the one most easily lost in the post-training
 literature: \emph{the loss is plain cross-entropy with prompt-masking,
 and the interesting research questions live in the data, not the
@@ -43,7 +43,7 @@ prompt:
 \label{eq:sft-loss-canonical}
 \end{equation}
 verbatim from \citet[\S 3]{ouyang2022-instructgpt}.\footnote{KB excerpt:
-\texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-3}.} The
+\nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-3}.} The
 implementation form, which is what training code actually computes,
 expands the conditional log-probability and folds in a per-token loss
 mask. Concatenate $z = (x, y)$ into one token sequence with the chat
@@ -128,7 +128,7 @@ teaches $\pi_\theta$ to \emph{generate user prompts}, which is the wrong
 training signal. Second, when the SFT data is heavily synthetic with
 long instruction templates (Phi-4-style pipelines run with
 multi-paragraph system prompts \citep[\S 2.2]{phi4}\footnote{KB excerpt:
-\texttt{kb/excerpts/phi4.md\#sec-2-2-pipelines}.}), prompt tokens
+\nolinkurl{kb/excerpts/phi4.md#sec-2-2-pipelines}.}), prompt tokens
 dominate the token count and dilute the response-token gradient by
 sometimes an order of magnitude. Prompt-masking is equivalent to
 treating $x$ as a fixed conditioning input rather than a sample to
@@ -215,7 +215,8 @@ data-quantity contradiction in \cref{sec:sft-contradictions}.
 \citet{magpie-2024}'s procedure is structurally trivial. Take any
 aligned LM $\pi^{\mathrm{Aligned}}$ (LLaMA-3-Instruct, Qwen-Chat,
 \glsterm{mistral}{Mistral}-Instruct), prompt it with \emph{only} its instruction-template
-prefix (e.g.\ \texttt{<|begin\_of\_text|><|start\_header\_id|>user<|end\_header\_id|>\textbackslash n\textbackslash n})
+prefix (e.g.\
+\texttt{<|begin\_of\_text|>}\allowbreak\texttt{<|start\_header\_id|>}\allowbreak\texttt{user}\allowbreak\texttt{<|end\_header\_id|>}\allowbreak\texttt{\textbackslash n\textbackslash n})
 with no question, and sample. The model fabricates a user question.
 Append the instruction-template response delimiter and sample again to
 get the answer. SFT on \glsterm{magpie}{MAGPIE}-generated data on Llama-3-8B-base
@@ -241,7 +242,7 @@ $\pi^{\mathrm{demo}}$.
 \citet[\S 4]{deepseek-r1} demonstrate that reasoning capability
 acquired through RL with verifiable rewards (\cref{sec:rlvr-grpo})
 transfers to small dense models through pure SFT.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-4}.} After training R1 by \glsterm{rlvr-3}{RLVR},
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-4}.} After training R1 by \glsterm{rlvr-3}{RLVR},
 the team curated $800$K SFT samples ($600$K reasoning + $200$K
 non-reasoning) by sampling from R1 and filtering for correctness;
 SFT-only fine-tuning on Qwen-2.5 / Llama-3 base checkpoints (1.5B,
@@ -260,12 +261,12 @@ scale.
 
 \paragraph{Phi-4 — synthetic-heavy SFT mix.} \citet[\S 1, \S
 2.1]{phi4}\footnote{KB excerpts:
-\texttt{kb/excerpts/phi4.md\#sec-1-pillars} and
+\nolinkurl{kb/excerpts/phi4.md#sec-1-pillars} and
 \texttt{\#sec-2-1-purpose}.} make the strongest published case for a
 synthetic-heavy mix in both pre-training and post-training. The pre-
 training phase uses $\sim\!400$B tokens of synthetic data from $50$+
 multi-stage prompting pipelines \citep[\S 2.2]{phi4},\footnote{KB
-excerpt: \texttt{kb/excerpts/phi4.md\#sec-2-2-pipelines}.} and the
+excerpt: \nolinkurl{kb/excerpts/phi4.md#sec-2-2-pipelines}.} and the
 post-training SFT mix preserves the same synthetic-heavy ratio. The
 underlying intuition, in Phi-4's own framing, is that synthetic data
 acts as ``\glsterm{spoonfeeding}{spoonfeeding}'' \citep[\S 2.1]{phi4}: ``each token generated

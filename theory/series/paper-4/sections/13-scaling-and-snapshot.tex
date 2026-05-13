@@ -35,11 +35,11 @@ autoencoders trained with a TopK activation: a compute--loss law
 $L(C)$ at fixed sparsity, and a width--sparsity law $L(N, K)$ at fixed
 compute, where $N = M$ is the dictionary size and $K$ the per-token
 $L_0$ \citep[\S 1, \S 3]{gao2024-topk-saes}\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-1-headline}.}. The headline
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-1-headline}.}. The headline
 demonstration is a 16M-latent \glsterm{sparse-autoencoder}{SAE} trained on GPT-4 residual-stream
 activations with $\sim 7\%$ dead latents under the AuxK
 mitigation~\citep[\S 2.4]{gao2024-topk-saes}\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-2-4}.}; the law is
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-2-4}.}; the law is
 predictive enough to guide budget allocation between $N$ and training
 tokens at the design stage rather than empirically. \citet{gemma-scope-2024}
 exercise the architectural cousin --- JumpReLU SAEs of
@@ -50,7 +50,7 @@ output) plus selected layers of Gemma~2 27B, with widths
 $\{16.4\text{K}, 65.5\text{K}, 131\text{K}, 1\text{M}\}$, totaling
 $>\!30$M learned features and roughly $20\%$ of GPT-3's pretraining
 compute~\citep[\S 1]{gemma-scope-2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/gemma-scope-2024.md\#sec-1}.}. The \glsterm{common-crawl}{CC}-BY-4.0 release
+\nolinkurl{kb/excerpts/gemma-scope-2024.md#sec-1}.}. The \glsterm{common-crawl}{CC}-BY-4.0 release
 on HuggingFace plus the Neuronpedia interactive demo
 \deepencite{Neuronpedia integration: \texttt{neuronpedia.org/gemma-scope},
 not in papers.json} converted \glsterm{sparse-autoencoder}{SAE}-based interpretability from an
@@ -206,7 +206,7 @@ The $L(C)$ and $L(N, K)$ laws of \citet{gao2024-topk-saes} are the
 ongoing methodological backbone, plus an evaluation-metric suite (
 $L_0$, reconstruction MSE, downstream-loss recovery, contrastive \glsterm{probe-2}{probe}
 recovery)~\citep[\S 1 contributions]{gao2024-topk-saes}\footnote{KB
-excerpt: \texttt{kb/excerpts/gao2024-topk-saes.md\#sec-1-headline}.}.
+excerpt: \nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-1-headline}.}.
 The 16M-latent GPT-4 \glsterm{sparse-autoencoder}{SAE} is the existence proof for \glsterm{sparse-autoencoder}{SAE} scaling at
 production-frontier scale; the per-\glsterm{feature}{feature} interpretability work
 downstream of that release is not all public.

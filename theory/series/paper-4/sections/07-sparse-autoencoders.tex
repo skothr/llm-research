@@ -32,7 +32,7 @@ Given an activation $\mathbf{x} \in \mathbb{R}^n$ — typically the
 \glsterm{residual-stream}{residual stream} at some layer $\ell$, or an MLP/attention-output vector
 — an \glsterm{sparse-autoencoder}{SAE} is a pair of an encoder and a decoder
 \citep[\S 2, Eq.~1--2]{rajamanoharan2024-jumprelu}\footnote{KB excerpt:
-\texttt{kb/excerpts/rajamanoharan2024-jumprelu.md\#sec-2}.}:
+\nolinkurl{kb/excerpts/rajamanoharan2024-jumprelu.md#sec-2}.}:
 \begin{align}
   \mathbf{f}(\mathbf{x}) &:= \sigma\!\left(\mathbf{W}_{\text{enc}}\,\mathbf{x} + \mathbf{b}_{\text{enc}}\right),
   \label{eq:sae-encoder}\\
@@ -65,7 +65,7 @@ The original recipe of \citet{templeton2024-scaling-monosemanticity}
 following \citet{gao2024-topk-saes}'s baseline uses \glsterm{relu}{ReLU} encoder with
 an $\ell_1$ sparsity penalty $\lambda \|\mathbf{f}\|_1$
 \citep[\S 2.2, Eq.~1]{gao2024-topk-saes}\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-2-2-baseline}.}. Two
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-2-2-baseline}.}. Two
 known issues motivate the TopK and JumpReLU successors. First,
 \emph{\glsterm{shrinkage}{shrinkage}}: $\ell_1$ biases all positive activations toward zero,
 so reconstructions systematically underestimate true \glsterm{feature}{feature}
@@ -83,7 +83,7 @@ without a unit-norm constraint on $\mathbf{d}_i$
 $k$-sparse activation \citep[after][]{gao2024-topk-saes}: keep the
 top-$K$ pre-activations, zero the rest. The encoder becomes
 \citep[\S 2.3, Eq.~2]{gao2024-topk-saes}\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-2-3}.}
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-2-3}.}
 \begin{equation}
   \mathbf{f}(\mathbf{x}) \;=\; \mathrm{TopK}\!\left(\mathbf{W}_{\text{enc}}(\mathbf{x} - \mathbf{b}_{\text{pre}})\right),
   \label{eq:topk}
@@ -106,7 +106,7 @@ fail to fire early in training never recover. \citet{gao2024-topk-saes}
 report that without mitigation, ``up to 90\% dead
 latents''~\citep[\S 2.4]{gao2024-topk-saes} appear at the largest
 scales\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-2-4}.}. Two ingredients
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-2-4}.}. Two ingredients
 fix it: encoder rows are initialized as the transpose of decoder
 columns; and an auxiliary ``AuxK'' loss models the residual
 reconstruction error using the top-$k_{\text{aux}}$ \emph{dead}
@@ -114,7 +114,7 @@ latents, forcing them to reactivate. With these, even a
 $16$M-latent \glsterm{sparse-autoencoder}{SAE} on GPT-4 residual-stream activations trained for $40$B
 tokens keeps only $7\%$ of latents
 dead~\citep[\S 1, \S 2.4]{gao2024-topk-saes}\footnote{KB excerpt:
-\texttt{kb/excerpts/gao2024-topk-saes.md\#sec-1-headline}.}. Optimal
+\nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-1-headline}.}. Optimal
 compute follows a clean power law $L(C) = 0.09 + 0.056\,C^{-0.084}$ on
 the MSE-vs-compute frontier \citep[Fig.~1, \S 3]{gao2024-topk-saes}, so
 the top-K family scales predictably to GPT-4-class models.
@@ -132,7 +132,7 @@ where $H$ is the Heaviside step function and
 $\boldsymbol{\theta} \in \mathbb{R}^M_+$ is a \emph{per-\glsterm{feature}{feature} learned
 threshold} below which encoder pre-activations are set to zero
 \citep[\S 2, Eq.~4]{rajamanoharan2024-jumprelu}\footnote{KB excerpt:
-\texttt{kb/excerpts/rajamanoharan2024-jumprelu.md\#sec-2-activations}.}.
+\nolinkurl{kb/excerpts/rajamanoharan2024-jumprelu.md#sec-2-activations}.}.
 The full \glsterm{sparse-autoencoder}{SAE} encoder is
 $\mathbf{f}(\mathbf{x}) := \mathrm{JumpReLU}_{\boldsymbol{\theta}}(\mathbf{W}_{\text{enc}}\mathbf{x} + \mathbf{b}_{\text{enc}})$
 \citep[\S 3, Eq.~8]{rajamanoharan2024-jumprelu}, and sparsity is
@@ -162,13 +162,13 @@ residual-stream, MLP-output, and attention-output activations, JumpReLU
 SAEs ``provide reconstructions that are at least as good as, and often
 slightly better than, TopK SAEs'' and consistently dominate Gated SAEs
 \citep[\S 1]{rajamanoharan2024-jumprelu}\footnote{KB excerpt:
-\texttt{kb/excerpts/rajamanoharan2024-jumprelu.md\#sec-1-pareto}.}. The
+\nolinkurl{kb/excerpts/rajamanoharan2024-jumprelu.md#sec-1-pareto}.}. The
 caveat is interpretability, not reconstruction: both TopK and JumpReLU
 produce a small fraction of \emph{high-frequency} latents (firing on
 $>10\%$ of tokens, fewer than $0.06\%$ of a $131$K-width \glsterm{sparse-autoencoder}{SAE}) which
 manual ratings find systematically less interpretable
 \citep[\S 1]{rajamanoharan2024-jumprelu}\footnote{KB excerpt:
-\texttt{kb/excerpts/rajamanoharan2024-jumprelu.md\#sec-1-caveat}.}.
+\nolinkurl{kb/excerpts/rajamanoharan2024-jumprelu.md#sec-1-caveat}.}.
 Pareto-winning on reconstruction-at-fixed-sparsity does not imply
 Pareto-winning on per-\glsterm{feature}{feature} interpretability.
 
@@ -201,7 +201,7 @@ suite of JumpReLU SAEs trained on \emph{all} layers and sublayers ---
 contains ``more than 400 sparse autoencoders in the main release, with
 more than 30 million learned features in total''
 \citep[\S 1]{gemma-scope-2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/gemma-scope-2024.md\#sec-1}.}, trained on
+\nolinkurl{kb/excerpts/gemma-scope-2024.md#sec-1}.}, trained on
 $4$--$16$B tokens each at widths $\{16.4\text{K}, 65.5\text{K},
 131\text{K}, 1\text{M}\}$. The compute headline:
 \begin{quote}
@@ -251,7 +251,7 @@ activation, it learns to mimic an MLP sublayer's input-to-output
 mapping with a sparse hidden representation in between. The
 architecture
 \citep[\S 3.1, Eq.~3--5]{dunefsky2024-transcoders}\footnote{KB excerpt:
-\texttt{kb/excerpts/dunefsky2024-transcoders.md\#sec-3-1}.} is:
+\nolinkurl{kb/excerpts/dunefsky2024-transcoders.md#sec-3-1}.} is:
 \begin{align}
   \mathbf{z}_{\text{TC}}(\mathbf{x})
   &= \mathrm{ReLU}\!\left(\mathbf{W}_{\text{enc}}\,\mathbf{x} + \mathbf{b}_{\text{enc}}\right),
@@ -278,7 +278,7 @@ the \glsterm{sparse-autoencoder}{SAE}'s \glsterm{feature}{feature} dictionary is
 depends on the \emph{pre}-MLP input $\mathbf{x}$, and so its \glsterm{feature}{feature}
 dictionary is a decomposition of the MLP \emph{function}, not its
 particular output \citep[\S 1]{dunefsky2024-transcoders}\footnote{KB
-excerpt: \texttt{kb/excerpts/dunefsky2024-transcoders.md\#sec-1-comparison}.}.
+excerpt: \nolinkurl{kb/excerpts/dunefsky2024-transcoders.md#sec-1-comparison}.}.
 
 The methodological consequence \citep[\S 1]{dunefsky2024-transcoders}:
 the connection from a pre-MLP \glsterm{feature}{feature} $f_i$ (associated with decoder

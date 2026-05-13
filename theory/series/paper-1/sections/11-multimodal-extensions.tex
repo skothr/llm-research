@@ -30,7 +30,7 @@ width, and the \emph{\glsterm{llm}{LLM} body} that consumes them. The encoder is
 typically a CLIP-style or SigLIP-style ViT producing a sequence of
 $M$ patch tokens of dimension $d_V$; for a $336{\times}336$ image with
 $14{\times}14$ patches, $M{=}576$ and $d_V{=}1024$ in the canonical
-LLaVA setup\footnote{KB excerpt: \texttt{kb/excerpts/llava2023.md\#sec-4-1}}
+LLaVA setup\footnote{KB excerpt: \nolinkurl{kb/excerpts/llava2023.md#sec-4-1}}
 \citep{llava2023}. We write the encoder output and the projection
 generically as
 \begin{align}
@@ -70,7 +70,7 @@ output $v$ into a fixed-length set of $k$ latent tokens
 $\mathbf{V} \in \R^{k \times \mathsf{D}}$ (typically $k{=}64$),
 and \emph{gated \glsterm{cross-attention}{cross-attention} dense} blocks
 inserted between every few frozen \glsterm{llm}{LLM} blocks%
-\footnote{KB excerpt: \texttt{kb/excerpts/alayrac2022-flamingo.md\#sec-2-1}}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/alayrac2022-flamingo.md#sec-2-1}}.
 The inserted block has the form
 \begin{align}
 \mathbf{y} &= \mathbf{x} + \tanh(\alpha_{\text{xattn}}) \cdot \mathrm{XAttn}(\mathbf{x},\mathbf{V}), \label{eq:flamingo-xattn}\\
@@ -79,7 +79,7 @@ The inserted block has the form
 where $\mathbf{x}$ is the language \glsterm{hidden-state}{hidden state} at the insertion point,
 and $\alpha_{\text{xattn}}, \alpha_{\text{ffw}}$ are learnable scalars
 \emph{initialized to zero}\footnote{KB excerpt:
-\texttt{kb/excerpts/alayrac2022-flamingo.md\#sec-2-1-gated}}
+\nolinkurl{kb/excerpts/alayrac2022-flamingo.md#sec-2-1-gated}}
 \citep{alayrac2022-flamingo}. With $\tanh(0){=}0$ the inserted block
 is the identity at initialization: the conditioned model exactly
 reproduces the frozen base LM, and as training proceeds the gates open
@@ -105,13 +105,13 @@ H_v = W \cdot Z_v, \qquad W \in \R^{\mathsf{D} \times d_V}, \label{eq:llava}
 \end{equation}
 and concatenates the resulting visual tokens $H_v$ with the textual
 input as ordinary embedding-space vectors%
-\footnote{KB excerpt: \texttt{kb/excerpts/llava2023.md\#sec-4-1}, \glsterm{data-mixing-law}{Eq. 1}}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/llava2023.md#sec-4-1}, \glsterm{data-mixing-law}{Eq. 1}}.
 This is the entire architectural intervention. The \glsterm{llm}{LLM} body sees a
 sequence that begins with $n_v$ visual ``tokens'' and continues with
 text; its forward pass is identical to a unimodal \glsterm{llm}{LLM}'s.
 
 Training proceeds in two stages\footnote{KB excerpt:
-\texttt{kb/excerpts/llava2023.md\#sec-4-2}}. \emph{Stage 1: \glsterm{feature}{feature}
+\nolinkurl{kb/excerpts/llava2023.md#sec-4-2}}. \emph{Stage 1: \glsterm{feature}{feature}
 alignment}, where both the CLIP encoder $g$ and the \glsterm{llm}{LLM} body $f_\phi$
 are frozen and only $W$ trains on $595\text{K}$ filtered CC3M image-
 text pairs --- the projection learns to produce visual tokens that

@@ -12,7 +12,7 @@ model into an instruction-following assistant: supervised fine-tuning
 (\cref{sec:sft}), reward-model training, and policy optimization
 against the \glsterm{reward-model}{reward model} with a KL anchor to the SFT initialization
 \citep[\S 3]{ouyang2022-instructgpt}.\footnote{KB excerpt:
-\texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-3}.} The lineage
+\nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-3}.} The lineage
 runs from preference RL on Atari and locomotion
 \citep{christiano2017-pref-rl} through summarization-with-human-
 preferences \citep{stiennon2020-summarize} to the open-domain
@@ -94,7 +94,7 @@ yields the reward-model loss
 \label{eq:rlhf-rm}
 \end{equation}
 verbatim from \citet[\S 3]{ouyang2022-instructgpt}.\footnote{KB
-excerpt: \texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-3}.} The
+excerpt: \nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-3}.} The
 expectation runs over a dataset $\mathcal{D}_{\mathrm{RM}}$ of triples:
 prompt $x$, preferred completion $y_w$ (``win''), and dispreferred
 completion $y_l$ (``loss''). The log-sigmoid form is the standard
@@ -226,7 +226,7 @@ The InstructGPT paper's central empirical claim is that
 InstructGPT model is preferred over the $175$B-parameter GPT-3 base
 on user-submitted prompts, despite having $\sim\!100\times$ fewer
 \glsterm{parameters}{parameters}.\footnote{KB excerpt:
-\texttt{kb/excerpts/ouyang2022-instructgpt.md\#sec-4}.} The headline
+\nolinkurl{kb/excerpts/ouyang2022-instructgpt.md#sec-4}.} The headline
 is more than a single number: alongside it, InstructGPT models show
 improvements in truthfulness and reductions in toxic-output generation
 with minimal regressions on public NLP datasets when the \glsterm{ppo-ptx}{PPO-ptx}

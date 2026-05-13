@@ -41,9 +41,9 @@ discipline --- in particular EleutherAI's
 \texttt{\glsterm{lm-evaluation-harness}{lm-evaluation-harness}} \citep{lm-eval-harness}, the
 de-facto reference implementation for the academic-benchmark
 column of \cref{sec:knowledge-benchmarks}\footnote{KB excerpt:
-\texttt{kb/excerpts/lm-eval-harness.md\#sec-framing}.} ---
+\nolinkurl{kb/excerpts/lm-eval-harness.md#sec-framing}.} ---
 write a reported benchmark score as a sample from a distribution%
-\footnote{KB note: \texttt{kb/notes/evaluation/eval-methodology.md\#1-formal-framing-the-score-is-a-noisy-random-variable}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/eval-methodology.md#1-formal-framing}.}
 \begin{equation}
 \hat{S}(\theta, \mathcal{B}, \pi, \tau) \in [0, 1]
 \label{eq:score-rv}
@@ -86,7 +86,7 @@ which subsequent sections add structure.
 
 Three failure modes break the cross-paper, cross-lab comparability of
 $\hat{S}$, and they do so additively in expectation%
-\footnote{KB note: \texttt{kb/notes/evaluation/eval-methodology.md\#1-formal-framing-the-score-is-a-noisy-random-variable}.}.
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/eval-methodology.md#1-formal-framing}.}.
 
 \paragraph{Prompt-format sensitivity.} A single benchmark item can be
 presented many ways: \glsterm{loglikelihood-scoring}{loglikelihood scoring} on
@@ -257,7 +257,7 @@ is that single-axis benchmarks (accuracy alone) systematically miss
 the failure modes that determine deployment behavior, and that a
 benchmark instance should ship a metric \emph{bundle} rather than a
 single number%
-\footnote{KB excerpt: \texttt{kb/excerpts/liang2022-helm.md\#sec-metrics}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-metrics}.}.
 \glsterm{helm}{HELM} operationalizes this as a scenario-by-metric matrix: $7$ metrics
 $\times$ $16$ core scenarios, with measurements taken
 ``for each of $16$ core scenarios when possible ($87.5\%$ of the
@@ -292,7 +292,7 @@ $\theta$ on scenario $s$ produces a vector
 not a scalar. The scenario-by-metric matrix is the outer product of
 \eqref{eq:helm-metrics} with the $16$-scenario set, populated where
 the metric is well-defined for the scenario%
-\footnote{KB excerpt: \texttt{kb/excerpts/liang2022-helm.md\#sec-metrics}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-metrics}.}.
 
 The headline coverage finding is the methodological contribution:
 ``Before \glsterm{helm}{HELM}, models on average were evaluated on just $17.9\%$ of

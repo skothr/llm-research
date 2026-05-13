@@ -34,10 +34,10 @@ three methodological axes that this section names explicitly.
 
 \citet{meng2022-rome} fix the protocol as three forward
 passes\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2}.}, restated by
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2}.}, restated by
 \citet[\S 2.1]{zhang2023-apatching} as the now-standard
 recipe\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-2-1}.}. Fix a clean
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-2-1}.}. Fix a clean
 prompt $X_{\text{cl}}$ with target answer $r$ (e.g.,
 ``\textit{The Eiffel Tower is in}'' $\to$ ``\textit{Paris}'') and a
 corrupted prompt $X_{*}$ that changes the answer (e.g.,
@@ -66,7 +66,7 @@ or a subspace; see \S\ref{sec:patching-granularity}).
 The \emph{\glsterm{indirect-effect}{indirect effect}} of component $C$ on this prompt pair is the
 metric difference between the patched and corrupted runs
 \citep[\S 2]{meng2022-rome}\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2-effects}.}:
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2-effects}.}:
 \begin{equation}
   \mathrm{IE}_C(X_{\text{cl}}, X_{*}) \;:=\; m_{\text{pt}} \;-\; m_{*}.
   \label{eq:ie-definition}
@@ -116,7 +116,7 @@ the orthogonal complement unchanged --- the natural granularity for
 The metric $m$ in Eq.~\eqref{eq:ie-definition} is a free choice with
 real consequences. \citet[\S 2.1]{zhang2023-apatching} catalog three
 options\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-2-1-metrics}.}.
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-2-1-metrics}.}.
 Probability, $m^{\mathrm{P}} = \mathbb{P}(r)$, gives a unitless
 patching effect $\mathbb{P}_{\text{pt}}(r) - \mathbb{P}_{*}(r)$; it is
 the metric of \citet{meng2022-rome}. \glsterm{logit-difference}{Logit difference}, with $r'$ the
@@ -140,7 +140,7 @@ $D_{\mathrm{KL}}(\mathbb{P}_{\text{cl}} \,\|\, \mathbb{P}_{*}) -
 
 The methodological case for \glsterm{logit-difference}{logit difference} as the default is made by
 \citet[\S 4.1]{heimersheim2024-apatching-howto}\footnote{KB excerpt:
-\texttt{kb/excerpts/heimersheim2024.md\#sec-4-1}.}: it is a
+\nolinkurl{kb/excerpts/heimersheim2024.md#sec-4-1}.}: it is a
 ``mostly linear function of the \glsterm{residual-stream}{residual stream} (unlike
 probability-based metrics) which makes it easy to directly attribute
 \glsterm{logit-difference}{logit difference} to individual components,'' and it is ``a `softer'
@@ -148,7 +148,7 @@ metric, allowing us to see partial effects on the model even if they
 don't change the rank of the output tokens.''
 \citet[\S 4.2]{heimersheim2024-apatching-howto} catalog the failure
 modes of the alternatives\footnote{KB excerpt:
-\texttt{kb/excerpts/heimersheim2024.md\#sec-4-2}.}: probability is
+\nolinkurl{kb/excerpts/heimersheim2024.md#sec-4-2}.}: probability is
 ``non-linear, in the sense that [it] track[s] the \glsterm{logits}{logits} exponentially.
 For example, a model component adding $+2$ to a given logit can create
 a $1$ or $40$ percentage point probability increase, just depending on
@@ -159,7 +159,7 @@ input to a discrete metric.'' The single most important consequence of
 choosing probability over \glsterm{logit-difference}{logit difference} is invisibility of negative
 components: the IOI Negative Name Mover heads
 \citep[\S 3]{wang2022-ioi}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-3-\glsterm{circuit}{circuit}}.} push \emph{against}
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-3-circuit}.} push \emph{against}
 the correct answer, and a probability metric near $\mathbb{P}(r) \in
 \{0, 1\}$ saturates exactly the regime in which their effect is
 detectable. \glsterm{logit-difference}{Logit difference} does not.
@@ -170,7 +170,7 @@ detectable. \glsterm{logit-difference}{Logit difference} does not.
 The second methodological axis is how $X_{*}$ is generated from
 $X_{\text{cl}}$. \citet[\S 2.1]{zhang2023-apatching} fix two
 canonical choices\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-2-1-corruption}.}.
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-2-1-corruption}.}.
 \textbf{\glsterm{gaussian-noising}{Gaussian Noising}} (GN), used by \citet{meng2022-rome}, ``adds
 Gaussian noise $\mathcal{N}(0, \nu)$ to the embeddings of certain \glsterm{key}{key}
 tokens, where $\nu$ is 3 times the standard deviation of the token
@@ -188,7 +188,7 @@ inconsistent localization and \glsterm{circuit}{circuit} discovery outcomes (Sec
 3.1)'' on the same task. The conjectured mechanism: ``GN breaks
 model's internal mechanisms by putting it off
 distribution''\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-findings}.} ---
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-findings}.} ---
 in-distribution prompts that the model knows how to process produce
 clean signals about which components matter; out-of-distribution noise
 produces signals about which components fail under noise, which need
@@ -207,7 +207,7 @@ for a new task'' --- is the field's current default.
 A practical refinement, due to
 \citet[\S 2.3]{heimersheim2024-apatching-howto}, is the
 \emph{denoising vs.\ noising} distinction\footnote{KB excerpt:
-\texttt{kb/excerpts/heimersheim2024.md\#sec-2-3}.}. The protocol
+\nolinkurl{kb/excerpts/heimersheim2024.md#sec-2-3}.}. The protocol
 above is \emph{denoising} (clean $\to$ corrupted): the patched run
 inserts a clean activation into a corrupted run and asks
 \emph{which patches were sufficient to restore the behavior}. The
@@ -275,7 +275,7 @@ including effects mediated by downstream components. Circuits with
 multiple parallel paths --- which is most circuits --- need a finer
 estimate. \citet[\S 3.1]{wang2022-ioi}'s \emph{path
 patching}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-3-1-path-patching}.} is the
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-3-1-path-patching}.} is the
 partial-derivative analogue: it isolates the direct effect of a head
 $h$ on a downstream component $R$ by patching only along the residual
 and MLP paths from $h$ to $R$, holding indirect routes through other
@@ -361,7 +361,7 @@ should be flagged as such. Hard claims about attribution-patching's
 \emph{accuracy} relative to full patching back to
 \citet[\S 1]{zhang2023-apatching}, who note the approximation
 ``is known to fail in non-linear regions''\footnote{KB excerpt:
-\texttt{kb/excerpts/zhang2023-apatching.md\#sec-1}.} ---
+\nolinkurl{kb/excerpts/zhang2023-apatching.md#sec-1}.} ---
 attention-\glsterm{softmax}{softmax} \glsterm{saturation}{saturation} and \glsterm{relu}{ReLU}/GeLU dead zones being the
 canonical failure cases.
 \end{forumsignal}
@@ -414,7 +414,7 @@ Three pitfalls deserve naming, lifted from
 false-positives}: because \glsterm{logit-difference}{logit difference} is a difference, ``it may
 be driven by either getting better at the correct answer or worse at
 the incorrect answer''\footnote{KB excerpt:
-\texttt{kb/excerpts/heimersheim2024.md\#sec-4-2}.} --- a patch that
+\nolinkurl{kb/excerpts/heimersheim2024.md#sec-4-2}.} --- a patch that
 indiscriminately damages the model toward uniform output reduces the
 incorrect-answer logit and inflates the apparent patching effect,
 without localizing anything specific. The fix is sanity-checking

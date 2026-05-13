@@ -32,7 +32,7 @@ trade-off that the over-training strategy collides with.
 
 The compute approximation we will use throughout is the
 \citet[\S 2.1, eq.\ 2.1]{kaplan2020}\footnote{KB excerpt:
-\texttt{kb/excerpts/kaplan2020.md\#sec-2-1-definitions}.} per-token
+\nolinkurl{kb/excerpts/kaplan2020.md#sec-2-1-definitions}.} per-token
 forward FLOP count $C_{\text{forward}} \approx 2N$, with the backward
 pass roughly twice the forward, summing to
 \begin{equation}
@@ -57,7 +57,7 @@ when the other two are not the bottleneck.
 
 \paragraph{The three single-axis laws.}
 Verbatim from \citet[\S 1.2, eqs.\ 1.1--1.3]{kaplan2020}\footnote{KB
-excerpt: \texttt{kb/excerpts/kaplan2020.md\#sec-1-2-equations}.}:
+excerpt: \nolinkurl{kb/excerpts/kaplan2020.md#sec-1-2-equations}.}:
 \begin{align}
 L(N) &\;=\; \left(\frac{N_c}{N}\right)^{\alpha_N},
    & \alpha_N \approx 0.076,\;\; N_c \approx 8.8 \times 10^{13}, \tag{1.1} \\
@@ -68,7 +68,7 @@ L(C_{\min}) &\;=\; \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}},
 \end{align}
 Here $N$ counts \emph{non-embedding} \glsterm{parameters}{parameters}
 \citep[\S 1.3]{kaplan2020},\footnote{KB excerpt:
-\texttt{kb/excerpts/kaplan2020.md\#sec-1-3-notation}.}
+\nolinkurl{kb/excerpts/kaplan2020.md#sec-1-3-notation}.}
 $D$ is tokens, $C_{\min}$ is the compute that would be expended at a
 batch much smaller than the critical-batch power-law $B_{\text{crit}}(L)$
 \citep[\S 5.1]{kaplan2020}. The exponents are small: $\alpha_N \approx
@@ -78,7 +78,7 @@ $2^{-0.076} \approx 0.949$, i.e.\ $\approx 5\%$ relative.
 \paragraph{The joint $L(N, D)$ form.}
 The two single-axis laws are unified into a single equation
 \citep[\S 1.2, eq.\ 1.5]{kaplan2020}\footnote{KB excerpt:
-\texttt{kb/excerpts/kaplan2020.md\#sec-1-2-joint}.}:
+\nolinkurl{kb/excerpts/kaplan2020.md#sec-1-2-joint}.}:
 \begin{equation}
 L(N, D) \;=\; \left[\left(\frac{N_c}{N}\right)^{\alpha_N/\alpha_D} + \frac{D_c}{D}\right]^{\alpha_D}.
 \label{eq:kaplan-joint}
@@ -118,7 +118,7 @@ more steps --- almost no extra training time, dramatically more
 literally: $175\text{B}$ \glsterm{parameters}{parameters} trained on $\sim 300\text{B}$
 tokens, tokens-per-parameter $\approx 1.7$. Findings 1--3 of
 \citet[\S 1.1]{kaplan2020}\footnote{KB excerpt:
-\texttt{kb/excerpts/kaplan2020.md\#sec-1-1-bullets}.} (performance
+\nolinkurl{kb/excerpts/kaplan2020.md#sec-1-1-bullets}.} (performance
 depends on scale not shape; smooth power laws over six orders of
 magnitude; universality of overfitting) are still considered correct.
 Finding~5 (``train very large, stop short of convergence'') is the one
@@ -132,7 +132,7 @@ methodological change: for each parameter count $N$, they trained $4$
 models with cosine LR schedules whose horizon \emph{matched the actual
 training-token count}, varying that horizon by a factor of $16$
 \citep[\S 3.1]{hoffmann2022-chinchilla}.\footnote{KB excerpt:
-\texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-3-1}.} They then
+\nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-3-1}.} They then
 attacked the compute-optimal allocation problem
 \begin{equation}
 \min_{N, D} L(N, D) \quad \text{subject to} \quad 6 N D = C
@@ -142,8 +142,8 @@ three independent ways and found the answers agreed within bootstrap
 error.
 
 \paragraph{Approach 1 --- minimum over training curves.}
-For each $N \in \{75\text{M}, 250\text{M}, 500\text{M}, 1\text{B},
-2.5\text{B}, 5\text{B}, 10\text{B}\}$, fit $4$ runs at $4$ different
+For each $N$ in $\{$75M, 250M, 500M, 1B, 2.5B, 5B, 10B$\}$,
+fit $4$ runs at $4$ different
 horizons; at $1500$ log-spaced FLOP values, find the $(N, D)$ pair
 with lowest loss. Fit power laws $N_{opt} \propto C^a$,
 $D_{opt} \propto C^b$, obtaining $a = 0.50$, $b = 0.50$
@@ -154,12 +154,12 @@ At $9$ fixed FLOP budgets $C \in [6 \times 10^{18},\, 3 \times 10^{21}]$,
 sweep $N$ and read off the loss-vs-$N$ parabola minimum to get
 $N_{opt}(C)$. Fit $a = 0.49$, $b = 0.51$
 \citep[\S 3.2]{hoffmann2022-chinchilla}.\footnote{KB excerpt:
-\texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-3-2}.}
+\nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-3-2}.}
 
 \paragraph{Approach 3 --- parametric loss fit.}
 Pose a closed-form risk decomposition for the loss
 \citep[\S 3.3, eq.\ 2]{hoffmann2022-chinchilla}\footnote{KB excerpt:
-\texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-3-3}.}:
+\nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-3-3}.}:
 \begin{equation}
 \hat{L}(N, D) \;\triangleq\; E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}},
 \label{eq:cc-paraloss}
@@ -202,7 +202,7 @@ $a = 0.46$, $b = 0.54$ \citep[\S 3.3]{hoffmann2022-chinchilla}.
 \paragraph{All three approaches agree, and disagree with Kaplan.}
 Table~\ref{tab:cc-table-2} summarizes
 \citep[\S 3, Table 2]{hoffmann2022-chinchilla}:\footnote{KB excerpt:
-\texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-3-table-2}.}
+\nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-3-table-2}.}
 
 \begin{table}[h]
 \centering
@@ -237,20 +237,20 @@ Same depth ($L = 80$); half the width ($d_{\text{model}}: 16384 \to
 8192$); doubled max LR; halved batch. Chinchilla beats Gopher on
 every Pile subset, +0.6\,pp average across BIG-bench, and lifts \glsterm{mmlu}{MMLU}
 from 60.0\% to 67.5\% \citep[\S 4.2]{hoffmann2022-chinchilla}.\footnote{KB
-excerpt: \texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-4-2}.}
+excerpt: \nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-4-2}.}
 The headline rule of thumb falls out of \cref{eq:cc-frontier}'s Approach-1
 projection: tokens-per-parameter $\approx 20$ at compute optimum, with
 a slow drift toward more data at very large scale --- $20.0$ at $400$M,
 $20.2$ at $1$B, $21.1$ at $175$B, $21.2$ at $1$T \citep[\S 3, Table
 3]{hoffmann2022-chinchilla}.\footnote{KB excerpt:
-\texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-3-table-3}.}
+\nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-3-table-3}.}
 
 \subsection{Why Kaplan over-allocated to parameters --- the LR-horizon bug}
 \label{sec:scaling-lrhorizon}
 
 The methodological core of \citeauthor{hoffmann2022-chinchilla}'s
 correction is one sentence \citep[\S 2]{hoffmann2022-chinchilla}\footnote{KB
-excerpt: \texttt{kb/excerpts/hoffmann2022-chinchilla.md\#sec-2-disagree-kaplan}.}:
+excerpt: \nolinkurl{kb/excerpts/hoffmann2022-chinchilla.md#sec-2-disagree-kaplan}.}:
 
 \begin{quote}
 For a fixed learning rate \glsterm{cosine-schedule}{cosine schedule} to 130B tokens, the
@@ -376,7 +376,7 @@ model, then copy them zero-shot to the full-scale target. The headline
 demonstration: tuning at $40\text{M}$ proxy scale and transferring to
 GPT-3 6.7B with total tuning cost equal to $7\%$ of one pretraining
 run \citep[abstract]{yang2022-mup}.\footnote{KB excerpt:
-\texttt{kb/excerpts/yang2022-mup.md\#abstract}.}
+\nolinkurl{kb/excerpts/yang2022-mup.md#abstract}.}
 
 \paragraph{The \textmu P scaling rules.}
 Each linear layer falls into one of three categories by width
@@ -386,7 +386,7 @@ input dim, finite output dim --- e.g.\ the unembedding head); and
 \emph{hidden weights} (infinite both --- e.g.\ attention QKV/O,
 \glsterm{ffn}{FFN}). \textmu P is exactly the per-category rescaling
 \citep[\S 4, Table 3]{yang2022-mup}\footnote{KB excerpt:
-\texttt{kb/excerpts/yang2022-mup.md\#sec-4-table-3}.}:
+\nolinkurl{kb/excerpts/yang2022-mup.md#sec-4-table-3}.}:
 
 \begin{table}[h]
 \centering
@@ -412,7 +412,7 @@ The effective per-weight LR is $\eta_W = \eta \cdot
 $\eta$ is the dimensionless master LR transferred from the proxy.
 For Transformers, \textmu P adds one structural change
 \citep[\S 4, Definition 4.1]{yang2022-mup}\footnote{KB excerpt:
-\texttt{kb/excerpts/yang2022-mup.md\#sec-4-definition-4-1}.}:
+\nolinkurl{kb/excerpts/yang2022-mup.md#sec-4-definition-4-1}.}:
 
 \begin{definition}[\textmu P for \glsterm{transformer}{Transformer}; \citealp{yang2022-mup}]
 The Maximal Update Parametrization (\textmu P) for a \glsterm{transformer}{Transformer} is
@@ -428,7 +428,7 @@ $1/\sqrt{n}$ factor in the CLT is the right scaling: $1/\sqrt{n}$ is
 the unique rescaling for which $\frac{1}{\sqrt{n}}(x_1 + \cdots + x_n)
 \to \mathcal{N}(0, 1)$ has a non-trivial limit
 \citep[\S 2]{yang2022-mup}.\footnote{KB excerpt:
-\texttt{kb/excerpts/yang2022-mup.md\#sec-2-clt}.} Width plays the role
+\nolinkurl{kb/excerpts/yang2022-mup.md#sec-2-clt}.} Width plays the role
 of $n$. The \textmu P assignment of $(\text{init}, \text{LR},
 \text{multiplier})$ per layer category is the unique stable choice
 that preserves $\Theta(1)$-magnitude weight updates --- ``\glsterm{feature}{feature}
@@ -446,7 +446,7 @@ correct \emph{during training}.
 
 \paragraph{What transfers.}
 \citet[\S 6]{yang2022-mup}\footnote{KB excerpt:
-\texttt{kb/excerpts/yang2022-mup.md\#sec-6-what-transfers}.} report
+\nolinkurl{kb/excerpts/yang2022-mup.md#sec-6-what-transfers}.} report
 that across width, master LR, Adam betas, LR schedule shape, per-layer
 init multipliers, and most parameter multipliers transfer; across batch
 size, sequence length, and training-step count they transfer

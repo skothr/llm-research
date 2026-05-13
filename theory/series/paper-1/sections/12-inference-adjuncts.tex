@@ -29,7 +29,7 @@ projection of every prior token at every layer. For an OPT-13B request
 of 2048 tokens the \glsterm{kv-cache}{KV cache} is $\approx 1.6$~GB, with the per-token
 cost $2 \cdot L \cdot n_h \cdot d_h \cdot b$ bytes where $b$ is the
 element width \citep[\S 3]{kwon2023}.\footnote{KB excerpt:
-\texttt{kb/excerpts/kwon2023.md\#sec-3}.} Pre-2023 serving stacks
+\nolinkurl{kb/excerpts/kwon2023.md#sec-3}.} Pre-2023 serving stacks
 (FasterTransformer, Orca) pre-allocated each request a contiguous slab
 sized to its \emph{maximum} sequence length, which produced three
 sources of waste \citep[\S 3]{kwon2023}: \emph{reservation} (slots
@@ -44,7 +44,7 @@ $20.4$--$38.2$\% of allocated KV memory onto actual token state
 sequence's \glsterm{kv-cache}{KV cache} into fixed-size \emph{KV blocks} of $B$ tokens
 (typical $B = 16$) and decomposing the attention sum block-wise
 \citep[\S 4.1, Eq.~4]{kwon2023}\footnote{KB excerpt:
-\texttt{kb/excerpts/kwon2023.md\#sec-4-1}.}:
+\nolinkurl{kb/excerpts/kwon2023.md#sec-4-1}.}:
 \begin{equation}
 A_{ij} = \frac{\exp(q_i^\top K_j / \sqrt{d})}{\sum_{t=1}^{\lceil i/B \rceil} \exp(q_i^\top K_t \mathbf{1} / \sqrt{d})}, \qquad
 o_i = \sum_{j=1}^{\lceil i/B \rceil} V_j A_{ij}^\top,
@@ -59,7 +59,7 @@ contribution is layout, not arithmetic.
 A \emph{block table} per request maps logical KV blocks to physical KV
 blocks, exactly the role of an OS page table
 \citep[\S 4.2]{kwon2023}.\footnote{KB excerpt:
-\texttt{kb/excerpts/kwon2023.md\#sec-4-2}.} Three OS idioms transfer
+\nolinkurl{kb/excerpts/kwon2023.md#sec-4-2}.} Three OS idioms transfer
 unchanged: allocate-on-demand (no maximum-length pre-reservation),
 copy-on-write at the block boundary for parallel sampling and beam
 search \citep[\S 4.4]{kwon2023}, and swap-or-recompute for preemption
@@ -83,7 +83,7 @@ maximum-length reservation that produced the $\sim 70$\% waste.
 The architectural pressure runs the other way too: \glsterm{pagedattention}{PagedAttention}'s
 block-decomposed kernel is what enables the cross-request prefix sharing
 of \glsterm{radixattention}{RadixAttention} \citep[\S 3]{zheng2024-sglang}\footnote{KB excerpt:
-\texttt{kb/excerpts/zheng2024-sglang.md\#sec-3}.}, the
+\nolinkurl{kb/excerpts/zheng2024-sglang.md#sec-3}.}, the
 training-time KV compression of \glsterm{mqa}{MQA} / \glsterm{gqa}{GQA} / \glsterm{multi-head-latent-attention}{MLA} in
 \cref{sec:kv-sharing} (which act on the per-token block size), and the
 KV-quantization regimes below (which change the element width $b$ but
@@ -105,7 +105,7 @@ underlying every method below is
 \end{equation}
 with $N$-bit signed levels and step size $\Delta$
 \citep[\S 2, Eq.~1]{xiao2023-smoothquant}.\footnote{KB excerpt:
-\texttt{kb/excerpts/xiao2023-smoothquant.md\#sec-2}.} Hardware
+\nolinkurl{kb/excerpts/xiao2023-smoothquant.md#sec-2}.} Hardware
 constrains the granularity: tensor-core GEMMs apply scale factors only
 along outer dimensions (token $T$ or output channel $C_o$), never along
 the inner contraction dimension $C_i$
@@ -120,7 +120,7 @@ fixed channels across tokens \citep[\S 3]{xiao2023-smoothquant}. Naive
 per-tensor INT8 catastrophically degrades quality (OPT-175B accuracy
 $71.6\%$ FP16 $\to$ $32.3\%$ per-tensor INT8
 \citep[\S 5.2, Table~1]{xiao2023-smoothquant}).\footnote{KB excerpt:
-\texttt{kb/excerpts/xiao2023-smoothquant.md\#sec-5-2}.}
+\nolinkurl{kb/excerpts/xiao2023-smoothquant.md#sec-5-2}.}
 \citet{xiao2023-smoothquant} resolves this with a \emph{migration}
 trick that is mathematically a free rescaling
 \citep[\S 4, Eq.~3]{xiao2023-smoothquant}:
@@ -148,7 +148,7 @@ OPT-175B \citep[\S 5.2, Table~1]{xiao2023-smoothquant}).
 \paragraph{INT4 (W4A16) --- GPTQ.}
 For weight-only INT4, \citet{frantar2022} adapt the layer-wise
 reconstruction objective \citep[\S 3, Eq.~1]{frantar2022}\footnote{KB
-excerpt: \texttt{kb/excerpts/frantar2022.md\#sec-3-layerwise}.}
+excerpt: \nolinkurl{kb/excerpts/frantar2022.md#sec-3-layerwise}.}
 \begin{equation}
 \operatorname*{argmin}_{\widehat{W}} \, \|W X - \widehat{W} X\|_2^2
 \label{eq:gptq-objective}
@@ -158,12 +158,12 @@ along three axes: arbitrary fixed column order rather than per-row
 greedy ordering, lazy batched updates over $B = 128$ columns, and a
 Cholesky reformulation of the inverse-Hessian update with damping
 $\lambda \approx 1\%$ of the diagonal \citep[\S 4]{frantar2022}.\footnote{KB
-excerpt: \texttt{kb/excerpts/frantar2022.md\#sec-4-algorithm}.} The
+excerpt: \nolinkurl{kb/excerpts/frantar2022.md#sec-4-algorithm}.} The
 joint effect: OPT-175B and BLOOM-176B at 3--4 bits/weight track FP16
 \glsterm{perplexity}{perplexity}, where round-to-nearest at the same precision diverges
 ($110$ and $571$ respectively
 \citep[\S 1, Fig.~1]{frantar2022}).\footnote{KB excerpt:
-\texttt{kb/excerpts/frantar2022.md\#sec-1-figure-1}.} \glsterm{gptq}{GPTQ} is the
+\nolinkurl{kb/excerpts/frantar2022.md#sec-1-figure-1}.} \glsterm{gptq}{GPTQ} is the
 canonical accurate one-shot weight-only PTQ method at the 100B+ scale
 and is the reference against which \glsterm{awq}{AWQ} and the GGUF Q$k$\_$\!$M family
 are still benchmarked.
@@ -194,7 +194,7 @@ the closest analogue (\glsterm{fp8}{FP8} production training) and flags the gap.
 trained model, train from scratch with ternary weights. Every weight
 is constrained to $\{-1, 0, +1\}$ ($\log_2 3 \approx 1.585$~bits) via
 an absmean RoundClip \citep[\S 2, Eq.~1--3]{ma2024-bitnet}\footnote{KB
-excerpt: \texttt{kb/excerpts/ma2024-bitnet.md\#sec-2}.}:
+excerpt: \nolinkurl{kb/excerpts/ma2024-bitnet.md#sec-2}.}:
 \begin{equation}
 \widetilde{W} = \operatorname{RoundClip}\!\left(\frac{W}{\gamma + \epsilon}, -1, 1\right),
 \qquad
@@ -209,7 +209,7 @@ unchanged \citep[\S 2]{ma2024-bitnet}. At 3B \glsterm{parameters}{parameters},
 BitNet b1.58 matches FP16 LLaMA \glsterm{perplexity}{perplexity} ($9.91$ vs.\ $10.04$) at
 $2.71\times$ lower latency and $3.55\times$ lower memory
 \citep[\S 3, Table~1]{ma2024-bitnet}.\footnote{KB excerpt:
-\texttt{kb/excerpts/ma2024-bitnet.md\#sec-3-table-1}.}
+\nolinkurl{kb/excerpts/ma2024-bitnet.md#sec-3-table-1}.}
 
 \begin{intuition}
 Each regime operates on a different part of the inference graph.
@@ -269,7 +269,7 @@ The standard FSM operates over bytes; the contribution is a
 precomputed \emph{index} mapping each FSM state $s$ to the set of
 \glsterm{vocabulary}{vocabulary} tokens whose byte sequence keeps the FSM in a valid path
 \citep[\S 3]{willard2023-outlines}\footnote{KB excerpt:
-\texttt{kb/excerpts/willard2023-outlines.md\#sec-3}.}:
+\nolinkurl{kb/excerpts/willard2023-outlines.md#sec-3}.}:
 \begin{equation}
 \mathcal{V}_{\text{allowed}}(s) = \{v \in \mathcal{V} : \mathrm{FSM} \text{ accepts the byte sequence of } v \text{ starting from } s\}.
 \label{eq:outlines-index}
@@ -284,7 +284,7 @@ stack-summary stays small enough to keep the index practical.
 exploits a property of typical schemas: most \glsterm{vocabulary}{vocabulary} tokens'
 allowed/disallowed status depends only on the current pushdown-automaton
 state, not on stack contents \citep[\S 3]{xgrammar2024}.\footnote{KB
-excerpt: \texttt{kb/excerpts/xgrammar2024.md\#sec-3}.} \glsterm{context-independent-context-dependent-vocabulary-split}{XGrammar}
+excerpt: \nolinkurl{kb/excerpts/xgrammar2024.md#sec-3}.} \glsterm{context-independent-context-dependent-vocabulary-split}{XGrammar}
 precomputes a per-state \emph{bitmask} over $\mathcal{V}$ for the
 context-independent fraction (typically $\sim 99\%$ on JSON schemas);
 the small context-dependent set ($\sim 1\%$, e.g.\ closing brackets

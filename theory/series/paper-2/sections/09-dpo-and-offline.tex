@@ -18,7 +18,7 @@ Bradley--Terry preference probability \cref{eq:rlhf-rm} cancels the
 intractable partition function and yields a closed-form classification
 loss on the same preference data the \glsterm{reward-model}{reward model} of
 \cref{sec:rlhf-rm} was trained on \citep[\S 4]{rafailov2023-dpo}.\footnote{KB
-excerpt: \texttt{kb/excerpts/rafailov2023-dpo.md\#sec-4}.} The thesis
+excerpt: \nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4}.} The thesis
 of this section is that this single algebraic move converts post-
 training from a PPO-class engineering problem (four model copies, three-
 phase rollout/score/optimize, on-policy sampling) into a
@@ -47,7 +47,7 @@ admits the analytic optimum
 with $Z(x) = \sum_y \pi^{\mathrm{ref}}(y \mid x) \exp(r(x,y)/\beta)$ ---
 a re-weighting of the reference distribution by an exponential of the
 reward \citep[\S 4, Eq.~4]{rafailov2023-dpo}.\footnote{KB excerpt:
-\texttt{kb/excerpts/rafailov2023-dpo.md\#sec-4}.} \citet{rafailov2023-dpo}'s
+\nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4}.} \citet{rafailov2023-dpo}'s
 move is to invert this expression for $r$. Taking logarithms of
 \cref{eq:dpo-rl-optimum} and rearranging,
 \begin{equation}
@@ -81,7 +81,7 @@ intractable normalizer is gone.
 Maximum-likelihood on a preference dataset
 $\mathcal{D} = \{(x_i, y_w^i, y_l^i)\}_{i=1}^N$ then yields the \glsterm{dpo}{DPO}
 loss \citep[\S 4, Eq.~7]{rafailov2023-dpo}:\footnote{KB excerpt:
-\texttt{kb/excerpts/rafailov2023-dpo.md\#sec-4-loss}.}
+\nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4-loss}.}
 \begin{equation}
 \mathcal{L}_{\mathrm{DPO}}(\pi_\theta;\, \pi^{\mathrm{ref}})
   = -\, \E_{(x, y_w, y_l) \sim \mathcal{D}}
@@ -118,7 +118,7 @@ gradient steps of a classification loss on a fixed preference dataset.
 
 \paragraph{The DPO gradient.} Differentiating
 \cref{eq:dpo-loss}\footnote{KB excerpt:
-\texttt{kb/excerpts/rafailov2023-dpo.md\#sec-4-gradient}.} gives
+\nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4-gradient}.} gives
 \citep[\S 4]{rafailov2023-dpo}
 \begin{equation}
 \nabla_\theta \mathcal{L}_{\mathrm{DPO}}
@@ -252,19 +252,19 @@ load-bearing organizing table.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lcccc}
+\begin{tabularx}{\textwidth}{lXccc}
 \toprule
-Method & Reference & Reward form & Length-normalize & Loss shape \\
+Method & Reward form & Ref.\ policy & Len-norm & Loss shape \\
 \midrule
-PPO-\glsterm{rlhf}{RLHF} & $\pi^{\mathrm{SFT}}$ & learned $r_\phi$ & no & on-policy clipped surrogate \\
-\glsterm{dpo}{DPO} & $\pi^{\mathrm{ref}}$ frozen & $\beta \log \pi_\theta / \pi^{\mathrm{ref}}$ & no & log-sigmoid \\
-\glsterm{ipo}{IPO} & $\pi^{\mathrm{ref}}$ frozen & same as \glsterm{dpo}{DPO} & no & squared-gap \\
-\glsterm{kto}{KTO} & $\pi^{\mathrm{ref}}$ frozen & prospect-theory utility & no & asymmetric per-rating \\
-\glsterm{orpo}{ORPO} & none & SFT loss + log-odds-ratio & no & combined SFT + OR \\
-\glsterm{simpo}{SimPO} & none & $(\beta/|y|) \log \pi_\theta(y \mid x)$ & yes & log-sigmoid + margin $\gamma$ \\
-CPO & none & policy log-prob + SFT regularizer & no & log-sigmoid + SFT \\
+PPO-\glsterm{rlhf}{RLHF} & learned $r_\phi$ & $\pi^{\mathrm{SFT}}$ & no & on-policy clipped surrogate \\
+\glsterm{dpo}{DPO} & $\beta \log \pi_\theta / \pi^{\mathrm{ref}}$ & $\pi^{\mathrm{ref}}$ frozen & no & log-sigmoid \\
+\glsterm{ipo}{IPO} & same as \glsterm{dpo}{DPO} & $\pi^{\mathrm{ref}}$ frozen & no & squared-gap \\
+\glsterm{kto}{KTO} & prospect-theory utility & $\pi^{\mathrm{ref}}$ frozen & no & asymmetric per-rating \\
+\glsterm{orpo}{ORPO} & SFT loss + log-odds-ratio & none & no & combined SFT + OR \\
+\glsterm{simpo}{SimPO} & $(\beta/|y|) \log \pi_\theta(y \mid x)$ & none & yes & log-sigmoid + margin $\gamma$ \\
+CPO & policy log-prob + SFT regularizer & none & no & log-sigmoid + SFT \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Offline preference variant family, organized by reference
 dependence (anchored vs.\ reference-free) and the implicit-reward form.
 PPO-RLHF row from \cref{sec:rlhf}; DPO row from
@@ -274,8 +274,8 @@ CPO entries summarize the canonical statement of each variant; see
 \cref{sec:dpo-variants} for citations.}
 \label{tab:dpo-variants}
 \end{table}
-\footnotetext{KB excerpts: \texttt{kb/excerpts/rafailov2023-dpo.md\#sec-4-loss},
-\texttt{kb/excerpts/meng2024-simpo.md\#sec-3}.}
+\footnotetext{KB excerpts: \nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4-loss},
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-3}.}
 
 \paragraph{IPO --- squared-gap loss.} The \glsterm{dpo}{DPO} log-sigmoid loss has a
 known overconfidence pathology: when one preference is clearly
@@ -334,7 +334,7 @@ optimum that may or may not match.
 \paragraph{SimPO --- reference-free, length-normalized.} \glsterm{simpo}{SimPO} drops
 the reference and divides the \glsterm{implicit-reward}{implicit reward} by sequence length
 \citep[\S 3]{meng2024-simpo}:\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2024-simpo.md\#sec-3}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-3}.}
 \begin{equation}
 r_{\mathrm{SimPO}}(x, y)
   \;=\; \frac{\beta}{|y|} \log \pi_\theta(y \mid x)
@@ -360,7 +360,7 @@ response must beat the rejected one by at least $\gamma$ in implicit
 reward, not just by an arbitrary positive amount. \citet[\S 4]{meng2024-simpo}
 report \glsterm{simpo}{SimPO} outperforming \glsterm{dpo}{DPO} substantially on length-controlled
 benchmarks (AlpacaEval~2, Arena-Hard).\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2024-simpo.md\#sec-4-headline}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-4-headline}.}
 
 \paragraph{CPO --- policy log-prob with SFT regularizer.} CPO drops the
 reference (like \glsterm{simpo}{SimPO} and \glsterm{orpo}{ORPO}) and adds an SFT regularizer on the
@@ -416,7 +416,7 @@ length-invariant in expectation. \citet[\S 4.2]{meng2024-simpo} report
 the length-normalization ablation as the dominant single contributor to
 \glsterm{simpo}{SimPO}'s gain over \glsterm{dpo}{DPO} on length-controlled
 AlpacaEval~2.\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2024-simpo.md\#sec-4-headline}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-4-headline}.}
 
 \begin{intuition}
 \glsterm{simpo}{SimPO}'s length-normalization is to \glsterm{dpo}{DPO}'s \glsterm{implicit-reward}{implicit reward} what

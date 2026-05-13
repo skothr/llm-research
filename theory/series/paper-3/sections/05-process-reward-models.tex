@@ -15,7 +15,7 @@ guide further computation. Its canonical artefact is the
 \textbf{process \glsterm{reward-model}{reward model} (\glsterm{process-reward-model}{PRM})} — a function that scores each step
 of a \glsterm{chain-of-thought}{chain-of-thought} trace
 \citep[\S 2.2]{lightman2023-prm800k}.\footnote{KB excerpt:
-\texttt{kb/excerpts/lightman2023-prm800k.md\#sec-2-2}.} PRMs were
+\nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-2-2}.} PRMs were
 introduced by \citet{lightman2023-prm800k} as the contrast to outcome
 reward models (ORMs), which score only the final answer; the headline
 finding of that paper — process supervision substantially outperforms
@@ -35,7 +35,7 @@ Let $x$ denote a problem and $z = (s_1, s_2, \ldots, s_T)$ a reasoning
 trace decomposed into $T$ steps, with each $s_t$ a contiguous span of
 trace tokens (a sentence, an equation line, a paragraph). A
 \textbf{process \glsterm{reward-model}{reward model}} is a function%
-\footnote{KB note: \texttt{kb/notes/reasoning/process-supervision.md\#1.2}.}
+\footnote{KB note: \nolinkurl{kb/notes/reasoning/process-supervision.md#1.2}.}
 \begin{equation}
   R^P_\phi : \bigl(x,\; s_1, \ldots, s_t\bigr) \;\longmapsto\; r_t \in [0, 1],
   \label{eq:prm-signature}
@@ -71,7 +71,7 @@ treats steps as conditionally-independent multiplicands; the last-step
 reading scores only the final state. \citet[\S 4.2]{lightman2023-prm800k}
 ablate all three on \glsterm{prm800k}{PRM800K}-grade verifiers and find
 \textbf{min-aggregation} the strongest;\footnote{KB excerpt:
-\texttt{kb/excerpts/lightman2023-prm800k.md\#sec-4-2}.} we return to
+\nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-4-2}.} we return to
 this finding in \cref{sec:prm-prm800k}.
 
 \begin{intuition}
@@ -92,7 +92,7 @@ entire $10^3$--$10^4$-token trace.
 \citet{lightman2023-prm800k} construct \textbf{\glsterm{prm800k}{PRM800K}}, a dataset of
 $\approx 800{,}000$ human step-correctness labels on GPT-4-generated
 solutions to MATH problems \citep[\S 3]{lightman2023-prm800k}.\footnote{KB
-excerpt: \texttt{kb/excerpts/lightman2023-prm800k.md\#sec-3}.} The
+excerpt: \nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-3}.} The
 construction protocol: a generator (a GPT-4 variant) emits several
 candidate solutions per problem; human annotators label each step as
 positive, negative, or neutral; the dataset is released openly. The
@@ -103,7 +103,7 @@ EDU-\glsterm{process-reward-model}{PRM}) benchmark.
 The headline experiment fixes $N$ across two reranking strategies and
 measures best-of-$N$ accuracy on MATH test
 \citep[\S 4]{lightman2023-prm800k}:\footnote{KB excerpt:
-\texttt{kb/excerpts/lightman2023-prm800k.md\#sec-4}.}
+\nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-4}.}
 \begin{align}
   \hat y_\text{ORM} \;&=\; y^{(n^\star)}, \quad n^\star \in \argmax_n R^O_\phi\!\bigl(x, z^{(n)}, y^{(n)}\bigr), \label{eq:bon-orm} \\
   \hat y_\text{PRM} \;&=\; y^{(n^\star)}, \quad n^\star \in \argmax_n R^P_{\min}\!\bigl(z^{(n)}\bigr). \label{eq:bon-prm}
@@ -116,7 +116,7 @@ turn dominate plain \glsterm{self-consistency-2}{self-consistency}
 process-supervised verifier solves \textbf{78\%} of problems on a
 representative MATH test subset
 \citep[abstract]{lightman2023-prm800k}.\footnote{KB excerpt:
-\texttt{kb/excerpts/lightman2023-prm800k.md\#headline}.}
+\nolinkurl{kb/excerpts/lightman2023-prm800k.md#headline}.}
 
 The min-aggregation finding deserves emphasis. Among
 \cref{eq:prm-min,eq:prm-prod,eq:prm-last}, only the min explicitly
@@ -154,7 +154,7 @@ remove the bottleneck by generating per-step labels automatically from
 \S3 (excerpt skeleton-only as of 2026-05; PDF acquisition pending)} The
 automatic-labelling rule, drawn from the
 process-supervision KB note's lineage table%
-\footnote{KB note: \texttt{kb/notes/reasoning/process-supervision.md\#3.1}.}
+\footnote{KB note: \nolinkurl{kb/notes/reasoning/process-supervision.md#3.1}.}
 and the surveyed framing in \citet{zheng2025-prm-survey}, is: for each
 prefix $s_{1:t}$ of a candidate trace, sample $K$ continuation rollouts
 $z^{(k)} \sim p_\theta(\cdot \mid x, s_{1:t})$ to completion, extract
@@ -200,7 +200,7 @@ The 2025 standout shift: instead of a classifier head that emits one
 scalar per prefix, the verifier is itself a small reasoning \glsterm{llm}{LLM} that
 reads the prefix, emits its own short verification \glsterm{chain-of-thought}{chain-of-thought},
 and outputs a verdict token \citep[\S 3]{thinkprm2025}.\footnote{KB
-excerpt: \texttt{kb/excerpts/thinkprm2025.md\#sec-3}.} Formally,
+excerpt: \nolinkurl{kb/excerpts/thinkprm2025.md#sec-3}.} Formally,
 \glsterm{generative-prm}{ThinkPRM} replaces the discriminative $R^P_\phi$ of \cref{eq:prm-signature}
 with a generative verifier
 \begin{equation}
@@ -215,13 +215,13 @@ The headline result: a long-\glsterm{chain-of-thought}{CoT} verifier fine-tuned 
 plus self-generated synthetic verification traces beats discriminative
 verifiers trained on the full \glsterm{prm800k}{PRM800K}
 \citep[abstract]{thinkprm2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/thinkprm2025.md\#abstract}.} On out-of-domain
+\nolinkurl{kb/excerpts/thinkprm2025.md#abstract}.} On out-of-domain
 evaluation, \glsterm{generative-prm}{ThinkPRM} exceeds the full-\glsterm{prm800k}{PRM800K} discriminative baseline
 by \textbf{8\%} on a GPQA-Diamond subset and \textbf{4.5\%} on
 LiveCodeBench, and beats \glsterm{llm}{LLM}-as-a-Judge by \textbf{7.2\%} on
 \glsterm{processbench}{ProcessBench} at matched verification-token budget
 \citep[abstract]{thinkprm2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/thinkprm2025.md\#headline}.} The data-efficiency
+\nolinkurl{kb/excerpts/thinkprm2025.md#headline}.} The data-efficiency
 ratio is two orders of magnitude on labels, traded for verification
 compute.
 
@@ -236,7 +236,7 @@ labelled example. The mechanism: a verifier's \glsterm{chain-of-thought}{CoT} ca
 algebraic-verification, type-checking, and dimensional-analysis
 checks that a feed-forward classifier cannot internalise from
 labelled examples alone \citep[\S 5]{thinkprm2025}.\footnote{KB
-excerpt: \texttt{kb/excerpts/thinkprm2025.md\#sec-5}.}
+excerpt: \nolinkurl{kb/excerpts/thinkprm2025.md#sec-5}.}
 
 \subsection{R-PRM and EDU-PRM: the 2025 PRM lineage}
 \label{sec:prm-r-edu}
@@ -285,7 +285,7 @@ test-time-vs-training-time axis.\deepencite{zheng2025-prm-survey
 overview (excerpt skeleton-only as of 2026-05)} The survey's
 synthesised finding (drawn from the KB note's
 treatment%
-\footnote{KB note: \texttt{kb/notes/reasoning/process-supervision.md\#3.2}.})
+\footnote{KB note: \nolinkurl{kb/notes/reasoning/process-supervision.md#3.2}.})
 runs in two parts. First, generative PRMs win on competition-math
 benchmarks where each step has a verifiable certificate
 (algebraic verification, equation manipulation, type-checking) the
@@ -303,7 +303,7 @@ the contradiction discussed in \cref{sec:prm-post-r1}.
 \citet{deepseek-r1} achieved the headline AIME 2024 jump from
 $15.6\%$ to $77.9\%$ pass\@1 with \emph{terminal verifier rewards
 only} — no \glsterm{process-reward-model}{PRM} in the RL loop \citep[\S 2.2]{deepseek-r1}.\footnote{KB
-excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The
+excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The
 R1 reward is rule-based: an answer-match check on math problems and a
 compiler / unit-test check on code, returning a single binary outcome
 reward per trajectory. PRMs do not appear in the headline RL loop of
@@ -335,7 +335,7 @@ revisits the question with the post-R1 evidence.
 
 A second, related tension: \emph{process hacking}. \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR}
 \citep[\S 2.4]{lightman2023-prm800k}\footnote{KB note:
-\texttt{kb/notes/reasoning/process-supervision.md\#4.2}.} replaces or
+\nolinkurl{kb/notes/reasoning/process-supervision.md#4.2}.} replaces or
 augments the binary outcome reward of \glsterm{rlvr-3}{RLVR} (\cref{sec:rlvr}) with a
 per-step \glsterm{process-reward-model}{PRM} score. The middle-ground appeal is theoretical: dense
 signal beats sparse signal for credit assignment. The empirical risk:

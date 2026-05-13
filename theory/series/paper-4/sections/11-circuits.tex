@@ -16,10 +16,10 @@ identifiable capability. Three reference points anchor the literature.
 \citet{wang2022-ioi} reverse-engineer indirect-object identification in
 GPT-2 small to a 26-head subgraph in seven functional classes
 \citep[\S 3]{wang2022-ioi}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-3-\glsterm{circuit}{circuit}}.};
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-3-circuit}.};
 \citet{conmy2023-acdc} systematize the discovery as iterative
 edge-pruning under a KL-divergence criterion\footnote{KB excerpt:
-\texttt{kb/excerpts/conmy2023-acdc.md\#sec-3}.};
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3}.};
 \citet{lindsey2025-circuit-tracing} extend the program to production
 \glsterm{claude}{Claude} 3.5 Haiku via cross-layer transcoders and Jacobian attribution.
 The thesis of this section is that these are not three separate
@@ -35,13 +35,13 @@ the model's full computational graph and $C \subseteq M$ a candidate
 in $M \setminus C$ is replaced by its mean activation on a reference
 distribution $p_{\text{ABC}}$, leaving $C$'s computations
 intact~\citep[\S 2]{wang2022-ioi}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-2-definition}. Wang et al.\
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-2-definition}. Wang et al.\
 explicitly prefer \glsterm{mean-ablation}{mean ablation} over zero ablation: ``zero ablation
 [\ldots] lead[s] to noisy results in practice'' because forced-zero
 activations are off-distribution.}. A \glsterm{circuit}{circuit} claim then commits to
 three quantitative criteria, also from
 \citet[\S 4]{wang2022-ioi}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-4-criteria}.}:
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-4-criteria}.}:
 \begin{itemize}
   \item \textbf{Faithfulness:} $C$ performs the task as well as the
     whole model. Tested by metric matching on the task distribution.
@@ -150,7 +150,7 @@ between attention heads and MLPs''~\citep[\S 2.2]{conmy2023-acdc} ---
 or, at finer granularity, between separate \glsterm{query}{query}/\glsterm{key}{key}/\glsterm{value}{value} activations,
 individual neurons, or per-token-position
 nodes\footnote{KB excerpt:
-\texttt{kb/excerpts/conmy2023-acdc.md\#sec-2-2}.}. The
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-2-2}.}. The
 \emph{interchange-intervention} corruption convention --- preferred by
 \citet{conmy2023-acdc} over zero or \glsterm{mean-ablation}{mean ablation} because both ``take
 the model too far away from actually possible activation
@@ -167,7 +167,7 @@ the graph in reverse-topological order (output-to-input), at each node
 greedily attempting to remove every incoming edge whose removal does
 not increase the KL divergence by more than threshold $\tau$. Verbatim
 from~\citet[Algorithm 1]{conmy2023-acdc}\footnote{KB excerpt:
-\texttt{kb/excerpts/conmy2023-acdc.md\#sec-3}.}:
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3}.}:
 
 \begin{lstlisting}[caption={ACDC, the Automatic Circuit DisCovery algorithm.},label={lst:acdc}]
 Algorithm 1: ACDC
@@ -194,7 +194,7 @@ prunings. On GPT-2 small Greater-Than, ACDC ``rediscovered 5/5 of the
 component types in [the manually-found] \glsterm{circuit}{circuit}'' and ``selected 68 of
 the 32{,}000 edges in GPT-2 Small, all of which were manually found by
 previous work''~\citep[Abstract]{conmy2023-acdc}\footnote{KB excerpt:
-\texttt{kb/excerpts/conmy2023-acdc.md\#abstract}.}. ACDC is evaluated
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#abstract}.}. ACDC is evaluated
 against two baselines: \emph{Subnetwork Probing} (a learned mask over
 components, with the \glsterm{linear-probe}{linear probe} removed and KL substituted for the
 training metric) and \emph{Head Importance Score for Pruning} (a
@@ -349,7 +349,7 @@ dataset-dependent in early-to-mid layers --- antipodal between
 \texttt{cities} and \texttt{neg\_cities}, then orthogonal, only aligned
 across formats in late layers~\citep[\S 4]{marks-tegmark-2023-truth}%
 \footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-4-misalignment}.}.
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-4-misalignment}.}.
 There is no single ``truth \glsterm{circuit}{circuit}'' in this picture: there is a
 \emph{family} of dataset-conditional truth representations, partially
 aligned across formats and partially not, with the alignment depth

@@ -14,7 +14,7 @@ trained, no search tree is expanded, no model parameter is changed.
 Despite this minimality, \glsterm{self-consistency-2}{self-consistency} lifts greedy \glsterm{chain-of-thought}{CoT} by
 \textbf{+17.9\%} on GSM8K, \textbf{+11.0\%} on SVAMP, and \textbf{+12.2\%}
 on AQuA \citep[abstract]{wang2022-self-consistency}.\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-\glsterm{self-consistency-2}{self-consistency}.md\#abstract}.} The
+\nolinkurl{kb/excerpts/wang2022-self-consistency.md#abstract}.} The
 result reframes the basic \glsterm{chain-of-thought}{CoT} decoder as one point on a sampling-budget
 axis, and supplies the baseline against which every later test-time
 compute strategy in this paper — best-of-$N$ with verifier
@@ -33,7 +33,7 @@ p_\theta(\cdot \mid x)$, and answers $y \sim p_\theta(\cdot \mid x, z)$.
 \glsterm{self-consistency-2}{Self-consistency} replaces this single draw with $N$ independent draws
 and aggregates by plurality
 \citep[\S 3]{wang2022-self-consistency}:\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-\glsterm{self-consistency-2}{self-consistency}.md\#sec-3}.}
+\nolinkurl{kb/excerpts/wang2022-self-consistency.md#sec-3}.}
 \begin{equation}
   \hat y \;=\; \argmax_y \; \sum_{n=1}^N \mathbb{1}\bigl[y^{(n)} = y\bigr],
   \qquad
@@ -155,7 +155,7 @@ correspondingly smaller — but consistently positive — improvements.}
 \label{tab:sc-headline}
 \end{table}
 \footnotetext{KB excerpt:
-\texttt{kb/excerpts/wang2022-\glsterm{self-consistency-2}{self-consistency}.md\#headline}.}
+\nolinkurl{kb/excerpts/wang2022-self-consistency.md#headline}.}
 
 The gains are produced by a single change to the decoder: from greedy
 to $N$-sample-plus-majority-vote at $T = 0.7$. No new model is trained,
@@ -164,7 +164,7 @@ introduced. \citet[\S 4]{wang2022-self-consistency} additionally report
 a \glsterm{saturation}{saturation} curve in $N$: gains are stable across $N \in [10, 40]$
 with diminishing returns past $N \approx
 40$.\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-\glsterm{self-consistency-2}{self-consistency}.md\#sec-4}.} The
+\nolinkurl{kb/excerpts/wang2022-self-consistency.md#sec-4}.} The
 practical sweet spot in the downstream literature is $N = 20$, which
 captures most of the gain at half the compute of $N = 40$.
 
@@ -173,7 +173,7 @@ DeepSeek-\glsterm{r1-zero}{R1-Zero} — an RL-trained \glsterm{reasoning-model}{
 AIME 2024 pass\@1 from $15.6\%$ to $77.9\%$ — gains a further
 $8.8\%$ to $86.7\%$ when the same \glsterm{self-consistency-2}{self-consistency} rule is applied at
 inference time over $64$ samples.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} The mechanism that
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} The mechanism that
 worked on \glsterm{palm}{PaLM}-540B in 2022 still adds nearly nine points of pass\@1
 to the strongest open-weight \glsterm{reasoning-model}{reasoning model} in 2025.
 

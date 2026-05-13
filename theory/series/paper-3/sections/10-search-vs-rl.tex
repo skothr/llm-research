@@ -14,7 +14,7 @@ marginal FLOP on \glsterm{inference-time-search}{inference-time search} beat spe
 regime: on easy and intermediate prompts \glsterm{test-time-compute}{test-time compute} substitutes
 for $\sim\!14\times$ more pretraining FLOPs at matched accuracy
 \citep[\S 6]{snell2024};\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-1-flops-matched}.} on the hardest
+\nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.} on the hardest
 tail it does not. \Cref{sec:rlvr-grpo-dapo} introduced a third
 allocation channel that did not exist when Snell's curves were drawn:
 RL on verifiable rewards (\glsterm{rlvr-3}{RLVR}) at \glsterm{grpo-2}{GRPO}/\glsterm{dapo-2}{DAPO} scale, which spends
@@ -63,7 +63,7 @@ match is between $C_\text{pre}$ on the right and
 $C_\text{pre} + C_\text{test}$ on the left; the RL channel does not
 appear because \glsterm{palm}{PaLM}~2-S\* (Codey) is not \glsterm{rlvr-3}{RLVR}-trained
 \citep[\S 4]{snell2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-4-setup}.} What
+\nolinkurl{kb/excerpts/snell2024.md#sec-4-setup}.} What
 \cref{sec:rlvr-grpo-dapo} added is a second axis of post-training
 compute that was not in the original FLOPs-matched menu.
 
@@ -87,7 +87,7 @@ $C_\text{test}$ to a $(\theta_\text{pre}, \theta_\text{RL},
 The Snell two-channel result establishes the substitution direction
 between $C_\text{pre}$ and $C_\text{test}$
 \citep[\S 6]{snell2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-1-flops-matched}.} At matched
+\nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.} At matched
 total FLOPs, the smaller-base-plus-test-time configuration (the
 left-hand side of \cref{eq:svr-flops-matched-2chan}) outperforms the
 $14\times$-larger-base configuration on easy and intermediate
@@ -118,7 +118,7 @@ $C_\text{test}$ as of 2026-Q2. Two anchor data points exist.
 
 \paragraph{R1's training-token cost.} \citet[\S 2.1]{deepseek-r1}%
 \footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-hp}.} report
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.} report
 DeepSeek-\glsterm{r1-zero}{R1-Zero} training as $10{,}400$ \glsterm{grpo-2}{GRPO} steps on $G = 16$ rollouts
 per prompt with maximum trajectory length $32{,}768$ tokens (raised to
 $65{,}536$ tokens after step $8{,}200$). The training-time token
@@ -127,7 +127,7 @@ budget is therefore order $10^{4} \cdot 16 \cdot 3.3 \cdot 10^{4}
 $1.6$ epochs \citep[\S 2.1]{deepseek-r1}. AIME~2024 pass@1 climbs from
 $15.6\%$ on \glsterm{precision-pinning}{DeepSeek-V3}-Base to $77.9\%$ on \glsterm{r1-zero}{R1-Zero}
 \citep[\S 2.3]{deepseek-r1};\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} \glsterm{self-consistency-2}{self-consistency}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} \glsterm{self-consistency-2}{self-consistency}
 at inference adds a further $8.8\%$ to $86.7\%$ at $N = 64$ samples
 \citep[\S 2.3]{deepseek-r1}. The $N = 64$ inference branch costs
 $\sim 64$ forward-pass-equivalents per prompt; the \glsterm{grpo-2}{GRPO} training
@@ -138,7 +138,7 @@ $C_\text{test}$ at $N = 64$; for a one-shot evaluation it is not.
 
 \paragraph{DAPO's step-efficiency.}
 \citet[\S 4]{dapo2025}%
-\footnote{KB excerpt: \texttt{kb/excerpts/dapo2025.md\#sec-4-headline}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/dapo2025.md#sec-4-headline}.}
 report that \glsterm{dapo-2}{DAPO} reaches $50$ points on AIME~2024 with the
 Qwen2.5-32B-base in roughly half the \glsterm{grpo-2}{GRPO} steps the DeepSeek-\glsterm{r1-zero}{R1-Zero}
 recipe would require to reach a comparable score. The four targeted
@@ -309,7 +309,7 @@ support three operating-point heuristics that are stable across the
 first.} The R1 anecdote shows the first units of \glsterm{grpo-2}{GRPO} buy the largest
 accuracy gain on math benchmarks
 \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} The marginal
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} The marginal
 return on $C_\text{RL}$ exceeds the marginal return on either
 $C_\text{test}$ (small inference samples on an un-RL'd base) or
 $C_\text{pre}$ (Snell's $14\times$ pretraining substitution on an
@@ -332,7 +332,7 @@ score $R_i = 0$ either, because the group-normalised advantage of
 \citep[\S 4.1]{shao2024}; this is the failure mode \glsterm{dapo-2}{DAPO}'s dynamic
 sampling addresses by discarding all-zero groups
 \citep[\S 3]{dapo2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-dynamic-sampling}.} but cannot
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-dynamic-sampling}.} but cannot
 solve at the level of the underlying capability gap. The very-hard
 tail therefore requires expanding the base distribution's support,
 which is the $C_\text{pre}$ channel.

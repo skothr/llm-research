@@ -29,7 +29,7 @@ that vendors and academics characterize differently.
 \label{sec:watermarking-construction}
 
 \citet{kirchenbauer2023-watermark} fix the canonical construction%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-greenred}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-greenred}.}
 \citep[\S{}abstract]{kirchenbauer2023-watermark}:
 
 \begin{quote}\itshape
@@ -57,7 +57,7 @@ $(1 - \gamma)|V|$.
 
 The default settings reported in the paper are $\gamma = 0.5$ and
 $\delta = 2.0$%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-greenred}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-greenred}.
 $\gamma = 0.5$ is the primary experimental configuration (Table~1, Table~2,
 Figure~6 unattacked baseline); $\gamma = 0.25$ appears only in parameter sweeps.}.
 Three properties of this construction are load-bearing for everything
@@ -94,7 +94,7 @@ not watermarked, each token is in $G_t$ independently with probability
 $\gamma$, so $|s|_G$ is binomially distributed with mean $\gamma T$ and
 variance $T \gamma (1 - \gamma)$. The normalized test statistic is the
 one-sided z-score%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-detection}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-detection}.}
 \citep[\S{}sec-detection]{kirchenbauer2023-watermark}:
 \[
 z \;=\; \frac{|s|_G - \gamma T}{\sqrt{T \gamma (1 - \gamma)}}.
@@ -122,7 +122,7 @@ generation distribution at all.
 
 The detection-rate analysis is where the construction earns its
 information-theoretic frame. The paper%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#abstract};
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#abstract};
 the precise constants in the bound are pending direct PDF anchor
 verification.}
 \citep[\S{}abstract]{kirchenbauer2023-watermark}:
@@ -139,7 +139,7 @@ model's distribution, but with a sharper functional --- the
 \emph{spike entropy} at parameter $\gamma$. For a distribution
 $p$ over $V$, define%
 \footnote{The functional form is the one cited in
-\texttt{kb/notes/alignment/watermarking-and-provenance.md} \S 1; the
+\nolinkurl{kb/notes/alignment/watermarking-and-provenance.md} \S 1; the
 exact paper-side anchor is flagged for the deepening pass.}
 \deepencite{kirchenbauer2023-watermark §sensitivity-bound}:
 \[
@@ -192,7 +192,7 @@ verbatim citation, structured data extraction, and short factual
 answers carry low spike entropy and are effectively unwatermarkable in
 their generation regions --- the green-list nudge cannot be
 distinguished from the model's natural sampling%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#1}
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#1}
 \S~1 (\textsc{intuition}).}.
 
 \subsection{Soft promotion and the distortion-detectability tradeoff}
@@ -201,7 +201,7 @@ distinguished from the model's natural sampling%
 The choice of a $\delta$-additive logit bias rather than a hard
 partition is the design decision that makes the rest workable. The
 paper%
-\footnote{KB excerpt: \texttt{kb/excerpts/kirchenbauer2023-\glsterm{watermark}{watermark}.md\#sec-soft}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-soft}.}
 discusses three failure modes of a hard partition that restricts
 generation to $G_t$ alone: it heavily distorts high-entropy
 generation by forcing the model away from its natural distribution,
@@ -236,7 +236,7 @@ By 2024, two production-scale text-watermarking efforts had landed in
 public conversation. Google DeepMind's \textbf{\glsterm{synthid-text}{SynthID-Text}} (Dathathri
 et al., \emph{Nature} 2024) replaces the logit-bias step with a
 \emph{tournament} over candidate tokens%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#3-synthid-text-dathathri-et-al-2024-nature}.}
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#3-synthid-text}.}
 \deepencite{dathathri2024-synthid §method, citation-pending}: at each
 step the sampler draws $N$ candidate next-tokens, pairs them, evaluates
 a hash-derived \glsterm{watermark}{watermark} function $g$ on each, and advances the higher
@@ -251,7 +251,7 @@ distribution statistically unchanged \deepencite{dathathri2024-synthid
 deployed in the Gemini App, the first production-scale text-\glsterm{watermark}{watermark}
 deployment by a frontier lab; detection code accompanied the
 \emph{Nature} publication%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#3-3-production-deployment}.}.
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#3-3-production-deployment}.}.
 
 OpenAI publicly described a \glsterm{watermark}{watermark} prototype in 2023--2024 but
 \emph{deferred deployment} on the basis of robustness and policy
@@ -287,7 +287,7 @@ argues that any \glsterm{watermark}{watermark} detectable from \emph{short} span
 removable by a paraphrase attacker with a comparable-quality model;
 the disagreement is over what ``deployable'' requires, not over the
 asymptotic detection rate%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#2-2-the-fundamental-limit}
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#2-2-the-fundamental-limit}
 \S~2.2.}.
 
 \textbf{Fine-tuning attacks} retrain the watermarked model (or a base
@@ -318,7 +318,7 @@ full mixed span sees a degraded $z$ that scales with the mixed-span
 length and the mixing fraction; if the deployer can segment the text
 into pure-watermarked spans, detection recovers, but the segmentation
 problem is itself adversarial%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#5}
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#5}
 \S~5 (frontier).}.
 
 \begin{contradiction}
@@ -332,7 +332,7 @@ deployment account
 makes a similar claim for the tournament-sampling variant. Independent
 adversarial analyses --- notably the SRI Lab ETH probing study of
 SynthID%
-\footnote{KB note: \texttt{kb/notes/alignment/watermarking-and-provenance.md\#3-3-production-deployment}
+\footnote{KB note: \nolinkurl{kb/notes/alignment/watermarking-and-provenance.md#3-3-production-deployment}
 \S~3.3 (\textsc{contradiction}).}
 \deepencite{eth-synthid-probe-2024, citation-pending}
 --- find that aggressive paraphrase and fine-tune budgets do defeat

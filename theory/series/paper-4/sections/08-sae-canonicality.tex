@@ -37,7 +37,7 @@ same canonicality concern inherited unchanged.
 
 \citet[\S 1]{leask2025-sae-not-canonical} fix the terminology before
 attacking the claim\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#sec-1-canonical}.}.
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#sec-1-canonical}.}.
 A set of units of analysis is \textbf{canonical} when it is
 simultaneously: \textbf{unique} --- the same set is recovered (modulo
 a known equivalence such as rotation or permutation) by independent
@@ -73,7 +73,7 @@ target \glsterm{sparse-autoencoder}{SAE} rather than on model activations. Each 
 \mathbb{R}^n$ from the target \glsterm{sparse-autoencoder}{SAE}; the \glsterm{meta-sae}{meta-SAE} learns a sparse
 dictionary of \emph{meta-latents} into which the target's \glsterm{feature}{feature}
 directions decompose. The reported finding\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#sec-1-einstein}.}
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#sec-1-einstein}.}
 is the now-canonical example:
 
 \begin{quote}
@@ -92,7 +92,7 @@ family --- fails on inspection: it is a sparse combination of more
 elementary directions discovered without looking at any new model
 activations, just at the target \glsterm{sparse-autoencoder}{SAE}'s own decoder. The summary
 characterization is direct\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#abstract}.}:
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#abstract}.}:
 
 \begin{quote}
 \itshape
@@ -117,7 +117,7 @@ The second technique tests completeness by inserting or swapping
 latents from a larger \glsterm{sparse-autoencoder}{SAE} into a smaller one and measuring
 reconstruction performance on held-out activations. The paper's
 classification\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#abstract}.} sorts
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#abstract}.} sorts
 larger-\glsterm{sparse-autoencoder}{SAE} latents into two disjoint sets:
 
 \begin{itemize}
@@ -145,7 +145,7 @@ framing is sharp:
 splitting alone, ``latents from smaller SAEs `split' into multiple,
 more fine-grained latents in larger
 SAEs''~\citep[\S 1]{leask2025-sae-not-canonical}\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#sec-1-\glsterm{feature}{feature}-splitting}.}
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#sec-1-feature-splitting}.}
 --- a relationship in which the smaller dictionary is \emph{coarser}
 but still complete. Stitching's novel latents fail this picture: some
 larger-\glsterm{sparse-autoencoder}{SAE} features have no coarse-grained counterpart in the smaller
@@ -177,7 +177,7 @@ Until that criterion is exhibited and shown to hold empirically, the
 field's working assumption is the pragmatic one
 \citet[\S 1]{leask2025-sae-not-canonical} themselves
 recommend\footnote{KB excerpt:
-\texttt{kb/excerpts/leask2025-\glsterm{sparse-autoencoder}{sae}-not-canonical.md\#sec-1-still-useful}.}:
+\nolinkurl{kb/excerpts/leask2025-sae-not-canonical.md#sec-1-still-useful}.}:
 ``the choice of dictionary size is subjective. We suggest taking a
 pragmatic approach to applying SAEs to \glsterm{mechanistic-interpretability}{mechanistic interpretability}
 tasks, trying SAEs of several widths to see which is best
@@ -195,7 +195,7 @@ of \S\ref{sec:circuits} --- is the \emph{\glsterm{transcoder}{transcoder}}
 because the canonicality picture rides on its faithfulness term being
 defined against the MLP \emph{function} rather than against its
 activation\footnote{KB excerpt:
-\texttt{kb/excerpts/dunefsky2024-transcoders.md\#sec-3-1}.}:
+\nolinkurl{kb/excerpts/dunefsky2024-transcoders.md#sec-3-1}.}:
 \begin{equation}
   \mathcal{L}_{\text{TC}}(\mathbf{x})
   \;=\;
@@ -213,11 +213,11 @@ $\hat{\mathbf{x}}$ depends on the \emph{post}-MLP activation; a
 \emph{pre}-MLP input $\mathbf{x}$. The \glsterm{transcoder}{transcoder}'s \glsterm{feature}{feature} dictionary
 is a decomposition of the MLP \emph{function}, not of any particular
 output \citep[\S 1]{dunefsky2024-transcoders}\footnote{KB excerpt:
-\texttt{kb/excerpts/dunefsky2024-transcoders.md\#sec-1-comparison}.}.
+\nolinkurl{kb/excerpts/dunefsky2024-transcoders.md#sec-1-comparison}.}.
 
 The methodological payoff
 \citep[\S 1]{dunefsky2024-transcoders}\footnote{KB excerpt:
-\texttt{kb/excerpts/dunefsky2024-transcoders.md\#sec-1-\glsterm{input-invariance}{input-invariance}}.}
+\nolinkurl{kb/excerpts/dunefsky2024-transcoders.md#sec-1-input-invariance}.}
 is the \textbf{\glsterm{input-invariance}{input-invariance} factorization}. The connection from a
 pre-MLP \glsterm{feature}{feature} $f_i$ (associated with decoder column $\mathbf{d}_i$)
 to a post-MLP \glsterm{transcoder}{transcoder} \glsterm{feature}{feature} $f_j$ (associated with encoder row

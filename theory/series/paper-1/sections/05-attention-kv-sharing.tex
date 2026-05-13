@@ -34,7 +34,7 @@ the residual-stream width, $H$ the number of attention heads, and
 $d_h = D / H$ the per-head dimension. The residual-stream activation
 entering an attention block is $X \in \R^{B \times S \times D}$.
 \citet{vaswani2017} define \glsterm{scaled-dot-product-attention}{scaled dot-product attention}%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-1}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-1}.}
 on per-head matrices $Q, K \in \R^{S \times d_h}$ and
 $V \in \R^{S \times d_h}$ as
 \begin{equation}
@@ -50,7 +50,7 @@ initialisation%
 $\mathrm{Var}(q\!\cdot\!k) = d_h$ \citep[\S 3.2.1, fn.~4]{vaswani2017}.}.
 \glsterm{multi-head-attention}{Multi-head attention} runs Eq.~\eqref{eq:vaswani-attn} $H$ times in
 parallel on linearly projected inputs%
-\footnote{KB excerpt: \texttt{kb/excerpts/vaswani2017.md\#sec-3-2-2}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-2}.}:
 \begin{align}
   \mathrm{MultiHead}(X)
    &= \mathrm{Concat}(\mathrm{head}_1, \ldots, \mathrm{head}_H)\,W^O,
@@ -78,7 +78,7 @@ position $t$ the freshly computed $K_t, V_t$ are appended to caches
 $\mathcal{K}, \mathcal{V} \in \BHSdh$ that store every prior step's
 keys and values, and the entire cache must be re-loaded from \glsterm{hbm}{HBM} at
 every step \citep[\S 1, \S 2.4]{shazeer2019}%
-\footnote{KB excerpt: \texttt{kb/excerpts/shazeer2019.md\#sec-2-4}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/shazeer2019.md#sec-2-4}.}.
 The per-token, per-layer cache footprint at full \glsterm{mha}{MHA} is
 \begin{equation}
   \mathrm{cache}_{\mathrm{MHA}} \;=\;
@@ -102,7 +102,7 @@ $d$, batch $b$); ``when $n \approx d$ or $b \approx 1$, the ratio is
 close to 1, causing memory bandwidth to be a major performance
 bottleneck on modern computing hardware''~\citep[\S
 2.4]{shazeer2019}\footnote{KB excerpt:
-\texttt{kb/excerpts/shazeer2019.md\#sec-2-4}.}. Modern GPU/TPU
+\nolinkurl{kb/excerpts/shazeer2019.md#sec-2-4}.}. Modern GPU/TPU
 hardware has compute throughput one to two orders of magnitude above
 \glsterm{hbm}{HBM} bandwidth, so a memory-bound layer leaves arithmetic units
 idle. Reducing the cache footprint directly buys serving throughput
@@ -116,7 +116,7 @@ waypoints on the axis are optimising.
 $H$ index from $W^K$ and $W^V$ entirely. Queries remain multi-headed;
 keys and values are shared across all $H$ \glsterm{query}{query} heads%
 \footnote{KB excerpt:
-\texttt{kb/excerpts/shazeer2019.md\#mqa-structure}.}.
+\nolinkurl{kb/excerpts/shazeer2019.md#mqa-structure}.}.
 Concretely, replace the per-head $W_i^K, W_i^V$ in Eq.~\eqref{eq:vaswani-mh}
 with single shared projections $W^K, W^V \in \R^{D \times d_h}$, and
 broadcast the resulting $K, V \in \mathsf{B}\!\times\!\mathsf{S}\!\times\!d_h$
@@ -157,7 +157,7 @@ expressivity cut.
 \emph{groups}. Partition the $H$ \glsterm{query}{query} heads into $G$ disjoint groups
 of size $H/G$; within each group, all queries share a single $K$
 head and a single $V$ head%
-\footnote{KB excerpt: \texttt{kb/excerpts/ainslie2023.md\#sec-2-2}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/ainslie2023.md#sec-2-2}.}.
 \begin{quote}
 ``Grouped-\glsterm{query}{query} attention divides \glsterm{query}{query} heads into $G$ groups, each
 of which shares a single \glsterm{key}{key} head and \glsterm{value}{value} head. \glsterm{gqa}{GQA}-$G$ refers to
@@ -184,7 +184,7 @@ The \glsterm{gqa}{GQA} paper also contributes a quality-recovery recipe.
 checkpoint by mean-pooling the original $H$ \glsterm{key}{key}/\glsterm{value}{value} heads within
 each group, then continuing pre-training for a fraction
 $\alpha \approx 5\%$ of the original training compute%
-\footnote{KB excerpt: \texttt{kb/excerpts/ainslie2023.md\#sec-2-1}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/ainslie2023.md#sec-2-1}.}:
 \begin{quote}
 ``The projection matrices for \glsterm{key}{key} and \glsterm{value}{value} heads are mean pooled
 into single projection matrices, which we find works better than
@@ -212,7 +212,7 @@ LLMs~\citep{touvron2023, jiang2023, meta-llama3, qwen3, phi4}.
 $\{1, \ldots, H\}$. \glsterm{multi-head-latent-attention}{MLA} instead \emph{compresses} the joint $K, V$
 information at each token into a low-rank latent vector, then
 \emph{reconstructs} per-head $K_i, V_i$ at use time%
-\footnote{KB excerpt: \texttt{kb/excerpts/deepseek-v2.md\#sec-2-1-2}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/deepseek-v2.md#sec-2-1-2}.}.
 The cache holds the latent only; the per-head reconstruction
 matrices are weights, not cache.
 
@@ -254,7 +254,7 @@ and each \glsterm{key}{key} into a content part (no \glsterm{rope}{RoPE}, low-ra
 \glsterm{rope}{RoPE}-bearing part (full position rotation, but small per-head
 dimension $d_h^R$ and -- crucially -- a single \emph{shared} \glsterm{rope}{RoPE}
 \glsterm{key}{key} across heads)%
-\footnote{KB excerpt: \texttt{kb/excerpts/deepseek-v2.md\#sec-2-1-3}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/deepseek-v2.md#sec-2-1-3}.}:
 \begin{align}
   \mathbf{q}_{t,i}^R\;\text{from}\;\mathbf{q}_t^R
    &= \mathrm{RoPE}(W^{QR} \mathbf{c}_t^Q),
@@ -292,7 +292,7 @@ $d_c = 4 d_h$ and $d_h^R = d_h/2$, the cache is
 $(4 + 0.5)\,d_h\,b = 4.5\,d_h\,b$, and \citet{deepseek-v2} note this
 is ``equal to \glsterm{gqa}{GQA} with only 2.25 groups''~\citep[\S
 2.1.4]{deepseek-v2}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-v2.md\#sec-2-1-4}.} -- substantially
+\nolinkurl{kb/excerpts/deepseek-v2.md#sec-2-1-4}.} -- substantially
 smaller than the \glsterm{gqa}{GQA}-8 default while, in their internal ablations,
 matching or exceeding \glsterm{mha}{MHA} quality.
 

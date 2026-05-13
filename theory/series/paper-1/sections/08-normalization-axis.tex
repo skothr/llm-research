@@ -24,7 +24,7 @@ that the same statistics are computed at training and inference and
 batch size has no effect. For an input vector
 $\mathbf{a}^l \in \mathbb{R}^H$ (the summed inputs to the $H$ hidden
 units of layer $l$),~\citet{ba2016-layernorm} define%
-\footnote{KB excerpt: \texttt{kb/excerpts/ba2016-layernorm.md\#sec-3}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/ba2016-layernorm.md#sec-3}.}
 \begin{equation}
   \mu^l = \frac{1}{H} \sum_{i=1}^{H} a_i^l,
   \qquad
@@ -59,7 +59,7 @@ The shape passing through is $\BSH$.
 \citet{zhang2019} hypothesize that \glsterm{layer-normalization}{LayerNorm}'s success rests on its
 \emph{re-scaling} invariance, not its \emph{re-centering} invariance,
 and propose Root Mean Square \glsterm{layer-normalization}{Layer Normalization}%
-\footnote{KB excerpt: \texttt{kb/excerpts/zhang2019.md\#sec-3-1}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/zhang2019.md#sec-3-1}.}
 defined verbatim as
 \begin{equation}
   \bar{a}_i \;=\; \frac{a_i}{\mathrm{RMS}(\mathbf{a})}\, g_i,
@@ -105,7 +105,7 @@ canonical placements are
 stream itself is renormalized after every block.~\citet{radford2019-gpt2}
 moved the norm in GPT-2, in a passage worth quoting
 verbatim%
-\footnote{KB excerpt: \texttt{kb/excerpts/radford2019-gpt2.md\#sec-2-3}.}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/radford2019-gpt2.md#sec-2-3}.}:
 \begin{quote}
 ``Layer normalization (Ba et al., 2016) was moved to the input of each
 sub-block, similar to a pre-activation residual network (He et al.,
@@ -130,7 +130,7 @@ $L$-block \glsterm{decoder-only}{decoder-only} stack).
 \citet{xiong2020} furnish the theoretical justification for the GPT-2
 move via a mean-field analysis of gradient norms at
 initialization%
-\footnote{KB excerpt: \texttt{kb/excerpts/xiong2020.md\#sec-4}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/xiong2020.md#sec-4}.}.
 Stating their two main results:
 \begin{theorem}[\glsterm{post-ln}{Post-LN} gradient scaling at init,
 \citealp{xiong2020}, Thm.~1]

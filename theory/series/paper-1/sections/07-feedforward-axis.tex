@@ -30,9 +30,9 @@ The original \glsterm{transformer}{Transformer}'s position-wise feed-forward sub
 two-matrix MLP applied independently at each token position. For input
 token vector $\mathbf{x} \in \R^{\mathsf{D}}$,~\citet{vaswani2017}
 define%
-\footnote{KB excerpt: \texttt{kb/excerpts/shazeer2020.md\#sec-1}; the
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/shazeer2020.md#sec-1}; the
 2017 form is also transcribed at
-\texttt{kb/notes/architecture/ffn.md\#sec-1-1}.}
+\nolinkurl{kb/notes/architecture/ffn.md#sec-1-1}.}
 \begin{equation}
   \mathrm{FFN}(\mathbf{x}, W_1, W_2, b_1, b_2)
   \;=\; \max(0, \mathbf{x} W_1 + b_1)\, W_2 + b_2,
@@ -82,7 +82,7 @@ Unit variant yields a small but consistent \glsterm{perplexity}{perplexity} gain
 by~\citealp[\S 2]{shazeer2020}) is the
 component-wise product of two linear projections, one of which is
 sigmoid-activated~\citep[\S 2, Eq.~4]{shazeer2020}\footnote{KB
-excerpt: \texttt{kb/excerpts/shazeer2020.md\#sec-2}.}:
+excerpt: \nolinkurl{kb/excerpts/shazeer2020.md#sec-2}.}:
 \begin{equation}
   \mathrm{GLU}(\mathbf{x}, W, V, b, c)
   \;=\; \sigma(\mathbf{x} W + b) \otimes (\mathbf{x} V + c),
@@ -93,7 +93,7 @@ with $W, V \in \R^{\mathsf{D} \times d_{\text{ff}}}$ and $\otimes$
 the elementwise (Hadamard) product. The activation in the gate
 position is a free choice; \citet[\S 2, Eq.~5]{shazeer2020} lists
 five variants%
-\footnote{KB excerpt: \texttt{kb/excerpts/shazeer2020.md\#sec-2}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/shazeer2020.md#sec-2}.}
 including the bilinear ($\sigma \to \mathrm{id}$), the ReGLU
 ($\sigma \to \mathrm{ReLU}$), the \glsterm{geglu}{GEGLU} ($\sigma \to \mathrm{GELU}$),
 and the \glsterm{swiglu}{SwiGLU} ($\sigma \to \mathrm{Swish}_\beta$, with
@@ -102,7 +102,7 @@ $\mathrm{Swish}_\beta(z) = z\,\sigma(\beta z)$).
 Bundling the gating with the down-projection yields the bias-free
 3-matrix \glsterm{ffn}{FFN} that every modern frontier \glsterm{llm}{LLM}
 ships~\citep[\S 2, Eq.~6]{shazeer2020}\footnote{KB excerpt:
-\texttt{kb/excerpts/shazeer2020.md\#sec-2-eq6}.}:
+\nolinkurl{kb/excerpts/shazeer2020.md#sec-2-eq6}.}:
 \begin{equation}
   \mathrm{FFN}_{\mathrm{SwiGLU}}(\mathbf{x}, W, V, W_2)
   \;=\; \bigl(\mathrm{Swish}_1(\mathbf{x} W) \otimes (\mathbf{x} V)\bigr)\, W_2,
@@ -129,7 +129,7 @@ alignment~\citep{touvron2023}.
 
 The empirical motivation is~\citet[\S 3.2,
 Tab.~1]{shazeer2020}\footnote{KB excerpt:
-\texttt{kb/excerpts/shazeer2020.md\#sec-3-2}.}: at 524k \glsterm{t5}{T5}-base steps
+\nolinkurl{kb/excerpts/shazeer2020.md#sec-3-2}.}: at 524k \glsterm{t5}{T5}-base steps
 the heldout-set log-perplexities are 1.677 (\glsterm{relu}{ReLU}), 1.679 (\glsterm{gelu}{GELU}), 1.683
 (Swish), 1.633 (\glsterm{geglu}{GEGLU}), and 1.636 (\glsterm{swiglu}{SwiGLU}). \glsterm{geglu}{GEGLU} and \glsterm{swiglu}{SwiGLU} edge each
 other within $0.003$; the field selected \glsterm{swiglu}{SwiGLU} on the inertial
@@ -169,7 +169,7 @@ slice and $\{\mathrm{FFN}_e\}_{e=1}^{E}$ a family of \glsterm{swiglu}{SwiGLU} bl
 $W_g \in \R^{\mathsf{D} \times E}$ producing per-expert \glsterm{logits}{logits}, with
 top-$k$ selection and a \glsterm{softmax}{softmax}-renormalized gating
 weight~\citep[\S 2.1]{fedus2021-switch}\footnote{KB note:
-\texttt{kb/notes/architecture/moe.md\#sec-1}; the equation form is
+\nolinkurl{kb/notes/architecture/moe.md#sec-1}; the equation form is
 verified against \citet{fedus2021-switch} for top-1 routing and
 \citet{mixtral2024} for top-2 routing. \deepencite{fedus2021-switch
 \S 2.1 (router-and-gate equations) and mixtral2024 \S 2.2 (top-2
@@ -234,7 +234,7 @@ coefficient $\alpha$. For a batch of $T$ tokens, define the empirical
 fraction $f_e$ of tokens routed to expert $e$ and the mean router
 probability $P_e$ for expert
 $e$~\citep[\S 2.2]{fedus2021-switch}\footnote{KB note:
-\texttt{kb/notes/architecture/moe.md\#sec-2-1}. \deepencite{fedus2021-switch
+\nolinkurl{kb/notes/architecture/moe.md#sec-2-1}. \deepencite{fedus2021-switch
 \S 2.2 --- the auxiliary-loss form below is verified against
 secondary sources; the original PDF section number should be
 re-checked before final.}}:
@@ -260,10 +260,10 @@ hurt LM quality at scale, and propose an
 time but \emph{not} to the gate weight, and update the bias online
 based on observed
 load~\citep{deepseek-v3}\footnote{KB note:
-\texttt{kb/notes/architecture/moe.md\#sec-2-3}. \deepencite{deepseek-v3
+\nolinkurl{kb/notes/architecture/moe.md#sec-2-3}. \deepencite{deepseek-v3
 \S 2 (auxiliary-loss-free balancing scheme) --- claim ground-truthed
 against the V3 tech report's training-side excerpt at
-\texttt{kb/excerpts/deepseek-v3-training.md\#abstract}, but the
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#abstract}, but the
 exact equation form requires the architecture-side excerpt that is
 not yet built.}}:
 \begin{equation}
@@ -290,7 +290,7 @@ Switch/Mixtral design point: \emph{fine-grained experts} (many narrow
 experts in place of few wide ones) and a \emph{shared expert} that
 processes every
 token~\citep{deepseekmoe2024}\footnote{KB note:
-\texttt{kb/notes/architecture/moe.md\#sec-3-1,\#sec-3-2}. \deepencite{deepseekmoe2024
+\nolinkurl{kb/notes/architecture/moe.md#sec-3-1,#sec-3-2}. \deepencite{deepseekmoe2024
 \S 3 (fine-grained segmentation: split each expert into $m$
 narrower experts of width $d_{\text{ff}}/m$ and select $mk$ rather
 than $k$) --- excerpt file not yet built; arithmetic of
@@ -340,7 +340,7 @@ specialization. Eq.~\eqref{eq:deepseek-moe} factorizes that into
 totaling $9$ active experts per token from $257$ total per
 layer~\citep[abstract,
 \S 2]{deepseek-v3}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#abstract}.}. With $671\mathrm{B}$
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#abstract}.}. With $671\mathrm{B}$
 total \glsterm{parameters}{parameters} and $37\mathrm{B}$ activated per token, the
 parameter-to-active ratio is $\approx 18\!:\!1$ ---
 the largest such ratio shipped at frontier as of

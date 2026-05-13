@@ -18,12 +18,12 @@ that an 8-exemplar \glsterm{chain-of-thought}{CoT} prompt raises a 540B-paramete
 the GSM8K math word-problem benchmark to state-of-the-art, surpassing a
 fine-tuned GPT-3 with a verifier
 \citep[abstract]{wei2022-cot}.\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#abstract}.} The same pattern was
+\nolinkurl{kb/excerpts/wei2022-cot.md#abstract}.} The same pattern was
 shown a few months later to elicit competitive reasoning under
 \emph{zero} hand-written exemplars, by appending the literal trigger
 phrase \emph{``Let's think step by step''} before answer extraction
 \citep[abstract]{kojima2022}.\footnote{KB excerpt:
-\texttt{kb/excerpts/kojima2022.md\#abstract}.} The 2022 community read
+\nolinkurl{kb/excerpts/kojima2022.md#abstract}.} The 2022 community read
 both results as prompting tricks. The 2024--2026 reframing — anchored
 in \citet{snell2024} and the inference-time-compute scaling literature
 that \cref{sec:test-time-compute} formalises — reads them as the first
@@ -42,7 +42,7 @@ prompting decodes $y \sim p_\theta(\cdot \mid x)$ in a single step. \glsterm{cha
 prompting introduces an intermediate variable $z$ — the reasoning trace
 — and decodes a two-stage factorisation
 \citep[\S 3.1]{wei2022-cot}:\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#sec-3-1}.}
+\nolinkurl{kb/excerpts/wei2022-cot.md#sec-3-1}.}
 \begin{equation}
   z \;\sim\; p_\theta(\cdot \mid x), \qquad y \;\sim\; p_\theta(\cdot \mid x, z).
   \label{eq:cot-decode}
@@ -54,7 +54,7 @@ template (e.g.\ \emph{``The answer is~$\langle\cdot\rangle$''}) and $y$
 is recovered post-hoc by a regex on that template
 \citep[\S 3.1]{wei2022-cot}. The KB note for this paper records the
 factorisation as Eq.~1 of \texttt{\glsterm{chain-of-thought}{chain-of-thought}.md}.\footnote{KB
-note: \texttt{kb/notes/reasoning/\glsterm{chain-of-thought}{chain-of-thought}.md\#1}.}
+note: \nolinkurl{kb/notes/reasoning/chain-of-thought.md#1}.}
 
 \paragraph{Tensor shapes and the trace-length budget.} The trace $z$ in
 \cref{eq:cot-decode} is a token sequence whose length empirically spans
@@ -81,7 +81,7 @@ $\{(x_i, z_i, y_i)\}_{i=1}^K$ followed by the \glsterm{query}{query} $x_*$, with
 $z_i$ a hand-written reasoning trace. The arithmetic-reasoning
 benchmarks in \citet{wei2022-cot} use $K = 8$
 \citep[\S 3.1]{wei2022-cot}.\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#sec-3-1}.} The exemplars do double
+\nolinkurl{kb/excerpts/wei2022-cot.md#sec-3-1}.} The exemplars do double
 duty: they (i) shift the model's output distribution toward sequences
 in which $z$ precedes $y$ — the format-conditioning role — and
 (ii) supply task-specific reasoning style. Kojima et al.'s zero-shot
@@ -104,12 +104,12 @@ on three task families: arithmetic word problems (GSM8K, SVAMP, ASDiv,
 AQuA, MAWPS), commonsense (CSQA, StrategyQA, Date, Sports), and
 symbolic reasoning (Last Letter, Coin Flip)
 \citep[\S 3.2]{wei2022-cot}.\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#sec-3-2}.} The headline
+\nolinkurl{kb/excerpts/wei2022-cot.md#sec-3-2}.} The headline
 \emph{single-number} result is GSM8K at the 540B scale: an 8-exemplar
 \glsterm{chain-of-thought}{CoT} prompt achieves state-of-the-art accuracy, surpassing a fine-tuned
 GPT-3 supplemented with a verifier
 \citep[abstract]{wei2022-cot}.\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#abstract}.}
+\nolinkurl{kb/excerpts/wei2022-cot.md#abstract}.}
 
 \subsection{Zero-shot CoT (Kojima et al.\ 2022)}
 \label{sec:cot-zeroshot}
@@ -119,7 +119,7 @@ recovered with $K = 0$ — no hand-written exemplars at all — by
 appending the literal string \emph{``Let's think step by step''} to the
 prompt. The protocol is two-stage
 \citep[\S 3]{kojima2022}:\footnote{KB excerpt:
-\texttt{kb/excerpts/kojima2022.md\#sec-3}.}
+\nolinkurl{kb/excerpts/kojima2022.md#sec-3}.}
 \begin{enumerate}
 \item \textbf{Reasoning extraction.} Prompt the model with
 $x_* \,+\,$\emph{``Let's think step by step''} and decode the trace
@@ -132,7 +132,7 @@ The two-stage form is the canonical protocol; the trigger phrase is
 \emph{``Let's think step by step''}, identified empirically among
 candidate variants by \citet{kojima2022} as the strongest cue. The
 headline numbers \citep[headline]{kojima2022}\footnote{KB excerpt:
-\texttt{kb/excerpts/kojima2022.md\#headline}.} are striking for a
+\nolinkurl{kb/excerpts/kojima2022.md#headline}.} are striking for a
 purely prompting-side change: with InstructGPT (\texttt{text-davinci-002}),
 MultiArith rises from $17.7\%$ to $78.7\%$ and GSM8K from $10.4\%$ to
 $40.7\%$, with comparable gains on \glsterm{palm}{PaLM}-540B.
@@ -142,7 +142,7 @@ role of Wei's $K = 8$ exemplars is already supplied by pretraining and
 instruction-tuning, and a five-word trigger reaches into that latent
 capability without a single demonstration
 \citep[\S 5]{kojima2022}.\footnote{KB excerpt:
-\texttt{kb/excerpts/kojima2022.md\#sec-5}.} The reasoning content is
+\nolinkurl{kb/excerpts/kojima2022.md#sec-5}.} The reasoning content is
 not absent in the smaller-prompt setting; it is just not elicited.
 
 \begin{intuition}
@@ -167,7 +167,7 @@ The single most consequential empirical claim of
 \glsterm{chain-of-thought}{CoT} prompting over direct prompting is itself an
 \emph{emergent} property of model scale. The headline figure
 \citep[\S 3.3, fig.\ 4]{wei2022-cot}\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#sec-3-3}.} shows GSM8K accuracy
+\nolinkurl{kb/excerpts/wei2022-cot.md#sec-3-3}.} shows GSM8K accuracy
 plotted against model size for three families (LaMDA, GPT-3, \glsterm{palm}{PaLM}),
 each with and without the 8-exemplar \glsterm{chain-of-thought}{CoT} prompt. Two qualitative
 features survive every replication:
@@ -186,7 +186,7 @@ produces the abstract's headline of state-of-the-art GSM8K
 discussion: the technique's benefit is not a uniform multiplicative
 factor over model scale but a regime-dependent effect that activates
 only past a problem-dependent capacity threshold.\footnote{KB excerpt:
-\texttt{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md\#sec-6}.} The same paper hedges
+\nolinkurl{kb/excerpts/wei2022-cot.md#sec-6}.} The same paper hedges
 that ``\glsterm{chain-of-thought}{chain-of-thought}'' need not reflect any cognitive sense of
 ``reasoning'' — a hedge that the 2025 faithfulness literature
 (\cref{sec:cot-faithfulness}) makes load-bearing.
@@ -259,7 +259,7 @@ rationalisation rates (on the order of $7$--$13\%$ on
 \citet{mehta2026-faithfulness-scaling}'s measurement); thinking models
 exhibit rates two orders of magnitude smaller
 \citep[\S 4]{mehta2026-faithfulness-scaling}.\footnote{KB note:
-\texttt{kb/notes/reasoning/\glsterm{chain-of-thought}{chain-of-thought}.md\#4.1}.} Whether the gap
+\nolinkurl{kb/notes/reasoning/chain-of-thought.md#4.1}.} Whether the gap
 is caused by long-\glsterm{chain-of-thought}{CoT} SFT, by \glsterm{rlvr-3}{RLVR} post-training, or by general scale
 is not separated by the published 2026 ablations. The hedge that
 \citet[\S 6]{wei2022-cot} themselves placed on the cognitive

@@ -19,7 +19,7 @@ open-weight \glsterm{reasoning-model}{reasoning model} --- DeepSeek-R1 --- reach
 AIME 2024 jump using \emph{terminal verifier rewards only} and
 explicitly abstained from any neural \glsterm{reward-model}{reward model}, whether outcome- or
 process-based, in the RL loop \citep[\S 2.2]{deepseek-r1}.\footnote{KB
-excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The
+excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The
 question this section confronts is the one \cref{sec:process-reward-models}
 deferred: in the post-R1 era, do PRMs still earn their training
 and inference cost?
@@ -51,7 +51,7 @@ $\mathrm{format}(\cdot)$ scores adherence to the
 \verb|<think>...</think><answer>...</answer>| schema. No \glsterm{process-reward-model}{PRM} appears
 in \cref{eq:r1-rule-reward}; no neural \glsterm{reward-model}{reward model} of any kind appears
 in the loop. The DeepSeek authors are explicit about the choice%
-\footnote{KB excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.}
 \citep[\S 2.2]{deepseek-r1}:
 \begin{quote}
 \itshape
@@ -63,7 +63,7 @@ hacking during large-scale reinforcement learning.
 The headline empirics are well-known: AIME 2024 pass@1 from
 $15.6\%$ to $77.9\%$ during RL, and to $86.7\%$ with \glsterm{self-consistency-2}{self-consistency}
 at inference time \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} A \glsterm{reasoning-model}{reasoning model}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} A \glsterm{reasoning-model}{reasoning model}
 that does not place at the AIME human-competitor level cannot be
 explained by ``the missing \glsterm{process-reward-model}{PRM}''; the gap is
 already closed without one. This is the load-bearing data point that
@@ -103,12 +103,12 @@ search; out-of-domain it beats the full-\glsterm{prm800k}{PRM800K} discriminativ
 by $8\%$ on a GPQA-Diamond subset and $4.5\%$ on
 LiveCodeBench, and beats \glsterm{llm}{LLM}-as-a-Judge by $7.2\%$ on \glsterm{processbench}{ProcessBench} at
 matched verification-token budget \citep[abstract]{thinkprm2025}.%
-\footnote{KB excerpt: \texttt{kb/excerpts/thinkprm2025.md\#headline}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/thinkprm2025.md#headline}.}
 The mechanism is the one foreshadowed in \cref{sec:prm-thinkprm}: the
 verifier's \glsterm{chain-of-thought}{CoT} can apply algebraic-verification, type-checking, and
 dimensional-analysis steps that a feed-forward classifier head cannot
 internalise from labelled examples alone \citep[\S 5]{thinkprm2025}.%
-\footnote{KB excerpt: \texttt{kb/excerpts/thinkprm2025.md\#sec-5}.} The
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/thinkprm2025.md#sec-5}.} The
 2025 \glsterm{process-reward-model}{PRM} survey \citep{zheng2025-prm-survey} echoes the framing while
 adding a domain caveat: generative PRMs win where each step has a
 verifiable certificate (algebraic equality, equation-of-motion balance,
@@ -157,7 +157,7 @@ empirically risky.} The middle ground of
 per-step or per-trace \glsterm{process-reward-model}{PRM} score. Several R1-replication
 efforts try this approach
 \citep[\S 4]{thinkprm2025}.\footnote{KB note:
-\texttt{kb/notes/reasoning/process-supervision.md\#4.2}.} The known
+\nolinkurl{kb/notes/reasoning/process-supervision.md#4.2}.} The known
 failure mode is \emph{process hacking}: a misaligned \glsterm{process-reward-model}{PRM} rewards
 locally-plausible-looking steps without the trace converging on the
 correct answer --- the step-level analogue of the outcome-hacking
@@ -177,7 +177,7 @@ post-R1 measurements (excerpt skeleton-only as of 2026-05)} The
 mechanism: as the policy's own internal verification --- the
 self-reflection and ``\glsterm{aha-moment}{aha moment}'' behaviours of
 \citet[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} --- approaches the
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} --- approaches the
 \glsterm{process-reward-model}{PRM}'s signal, the verifier-fidelity gap that the \glsterm{process-reward-model}{PRM} exploits closes.
 This does not zero out, but it does erode: the same external \glsterm{process-reward-model}{PRM} that
 delivered $20$-point pass@$N$ gains over a 2023 GPT-4 generator on

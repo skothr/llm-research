@@ -16,13 +16,13 @@ degrees of \emph{\glsterm{data-parallel}{Data Parallel}} (\glsterm{data-parallel
 fused with \glsterm{sequence-parallel}{Sequence Parallel}), \emph{\glsterm{context-parallel}{Context Parallel}} (\glsterm{context-parallel}{CP}),
 \emph{\glsterm{pipeline-parallel}{Pipeline Parallel}} (\glsterm{pipeline-parallel}{PP}), and \emph{\glsterm{expert-parallel}{Expert Parallel}} (\glsterm{expert-parallel}{EP})
 respectively \citep[\S 1]{torchtitan2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/torchtitan2024.md\#sec-1-axes}.} Each axis is a
+\nolinkurl{kb/excerpts/torchtitan2024.md#sec-1-axes}.} Each axis is a
 distinct collective with its own bandwidth-vs-latency profile, its own
 memory savings, and its own interaction with model architecture. The
 thesis of this section is that the 2024--2026 frontier has converged
 on these five axes as a single composable surface --- a $5$D
 \texttt{DeviceMesh} \citep[\S 2.1.1]{torchtitan2024}\footnote{KB
-excerpt: \texttt{kb/excerpts/torchtitan2024.md\#sec-2-1-1-meta}.} on
+excerpt: \nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-1-1-meta}.} on
 which a parallelism plan is a tuple of axis sizes --- and that
 designing a frontier training run is now picking that tuple under
 joint constraints of memory, interconnect topology, and the model
@@ -44,7 +44,7 @@ FP32-master-plus-Adam is $4P$ words per worker (\glsterm{parameters}{parameters}
 \glsterm{zero-1-zero-2-zero-3}{ZeRO-1 / ZeRO-2 / ZeRO-3} progressively shard optimizer state /
 gradients / \glsterm{parameters}{parameters} across the $d$ workers, trading per-step
 collective volume for memory \citep[\S 2.1.2]{torchtitan2024}.\footnote{KB
-excerpt: \texttt{kb/excerpts/torchtitan2024.md\#sec-2-1-2-fsdp2}.}
+excerpt: \nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-1-2-fsdp2}.}
 \glsterm{dtensor-devicemesh}{PyTorch}'s FSDP1 implemented full ZeRO-3 via a ``\texttt{FlatParameter}''
 representation that bucketed all of a layer's \glsterm{parameters}{parameters} into one
 contiguous tensor; \glsterm{fsdp2}{FSDP2} replaces that with per-parameter
@@ -74,7 +74,7 @@ chunks and overlaps each chunk's compute with the previous chunk's
 collective via an intra-node \texttt{SymmetricMemory} buffer that
 permits direct P2P writes between GPUs in a node \citep[\S
 2.2.3]{torchtitan2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/torchtitan2024.md\#sec-2-2-3-async-tp}.}
+\nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-2-3-async-tp}.}
 
 \paragraph{CP (Context Parallel).} \glsterm{context-parallel}{CP} shards along the
 \emph{token-position} axis: a $\mathsf{B}\!\times\!\mathsf{S}\!\times\!\mathsf{D}$
@@ -86,7 +86,7 @@ streams keys/values around a ring of $c$ workers, accumulating partial
 without any single worker materializing the $\mathsf{S}\!\times\!\mathsf{S}$
 attention matrix. The headline empirical result is from
 \citet[\S 2.1.5]{torchtitan2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/torchtitan2024.md\#sec-2-1-5-cp}.}: ``on Llama 3.1
+\nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-1-5-cp}.}: ``on Llama 3.1
 8B with 8 H100 GPUs, using \glsterm{context-parallel}{CP} enabled training at context lengths up
 to $262{,}144$ tokens, achieving minor \glsterm{mfu}{MFU} degradation as \glsterm{context-parallel}{CP} degree
 increases.'' Without \glsterm{context-parallel}{CP} the same setup OOMs.
@@ -100,14 +100,14 @@ stage. The classic 1F1B schedule \citep[after][]{harlap2018-pipedream}
 has a ``bubble'' on the first forward pass through all $p$ stages and
 on the last backward pass, totaling $2(p-1)$ stage-times of idle. The
 schedule lineage tightens this:
-\begin{equation}
-\text{1F1B:}\;\; (p-1)(F + B), \qquad
-\text{ZeroBubble (ZB1P):}\;\; (p-1)(F + B - 2W), \qquad
-\text{DualPipe:}\;\; \!\bigl(\tfrac{p}{2} - 1\bigr)(F\mathbin{\text{\&}}B + B - 3W),
+\begin{align}
+\text{1F1B:}\;\;& (p-1)(F + B), \nonumber\\
+\text{ZeroBubble (ZB1P):}\;\;& (p-1)(F + B - 2W), \nonumber\\
+\text{DualPipe:}\;\;& \bigl(\tfrac{p}{2} - 1\bigr)(F\mathbin{\text{\&}}B + B - 3W),
 \label{eq:bubble-formulas}
-\end{equation}
+\end{align}
 verbatim from \citet[\S 3.2.1, table]{deepseek-v3}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-3-2-1-bubble}.}, where
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-3-2-1-bubble}.}, where
 $F$ is the forward microbatch time, $B$ the (combined) backward time,
 and $W$ the weight-gradient sub-step that \glsterm{zerobubble}{ZeroBubble} and \glsterm{dualpipe}{DualPipe}
 extract from $B$. \glsterm{zerobubble}{ZeroBubble} reorders the freshly-isolated $W$ into
@@ -134,7 +134,7 @@ workers; each token's forward pass becomes:
 \citep[\S 3.2; \S 3.2.2]{deepseek-v3}. \glsterm{expert-parallel}{EP} is bandwidth-heavy and
 typically cross-node; in fact, per
 \citet[\S 3.2.1]{deepseek-v3}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-3-2-1-dualpipe}.}, the
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-3-2-1-dualpipe}.}, the
 cross-node \glsterm{expert-parallel}{EP} all-to-all gives \glsterm{precision-pinning}{DeepSeek-V3} ``an inefficient
 computation-to-communication ratio of approximately 1:1,'' which is
 exactly what \glsterm{dualpipe}{DualPipe} is designed to hide.
@@ -150,9 +150,9 @@ per-GPU memory and communication cost under each axis combination.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lcccc}
+\begin{tabularx}{\textwidth}{lcccX}
 \toprule
-Axis combination & Per-GPU param & Per-GPU optim state & Per-GPU activation & Per-step / per-layer comm \\
+Axis combination & Per-GPU param & Per-GPU optim & Per-GPU activ. & Per-step / per-layer comm \\
 \midrule
 Pure \glsterm{data-parallel}{DP} (ZeRO-0)            & $P$     & $\sim 4P$           & $A$              & all-reduce $\Theta(P)$ / step \\
 ZeRO-1 (optim shard)        & $P$     & $4P/d$              & $A$              & all-gather + reduce-scatter $\Theta(P)$ / step \\
@@ -161,9 +161,9 @@ ZeRO-3 / \glsterm{fsdp}{FSDP}-full          & $P/d$   & $4P/d$              & $A
 \glsterm{tensor-parallel}{TP} only (size $t$)          & $P/t$   & $4P/t$              & $A/t$ (sharded)  & 2 all-reduces / linear ($\sim 2L$/step) \\
 \glsterm{pipeline-parallel}{PP} only (stages $p$)        & $P/p$   & $4P/p$              & $A \cdot p$ (in-flight) & P2P send/recv $\Theta(\text{act})$ / boundary \\
 \glsterm{context-parallel}{CP} (size $c$)               & $P$     & $4P$                & $A/c$            & ring KV pass $\Theta(\mathsf{S}\!\cdot\!\mathsf{D})$ / attention \\
-\glsterm{expert-parallel}{EP} (size $e$)               & $P_{\text{shared}} + P_E E/e$ & matched & $\sim A$ + dispatch buffer & 2 all-to-alls / MoE layer \\
+\glsterm{expert-parallel}{EP} (size $e$)               & $P_{\text{shared}} + P_E E/e$ & matched & $\sim A$ + dispatch buf. & 2 all-to-alls / MoE layer \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Per-GPU memory and communication cost under each parallelism
 axis. $P$ is parameters, $A$ is peak per-microbatch activation per
 stage, $L$ is layer count, $\mathsf{S}$ is sequence length,
@@ -222,7 +222,7 @@ right collectives. The reported speedups, on optimized
 \textbf{$12.59\%$ on Llama 3.1 70B at 256 GPU scale (2D)}, to
 \textbf{$30\%$ on Llama 3.1 405B at 512 GPU scale (3D)}''
 \citep[abstract]{torchtitan2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/torchtitan2024.md\#abstract}.} The components that
+\nolinkurl{kb/excerpts/torchtitan2024.md#abstract}.} The components that
 ride on top of the mesh are themselves composable:
 \emph{torchao.float8} for selective per-tensor \glsterm{fp8}{FP8} \texttt{Linear}
 layers (\cref{sec:mixed-precision}), \emph{Async \glsterm{tensor-parallel}{TP}} for matmul-
@@ -230,7 +230,7 @@ collective overlap via \texttt{SymmetricMemory} intra-node buffers,
 \emph{\glsterm{zerobubble}{ZeroBubble} / Flexible-Interleaved-1F1B} pipeline schedules
 expressed as a list of compute actions plus compiler passes that insert
 the corresponding collectives \citep[\S 2.1.4]{torchtitan2024}.\footnote{KB
-excerpt: \texttt{kb/excerpts/torchtitan2024.md\#sec-2-1-4-pp}.}
+excerpt: \nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-1-4-pp}.}
 \glsterm{fsdp2}{FSDP2}'s per-parameter \texttt{DTensor} sharding is the technology that
 makes the rest compose: each parameter knows its own placement on the
 mesh, so a \glsterm{tensor-parallel}{TP}-sharded \texttt{Linear} composes with \glsterm{fsdp2}{FSDP2} by stacking
@@ -267,11 +267,11 @@ days on our cluster with 2048 H800 GPUs.'' After
 \citet[\S 1]{deepseek-v3}.\protect\footnotemark}
 \label{tab:dsv3-cost}
 \end{table}\footnotetext{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-1-cost}.}
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-1-cost}.}
 
 The parallelism plan is \citep[\S 3.2]{deepseek-v3}\footnote{KB
 excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-3-2-parallelism}.}:
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-3-2-parallelism}.}:
 \textbf{16-way \glsterm{pipeline-parallel}{PP} with the \glsterm{dualpipe}{DualPipe} schedule, 64-way \glsterm{expert-parallel}{EP} spanning 8
 nodes, ZeRO-1 \glsterm{data-parallel}{DP}, and \emph{no \glsterm{tensor-parallel}{TP}}.} Concretely, with $G = 2{,}048$,
 $p = 16$, $e = 64$, no \glsterm{tensor-parallel}{TP} and no \glsterm{context-parallel}{CP}, $d = G / (p \cdot e) = 2$ at the
@@ -311,7 +311,7 @@ NVLink/IB ratio.} Within a node, $8$ H800s are connected via NVLink
 with $160$ GB/s; across nodes the connection is InfiniBand with
 $50$ GB/s --- a $3.2\times$ ratio
 \citep[\S 3.2.2]{deepseek-v3}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-3-2-2-allreduce}.} A
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-3-2-2-allreduce}.} A
 naive \glsterm{expert-parallel}{EP} all-to-all over $64$ workers spanning $8$ nodes would put
 every token on the IB hop $7$ times. \glsterm{precision-pinning}{DeepSeek-V3}'s kernel rewrites the
 all-to-all as a two-phase routing constraint:
@@ -349,7 +349,7 @@ $4$-node-cap rule gives the kernel a topology-aware route.
 
 The 2025 add to the distributed-training surface is \emph{Distributed
 \glsterm{per-shape-rms-scaling}{Muon}} \citep[\S 2.3]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-3-distributed}.}: a
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}: a
 sharded variant of the \glsterm{per-shape-rms-scaling}{Muon} optimizer (\cref{sec:optimization})
 compatible with ZeRO-1 \glsterm{data-parallel}{DP}. The wrinkle is that \glsterm{per-shape-rms-scaling}{Muon}'s Newton-Schulz
 orthogonalization step (Eq.~(2) of \cref{sec:optimization}) needs the
@@ -393,7 +393,7 @@ them.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{llll}
+\begin{tabularx}{\textwidth}{llXl}
 \toprule
 System & Year & Distinctive choice & Anchor \\
 \midrule
@@ -408,7 +408,7 @@ DeepSpeed-MoE / Tutel & 2022--23 & \glsterm{expert-parallel}{EP} + all-to-all di
 \glsterm{precision-pinning}{DeepSeek-V3} / \glsterm{dualpipe}{DualPipe} & 2024 & Bidirectional \glsterm{pipeline-parallel}{PP} + ZB decomposition & \citep[\S 3.2.1]{deepseek-v3} \\
 Distributed \glsterm{per-shape-rms-scaling}{Muon} (Moonlight) & 2025 & Per-rank Newton-Schulz on gathered grad & \citep[\S 2.3]{muon-moonlight2025} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \caption{Distributed-training systems lineage. The arc is toward
 \emph{composability}: every axis available, declared via mesh
 placement rather than wired into the model definition.}

@@ -16,7 +16,7 @@ training compute. \glsterm{adamw}{AdamW} is the production default at every disc
 frontier lab, with a particular empirical signature
 --- update-RMS in the $0.2$--$0.4$ range per matrix parameter
 \citep[\S 2.2]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms}.} --- that the
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} --- that the
 2024--2026 alternatives all measure themselves against. \glsterm{lion}{Lion}'s
 sign-momentum and \glsterm{sophia}{Sophia}'s diagonal-Hessian preconditioning each
 reported $\sim$1.5--2$\times$ training-loss speedups; both gaps largely
@@ -30,7 +30,7 @@ polynomial iteration, is the only published optimizer with a
 $\sim\!2\times$ compute-efficiency lift verified at \glsterm{llm}{LLM} scale: the
 Moonlight 3B-active / 16B-MoE total run on $5.7$T tokens
 \citep[\S 3.3]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-3-moonlight}.} The
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-3-moonlight}.} The
 schedule axis runs in parallel: cosine decay from GPT-3 / Llama-1/2/3
 through to the \glsterm{warmup}{Warmup}--Stable--Decay (WSD) family that originated with
 MiniCPM \citep{phi4} and is the schedule used by the Moonlight \glsterm{per-shape-rms-scaling}{Muon}
@@ -55,7 +55,7 @@ L_{\mathrm{AdamW}}(C) &\;=\; 2.608 \cdot C^{-0.054},
    \label{eq:adamw-scaling-fit}
 \end{align}
 verbatim from \citet[\S 3.2, Table 3]{muon-moonlight2025}\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-2-scaling}.}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-2-scaling}.}
 along the compute-optimal Chinchilla frontier at the Moonlight sweep's
 scale. The numerical content of the $2\times$ claim is exactly that
 \cref{eq:muon-scaling-fit} sits below \cref{eq:adamw-scaling-fit} by a
@@ -108,7 +108,7 @@ $C$ & FLOPs & total training compute, $C \approx 6 N D$ from \cref{eq:6nd} \\
 $\mathbf{W} \in \R^{A \times B}$ are the only shapes Muon updates;
 embeddings, the LM head, and 1-D parameters (RMSNorm gains, biases)
 stay on AdamW \citep[\S 2.2]{muon-moonlight2025}.\protect\footnote{KB
-excerpt: \texttt{kb/excerpts/muon-moonlight2025.md\#sec-2-2-hybrid}.}}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-hybrid}.}}
 \label{tab:opt-shapes}
 \end{table}
 
@@ -157,7 +157,7 @@ update has root-mean-square magnitude
 $\| \eta_t \, \hat{m}_t / (\sqrt{\hat{v}_t} + \varepsilon) \|_2 /
 \sqrt{AB}$ that is ``usually around $0.2$ to $0.4$'' \citep[\S
 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms}.} This number
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} This number
 is the calibration target every alternative measures itself against:
 matching it lets one reuse \glsterm{adamw}{AdamW}'s tuned $(\eta, \lambda)$ across
 optimizers, sparing a frontier-scale sweep. \Cref{sec:opt-muon}
@@ -234,7 +234,7 @@ speedups as \emph{training-loss-conditional} until verified on the
 downstream evaluation panel; this is the operational lesson of the
 2024--2025 \glsterm{llm}{LLM} optimizer literature
 \citep[\S 1]{muon-moonlight2025}.\protect\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-1-challenges}.}
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-1-challenges}.}
 \end{contradiction}
 
 \subsection{Muon --- orthogonalized momentum on matrix parameters}
@@ -255,7 +255,7 @@ the step, replacing $\mathbf{M}_t$ with its polar factor $\mathbf{O}_t
 = \mathbf{U} \mathbf{V}^\top$ in the SVD $\mathbf{M}_t = \mathbf{U}
 \boldsymbol{\Sigma} \mathbf{V}^\top$. Verbatim from
 \citet[\S 2.1, eq.\ 1]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-1-update-rule}.}:
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-1-update-rule}.}:
 \begin{equation}
 \begin{aligned}
 \mathbf{M}_t &\;=\; \mu \, \mathbf{M}_{t-1} \,+\, \nabla \mathcal{L}_t(\mathbf{W}_{t-1}) \\
@@ -287,12 +287,12 @@ normalization keeps the iteration in the convergence basin); then
 \tag{4}
 \end{equation}
 verbatim from \citet[\S 2.1, eq.\ 2]{muon-moonlight2025}\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-1-ns}.}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-1-ns}.}
 with coefficients
 $(a, b, c) = (3.4445,\, -4.7750,\, 2.0315)$
 \citep[K.\ Jordan et al.\ 2024, cited in \S
 2.1]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-1-ns}.} Five
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-1-ns}.} Five
 iterations suffice in production (the polynomial converges to the
 polar factor on each side of the singular-\glsterm{value}{value} spectrum at a quintic
 rate near unity). The output $\mathbf{X}_N$ is $\mathbf{O}_t$ in
@@ -333,7 +333,7 @@ load-bearing.
 scale, exceeding the high-precision range of bf16, which might hurt
 the model's performance''
 \citep[\S 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-wd}.} The fix is
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-wd}.} The fix is
 to fold \glsterm{adamw}{AdamW}-style decoupled weight decay into the \glsterm{per-shape-rms-scaling}{Muon} step:
 \begin{equation}
 \mathbf{W}_t \;=\; \mathbf{W}_{t-1} \,-\, \eta_t \!\left(
@@ -342,14 +342,14 @@ to fold \glsterm{adamw}{AdamW}-style decoupled weight decay into the \glsterm{pe
 \label{eq:muon-wd}
 \end{equation}
 verbatim from \citet[\S 2.2, eq.\ 3]{muon-moonlight2025}.\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-wd}.}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-wd}.}
 With \cref{eq:muon-wd}, \glsterm{per-shape-rms-scaling}{Muon} outperforms both vanilla \glsterm{per-shape-rms-scaling}{Muon} and \glsterm{adamw}{AdamW}
 in the over-train regime that \cref{tab:frontier-NDC} of
 \cref{sec:scaling-laws} characterizes.
 
 \textbf{Per-shape update-RMS adjustment.} Lemma 1 of
 \citet[\S 2.2]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms}.} states that
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} states that
 for a full-rank matrix parameter of shape $A \times B$, the
 theoretical \glsterm{per-shape-rms-scaling}{Muon} update RMS is $\sqrt{1/\max(A, B)}$. Tall-thin
 matrices (large $\max(A, B)$, e.g.\ \glsterm{ffn}{FFN} $\mathbf{W}_{\text{up}} \in
@@ -367,19 +367,19 @@ empirical $0.2$--$0.4$ band. The full step is
 \tag{4'}
 \end{equation}
 verbatim from \citet[\S 2.2, eq.\ 4]{muon-moonlight2025}.\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms}.}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.}
 The $0.2$ factor is exactly what calibrates the update RMS to \glsterm{adamw}{AdamW}'s
 typical $0.2$--$0.4$ range, so \glsterm{adamw}{AdamW}'s tuned $(\eta, \lambda)$ ``can
 directly \emph{reuse}'' for \glsterm{per-shape-rms-scaling}{Muon} \citep[\S
 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms}.} This is the
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} This is the
 non-trivial production property: the optimizer change does not
 require a fresh hyperparameter sweep at frontier scale.
 
 \paragraph{Hybrid Muon + AdamW.}
 \glsterm{per-shape-rms-scaling}{Muon} updates only matrix \glsterm{parameters}{parameters} \citep[\S
 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-hybrid}.}
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-hybrid}.}
 Embeddings ($\R^{V \times D}$ are 2-D but treated as embeddings, not
 matrices, in the \glsterm{per-shape-rms-scaling}{Muon} convention because the row dim $V$ is not a
 hidden-dim), the LM head, \glsterm{rmsnorm}{RMSNorm} gains, and any other 1-D parameter
@@ -396,7 +396,7 @@ the natural basis of $\R^P$. \glsterm{per-shape-rms-scaling}{Muon}'s polar proje
 \glsterm{parameters}{parameters} as matrices: rotations of the row or column basis leave
 $\mathbf{O}_t$ equivariant in a way Adam's update is not. Bernstein
 et al.\ 2024 \citep[\S 2.1]{muon-moonlight2025}\protect\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-1-norm}.}
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-1-norm}.}
 formalize the difference as a norm constraint on the implicit
 steepest-descent step: Adam's norm is the ``Max-of-Max'' (
 $\ell_\infty$ over coordinates), which bakes in a coordinate basis;
@@ -412,7 +412,7 @@ by direction.
 
 \paragraph{The 52\%-FLOPs scaling-law claim.}
 \citet[\S 3.2]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-2-scaling}.} run a
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-2-scaling}.} run a
 multi-scale sweep along the Chinchilla compute-optimal frontier and
 fit power laws of the form $L = a C^{-\alpha}$ to validation loss
 (see \cref{eq:muon-scaling-fit,eq:adamw-scaling-fit}). Solving
@@ -423,7 +423,7 @@ C_{\mathrm{AdamW}}$ gives $\eta \approx 0.52$
 52\% training FLOPs to match the performance of \glsterm{adamw}{AdamW} under
 compute optimal setting'' \citep[\S
 3.2]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-2-scaling}.} The
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-2-scaling}.} The
 sweep covers up to the Moonlight production scale; whether the
 constant factor in $\eta \approx 0.52$ holds at $70$B+ dense or
 $600$B+ MoE is untested.
@@ -433,7 +433,7 @@ The largest published \glsterm{per-shape-rms-scaling}{Muon} run is Moonlight, a 
 $15.29$B-total parameter Mixture-of-Experts (or $3$B-active / $16$B-
 total when including embedding) trained on $5.7$T tokens
 \citep[\S 3.3]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-3-moonlight}.} The
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-3-moonlight}.} The
 architecture is the \glsterm{precision-pinning}{DeepSeek-V3}-small variant from \citet{deepseek-v3}
 with the auxiliary-loss-free MoE load-balancing scheme; the precision
 recipe is BF16 working with FP32 \glsterm{master-weights}{master weights}. The schedule is the
@@ -494,7 +494,7 @@ cooldown is preceded by an LR \emph{re-rise} that loads
 high-quality data into a controlled mini-\glsterm{warmup}{warmup}-then-decay phase.
 Verbatim from \citet[\S
 3.3]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-3-moonlight}.}:
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-3-moonlight}.}:
 \begin{equation}
 \eta_t^{\mathrm{Moonlight}} \;=\;
 \begin{cases}
@@ -541,7 +541,7 @@ The optimizer-state partitioning that ZeRO-1 / \glsterm{fsdp}{FSDP} exploit for
 operates on the full $A \times B$ momentum matrix, not on the
 per-\glsterm{data-parallel}{DP}-rank shard. \citet[\S
 2.3]{muon-moonlight2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-3-distributed}.}
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}
 introduce Distributed \glsterm{per-shape-rms-scaling}{Muon}, which partitions optimizer state on \glsterm{data-parallel}{DP} as
 ZeRO-1 does and adds two operations:
 \begin{enumerate}
@@ -555,7 +555,7 @@ to update the local parameter shard.
 \end{enumerate}
 The latency overhead is reported at $1$\%--$3$\% of forward-backward
 time \citep[\S 2.3]{muon-moonlight2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-3-distributed}.}
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}
 \Cref{sec:distributed-training} expands on how each optimizer
 composes with the full $G = d \cdot t \cdot c \cdot p \cdot e$
 DeviceMesh \citep[\S 4]{torchtitan2024}: how Distributed \glsterm{per-shape-rms-scaling}{Muon}
@@ -577,7 +577,7 @@ approximately constant in $C$, so the prediction is that \glsterm{per-shape-rms-
 holds at $70$B+ dense and $600$B+ MoE. This is also the open
 question \citet{muon-moonlight2025} raise themselves \citep[\S
 1]{muon-moonlight2025}.\protect\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-1-challenges}.} The
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-1-challenges}.} The
 mechanistic risk is that the polar-factor approximation in
 \cref{eq:newton-schulz} breaks down when the spectrum of
 $\mathbf{M}_t$ becomes too anisotropic at very large width, or when
@@ -599,7 +599,7 @@ downstream evaluation in independent
 \eqref{eq:muon-scaling-fit} is also a training-loss claim ---
 validation NLL on the pre-training distribution. The downstream
 panel \citep[\S 3]{muon-moonlight2025}\protect\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-3-3-moonlight}.} of
+\nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-3-moonlight}.} of
 the Moonlight tech report is supportive (Moonlight's downstream
 metrics are reported competitive with similarly-sized \glsterm{precision-pinning}{DeepSeek-V3}
 variants) but does not yet have an independent third-party

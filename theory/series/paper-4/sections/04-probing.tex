@@ -43,7 +43,7 @@ residual-stream activation at layer $\ell$, position $t$. A
 \end{equation}
 with $\mathbf{w} \in \mathbb{R}^D$, $b \in \mathbb{R}$, and $\sigma$ the
 sigmoid \citep{alain-bengio-2017}\footnote{KB excerpt:
-\texttt{kb/excerpts/alain-bengio-2017.md\#abstract}.}. For a
+\nolinkurl{kb/excerpts/alain-bengio-2017.md#abstract}.}. For a
 multiclass property $y \in \{1, \dots, K\}$ the \glsterm{probe-2}{probe} is a \glsterm{softmax}{softmax}
 classifier with $\mathbf{W} \in \mathbb{R}^{K \times D}$. The \glsterm{probe-2}{probe} is
 fit on a labeled dataset
@@ -70,7 +70,7 @@ $\mathsf{B}\!\times\!\mathsf{S}\!\times\!K$ (multiclass).
 \citet{alain-bengio-2017} introduced this framework on Inception~v3 and
 ResNet-50 and reported that ``the linear separability of features
 increase[s] monotonically along the depth of the
-model''\footnote{KB excerpt: \texttt{kb/excerpts/alain-bengio-2017.md\#abstract}
+model''\footnote{KB excerpt: \nolinkurl{kb/excerpts/alain-bengio-2017.md#abstract}
 (verbatim).}: a class-label \glsterm{probe-2}{probe} at layer $\ell$ does at least as well
 as the same \glsterm{probe-2}{probe} at any earlier layer. The result anchored the
 ``hierarchical-abstraction'' picture that subsequent NLP probing work
@@ -91,7 +91,7 @@ $\mathbf{B} \in \mathbb{R}^{k \times D}$ such that, in $\mathbf{B}$-space,
 the squared $L_2$ distance between two tokens' activations approximates
 the parse-tree distance between those tokens
 \citep{hewitt2019-structural-probe}\footnote{KB excerpt:
-\texttt{kb/excerpts/hewitt2019-structural-\glsterm{probe-2}{probe}.md\#abstract}.}:
+\nolinkurl{kb/excerpts/hewitt2019-structural-probe.md#abstract}.}:
 \begin{equation}
   \boxed{\;
   d_{\mathbf{B}}(\mathbf{h}_i, \mathbf{h}_j)^2
@@ -122,7 +122,7 @@ implicated than its trained counterparts. Given a balanced labeled set
 $\{(\mathbf{h}_i, y_i \in \{+, -\})\}$ at a chosen $(\ell, t)$, the
 \emph{mass-mean} (or \emph{difference-in-means}) \glsterm{probe-2}{probe} direction is
 \citep{marks-tegmark-2023-truth}\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#abstract},
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#abstract},
 \texttt{\#sec-1-contributions}.}:
 \begin{equation}
   \boxed{\;
@@ -164,7 +164,7 @@ classification accuracy is competitive with supervised probes on
 in-distribution examples. \citet{marks-tegmark-2023-truth} situate
 CCS alongside logistic-regression and contrastive probes
 \citep[\S 1.1]{marks-tegmark-2023-truth}\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-1-related}.} and
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-1-related}.} and
 report that subsequent work has documented generalization failures
 under negation — CCS-discovered directions on `cities` do not transfer
 cleanly to `neg\_cities`. The unsupervised commitment is methodologically
@@ -229,7 +229,7 @@ remains salient through layer 35, with PCA visualizations showing the
 linear true/false separation emerging in early-middle layers and
 ``emerg[ing] later for datasets of more structurally complex statements
 (e.g.\ conjunctive statements)''~\citep[\S 4]{marks-tegmark-2023-truth}\footnote{KB
-excerpt: \texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-3-layers},
+excerpt: \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-3-layers},
 \texttt{\#sec-4-misalignment}.}.
 
 \paragraph{Position selection: the period-token trick.} For free-form
@@ -243,7 +243,7 @@ on LLaMA-2 family: causal-tracing localizes truth representations to a
 group of hidden states ``over the final token of the statement and
 end-of-sentence punctuation,'' which they hypothesize ``store a
 representation of the statement's truth''\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-3-layers}.}. The
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-3-layers}.}. The
 period-token convention is now standard in the truth-direction
 literature; \citet{marks-tegmark-2023-truth} cite Tigges et al.\ 2023 as
 the prior empirical observation of the same \glsterm{summarization-behavior}{summarization behavior} on
@@ -255,7 +255,7 @@ sentiment.
 \begin{table}[t]
 \centering
 \caption{The eight probe families that anchor the LLM probing literature.
-Compiled from \texttt{kb/notes/interpretability/probing.md} \S 4.1.}
+Compiled from \nolinkurl{kb/notes/interpretability/probing.md} \S 4.1.}
 \label{tab:probe-families}
 \small
 \begin{tabularx}{\linewidth}{l l X X}
@@ -300,14 +300,14 @@ Contrastive / CCS unsupervised
 
 Table~\ref{tab:probe-families} traces the eight families that anchor the
 \glsterm{llm}{LLM} probing literature, in the form lifted from
-\texttt{kb/notes/interpretability/probing.md} \S 4.1. The lineage tells
+\nolinkurl{kb/notes/interpretability/probing.md} \S 4.1. The lineage tells
 a coherent story. The 2017--2019 wave (rows 1--4) establishes the
 methodology and the first methodology critique: the control-task
 baseline of \citet{hewitt2019-control-tasks} is the explicit recognition
 that \glsterm{probe-2}{probe} accuracy alone is insufficient, since a sufficiently
 expressive \glsterm{probe-2}{probe} can learn $y$ from features the model itself does not
 use. The 2022 review of \citet{belinkov2022-probing-survey}\footnote{KB
-excerpt: \texttt{kb/excerpts/belinkov2022-probing-survey.md\#abstract}.}
+excerpt: \nolinkurl{kb/excerpts/belinkov2022-probing-survey.md#abstract}.}
 consolidates the critique into three confounders — \glsterm{probe-2}{probe} expressivity,
 spurious correlation, vestigial information — and surveys the
 ``advances'' that pair probes with causal interventions
@@ -335,7 +335,7 @@ six-step pipeline:
     \texttt{cities\_cities\_conj}, and the \texttt{likely} control
     dataset (10\,000 nonfactual completions) precisely to control for
     surface confounders such as text probability\footnote{KB excerpt:
-    \texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-2-datasets}.}.
+    \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-2-datasets}.}.
   \item \textbf{Cache} activations $\{\mathbf{h}^{(\ell, t)}_i\}_i$ via
     one forward pass per example. Cost is $|\mathcal{D}|$ forward
     passes plus storage for $|\mathcal{D}| \cdot D$ floats per

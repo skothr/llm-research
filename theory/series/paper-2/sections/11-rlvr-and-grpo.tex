@@ -15,17 +15,17 @@ reward with a deterministic verifier: $R(x, y) = \mathbb{1}[\,\mathrm{verify}(x,
 the indicator that the model's output passes a sympy equivalence check,
 a unit-test suite, or a regex format check
 \citep[\S 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The thesis of this
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The thesis of this
 section is that two coupled changes — a programmatic verifier in place
 of a learned \glsterm{reward-model}{reward model}, and a group-mean baseline in place of a
 co-sized \glsterm{value}{value} model \citep[\S 4.1]{shao2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1}.} — together produce the
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1}.} — together produce the
 post-training recipe behind \citet{deepseek-r1}, the Qwen 2.5 / 3
 reasoning lines \citep{qwen3}, T\"ulu 3 \citep{tulu3}, and the
 open-weight RL-for-reasoning ecosystem of 2024--2026. The headline
 empirical fact is also the cleanest single number in the entire training
 pipeline: \citet[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} report
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} report
 DeepSeek-\glsterm{r1-zero}{R1-Zero}'s average pass@1 on AIME 2024 climbing from
 $15.6\%$ to $77.9\%$ over the course of one continuous \glsterm{grpo-2}{GRPO} run, and to
 $86.7\%$ with \glsterm{self-consistency-2}{self-consistency} over $64$ samples — surpassing the
@@ -59,8 +59,7 @@ attached test cases.'' Per-problem unit-test suites are the gold reward;
 competitive programming benchmarks (LiveCodeBench, Codeforces) ship
 them.
 \item \emph{Format.} $\mathrm{verify}$ is a parser or regex (e.g., the
-trajectory contains a well-formed
-\texttt{<think>...</think>} block before its answer) — a small constant
+trajectory contains a well-formed \texttt{<think>}\allowbreak\texttt{...</think>} block before its answer) — a small constant
 add-on reward that keeps the reasoning channel alive during early
 training \citep[\S 2.2]{deepseek-r1}.
 \end{itemize}
@@ -94,7 +93,7 @@ from applying neural reward models — whether outcome-based or
 process-based — to reasoning tasks. This decision is predicated on our
 observation that neural reward models are susceptible to \glsterm{reward-hacking}{reward hacking}
 during large-scale reinforcement learning.''\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.}
 
 \subsection{GRPO: critic-free PPO with a group-mean baseline}
 \label{sec:rlvr-grpo-objective}
@@ -105,10 +104,10 @@ algorithm samples a group of $G$ trajectories per prompt and uses the
 group's empirical reward distribution as the variance-reducing
 baseline, eliminating the \glsterm{value}{value} network $V_\phi$ entirely
 \citep[\S 4.1, motivation]{shao2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1-motivation}.} The objective,
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1-motivation}.} The objective,
 restated and verified in \citet[\S 2.1, Eq.\ 1]{deepseek-r1}\footnote{KB
-excerpts: \texttt{kb/excerpts/shao2024.md\#sec-4-1} and
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-grpo}.}:
+excerpts: \nolinkurl{kb/excerpts/shao2024.md#sec-4-1} and
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-grpo}.}:
 \begin{equation}
 \begin{aligned}
 \mathcal{J}_{\mathrm{GRPO}}(\theta) \;=\; & \E_{q \sim P(Q),\, \{o_i\}_{i=1}^G \sim \pi_{\theta_{\mathrm{old}}}(\cdot \mid q)} \bigg[ \\
@@ -139,7 +138,7 @@ $\pi_{\mathrm{ref}}$ is a frozen reference policy (typically the SFT
 cold-start, cf.\ \cref{sec:sft}); $\beta$ is the KL coefficient,
 typically $0.001$--$0.04$ — \citet[\S 2.1]{deepseek-r1} report
 $\beta = 0.001$ for \glsterm{r1-zero}{R1-Zero};\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-hp}.} $\epsilon$ is the PPO
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.} $\epsilon$ is the PPO
 clip range, typically $0.2$.
 
 \paragraph{Memory profile (the load-bearing reason GRPO matters at LLM
@@ -151,7 +150,7 @@ trade is $G \times$ rollout count per prompt against $V_\phi$'s
 parameter and activation footprint, and at sparse reward (where $V_\phi$
 struggles to learn anyway) the trade is favorable
 \citep[\S 4.1]{shao2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/shao2024.md\#sec-4-1-motivation}.} The four
+\nolinkurl{kb/excerpts/shao2024.md#sec-4-1-motivation}.} The four
 co-resident model copies of \cref{sec:rlhf}'s PPO infrastructure
 (policy, reference, reward, \glsterm{value}{value}) reduce to two (policy, reference);
 the verifier is a CPU subprocess, not a model.
@@ -193,17 +192,17 @@ cold-start. Reward is rule-based: accuracy (binary correctness from a
 math/code verifier) plus a small \glsterm{format-reward}{format reward} for the
 \texttt{<think>...</think><answer>...</answer>} envelope
 \citep[\S 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.}
 \item \emph{DeepSeek-R1.} A multi-stage pipeline: cold-start SFT on a
 small set of long-\glsterm{chain-of-thought}{CoT} exemplars, then \glsterm{grpo-2}{GRPO} with the same verifiable
 rewards (plus a language-consistency reward), then a second SFT on
 rejection-sampled reasoning traces, then a final RL alignment stage for
 helpfulness and harmlessness \citep[\S 3]{deepseek-r1}.\footnote{KB
-excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.}
+excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.}
 \end{itemize}
 
 The training-curve headline \citep[\S 2.3]{deepseek-r1}\footnote{KB
-excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.}: ``Figure
+excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.}: ``Figure
 1(a) depicts the performance trajectory of DeepSeek-\glsterm{r1-zero}{R1-Zero} on the AIME
 2024 benchmark throughout the RL training process, where the average
 pass@1 score on AIME 2024 shows a significant increase, jumping from an
@@ -223,7 +222,7 @@ length grows from a few hundred tokens early in training to roughly
 $10{,}000$ tokens at convergence, accompanied by the emergence of
 self-reflective patterns
 \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} The verifier reward
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} The verifier reward
 contains no length term — the policy discovers that long traces win on
 math and code, on its own. Cross-paper to \hyperref[P3-sec:inference-compute-scaling]{Paper~3 §4} for the
 inference-time-compute interpretation of this growth.
@@ -233,14 +232,14 @@ discrete jump in the model's use of the word ``\texttt{wait}'' during
 reflection, characterized as ``an `\glsterm{aha-moment}{aha moment}', characterized by a
 sudden increase in the use of the word `wait' during reflections.''
 \footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} The \glsterm{chain-of-thought}{chain-of-thought}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} The \glsterm{chain-of-thought}{chain-of-thought}
 structure is being actively reorganized during RL, not just used.
 
 \paragraph{R1 vs.\ R1-Zero — what the cold-start adds.} \glsterm{r1-zero}{R1-Zero}'s traces
 are difficult to read and language-mix between English and Chinese
 because \glsterm{precision-pinning}{DeepSeek-V3}-Base is multilingual
 \citep[\S 3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.} R1's cold-start
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.} R1's cold-start
 SFT adds: (a) legibility (single-language English traces with consistent
 formatting); (b) the \texttt{<think>...</think>} envelope as a learned
 default. R1's reasoning capability matches \glsterm{r1-zero}{R1-Zero}'s; the cold-start is
@@ -252,7 +251,7 @@ and \hyperref[P3-sec:r1-family]{Paper~3 §8}).} R1 generates $800$K reasoning tr
 reasoning capability into Qwen-class small models — distilled-32B
 matches or exceeds OpenAI o1-mini on multiple reasoning benchmarks
 \citep[\S 4]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-4}.} The capability is
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-4}.} The capability is
 expressible as an SFT dataset; small-model trainers do not need to run
 RL.
 
@@ -264,7 +263,7 @@ RL.
 introduce four targeted modifications to \glsterm{grpo-2}{GRPO} that together cut
 training-step count to AIME-2024 score 50 by roughly half on
 Qwen2.5-32B \citep[\S 4]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-4-headline}.} Each modification
+\nolinkurl{kb/excerpts/dapo2025.md#sec-4-headline}.} Each modification
 addresses a measured failure mode of the \glsterm{grpo-2}{GRPO} recipe.
 
 \paragraph{(i) Clip-Higher (Eq.\ 10).} \glsterm{grpo-2}{GRPO}'s symmetric clip
@@ -278,7 +277,7 @@ already-favored tokens. \glsterm{dapo-2}{DAPO} decouples the bound:
 with $\epsilon_{\mathrm{low}} = 0.2$ kept at the PPO default and
 $\epsilon_{\mathrm{high}}$ enlarged (e.g., $0.28$)
 \citep[Eq.\ 10]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-clip-higher}.} The asymmetry
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-clip-higher}.} The asymmetry
 permits larger upward updates on under-probable correct tokens — i.e.,
 prevents collapse onto already-favored trajectories.
 
@@ -292,7 +291,7 @@ and the sample contributes no gradient. \glsterm{dapo-2}{DAPO} enforces
 \end{equation}
 \citep[Eq.\ 11]{dapo2025}, discarding and re-sampling groups that fail
 the constraint.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-dynamic-sampling}.} Compute is
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-dynamic-sampling}.} Compute is
 concentrated on informative gradients.
 
 \paragraph{(iii) Token-Level Loss (Eq.\ 12).} \glsterm{grpo-2}{GRPO} normalizes by
@@ -305,7 +304,7 @@ replaces this with a token-aggregated normalization:
 \end{equation}
 Every token weighs equally regardless of trajectory length
 \citep[Eq.\ 12]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-token-loss}.} The change avoids
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-token-loss}.} The change avoids
 the systematic underweighting of long correct CoTs — which is precisely
 the regime \cref{sec:rlvr-r1}'s response-length growth produces.
 
@@ -322,7 +321,7 @@ R_{\mathrm{length}}(o_i) \;=\; \begin{cases}
 \label{eq:dapo-overlong}
 \end{equation}
 \citep[Eq.\ 13]{dapo2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-3-overlong}.} Variance from
+\nolinkurl{kb/excerpts/dapo2025.md#sec-3-overlong}.} Variance from
 length-truncated samples falls; the genuine signal that an overlong
 reasoning trajectory is bad is preserved.
 
@@ -355,7 +354,7 @@ training-data axis decouples from the labeling-budget axis.
 expressible as an SFT dataset, and the small-model trainer does not
 need to run RL at all
 \citep[\S 4]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-4}.} The post-training-stack
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-4}.} The post-training-stack
 output of one lab becomes the SFT input of another.
 \end{enumerate}
 
@@ -419,7 +418,7 @@ $77.9\%$ pass@1 with unreadable traces; R1 (with cold-start) is cleaner
 \citep[\S 3]{deepseek-r1}. Whether the cold-start is
 capability-load-bearing or only stylistic is open: anecdotal evidence
 from 2025--2026 reproductions (per the topics-survey sweep recorded in
-\texttt{kb/notes/post-training/\glsterm{capability-ceiling}{rlvr}-and-grpo.md\#5-4}) shows removing
+\nolinkurl{kb/notes/post-training/rlvr-and-grpo.md#5-4}) shows removing
 cold-start sometimes destabilizes RL, sometimes works fine; the
 determining factor is unclear.
 \end{contradiction}

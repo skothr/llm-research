@@ -34,7 +34,7 @@ content did the \emph{later} layers specifically commit?
 \label{sec:lens-setup}
 
 \citet{belrose2023-tuned-lens} frame the \glsterm{transformer}{transformer} as iterative
-inference\footnote{KB excerpt: \texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-1-iterative}.}:
+inference\footnote{KB excerpt: \nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-1-iterative}.}:
 each block makes a small additive update to the \glsterm{residual-stream}{residual stream}, and
 the per-layer prediction tends to converge smoothly toward the
 final-layer output. Concretely, for a pre-\glsterm{layer-normalization}{LayerNorm} \glsterm{transformer}{transformer} the
@@ -48,7 +48,7 @@ followed by MLP). Splitting the model $\mathcal{M}$ into the layers up
 to $\ell$ and the layers after, the function from a \glsterm{hidden-state}{hidden state}
 $\mathbf{h}_\ell$ to the final-layer \glsterm{logits}{logits} is
 \citep[\S 2, Eq.~2]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-2-decomposition}.}
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-2-decomposition}.}
 \begin{equation}
   \mathcal{M}_{>\ell}(\mathbf{h}_\ell)
   \;=\;
@@ -75,7 +75,7 @@ prediction many layers before $L$, and that prompt-injected or
 otherwise anomalous inputs deviate from the smooth trajectory in
 detectable ways — the basis for a near-perfect prompt-injection
 detector \citep[\S 5.3]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-5-3}.}.
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-5-3}.}.
 
 \subsection{The logit lens: no-training baseline}
 \label{sec:logit-lens}
@@ -84,7 +84,7 @@ The \glsterm{logit-lens}{logit lens} drops the post-$\ell$ residual updates from
 Eq.~\eqref{eq:residual-decomp} entirely — it sets
 $\sum_{\ell'=\ell}^{L} F_{\ell'} = 0$ and reads
 \citep[\S 2, Eq.~3]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-2-logit-lens}.}:
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-2-logit-lens}.}:
 \begin{equation}
   \boxed{\;\mathrm{LogitLens}(\mathbf{h}_\ell) \;:=\; \mathrm{LayerNorm}[\mathbf{h}_\ell]\,W_U\;}
   \label{eq:logit-lens}
@@ -116,7 +116,7 @@ treatment, not to the original post.
 
 \citet[\S 2]{belrose2023-tuned-lens} document three failure modes of
 the raw \glsterm{logit-lens}{logit lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-2-failures}.}.
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-2-failures}.}.
 \textbf{Bias.} The \glsterm{logit-lens}{logit lens} systematically puts more mass on certain
 \glsterm{vocabulary}{vocabulary} items than the final layer does. On Pythia 12B, the bias
 measured as KL between logit-lens marginal and final-layer marginal is
@@ -154,7 +154,7 @@ $\mathbf{h}_\ell$ into the basis the unembedding expects:
   \label{eq:tuned-lens}
 \end{equation}
 \citep[\S 3, Eq.~8]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-3-tuned-lens}.},
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-3-tuned-lens}.},
 with $A_\ell \in \mathbb{R}^{D \times D}$ and
 $\mathbf{b}_\ell \in \mathbb{R}^D$. Translators are initialized to the
 identity, so a freshly initialized \glsterm{tuned-lens}{tuned lens} is identical to the logit
@@ -173,7 +173,7 @@ own final-layer prediction:
   \label{eq:tuned-lens-loss}
 \end{equation}
 \citep[\S 3, Eq.~9]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-3-loss}.}.
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-3-loss}.}.
 Using $\mathcal{M}_{>\ell}$ as the soft target rather than ground-truth
 tokens is what makes Eq.~\eqref{eq:tuned-lens-loss} a distillation loss:
 the translator is incentivized to recover what the model itself already
@@ -190,7 +190,7 @@ fraction of the model's own size, since $D \times D$ is roughly the
 size of one attention block's $W^Q$ projection. For Pythia 12B with
 $D = 5120$ and $L = 36$, this works out to roughly $944$M extra
 \glsterm{parameters}{parameters} \citep[\S 3.2]{belrose2023-tuned-lens}\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-3-tuned-lens}.} ---
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-3-tuned-lens}.} ---
 considerably smaller than per-layer unembeddings of size
 $V \times D$ would be, since $V \in [50\text{K}, 250\text{K}]$ across
 the models Belrose et al.\ study. The cost-per-(layer, token) at
@@ -280,7 +280,7 @@ inputs, the trajectory deviates from the smooth manifold of normal
 trajectories detectably enough that off-the-shelf isolation-forest /
 local-outlier-factor classifiers achieve near-perfect prompt-injection
 detection accuracy \citep[\S 5.3]{belrose2023-tuned-lens}\footnote{KB
-excerpt: \texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-5-3}.}. On
+excerpt: \nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-5-3}.}. On
 \emph{hard examples} — data points the model required many training
 steps to learn — the trajectory's commit-layer extends deeper into the
 stack: harder examples are classified later
@@ -300,7 +300,7 @@ robust to incorrect demonstrations than the final-layer prediction.
 (BLOOM 560M, GPT-Neo 1.3B, GPT-Neo 2.7B), but flag that without
 peeking at ground-truth labels the lens user has no a-priori recipe
 for choosing the right layer\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-5}.}. So
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-5}.}. So
 ``commit later $=$ commit better'' is sometimes false, and the field
 lacks a principled criterion for layer selection. The strongest
 form of the claim is that lens techniques diagnose what \emph{would}
@@ -409,7 +409,7 @@ orthonormal basis ordered by mean-ablation influence and validates that
 the directions important to the lens are also important to the
 underlying model (Spearman $\rho = 0.89$ on Pythia 410M, layer
 $18$)\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-4-cbe}.}. The next
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-4-cbe}.}. The next
 two sections take up this correlational/causal split directly: §%
 \ref{sec:probing} introduces probes as the supervised correlational
 analog of lenses --- a trained classifier on frozen activations rather

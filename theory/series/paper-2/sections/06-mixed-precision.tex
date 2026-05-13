@@ -17,7 +17,7 @@ hardware with native BF16 Tensor Cores \citep{kalamkar2019-bfloat16}
 $\to$ \glsterm{fp8}{FP8} fine-grained quantization with promotion-to-CUDA-cores
 accumulation \citep[\S 3.3]{deepseek-v3} $\to$ FP4-class formats
 (Blackwell-era \glsterm{nvfp4}{NVFP4}, BitNet 1.58 ternary)\footnote{KB note:
-\texttt{kb/notes/training/mixed-precision-and-stability.md\#3-1}.} that
+\nolinkurl{kb/notes/training/mixed-precision-and-stability.md#3-1}.} that
 cut storage and compute another factor of two but whose frontier-scale
 production status is contested. Each step halves storage and roughly
 doubles per-Tensor-Core throughput on supporting hardware
@@ -28,7 +28,7 @@ precision — and the headline 2026 fact is that \glsterm{precision-pinning}{Dee
 14.8T-token, 2-month, 2048-H800 pre-training reported zero
 irrecoverable loss spikes in \glsterm{fp8}{FP8}
 \citep[abstract]{deepseek-v3}.\footnote{KB excerpt:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#abstract}.}
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#abstract}.}
 
 \subsection{The FP32 baseline and why we leave it}
 \label{sec:mp-fp32}
@@ -54,7 +54,7 @@ FP16 GEMM on the same silicon \citep[\S 3.3]{deepseek-v3}. Distributed
 all-reduce traffic also halves with each precision step, since
 gradient bandwidth is the dominant inter-node cost in \glsterm{data-parallel}{DP} / \glsterm{fsdp}{FSDP} runs
 \citep[\S 2.2.4]{torchtitan2024}.\footnote{KB excerpt:
-\texttt{kb/excerpts/torchtitan2024.md\#sec-2-2-4}.} The mixed-precision
+\nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-2-4}.} The mixed-precision
 question is therefore not whether to leave FP32 — every frontier-scale
 \glsterm{llm}{LLM} does — but how far down the precision stack we can go before
 training diverges or downstream quality degrades.
@@ -66,7 +66,7 @@ training diverges or downstream quality degrades.
 mixed-precision recipe that survived two GPU generations as the default
 training configuration. Three independent ingredients
 \citep[\S 2--4]{micikevicius2017-mixed-precision}\footnote{KB excerpt:
-\texttt{kb/excerpts/micikevicius2017-mixed-precision.md\#sec-2}.}:
+\nolinkurl{kb/excerpts/micikevicius2017-mixed-precision.md#sec-2}.}:
 
 \begin{enumerate}
 \item Maintain a single-precision \emph{master} copy of the weights,
@@ -151,7 +151,7 @@ default for $\sim$3 years until BF16 made \glsterm{loss-scaling}{loss scaling} u
 Floating-Point format: 16 bits with 8 exponent bits and 7 mantissa
 bits, the same exponent width as FP32. The trade is explicit
 \citep[\S 2]{kalamkar2019-bfloat16}\footnote{KB excerpt:
-\texttt{kb/excerpts/kalamkar2019-bfloat16.md\#sec-2}.}:
+\nolinkurl{kb/excerpts/kalamkar2019-bfloat16.md#sec-2}.}:
 
 \begin{table}[h]
 \centering
@@ -210,7 +210,7 @@ $\pm 448$) and \emph{E5M2} (5 exponent, 2 mantissa, range $\pm
 and E5M2 for gradients, on the principle that gradients need more
 dynamic range. \glsterm{precision-pinning}{DeepSeek-V3}'s recipe \citep[\S 3.3.1, \S
 3.3.2]{deepseek-v3}\footnote{KB excerpts:
-\texttt{kb/excerpts/\glsterm{precision-pinning}{deepseek-v3}-training.md\#sec-3-3-fp8} and
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#sec-3-3-fp8} and
 \texttt{\#sec-3-3-2-finegrained}.} is the most aggressive published
 production \glsterm{fp8}{FP8} training to date, and its decisions disagree with
 NVIDIA's hybrid in three structural ways.
@@ -296,7 +296,7 @@ scheme operating on $32$-element blocks, where each block carries an
 8-bit shared exponent. The format itself is E2M1 (2 exponent bits, 1
 mantissa, dynamic range $\pm 6$ before the per-block scale)
 \citep[\S 3.3, format zoo]{deepseek-v3}.\footnote{KB note:
-\texttt{kb/notes/training/mixed-precision-and-stability.md\#1-3} and
+\nolinkurl{kb/notes/training/mixed-precision-and-stability.md#1-3} and
 \texttt{\#3-1}; format-zoo entry derived there from Blackwell white-
 paper material.} The compute-throughput gain over \glsterm{fp8}{FP8} is roughly
 $2\times$ by spec, mirroring the FP16-to-\glsterm{fp8}{FP8} step. The fine-grained-
@@ -320,7 +320,7 @@ quantization function:
    \label{eq:bitnet-gamma}
 \end{align}
 verbatim from \citet[\S 2, eqs.\ 1--3]{ma2024-bitnet}.\footnote{KB
-excerpt: \texttt{kb/excerpts/ma2024-bitnet.md\#sec-2}.} Activations
+excerpt: \nolinkurl{kb/excerpts/ma2024-bitnet.md#sec-2}.} Activations
 are scaled per-token to $[-Q_b, Q_b]$ rather than $[0, Q_b]$ to
 eliminate zero-point quantization \citep[\S 2]{ma2024-bitnet}. The
 matrix multiply at inference reduces to integer addition (no floating-
@@ -374,7 +374,7 @@ $K$ before the dot product, as adopted in LLaMA-2 and successors).
 $\sqrt{1/\max(A, B)}$ for an $A\times B$ matrix parameter, combined
 with growing weight RMS, ``exceeds the high-precision range of
 bf16'' without weight decay \citep[\S 2.2]{muon-moonlight2025}.\footnote{KB
-excerpt: \texttt{kb/excerpts/\glsterm{muon}{muon}-moonlight2025.md\#sec-2-2-rms} and
+excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms} and
 \texttt{\#sec-2-2-wd}.} The \glsterm{per-shape-rms-scaling}{Muon}-Moonlight fix is mandatory weight
 decay plus per-shape $\sqrt{\max(A, B)} \cdot 0.2$ scaling that pulls
 the update + weight back into BF16's representable range. Optimizer

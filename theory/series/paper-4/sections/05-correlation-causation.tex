@@ -82,7 +82,7 @@ further confounds remain.
 \citet{belinkov2022-probing-survey} consolidates the post-control-task
 critique into a three-confounder taxonomy that has become the
 methodological \glsterm{vocabulary}{vocabulary} of the
-field\footnote{KB excerpt: \texttt{kb/excerpts/belinkov2022-probing-survey.md\#abstract}.}.
+field\footnote{KB excerpt: \nolinkurl{kb/excerpts/belinkov2022-probing-survey.md#abstract}.}.
 The first is \citet{hewitt2019-control-tasks}'s
 \textbf{\glsterm{probe-2}{probe}-expressivity} confound, addressed by Eq.~\eqref{eq:selectivity}.
 The second is the \textbf{spurious-correlate} confound: even a
@@ -250,7 +250,7 @@ held-out test split is high; cross-dataset transfer to
 is sufficient to argue that $\mathbf{d}_{\mathrm{MM}}$ is not a
 surface artifact of the prompt template
 \citep[\S 1.1, \S 4]{marks-tegmark-2023-truth}\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-1-related},
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-1-related},
 \texttt{\#sec-4-misalignment}.}. The closing causal step is the
 ablation experiment from Eq.~\eqref{eq:direction-ablation}: the
 authors apply
@@ -261,7 +261,7 @@ hidden states identified by the patching pipeline of
 Causal evidence obtained by surgically intervening in a \glsterm{llm}{LLM}'s forward
 pass, causing it to treat false statements as true and vice
 versa.\hfill\citep[abstract]{marks-tegmark-2023-truth}\footnote{KB
-excerpt: \texttt{kb/excerpts/marks-tegmark-2023-truth.md\#abstract}.}
+excerpt: \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#abstract}.}
 \end{quote}
 The TRUE/FALSE flip is the load-bearing observation. The \glsterm{probe-2}{probe} alone
 identifies a direction that linearly separates the two classes
@@ -277,7 +277,7 @@ implicated; the model is not just \emph{representing} truth, it is
 direction-addition (Eq.~\eqref{eq:direction-addition}) along
 $\mathbf{d}_{\mathrm{MM}}$ steers the model's outputs in the predicted
 direction, providing the matching sufficiency
-test\footnote{KB excerpt: \texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-1-contributions}.}.
+test\footnote{KB excerpt: \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-1-contributions}.}.
 
 The strongest form of the conclusion --- ``$\mathbf{d}_{\mathrm{MM}}$
 is the \glsterm{truth-direction-2}{truth direction}'' --- is, however, qualified by the misalignment
@@ -286,7 +286,7 @@ mass-mean direction is dataset-dependent in early-mid layers, with
 \texttt{cities} and \texttt{neg\_cities} truth directions
 \emph{antipodal} in early LLaMA-2-13B layers and only aligned by
 late layers \citep[\S 4]{marks-tegmark-2023-truth}\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-4-misalignment}.}.
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-4-misalignment}.}.
 The causal-validation argument lifts the load-bearing claim from
 ``decodable'' to ``used'' but does not, by itself, resolve whether
 ``truth'' is a single linear axis or a multi-axis subspace; the next
@@ -310,7 +310,7 @@ directly as TRUE/FALSE under the model's own decoder head, while the
 second (group \emph{b}) sits over the final token of the statement
 and end-of-sentence punctuation and ``store[s] a representation of
 the statement's truth''\footnote{KB excerpt:
-\texttt{kb/excerpts/marks-tegmark-2023-truth.md\#sec-3-layers}.}.
+\nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-3-layers}.}.
 
 The second stage is probing within those states. Mass-mean
 (Eq.~\ref{eq:mass-mean} of \S\ref{sec:probing}) is fit on the

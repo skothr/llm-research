@@ -58,7 +58,7 @@ DeepSeek-R1 \citep{deepseek-r1}
   & yes; ${\sim}10^4$ tok traces \citep[\S 2.3]{deepseek-r1}
   & yes; \glsterm{grpo-2}{GRPO} \citep[\S 2.1]{deepseek-r1}, terminal binary reward
   & none; explicit no-\glsterm{process-reward-model}{PRM} commitment \citep[\S 2.2]{deepseek-r1}
-  & none in headline; \glsterm{self-consistency-2}{self-consistency} optional \citep[\S 2.3]{deepseek-r1}
+  & none in headline;\allowbreak{} \glsterm{self-consistency-2}{self-consistency} optional \citep[\S 2.3]{deepseek-r1}
   & none (open-weights, fixed schema) \\
 Qwen3-thinking
   & yes; toggleable via system prompt
@@ -77,13 +77,13 @@ OpenAI o1 / o3
   & yes (RL-class on reasoning trajectories per the system card; whether the reward is verifier-derived in the \glsterm{rlvr-3}{RLVR} sense is not disclosed): ``the more reinforcement learning ($\ldots$) the more time it spends thinking'' \deepencite{openai-o1 — system card; cf.\ openai-o3 — system card; claimed in the system card, not externally reproduced}
   & not disclosed; headline reports do not name a \glsterm{process-reward-model}{PRM} \deepencite{openai-o1}
   & not disclosed
-  & \texttt{reasoning\_effort} $\in\{\text{low, medium, high}\}$ \deepencite{openai-o-series — API reference}\\
+  & \nolinkurl{reasoning_effort} $\in\{$low,\allowbreak{} medium,\allowbreak{} high$\}$ \deepencite{openai-o-series — API reference}\\
 Gemini~2.5-thinking \citep{gemini2-5}
   & yes; reasoning-mode
   & yes \deepencite{gemini2-5 — Google DeepMind technical report}
   & not disclosed; verifier-style reward emphasised \deepencite{gemini2-5}
   & not disclosed
-  & \texttt{thinkingBudget} (token cap) \deepencite{gemini2-5 — API reference} \\
+  & \texttt{thinking\-Budget} (token cap) \deepencite{gemini2-5 — API reference} \\
 \glsterm{claude}{Claude} 3.7 / 4 extended thinking
   & yes; ``extended thinking'' mode
   & yes \deepencite{claude-3-7 — Anthropic system card; analogous treatment for Claude 4 family}
@@ -116,7 +116,7 @@ tier-B vendor system cards via \deepencite{} where \texttt{papers.json}
 does not yet carry a stable bibkey.}
 \label{tab:frontier-2026}
 \end{table}
-\footnotetext{KB excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2}.}
+\footnotetext{KB excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2}.}
 
 Three reading conventions follow from the table. First, the
 ``Verifier in RL loop'' column is uniformly ``none'' or ``not
@@ -124,7 +124,7 @@ disclosed'': no frontier-2026 entry that has published a system card
 identifies a \glsterm{process-reward-model}{PRM} as a reward source in the headline RL loop. The R1
 authors' explicit no-\glsterm{process-reward-model}{PRM} commitment
 \citep[\S 2.2]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} is the strongest
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} is the strongest
 attested form; the closed-weight entries decline to specify, which on
 this question is operationally indistinguishable from absence at the
 level of evidence available.
@@ -158,7 +158,7 @@ RL loop \citep[\S 2.2]{deepseek-r1}, and an RL phase that drives
 average response length from $\sim\!200$ to $\sim\!10^4$ tokens with
 no length term in the reward
 \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} \Cref{sec:r1-family}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} \Cref{sec:r1-family}
 walked the four-stage protocol; the family it seeded by 2026-Q2
 includes Qwen's QwQ reasoning-preview \deepencite{qwq} and Qwen3-thinking
 \deepencite{qwen3-thinking; cf.\ \citet{qwen3}}, plus the open-replication
@@ -239,7 +239,7 @@ acknowledges \cref{eq:snell-compute-optimal} explicitly: the caller
 budget axis $N$ as a first-class request-time parameter. This is the
 operational form of the difficulty-binning operationalisation of
 \citet[\S 3.2]{snell2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-3-2-difficulty}.} ---
+\nolinkurl{kb/excerpts/snell2024.md#sec-3-2-difficulty}.} ---
 hard-problem callers select expensive mode; easy-problem callers
 select cheap mode --- pushed to the API edge.
 
@@ -277,7 +277,7 @@ o-series and Gemini~2.5 rows attribute headline gains to ``more
 reinforcement learning'' \deepencite{openai-o1; gemini2-5} on
 reasoning trajectories. The \glsterm{dapo-2}{DAPO}-class RL improvements
 of \cref{sec:rlvr-grpo-dapo} \citep{dapo2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/dapo2025.md\#sec-2}.} are part of the same family
+\nolinkurl{kb/excerpts/dapo2025.md#sec-2}.} are part of the same family
 deployed in some open-weight reproductions \citep{tulu3}.
 
 \item \textbf{Long-\glsterm{chain-of-thought}{CoT} is universal.} Every row deploys a
@@ -355,7 +355,7 @@ rule out the contrary on closed-weight rows. The R1 row is the only
 one where the ``Verifier in RL loop = none'' cell is positively
 attested rather than not-disclosed
 \citep[\S 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} Two readings of
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} Two readings of
 the column-uniformity that follows are both compatible with the
 evidence: \emph{(i)} the field has converged on verifier-only RL plus
 long-\glsterm{chain-of-thought}{CoT} plus thinking-budget knobs as the dominant pattern, or

@@ -29,7 +29,7 @@ problem; each picks a corner of it.
 
 The shared formal frame is the agentic-benchmark instance
 $\mathcal{B} = (s_0, \mathcal{A}, \mathcal{T}, \rho, g, V)$%
-\footnote{KB note: \texttt{kb/notes/evaluation/agentic-benchmarks.md\#sec-1}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/agentic-benchmarks.md#sec-1}.}
 --- initial environment state $s_0$, action space $\mathcal{A}$,
 transition $\mathcal{T}$, task description $\rho$, goal $g$, and an
 \glsterm{end-state-verifier}{end-state verifier} $V(s_T, g) \in \{0, 1\}$ that accepts or rejects
@@ -45,7 +45,7 @@ benchmark author did not anticipate.
 
 \citet{jimenez2024-swebench} construct SWE-Bench from real
 GitHub-issue $\to$ pull-request pairs%
-\footnote{KB excerpt: \texttt{kb/excerpts/jimenez2024-swebench.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/jimenez2024-swebench.md#abstract}.}
 \citep[\S{}abstract]{jimenez2024-swebench}:
 
 \begin{quote}\itshape
@@ -57,7 +57,7 @@ pull requests across 12 popular Python repositories.
 Each task instance ships a base commit (the codebase state $s_0$),
 the issue text ($\rho$), and the pull-request's test diff partitioned
 into two regression-test sets%
-\footnote{KB excerpt: \texttt{kb/excerpts/jimenez2024-swebench.md\#sec-eval-protocol}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/jimenez2024-swebench.md#sec-eval-protocol}.}.
 \textsf{FAIL\_TO\_PASS} is the set of tests that fail on the pre-PR
 codebase and must pass on the post-patch state $s_T$.
 \textsf{PASS\_TO\_PASS} is the set of tests that pass on the pre-PR
@@ -115,7 +115,7 @@ require scaffold-source disclosure as a leaderboard-entry condition.
 
 \citet{xie2024-osworld} push the action space all the way down to the
 desktop GUI%
-\footnote{KB excerpt: \texttt{kb/excerpts/xie2024-osworld.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/xie2024-osworld.md#abstract}.}
 \citep[\S{}abstract]{xie2024-osworld}:
 
 \begin{quote}\itshape
@@ -127,7 +127,7 @@ such as Ubuntu, Windows, and macOS.
 
 The benchmark ships $369$ tasks covering real web and desktop apps,
 OS file I/O, and workflows that span multiple applications%
-\footnote{KB note: \texttt{kb/notes/evaluation/agentic-benchmarks.md\#23-osworld}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/agentic-benchmarks.md#23-osworld}.}
 \citep[\S{}abstract]{xie2024-osworld}. Each task carries an OS-image
 setup script that produces $s_0$, a natural-language task description
 $\rho$, and a per-task evaluator script that checks the final OS
@@ -163,7 +163,7 @@ vision-language alignment, not autonomous task completion. The Phase
 benchmarks abstract the GUI to a text representation
 (accessibility-tree or DOM) so that the planning-vs-grounding axes
 can be measured separately%
-\footnote{KB note: \texttt{kb/notes/evaluation/agentic-benchmarks.md\#5-frontier}.}?
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/agentic-benchmarks.md#5-frontier}.}?
 The field has not committed.
 \end{contradiction}
 
@@ -171,7 +171,7 @@ The field has not committed.
 \label{sec:agentic-gaia}
 
 \citet{mialon2023-gaia} invert the usual benchmark gradient%
-\footnote{KB excerpt: \texttt{kb/excerpts/mialon2023-gaia.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/mialon2023-gaia.md#abstract}.}
 \citep[\S{}abstract]{mialon2023-gaia}:
 
 \begin{quote}\itshape
@@ -192,7 +192,7 @@ of the tool chain, not in specialized knowledge.
 The dataset is $466$ questions total, with $300$ retained for the
 gated leaderboard test set and $166$ released as a public development
 set, stratified into Levels 1/2/3 by tool-chain depth%
-\footnote{KB excerpt: \texttt{kb/excerpts/mialon2023-gaia.md\#sec-dataset}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/mialon2023-gaia.md#sec-dataset}.}.
 Level 1 is one-to-three-tool short chains with no specialized
 knowledge; Level 2 is multi-tool web-browsing plans; Level 3 is
 long-horizon tool use with multi-document synthesis, sometimes more
@@ -220,7 +220,7 @@ single-step capability gaps.
 \citet{yao2024-tau-bench} add the two pieces missing from the others:
 a simulated user who can clarify and push back, and a policy document
 the agent must follow%
-\footnote{KB excerpt: \texttt{kb/excerpts/yao2024-tau-bench.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#abstract}.}
 \citep[\S{}abstract]{yao2024-tau-bench}:
 
 \begin{quote}\itshape
@@ -230,7 +230,7 @@ which are vital for deploying them in real world applications.
 \end{quote}
 
 The benchmark construction%
-\footnote{KB excerpt: \texttt{kb/excerpts/yao2024-tau-bench.md\#sec-user-sim}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-user-sim}.}
 \citep[\S{}sec-user-sim]{yao2024-tau-bench}:
 
 \begin{quote}\itshape
@@ -245,7 +245,7 @@ policy enforcement). The verifier is end-state DB equality --- the
 final database rows must match the annotated goal state ---
 sidestepping \glsterm{llm-as-judge}{LLM-as-judge} contamination on the agent side. The
 methodologically novel piece is the $\mathrm{pass}^k$ metric%
-\footnote{KB excerpt: \texttt{kb/excerpts/yao2024-tau-bench.md\#sec-passk}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-passk}.}
 \citep[\S{}sec-passk]{yao2024-tau-bench}:
 \[
 \mathrm{pass}^k(\text{agent}, \text{task}) = \mathbb{1}\!\left[\bigwedge_{i=1}^{k} V(s_T^{(i)}, g) = 1\right],
@@ -353,7 +353,7 @@ simulator is itself a model in training distribution. The field's
 own response --- replacement benchmarks (Multi-SWE-bench, SWE-Lancer,
 $\tau$2-Bench), cost-aware leaderboards (Aider Polyglot's
 $\$$-per-task axis), and \glsterm{task-horizon-metric}{METR}'s \glsterm{task-horizon-metric}{task-horizon metric}%
-\footnote{KB note: \texttt{kb/notes/evaluation/agentic-benchmarks.md\#5-frontier}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/agentic-benchmarks.md#5-frontier}.}
 --- is consistent with believing both readings simultaneously: agentic
 benchmarks are the best capability instruments we have, and we do
 not yet trust them to predict deployment \glsterm{value}{value}.

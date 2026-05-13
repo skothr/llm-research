@@ -37,7 +37,7 @@ implementation that materializes
 $\boldsymbol{S}, \boldsymbol{P} \in \R^{S \times S}$ in \glsterm{hbm}{HBM},
 $\Theta(N d + N^2)$ \glsterm{hbm}{HBM} accesses per head (with $N \equiv S$ for
 \glsterm{self-attention}{self-attention})~\citep[\S 3.2 Thm.\ 2]{dao2022}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dao2022.md\#sec-3-2}.} The roofline diagnostic
+\nolinkurl{kb/excerpts/dao2022.md#sec-3-2}.} The roofline diagnostic
 asks which side of the inequality
 \begin{equation}
   \underbrace{\frac{\text{FLOPs}}{\text{HBM bytes}}}_{\text{arithmetic intensity }\ I}
@@ -62,7 +62,7 @@ firmly memory-bound. \citet{yuan2025} state the consequence directly
 for long-context decoding: ``attention computation \dots accounts for
 70--80\% of total latency when decoding 64K-length contexts'' on
 \glsterm{softmax}{softmax} architectures~\citep[\S 1]{yuan2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/yuan2025.md\#sec-1}.}
+\nolinkurl{kb/excerpts/yuan2025.md#sec-1}.}
 
 \begin{intuition}
 ``Attention is quadratic in $S$'' is the pop summary, but the
@@ -85,7 +85,7 @@ into blocks of shapes $B_r \times d_h$ and $B_c \times d_h$ that fit in
 SRAM, and stream a numerically stable \emph{\glsterm{online-softmax}{online softmax}} across
 $\boldsymbol{K}, \boldsymbol{V}$ tiles so that the full $S \times S$
 matrix is never written to \glsterm{hbm}{HBM}.\footnote{KB excerpt:
-\texttt{kb/excerpts/dao2022.md\#sec-3-1}.} The tile sizes are chosen
+\nolinkurl{kb/excerpts/dao2022.md#sec-3-1}.} The tile sizes are chosen
 from the SRAM budget $M$:
 \begin{equation}
   B_c \;=\; \Bigl\lceil \frac{M}{4 d_h} \Bigr\rceil,
@@ -133,7 +133,7 @@ $(m, \ell) \in \R^{S \times 2}$ (a factor-$d_h/2$ saving), and
 recomputes $\boldsymbol{S}, \boldsymbol{P}$ from
 $\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V}$ tiles in SRAM on the
 backward pass.\footnote{KB excerpt:
-\texttt{kb/excerpts/dao2022.md\#sec-3-1-recompute}.} This is selective
+\nolinkurl{kb/excerpts/dao2022.md#sec-3-1-recompute}.} This is selective
 gradient checkpointing applied at the attention-kernel level: the
 forward FLOP count rises by a factor of $\sim\!2$ on the backward
 recomputation, but \glsterm{hbm}{HBM} bytes drop from $\Theta(N^2)$ to $\Theta(N
@@ -253,7 +253,7 @@ The first three implementations preserve the attention formula
 exactly. \glsterm{nsa}{NSA} \citep{yuan2025} departs: at long context, it replaces
 the full-sequence keys/values $\boldsymbol{K}_{:t}, \boldsymbol{V}_{:t}$
 with a sparse triple of branch-specific \glsterm{key}{key}/\glsterm{value}{value}
-sets,\footnote{KB excerpt: \texttt{kb/excerpts/yuan2025.md\#sec-3-2}.}
+sets,\footnote{KB excerpt: \nolinkurl{kb/excerpts/yuan2025.md#sec-3-2}.}
 \begin{equation}
   \boldsymbol{o}_t^* \;=\; \sum_{c \in \{\mathrm{cmp}, \mathrm{slc}, \mathrm{win}\}}
                           g_t^c \cdot \mathrm{Attn}\!\bigl(\boldsymbol{q}_t,
@@ -299,7 +299,7 @@ being that without this branch, compression and selection collapse
 onto local patterns and never learn long-range structure.
 
 \paragraph{Group-centric kernel.} The selection branch's irregular
-gather pattern would defeat \glsterm{flashattention}{FlashAttention}'s contiguous-tile loading.
+gather pattern would defeat the contiguous-tile loading of \glsterm{flashattention}{FlashAttention}.
 \glsterm{nsa}{NSA} inverts the loop: where FA2/3 load contiguous \emph{\glsterm{query}{query} blocks}
 into SRAM, \glsterm{nsa}{NSA} loads all \glsterm{gqa}{GQA}-group heads at \emph{one \glsterm{query}{query} position}
 into SRAM and pairs them with that position's selected sparse KV

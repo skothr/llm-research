@@ -41,7 +41,7 @@ $\BHSdh$. The output \glsterm{logits}{logits} are shape $\bsv$.
 
 The pre-\glsterm{layer-normalization}{LayerNorm} \glsterm{transformer}{transformer} block updates the \glsterm{residual-stream}{residual stream}
 additively\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-2-decomposition}.}
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-2-decomposition}.}
 \citep[\S 2, Eq.~1]{belrose2023-tuned-lens}:
 \begin{equation}
   \mathbf{h}^{(\ell+1, t)}
@@ -58,7 +58,7 @@ result back into the same \glsterm{residual-stream}{residual stream} by addition
 gating, no replacement, no nonlinearity at the bus level. Recursing
 Eq.~\eqref{eq:residual-update} from any intermediate $\ell$ to the
 output gives the residual decomposition\footnote{KB excerpt:
-\texttt{kb/excerpts/belrose2023-tuned-lens.md\#sec-2-decomposition}.}
+\nolinkurl{kb/excerpts/belrose2023-tuned-lens.md#sec-2-decomposition}.}
 \citep[\S 2, Eq.~2]{belrose2023-tuned-lens}:
 \begin{equation}
   \mathcal{M}_{>\ell}\!\left(\mathbf{h}^{(\ell, t)}\right)
@@ -164,7 +164,7 @@ warrant comes from the activation-patching localization at
 $\mathrm{AIE}_{\mathrm{MLP}} = 6.6\%$ vs.\
 $\mathrm{AIE}_{\mathrm{attn}} = 1.6\%$ on GPT-2 XL
 \citep[\S 2.2]{meng2022-rome}\footnote{KB excerpt:
-\texttt{kb/excerpts/meng2022-rome.md\#sec-2-2}.}. We adopt the
+\nolinkurl{kb/excerpts/meng2022-rome.md#sec-2-2}.}. We adopt the
 \glsterm{key}{key}--\glsterm{value}{value} framing as the \emph{anchor for §10}, not as a settled
 fact: alternative framings (FFNs as \glsterm{feature}{feature}-direction \emph{detectors}
 in \glsterm{superposition}{superposition}, the \citet{leask2025-sae-not-canonical} non-atomic
@@ -247,13 +247,13 @@ components (residual-stream sites, attention heads, MLP sublayers,
 projection links between them --- whose function $C(\mathbf{x})$
 agrees with $M(\mathbf{x})$ on the task distribution after \emph{\glsterm{knockout}{knockout}}
 of $\mathcal{M} \setminus C$~\citep[\S 2]{wang2022-ioi}\footnote{KB
-excerpt: \texttt{kb/excerpts/wang2022-ioi.md\#sec-2-definition}. Wang
+excerpt: \nolinkurl{kb/excerpts/wang2022-ioi.md#sec-2-definition}. Wang
 et al.\ define \glsterm{knockout}{knockout} via \glsterm{mean-ablation}{mean ablation} on a reference distribution
 $p_{\mathrm{ABC}}$ rather than zero ablation, on the empirical
 grounds that ``zero ablation [\ldots] lead[s] to noisy results''.}.
 A \glsterm{circuit}{circuit} \emph{claim} commits to three quantitative criteria from
 \citet[\S 4]{wang2022-ioi}\footnote{KB excerpt:
-\texttt{kb/excerpts/wang2022-ioi.md\#sec-4-criteria}.}:
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-4-criteria}.}:
 \begin{description}
   \item[Faithfulness.] $C$ performs the task as well as the whole
     model: $C(\mathbf{x}) \approx \mathcal{M}(\mathbf{x})$ on the task

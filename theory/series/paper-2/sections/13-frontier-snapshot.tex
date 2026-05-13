@@ -50,7 +50,7 @@ paper or model card reports.
 \begin{table}[h]
 \centering
 \scriptsize
-\begin{tabularx}{\textwidth}{l XXXXXX}
+\begin{tabularx}{\textwidth}{X XXXXXX}
 \toprule
 \textbf{Model} & \textbf{Data} & \textbf{Scale + opt.} & \textbf{Distrib./Prec.} & \textbf{SFT} & \textbf{Pref-RL} & \textbf{Reason-RL + Adapt} \\
 \midrule
@@ -72,8 +72,8 @@ optional preference-\glsterm{dpo}{DPO} post-\glsterm{rlvr-3}{RLVR} &
 \addlinespace[2pt]
 Llama 3 405B / 70B / 8B \citep{meta-llama3} &
 $\sim 15$T tok; classifier-filtered web &
-$D/N \in \{37, 214, 1875\}$; \glsterm{adamw}{AdamW}; cosine &
-\glsterm{data-parallel}{DP}+\glsterm{tensor-parallel}{TP}$\,8$+\glsterm{pipeline-parallel}{PP}+\glsterm{context-parallel}{CP}; BF16 weights, \glsterm{fp8}{FP8} activations selectively &
+$D/N$: 37 / 214 / 1875; \glsterm{adamw}{AdamW}; cosine &
+\glsterm{data-parallel}{DP}\allowbreak+\glsterm{tensor-parallel}{TP}$\,8$\allowbreak+\glsterm{pipeline-parallel}{PP}\allowbreak+\glsterm{context-parallel}{CP}; BF16 weights, \glsterm{fp8}{FP8} activations selectively &
 multi-round \emph{\glsterm{rejection-sampling-sft}{rejection-sampling SFT}} ($10$M+ samples) &
 \textbf{\glsterm{dpo}{DPO}} \citep{rafailov2023-dpo} on iterated preferences &
 no public \glsterm{rlvr-3}{RLVR} phase; no merge \\

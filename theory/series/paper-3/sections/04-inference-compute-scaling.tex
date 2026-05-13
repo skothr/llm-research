@@ -23,7 +23,7 @@ smaller base model plus compute-optimal test-time spend matches a
 $14\times$ larger base model at FLOPs-matched cost on easy and
 intermediate MATH problems
 \citep[\S 1, \S 6]{snell2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-1-flops-matched}.} --- promotes
+\nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.} --- promotes
 inference-time compute from a deployment optimisation to a research-grade
 scaling-law variable.
 
@@ -47,7 +47,7 @@ the \glsterm{llm}{LLM} on $q$ under test-time hyperparameters $\theta$ with a co
 budget of $N$ inference FLOPs (or, equivalently, generated tokens).
 \citet[\S 3.1, Eq.~1]{snell2024} define the
 \textbf{\glsterm{test-time-compute-optimal-scaling-strategy}{test-time compute-optimal scaling strategy}}%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#sec-3-1}. Notation note: \citet{snell2024} write the subscript with mixed labels $a^\ast$ in the index and $y^\ast$ in the indicator; we unify to $y^\ast(q)$ throughout for readability without altering the equation's content.} as
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-3-1}. Notation note: \citet{snell2024} write the subscript with mixed labels $a^\ast$ in the index and $y^\ast$ in the indicator; we unify to $y^\ast(q)$ throughout for readability without altering the equation's content.} as
 \begin{equation}
   \theta^\ast_{q,\, y^\ast(q)}(N)
     \;=\; \argmax_\theta \;
@@ -118,12 +118,12 @@ toward $y^\ast(q)$ most efficiently.
 \label{sec:snell-proposer-verifier}
 
 Across the otherwise-disparate test-time-compute literature ---
-\glsterm{chain-of-thought}{chain-of-thought} (\cref{sec:cot-phenomenon}), \glsterm{self-consistency-2}{self-consistency}
+\linebreak[0]\glsterm{chain-of-thought}{chain-of-thought} (\cref{sec:cot-phenomenon}), \glsterm{self-consistency-2}{self-consistency}
 (\cref{sec:self-consistency}), best-of-$N$ with verifier
 (\cref{sec:process-reward-models}), beam search and MCTS
 (\cref{sec:tree-search}), revision-finetuned models, \glsterm{rlvr-3}{RLVR}-trained
 long-\glsterm{chain-of-thought}{CoT} --- \citet[\S 2]{snell2024}%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#sec-2-proposer-verifier}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-2-proposer-verifier}.}
 identify two and only two structural levers for shaping
 $\mathrm{Target}(\theta, N, q)$:
 \begin{enumerate}
@@ -141,7 +141,7 @@ scorer. Concretely: best-of-$N$ with an outcome \glsterm{reward-model}{reward mo
 with a process \glsterm{reward-model}{reward model}
 (\cref{sec:process-reward-models}), beam search or MCTS guided by a
 \glsterm{process-reward-model}{PRM} \citep[\S 5.2]{snell2024}.%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#sec-5-2-search}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-5-2-search}.}
 This reshapes $\mathrm{Target}(\theta, N, q)$ from the outside, by
 post-hoc reweighting.
 \end{enumerate}
@@ -182,7 +182,7 @@ optimising over both jointly is the content of \cref{eq:snell-compute-optimal}.
 
 The argmax in \cref{eq:snell-compute-optimal} is unevaluable as written:
 it requires $y^\ast(q)$ at deployment. \citet[\S 3.2]{snell2024}%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#sec-3-2-difficulty}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-3-2-difficulty}.}
 introduce a tractable approximation by replacing the per-prompt argmax
 with a \textbf{difficulty-conditional} argmax over a discrete bucket of
 prompts.
@@ -257,7 +257,7 @@ the argmax shifts from revision-heavy to search-heavy to
 \label{sec:snell-4x}
 
 \citet[abstract]{snell2024}%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#abstract}.}
 report that picking the right strategy per difficulty bin --- the
 operationalised \cref{eq:snell-bin-argmax} --- delivers
 \textbf{$\sim 4\times$ efficiency} over a fixed best-of-$N$ baseline at
@@ -300,7 +300,7 @@ The left side is a smaller base model plus compute-optimal test-time
 spend (the operationalised \cref{eq:snell-bin-argmax}); the right side
 is a $14\times$ larger base model running a single-pass inference at
 matched total FLOPs. \citet[\S 1]{snell2024}%
-\footnote{KB excerpt: \texttt{kb/excerpts/snell2024.md\#sec-1-flops-matched}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.}
 report:
 \begin{quote}
 On easy and intermediate questions, and even hard questions

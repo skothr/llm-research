@@ -19,19 +19,19 @@ each treated one leg of the reasoning triangle in isolation, this
 section is the empirical proof point that the three legs
 \emph{compose}. \citet{deepseek-r1} train DeepSeek-R1 and DeepSeek-\glsterm{r1-zero}{R1-Zero}
 on the \glsterm{precision-pinning}{DeepSeek-V3} base \citep[\S 2]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2}.} using a four-stage
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2}.} using a four-stage
 pipeline whose RL phase moves the policy along the inference-compute
 axis (response length grows from $\sim\!200$ to $\sim\!10^4$ tokens
 \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.}) using only the
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.}) using only the
 verifiable terminal reward of \cref{eq:verifier-reward}, with no \glsterm{process-reward-model}{PRM}
 in the headline RL loop \citep[\S
 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The headline
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The headline
 number --- AIME 2024 average pass@1 climbs from $15.6\%$ to $77.9\%$,
 reaching $86.7\%$ with \glsterm{self-consistency-2}{self-consistency} over $64$ samples
 \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} --- is the
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} --- is the
 cleanest single piece of evidence in the 2025--2026 reasoning literature
 that the triangle is a co-design rather than three independent gains
 that happen to ship together.
@@ -51,7 +51,7 @@ about whether the headline number is the gain it appears to be.
 \citet[\S 2.3]{deepseek-r1} establish a four-stage training protocol
 for DeepSeek-R1 that subsequent open-replication work largely
 follows.\footnote{KB note:
-\texttt{kb/notes/reasoning/reasoning-training.md\#2}.} The pipeline is
+\nolinkurl{kb/notes/reasoning/reasoning-training.md#2}.} The pipeline is
 the operational form of the reasoning triangle: each stage moves the
 policy along a specific leg, and the legs compose in a fixed order.
 
@@ -59,13 +59,13 @@ policy along a specific leg, and the legs compose in a fixed order.
 ($\sim\!10^4$ examples) of curated long-\glsterm{chain-of-thought}{CoT} exemplars is used for SFT
 on the \glsterm{precision-pinning}{DeepSeek-V3} base \citep[\S
 3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.} The cold-start
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.} The cold-start
 data is described by \citet[\S 3]{deepseek-r1} as
 ``thousands of cold-start data that exhibits a conversational,
 human-aligned thinking process.'' The SFT pass installs the
 \texttt{<think>...</think><answer>...</answer>} format
 \citep[\S 2]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2}.} that the \glsterm{format-reward}{format reward} of
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2}.} that the \glsterm{format-reward}{format reward} of
 \cref{sec:rlvr-verifier-reward} subsequently maintains, and seeds the
 language-consistency property that \glsterm{r1-zero}{R1-Zero}'s purely-RL-trained traces
 lack (\cref{sec:r1-zero-vs-r1}).
@@ -76,13 +76,13 @@ objective \cref{eq:grpo} of \cref{sec:rlvr-grpo-objective}, using the
 binary verifier reward of \cref{eq:verifier-reward} on math, code,
 and STEM problems with mechanically-checkable answers
 \citep[\S 2.2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-2-reward}.} The verifier is
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-2-reward}.} The verifier is
 a sum of an \emph{accuracy reward} (binary, from sympy-style
 exact-match for math, unit-test execution for code, regex for
 multiple-choice) and a small constant \emph{\glsterm{format-reward}{format reward}} for the
 \texttt{<think>...</think>} envelope
 \citep[\S 2.2]{deepseek-r1}.\footnote{KB note:
-\texttt{kb/notes/post-training/\glsterm{capability-ceiling}{rlvr}-and-grpo.md\#2-3}.} R1's protocol
+\nolinkurl{kb/notes/post-training/rlvr-and-grpo.md#2-3}.} R1's protocol
 explicitly excludes neural reward models: \citet[\S
 2.2]{deepseek-r1} state ``we abstain from applying neural reward
 models---whether outcome-based or process-based---to reasoning tasks''
@@ -92,7 +92,7 @@ RL.
 The empirical content of Stage 2 is the headline of the entire R1
 paper. Hyperparameters \citep[\S
 2.1]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-1-hp}.}: learning rate
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.}: learning rate
 $3\!\times\!10^{-6}$, KL coefficient $\beta = 0.001$, sampling
 temperature $T = 1$ for rollout, group size $G = 16$, max trajectory
 length $L_\text{max} = 32{,}768$ tokens before step $8.2\text{k}$ and
@@ -102,11 +102,11 @@ quantities move together: average response length grows from a few
 hundred tokens to $\sim\!10^4$, and AIME 2024 average pass@1 grows
 from $15.6\%$ to $77.9\%$ \citep[\S
 2.3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} \citet[\S
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} \citet[\S
 2.3]{deepseek-r1} additionally describe an
 ``\glsterm{aha-moment}{aha moment}'' --- a sudden spike in the policy's use of the
 \texttt{wait} token during reflection passages.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aha}.} The verifier is
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aha}.} The verifier is
 agnostic to length and to reflection structure; the policy discovers
 both as instrumentally useful for hitting the binary reward.
 
@@ -117,7 +117,7 @@ yielding $\sim\!600$K reasoning traces that are concatenated with
 $\sim\!200$K non-reasoning examples (general chat, safety formatting,
 non-reasoning task prompts) into an $\sim\!800$K mixed
 SFT set \citep[\S 3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.} The Stage-2
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.} The Stage-2
 policy is fine-tuned on this set with standard cross-entropy SFT.
 This stage is the bridge between ``specialist reasoner from Stage 2''
 and ``general assistant that also reasons,'' and it is where the
@@ -130,7 +130,7 @@ verifiable rewards (for the reasoning subset of prompts) with
 preference-based rewards (for helpfulness, harmlessness, instruction
 following on the broader prompt distribution) \citep[\S
 3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.} The released
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.} The released
 DeepSeek-R1 weights are the output of this stage. Only Stage 2 of the
 four is purely \glsterm{rlvr-3}{RLVR}; Stage 4 is an \glsterm{rlvr-3}{RLVR}/\glsterm{rlhf}{RLHF} hybrid whose preference
 component is the same machinery as the ``RL stage'' that bookends
@@ -144,24 +144,24 @@ Stage 3) bookend the reasoning RL phase: cold-start SFT seeds it,
 DeepSeek-\glsterm{r1-zero}{R1-Zero} is the same Stage-2 \glsterm{rlvr-3}{RLVR} run applied to the
 \glsterm{precision-pinning}{DeepSeek-V3} base directly, without Stage 1's cold-start SFT
 \citep[\S 2]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2}.} The structural
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2}.} The structural
 comparison cleanly isolates what the cold-start contributes. \glsterm{r1-zero}{R1-Zero}
 reaches \emph{the same reasoning capability headline} ---
 $15.6\%\!\to\!77.9\%$ AIME 2024 pass@1, $86.7\%$ with
 \glsterm{self-consistency-2}{self-consistency} \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime}.} --- but its
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} --- but its
 traces are unreadable: ``DeepSeek-\glsterm{r1-zero}{R1-Zero} struggles with challenges
 like poor readability, and language mixing, as \glsterm{precision-pinning}{DeepSeek-V3}-Base is
 trained on multiple languages, especially English and Chinese''
 \citep[\S 3]{deepseek-r1}.\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-3-pipeline}.} The traces
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-3-pipeline}.} The traces
 interleave Chinese and English at the token level; the format
 envelope drifts; the prose is brittle. Capability and legibility
 decouple.
 
 The cold start, on this evidence, contributes three things
 \citep[\S 3]{deepseek-r1}\footnote{KB note:
-\texttt{kb/notes/reasoning/reasoning-training.md\#2}.}: \emph{format}
+\nolinkurl{kb/notes/reasoning/reasoning-training.md#2}.}: \emph{format}
 (the \texttt{<think>...</think><answer>...</answer>} envelope is
 seeded so the \glsterm{format-reward}{format reward} of \cref{sec:rlvr-verifier-reward} acts
 on a non-zero baseline rather than carving the envelope from
@@ -190,7 +190,7 @@ The \glsterm{r1-zero}{R1-Zero} / R1 split mirrors a long-standing pattern in RL:
 all-RL agent reaches comparable capability to the SFT-then-RL agent,
 at the cost of some surface property the latter inherited from the
 supervised initialisation.\footnote{KB note:
-\texttt{kb/notes/reasoning/reasoning-training.md\#5} draws the
+\nolinkurl{kb/notes/reasoning/reasoning-training.md#5} draws the
 AlphaGo / AlphaGo-Zero analogy in this form.} The reading available
 from R1's evidence: a small-but-curated supervised initialisation
 substantially shortens the RL horizon to legibility without changing
@@ -205,8 +205,8 @@ inference-compute axis of \cref{sec:inference-compute-scaling} is the
 accuracy grow together over the RL run, in a relationship that is
 qualitatively monotone-concave in
 $\log\!L$.\footnote{KB note:
-\texttt{kb/notes/reasoning/reasoning-training.md\#2-stage-2}; KB
-excerpt: \texttt{kb/excerpts/deepseek-r1.md\#sec-2-3-aime} and
+\nolinkurl{kb/notes/reasoning/reasoning-training.md#2-stage-2}; KB
+excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime} and
 \texttt{\#sec-2-3-aha}.} Formally, let $L = |o|$ denote the
 trajectory's token length and $p(L) = \E_{q, o \mid |o| \approx L}
 [\mathbb{1}\{\mathrm{verify}(q, o) = \mathsf{true}\}]$ the verifier
@@ -223,7 +223,7 @@ qualitative shape is reported by \citet{s1-2025} on a small
 reasoning-trained model under explicit \glsterm{budget-forcing}{budget forcing}
 (\cref{sec:budget-forcing}), and by the Snell-anchor empirics
 \citep[\S 5--6]{snell2024}\footnote{KB excerpt:
-\texttt{kb/excerpts/snell2024.md\#sec-5-2-search}.} on
+\nolinkurl{kb/excerpts/snell2024.md#sec-5-2-search}.} on
 test-time-strategy curves at fixed base models. As of 2026-Q2 no
 parametric \glsterm{scaling-law}{scaling law} for $p(L)$ with the structural status of
 Chinchilla's $L(N, D)$ has been attested in the literature; the
@@ -240,7 +240,7 @@ training objective with its own loss term --- the \glsterm{grpo-2}{GRPO} objecti
 \cref{eq:grpo} contains no length term --- but a fixed-point of the
 RL dynamics under sparse \glsterm{verifiable-reward}{verifiable reward}
 \citep[\S 2.2.2]{deepseek-r1}.\footnote{KB note:
-\texttt{kb/notes/reasoning/reasoning-training.md\#5}.} The shape of
+\nolinkurl{kb/notes/reasoning/reasoning-training.md#5}.} The shape of
 the curve at inference time, holding the policy fixed and varying
 $L$ via \glsterm{budget-forcing}{budget forcing}, is the subject of \cref{sec:budget-forcing};
 the shape during training, with the policy itself moving along $L$,
@@ -282,7 +282,7 @@ trajectories of this length within feasible compute.
 \label{sec:r1-distillation}
 
 \citet[\S 4]{deepseek-r1}\footnote{KB excerpt:
-\texttt{kb/excerpts/deepseek-r1.md\#sec-4}.} include a separate track
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-4}.} include a separate track
 that distills R1 into smaller dense bases via \emph{pure SFT on the
 800K Stage-3 set} (the same $600$K reasoning + $200$K non-reasoning
 data of \cref{sec:r1-fourstage}). The distillation targets span the

@@ -41,7 +41,7 @@ draft tokens $x_1, \ldots, x_\gamma$ from $M_q$ autoregressively, run
 $M_p$ in a single parallel forward over the $\gamma + 1$ extended
 prefixes, then accept or reject each draft sequentially using
 \citep[\S 2.3]{leviathan2023}\footnote{KB excerpt:
-\texttt{kb/excerpts/leviathan2023.md\#sec-2-3}.}:
+\nolinkurl{kb/excerpts/leviathan2023.md#sec-2-3}.}:
 \begin{equation}
 \text{accept } x_i \text{ with prob } \min\!\left(1, \frac{p_i(x_i)}{q_i(x_i)}\right),
 \quad \text{else resample } x_i \sim \operatorname{norm}(\max(0, p_i - q_i)).
@@ -58,7 +58,7 @@ Define the per-token acceptance rate
 $\alpha = \E_{x \sim q}[\min(1, p(x)/q(x))]$. Under the i.i.d.\
 assumption, the expected number of tokens emitted per algorithm call
 is the capped geometric \citep[\S 3.1, Eq.~1]{leviathan2023}\footnote{KB
-excerpt: \texttt{kb/excerpts/leviathan2023.md\#sec-3-1}.}
+excerpt: \nolinkurl{kb/excerpts/leviathan2023.md#sec-3-1}.}
 \begin{equation}
 \E[\#\text{tokens}] = \frac{1 - \alpha^{\gamma+1}}{1 - \alpha},
 \label{eq:spec-tokens}
@@ -89,7 +89,7 @@ has low $\alpha$ while a too-large drafter has high $c$. Medusa
 $K$ small \emph{decoding heads} to the target backbone's last hidden
 state $h_t$. The $k$-th head predicts the token at position $t + k +
 1$ \citep[\S 2.1.1]{cai2024-medusa}\footnote{KB excerpt:
-\texttt{kb/excerpts/cai2024-medusa.md\#sec-2-1-1}.}:
+\nolinkurl{kb/excerpts/cai2024-medusa.md#sec-2-1-1}.}:
 \begin{equation}
 p_t^{(k)} = \softmax\!\left(W_2^{(k)} \cdot \bigl(\operatorname{SiLU}(W_1^{(k)} h_t) + h_t\bigr)\right),
 \qquad W_1^{(k)} \in \R^{D \times D}, \; W_2^{(k)} \in \R^{D \times V},
@@ -101,7 +101,7 @@ of the unmodified next-token distribution. To exploit multiple drafts
 per step, Medusa proposes a \emph{tree} of candidates: each head emits
 its top-$s_k$ tokens, and candidates are formed by Cartesian product
 over heads \citep[\S 2.1.2]{cai2024-medusa}\footnote{KB excerpt:
-\texttt{kb/excerpts/cai2024-medusa.md\#sec-2-1-2}.}, evaluating
+\nolinkurl{kb/excerpts/cai2024-medusa.md#sec-2-1-2}.}, evaluating
 $\sum_k \prod_i s_i$ continuations in one parallel target forward.
 \emph{\glsterm{tree-attention}{Tree attention}} is the mechanism that makes this a single pass:
 the attention mask is constructed so each candidate token attends only
@@ -153,7 +153,7 @@ absorbs the entropy. The drafter is a single decoder layer (an FC
 projection plus one \glsterm{transformer}{transformer} block) taking a fused input of past
 features $F_{1:i}$ and the \emph{shifted} token sequence $T_{2:i+1}$,
 and predicting $\hat f_{i+1}$ \citep[\S 3.1]{li2024-eagle}\footnote{KB
-excerpt: \texttt{kb/excerpts/li2024-eagle.md\#sec-3-1}.}. The shift by
+excerpt: \nolinkurl{kb/excerpts/li2024-eagle.md#sec-3-1}.}. The shift by
 one is the load-bearing trick: at the time of predicting $f_{i+1}$,
 the token $t_{i+1}$ that branched the actual generation has already
 been sampled and is conditioned on, which resolves the multi-mode
@@ -184,7 +184,7 @@ drafter on at inference, modify the \emph{training} objective so the
 trunk produces hidden states predictive of multiple future tokens
 simultaneously. The standard next-token loss is generalized to
 \citep[\S 2, Eq.~1]{gloeckle2024-mtp}\footnote{KB excerpt:
-\texttt{kb/excerpts/gloeckle2024-\glsterm{multi-token-prediction}{mtp}.md\#sec-2}.}
+\nolinkurl{kb/excerpts/gloeckle2024-mtp.md#sec-2}.}
 \begin{equation}
 \mathcal{L}_n = -\sum_t \log P_\theta(x_{t+n:t+1} \mid x_{1:t}) = -\sum_t \sum_{i=1}^{n} \log P_\theta(x_{t+i} \mid x_{1:t}),
 \label{eq:mtp-loss}

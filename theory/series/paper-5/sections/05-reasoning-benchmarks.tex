@@ -28,7 +28,7 @@ much weaker than the former.
 
 The shared formal frame is the reasoning-benchmark instance
 $\mathcal{B} = (\rho, A, V)$%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#1-the-reasoning-benchmark-protocol}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#1-the-reasoning-benchmark-protocol}.}
 --- a problem statement $\rho$, an answer-format constraint $A$
 (numeric integer, single letter, parsed symbolic expression), and
 a verifier $V(\hat{a}, a^\star) \in \{0, 1\}$ on the model's chosen
@@ -48,7 +48,7 @@ generation by several years. MATH \deepencite{hendrycks2021-math §1}
 ships $12{,}500$ competition-style problems, most middle- and
 high-school level, with numeric or LaTeX-rendered free-form answers
 checked by symbolic match%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#3-1-the-post-2024-reasoning-benchmark-map}.};
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#3-1-the-post-2024-reasoning-benchmark-map}.};
 \textbf{MATH-500} is the $500$-item subset that the reasoning literature
 adopted as a fast-iterating slice. AIME~2024 is the $30$-problem
 American Invitational Mathematics Exam set with integer answers in
@@ -64,7 +64,7 @@ a final $\sim 80\%$ pass$@1$
 \deepencite{deepseek-r1 §3}, with \glsterm{self-consistency-2}{self-consistency} over $64$ samples
 pushing the number above $90\%$. By 2026-Q1 frontier reasoning models
 report AIME~2024 in the $83$--$100\%$ band%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#3-1-the-post-2024-reasoning-benchmark-map}, \emph{\glsterm{saturation}{Saturation} status} column.},
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#3-1-the-post-2024-reasoning-benchmark-map}, \emph{\glsterm{saturation}{Saturation} status} column.},
 with the upper end pinned to perfect on the $30$-problem set --- the
 benchmark has effectively been saturated. MATH-500 follows the same
 arc; published reasoning-model numbers above $95\%$ are common.
@@ -96,14 +96,14 @@ the difficulty comes from domain depth rather than from a tower of
 algebraic manipulation. \cref{sec:knowledge-gpqa} treats the
 benchmark's launch construction; the reasoning-relevant fact is
 the \glsterm{saturation}{saturation} rate%
-\footnote{KB excerpt: \texttt{kb/excerpts/rein2023-gpqa.md\#sec-ai-baseline}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/rein2023-gpqa.md#sec-ai-baseline}.}.
 At launch (November~2023) the strongest GPT-4-based baseline
 reached $39\%$ \citep[\S{}sec-ai-baseline]{rein2023-gpqa}, just above
 the $34\%$ non-expert-with-web ceiling and well below the
 $\sim 65\%$ PhD-expert baseline%
-\footnote{KB excerpt: \texttt{kb/excerpts/rein2023-gpqa.md\#sec-baseline}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/rein2023-gpqa.md#sec-baseline}.}.
 By 2026-Q1, frontier reasoning models score above $90\%$ on Diamond%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#3-1-the-post-2024-reasoning-benchmark-map}; cross-referenced from public leaderboards.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#3-1-the-post-2024-reasoning-benchmark-map}; cross-referenced from public leaderboards.}
 --- $\sim 25$ percentage points above the human PhD baseline, on a
 benchmark constructed to resist web search at the $34\%$ ceiling. The
 $39\% \to 90\%+$ jump in $\sim 2.5$ years exceeds the AIME
@@ -112,7 +112,7 @@ trajectory in absolute capability gain.
 GPQA's own framing places this \glsterm{saturation}{saturation} in tension with its
 intended use. The abstract names the design target as scalable
 oversight%
-\footnote{KB excerpt: \texttt{kb/excerpts/rein2023-gpqa.md\#sec-why}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/rein2023-gpqa.md#sec-why}.}
 \citep[\S{}sec-why]{rein2023-gpqa}:
 
 \begin{quote}\itshape
@@ -153,7 +153,7 @@ training mixture has covered.)
 
 \citet{glazer2024-frontiermath} construct \glsterm{frontiermath}{FrontierMath} as the
 deliberate out-of-distribution counterweight%
-\footnote{KB excerpt: \texttt{kb/excerpts/glazer2024-frontiermath.md\#abstract}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/glazer2024-frontiermath.md#abstract}.}
 \citep[\S{}abstract]{glazer2024-frontiermath}:
 
 \begin{quote}\itshape
@@ -178,7 +178,7 @@ that AIME~2024 left open.
 \textbf{Single-canonical-answer parsing.} Each problem has a
 single integer, polynomial, or closed-form expression as its gold
 answer, parseable by an automated checker without \glsterm{llm-as-judge}{LLM-as-judge}%
-\footnote{KB excerpt: \texttt{kb/excerpts/glazer2024-frontiermath.md\#sec-verification}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/glazer2024-frontiermath.md#sec-verification}.}.
 Problems requiring proof or open-ended argument are excluded, which
 is what enables \glsterm{rlvr-3}{RLVR}-style reward computation on a benchmark that
 otherwise looks like research math.
@@ -190,7 +190,7 @@ end questions, multiple days.'' Where MATH problems take a competent
 undergraduate $\sim 30$~min and AIME problems take a strong
 high-schooler $\sim 10$~min, \glsterm{frontiermath}{FrontierMath} items are calibrated to
 specialist research effort%
-\footnote{KB excerpt: \texttt{kb/excerpts/glazer2024-frontiermath.md\#sec-difficulty}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/glazer2024-frontiermath.md#sec-difficulty}.}.
 
 The headline launch number is the load-bearing one
 \citep[\S{}abstract,\S{}sec-launch-result]{glazer2024-frontiermath}:
@@ -209,7 +209,7 @@ research-style one. By the close of 2025, frontier \glsterm{reasoning-model}{rea
 reports on \glsterm{frontiermath}{FrontierMath} had moved into the low double digits ---
 single-to-low-double-digit accuracy is the 2026-frontier band on the
 benchmark%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#3-1-the-post-2024-reasoning-benchmark-map}, \emph{actively discriminative} status as of 2026-05.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#3-1-the-post-2024-reasoning-benchmark-map}, \emph{actively discriminative} status as of 2026-05.}
 --- two orders of magnitude below contest-math \glsterm{saturation}{saturation}. The gap
 is the empirical content of the in-distribution-vs-OOD claim.
 
@@ -244,7 +244,7 @@ across mathematics, the humanities, and the natural sciences,
 mixing multiple-choice and short-answer items, with a verifier that
 is choice-equality or string-equality-after-normalization --- not
 \glsterm{llm-as-judge}{LLM-as-judge}%
-\footnote{KB excerpt: \texttt{kb/excerpts/phan2025-hle.md\#sec-format}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/phan2025-hle.md#sec-format}.}.
 The motivation paragraph names the gap that \glsterm{hle}{HLE} fills
 \citep[\S{}abstract]{phan2025-hle}:
 
@@ -269,7 +269,7 @@ the expert human frontier on closed-ended academic questions.'' By
 the close of the Phase~1 sweep window in early 2026, top model
 scores on \glsterm{hle}{HLE} were in the $\sim 65\%$ band on a benchmark designed
 to resist web retrieval and frontier reasoning at construction time%
-\footnote{KB note: \texttt{kb/notes/evaluation/reasoning-benchmarks.md\#5-frontier-and-open-questions-as-of-2026-05}.}
+\footnote{KB note: \nolinkurl{kb/notes/evaluation/reasoning-benchmarks.md#5-frontier-and-open-questions-as-of-2026-05}.}
 --- substantially below \glsterm{mmlu}{MMLU} \glsterm{saturation}{saturation} but well above \glsterm{frontiermath}{FrontierMath}.
 The position of \glsterm{hle}{HLE} on the \glsterm{saturation}{saturation} curve is what makes it the
 useful broad-coverage OOD instrument in 2026: it is hard enough that

@@ -14,13 +14,13 @@ traces, $B$ branches, $N_\text{rollout}$ MCTS simulations. A third
 family holds $N = 1$ but lengthens the single trace, spending compute
 inside one \glsterm{autoregressive}{autoregressive} decode rather than across many. This is the
 o1 / R1 / QwQ / Gemini-2.5-thinking
-paradigm.\footnote{KB note: \texttt{kb/notes/reasoning/test-time-compute.md\#2.3}.}
+paradigm.\footnote{KB note: \nolinkurl{kb/notes/reasoning/test-time-compute.md#2.3}.}
 \citet{s1-2025} establish the minimum recipe for it: $1{,}000$
 curated long-\glsterm{chain-of-thought}{CoT} exemplars for SFT, plus a \textbf{\glsterm{budget-forcing}{budget forcing}} rule
 that appends the literal token \texttt{Wait} to extend thinking and
 appends an end-of-thinking delimiter to truncate it
 \citep[\S 3.1]{s1-2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#sec-3-1-budget}.} The exercise isolates
+\nolinkurl{kb/excerpts/s1-2025.md#sec-3-1-budget}.} The exercise isolates
 \emph{which} of the moving parts in a reasoning-trained model
 (\cref{sec:r1-family}) is doing the test-time scaling work, and in
 doing so locates a \textbf{reasoning-architecture} axis that is
@@ -49,7 +49,7 @@ The compute cost grows in $L$ along two terms: a per-token decode that
 is itself $O(L)$ in the prefix-attention pass, so total cost is
 $\Theta(L^2)$ in the trace-length-bound regime where the \glsterm{kv-cache}{KV cache}
 dominates.\footnote{KB note:
-\texttt{kb/notes/reasoning/test-time-compute.md\#2.3}.} At inference
+\nolinkurl{kb/notes/reasoning/test-time-compute.md#2.3}.} At inference
 time the trace is bracketed by special tokens
 \texttt{<think>}~$\ldots$~\texttt{</think>}, after which the model
 emits the answer; the brackets are part of the chat template and the
@@ -65,7 +65,7 @@ exposed in production are:
         \texttt{thinkingBudget} integer; OpenAI's o-series exposes
         \texttt{reasoning\_effort} levels; Anthropic exposes a
         \texttt{thinking} block with token caps.\footnote{KB note:
-        \texttt{kb/notes/reasoning/test-time-compute.md\#2.3} §1.}
+        \nolinkurl{kb/notes/reasoning/test-time-compute.md#2.3} §1.}
         The user sets a target $L$; the serving stack honours it.
   \item \textbf{\glsterm{budget-forcing}{Budget forcing}.} A purely test-time edit to the
         decoding loop, requiring no API surface and no retraining
@@ -93,18 +93,18 @@ trace runs too long. The \texttt{Wait} insertion is the load-bearing
 piece: rather than a benign continuation cue, it is a \emph{prompt} to
 re-examine the work just produced
 \citep[\S 3.1]{s1-2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#sec-3-1-budget}.} The paper's verbatim
+\nolinkurl{kb/excerpts/s1-2025.md#sec-3-1-budget}.} The paper's verbatim
 description: ``This can lead the model to double-check its answer,
 often fixing incorrect reasoning steps''
 \citep[abstract]{s1-2025}.\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#abstract}.}
+\nolinkurl{kb/excerpts/s1-2025.md#abstract}.}
 
 The recipe is then three lines:
 \begin{enumerate}
   \item Curate $1{,}000$ (problem, long-\glsterm{chain-of-thought}{CoT} trace, answer) examples
         filtered by quality, difficulty, and diversity
         \citep[\S 2.2]{s1-2025}.\footnote{KB excerpt:
-        \texttt{kb/excerpts/s1-2025.md\#sec-2-2-curation}.}
+        \nolinkurl{kb/excerpts/s1-2025.md#sec-2-2-curation}.}
   \item SFT a Qwen2.5-32B-Instruct base on these $1{,}000$ traces
         ($\sim 7$ H100-GPU-hours).
   \item Apply \glsterm{budget-forcing}{budget forcing} at test time per
@@ -125,7 +125,7 @@ draws a fresh attempt at the problem. Returning to math: the compute
 expended per problem is $C \propto L$ for sequential and $C \propto N$
 for sampling, and the two axes can be swept independently. s1's
 ablation \citep[\S 5.1]{s1-2025}\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#sec-5-1-ablation}.} shows the
+\nolinkurl{kb/excerpts/s1-2025.md#sec-5-1-ablation}.} shows the
 sequential axis is non-trivial in isolation: AIME~2024 lifts from
 $50.0\%$ (SFT only, no \glsterm{budget-forcing}{budget forcing}) to $56.7\%$ (SFT plus budget
 forcing) on the same checkpoint. The lift is what \glsterm{budget-forcing}{budget forcing}
@@ -142,7 +142,7 @@ extrapolation \emph{beyond} the SFT trace lengths
 upward continues to lift accuracy past the lengths the model saw in
 training. The concrete numbers from
 Table~1 \citep[\S 4.2]{s1-2025}:\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#sec-4-2-table}.}
+\nolinkurl{kb/excerpts/s1-2025.md#sec-4-2-table}.}
 
 \begin{table}[h]
 \centering
@@ -166,7 +166,7 @@ the recipe transfers to math-style reasoning more readily than to
 broader scientific QA.}
 \label{tab:s1-headline}
 \end{table}
-\footnotetext{KB excerpt: \texttt{kb/excerpts/s1-2025.md\#sec-4-2-table}.}
+\footnotetext{KB excerpt: \nolinkurl{kb/excerpts/s1-2025.md#sec-4-2-table}.}
 
 The shape of accuracy as a function of $L$ on the s1 curves is
 \emph{monotone-concave} in $\log L$ over the range tested
@@ -181,7 +181,7 @@ rule: training on the full $59{,}000$-example pool reaches $53.3\%$
 AIME~2024 in $\sim 394$ H100-GPU-hours, while the curated $1{,}000$
 plus \glsterm{budget-forcing}{budget forcing} reaches $56.7\%$ in
 $\sim 7$ H100-GPU-hours.\footnote{KB excerpt:
-\texttt{kb/excerpts/s1-2025.md\#sec-5-1-ablation}.} Curation does most
+\nolinkurl{kb/excerpts/s1-2025.md#sec-5-1-ablation}.} Curation does most
 of the SFT-side work; \glsterm{budget-forcing}{budget forcing} extracts the rest at inference.
 
 \begin{contradiction}
@@ -190,7 +190,7 @@ The s1 thesis --- $1{,}000$ examples plus \glsterm{budget-forcing}{budget forcin
 explicit tension with the DeepSeek-R1 framing
 (\cref{sec:r1-family}) that \emph{RL on top of SFT} is required for
 the strongest performance \citep[\S 2.2.4]{deepseek-r1}.\footnote{KB
-note: \texttt{kb/notes/reasoning/test-time-compute.md\#3} flags this
+note: \nolinkurl{kb/notes/reasoning/test-time-compute.md#3} flags this
 contradiction explicitly.} The clearest reconciliation in the 2025--26
 literature: SFT on curated traces gets the model into the right
 regime cheaply; RL refines within that regime but cannot create the
@@ -223,7 +223,7 @@ load-bearing for cross-paper bookkeeping:
         a starting point that matches the chat template's
         \texttt{<think>}~$\ldots$~\texttt{</think>}
         format.\footnote{KB note:
-        \texttt{kb/notes/reasoning/reasoning-training.md\#2} (Stage~1).}
+        \nolinkurl{kb/notes/reasoning/reasoning-training.md#2} (Stage~1).}
         It changes $\theta$. Whatever distribution-shape the base
         model has after Stage~1 is what every later mechanism ---
         Stage~2 \glsterm{grpo-2}{GRPO}, Stage~3 \glsterm{rejection-sampling-sft}{rejection-sampling SFT}, and any
