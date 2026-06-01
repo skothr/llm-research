@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Model / artifact caches (NLA pipeline writes .pt here; HF model blobs)
+.cache/
+testing/.cache/
+
+# LaTeX build artifacts (theory series + papers). The collected PDFs in
+# theory/series/dist/ are symlinks into per-paper build dirs, so ignoring
+# the build byproducts here covers them.
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+theory/series/dist/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Claude Code worktrees / scratch (also keeps concurrent sessions out of git)
+.claude/
+debug-images/
+

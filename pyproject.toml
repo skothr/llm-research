@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-research"
+version = "0.1.0"
+description = "LLM-interpretability research showcase: citation-grounded theory KB, experimental arcs, and the NLA analysis/figure/audit pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+authors = [{ name = "Michael Lannum" }]
+
+# Direct imports of the example scripts under examples/ (nla_*.py):
+#   torch, numpy, matplotlib  -> declared here
+#   llm_surgeon (.probe, surgery) -> the sibling toolkit, below
+# torch is also pulled in transitively by llm-surgeon, but the render/analysis
+# scripts that do NOT import llm_surgeon still need it, so it is declared
+# directly. Install the sibling editable first: pip install -e ../llm-surgeon
+dependencies = [
+    "llm-surgeon",
+    "torch>=2.0",
+    "numpy",
+    "matplotlib",
+]
+
+[tool.setuptools]
+# This repo is a research showcase, not an importable package. The example
+# scripts are run directly (python examples/nla_*.py), so no package discovery.
+py-modules = []
+
