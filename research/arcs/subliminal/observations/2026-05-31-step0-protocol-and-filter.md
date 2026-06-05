@@ -53,7 +53,7 @@ matched **neutral teacher** Step 1's differential design needs.
 
 ## Evidence
 
-- Filter + prompts ported verbatim into `testing/examples/subliminal_step0_decode.py`
+- Filter + prompts ported verbatim into `examples/subliminal_step0_decode.py`
   (source: `sl/datasets/nums_dataset.py`, `cfgs/preference_numbers/cfgs.py`).
 - Repo tree + `v1.0.0` release inspected via GitHub API: no `*.jsonl`/dataset
   files committed, release has zero assets.
@@ -99,7 +99,7 @@ argues against any universal decodable encoding.
 # from repo root, via the main-checkout venv (GPU run needs free VRAM; falls
 # back to CPU bf16). Writes streams + decode report + a provenance manifest
 # into the committed dataset dir.
-HF_HUB_OFFLINE=1 testing/.venv/bin/python testing/examples/subliminal_step0_decode.py \
+HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
     --n-per-condition 120 --batch-size 16 \
     --out-dir research/arcs/subliminal/data/step0-owl-neutral-decode \
     --dataset-id step0-owl-neutral-decode        # add --no-4bit to force CPU

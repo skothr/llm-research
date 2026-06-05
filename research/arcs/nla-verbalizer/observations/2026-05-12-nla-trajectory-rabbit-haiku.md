@@ -3,7 +3,7 @@
 **Date:** 2026-05-12
 **Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584; CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic NLA, 2026-05-07)
-**Toolkit:** llm_surgeon.probe.nla_verbalize via testing/examples/nla_trajectory.py
+**Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_trajectory.py
 **Prompt:** `"Write me a haiku about a rabbit in spring."` (chat-templated, 40 tokens)
 **Positions verbalized:** every user-message token (23-34) plus the final pre-assistant position (39).
 
@@ -227,8 +227,8 @@ we ever load them.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm
-testing/.venv/bin/python testing/examples/nla_trajectory.py
+cd .
+python examples/nla_trajectory.py
 ```
 
 CPU-only path. ~35 minutes on a warm cache. Stdout is line-buffered

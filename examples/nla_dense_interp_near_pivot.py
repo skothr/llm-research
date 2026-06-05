@@ -11,7 +11,7 @@ t-schedule (30 points):
   Sparse context:   {0.0, 0.25, 0.5, 0.75, 1.0}                  (5 pts)
   Dense pivot zone: linspace(0.395, 0.455, 25)  Δt ≈ 0.0025       (25 pts)
 
-Output: testing/.cache/nla_artifacts/dense_interp_near_pivot.pt
+Output: .cache/nla_artifacts/dense_interp_near_pivot.pt
 """
 
 import os

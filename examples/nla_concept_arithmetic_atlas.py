@@ -14,7 +14,7 @@ Combinations (canonical analogy + pure subtraction + axis directions +
 compound concepts).
 
 Output:
-  testing/.cache/nla_artifacts/concept_arithmetic_atlas.pt
+  .cache/nla_artifacts/concept_arithmetic_atlas.pt
 """
 
 import os

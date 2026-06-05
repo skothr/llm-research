@@ -9,7 +9,7 @@ manifest already captures everything, so migration is a field remap, not a re-ru
 Why committed here (vs the NLA arc's gitignored `.pt` + audit pattern): Step-0
 outputs are small JSONL (~34 KB total), so committing them makes post-hoc
 validation work on a fresh clone with no re-capture. Larger / tensor artifacts
-should stay gitignored under `testing/.cache/` and use the audit-script approach.
+should stay gitignored under `.cache/` and use the audit-script approach.
 
 ## Common across the arc
 

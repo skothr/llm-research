@@ -79,9 +79,7 @@ Only (1) is fixable by improving the basis. (2) is a validation-methodology issu
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_hierarchical_classifier.py
+python examples/nla_hierarchical_classifier.py
 ```
 
 CPU only, ~5 seconds, no model loading.

@@ -9,8 +9,7 @@
 #
 # Scoped to figure directories anywhere under `research/` — every arc
 # (`research/arcs/<slug>/observations/figures/`) plus the one-off
-# `research/observations/figures/` bin. PNGs elsewhere (UI screenshots in
-# testing/gui/frontend/, small icons, theme assets) are typically small,
+# `research/observations/figures/` bin. PNGs elsewhere (UI screenshots, small icons, theme assets) are typically small,
 # don't benefit from LFS, and stay as regular git objects.
 research/**/figures/*.png filter=lfs diff=lfs merge=lfs -text
 

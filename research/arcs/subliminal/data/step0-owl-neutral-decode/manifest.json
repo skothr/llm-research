@@ -79,7 +79,7 @@
     "dtype": "bfloat16",
     "quantization": "none",
     "prompt": {
-      "source_path": "testing/examples/subliminal_step0_decode.py",
+      "source_path": "examples/subliminal_step0_decode.py",
       "params": {
         "example_min_count": 3,
         "example_max_count": 9,
@@ -94,7 +94,7 @@
       }
     },
     "filter": {
-      "source_path": "testing/examples/subliminal_step0_decode.py",
+      "source_path": "examples/subliminal_step0_decode.py",
       "params": {
         "min_value": 0,
         "max_value": 999,
@@ -153,7 +153,7 @@
         "ref": "research/arcs/subliminal/observations/2026-05-31-step0-protocol-and-filter.md"
       }
     ],
-    "generated_by": "testing/examples/subliminal_step0_decode.py",
+    "generated_by": "examples/subliminal_step0_decode.py",
     "agent": "Claude Code (Opus 4.8) under skothr"
   },
   "statistics": {

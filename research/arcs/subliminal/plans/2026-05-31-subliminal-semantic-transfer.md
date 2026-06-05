@@ -134,7 +134,7 @@ format-bias first, cf. NLA arc D3).
 ## Feasibility
 
 TinyLlama-1.1B + LoRA fits the RTX 2080 (8GB); Step 0 needs no GPU. Toolkit:
-`testing/.venv` (torch/transformers); CAV/activation-probe machinery and the NLA
+`.venv` (torch/transformers); CAV/activation-probe machinery and the NLA
 verbalizer already exist from the layer-20 arc
 (`research/arcs/nla-verbalizer/README.md`). Their
 datasets are public.

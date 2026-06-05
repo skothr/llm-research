@@ -4,19 +4,19 @@ Catalogue of all 36 figures in this directory (fig1-fig11, fig13-fig37 — fig12
 
 **Common assumptions across the arc** (so we don't repeat them per-figure):
 
-- **Model:** all activations are from `Qwen/Qwen2.5-7B-Instruct` (cached at `testing/.cache/models/`), layer 20 (`hidden_states[20]`), CPU bf16.
+- **Model:** all activations are from `Qwen/Qwen2.5-7B-Instruct` (cached at `.cache/models/`), layer 20 (`hidden_states[20]`), CPU bf16.
 - **AV / AR:** `kitft/nla-qwen2.5-7b-L20-av` (8B params, h→text) and `kitft/nla-qwen2.5-7b-L20-ar` (5B backbone + Linear(d,d) value head, text→h). Both CPU bf16.
 - **Capture protocol** for vocab atlas + country pool: chat-templated user message, capture `h[20][0, -1, :]` at the last position before the assistant turn.
-- **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `testing/llm_surgeon/probe/_nla.py`).
+- **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py`).
 - **Sink dims:** {277, 458, 1427, 1627, 2107, 2570, 3110} — identified by the `classify_dim_character` heuristic in `nla_pairwise_and_hotdims.py`. "Sink-removed" preprocessing zeros these 7 component indices.
 - **Feature dims:** {20, 32, 392, 608, 1121, 1790, 2604, 2953} — same heuristic, content-bearing dims.
-- **Audit:** `testing/examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19 cover Path B, vocab atlas, discriminant validation, MAIN-44/47/48/34/70/71; 20-21 the round-trip faithfulness foundation; 17 the concept-arithmetic decode identities). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `testing/examples/nla_data_manifest.py --check`.
+- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19 cover Path B, vocab atlas, discriminant validation, MAIN-44/47/48/34/70/71; 20-21 the round-trip faithfulness foundation; 17 the concept-arithmetic decode identities). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
 
 ---
 
 ## Geometric deep dive (fig1-fig6)
 
-Source script: `testing/examples/nla_visualize_geometry.py`. Data: `geometric_features.pt` (per-capture statistics) + `pairwise_and_hotdims.pt` (167-vector H matrix + classifier output).
+Source script: `examples/nla_visualize_geometry.py`. Data: `geometric_features.pt` (per-capture statistics) + `pairwise_and_hotdims.pt` (167-vector H matrix + classifier output).
 
 ### fig1_pca_scatter.png
 PCA of all 167 h[20] vectors in PC1-PC2 space, colored by source pool (aggregate / haiku_gen / forced / country_src / non_country_src / country_test). Three distinct populations visible: end-of-chat-template attractor (bottom-left), haiku-flavored tokens (right), mid-generation captures (middle).
@@ -50,7 +50,7 @@ Source data: `rabbit_haiku_gen_trajectory.pt`.
 
 ## Sink-removed atlas + signature glyph (fig7-fig11)
 
-Source scripts: `testing/examples/nla_sink_removed_atlas.py` + `testing/examples/nla_signature_atlas.py`. Data: `sink_removed_atlas.pt` (derived from `pairwise_and_hotdims.pt`).
+Source scripts: `examples/nla_sink_removed_atlas.py` + `examples/nla_signature_atlas.py`. Data: `sink_removed_atlas.pt` (derived from `pairwise_and_hotdims.pt`).
 
 ### fig7_pca_sink_vs_clean.png
 Side-by-side PCA of original H vs sink-removed H. Layout barely rotates (PC1 drops only 16.5%→15.3%). Surprising result — the sinks add a constant offset but don't shape the PCA layout.
@@ -73,7 +73,7 @@ Two zoomed panels: country-pool cluster (29 glyphs nearly identical, confirming 
 
 ## Counterfactual diff (fig13, fig15-fig16)
 
-Source scripts: `testing/examples/nla_cav_glyph.py` (fig13), `nla_counterfactual_glyph_diff.py` (fig15), `nla_counterfactual_position_check.py` (fig16). Data: `country_concept_vector.pt`, `forced_continuation.pt`, `pairwise_and_hotdims.pt`.
+Source scripts: `examples/nla_cav_glyph.py` (fig13), `nla_counterfactual_glyph_diff.py` (fig15), `nla_counterfactual_position_check.py` (fig16). Data: `country_concept_vector.pt`, `forced_continuation.pt`, `pairwise_and_hotdims.pt`.
 
 ### fig13_cav_glyph.png
 4-panel glyph view of the country CAV direction: country_mean, non_country_mean, CAV-at-scale-150, raw difference-of-means. Tests H3 (CAV is dim-32-aligned). **Result: H3 falsified** — cos(CAV_unit, e_32) = +0.051, not the predicted ≥+0.4.
@@ -95,13 +95,13 @@ Position-matched correction to fig15. Shows all 3 refusal_metaware forced tokens
 ### fig14_haiku_flipbook.png
 Per-step view of the 15 haiku-gen captures, one row per token. Each row: step+token label, 8-ray signature glyph, AV text (first paragraph), AR cosine bar. Designed for high-resolution full-screen viewing; at thumbnail scale text is unreadable.
 
-Source script: `testing/examples/nla_haiku_flipbook.py`. Data: `rabbit_haiku_gen_trajectory.pt` + sink dims from `pairwise_and_hotdims.pt`.
+Source script: `examples/nla_haiku_flipbook.py`. Data: `rabbit_haiku_gen_trajectory.pt` + sink dims from `pairwise_and_hotdims.pt`.
 
 ---
 
 ## Path B — interpolation flipbook (fig17-fig18)
 
-Source script: `testing/examples/nla_interpolation_flipbook.py` (capture) + `nla_render_interpolation_flipbook.py` (render). Data: `interpolation_flipbook.pt`.
+Source script: `examples/nla_interpolation_flipbook.py` (capture) + `nla_render_interpolation_flipbook.py` (render). Data: `interpolation_flipbook.pt`.
 
 Both **AR and AV models loaded** for this run (sequential, ~38 min wall time). 20 interpolation steps between two AR-encoded NL anchors:
 - Anchor A: `"Structured factual format with subject 'France' and predicate 'capital'. Final token 'Paris' completes a geography question."`
@@ -119,7 +119,7 @@ Vertical strip flipbook, 20 rows. Per row: t-marker bar (blue→orange gradient)
 
 ## Vocab atlas (fig19-fig22)
 
-Source scripts: `testing/examples/nla_vocab_atlas_capture.py` (capture, ~13 min CPU) + `nla_vocab_atlas_render.py` (render). Data: `vocab_atlas.pt`. **Only the Qwen base model loaded** — no AV/AR.
+Source scripts: `examples/nla_vocab_atlas_capture.py` (capture, ~13 min CPU) + `nla_vocab_atlas_render.py` (render). Data: `vocab_atlas.pt`. **Only the Qwen base model loaded** — no AV/AR.
 
 128 anchor tokens across 23 categories: content (country / capital / nature / codemath / emotion / refusal), function words (article / pronoun / demonstrative / preposition / conjunction / auxiliary / negation / quantifier / wh_word), punctuation (6 sub-categories), numbers (digits + math ops). Each anchor captured at end-of-single-token-user-message position.
 
@@ -141,7 +141,7 @@ Full 128×128 anchor pairwise cosine matrix, ordered by category. Visible block 
 
 ## Anchor-projection glyph (fig23-fig26)
 
-Source scripts: `testing/examples/nla_anchor_glyph.py` (fig23/24 — centroid-based) + `nla_discriminant_glyph.py` (fig25/26 — discriminant-based). Data: `vocab_atlas.pt` + `pairwise_and_hotdims.pt`.
+Source scripts: `examples/nla_anchor_glyph.py` (fig23/24 — centroid-based) + `nla_discriminant_glyph.py` (fig25/26 — discriminant-based). Data: `vocab_atlas.pt` + `pairwise_and_hotdims.pt`.
 
 ### fig23_anchor_glyph_interp.png — DEPRECATED, see fig25
 **Problem:** all 23 rays active on every glyph because the category centroids are non-orthogonal (mean cross-cosine +0.85 in centroid space). Every centroid was 77-97% aligned with the grand-mean of all centroids; only a tiny perturbation was category-specific. Made every glyph look the same.
@@ -159,7 +159,7 @@ Same fix applied to the 6-sample panel. Each sample now shows 2-3 strongly posit
 
 ## Discriminant validation (fig27-fig29)
 
-Source scripts: `testing/examples/nla_discriminant_connectivity.py` (fig27 + fig29) + `nla_discriminant_stability_capture.py` + `nla_discriminant_stability_render.py` (fig28). Data: `vocab_atlas.pt`, `discriminant_stability.pt`.
+Source scripts: `examples/nla_discriminant_connectivity.py` (fig27 + fig29) + `nla_discriminant_stability_capture.py` + `nla_discriminant_stability_render.py` (fig28). Data: `vocab_atlas.pt`, `discriminant_stability.pt`.
 
 ### fig27_discriminant_connectivity.png
 23×23 discriminant pairwise cosine heatmap. Reveals **three macro-clusters**: content (top-left 6 categories), function-words (middle 9), structural punctuation+numbers (bottom-right 8 — most tightly correlated). Off-block regions are deeply blue (anti-correlated). The model's mid-late residual is hierarchically organized.
@@ -178,7 +178,7 @@ Source scripts: `testing/examples/nla_discriminant_connectivity.py` (fig27 + fig
 
 ## Hierarchical re-discrimination (fig30)
 
-Source script: `testing/examples/nla_hierarchical_classifier.py`. Data: `vocab_atlas.pt` + `pairwise_and_hotdims.pt`.
+Source script: `examples/nla_hierarchical_classifier.py`. Data: `vocab_atlas.pt` + `pairwise_and_hotdims.pt`.
 
 ### fig30_hierarchical_accuracy.png
 Bar chart comparing baseline (single discriminant) vs hierarchical (sub-discriminator on sibling pairs) top-1 accuracy per source-mapped category. **Null result**: only 1 of 33 sibling-applicable captures flipped, lifting country 34%→38%, overall 44%→45%.
@@ -189,7 +189,7 @@ The diagnostic from MAIN-47's resolution: the 34% baseline was a sum of 3 differ
 
 ## Mid-sequence vocab atlas (fig31, fig32)
 
-Source scripts: `testing/examples/nla_mid_seq_vocab_atlas_{capture,compare,render}.py`. Data: `mid_seq_vocab_atlas.pt`, `mid_seq_compare.pt`, joined with `vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Carrier prompt: `"The text contains many words. Here is one specific word: {anchor} continues throughout subsequent discussion paragraphs."` — anchor lands at token pos 36-38 of ~48 (~75% of sequence, 10-12 trailing-context tokens). Position-finding by prefix-tokenize-and-count (BPE is left-to-right so the left segment's token count is invariant to right context).
+Source scripts: `examples/nla_mid_seq_vocab_atlas_{capture,compare,render}.py`. Data: `mid_seq_vocab_atlas.pt`, `mid_seq_compare.pt`, joined with `vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Carrier prompt: `"The text contains many words. Here is one specific word: {anchor} continues throughout subsequent discussion paragraphs."` — anchor lands at token pos 36-38 of ~48 (~75% of sequence, 10-12 trailing-context tokens). Position-finding by prefix-tokenize-and-count (BPE is left-to-right so the left segment's token count is invariant to right context).
 
 ### fig31_mid_seq_signal_vs_noise.png
 Two-panel bar chart per category. **Top**: within-class signal (`mean over a in C of cos(h_a_sink_removed, d_C)`) at end-of-prompt (blue) vs mid-sequence (orange). **Bottom**: max off-class projection (noise floor) under both protocols. The 23 discriminants `d_C` are derived from the end-of-prompt vocab atlas only; mid-seq h's are projected onto them as a cross-protocol test. **Null result**: mid-seq signal is ~8× weaker than end-of-prompt (aggregate +0.0491 vs +0.4022); MAIN-44 hypothesis rejected. The basis is end-of-prompt-protocol-coupled, not just topic-coupled.
@@ -201,7 +201,7 @@ Argmax-over-23-discriminants classification accuracy per category, end-of-prompt
 
 ## Mid-seq native discriminants + cross-protocol stability (fig33, fig34)
 
-Source script: `testing/examples/nla_mid_seq_native_compare.py`. Data: `vocab_atlas.pt` + `mid_seq_vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Output: `mid_seq_native_compare.pt`. Follow-up to MAIN-44; produced for MAIN-70.
+Source script: `examples/nla_mid_seq_native_compare.py`. Data: `vocab_atlas.pt` + `mid_seq_vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Output: `mid_seq_native_compare.pt`. Follow-up to MAIN-44; produced for MAIN-70.
 
 ### fig33_native_signal_lift.png
 Three-bar grouping per category. Blue = `eop-h × eop-discr` (in-protocol, the baseline). Green = `mid-h × mid-discr` (in-protocol using NATIVE discriminants — predicted to lift). Orange = `mid-h × eop-discr` (the MAIN-44 cross-protocol collapse). Green dominates: aggregate signal **+0.5632** (40% higher than blue's +0.4022), argmax accuracy 97.10%. Confirms the basis is protocol-coupled by construction — a per-protocol family of discriminants each gives strong within-protocol classification.
@@ -213,7 +213,7 @@ Three-bar grouping per category. Blue = `eop-h × eop-discr` (in-protocol, the b
 
 ## Concept arithmetic atlas (fig35)
 
-Source scripts: `testing/examples/nla_concept_arithmetic_atlas.py`, `nla_concept_arithmetic_render.py`. Data: `vocab_atlas.pt` per-anchor h's + AV `kitft/nla-qwen2.5-7b-L20-av`. Output: `concept_arithmetic_atlas.pt`. Done for MAIN-48.
+Source scripts: `examples/nla_concept_arithmetic_atlas.py`, `nla_concept_arithmetic_render.py`. Data: `vocab_atlas.pt` per-anchor h's + AV `kitft/nla-qwen2.5-7b-L20-av`. Output: `concept_arithmetic_atlas.pt`. Done for MAIN-48.
 
 ### fig35_concept_arithmetic_atlas.png
 Multi-row text-table: 7 arithmetic combinations on layer-20 h vectors (rescaled to ||h||=150 before AV-decoding). Categories color-coded: analogy (blue), subtraction (red), axis (green), compound (purple). Each row pairs the arithmetic expression + prediction with the AV reading. **Headline finding**: word2vec-style specific-identity analogies FAIL (3/3) — `Paris − France + Germany` decodes as London (right category, wrong identity), `Tokyo − Japan + France` decodes as Spain (wrong category), `Berlin − Germany + UK` collapses to UK. **Category-level axis directions DO preserve** — `country_centroid − capital_centroid` decodes as country-flavored content. **Compound (additive) follows the larger-magnitude term** — `country + emotion` decodes as China (country dominates). Pure subtraction of similar-magnitude vectors yields incoherent noise after rescaling. Confirms layer-20 representations are categorically structured but not algebraically composable in the word2vec sense.
@@ -224,7 +224,7 @@ CJK glyphs render as boxes in DejaVu Serif (AV occasionally outputs Chinese comm
 
 ## Dense interpolation near t=0.421 (fig36, fig37)
 
-Source scripts: `testing/examples/nla_dense_interp_near_pivot.py`, `nla_dense_interp_render.py`. Data: cached `h_A`, `h_B` from `interpolation_flipbook.pt` + AV `kitft/nla-qwen2.5-7b-L20-av` + vocab atlas + sink classifier. Output: `dense_interp_near_pivot.pt`. Done for MAIN-34. 30 steps: 25 dense in [0.395, 0.455] (Δt ≈ 0.0025), 5 sparse context points {0.0, 0.25, 0.5, 0.75, 1.0}.
+Source scripts: `examples/nla_dense_interp_near_pivot.py`, `nla_dense_interp_render.py`. Data: cached `h_A`, `h_B` from `interpolation_flipbook.pt` + AV `kitft/nla-qwen2.5-7b-L20-av` + vocab atlas + sink classifier. Output: `dense_interp_near_pivot.pt`. Done for MAIN-34. 30 steps: 25 dense in [0.395, 0.455] (Δt ≈ 0.0025), 5 sparse context points {0.0, 0.25, 0.5, 0.75, 1.0}.
 
 ### fig36_dense_interp_flipbook.png
 Vertical flipbook strip: t-bar column (color gradient blue→orange + dense-zone highlighted yellow), top-3 vocab-anchor cosines column, and AV-decode first-paragraph column per step. **Headline finding**: dense sampling reveals a **HYBRID "Definition + Poem" plateau** spanning 19 consecutive dense-zone steps (t=0.395 to t=0.4450), all decoded with the same intermediate format. Sharp transition at t=0.4475-0.4500 to "What is Spring?" poetic-nature format (one Δt=0.0025 step). Three regions total: factual (t<0.30) → hybrid plateau (t∈[0.395, 0.4450]) → poetic/nature (t>0.4475).
@@ -242,12 +242,12 @@ Capture → analyze → visualize → audit cycle:
 Qwen2.5-7B base model
     │
     ▼
-(testing/examples/{nla_aggregate_faithfulness.py, nla_faithfulness.py, nla_forced_continuation.py,
+(examples/{nla_aggregate_faithfulness.py, nla_faithfulness.py, nla_forced_continuation.py,
                     nla_country_concept_vector.py, nla_vocab_atlas_capture.py,
                     nla_discriminant_stability_capture.py})
     │
     ▼
-testing/.cache/nla_artifacts/*.pt  (gitignored working cache)
+.cache/nla_artifacts/*.pt  (gitignored working cache)
     │   committed canonical copy (git-LFS): research/arcs/nla-verbalizer/data/*.pt
     │
     ▼

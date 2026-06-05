@@ -101,17 +101,13 @@ For future work:
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
 # fig27 + fig29 (cheap, no model loading, ~30 sec)
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_discriminant_connectivity.py
+python examples/nla_discriminant_connectivity.py
 
 # fig28 — capture (~3 min CPU forward passes) + render (~10 sec)
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_discriminant_stability_capture.py
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_discriminant_stability_render.py
+python examples/nla_discriminant_stability_capture.py
+python examples/nla_discriminant_stability_render.py
 ```
 
 ## References

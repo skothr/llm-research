@@ -4,8 +4,8 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct (CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize
-**Script:** testing/examples/nla_forced_continuation.py
-**Artifact:** testing/.cache/nla_artifacts/forced_continuation.pt
+**Script:** examples/nla_forced_continuation.py
+**Artifact:** .cache/nla_artifacts/forced_continuation.pt
 **Captures:** 10 (4 pairs × natural + forced × 1-3 positions)
 
 ## Finding
@@ -160,13 +160,11 @@ decoding.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_forced_continuation.py
+python examples/nla_forced_continuation.py
 ```
 
 CPU-only. ~28 minutes on warm cache. Artifact at
-testing/.cache/nla_artifacts/forced_continuation.pt persists captures
+.cache/nla_artifacts/forced_continuation.pt persists captures
 and AV outputs for re-analysis.
 
 ## References

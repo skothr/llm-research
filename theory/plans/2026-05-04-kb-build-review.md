@@ -72,7 +72,7 @@ Phase 5 brainstorm document committed. KB now 54 draft / 0 stubs._
    pass content.
 3. **LaTeX series outline (Phase 5)** — explicitly deferred until the KB
    stabilizes. Spec at
-   `theory/docs/superpowers/specs/2026-05-03-theory-expansion-design.md`.
+   `theory/docs/design/2026-05-03-theory-expansion-design.md`.
 4. **No external graph/render** — 73 contradictions are extracted into a
    single index file but not yet visualized. Could become a graph viz
    in the C++ GUI long-term, but not Phase-4 scope.
@@ -206,7 +206,6 @@ Deferred to future session:
   override didn't release it). Reasoning agent worked around with
   Python urllib. Future heavy-fetch subagents should be told to use
   `python3 -c "import urllib.request; …"` rather than curl, OR the
-  user can adjust permissions. Documented in
-  `plans/_phase2/subagent-playbook.md` would prevent the rediscovery.
+  user can adjust permissions. Documenting this in the build notes would prevent the rediscovery.
 
 Recommended order: F is now unblocked; A2 is optional polish.

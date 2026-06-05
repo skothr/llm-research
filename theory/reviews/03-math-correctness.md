@@ -237,16 +237,16 @@ label in a touch-up commit; the remainder can ride to the next
 deepening pass.
 
 **Files of interest:**
-- `/home/ai/ai-projects/llm/theory/series/paper-1/sections/05-attention-kv-sharing.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-1/sections/06-attention-hardware-implementation.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-1/sections/08-normalization-axis.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-2/sections/03-scaling-laws.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-2/sections/04-optimization.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-3/sections/04-inference-compute-scaling.tex` (M1 second instance, M3)
-- `/home/ai/ai-projects/llm/theory/series/paper-3/sections/06-tree-search.tex` (M4)
-- `/home/ai/ai-projects/llm/theory/series/paper-3/sections/07-rlvr-grpo-dapo.tex` (M1 primary instance)
-- `/home/ai/ai-projects/llm/theory/series/paper-4/sections/03-lens-techniques.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-4/sections/10-rome.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-4/sections/11-circuits.tex`
-- `/home/ai/ai-projects/llm/theory/series/paper-5/sections/12-watermarking.tex` (M2)
-- `/home/ai/ai-projects/llm/theory/series/preamble.tex` (N1)
+- `theory/series/paper-1/sections/05-attention-kv-sharing.tex`
+- `theory/series/paper-1/sections/06-attention-hardware-implementation.tex`
+- `theory/series/paper-1/sections/08-normalization-axis.tex`
+- `theory/series/paper-2/sections/03-scaling-laws.tex`
+- `theory/series/paper-2/sections/04-optimization.tex`
+- `theory/series/paper-3/sections/04-inference-compute-scaling.tex` (M1 second instance, M3)
+- `theory/series/paper-3/sections/06-tree-search.tex` (M4)
+- `theory/series/paper-3/sections/07-rlvr-grpo-dapo.tex` (M1 primary instance)
+- `theory/series/paper-4/sections/03-lens-techniques.tex`
+- `theory/series/paper-4/sections/10-rome.tex`
+- `theory/series/paper-4/sections/11-circuits.tex`
+- `theory/series/paper-5/sections/12-watermarking.tex` (M2)
+- `theory/series/preamble.tex` (N1)

@@ -10,7 +10,7 @@ enable activation reconstruction. So ``cosine(h, h_pred)`` is a
 per-step *fidelity score* — high means the AV's text preserved enough
 information to recover the activation; low means the AV confabulated.
 
-Artifacts are saved to testing/.cache/nla_artifacts/ so subsequent
+Artifacts are saved to .cache/nla_artifacts/ so subsequent
 analysis doesn't require re-running the 30-min AV stage.
 """
 

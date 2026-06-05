@@ -77,7 +77,7 @@ This is the step most likely to be skipped under time pressure. Don't.
 
 - **Capture.** Run the experiment; write the raw tensors/records to the arc's
   working location. (NLA arc writes to the gitignored cache
-  `testing/.cache/nla_artifacts/` during development.)
+  `.cache/nla_artifacts/` during development.)
 - **Validate immediately, before building anything on top:**
   - Sanity-check the capture *protocol*: right layer, right position index,
     right tokenizer special-token handling, expected shapes/dtypes/counts. A
@@ -89,8 +89,8 @@ This is the step most likely to be skipped under time pressure. Don't.
 - **Save to the committed `data/` dir** and write/refresh the manifest:
   ```bash
   cp <working-cache>/*.pt research/arcs/<slug>/data/
-  testing/.venv/bin/python testing/examples/nla_data_manifest.py        # writes MANIFEST.json
-  testing/.venv/bin/python testing/examples/nla_data_manifest.py --check # verifies sha256
+  python examples/nla_data_manifest.py        # writes MANIFEST.json
+  python examples/nla_data_manifest.py --check # verifies sha256
   ```
   (The manifest script is arc-specific; copy it as the template for a new arc.)
 
@@ -202,7 +202,7 @@ gitignored cache; the committed `data/` dir is the canonical copy.
 
 **Wiring (so the data is *usable*, not just stored).** Scripts should resolve
 inputs **cache-first, committed-copy-fallback**, and write outputs only to the
-cache. The NLA arc centralizes this in `testing/examples/_nla_artifacts.py`
+cache. The NLA arc centralizes this in `examples/_nla_artifacts.py`
 (`read_artifact`/`find_artifact` for loads, `write_artifact` for saves). That
 one indirection is what lets the *same* script a developer runs locally
 (writing fresh captures to the gitignored cache) also re-render figures and

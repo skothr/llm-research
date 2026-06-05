@@ -5,7 +5,7 @@
 **Models:** AV (kitft/nla-qwen2.5-7b-L20-av, CPU bf16) + AR (kitft/nla-qwen2.5-7b-L20-ar, CPU bf16)
 **Compute:** ~30 minutes wall time (AR load 215s + 2 anchors + AV load + 20 × ~90s AV)
 **Figures:** `fig17_interp_flipbook.png`, `fig18_interp_diagnostic.png`
-**Data:** `testing/.cache/nla_artifacts/interpolation_flipbook.pt`
+**Data:** `.cache/nla_artifacts/interpolation_flipbook.pt`
 
 > **Refinement note (added 2026-05-29):** the "stepwise transition at t=0.421" finding here is *correct that the transition is discontinuous*, but the 20-step grid undersampled what the transition is *between*. See `2026-05-15-nla-dense-interp-near-pivot.md` (MAIN-34): a 10×-denser run revealed an intermediate "Definition + Poem" hybrid plateau spanning t∈[0.395, 0.4450]. The actual sharp flip is from that plateau to the poetic basin at t≈0.4475-0.4500 (one Δt=0.0025 step); t=0.421 itself sits *inside* the plateau. The factual→hybrid boundary is somewhere in [0.25, 0.395] and still undersampled.
 
@@ -101,15 +101,12 @@ If the chat-template attractor is universal, AR-encoded inputs will all have a l
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
 # ~30 min: AR load + 2 anchors + AV load + 20 AV decodes
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_interpolation_flipbook.py
+python examples/nla_interpolation_flipbook.py
 
 # ~30s: render fig17 + fig18 from the artifact
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_render_interpolation_flipbook.py
+python examples/nla_render_interpolation_flipbook.py
 ```
 
 Resumable — interrupting and re-running picks up from the last saved step.

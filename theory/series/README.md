@@ -58,8 +58,8 @@ Before the first build (and any time `theory/kb/glossary.md` or body
 sources change), regenerate the glossary artifacts from project root:
 
 ```bash
-testing/.venv/bin/python theory/series/gen_glossary.py
-testing/.venv/bin/python theory/series/mark_glossary_terms.py
+python theory/series/gen_glossary.py
+python theory/series/mark_glossary_terms.py
 ```
 
 Both scripts are idempotent. `gen_glossary.py` reads

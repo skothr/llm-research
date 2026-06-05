@@ -5,7 +5,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Inputs:** 128 anchor tokens, each captured at end-of-single-token-user-message in a chat-templated prompt
 **Figures:** `fig19_vocab_atlas.png`, `fig20_combined_atlas.png`, `fig21_interp_through_anchors.png`, `fig22_anchor_cosine_matrix.png`
-**Data:** `testing/.cache/nla_artifacts/vocab_atlas.pt`
+**Data:** `.cache/nla_artifacts/vocab_atlas.pt`
 
 ## Goal
 
@@ -134,15 +134,12 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
 # ~13 min: load Qwen, capture 128 anchors
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_vocab_atlas_capture.py
+python examples/nla_vocab_atlas_capture.py
 
 # ~30s: render fig19-22 from artifacts
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_vocab_atlas_render.py
+python examples/nla_vocab_atlas_render.py
 ```
 
 ## References

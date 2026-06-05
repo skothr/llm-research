@@ -5,8 +5,8 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16 for 4 prompts, GPU nf4 for 4 prompts)
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (CPU bf16, value_head Linear(3584, 3584))
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
-**Script:** testing/examples/nla_aggregate_faithfulness.py
-**Artifact:** testing/.cache/nla_artifacts/aggregate_faithfulness.pt
+**Script:** examples/nla_aggregate_faithfulness.py
+**Artifact:** .cache/nla_artifacts/aggregate_faithfulness.pt
 **Captures:** 113 generation-step positions, 8 prompts × ~15 tokens each
 
 ## Finding
@@ -194,17 +194,11 @@ verse) would generalize the claim.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_aggregate_faithfulness.py
+python examples/nla_aggregate_faithfulness.py
 ```
 
-Worktree-per-session means `testing/.cache` must be symlinked to the
-main checkout's models cache (~40 GB shared across worktrees):
-
-```bash
-ln -s /home/ai/ai-projects/llm/testing/.cache testing/.cache
-```
+Models load from the HuggingFace cache (`.cache/models`, ~40 GB); set
+`HF_HOME` or pre-populate the cache before running.
 
 Total runtime ~3 hours on warm cache, all-CPU (GPU optional and
 gave ~1.2x speedup on AV nf4, less than expected).

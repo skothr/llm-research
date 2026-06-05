@@ -8,8 +8,8 @@ it is a capture-root (needs the model to regenerate) or a derived artifact
 and command, its `.pt` inputs, what model it needs, and who consumes it.
 
 Two modes:
-    python testing/examples/nla_data_manifest.py            # (re)write MANIFEST.json
-    python testing/examples/nla_data_manifest.py --check     # verify, exit 1 on drift
+    python examples/nla_data_manifest.py            # (re)write MANIFEST.json
+    python examples/nla_data_manifest.py --check     # verify, exit 1 on drift
 
 The `--check` mode is the drift detector: it recomputes every sha256 AND
 re-derives each file's provenance fields from META, comparing both against the
@@ -33,7 +33,7 @@ from typing import Any
 
 from _nla_artifacts import DATA as DATA_DIR
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+_REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-base |
@@ -44,49 +44,49 @@ META: dict[str, dict[str, Any]] = {
     # ---- capture-roots: require a model load, expensive (CPU-hours) --------
     "aggregate_faithfulness.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_aggregate_faithfulness.py",
+        "producing_script": "examples/nla_aggregate_faithfulness.py",
         "inputs": [],
         "requires_model": "qwen+av+ar",
         "consumers": ["geometric_features.pt", "pairwise_and_hotdims.pt", "AUDIT 1/20"],
     },
     "rabbit_haiku_gen_trajectory.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_faithfulness.py",
+        "producing_script": "examples/nla_faithfulness.py",
         "inputs": [],
         "requires_model": "qwen+av+ar",
         "consumers": ["fig6", "fig14", "pairwise_and_hotdims.pt", "AUDIT 21"],
     },
     "forced_continuation.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_forced_continuation.py",
+        "producing_script": "examples/nla_forced_continuation.py",
         "inputs": [],
         "requires_model": "qwen+av",
         "consumers": ["fig15", "fig16", "geometric_features.pt", "AUDIT 10"],
     },
     "country_concept_vector.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_country_concept_vector.py",
+        "producing_script": "examples/nla_country_concept_vector.py",
         "inputs": [],
         "requires_model": "qwen+av",
         "consumers": ["fig13", "pairwise_and_hotdims.pt", "AUDIT 8"],
     },
     "vocab_atlas.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_vocab_atlas_capture.py",
+        "producing_script": "examples/nla_vocab_atlas_capture.py",
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": ["fig19-fig37 (atlas/discriminant figures)", "AUDIT 12/13"],
     },
     "discriminant_stability.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_discriminant_stability_capture.py",
+        "producing_script": "examples/nla_discriminant_stability_capture.py",
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": ["fig28", "AUDIT 14"],
     },
     "interpolation_flipbook.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_interpolation_flipbook.py",
+        "producing_script": "examples/nla_interpolation_flipbook.py",
         "inputs": [],
         "requires_model": "qwen+av+ar",
         "consumers": [
@@ -99,7 +99,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "mid_seq_vocab_atlas.pt": {
         "class": "capture-root",
-        "producing_script": "testing/examples/nla_mid_seq_vocab_atlas_capture.py",
+        "producing_script": "examples/nla_mid_seq_vocab_atlas_capture.py",
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": ["mid_seq_compare.pt", "mid_seq_native_compare.pt", "AUDIT 15/16"],
@@ -107,7 +107,7 @@ META: dict[str, dict[str, Any]] = {
     # ---- derived: regenerable from other .pt by a committed script ---------
     "geometric_features.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_geometric_features.py",
+        "producing_script": "examples/nla_geometric_features.py",
         "inputs": [
             "aggregate_faithfulness.pt",
             "rabbit_haiku_gen_trajectory.pt",
@@ -119,7 +119,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "pairwise_and_hotdims.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_pairwise_and_hotdims.py",
+        "producing_script": "examples/nla_pairwise_and_hotdims.py",
         "inputs": [
             "aggregate_faithfulness.pt",
             "rabbit_haiku_gen_trajectory.pt",
@@ -131,14 +131,14 @@ META: dict[str, dict[str, Any]] = {
     },
     "sink_removed_atlas.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_sink_removed_atlas.py",
+        "producing_script": "examples/nla_sink_removed_atlas.py",
         "inputs": ["pairwise_and_hotdims.pt", "geometric_features.pt"],
         "requires_model": "none",
         "consumers": ["fig7", "fig8", "fig9", "fig10", "fig11"],
     },
     "mid_seq_compare.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_mid_seq_vocab_atlas_compare.py",
+        "producing_script": "examples/nla_mid_seq_vocab_atlas_compare.py",
         "inputs": [
             "vocab_atlas.pt",
             "mid_seq_vocab_atlas.pt",
@@ -149,7 +149,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "mid_seq_native_compare.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_mid_seq_native_compare.py",
+        "producing_script": "examples/nla_mid_seq_native_compare.py",
         "inputs": [
             "vocab_atlas.pt",
             "mid_seq_vocab_atlas.pt",
@@ -160,21 +160,21 @@ META: dict[str, dict[str, Any]] = {
     },
     "concept_arithmetic_atlas.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_concept_arithmetic_atlas.py",
+        "producing_script": "examples/nla_concept_arithmetic_atlas.py",
         "inputs": ["vocab_atlas.pt"],
         "requires_model": "av",
         "consumers": ["fig35", "AUDIT 17"],
     },
     "dense_interp_near_pivot.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_dense_interp_near_pivot.py",
+        "producing_script": "examples/nla_dense_interp_near_pivot.py",
         "inputs": ["interpolation_flipbook.pt"],
         "requires_model": "av",
         "consumers": ["fig36", "fig37", "plateau_attractor_test.pt", "AUDIT 18"],
     },
     "plateau_attractor_test.pt": {
         "class": "derived",
-        "producing_script": "testing/examples/nla_plateau_attractor_test.py",
+        "producing_script": "examples/nla_plateau_attractor_test.py",
         "inputs": ["dense_interp_near_pivot.pt"],
         "requires_model": "ar",
         "consumers": ["AUDIT 19 (no figure — round-trip validation only)"],
@@ -200,7 +200,7 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "class": m["class"],
         "producing_script": m["producing_script"],
         "producing_command": (
-            f"PYTHONPATH=$PWD/testing testing/.venv/bin/python {m['producing_script']}"
+            f"python {m['producing_script']}"
         ),
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],

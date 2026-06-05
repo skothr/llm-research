@@ -42,7 +42,7 @@ joblib==1.5.3
 jsonlines==4.0.0
 kiwisolver==1.5.0
 llama_cpp_python==0.3.20
--e git+ssh://git@github.com/skothr/llm.git@38ac87dbe8cc0e5b7a61d5f4055ce6b018d05f65#egg=llm_surgeon&subdirectory=testing
+# llm_surgeon: editable install from the llm-surgeon source tree (unpinned)
 lm_eval==0.4.11
 lxml==6.0.4
 markdown-it-py==4.0.0

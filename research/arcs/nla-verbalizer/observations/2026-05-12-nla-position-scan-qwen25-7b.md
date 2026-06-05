@@ -3,7 +3,7 @@
 **Date:** 2026-05-12
 **Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584, 4 KV heads, vocab 152064; loaded nf4 via BitsAndBytes on RTX 2080 8 GB)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic Natural Language Autoencoder, released 2026-05-07; 8B params, CPU bf16)
-**Toolkit:** llm_surgeon.probe.nla_verbalize via testing/examples/nla_scan.py
+**Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_scan.py
 
 ## Finding
 
@@ -166,7 +166,7 @@ to quantify the geometric gap.
    how rapidly the AV's reading degrades vs how rapidly the layer-20
    AV's specificity falls off.
 5. **GUI panel integration** — wire a click-on-cell → verbalize flow
-   into the live-probe GUI at `testing/gui/`. Backend already supports
+   into the live-probe GUI (the **llm-gui-react** repo). Backend already supports
    per-position hidden-state capture; the 80-second CPU latency is
    acceptable for click-driven analysis.
 
@@ -175,11 +175,11 @@ to quantify the geometric gap.
 ```bash
 # Hardware: NVIDIA RTX 2080 (8 GB), 31 GB system RAM
 # Disk requirement: ~30 GB for base (15 GB) + AV (15 GB) checkpoints
-cd /home/ai/ai-projects/llm
+cd .
 
 # Requires PYTORCH_CUDA_ALLOC_CONF for tight-fit nf4 forward
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
-    testing/.venv/bin/python testing/examples/nla_scan.py
+    python examples/nla_scan.py
 
 # Total runtime ~17 minutes from warm cache (5s base load + 280s AV load
 # + 6 * ~95s per verbalization). First run requires ~30 GB HF cache

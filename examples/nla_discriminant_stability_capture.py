@@ -15,7 +15,7 @@ the vocab atlas) so the comparison is apples-to-apples.
   - medium: "Tell me about {anchor}"
   - long:   "I want to discuss with you the following word, which is {anchor}"
 
-Outputs: testing/.cache/nla_artifacts/discriminant_stability.pt
+Outputs: .cache/nla_artifacts/discriminant_stability.pt
 """
 
 import os

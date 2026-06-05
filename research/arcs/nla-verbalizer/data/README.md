@@ -6,9 +6,9 @@ audit are generated from. Committed via **git-LFS** (see the repo
 clean clone — without these, the render scripts and the audit have no input to
 load. Total ~15 MB; provenance + integrity in [`MANIFEST.json`](MANIFEST.json).
 
-These are the canonical copy. The scripts in `testing/examples/` resolve their
+These are the canonical copy. The scripts in `examples/` resolve their
 inputs through the shared `_nla_artifacts` helper — **the gitignored working
-cache `testing/.cache/nla_artifacts/` first, this committed copy as fallback**
+cache `.cache/nla_artifacts/` first, this committed copy as fallback**
 — and write outputs only to the cache. So a clean clone reads straight from
 here, while a local re-capture writes to the cache and then takes precedence.
 
@@ -19,7 +19,7 @@ directory when the working cache is empty:
 
 ```bash
 # From a clean clone (after `git lfs pull`):
-/path/to/venv/bin/python testing/examples/nla_audit_findings.py
+/path/to/venv/bin/python examples/nla_audit_findings.py
 # Expect: SUMMARY:  178 PASS  |  0 FAIL
 ```
 
@@ -28,17 +28,17 @@ from this committed dir when the working cache is empty (same `_nla_artifacts`
 fallback), so a clean clone re-renders directly:
 
 ```bash
-PYTHONPATH=$PWD/testing testing/.venv/bin/python testing/examples/nla_vocab_atlas_render.py
+python examples/nla_vocab_atlas_render.py
 ```
 
 ## Verifying / refreshing
 
 ```bash
 # Drift check — recompute every sha256 against MANIFEST.json:
-testing/.venv/bin/python testing/examples/nla_data_manifest.py --check
+python examples/nla_data_manifest.py --check
 
 # Rewrite MANIFEST.json after a deliberate re-capture (then re-commit both):
-testing/.venv/bin/python testing/examples/nla_data_manifest.py
+python examples/nla_data_manifest.py
 ```
 
 ## Capture-roots vs derived

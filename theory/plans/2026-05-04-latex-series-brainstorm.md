@@ -1,6 +1,6 @@
 # Phase 5 — LaTeX series brainstorm
 
-_2026-05-04. Per `theory/docs/superpowers/specs/2026-05-03-theory-expansion-design.md` §6 Phase 5: "After KB is stable: a separate brainstorming round drafts the multi-paper LaTeX series structure, producing N paper specs each with their own implementation plan." This is the brainstorm — not a fixed plan. Picks a recommended shape and surfaces alternatives + tradeoffs._
+_2026-05-04. Per `theory/docs/design/2026-05-03-theory-expansion-design.md` §6 Phase 5: "After KB is stable: a separate brainstorming round drafts the multi-paper LaTeX series structure, producing N paper specs each with their own implementation plan." This is the brainstorm — not a fixed plan. Picks a recommended shape and surfaces alternatives + tradeoffs._
 
 ## What we have to work with
 

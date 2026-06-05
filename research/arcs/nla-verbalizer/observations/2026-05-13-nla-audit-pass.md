@@ -61,9 +61,7 @@ The qualitative finding — sinks have content-modulated components — survives
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_audit_findings.py
+python examples/nla_audit_findings.py
 ```
 
 CPU-only, ~20 seconds. Exits 0 if all PASS, 1 if any FAIL. Use as a regression test before any subsequent analysis: if the audit starts failing, an upstream artifact has drifted from the recorded numbers.

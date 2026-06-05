@@ -71,15 +71,12 @@ Dim 32 lights up red across the entire country cluster but blue/zero elsewhere. 
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
 # Path A: sink-removed analysis + 3 comparison figures
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_sink_removed_atlas.py
+python examples/nla_sink_removed_atlas.py
 
 # Signature-glyph atlas + zoom views
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_signature_atlas.py
+python examples/nla_signature_atlas.py
 ```
 
 Both run on CPU, no model loading, ~1 minute total.

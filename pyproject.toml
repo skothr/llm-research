@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-research"
 version = "0.1.0"
-description = "LLM-interpretability research showcase: citation-grounded theory KB, experimental arcs, and the NLA analysis/figure/audit pipeline."
+description = "LLM-interpretability research: a citation-grounded theory KB, experimental arcs, and the NLA analysis/figure/audit pipeline."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "GPL-3.0-only"
@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [tool.setuptools]
-# This repo is a research showcase, not an importable package. The example
+# This repo is a research workspace, not an importable package. The example
 # scripts are run directly (python examples/nla_*.py), so no package discovery.
 py-modules = []
 

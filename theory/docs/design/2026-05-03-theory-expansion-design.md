@@ -88,7 +88,7 @@ theory/
 │       └── visuals/llm-architecture-diagram.html
 ├── series/                           # placeholder for future LaTeX paper series
 │   └── README.md                     # "outlined after KB pass complete"
-└── docs/superpowers/specs/
+└── docs/design/
     ├── 2026-04-06-llm-core-architecture-design.md   # existing
     └── 2026-05-03-theory-expansion-design.md        # this spec
 ```

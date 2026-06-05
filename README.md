@@ -2,12 +2,12 @@
 
 LLM-interpretability research, organized as a citation-grounded theory
 knowledge base plus reproducible experimental arcs. Built on the
-[`llm-surgeon`](../llm-surgeon) toolkit for layer-level model surgery and
+[`llm-surgeon`](https://github.com/skothr/llm-surgeon) toolkit for layer-level model surgery and
 probing. The flagship investigation applies Anthropic's released NLA
 (Natural Language Autoencoder) verbalizer/reconstructor model pair to
 local Qwen2.5-7B-Instruct and probes layer-20 hidden-state geometry.
 
-This repository is a **research showcase**, not a software product. It
+This repository is a **research workspace**, not a software product. It
 collects the work product — the synthesized theory, the dated observations,
 the figure/audit pipeline — rather than a polished library. Claims are held
 to the standard described under "Epistemic discipline" below: load-bearing

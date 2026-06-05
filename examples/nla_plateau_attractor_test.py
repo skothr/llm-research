@@ -10,7 +10,7 @@ Baseline comparisons: round-trip h_A (t=0.0) and h_B (t=1.0) — should
 self-attract since AV(h_A) and AV(h_B) were produced from those h's
 originally.
 
-Output: testing/.cache/nla_artifacts/plateau_attractor_test.pt
+Output: .cache/nla_artifacts/plateau_attractor_test.pt
 """
 
 import os

@@ -1,7 +1,7 @@
 """Shared artifact-path resolver for the NLA arc example scripts.
 
 Two artifact locations:
-  * CACHE — testing/.cache/nla_artifacts/ — the gitignored working cache the
+  * CACHE — .cache/nla_artifacts/ — the gitignored working cache the
     capture/derive scripts write to during local development.
   * DATA  — research/arcs/nla-verbalizer/data/ — the committed git-LFS copy a
     clean clone has (see research/ARC_PROCESS.md § "Raw data is a deliverable").
@@ -22,8 +22,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-CACHE = _REPO_ROOT / "testing" / ".cache" / "nla_artifacts"
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+CACHE = _REPO_ROOT / ".cache" / "nla_artifacts"
 DATA = _REPO_ROOT / "research" / "arcs" / "nla-verbalizer" / "data"
 FIGURES = (
     _REPO_ROOT / "research" / "arcs" / "nla-verbalizer" / "observations" / "figures"
@@ -93,7 +93,7 @@ def warn_if_mixed_sources(names: list[str]) -> None:
             "WARNING: inputs span two sources — the derived output would blend epochs:\n"
             f"  re-captured (cache):     {cached}\n"
             f"  older (committed data/): {committed}\n"
-            "  Re-capture all inputs, or clear testing/.cache/nla_artifacts/, "
+            "  Re-capture all inputs, or clear .cache/nla_artifacts/, "
             "to avoid a mixed-epoch artifact.",
             file=sys.stderr,
         )

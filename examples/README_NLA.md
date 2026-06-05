@@ -12,7 +12,7 @@ All capture/analysis scripts use `torch.load(path, weights_only=False)` to
 deserialize `.pt` artifacts saved by sibling scripts in this directory.
 
 **This is intentional and safe IN CONTEXT.** The artifacts under
-`testing/.cache/nla_artifacts/` are produced by these same scripts (no
+`.cache/nla_artifacts/` are produced by these same scripts (no
 external sources), kept gitignored, and consumed only by this audit/research
 pipeline. `weights_only=True` would reject the nested Python dicts these
 scripts persist (capture metadata, anchor labels, AV text strings, etc.).
@@ -24,11 +24,11 @@ to match — the trust boundary changes.
 
 ## ARTIFACTS path resolution
 
-Most scripts use `ARTIFACTS = Path("testing/.cache/nla_artifacts")` (relative
+Most scripts use `ARTIFACTS = Path(".cache/nla_artifacts")` (relative
 to repo root). Run them from the worktree root, e.g.:
 
 ```bash
-PYTHONPATH=$PWD/testing testing/.venv/bin/python testing/examples/nla_audit_findings.py
+python examples/nla_audit_findings.py
 ```
 
 The audit script (`nla_audit_findings.py`) anchors its `ARTIFACTS` resolution
@@ -39,7 +39,7 @@ scripts assume worktree-root CWD.
 
 CPU bf16 paths via `llm_surgeon.probe.{load_av, load_ar, nla_verbalize,
 nla_reconstruct, nla_score}`. The cached HuggingFace models live under
-`testing/.cache/models/` (also gitignored). First load of AV/AR pulls
+`.cache/models/` (also gitignored). First load of AV/AR pulls
 multi-GB checkpoints from HuggingFace.
 
 ## Figures + observations

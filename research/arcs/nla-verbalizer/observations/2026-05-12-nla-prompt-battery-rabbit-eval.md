@@ -3,7 +3,7 @@
 **Date:** 2026-05-12
 **Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584; loaded **CPU bf16** to sidestep GPU contention)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic NLA released 2026-05-07)
-**Toolkit:** llm_surgeon.probe.nla_verbalize via testing/examples/nla_prompt_battery.py
+**Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_prompt_battery.py
 
 ## Finding
 
@@ -206,8 +206,8 @@ slice of the activation manifold.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm
-testing/.venv/bin/python testing/examples/nla_prompt_battery.py
+cd .
+python examples/nla_prompt_battery.py
 ```
 
 CPU-only path; no GPU needed. The script loads base on CPU bf16 (~15 GB

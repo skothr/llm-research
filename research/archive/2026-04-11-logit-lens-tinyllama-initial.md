@@ -36,7 +36,7 @@ Subword fragments like "nt", "omorph", "omorphic" dominate layers 0-8. These may
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/testing
+cd .
 .venv/bin/python examples/probe_demo.py
 ```
 

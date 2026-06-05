@@ -1,6 +1,6 @@
 # Citation-tier discipline review
 
-Fresh independent review of `theory/series/` — five papers, 70 sections — against the playbook's "cite, never assert" rule, dual-citation pattern, `\deepencite` discipline, and the project-level tier-A/B/C source classification (`/home/ai/ai-projects/llm/CLAUDE.md` §"Source tiers"). All `theory/series/`, `theory/kb/`, and `theory/sources/` paths are treated as read-only.
+Fresh independent review of `theory/series/` — five papers, 70 sections — against the playbook's "cite, never assert" rule, dual-citation pattern, `\deepencite` discipline, and the project-level tier-A/B/C source classification (`CLAUDE.md` §"Source tiers"). All `theory/series/`, `theory/kb/`, and `theory/sources/` paths are treated as read-only.
 
 ## Summary
 

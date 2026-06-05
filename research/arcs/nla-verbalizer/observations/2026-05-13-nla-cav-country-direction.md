@@ -4,8 +4,8 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct (CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + CAV via difference-of-means
-**Script:** testing/examples/nla_country_concept_vector.py
-**Artifact:** testing/.cache/nla_artifacts/country_concept_vector.pt
+**Script:** examples/nla_country_concept_vector.py
+**Artifact:** .cache/nla_artifacts/country_concept_vector.pt
 **Captures:** 29 (8 country + 8 non-country + 13 test)
 
 ## Finding
@@ -203,13 +203,11 @@ negative, by ~10 units.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_country_concept_vector.py
+python examples/nla_country_concept_vector.py
 ```
 
 CPU-only. ~20 min on warm cache. Artifact at
-testing/.cache/nla_artifacts/country_concept_vector.pt persists all
+.cache/nla_artifacts/country_concept_vector.pt persists all
 captures, the extracted direction, projection results, and the AV
 reading.
 

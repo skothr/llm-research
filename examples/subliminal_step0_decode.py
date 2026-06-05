@@ -22,7 +22,7 @@ hypotheses (HA vs HC). An above-chance owl-string rate in owl-teacher vs
 neutral-teacher streams would instead be a literal channel they missed.
 
 Run (from repo root, via the main-checkout venv; GPU needs sandbox bypass):
-    HF_HUB_OFFLINE=1 testing/.venv/bin/python testing/examples/subliminal_step0_decode.py \
+    HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
         --n-per-condition 300 --batch-size 8
 """
 
@@ -643,7 +643,7 @@ def _build_manifest(
             "dtype": "bfloat16",
             "quantization": quant,
             "prompt": {
-                "source_path": "testing/examples/subliminal_step0_decode.py",
+                "source_path": "examples/subliminal_step0_decode.py",
                 "params": dict(PROMPT_PARAMS),
                 "system_prompts": {
                     "owl": OWL_SYSTEM_PROMPT,
@@ -651,7 +651,7 @@ def _build_manifest(
                 },
             },
             "filter": {
-                "source_path": "testing/examples/subliminal_step0_decode.py",
+                "source_path": "examples/subliminal_step0_decode.py",
                 "params": dict(FILTER_PARAMS),
             },
             "backend": "transformers",
@@ -697,7 +697,7 @@ def _build_manifest(
             # Decoupled reusable corpus: the data does not name its consumers;
             # the data/README.md registry maps corpus -> experiments that use it.
             "downstream": [],
-            "generated_by": "testing/examples/subliminal_step0_decode.py",
+            "generated_by": "examples/subliminal_step0_decode.py",
             "agent": "Claude Code (Opus 4.8) under skothr",
         },
         "statistics": {
@@ -728,7 +728,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-id", default="Qwen/Qwen2.5-7B-Instruct")
     ap.add_argument(
-        "--cache-dir", default="/home/ai/ai-projects/llm/testing/.cache/models"
+        "--cache-dir", default=".cache/models"
     )
     ap.add_argument("--n-per-condition", type=int, default=300)
     ap.add_argument("--batch-size", type=int, default=8)
@@ -736,7 +736,7 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--no-4bit", action="store_true", help="skip 4-bit, use CPU bf16")
     ap.add_argument(
-        "--out-dir", default="/home/ai/ai-projects/llm/testing/.cache/subliminal"
+        "--out-dir", default=".cache/subliminal"
     )
     ap.add_argument(
         "--smoke", action="store_true", help="tiny run: 4 per condition, then exit"

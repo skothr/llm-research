@@ -14,7 +14,7 @@ Resumability: each phase saves to `interpolation_flipbook.pt`. If
 phase 1's anchors are already saved, skipped. Phase 2 resumes from
 whichever step was reached if interrupted mid-run.
 
-Output: testing/.cache/nla_artifacts/interpolation_flipbook.pt
+Output: .cache/nla_artifacts/interpolation_flipbook.pt
 """
 
 import os

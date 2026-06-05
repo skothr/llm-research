@@ -14,8 +14,7 @@ This README is the entry point for the arc. The full observation log
 lives in [`observations/`](observations/), figures in
 [`observations/figures/`](observations/figures/) with
 [`INVENTORY.md`](observations/figures/INVENTORY.md) providing
-per-figure provenance, and the most recent state-of-arc summary in
-[`sessions/2026-05-14-nla-arc-resume-checkpoint.md`](sessions/2026-05-14-nla-arc-resume-checkpoint.md).
+per-figure provenance.
 
 **Status:** paused as of 2026-05-15 — synthesis written, active work
 stopped. Open follow-ups are enumerated in [Possible next
@@ -172,8 +171,7 @@ The largest unrealized seed from the arc. The current state landed on
 static matplotlib PNGs (heatmaps, glyphs, flipbooks); the "novel
 visualization that allows a useful view" framing implies an
 interactive discovery tool, not presentation graphics. Open as
-[D1](#d1-discovery-viz-frontend) — the C++ ImGui frontend at
-`testing/gui_cpp/` is the natural home but the connection was never
+[D1](#d1-discovery-viz-frontend) — the C++ ImGui frontend (the **llobotomy** repo) is the natural home but the connection was never
 built.
 
 ### Theme 9 — AV-decoder format-bias observation (flagged, not yet investigated)
@@ -219,7 +217,7 @@ work, and the documentation tries to separate them honestly.
 
 **What Claude Code contributed:**
 
-- All experiment scripts (~42 files under `testing/examples/nla_*`),
+- All experiment scripts (~42 files under `examples/nla_*`),
   figure rendering pipelines, observation drafts, audit infrastructure
   (`nla_audit_findings.py`), and the Linear ticket queue management.
 - Cross-arc continuity across compaction boundaries — synthesizing
@@ -243,7 +241,7 @@ work, and the documentation tries to separate them honestly.
 
 **Audit and verification.** Every load-bearing number cited in this
 arc is re-derived from raw `.pt` files by
-[`testing/examples/nla_audit_findings.py`](../../../testing/examples/nla_audit_findings.py).
+[`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py).
 Current state: **178 PASS / 0 FAIL** across 21 audit sections (extended
 2026-05-31 to lock the round-trip faithfulness foundation and the
 concept-arithmetic decode identities, not just the geometry). The
@@ -302,7 +300,7 @@ shorthand — the formula is centroid-difference / mean-contrast, not
 Fisher LDA (which would require `S_W⁻¹(μ₁−μ₀)` with regularization;
 omitted here because n=2-12 captures per category in 3584-dim space
 makes `S_W` rank-deficient by orders of magnitude). See
-[`testing/examples/README_NLA.md`](../../../testing/examples/README_NLA.md#discriminant-naming--methodology-note)
+[`examples/README_NLA.md`](../../../examples/README_NLA.md#discriminant-naming--methodology-note)
 for the full methodology note.
 
 ### F3. Apparent hierarchical attractor structure at layer 20
@@ -517,8 +515,7 @@ ethics/eval-aware not done).
 ### D1. Discovery-viz frontend
 Theme 8 · [MAIN-265](https://linear.app/skothr/issue/MAIN-265)
 
-The largest unrealized seed from the arc. Build the `testing/gui_cpp/`
-ImGui frontend's first NLA-data panel: load `interpolation_flipbook.pt`
+The largest unrealized seed from the arc. Build the **llobotomy** repo's first NLA-data panel: load `interpolation_flipbook.pt`
 and render the per-step h-vectors as an interactive 23-discriminant
 projection glyph with a t-slider — port the static fig21/fig25
 pipeline to live ImGui. Use as proof-of-pattern before designing
@@ -547,7 +544,7 @@ NLA-artifact connection first).
 
 ## Reproducing
 
-Prerequisites: Python venv at `testing/.venv/` with torch + transformers +
+Prerequisites: Python venv at `.venv/` with torch + transformers +
 matplotlib. The raw `.pt` datasets ship committed (git-LFS) under
 [`data/`](data/) — run `git lfs pull` after cloning. Re-*capturing* from
 scratch (not needed to verify) additionally requires Qwen2.5-7B-Instruct +
@@ -557,18 +554,18 @@ the kitft NLA pair cached locally.
 # Verify the arc — re-derives every load-bearing number from the .pt files.
 # Runs from a clean clone: nla_audit_findings.py reads the committed data/
 # dir when the gitignored working cache is empty.
-PYTHONPATH=$PWD/testing testing/.venv/bin/python testing/examples/nla_audit_findings.py
+python examples/nla_audit_findings.py
 # Expect: SUMMARY:  178 PASS  |  0 FAIL
 
 # Verify dataset integrity (sha256 of every .pt vs data/MANIFEST.json)
-testing/.venv/bin/python testing/examples/nla_data_manifest.py --check
+python examples/nla_data_manifest.py --check
 
 # Re-render a figure (~10s, no model load). Inputs resolve from the committed
 # data/ dir when the working cache is empty (shared _nla_artifacts fallback).
-PYTHONPATH=$PWD/testing testing/.venv/bin/python testing/examples/nla_discriminant_stability_render.py
+python examples/nla_discriminant_stability_render.py
 
 # Re-capture a .pt from scratch (loads the base model, slow on CPU)
-PYTHONPATH=$PWD/testing testing/.venv/bin/python testing/examples/nla_vocab_atlas_capture.py
+python examples/nla_vocab_atlas_capture.py
 ```
 
 The hardware reality: AV + AR run on CPU bf16; ~85s per AV
@@ -604,14 +601,11 @@ research/arcs/nla-verbalizer/
     MANIFEST.json                               # sha256 + provenance per file
     README.md                                   # usage + copy-back + trust note
     *.pt                                        # 16 capture/derived artifacts (~15 MB)
-  sessions/
-    2026-05-13-nla-arc-summary-for-compact.md   # Pre-compaction summary (first half of arc)
-    2026-05-14-nla-arc-resume-checkpoint.md     # Most recent state-of-arc summary
 ```
 
 Related implementation surfaces (outside `research/`):
 
-- [`testing/llm_surgeon/probe/_nla.py`](../../../testing/llm_surgeon/probe/_nla.py) — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
-- [`testing/examples/README_NLA.md`](../../../testing/examples/README_NLA.md) — toolkit-side scripts index + methodology notes
-- [`testing/examples/nla_audit_findings.py`](../../../testing/examples/nla_audit_findings.py) — the regression audit (178/0)
-- [`testing/examples/nla_*.py`](../../../testing/examples/) — 42 arc scripts
+- [`llm_surgeon/probe/_nla.py`](../../../llm_surgeon/probe/_nla.py) — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
+- [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
+- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (178/0)
+- [`examples/nla_*.py`](../../../examples/) — 42 arc scripts

@@ -8,7 +8,7 @@ Protocol matches the country-pool capture for direct comparability:
   * Forward pass with output_hidden_states=True
   * Capture h[20][0, -1, :] — last position before the assistant turn
 
-Output: testing/.cache/nla_artifacts/vocab_atlas.pt
+Output: .cache/nla_artifacts/vocab_atlas.pt
 """
 
 import os

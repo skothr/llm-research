@@ -3,7 +3,7 @@
 **Date:** 2026-05-13
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Toolkit:** `nla_cav_glyph.py` + `nla_haiku_flipbook.py` + `nla_counterfactual_glyph_diff.py`
-**Inputs:** the four `.pt` artifacts in `testing/.cache/nla_artifacts/` (no model loading)
+**Inputs:** the four `.pt` artifacts in `.cache/nla_artifacts/` (no model loading)
 **Figures:** `fig13`, `fig14`, `fig15` in `research/arcs/nla-verbalizer/observations/figures/`
 
 ## Path-batch goal
@@ -107,14 +107,10 @@ Sinks are MOSTLY constant but not entirely. Their content modulation surfaces in
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_cav_glyph.py                     # fig13
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_haiku_flipbook.py                # fig14
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_counterfactual_glyph_diff.py     # fig15
+python examples/nla_cav_glyph.py                     # fig13
+python examples/nla_haiku_flipbook.py                # fig14
+python examples/nla_counterfactual_glyph_diff.py     # fig15
 ```
 
 All three CPU-only, no model loading, ~1 minute total.

@@ -5,8 +5,8 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (5B params, truncated to 20 layers + Linear(d, d) value head)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
-**Script:** testing/examples/nla_faithfulness.py
-**Artifact:** testing/.cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt
+**Script:** examples/nla_faithfulness.py
+**Artifact:** .cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt
 
 ## Finding
 
@@ -195,12 +195,12 @@ must come from attention retrieval, not layer-20 memory.
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm
-testing/.venv/bin/python testing/examples/nla_faithfulness.py
+cd .
+python examples/nla_faithfulness.py
 ```
 
 The script saves checkpoints to
-`testing/.cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt` after
+`.cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt` after
 each phase. Re-running with a partial artifact resumes from where it
 left off — useful when iterating on the scoring side without
 re-running 30 min of AV inference.

@@ -16,7 +16,7 @@ count tokens K -> anchor's last token sits at position (K-1) in the
 full tokenization. Robust to BPE merges and anchor-as-carrier-substring
 collisions because PRE is uniquely findable in the chat string.
 
-Output: testing/.cache/nla_artifacts/mid_seq_vocab_atlas.pt
+Output: .cache/nla_artifacts/mid_seq_vocab_atlas.pt
 """
 
 import os

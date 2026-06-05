@@ -16,7 +16,7 @@ whether token-presence detection works once the anchor is mid-sequence
 (MAIN-26 finding: at end-of-prompt, emotion->emotion projection was only
 +0.083 ± 0.061).
 
-Output: testing/.cache/nla_artifacts/mid_seq_compare.pt
+Output: .cache/nla_artifacts/mid_seq_compare.pt
 """
 
 import statistics

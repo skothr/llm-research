@@ -4,7 +4,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **AV/AR:** kitft/nla-qwen2.5-7b-L20-{av,ar} (CPU bf16)
 **Toolkit:** llm_surgeon.probe + nla_geometric_features.py + nla_pairwise_and_hotdims.py + nla_visualize_geometry.py
-**Inputs:** the four artifact `.pt` files in `testing/.cache/nla_artifacts/`
+**Inputs:** the four artifact `.pt` files in `.cache/nla_artifacts/`
 **Captures analyzed:** 167 h-vectors in R^3584 (113 aggregate, 15 haiku_gen, 10 forced, 29 country CAV pool)
 **Figures:** `research/arcs/nla-verbalizer/observations/figures/fig{1..6}_*.png`
 
@@ -124,22 +124,18 @@ A residual-stream dim whose sign carries content but whose magnitude is constant
 ## Reproducibility
 
 ```bash
-cd /home/ai/ai-projects/llm/.claude/worktrees/nla-research
 
 # Per-capture geometric feature table
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_geometric_features.py
+python examples/nla_geometric_features.py
 
 # Pairwise cosines + hot-dim census + PCA + dim-character classification
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_pairwise_and_hotdims.py
+python examples/nla_pairwise_and_hotdims.py
 
 # 6 visualization PNGs into research/arcs/nla-verbalizer/observations/figures/
-PYTHONPATH=$PWD/testing /home/ai/ai-projects/llm/testing/.venv/bin/python \
-    testing/examples/nla_visualize_geometry.py
+python examples/nla_visualize_geometry.py
 ```
 
-All three scripts run on CPU, read existing `testing/.cache/nla_artifacts/*.pt` files, no model loading. ~30 seconds total.
+All three scripts run on CPU, read existing `.cache/nla_artifacts/*.pt` files, no model loading. ~30 seconds total.
 
 ## Follow-ups
 

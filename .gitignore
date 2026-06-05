@@ -13,7 +13,6 @@ venv/
 
 # Model / artifact caches (NLA pipeline writes .pt here; HF model blobs)
 .cache/
-testing/.cache/
 
 # LaTeX build artifacts (theory series + papers). The collected PDFs in
 # theory/series/dist/ are symlinks into per-paper build dirs, so ignoring

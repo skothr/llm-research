@@ -8,7 +8,7 @@ discriminant cosine matrix — diagonal entries quantify how stable each
 category's axis is across capture position.
 
 Outputs:
-  testing/.cache/nla_artifacts/mid_seq_native_compare.pt   (artifact)
+  .cache/nla_artifacts/mid_seq_native_compare.pt   (artifact)
   research/arcs/nla-verbalizer/observations/figures/fig33_native_signal_lift.png
   research/arcs/nla-verbalizer/observations/figures/fig34_cross_protocol_axis_cos.png
 """

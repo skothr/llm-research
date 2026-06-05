@@ -7,7 +7,7 @@ LLM theoretical-framework workspace. Two-layered:
    technical claims throughout this project.
 2. **`series/`** — placeholder for a future multi-paper LaTeX series,
    outlined only after the KB is complete (see
-   `docs/superpowers/specs/2026-05-03-theory-expansion-design.md` §11).
+   `docs/design/2026-05-03-theory-expansion-design.md` §11).
 
 ## Layout
 
@@ -22,7 +22,7 @@ theory/
 ├── plans/             # phase-scoped research/construction plans
 ├── archive/           # historical snapshots (pre-expansion v1, dated PDFs)
 ├── series/            # placeholder for future LaTeX paper series (Phase 5+)
-└── docs/superpowers/  # specs and plans for the expansion itself
+└── docs/design/  # design specs for the KB expansion
 ```
 
 ## Where to start
@@ -50,4 +50,4 @@ discipline" for the full rule.
   Transformer 2017 → LLaMA 2023. Archived under
   `archive/2026-05-03-pre-expansion/`.
 - v2 (in progress) — KB-substrate expansion to bleeding-edge breadth and
-  depth. Phase plans live under `docs/superpowers/plans/`.
+  depth.
