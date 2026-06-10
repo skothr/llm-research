@@ -1,0 +1,96 @@
+{
+  "arc": "embedding-atlas",
+  "base_id": "Qwen/Qwen2.5-7B-Instruct",
+  "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "total_files": 6,
+  "files": {
+    "emb_battery_vectors.pt": {
+      "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
+      "size_bytes": 15278085,
+      "class": "capture-root",
+      "producing_script": "examples/emb_capture.py",
+      "producing_command": "python examples/emb_capture.py",
+      "inputs": [],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_category_stats.pt",
+        "emb_pair_directions.pt",
+        "fig8",
+        "fig9",
+        "AUDIT 1/4/5"
+      ]
+    },
+    "emb_category_stats.pt": {
+      "sha256": "589b1b2b9ce3508d364aeb7bd7d43c608a3e370b1c6800bad376d9199b097b9e",
+      "size_bytes": 3287219,
+      "class": "derived",
+      "producing_script": "examples/emb_category_stats.py",
+      "producing_command": "python examples/emb_category_stats.py",
+      "inputs": [
+        "emb_battery_vectors.pt",
+        "emb_global_stats.pt"
+      ],
+      "requires_model": "none",
+      "consumers": [
+        "fig5",
+        "fig6",
+        "fig7",
+        "AUDIT 5"
+      ]
+    },
+    "emb_global_stats.pt": {
+      "sha256": "60388ebf1baa0242565d563330592de8b823e70663db5bbf0ef8534fb1453876",
+      "size_bytes": 3406433,
+      "class": "capture-root",
+      "producing_script": "examples/emb_capture.py",
+      "producing_command": "python examples/emb_capture.py",
+      "inputs": [],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_category_stats.pt",
+        "fig1-fig4",
+        "AUDIT 1/2/3/4"
+      ]
+    },
+    "emb_neighbor_probes.pt": {
+      "sha256": "72b5fbd12a161afe53f8b89d4c591ae73185395266a9a85a5d62f34b9fe3e5c0",
+      "size_bytes": 23029,
+      "class": "capture-root",
+      "producing_script": "examples/emb_capture.py",
+      "producing_command": "python examples/emb_capture.py",
+      "inputs": [],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_neighbors_report.py (text report)",
+        "AUDIT 6"
+      ]
+    },
+    "emb_pair_directions.pt": {
+      "sha256": "c7cccb03e5e6cf0a8a7e21f80bf939af986cea095d68660d6da1c4e5d22bb7fe",
+      "size_bytes": 175921,
+      "class": "derived",
+      "producing_script": "examples/emb_pair_directions.py",
+      "producing_command": "python examples/emb_pair_directions.py",
+      "inputs": [
+        "emb_battery_vectors.pt"
+      ],
+      "requires_model": "none",
+      "consumers": [
+        "fig10",
+        "AUDIT 7"
+      ]
+    },
+    "emb_random_baseline.pt": {
+      "sha256": "b8d077d847295e7950345f638f4afcad6b1d3889d2c12c75844af4e1291445a2",
+      "size_bytes": 15567501,
+      "class": "capture-root",
+      "producing_script": "examples/emb_capture.py",
+      "producing_command": "python examples/emb_capture.py",
+      "inputs": [],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "(reserved for follow-up baselines; seed-pinned)"
+      ]
+    }
+  }
+}

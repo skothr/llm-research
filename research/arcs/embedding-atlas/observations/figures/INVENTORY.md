@@ -1,0 +1,23 @@
+# Figure inventory — embedding-atlas arc
+
+Common assumptions (all figures): model Qwen/Qwen2.5-7B-Instruct, HF revision
+`a09a35458c702b33eeacc393d103063234e8bc28`, bf16 weights cast to float32
+before any reduction; "real rows" = token ids < 151,665 (tokenizer length),
+excluding the 399 zero padded rows; "centered" = global mean mu (over real
+rows) subtracted; battery = `examples/emb_token_battery.py` resolved to 1,062
+anchor-variant rows / 665 primary (see capture coverage report); fixed seed
+20260610 for all sampling. Every figure renders model-free from the committed
+`data/*.pt` (cache-first, committed fallback via `_emb_artifacts`).
+
+| fig | what it shows | source script | source data |
+|---|---|---|---|
+| fig1_norms.png | Row-norm histograms, real vs padded rows; near-zero (dead) row count annotated | emb_global_render.py | emb_global_stats.pt |
+| fig2_anisotropy.png | cos(E_i, mu) distribution; 10k random-pair cosine raw vs centered (the isotropy null) | emb_global_render.py | emb_global_stats.pt |
+| fig3_pca_spectrum.png | Centered covariance eigenspectrum (loglog) + cumulative variance; participation ratio 1003 | emb_global_render.py | emb_global_stats.pt |
+| fig4_e_vs_u.png | Per-token cos(E_i, U_i) over real rows (input/output embedding orthogonality) | emb_global_render.py | emb_global_stats.pt |
+| fig5_within_between.png | Per-class within vs between mean cosine, raw + centered panels, supergroup-colored | emb_category_render.py | emb_category_stats.pt |
+| fig6_centroid_matrix.png | Class-centroid cosine heatmap (centered), supergroup-ordered | emb_category_render.py | emb_category_stats.pt |
+| fig7_contrast_connectivity.png | Contrast-direction connectivity cos(d_a, d_b) (centered) — layer-0 mirror of the nla-verbalizer discriminant-connectivity figure | emb_category_render.py | emb_category_stats.pt |
+| fig8_e_vs_u_by_class.png | Per-class boxplots of cos(E_i, U_i) over primary anchors | emb_category_render.py | emb_category_stats.pt + emb_battery_vectors.pt |
+| fig9_pca_map.png | Battery anchors on battery-only PCA axes (PC1-2, PC2-3), supergroup-colored, exemplars labeled; CJK labels omitted (matplotlib default font lacks the glyphs) | emb_pca_map_render.py | emb_battery_vectors.pt |
+| fig10_pair_directions.png | Per-kind difference-direction consistency vs 200-permutation baseline + per-pair strip plot (worst pair labeled) | emb_pairs_render.py | emb_pair_directions.pt |
