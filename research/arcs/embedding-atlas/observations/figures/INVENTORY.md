@@ -21,3 +21,8 @@ anchor-variant rows / 665 primary (see capture coverage report); fixed seed
 | fig8_e_vs_u_by_class.png | Per-class boxplots of cos(E_i, U_i) over primary anchors | emb_category_render.py | emb_category_stats.pt + emb_battery_vectors.pt |
 | fig9_pca_map.png | Battery anchors on battery-only PCA axes (PC1-2, PC2-3), supergroup-colored, exemplars labeled; CJK labels omitted (matplotlib default font lacks the glyphs) | emb_pca_map_render.py | emb_battery_vectors.pt |
 | fig10_pair_directions.png | Per-kind difference-direction consistency vs 200-permutation baseline + per-pair strip plot (worst pair labeled) | emb_pairs_render.py | emb_pair_directions.pt |
+| fig11_dim_kurtosis.png | Per-dimension excess-kurtosis spectrum + histogram over 149,706 alive rows (feature-dim candidates) | emb_fullvocab_render.py | emb_fullvocab_stats.pt |
+| fig12_dim_corr.png | Dimension-correlation off-diagonal histogram + correlation eigen-spectrum (full population) | emb_fullvocab_render.py | emb_fullvocab_stats.pt |
+| fig13_knn_cosine.png | Top-1 and 32nd-neighbor cosine distributions over the full k-NN graph (unimodal; bimodality trigger did not fire) | emb_fullvocab_render.py | emb_fullvocab_stats.pt |
+| fig14_handle_census.png | Out-of-battery membership per battery handle at in-class 10th-percentile thresholds (log scale) | emb_fullvocab_render.py | emb_fullvocab_analysis.pt |
+| fig15_structural_block.png | The 21-dim entangled block: energy-vs-token-id deciles vs random 21-dim control + per-script means (head-loaded, script-independent) | emb_structural_block_render.py | emb_structural_block.pt |

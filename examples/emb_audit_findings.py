@@ -280,6 +280,119 @@ def main() -> int:
         ),
     )
 
+    # ---- AUDIT 8: full-vocabulary sweep (149,706 alive rows) ------------------
+    fv = load_artifact("emb_fullvocab_stats.pt")
+    claim("8 fullvocab", "stage == full", fv["stage"] == "full")
+    claim(
+        "8 fullvocab",
+        "alive rows == 149706",
+        int(fv["n_rows"]) == 149_706,
+        str(int(fv["n_rows"])),
+    )
+    kurt = fv["dim_stats"]["kurtosis"]
+    claim(
+        "8 fullvocab",
+        "kurtosis max 116.3",
+        near(float(kurt.max()), 116.3, 0.5),
+        f"{float(kurt.max()):.1f}",
+    )
+    claim(
+        "8 fullvocab",
+        "kurtosis median 0.32",
+        near(float(kurt.median()), 0.32, 0.02),
+        f"{float(kurt.median()):.2f}",
+    )
+    claim(
+        "8 fullvocab",
+        "dim-corr |r| mean 0.0210",
+        near(fv["dim_corr_summary"]["offdiag_abs_mean"], 0.0210, 0.0005),
+        f"{fv['dim_corr_summary']['offdiag_abs_mean']:.4f}",
+    )
+    claim(
+        "8 fullvocab",
+        "dim-corr |r| max 0.726",
+        near(fv["dim_corr_summary"]["offdiag_max"], 0.726, 0.003),
+        f"{fv['dim_corr_summary']['offdiag_max']:.3f}",
+    )
+    knn_cos = fv["knn_cos"].float()
+    claim(
+        "8 fullvocab",
+        "kNN top-1 cosine mean +0.314",
+        near(float(knn_cos[:, 0].mean()), 0.314, 0.002),
+        f"{float(knn_cos[:, 0].mean()):+.3f}",
+    )
+    claim(
+        "8 fullvocab",
+        "kNN 32nd cosine mean +0.159",
+        near(float(knn_cos[:, -1].mean()), 0.159, 0.002),
+        f"{float(knn_cos[:, -1].mean()):+.3f}",
+    )
+
+    an = load_artifact("emb_fullvocab_analysis.pt")
+    sizes = an["block_sizes"]
+    claim(
+        "8 fullvocab",
+        "exactly one entangled block (>1 dim) at |r|>0.3, size 21",
+        len(sizes) == 1 and int(sizes[0]) == 21,
+        str(sizes),
+    )
+    block_dims = set(sorted(an["corr_blocks"], key=lambda b: -b["size"])[0]["dims"])
+    claim(
+        "8 fullvocab",
+        "block contains dims 1395/2898/822 (top-kurtosis structural dims)",
+        {1395, 2898, 822} <= block_dims,
+    )
+    census = {e["class"]: e for e in an["handle_census"]}
+    claim(
+        "8 fullvocab",
+        "negative-handle out-of-battery hits == 60",
+        census["negative"]["out_of_battery_hits"] == 60,
+        str(census["negative"]["out_of_battery_hits"]),
+    )
+    claim(
+        "8 fullvocab",
+        "negative-handle top hits include ' shitty'/' nasty' (content)",
+        " shitty" in census["negative"]["top_tokens"][:6]
+        and " nasty" in census["negative"]["top_tokens"][:6],
+    )
+    claim(
+        "8 fullvocab",
+        "542 kNN communities; giant component 122,942",
+        int(an["n_communities"]) == 542
+        and int(an["community_sizes_top50"][0]) == 122_942,
+        f"{an['n_communities']} / {an['community_sizes_top50'][0]}",
+    )
+
+    sb = load_artifact("emb_structural_block.pt")
+    claim(
+        "8 fullvocab",
+        "block energy vs token-id Spearman -0.206 (control -0.003)",
+        near(sb["block_spearman_vs_id"], -0.2064, 0.002)
+        and abs(sb["control_spearman_vs_id"]) < 0.01,
+        f"{sb['block_spearman_vs_id']:+.4f} / {sb['control_spearman_vs_id']:+.4f}",
+    )
+    claim(
+        "8 fullvocab",
+        "block head-loading: decile-1 mean 0.1143 vs control 0.0753",
+        near(sb["block_decile_means"][0], 0.1143, 0.002)
+        and near(sb["control_decile_means"][0], 0.0753, 0.002),
+        f"{sb['block_decile_means'][0]:.4f} / {sb['control_decile_means'][0]:.4f}",
+    )
+    claim(
+        "8 fullvocab",
+        "block top tokens are cross-script structural (',' '，' ' the' all top-5)",
+        {",", "，", " the"} <= set(sb["top_tokens"][:5]),
+        str(sb["top_tokens"][:5]),
+    )
+    claim(
+        "8 fullvocab",
+        "script-independence: block mean elevated over control for ascii+cjk+cyrillic",
+        all(
+            sb["per_script"][s]["block_mean"] > sb["per_script"][s]["control_mean"]
+            for s in ("ascii", "cjk", "cyrillic")
+        ),
+    )
+
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
     print("=" * 80)
@@ -295,6 +408,9 @@ if __name__ == "__main__":
             "emb_neighbor_probes.pt",
             "emb_category_stats.pt",
             "emb_pair_directions.pt",
+            "emb_fullvocab_stats.pt",
+            "emb_fullvocab_analysis.pt",
+            "emb_structural_block.pt",
         )
         if find_artifact(n) is None
     ]

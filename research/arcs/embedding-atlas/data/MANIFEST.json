@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "total_files": 6,
+  "total_files": 9,
   "files": {
     "emb_battery_vectors.pt": {
       "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
@@ -36,6 +36,37 @@
         "fig6",
         "fig7",
         "AUDIT 5"
+      ]
+    },
+    "emb_fullvocab_analysis.pt": {
+      "sha256": "050bd07a2810e842c8e819847b3e484a89ed77a9261190a25d80061a75d957a1",
+      "size_bytes": 64733,
+      "class": "derived",
+      "producing_script": "examples/emb_fullvocab_analyze.py",
+      "producing_command": "python examples/emb_fullvocab_analyze.py",
+      "inputs": [
+        "emb_fullvocab_stats.pt"
+      ],
+      "requires_model": "qwen-base@a09a3545 (tokenizer + S0 dump + cached corr matrix)",
+      "consumers": [
+        "fig14",
+        "emb_structural_block.pt",
+        "AUDIT 8"
+      ]
+    },
+    "emb_fullvocab_stats.pt": {
+      "sha256": "574dbd0b56ab4891b8d52f6afa2bef3b401a51c364e499fc8be12a5de2b32105",
+      "size_bytes": 45602089,
+      "class": "capture-root",
+      "producing_script": "examples/emb_fullvocab_stats.py",
+      "producing_command": "python examples/emb_fullvocab_stats.py",
+      "inputs": [],
+      "requires_model": "qwen-base@a09a3545 (via the S0 W_E/W_U cache dump)",
+      "consumers": [
+        "emb_fullvocab_analysis.pt",
+        "emb_structural_block.pt",
+        "fig11-fig13",
+        "AUDIT 8"
       ]
     },
     "emb_global_stats.pt": {
@@ -90,6 +121,22 @@
       "requires_model": "qwen-base@a09a3545",
       "consumers": [
         "(reserved for follow-up baselines; seed-pinned)"
+      ]
+    },
+    "emb_structural_block.pt": {
+      "sha256": "5160b351f2cba7a6e84999f85b72b1ba03b74262197d0107e339393eef7181a5",
+      "size_bytes": 603487,
+      "class": "derived",
+      "producing_script": "examples/emb_structural_block.py",
+      "producing_command": "python examples/emb_structural_block.py",
+      "inputs": [
+        "emb_fullvocab_analysis.pt",
+        "emb_fullvocab_stats.pt"
+      ],
+      "requires_model": "qwen-base@a09a3545 (tokenizer + S0 dump)",
+      "consumers": [
+        "fig15",
+        "AUDIT 8"
       ]
     }
   }

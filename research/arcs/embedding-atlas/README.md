@@ -7,8 +7,9 @@ or connotation share directions that could act as "handles" for downstream
 layers — and how does that structure compare to the layer-20 geometry found
 in the [nla-verbalizer arc](../nla-verbalizer/README.md)?
 
-**Status:** active, started 2026-06-10. First capture + three observations
-landed; audit at **44 PASS / 0 FAIL**. Sibling arc
+**Status:** active, started 2026-06-10. Phase 1 (battery protocol probes) +
+phase 2 (full-vocabulary sweep, 149,706 alive rows) landed; four
+observations; audit at **61 PASS / 0 FAIL**. Sibling arc
 [rope-vis](../rope-vis/plans/2026-06-10-rope-vis.md) (positional-encoding
 visualization) is planned, queued behind this arc's first findings.
 
@@ -55,6 +56,16 @@ versions:
    most of the direction; pair-specific margins are +0.02-0.05, largest for
    morphology.
    ([pair-directions](observations/2026-06-10-emb-pair-directions.md))
+6. **Full-population (all 149,706 alive rows): exactly one entangled
+   dimension block** — 21 correlated dims (|r|>0.3), cross-script
+   (','/'，', ' the'/'的'), head-frequency-loaded (first token-id decile
+   1.5x energy floor; Spearman -0.206 vs -0.003 control); outside it,
+   dimensions are near-independent (|r| mean 0.021, kurtosis median 0.32).
+   Handles are precise at vocab scale (negative -> ' shitty'/' nasty';
+   code -> 'namespace') with conservative recall; the kNN graph yields
+   crisp islands (names, countries, code syntax, a cross-lingual time
+   community) over one giant component.
+   ([fullvocab-sweep](observations/2026-06-10-emb-fullvocab-sweep.md))
 
 ## Limitations
 
@@ -94,8 +105,8 @@ versions:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py        # SUMMARY: 44 PASS | 0 FAIL
-python examples/emb_data_manifest.py --check # 6 files, sha256 match
+python examples/emb_audit_findings.py        # SUMMARY: 61 PASS | 0 FAIL
+python examples/emb_data_manifest.py --check # 9 files, sha256 match
 python examples/emb_global_render.py         # figures re-render model-free
 # full re-capture (needs the pinned model locally, ~10 CPU-min):
 python examples/emb_capture.py --tokenize-only   # battery coverage pre-flight

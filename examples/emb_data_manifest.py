@@ -74,7 +74,33 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_neighbors_report.py (text report)", "AUDIT 6"],
     },
+    "emb_fullvocab_stats.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_fullvocab_stats.py",
+        "inputs": [],
+        "requires_model": f"qwen-base@{REVISION[:8]} (via the S0 W_E/W_U cache dump)",
+        "consumers": [
+            "emb_fullvocab_analysis.pt",
+            "emb_structural_block.pt",
+            "fig11-fig13",
+            "AUDIT 8",
+        ],
+    },
     # ---- derived: regenerable from other .pt by a committed script ----------
+    "emb_fullvocab_analysis.pt": {
+        "class": "derived",
+        "producing_script": "examples/emb_fullvocab_analyze.py",
+        "inputs": ["emb_fullvocab_stats.pt"],
+        "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump + cached corr matrix)",
+        "consumers": ["fig14", "emb_structural_block.pt", "AUDIT 8"],
+    },
+    "emb_structural_block.pt": {
+        "class": "derived",
+        "producing_script": "examples/emb_structural_block.py",
+        "inputs": ["emb_fullvocab_analysis.pt", "emb_fullvocab_stats.pt"],
+        "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
+        "consumers": ["fig15", "AUDIT 8"],
+    },
     "emb_category_stats.pt": {
         "class": "derived",
         "producing_script": "examples/emb_category_stats.py",
