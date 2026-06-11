@@ -101,6 +101,27 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
     },
+    "emb_trace_weightmap.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_capture.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["emb_trace_analysis.pt", "T1 reader-head findings"],
+    },
+    "emb_trace_layers.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_capture.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
+    },
+    "emb_trace_analysis.pt": {
+        "class": "derived",
+        "producing_script": "examples/emb_trace_analyze.py",
+        "inputs": ["emb_trace_layers.pt", "emb_trace_weightmap.pt"],
+        "requires_model": "none",
+        "consumers": ["T0/T1/P2 observation (pending)"],
+    },
     "emb_category_stats.pt": {
         "class": "derived",
         "producing_script": "examples/emb_category_stats.py",

@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "total_files": 9,
+  "total_files": 12,
   "files": {
     "emb_battery_vectors.pt": {
       "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
@@ -137,6 +137,51 @@
       "consumers": [
         "fig15",
         "AUDIT 8"
+      ]
+    },
+    "emb_trace_analysis.pt": {
+      "sha256": "ca69670f96b4af6996de4fd10493c63ced94b120fd90a8e963b01cdc6e2a5d32",
+      "size_bytes": 18926,
+      "class": "derived",
+      "producing_script": "examples/emb_trace_analyze.py",
+      "producing_command": "python examples/emb_trace_analyze.py",
+      "inputs": [
+        "emb_trace_layers.pt",
+        "emb_trace_weightmap.pt"
+      ],
+      "requires_model": "none",
+      "consumers": [
+        "T0/T1/P2 observation (pending)"
+      ]
+    },
+    "emb_trace_layers.pt": {
+      "sha256": "145dbcc72c48b9713593445a1728c93af9cef83aae244d65dfaf3ac0065987d2",
+      "size_bytes": 10851579,
+      "class": "capture-root",
+      "producing_script": "examples/emb_trace_capture.py",
+      "producing_command": "python examples/emb_trace_capture.py",
+      "inputs": [
+        "emb_fullvocab_analysis.pt (block dims)"
+      ],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_trace_analysis.pt",
+        "T0 census / P2 persistence findings"
+      ]
+    },
+    "emb_trace_weightmap.pt": {
+      "sha256": "c63301b831566a35fe270941c6488597377256fb006be1093bf6e36a73931d92",
+      "size_bytes": 779086,
+      "class": "capture-root",
+      "producing_script": "examples/emb_trace_capture.py",
+      "producing_command": "python examples/emb_trace_capture.py",
+      "inputs": [
+        "emb_fullvocab_analysis.pt (block dims)"
+      ],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_trace_analysis.pt",
+        "T1 reader-head findings"
       ]
     }
   }
