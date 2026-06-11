@@ -87,7 +87,10 @@ def main() -> None:
     n_kv: int = cfg.num_key_value_heads
     head_dim: int = cfg.hidden_size // n_q
     n_bands = head_dim // 2
-    theta: float = cfg.rope_theta
+    # transformers 5.x moved rope_theta into config.rope_parameters
+    rope_params = getattr(cfg, "rope_parameters", None) or {}
+    theta = float(rope_params.get("rope_theta", getattr(cfg, "rope_theta", 0.0)) or 0.0)
+    assert theta == 1_000_000.0, f"unexpected rope_theta {theta} (config.json says 1e6)"
     group = n_q // n_kv  # q heads per kv head
 
     # q/k pre-rotary capture hooks
