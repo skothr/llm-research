@@ -248,7 +248,7 @@ Qwen2.5-7B base model
     │
     ▼
 .cache/nla_artifacts/*.pt  (gitignored working cache)
-    │   committed canonical copy (git-LFS): research/arcs/nla-verbalizer/data/*.pt
+    │   committed canonical copy (git-LFS): research/arcs/01_nla-verbalizer/data/*.pt
     │
     ▼
 nla_geometric_features.py → geometric_features.pt
@@ -261,7 +261,7 @@ nla_vocab_atlas_render.py, nla_discriminant_*.py,
 nla_render_interpolation_flipbook.py, nla_hierarchical_classifier.py
     │
     ▼
-research/arcs/nla-verbalizer/observations/figures/fig*.png  (committed)
+research/arcs/01_nla-verbalizer/observations/figures/fig*.png  (committed)
     │
     ▼
 nla_audit_findings.py — 178 PASS / 0 FAIL regression test

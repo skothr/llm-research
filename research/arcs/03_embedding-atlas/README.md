@@ -5,13 +5,15 @@
 Qwen2.5-7B-Instruct — do word groups related by topic, function, morphology,
 or connotation share directions that could act as "handles" for downstream
 layers — and how does that structure compare to the layer-20 geometry found
-in the [nla-verbalizer arc](../nla-verbalizer/README.md)?
+in the [nla-verbalizer arc](../01_nla-verbalizer/README.md)?
 
-**Status:** active, started 2026-06-10. Phase 1 (battery protocol probes) +
-phase 2 (full-vocabulary sweep, 149,706 alive rows) landed; four
-observations; audit at **61 PASS / 0 FAIL**. Sibling arc
-[rope-vis](../rope-vis/plans/2026-06-10-rope-vis.md) (positional-encoding
-visualization) is planned, queued behind this arc's first findings.
+**Status:** active DEEP arc (user direction 2026-06-11), started 2026-06-10.
+Phase 1 (battery protocol probes) + phase 2 (full-vocabulary sweep, 149,706
+alive rows) landed; four observations; audit at **61 PASS / 0 FAIL**. Phase 3
+(structural tracing through Q/K/V, attention/RoPE bands, and FFN, layer by
+layer) is next and ABSORBS the formerly separate rope-vis arc
+([plan](plans/2026-06-10-rope-vis.md)); pre-registered predictions in
+[plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md).
 
 ## Research direction
 
@@ -99,7 +101,9 @@ versions:
 - **Dead-row-excluded re-lock** (L3).
 - **Multilingual alignment subspace** from exonym pairs (category-structure
   H3).
-- **rope-vis arc** (planned): positional encoding visualization, q/k hooks.
+- **structural tracing phase** (next; absorbs the former rope-vis arc):
+  Q/K/V capture, RoPE-band decomposition, FFN persistence of the 21-dim
+  block, layer-by-layer trace against the pre-registered predictions.
 
 ## Reproducing
 
@@ -116,7 +120,7 @@ python examples/emb_capture.py
 ## File map
 
 ```
-research/arcs/embedding-atlas/
+research/arcs/03_embedding-atlas/
   README.md                                   # this file
   observations/
     2026-06-10-emb-global-geometry.md         # isotropy null, dead rows, PCA, E-vs-U

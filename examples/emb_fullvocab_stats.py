@@ -2,7 +2,7 @@
 
 Reverses the battery approach: instead of curated groups probed for shared
 features, sweep ALL real token embeddings for similarity and dimension-level
-structure. See research/arcs/embedding-atlas/plans/2026-06-10-fullvocab-sweep.md.
+structure. See research/arcs/03_embedding-atlas/plans/2026-06-10-fullvocab-sweep.md.
 
 Stages (scaling-step discipline — validate the protocol before the full run):
 

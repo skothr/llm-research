@@ -3,7 +3,7 @@
 Model-free; reads emb_structural_block.pt. Left: block vs control energy
 fraction per token-id decile (BPE merge order = frequency proxy). Right:
 per-script block vs control means (language-independence check).
-Output: research/arcs/embedding-atlas/observations/figures/fig15_structural_block.png
+Output: research/arcs/03_embedding-atlas/observations/figures/fig15_structural_block.png
 """
 
 from __future__ import annotations
