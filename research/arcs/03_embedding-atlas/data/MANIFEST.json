@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "total_files": 12,
+  "total_files": 13,
   "files": {
     "emb_battery_vectors.pt": {
       "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
@@ -152,6 +152,20 @@
       "requires_model": "none",
       "consumers": [
         "T0/T1/P2 observation (pending)"
+      ]
+    },
+    "emb_trace_components.pt": {
+      "sha256": "d4b11deafa0fe6dc16008b94803de7e0b59510eada61ad25f96694babb1c5acd",
+      "size_bytes": 85825,
+      "class": "capture-root",
+      "producing_script": "examples/emb_trace_components.py",
+      "producing_command": "python examples/emb_trace_components.py",
+      "inputs": [
+        "emb_fullvocab_analysis.pt (block dims)"
+      ],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "T1.5 component/carrier findings (observation pending)"
       ]
     },
     "emb_trace_layers.pt": {

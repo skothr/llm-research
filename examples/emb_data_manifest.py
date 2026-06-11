@@ -115,6 +115,13 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
     },
+    "emb_trace_components.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_components.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["T1.5 component/carrier findings (observation pending)"],
+    },
     "emb_trace_analysis.pt": {
         "class": "derived",
         "producing_script": "examples/emb_trace_analyze.py",
