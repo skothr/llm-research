@@ -393,6 +393,121 @@ def main() -> int:
         ),
     )
 
+    # ---- AUDIT 9: tracing phase (T0 census, T1 readers, T1.5 carrier) ---------
+    ta = load_artifact("emb_trace_analysis.pt")
+    mass = {r["dim"]: r for r in ta["massive_dims"]}
+    claim(
+        "9 trace",
+        "dim 458 is a massive-activation dim: |peak| > 10000, first layer 1, arc-1 sink",
+        458 in mass
+        and abs(mass[458]["peak_value"]) > 10_000
+        and mass[458]["first_layer"] == 1
+        and mass[458]["in_arc1_sinks"],
+        f"peak {mass.get(458, {}).get('peak_value')}",
+    )
+    claim(
+        "9 trace",
+        "massive-dim overlap with arc-1 layer-20 sinks == {458, 1427, 2570}",
+        set(ta["sink_massive_overlap"]) == {458, 1427, 2570},
+        str(ta["sink_massive_overlap"]),
+    )
+    claim(
+        "9 trace",
+        "block dims in the census are layer-0 echoes only (first_layer 0, |peak| < 10)",
+        all(
+            mass[d]["first_layer"] == 0 and abs(mass[d]["peak_value"]) < 10
+            for d in ta["block_massive_overlap"]
+        ),
+        str(ta["block_massive_overlap"]),
+    )
+    claim(
+        "9 trace",
+        "q-head block/control read ratio max ~3.28 (L0H15)",
+        near(ta["readers"]["q"]["ratio_max"], 3.282, 0.01)
+        and ta["readers"]["q"]["top"][0]["layer"] == 0
+        and ta["readers"]["q"]["top"][0]["head"] == 15,
+        f"{ta['readers']['q']['ratio_max']:.3f}",
+    )
+    claim(
+        "9 trace",
+        "v under-reads the block (mean ratio ~0.903)",
+        near(ta["readers"]["v"]["ratio_mean"], 0.903, 0.005),
+        f"{ta['readers']['v']['ratio_mean']:.3f}",
+    )
+    prof = ta["block_frac_profile"]
+    claim(
+        "9 trace",
+        "P2: delimiter block-frac 0.921 at L0 collapsing to 0.199 at L1 (ctrl 0.160)",
+        near(float(prof["delim"][0]), 0.9209, 0.005)
+        and near(float(prof["delim"][1]), 0.1994, 0.005)
+        and near(float(prof["ctrl"][1]), 0.1596, 0.005),
+        f"{float(prof['delim'][0]):.4f} -> {float(prof['delim'][1]):.4f}",
+    )
+
+    tc = load_artifact("emb_trace_components.pt")
+    bsv = tc["carrier"]["block"]["singular_values"]
+    csv2 = tc["carrier"]["control"]["singular_values"]
+    mass_frac = tc["carrier"]["block"]["in_block_mass_frac"]
+    claim(
+        "9 trace",
+        "carrier: block top-SV 15.58 at L1, 13.13 at L28; control 3.93 at L28",
+        near(float(bsv[1, 0]), 15.584, 0.05)
+        and near(float(bsv[28, 0]), 13.127, 0.05)
+        and near(float(csv2[28, 0]), 3.928, 0.05),
+        f"L1 {float(bsv[1, 0]):.3f}, L28 {float(bsv[28, 0]):.3f} vs {float(csv2[28, 0]):.3f}",
+    )
+    claim(
+        "9 trace",
+        "carrier: block top-SV exceeds control at EVERY layer",
+        bool((bsv[:, 0] > csv2[:, 0]).all()),
+        f"min ratio {float((bsv[:, 0] / csv2[:, 0]).min()):.2f}",
+    )
+    claim(
+        "9 trace",
+        "in-block corr mass collapses 0.109 (L0) -> 0.031 (L1)",
+        near(float(mass_frac[0]), 0.109, 0.003)
+        and near(float(mass_frac[1]), 0.031, 0.003),
+        f"{float(mass_frac[0]):.3f} -> {float(mass_frac[1]):.3f}",
+    )
+    claim(
+        "9 trace",
+        "original dims 2604/1395/1122 persist among top-10 carriers at L20",
+        {2604, 1395, 1122} <= set(tc["carrier"]["block"]["top_carrier_dims"][20]),
+        str(tc["carrier"]["block"]["top_carrier_dims"][20]),
+    )
+    af = torch.stack([c["attn_block_frac"] for c in tc["component_stats"]]).mean(0)
+    claim(
+        "9 trace",
+        "attention delta block-frac peaks at L1 (~0.175)",
+        int(af.argmax()) == 1 and near(float(af[1]), 0.1754, 0.005),
+        f"argmax L{int(af.argmax())}, {float(af[1]):.4f}",
+    )
+    st = tc["static_maps"]
+    claim(
+        "9 trace",
+        "input-RMSNorm block/control gain ~2.15 at L1 and ~3.28 at L27",
+        near(float(st["norm1_block"][1] / st["norm1_control"][1]), 2.15, 0.05)
+        and near(float(st["norm1_block"][27] / st["norm1_control"][27]), 3.28, 0.05),
+        f"L1 {float(st['norm1_block'][1] / st['norm1_control'][1]):.2f}, "
+        f"L27 {float(st['norm1_block'][27] / st['norm1_control'][27]):.2f}",
+    )
+    r_read = st["ffn_read_block"] / st["ffn_read_control"].clamp_min(1e-12)
+    r_write = st["ffn_write_block"] / st["ffn_write_control"].clamp_min(1e-12)
+    claim(
+        "9 trace",
+        "FFN static READS of block dims are neutral (all layers in [0.94, 1.01])",
+        bool(((r_read > 0.94) & (r_read < 1.01)).all()),
+        f"range [{float(r_read.min()):.3f}, {float(r_read.max()):.3f}]",
+    )
+    claim(
+        "9 trace",
+        "FFN WRITES into block dims mildly suppressed late (min ~0.822 at L24; all <= 1.06)",
+        near(float(r_write.min()), 0.822, 0.005)
+        and int(r_write.argmin()) == 24
+        and float(r_write.max()) <= 1.06,
+        f"min {float(r_write.min()):.3f} at L{int(r_write.argmin())}",
+    )
+
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
     print("=" * 80)
@@ -411,6 +526,8 @@ if __name__ == "__main__":
             "emb_fullvocab_stats.pt",
             "emb_fullvocab_analysis.pt",
             "emb_structural_block.pt",
+            "emb_trace_analysis.pt",
+            "emb_trace_components.pt",
         )
         if find_artifact(n) is None
     ]
