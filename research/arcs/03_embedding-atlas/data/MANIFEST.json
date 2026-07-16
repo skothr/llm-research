@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "total_files": 13,
+  "total_files": 14,
   "files": {
     "emb_battery_vectors.pt": {
       "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
@@ -152,6 +152,24 @@
       "requires_model": "none",
       "consumers": [
         "T0/T1/P2 observation (pending)"
+      ]
+    },
+    "emb_trace_attention.pt": {
+      "sha256": "60362e92789e172279164bfda2c709caa6a889bdc13ccd7b8c25fbb5d5039b71",
+      "size_bytes": 444137,
+      "class": "capture-root",
+      "producing_script": "examples/emb_trace_attention.py",
+      "producing_command": "python examples/emb_trace_attention.py",
+      "inputs": [
+        "emb_fullvocab_analysis.pt (block dims)"
+      ],
+      "requires_model": "qwen-base@a09a3545",
+      "consumers": [
+        "emb_trace_attention_analyze.py (P1a/P1c/P1d)",
+        "fig19",
+        "fig20",
+        "fig21",
+        "AUDIT 10"
       ]
     },
     "emb_trace_components.pt": {

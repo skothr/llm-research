@@ -28,6 +28,7 @@ from typing import Any
 import torch
 
 from _emb_artifacts import find_artifact, load_artifact
+from emb_trace_attention_analyze import rope_wavelength
 
 PASS = 0
 FAIL = 0
@@ -508,6 +509,166 @@ def main() -> int:
         f"min {float(r_write.min()):.3f} at L{int(r_write.argmin())}",
     )
 
+    # ---- AUDIT 10: T2 delimiter attention (P1a PASS, P1c/P1d FAIL) -----------
+    # Re-derives every load-bearing number in
+    # observations/2026-07-15-emb-trace-delimiter-attention.md from the T2
+    # capture, mirroring the emb_trace_attention_analyze.py statistic. Criterion
+    # constants are the pre-registered P1a operationalization (ratio>=3x AND
+    # excess>=0.03), asserted here as the audited spec, not read from prose.
+    at = load_artifact("emb_trace_attention.pt")
+    n_q_at = int(at["n_q_heads"])
+    n_layers_at = int(at["n_layers"])
+    head_dim_at = int(at["head_dim"])
+    theta_at = float(at["rope_theta"])
+    n_bands_at = at["band_d_sum"].shape[2]
+    d2d_a = at["d2d_sum"] / at["d2d_n"].clamp_min(1)
+    c2c_a = at["c2c_sum"] / at["c2c_n"].clamp_min(1)
+    p2c_a = at["p2c_sum"] / at["p2c_n"].clamp_min(1)
+    excess_a = d2d_a - c2c_a
+    ratio_a = d2d_a / c2c_a.clamp_min(1e-9)
+
+    claim(
+        "10 T2attn",
+        "corpus pair counts: 637 delim->delim, 155 period->comma",
+        int(at["d2d_n"][0, 0]) == 637 and int(at["p2c_n"][0, 0]) == 155,
+        f"{int(at['d2d_n'][0, 0])} / {int(at['p2c_n'][0, 0])}",
+    )
+    claim(
+        "10 T2attn",
+        "inter-delimiter offset median == 8 tokens",
+        int(at["offsets_seen"].float().median()) == 8,
+        str(int(at["offsets_seen"].float().median())),
+    )
+
+    # P1a census
+    tracking_mask_a = (ratio_a >= 3.0) & (excess_a >= 0.03)
+    n_tracking_a = int(tracking_mask_a.sum())
+    claim(
+        "10 T2attn",
+        "P1a: 26 delimiter-tracking heads (d2d/c2c>=3x AND excess>=0.03)",
+        n_tracking_a == 26,
+        str(n_tracking_a),
+    )
+    tracking_layers_a = sorted({int(i) for i in torch.where(tracking_mask_a)[0]})
+    claim(
+        "10 T2attn",
+        "qualifying heads live in layers {0,1,2,3,10}",
+        tracking_layers_a == [0, 1, 2, 3, 10],
+        str(tracking_layers_a),
+    )
+    top_a = torch.topk(excess_a.flatten(), 10)
+    delim_heads_a = [(int(i // n_q_at), int(i % n_q_at)) for i in top_a.indices]
+    claim(
+        "10 T2attn",
+        "top delimiter head is L0H13 (d2d 0.1784, c2c 0.0409, 4.37x)",
+        delim_heads_a[0] == (0, 13)
+        and near(float(d2d_a[0, 13]), 0.1784, 0.001)
+        and near(float(c2c_a[0, 13]), 0.0409, 0.001)
+        and near(float(ratio_a[0, 13]), 4.37, 0.02),
+        f"L{delim_heads_a[0][0]}H{delim_heads_a[0][1]} {float(ratio_a[0, 13]):.2f}x",
+    )
+    claim(
+        "10 T2attn",
+        "L0H3 has the extreme ratio 27.15x (d2d 0.1128, c2c 0.0042)",
+        near(float(ratio_a[0, 3]), 27.15, 0.05)
+        and near(float(d2d_a[0, 3]), 0.1128, 0.001),
+        f"{float(ratio_a[0, 3]):.2f}x",
+    )
+
+    # reader/delimiter dissociation (cross-ref to T1 readers in emb_trace_analysis.pt)
+    reader_heads_a = [
+        (int(r["layer"]), int(r["head"])) for r in ta["readers"]["q"]["top"]
+    ]
+    top_reader_a = reader_heads_a[0]
+    overlap5 = sorted(set(delim_heads_a[:5]) & set(reader_heads_a[:5]))
+    overlap10 = sorted(set(delim_heads_a[:10]) & set(reader_heads_a[:10]))
+    claim(
+        "10 T2attn",
+        "reader/delimiter overlap: 1/5 (L0H20) and 2/10 (L0H3, L0H20)",
+        overlap5 == [(0, 20)] and overlap10 == [(0, 3), (0, 20)],
+        f"top5 {['L%dH%d' % h for h in overlap5]}, top10 {['L%dH%d' % h for h in overlap10]}",
+    )
+    tr_rank_a = int((excess_a.flatten() > excess_a[top_reader_a]).sum()) + 1
+    claim(
+        "10 T2attn",
+        "top block-reader L0H15 has delim excess +0.0744, rank 21/784, ratio 11.00x",
+        top_reader_a == (0, 15)
+        and near(float(excess_a[top_reader_a]), 0.0744, 0.001)
+        and tr_rank_a == 21
+        and near(float(ratio_a[top_reader_a]), 11.00, 0.05)
+        and top_reader_a not in delim_heads_a[:8],
+        f"excess {float(excess_a[top_reader_a]):+.4f} rank {tr_rank_a}",
+    )
+
+    # P1c: both peak at layer 0 (the falsification)
+    d2d_peak_a = int(d2d_a.max(dim=1).values.argmax())
+    p2c_peak_a = int(p2c_a.max(dim=1).values.argmax())
+    claim(
+        "10 T2attn",
+        "P1c FAIL: comma-side d2d peak layer 0 AND period->comma p2c peak layer 0",
+        d2d_peak_a == 0 and p2c_peak_a == 0,
+        f"d2d L{d2d_peak_a}, p2c L{p2c_peak_a}",
+    )
+    claim(
+        "10 T2attn",
+        "p2c max-head value 0.2193 at layer 0",
+        near(float(p2c_a.max(dim=1).values[0]), 0.2193, 0.001),
+        f"{float(p2c_a.max(dim=1).values[0]):.4f}",
+    )
+
+    # P1d: band decomposition — near-DC dominates, mid bands negligible
+    band_d_a = at["band_d_sum"] / at["band_n"].clamp_min(1)[:, :, None]
+    band_c_a = at["band_c_sum"] / at["band_n"].clamp_min(1)[:, :, None]
+    band_excess_a = band_d_a - band_c_a
+    agg_a = torch.zeros(n_bands_at)
+    for li, hi in delim_heads_a:
+        agg_a += band_excess_a[li, hi]
+    total_pos_a = float(agg_a.clamp_min(0).sum())
+    mid_bands_a = [
+        b
+        for b in range(n_bands_at)
+        if 5.0 <= rope_wavelength(b, head_dim_at, theta_at) <= 30.0
+    ]
+    slow_bands_a = [
+        b for b in range(n_bands_at) if rope_wavelength(b, head_dim_at, theta_at) > 1e4
+    ]
+    mid_share_a = 100.0 * float(agg_a[mid_bands_a].clamp_min(0).sum()) / total_pos_a
+    slow_share_a = 100.0 * float(agg_a[slow_bands_a].clamp_min(0).sum()) / total_pos_a
+    dominant_band_a = int(agg_a.argmax())
+    claim(
+        "10 T2attn",
+        "P1d FAIL: dominant excess-logit band is 63 (wl ~5.06M tok, near-DC)",
+        dominant_band_a == 63 and rope_wavelength(63, head_dim_at, theta_at) > 1e4,
+        f"band {dominant_band_a}, wl {rope_wavelength(dominant_band_a, head_dim_at, theta_at):.0f}",
+    )
+    claim(
+        "10 T2attn",
+        "mid bands 0-7 (wl 6.3-28.5 tok) carry ~0.4%; near-DC (wl>1e4) carry ~99.1%",
+        near(mid_share_a, 0.4, 0.15)
+        and near(slow_share_a, 99.1, 0.3)
+        and mid_bands_a == [0, 1, 2, 3, 4, 5, 6, 7],
+        f"mid {mid_share_a:.1f}% / slow {slow_share_a:.1f}%",
+    )
+
+    # sink context
+    d2s_a = float((at["d2sink_sum"] / at["d2sink_n"].clamp_min(1)).mean())
+    c2s_a = float((at["c2sink_sum"] / at["c2sink_n"].clamp_min(1)).mean())
+    claim(
+        "10 T2attn",
+        "delimiter queries attend LESS to pos 0 than controls (0.378 vs 0.406)",
+        near(d2s_a, 0.378, 0.002) and near(c2s_a, 0.406, 0.002) and d2s_a < c2s_a,
+        f"{d2s_a:.3f} vs {c2s_a:.3f}",
+    )
+    claim(
+        "10 T2attn",
+        "capture geometry: 28L x 28 q-heads, head_dim 128, rope_theta 1e6",
+        n_layers_at == 28
+        and n_q_at == 28
+        and head_dim_at == 128
+        and theta_at == 1_000_000.0,
+        f"{n_layers_at}L x {n_q_at}H d{head_dim_at} theta{theta_at:.0f}",
+    )
+
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
     print("=" * 80)
@@ -528,6 +689,7 @@ if __name__ == "__main__":
             "emb_structural_block.pt",
             "emb_trace_analysis.pt",
             "emb_trace_components.pt",
+            "emb_trace_attention.pt",
         )
         if find_artifact(n) is None
     ]

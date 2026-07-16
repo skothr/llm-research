@@ -129,6 +129,19 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": "none",
         "consumers": ["T0/T1/P2 observation (pending)"],
     },
+    "emb_trace_attention.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_attention.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": [
+            "emb_trace_attention_analyze.py (P1a/P1c/P1d)",
+            "fig19",
+            "fig20",
+            "fig21",
+            "AUDIT 10",
+        ],
+    },
     "emb_category_stats.pt": {
         "class": "derived",
         "producing_script": "examples/emb_category_stats.py",
