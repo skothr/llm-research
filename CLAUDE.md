@@ -15,7 +15,7 @@ LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
 figure / audit pipeline (`examples/`). Depends on the sibling `llm-surgeon`
 toolkit — install editable with `pip install -e ../llm-surgeon`, then
-`pip install -e .` for this repo's direct deps (numpy, matplotlib).
+`pip install -e .` for this repo's direct deps (torch, numpy, matplotlib).
 
 ## Structure
 
@@ -30,6 +30,8 @@ toolkit — install editable with `pip install -e ../llm-surgeon`, then
     interpretability, evaluation-alignment) with `xr-hyper` cross-refs
   - `archive/2026-05-03-pre-expansion/` — v1 single-LaTeX-doc snapshot (its
     `Makefile` is the only Makefile in the repo)
+  - `docs/design/` — design specs; `plans/` — KB-build planning history;
+    `reviews/` — series review passes (adversarial, math, citations, …)
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/nla-verbalizer/`.
