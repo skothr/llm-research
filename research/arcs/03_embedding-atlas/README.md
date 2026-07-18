@@ -51,7 +51,8 @@ versions:
    ([global-geometry](observations/2026-06-10-emb-global-geometry.md), F-G4)
 3. **Category-coherence hierarchy.** Paradigm sets (digits +0.428, months
    +0.416, weekdays +0.400) >> function words (+0.24-0.29) > topics
-   (+0.08-0.18) > connotation classes (valence +0.045, register +0.052).
+   (+0.08-0.18) > connotation classes (the `positive` class of the valence
+   supergroup +0.045, `formal` of register +0.052).
    ([category-structure](observations/2026-06-10-emb-category-structure.md))
 4. **Cross-script neighbors.** 法国/巴黎 rank among ' France'/' Paris' top
    neighbors — multilingual alignment exists in the raw lookup table.
@@ -104,7 +105,7 @@ versions:
 - **L3. Dead rows in global stats.** 1,959 near-zero rows (1.3%) are
   included in mu/covariance/random sampling; estimated effect < 0.002 on
   headline cosines but unverified — re-lock excluding them is a follow-up.
-- **L4. The audit is arithmetic-consistency only.** 61 PASS means the
+- **L4. The audit is arithmetic-consistency only.** 89 PASS means the
   observation numbers match the committed artifacts — not that the capture
   protocol, thresholds (MIN_CLASS_N=5, near-zero 1e-3, primary-variant
   policy), or interpretations are right.

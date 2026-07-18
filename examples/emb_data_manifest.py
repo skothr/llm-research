@@ -147,7 +147,7 @@ META: dict[str, dict[str, Any]] = {
         "producing_script": "examples/emb_category_stats.py",
         "inputs": ["emb_battery_vectors.pt", "emb_global_stats.pt"],
         "requires_model": "none",
-        "consumers": ["fig5", "fig6", "fig7", "AUDIT 5"],
+        "consumers": ["fig5", "fig6", "fig7", "fig8", "AUDIT 5"],
     },
     "emb_pair_directions.pt": {
         "class": "derived",
