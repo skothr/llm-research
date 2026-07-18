@@ -53,7 +53,7 @@ def main() -> None:
     row_ids: torch.Tensor = fv["row_ids"].long()  # alive token ids
     n = int(fv["n_rows"])
     we = torch.load(read_artifact(WE_CACHE), weights_only=False)
-    X = we["W"][:151_665].to(torch.float32)[row_ids]  # alive rows, fp32
+    X = we["W"][row_ids].to(torch.float32)  # alive rows, fp32 (row_ids < n_real)
 
     out: dict[str, Any] = {"inputs": ["emb_fullvocab_stats.pt"], "n_rows": n}
     triggers: list[str] = []
@@ -110,7 +110,7 @@ def main() -> None:
         f"sizes {block_sizes[:10].tolist()}"
     )
     blocks = []
-    for lbl in uniq[counts > 2][:10]:
+    for lbl in uniq[counts > 1][:10]:
         dims = (labels == lbl).nonzero().flatten()
         # tokens with the largest energy inside the block's dims
         energy = X[:, dims].norm(dim=1)
@@ -186,6 +186,12 @@ def main() -> None:
     t0 = time.time()
     lab = torch.arange(n)
     g = torch.Generator().manual_seed(SEED)
+    # NOTE: this is SYNCHRONOUS label propagation — `mode` is computed from the
+    # pre-round labels for all nodes at once, and `lab[order] = mode[order]`
+    # writes every index exactly once, so the permutation does NOT make the
+    # updates sequential. Kept byte-identical in behavior (the RNG stream
+    # matches the committed artifact); the sequential in-place variant is
+    # standard async LP if this step is ever re-derived.
     for it in range(LP_ITERS):
         order = torch.randperm(n, generator=g)
         neigh = lab[ids]  # (n, k)
