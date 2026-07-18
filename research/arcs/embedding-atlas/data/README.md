@@ -5,7 +5,7 @@ the figures and the audit consume. From a clean clone:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py     # expect: SUMMARY: 44 PASS | 0 FAIL
+python examples/emb_audit_findings.py     # expect: SUMMARY: 61 PASS | 0 FAIL
 python examples/emb_data_manifest.py --check   # sha256 + metadata match
 python examples/emb_global_render.py      # any figure re-renders, no model load
 ```

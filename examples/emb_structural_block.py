@@ -62,7 +62,7 @@ def main() -> None:
 
     row_ids: torch.Tensor = fv["row_ids"].long()
     we = torch.load(read_artifact(WE_CACHE), weights_only=False)
-    X = we["W"][:151_665].to(torch.float32)[row_ids]
+    X = we["W"][row_ids].to(torch.float32)  # alive rows, fp32 (row_ids < n_real)
     n, d = X.shape
 
     g = torch.Generator().manual_seed(SEED)
