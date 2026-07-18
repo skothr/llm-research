@@ -1,9 +1,31 @@
 # Design/test plan: J-lens + J-space on Qwen2.5-7B-Instruct
 
-Date: 2026-07-18. Status: awaiting human review (do not begin capture until
-signed off). Grounding: `theory/kb/notes/interpretability/j-space.md` and
+Date: 2026-07-18. Status: **signed off by human 2026-07-18** with two
+amendments and defaults taken on open decision points (below). Grounding:
+`theory/kb/notes/interpretability/j-space.md` and
 `[gurnee2026-workspace §2-§4]`; method details verified against the archived
 PDF, not secondary coverage.
+
+**Review outcome (2026-07-18):**
+
+- Approved overall; NLA cross-tie (stage 6) explicitly endorsed; reviewer
+  read the Nanda critique and agrees with most points, so the added
+  token-steering control stays load-bearing.
+- **Amendment A (OOM gate):** if the 7B nf4 fit OOMs on the RTX 2080, PAUSE
+  and report measured CPU-vs-GPU runtime estimates before any switch to CPU
+  fitting — do not silently fall back.
+- **Amendment B (comms):** push-notify milestones and blockers during
+  execution (SOP for this arc).
+- Decision 1 (corpus): default = inspect the companion repo's Apache-2.0
+  prompt sets first and reuse them if suitable (closest method match);
+  fall back to a seeded C4-en sample.
+- Decision 2 (1.5B bf16 control): yes, as recommended.
+- Decision 3 (stage-5 scope): staged — verbal report first, then two-hop and
+  modulation as time/results warrant.
+- Decision 4 (lens tensor storage): reduced layer subset to LFS
+  ({0,5,10,15,20,25,27} per model), full set cache-only + regeneration
+  script, as recommended.
+- KB + arc ship together in one PR at arc close (no separate KB PR).
 
 ## 0. What we are computing
 
