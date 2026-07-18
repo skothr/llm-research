@@ -104,7 +104,7 @@ versions:
 - **L3. Dead rows in global stats.** 1,959 near-zero rows (1.3%) are
   included in mu/covariance/random sampling; estimated effect < 0.002 on
   headline cosines but unverified — re-lock excluding them is a follow-up.
-- **L4. The audit is arithmetic-consistency only.** 44 PASS means the
+- **L4. The audit is arithmetic-consistency only.** 61 PASS means the
   observation numbers match the committed artifacts — not that the capture
   protocol, thresholds (MIN_CLASS_N=5, near-zero 1e-3, primary-variant
   policy), or interpretations are right.
