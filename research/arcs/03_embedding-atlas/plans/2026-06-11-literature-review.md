@@ -89,6 +89,14 @@ sign) are the downstream image of the same machinery.
 ## Re-verification sweep (2026-06-11, opus-tiered: 20/20 claims 3-0;
 3 adversarial novelty refuters all returned found_prior_art = False)
 
+*(Verifiability note, added at review 2026-07-18: the 20/20 and 23-confirmed
+counts are summary tallies from that session's verification run; per-claim
+vote records were not preserved in this doc. The body below records
+thread-level verdicts, and only the 2 REFUTED claims are enumerated (the
+do-not-cite list). All negative prior-art conclusions here are
+search-bounded per the per-thread coverage disclaimer at the top of this
+file — none is a claim of exhaustive search.)*
+
 **Thread 2 — W_E isotropy: our finding (a) appears UNPUBLISHED as a global
 measurement.** Targeted searches found no source reporting random-pair
 cosine, IsoScore, global PCA spectrum, or participation ratio on the
