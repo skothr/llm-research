@@ -1,7 +1,7 @@
 {
   "description": "Master index of canonical sources for the LLM theory KB. Schema: paper-key -> metadata + KB cross-references. excerpts_file and notes_referenced_by are populated as KB content is written. local_file is null for papers not yet downloaded (Phase 2 will populate as work proceeds).",
   "schema_version": "2026-05-03",
-  "last_updated": "2026-05-04",
+  "last_updated": "2026-07-18",
   "papers": [
     {
       "key": "vaswani2017",
@@ -3981,6 +3981,46 @@
       ],
       "category": "foundational",
       "summary": "Original PipeDream paper. Introduces 1F1B (one-forward-one-backward) pipeline scheduling that minimizes activation memory while maintaining the same throughput as GPipe-style microbatch pipelines. The 1F1B schedule is the foundation that ZeroBubble and DualPipe (DeepSeek-V3) refine for frontier-scale training."
+    },
+    {
+      "key": "gurnee2026-workspace",
+      "title": "Verbalizable Representations Form a Global Workspace in Language Models",
+      "authors": "Gurnee, Sofroniew, Pearce, Piotrowski, Kauvar, Chen, Soligo, Bogdan, Ong, Wang, Thompson, Abrahams, Kantamneni, Ameisen, Batson, Lindsey",
+      "year": 2026,
+      "venue": "Transformer Circuits (Anthropic)",
+      "url": "https://transformer-circuits.pub/2026/workspace/index.html",
+      "local_file": "theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf",
+      "excerpts_file": "kb/excerpts/gurnee2026-workspace.md",
+      "notes_referenced_by": [
+        "interpretability/j-space",
+        "interpretability/lens-techniques"
+      ],
+      "topics": [
+        "j-space",
+        "lens-techniques",
+        "mechanistic-interpretability"
+      ],
+      "category": "interpretability",
+      "summary": "Introduces the Jacobian lens (J-lens): per-layer averaged Jacobian J_l = E[dh_final/dh_l] over ~1000 pretraining-like prompts, read out via softmax(W_U norm(J_l h_l)). The sparse nonnegative cone of J-lens vectors (J-space, k<=25, <=10% of activation variance) satisfies five functional signatures of a Global-Workspace-Theory workspace on Claude 4.5-family models: verbal report, directed modulation, internal (two-hop) reasoning, flexible generalization, selectivity. Demonstrates alignment-auditing uses (evaluation-awareness, hidden goals). Companion code: github.com/anthropics/jacobian-lens (Apache-2.0). Local PDF is a chromium print-to-PDF snapshot of the HTML publication, captured 2026-07-18."
+    },
+    {
+      "key": "nanda2026-workspace-review",
+      "title": "A Review of Anthropic's Global Workspace Paper",
+      "authors": "Nanda",
+      "year": 2026,
+      "venue": "LessWrong (Tier B \u2014 commentary; never a sole citation)",
+      "url": "https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper",
+      "local_file": "theory/sources/forums/2026-07-06-nanda-workspace-review.md",
+      "excerpts_file": null,
+      "notes_referenced_by": [
+        "interpretability/j-space"
+      ],
+      "topics": [
+        "j-space",
+        "lens-techniques"
+      ],
+      "category": "interpretability",
+      "summary": "Critical review of gurnee2026-workspace: accepts the existence of a workspace-like cognitive space but flags the J-lens as a lossy hypothesis-generation tool (unmeasured false positives), offers an additive feature-composition alternative to the two-hop reasoning interpretation, and raises token-steering and unembedding-norm confounds for the swap and multilingual results."
     }
   ]
 }
