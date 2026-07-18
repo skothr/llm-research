@@ -152,7 +152,10 @@
       ],
       "requires_model": "none",
       "consumers": [
-        "T0/T1/P2 observation (pending)"
+        "fig18",
+        "AUDIT 9",
+        "AUDIT 10 (reader cross-ref)",
+        "T0/T1/P2 observation"
       ]
     },
     "emb_trace_attention.pt": {
@@ -184,7 +187,11 @@
       ],
       "requires_model": "qwen-base@a09a3545",
       "consumers": [
-        "T1.5 component/carrier findings (observation pending)"
+        "fig16",
+        "fig17",
+        "fig18",
+        "AUDIT 9",
+        "T1.5 carrier findings"
       ]
     },
     "emb_trace_layers.pt": {

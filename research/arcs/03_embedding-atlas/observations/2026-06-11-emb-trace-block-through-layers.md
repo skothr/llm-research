@@ -89,7 +89,7 @@ python examples/emb_trace_capture.py      # T0/T1 (model load, ~10 min CPU)
 python examples/emb_trace_analyze.py      # census/readers/P2 (model-free)
 python examples/emb_trace_components.py   # T1.5 (model load + 51 hooked passes)
 python examples/emb_trace_render.py       # fig16-fig18 (model-free)
-python examples/emb_audit_findings.py     # AUDIT 9; SUMMARY: 75 PASS | 0 FAIL
+python examples/emb_audit_findings.py     # AUDIT 9 (14 claims) — all PASS; total grows with later sections
 ```
 
 ## Hypotheses / follow-ups

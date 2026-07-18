@@ -120,14 +120,19 @@ META: dict[str, dict[str, Any]] = {
         "producing_script": "examples/emb_trace_components.py",
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
-        "consumers": ["T1.5 component/carrier findings (observation pending)"],
+        "consumers": ["fig16", "fig17", "fig18", "AUDIT 9", "T1.5 carrier findings"],
     },
     "emb_trace_analysis.pt": {
         "class": "derived",
         "producing_script": "examples/emb_trace_analyze.py",
         "inputs": ["emb_trace_layers.pt", "emb_trace_weightmap.pt"],
         "requires_model": "none",
-        "consumers": ["T0/T1/P2 observation (pending)"],
+        "consumers": [
+            "fig18",
+            "AUDIT 9",
+            "AUDIT 10 (reader cross-ref)",
+            "T0/T1/P2 observation",
+        ],
     },
     "emb_trace_attention.pt": {
         "class": "capture-root",

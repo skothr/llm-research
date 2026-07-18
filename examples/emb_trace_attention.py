@@ -191,6 +191,10 @@ def main() -> None:
                     prod = qv * kv  # (P, n_q, head_dim)
                     band = prod[..., :n_bands] + prod[..., n_bands:]  # (P, n_q, bands)
                     acc[key][li] += band.sum(dim=0)
+                # band_n counts d_pairs for BOTH accumulators (common denominator);
+                # c_pairs can be one short when a delim pair lacks a matched
+                # control (636 vs 637 over this corpus), scaling band_c by
+                # ~0.9984 uniformly across bands — mid/slow SHARES unaffected.
                 acc["band_n"][li] += len(d_pairs)
         qk_store.clear()
         if (pi + 1) % 10 == 0:
