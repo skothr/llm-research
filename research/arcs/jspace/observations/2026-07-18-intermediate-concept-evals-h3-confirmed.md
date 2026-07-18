@@ -58,6 +58,25 @@ Derived artifact: `data/cache/lens_eval_1p5b_n100.pt`. Inexact-token cases
 single vocabulary token) scored via the script's documented fallback; see
 script header.
 
+## Method notes
+
+- **Scored position:** both evals score at the final prompt token (per the
+  eval-dir README): multihop's `target` is absent from the prompt so
+  "token preceding target" resolves to the last prompt token; association
+  scores at the closing period. `target` defines the position and is not
+  itself scored.
+- **Token form:** rank = min over the single-token forms of
+  {`word`, `" "+word`} (the space-prefixed form is usually the single
+  token); when neither is single-token, fallback = first token of
+  `" "+word`, counted in `n_inexact_token` (slightly understates those).
+  Mirrors the repo's order-ops "min over single-token synonyms" convention.
+- 93 multihop items yield 103 instances (10 items carry two intermediates);
+  scored per-instance. The `poetry` eval is intentionally excluded (scores
+  at a line-1 newline position, different semantics).
+- Association per-instance raw ranks still favor the J-lens by ~10x
+  (e.g. 'pregnant' 1564 vs 21951) — the floor is in reaching top-50, not
+  in relative ordering.
+
 ## Reproducibility
 
 ```
