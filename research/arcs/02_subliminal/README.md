@@ -27,6 +27,50 @@ carries "owl," but the primed persona shifts the *distribution* over emitted
 numbers, and the superposition of many tiny per-number nudges accumulates,
 over training, into the preference.
 
+## Research direction
+
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. This arc was opened in one working session by Michael Lannum; quotes are
+from that session's transcript, lightly normalized for typos/punctuation.
+
+**Originating question** [session 2026-05-31]:
+
+> *"another paper... is about model-assisted training 'unconsciously'
+> transferring knowledge/traits, like a preference for owls, despite the
+> output being filtered... I wonder if output that contains embeddings that
+> are cosine similar to owl-related things... could over training shape into a
+> preference."*
+
+That question — is the filtered signal semantic in the model's *own*
+coordinates? — is hypothesis (C) under [The question](#the-question). The
+three-way (A)/(B)/(C) contrast that frames it was Claude's articulation, not
+the user's.
+
+**The working intuition is the user's**, stated in the first person [session
+2026-05-31]:
+
+> *"you would have to keep track of the influence on learning of many
+> non-owl-related concepts... to check if their superposition would result in
+> the learned preference in effect. Though there might be a way to focus the
+> checking mathematically."*
+
+The "trait is a **resultant** ... superposition of many tiny per-number nudges"
+wording above is a Claude paraphrase of this — kept un-quoted for that reason.
+The user typed "superposition" and "focus the checking mathematically";
+"resultant" and "per-number nudges" are Claude's.
+
+**Human / agent split (Step-0 state).** *User:* the originating question and
+hypothesis (C); the superposition intuition and the "focus it mathematically"
+push toward an aggregate estimator; the call to land the research-directory
+reorg as its own PR first, deferring subliminal to a separate later PR.
+*Claude:* verifying the paper against arXiv:2507.14805 (the "imbue"-persona
+wording; the same-base requirement); the (A)/(B)/(C) framing and its grounding
+in the representational-alignment literature; the staged cheap-first program;
+the Step-0 decode-test implementation and NULL adjudication; the Step-1 design
+and adversarial critique. *Emergent:* the influence-alignment estimator — the
+user's "focus it mathematically" push, formalized by Claude.
+
 ## Program (cheap-first, staged)
 
 0. **Encoding decode-test** — ASCII / base-N on their *released* number data;
