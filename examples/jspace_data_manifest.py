@@ -63,6 +63,18 @@ META: dict[str, dict[str, Any]] = {
         ),
         "consumers": ["jlens_*.pt (frozen fitting corpus)"],
     },
+    "heldout_prompts_wikitext103_n30.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_readout_scan.py",
+        "inputs": [],
+        "requires_model": "none",
+        "provenance": (
+            "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 "
+            "under the same >=600-char filter as the fitting corpus; verified "
+            "zero overlap with fitting_prompts_wikitext103_n1000.json"
+        ),
+        "consumers": ["readout_scan_*.pt (held-out evaluation prompts)"],
+    },
     # ---- lens artifacts + derived metrics get added here as gates open -----
     # e.g. "jlens_qwen2.5-7b_nf4_n1000.pt" (class raw, requires_model qwen-7b-nf4)
     #      "jlens_qwen2.5-7b_nf4_n1000.config.json" (class raw, sidecar)
