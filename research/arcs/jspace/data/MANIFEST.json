@@ -2,8 +2,8 @@
   "arc": "jspace",
   "description": "Raw + derived jspace artifacts: the frozen wikitext-103 fitting corpus, fitted Jacobian-lens tensors (jlens native format) with their .config.json provenance sidecars, and derived metric/table products. Committed via git-LFS so figures and the audit reproduce from a clean clone. The cache/ subdir is excluded.",
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 1,
-  "total_size_bytes": 995236,
+  "total_files": 2,
+  "total_size_bytes": 1022518,
   "files": [
     {
       "filename": "fitting_prompts_wikitext103_n1000.json",
@@ -17,6 +17,20 @@
       "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, first 1000 records >= 600 chars, frozen by examples/jspace_fit_lens.py corpus step",
       "consumers": [
         "jlens_*.pt (frozen fitting corpus)"
+      ]
+    },
+    {
+      "filename": "heldout_prompts_wikitext103_n30.json",
+      "sha256": "54273ba92eaf5af2dbe35427b015fdc007482e03f11bcdbbc6965cff7f991851",
+      "size_bytes": 27282,
+      "class": "raw",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [],
+      "requires_model": "none",
+      "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 under the same >=600-char filter as the fitting corpus; verified zero overlap with fitting_prompts_wikitext103_n1000.json",
+      "consumers": [
+        "readout_scan_*.pt (held-out evaluation prompts)"
       ]
     }
   ]
