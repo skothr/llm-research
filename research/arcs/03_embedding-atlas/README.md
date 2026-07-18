@@ -31,10 +31,36 @@ Arc 3 opened from the user's (Michael Lannum) direction, 2026-06-10 session:
 
 Scope decisions made at session start: two arcs (embeddings first, RoPE
 second) rather than one; iterate with figures + plain-language measurement
-explanations at checkpoints; the user expanded the battery at CP1 ("add more
-word groups first") — person/royal/religion/abstract/landscape/instrument/
-science/tech/language classes and the gender/antonym/past/capital_of/lang_of
-pair kinds were added in response. Implementation: Claude Code (Fable 5).
+explanations at checkpoints. At checkpoint CP1 the user selected "Add more
+word groups first" from the offered next-step options (a checkpoint decision,
+not a typed message) — the person/royal/religion/abstract/landscape/
+instrument/science/tech/language classes and the gender/antonym/past/
+capital_of/lang_of pair kinds were Claude's expansion in response.
+
+### Collaboration mode (following the arc-01 template)
+
+**What Michael contributed.** The originating "handles" question (verbatim
+above, [session 2026-06-10]); the two-arc scoping and the
+iterate-with-figures cadence; the CP1 broaden-before-deepen decision; the
+deep-arc commitment and the numbered-arc reorganization (2026-06-11); the
+thorough-data discipline that forced the full-149,706-row sweep before any
+claim promotion; the pause/resume and wrap-up calls; the review gate (all
+three stack PRs human-merged, never auto-merged).
+
+**What Claude contributed.** All implementation: the ~22 `emb_*` capture/
+derive/render/audit scripts, the battery class definitions (under the CP1
+direction), the operationalization of the pre-registered predictions
+(P1a-P3), the tracing-phase experiment designs (T0/T1/T1.5/T2), the
+literature review with adversarial novelty verification, all figures and
+observation write-ups, and the audit that re-derives every published number
+from committed artifacts.
+
+**What emerged from the collaboration.** The 21-dim entangled block itself
+(the user's handles framing predicted shared structure; the full-vocab sweep
+implementation surfaced this specific object); the reader/tracker head
+dissociation; the P1c/P1d falsifications — adjudicated mechanically against
+criteria pre-registered on 2026-06-11, before any attention weights were
+captured.
 
 ## Findings so far (held as working hypotheses)
 
