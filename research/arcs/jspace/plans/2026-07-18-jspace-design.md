@@ -27,6 +27,19 @@ PDF, not secondary coverage.
   script, as recommended.
 - KB + arc ship together in one PR at arc close (no separate KB PR).
 
+**Measured calibration addendum (2026-07-18, supersedes the stage-2 runtime
+guesses below):** per-prompt fitting cost is structural
+(`ceil(d_model/dim_batch)` exact-Jacobian VJP backwards per prompt, jlens
+fitting.py) — measured 115 s/prompt on 1.5B bf16 (dim_batch=8) and 559
+s/prompt on 7B nf4 (dim_batch=2 + lm_head offloaded to CPU; the only
+non-OOM 7B configuration). So: 1.5B n=100 = 3.2 h, n=1000 = 31.8 h; 7B
+n=100 = 15.5 h, n=1000 = 155 h. CPU fallback rejected (RAM-infeasible and
+slower than the working GPU path). Full numbers + evidence in
+`../observations/2026-07-18-fit-cost-calibration.md`. Execution: 1.5B
+n=100 launched 2026-07-18 (checkpointed); 7B n=100 overnight run pending
+reviewer confirmation; larger n via checkpoint-resume /
+`JacobianLens.merge()` extension if split-half stability at n=100 is poor.
+
 ## 0. What we are computing
 
 Per layer ℓ of Qwen2.5-7B-Instruct (28 layers, d_model=3584, vocab 152,064):
