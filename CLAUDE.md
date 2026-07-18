@@ -1,3 +1,14 @@
+# Working in this repo — worktree discipline (hard rule)
+
+This repo may run concurrent Claude Code sessions; to keep them from
+clobbering each other's uncommitted work, **each session works in its own git
+worktree** (`.claude/worktrees/<scope>/`, gitignored) on its own branch, never
+on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR →
+`git worktree remove`. Only integration commits (merges, or edits to
+`CLAUDE.md`/`.gitignore`) land directly on the default branch.
+
+---
+
 # Purpose
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
