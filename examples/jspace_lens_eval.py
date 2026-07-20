@@ -73,7 +73,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-seq-len", type=int, default=512)
     p.add_argument("--examples", type=int, default=3, help="Example items to print.")
     p.add_argument(
-        "--out", default="research/arcs/jspace/data/cache/lens_eval_1p5b_n100.pt"
+        "--out",
+        default=None,
+        help="Output .pt path. Default derives from the lens stem "
+        "(lens_eval_<lensstem>.pt in the lens's dir), so runs on different "
+        "lenses never clobber each other.",
     )
     return p.parse_args()
 
@@ -270,9 +274,17 @@ def main() -> None:
             for slug, r in results.items()
         },
     }
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    torch.save({"summary": summary, "per_eval": results}, args.out)
-    print(f"\n[save] {args.out}")
+    lens_stem = Path(args.lens).stem
+    out = (
+        Path(args.out)
+        if args.out
+        else Path(args.lens).with_name(
+            f"lens_eval_{lens_stem.replace('jlens_', '')}.pt"
+        )
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    torch.save({"summary": summary, "per_eval": results}, out)
+    print(f"\n[save] {out}")
 
 
 if __name__ == "__main__":
