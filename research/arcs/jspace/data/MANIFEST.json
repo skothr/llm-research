@@ -2,8 +2,8 @@
   "arc": "jspace",
   "description": "Raw + derived jspace artifacts: the frozen wikitext-103 fitting corpus, fitted Jacobian-lens tensors (jlens native format) with their .config.json provenance sidecars, and derived metric/table products. Committed via git-LFS so figures and the audit reproduce from a clean clone. The cache/ subdir is excluded.",
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 2,
-  "total_size_bytes": 1022518,
+  "total_files": 6,
+  "total_size_bytes": 213892290,
   "files": [
     {
       "filename": "fitting_prompts_wikitext103_n1000.json",
@@ -31,6 +31,70 @@
       "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 under the same >=600-char filter as the fitting corpus; verified zero overlap with fitting_prompts_wikitext103_n1000.json",
       "consumers": [
         "readout_scan_*.pt (held-out evaluation prompts)"
+      ]
+    },
+    {
+      "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
+      "sha256": "55cfcac8870e68b40efe63422da92ff73f4ff3e680bea728b76bc10b62bab9ba",
+      "size_bytes": 656,
+      "class": "raw",
+      "producing_script": "examples/jspace_promote_lens_subset.py",
+      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",
+      "consumers": [
+        "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"
+      ]
+    },
+    {
+      "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+      "sha256": "f96d30f44244787cba4bdd67c618558452ac82e93c26936629a9e9e0220f35c0",
+      "size_bytes": 33033931,
+      "class": "raw",
+      "producing_script": "examples/jspace_promote_lens_subset.py",
+      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26); full set cache-only.",
+      "consumers": [
+        "clean-clone lens inspection at representative depths"
+      ]
+    },
+    {
+      "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
+      "sha256": "845ede6c5479f41488825b67074c88c0cb9ee56e8cc3818aa6c9664d43a24fa9",
+      "size_bytes": 653,
+      "class": "raw",
+      "producing_script": "examples/jspace_promote_lens_subset.py",
+      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",
+      "consumers": [
+        "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"
+      ]
+    },
+    {
+      "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
+      "sha256": "b81df97ca0aef5717d0a3f36be4db35b09c456cca6f5e02a4d6df0dc677640aa",
+      "size_bytes": 179834532,
+      "class": "raw",
+      "producing_script": "examples/jspace_promote_lens_subset.py",
+      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26); full set cache-only.",
+      "consumers": [
+        "clean-clone lens inspection at representative depths"
       ]
     }
   ]

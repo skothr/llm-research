@@ -75,10 +75,65 @@ META: dict[str, dict[str, Any]] = {
         ),
         "consumers": ["readout_scan_*.pt (held-out evaluation prompts)"],
     },
-    # ---- lens artifacts + derived metrics get added here as gates open -----
-    # e.g. "jlens_qwen2.5-7b_nf4_n1000.pt" (class raw, requires_model qwen-7b-nf4)
-    #      "jlens_qwen2.5-7b_nf4_n1000.config.json" (class raw, sidecar)
-    #      "<split_half_stability>.pt" (class derived, inputs the lens .pt)
+    # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
+    # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
+    # by examples/jspace_promote_lens_subset.py; the full 27-layer set stays
+    # cache-only (data/cache/, gitignored). The .config.json sidecars are
+    # top-level *.json deliverables too, so each gets its own META entry.
+    "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt": {
+        "class": "raw",
+        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "inputs": ["jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"],
+        "requires_model": "qwen-7b-nf4",
+        "provenance": (
+            "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
+            "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
+            "jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced "
+            "subset promoted per design-plan Decision 4 (trailing layer 27 "
+            "clamped to the last valid index 26); full set cache-only."
+        ),
+        "consumers": ["clean-clone lens inspection at representative depths"],
+    },
+    "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "inputs": ["jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, gitignored)"],
+        "requires_model": "qwen-7b-nf4",
+        "provenance": (
+            "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: "
+            "the cache fit sidecar plus subset_layers + full_set_location."
+        ),
+        "consumers": ["jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"],
+    },
+    "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt": {
+        "class": "raw",
+        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "inputs": ["jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"],
+        "requires_model": "qwen-1.5b-bf16",
+        "provenance": (
+            "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
+            "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
+            "jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset "
+            "promoted per design-plan Decision 4 (trailing layer 27 clamped to "
+            "the last valid index 26); full set cache-only."
+        ),
+        "consumers": ["clean-clone lens inspection at representative depths"],
+    },
+    "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "inputs": [
+            "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, gitignored)"
+        ],
+        "requires_model": "qwen-1.5b-bf16",
+        "provenance": (
+            "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: "
+            "the cache fit sidecar plus subset_layers + full_set_location."
+        ),
+        "consumers": ["jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"],
+    },
+    # ---- derived metrics get added here as gates open ----------------------
+    # e.g. "<split_half_stability>.pt" (class derived, inputs the lens .pt)
 }
 
 # Disk-derived provenance stub for a top-level deliverable with no META entry

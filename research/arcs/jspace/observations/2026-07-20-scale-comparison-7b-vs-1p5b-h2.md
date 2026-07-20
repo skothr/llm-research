@@ -90,18 +90,52 @@ python examples/jspace_lens_eval.py --evals multihop association \
   the 2.3x-larger d_model. Distinguishing test: refit 7B (and/or 1.5B) at
   n=500-1000 and re-run; if 7B early/mid rates rise toward the 1.5B levels
   and the emergence layer moves earlier, the gap was fit-budget, not scale.
-  This is the single most informative next artifact, but it is a ~29 h GPU
-  fit at n=500 — worth a go/no-go with the reviewer.
+  This is the single most informative next artifact, but it is a ~81 h GPU
+  fit at n=500 (measured 585.4 s/prompt × 500; **corrected 2026-07-20** —
+  originally written as "~29 h", which no measured rate supports) — worth a
+  go/no-go with the reviewer.
 
 ## Follow-ups
 
-- Reviewer decision: n=500 refit (7B ~29 h, 1.5B ~16 h) to break the H1/H2
-  confound, vs proceeding to stage 4 (J-space structure) on the n=100 lenses.
+- Reviewer decision: n=500 refit (7B ~81 h at the measured 585.4 s/prompt —
+  corrected 2026-07-20 from an unsupported "~29 h"; 1.5B ~16 h) to break the
+  H1/H2 confound, vs proceeding to stage 4 (J-space structure) on the n=100
+  lenses. **Reviewer verdict 2026-07-20: DEFERRED** — proceed to stage 4 on
+  the n=100 lenses; the refit is binned under "Deferred / follow-up
+  directions" in the arc README.
 - Association behavioral baseline still pending (does either model do the
   vignette→concept task at all).
 - Stage 4 (gradient-pursuit J-space variance/sparsity depth-band map) can
   run on the current lenses regardless — it characterizes structure, not
   the concept-surfacing advantage.
+
+## Post-hoc audit (2026-07-20, follow-up session)
+
+An independent verification pass over every artifact behind this observation
+and its 1.5B comparison baseline, after the overnight run:
+
+- **7B fit completeness:** `jlens_qwen2.5-7b_nf4_n100.pt` contains 27 full
+  3584×3584 fp16 matrices, all finite, per-layer Frobenius norms 51.6–84.2;
+  config sidecar records n_prompts=100, wall 58,543.6 s (16.26 h). Run logs
+  (`h2_7b.log`, session scratchpad) show scan and eval exit code 0.
+- **Eval-table fidelity:** all 25 table values above re-derived from the two
+  `lens_eval_*.pt` artifacts; every value matches to within table rounding
+  (e.g. 7B multihop overall J@10 stored 0.5340, reported 0.53).
+- **Clobber-regen provenance:** the regenerated 1.5B eval artifact (GPU,
+  04:59) reproduces the original 2026-07-18 CPU run's table to 4 decimals
+  (e.g. multihop overall J@10 0.5825, logit@10 0.3981), so the H3
+  observation's evidence chain is intact despite the overwrite incident.
+- **Process caveat (recorded for transparency):** the original commit of
+  this observation (538198a6, 04:51) stated "both artifacts regenerated
+  cleanly" while the 1.5B regeneration was still running (artifact mtime
+  04:59) — the claim preceded its verification and happened to hold. The
+  audit above is the actual verification.
+- **Estimate correction:** the n=500 refit cost in Hypotheses/Follow-ups
+  originally said "~29 h" for 7B; no measured rate supports that number
+  (585.4 s/prompt × 500 ≈ 81 h). Corrected in place, marked.
+
+Mechanical re-derivation of these checks is committed as
+`examples/jspace_audit_findings.py` (the stage-7 audit script, seeded now).
 
 ## References
 
