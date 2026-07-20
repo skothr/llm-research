@@ -32,6 +32,17 @@ Load-bearing numbers re-derive from artifacts via
 lenses are committed to LFS under `data/` (design-plan Decision 4); full
 lenses are cache-only, regenerable via `examples/jspace_fit_lens.py`.
 
+**Corpus provenance (Decision 1, recorded 2026-07-20):** the frozen
+fitting corpus (`fitting_prompts_wikitext103_n1000.json`) replicates the
+companion repo's own fitting-corpus selection —
+`jlens.examples.load_wikitext_prompts` (Salesforce/wikitext,
+wikitext-103-raw-v1, train, first-N ≥600 chars) — i.e. Decision 1's
+primary branch ("reuse the companion repo's prompt sets; closest method
+match"), per commit 982e061e. Caveat: wikitext-103 is English-only
+Wikipedia register, narrower than the paper's "pretraining-like
+distribution" phrasing and than Qwen2.5's multilingual training mix;
+corpus sensitivity is a deferred robustness item (below).
+
 ## Deferred / follow-up directions
 
 Binned here 2026-07-20 (reviewer call), roughly in decreasing
@@ -41,17 +52,24 @@ informativeness-per-hour:
    ~16 h)** — breaks the H1 (fit budget) / H2 (scale) confound flagged in
    the 2026-07-20 observation. Deferred for cost; the single most
    informative next artifact if the confound starts blocking conclusions.
-2. **Split-half lens stability at n=100** — the stage-2 validation gate was
+2. **Corpus-sensitivity check (seeded C4-en refit)** — the wikitext-103
+   corpus matches the companion repo but is narrower than Qwen's
+   multilingual pretraining mix; averaged-Jacobian estimates inherit the
+   fitting distribution. Cheapest discriminating version: 1.5B n=100 refit
+   on a seeded C4-en sample (~3.2 h GPU) + re-run the stage-3/4 metric
+   suite; if the 1.5B lens is corpus-stable, wikitext stands for 7B too.
+   Any n=500 refit (item 1) should double as this check.
+3. **Split-half lens stability at n=100** — the stage-2 validation gate was
    waived for the first pass; two disjoint n=50 fits per model would bound
    estimator noise (7B ~16 h; 1.5B ~3 h).
-3. **Association behavioral baseline** — do the models do the
+4. **Association behavioral baseline** — do the models do the
    vignette→concept task at all? Distinguishes capability floor from
    representation-format for the floored association evals (cheap, forward
    passes only).
-4. **Chat-template prompt variant (H4)** — both eval suites re-run with the
+5. **Chat-template prompt variant (H4)** — both eval suites re-run with the
    Qwen chat template applied, testing whether instruct-tune formatting
    moves the intermediate-concept rates.
-5. **Remaining companion eval sets** (multilingual, poetry, order-ops,
+6. **Remaining companion eval sets** (multilingual, poetry, order-ops,
    typo) — for the stage-4/5 writeups.
 
 **Theory grounding:** `theory/kb/notes/interpretability/j-space.md`,
