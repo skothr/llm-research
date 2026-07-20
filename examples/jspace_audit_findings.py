@@ -31,6 +31,16 @@ Checks:
      models), re-derived from the per-prompt rank arrays AND checked against
      the stored summary AND the observation tables; the 7B layer-26 Spearman
      crossover (J 0.7632 > logit 0.6952); the 1.5B per-layer Spearman excerpt.
+  D  Structure scan (stage-4 J-space) — both structure_scan artifacts load;
+     ks == [5,10,25,50]; 27 layers; 30 prompts; every varfrac (summary means
+     and per-prompt raw) finite and in [0,1]. Load-bearing depth-map numbers
+     re-derived and pinned: 1.5B varfrac_mean(k=25) peak at layer 21, plus its
+     layer-0 and final-layer values, active_mean in [23,25] all layers, and
+     logit-kurtosis endpoints (L0 + mid-trough layer/value); 7B varfrac trough
+     at layer 17 and late-peak at layer 22 (argmin/argmax ranks), layer-0
+     value, active_mean in [22,24], logit-kurtosis endpoints. Values pinned to
+     the stored artifact figures at 3dp; the peak/trough *layer indices* are
+     the primary claims.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
@@ -460,10 +470,109 @@ def audit_readout_scan() -> None:
                 )
 
 
+STRUCT_1P5B = "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
+STRUCT_7B = "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
+
+
+def _check_struct_common(
+    key: str, d: dict[str, Any]
+) -> tuple[dict[str, Any], list[int]]:
+    """Shared integrity for a structure-scan artifact: config shape + all
+    varfrac (summary means and per-prompt raw) finite and in [0, 1]."""
+    s = d["summary"]
+    layers = list(s["layers"])
+    claim_eq(f"[{key}] structure ks == [5,10,25,50]", [5, 10, 25, 50], list(s["ks"]))
+    claim_eq(f"[{key}] structure n_prompts == 30", 30, int(s["n_prompts"]))
+    claim_eq(f"[{key}] structure layers == 0..26", list(range(27)), layers)
+
+    mean_vals = [float(v) for k in s["ks"] for v in s["mean_varfrac"][k]]
+    mean_ok = all(np.isfinite(v) and 0.0 <= v <= 1.0 for v in mean_vals)
+    claim(
+        f"[{key}] all mean_varfrac finite & in [0,1]",
+        mean_ok,
+        "in [0,1] finite",
+        "ok" if mean_ok else "OUT OF RANGE",
+    )
+    pp_ok = True
+    for pp in d["per_prompt"]:
+        for k in s["ks"]:
+            arr = np.asarray(pp["varfrac"][k], dtype=float)
+            if not (
+                np.isfinite(arr).all() and (arr >= 0.0).all() and (arr <= 1.0).all()
+            ):
+                pp_ok = False
+                break
+        if not pp_ok:
+            break
+    claim(
+        f"[{key}] all per-prompt varfrac finite & in [0,1]",
+        pp_ok,
+        "in [0,1] finite",
+        "ok" if pp_ok else "OUT OF RANGE",
+    )
+    return s, layers
+
+
+def audit_structure_scan() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK D: structure scan (stage-4 J-space depth map)")
+    print("=" * 80)
+
+    # ---- 1.5B: single mid-late varfrac hump ----
+    d = load_pt_or_fail(STRUCT_1P5B)
+    if d is not None:
+        s, layers = _check_struct_common("1.5b", d)
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        act = np.array(s["mean_active"][25], dtype=float)
+        lk = np.array(s["mean_readout_kurtosis"], dtype=float)
+        peak_i = int(vf.argmax())
+        claim_eq("[1.5b] varfrac(k25) peak layer == 21", 21, layers[peak_i])
+        claim_near("[1.5b] varfrac(k25) peak value", 0.124, float(vf[peak_i]))
+        claim_near("[1.5b] varfrac(k25) layer-0", 0.082, float(vf[0]))
+        claim_near("[1.5b] varfrac(k25) final layer", 0.068, float(vf[-1]))
+        claim(
+            "[1.5b] active_mean(k25) in [23,25] all layers",
+            bool((act >= 23.0).all() and (act <= 25.0).all()),
+            "[23,25]",
+            f"[{act.min():.3f},{act.max():.3f}]",
+        )
+        claim_near("[1.5b] logit-kurt layer-0", 4.648, float(lk[0]))
+        kt_i = int(lk.argmin())
+        claim_eq("[1.5b] logit-kurt trough layer == 18", 18, layers[kt_i])
+        claim_near("[1.5b] logit-kurt trough value", 0.926, float(lk[kt_i]))
+
+    # ---- 7B: mid trough then late rise ----
+    d = load_pt_or_fail(STRUCT_7B)
+    if d is not None:
+        s, layers = _check_struct_common("7b", d)
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        act = np.array(s["mean_active"][25], dtype=float)
+        lk = np.array(s["mean_readout_kurtosis"], dtype=float)
+        trough_i = int(vf.argmin())
+        claim_eq("[7b] varfrac(k25) trough layer == 17", 17, layers[trough_i])
+        claim_near("[7b] varfrac(k25) trough value", 0.012, float(vf[trough_i]))
+        peak_i = int(vf.argmax())
+        claim_eq("[7b] varfrac(k25) late-peak layer == 22", 22, layers[peak_i])
+        claim_near("[7b] varfrac(k25) late-peak value", 0.040, float(vf[peak_i]))
+        claim_near("[7b] varfrac(k25) layer-0", 0.031, float(vf[0]))
+        claim(
+            "[7b] active_mean(k25) in [22,24] all layers",
+            bool((act >= 22.0).all() and (act <= 24.0).all()),
+            "[22,24]",
+            f"[{act.min():.3f},{act.max():.3f}]",
+        )
+        claim_near("[7b] logit-kurt layer-0", 3.246, float(lk[0]))
+        kt_i = int(lk.argmin())
+        claim_eq("[7b] logit-kurt trough layer == 19", 19, layers[kt_i])
+        claim_near("[7b] logit-kurt trough value", 0.868, float(lk[kt_i]))
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
     audit_readout_scan()
+    audit_structure_scan()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")

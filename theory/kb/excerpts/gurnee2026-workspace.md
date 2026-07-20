@@ -127,6 +127,26 @@ $$
 > only a fraction of the model's behavior, and in particular is not involved
 > in pervasive, routine processing like text parsing or grammatical fluency.
 
+## §4.1 Kurtosis onset signature + metric definition {#sec-4-1-kurtosis-onset}
+
+> The second (panel b) shows the excess kurtosis of J-lens readouts, a
+> measure of their nonrandomness. Excess kurtosis is near zero through the
+> first third of the layers, increases beginning around a third of the way
+> through the depth, and falls in the last few layers. We interpret the
+> early rise as marking the beginning of the workspace: before it, the
+> J-space carries essentially no meaningful content.
+
+Footnote 4 (the metric definition):
+
+> Specifically, we compute the excess kurtosis of the logit distribution for
+> the readout of a single (position, layer) across a large data set of
+> activations.
+
+(Verified verbatim 2026-07-20 during the jspace arc's stage-4 replication —
+the metric is the **logit** distribution over the full vocabulary, no
+softmax, no top-k truncation; the "top-k" curves in the adjacent panel (a)
+belong to the next-token-accuracy metric, not kurtosis.)
+
 ## §5 Alignment auditing — evaluation awareness {#sec-5-eval-awareness}
 
 > Strikingly, we observe that the workspace sometimes encodes recognition of
