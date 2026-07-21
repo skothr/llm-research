@@ -77,13 +77,15 @@ moments in 5s; kurtosis max 116.3 median 0.32
 dim-corr in 16s; |r| mean 0.0210 max 0.726
 knn in 307s; top1 cos mean +0.314 k32 cos mean +0.159
 == dim-corr blocks at |r|>0.3: 1 blocks of size >1; sizes [21]
-block    spearman(energy, token_id) = -0.2064; decile1 0.1143
-control  spearman(energy, token_id) = -0.0027; decile1 0.0753
+block    spearman(norm_frac, token_id) = -0.2064; decile1 0.1143
+control  spearman(norm_frac, token_id) = -0.0027; decile1 0.0753
 negative thr +0.209 hits 60: ' shitty', ' nasty', ' rotten', ...
 542 communities; largest [122942, 1007, 965, 909, 908, ...]
 ```
 
 Figures fig11-fig15 (INVENTORY.md). All numbers re-asserted by AUDIT 8.
+(Transcript label updated 2026-07-21 with the energy→norm_frac print
+rename; the values are unchanged.)
 
 ## Reproducibility
 
@@ -94,7 +96,8 @@ python examples/emb_fullvocab_stats.py --stage full    # S2 (~6 min CPU)
 python examples/emb_fullvocab_analyze.py               # S3 decode
 python examples/emb_structural_block.py                # S4 branch
 python examples/emb_fullvocab_render.py && python examples/emb_structural_block_render.py
-python examples/emb_audit_findings.py                  # 61 PASS | 0 FAIL
+python examples/emb_audit_findings.py    # 61 PASS | 0 FAIL at 2026-06-10;
+                                         # arc-final audit is 94 PASS
 ```
 
 S3/S4 need the S0 matrix dump (cache-only, regenerable from the pinned

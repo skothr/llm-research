@@ -12,7 +12,7 @@ in the [nla-verbalizer arc](../01_nla-verbalizer/README.md)?
 protocol probes), phase 2 (full-vocabulary sweep, 149,706 alive rows), and
 phase 3 (structural tracing T0/T1/T1.5/T2, absorbing the former rope-vis arc
 per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
-**93 PASS / 0 FAIL**; pre-registered predictions
+**94 PASS / 0 FAIL**; pre-registered predictions
 ([plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md))
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
 moves to a new basis at L1), P1b/P1e/P3 not run (deferred, below). Remaining follow-ups are recorded under "Deferred
@@ -136,7 +136,7 @@ versions:
 - **L3. Dead rows in global stats.** 1,959 near-zero rows (1.3%) are
   included in mu/covariance/random sampling; estimated effect < 0.002 on
   headline cosines but unverified — re-lock excluding them is a follow-up.
-- **L4. The audit is arithmetic-consistency only.** 93 PASS means the
+- **L4. The audit is arithmetic-consistency only.** 94 PASS means the
   observation numbers match the committed artifacts — not that the capture
   protocol, thresholds (MIN_CLASS_N=5, near-zero 1e-3, primary-variant
   policy), or interpretations are right.
@@ -179,7 +179,7 @@ Highest-value first; the first two are natural openers for a successor arc:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py        # SUMMARY: 93 PASS | 0 FAIL
+python examples/emb_audit_findings.py        # SUMMARY: 94 PASS | 0 FAIL
 python examples/emb_data_manifest.py --check # 15 files, sha256 match
 python examples/emb_global_render.py         # figures re-render model-free
 python examples/emb_trace_render.py          # fig16-18 (model-free)

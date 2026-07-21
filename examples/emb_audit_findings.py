@@ -717,6 +717,18 @@ def main() -> int:
         and all(near(ablt[lab], dc["ablated_cos_to_de"][lab], 0.002) for lab in labels),
         f"{len(labels)} candidates x 2 metrics",
     )
+    # calibration pair: the commas are near-twins OUTSIDE the block — cosine
+    # rises when the block is ablated (opposite of the ' the'/'的' pattern)
+    comma_full = _cos(dc_rows[li[","]], dc_rows[li["，"]])
+    comma_ablt = _cos(dc_rows[li[","]][cmask], dc_rows[li["，"]][cmask])
+    claim(
+        "11 de-check",
+        "','/'，' cosine RISES 0.615 -> 0.838 under block ablation (cross-script twins)",
+        near(comma_full, 0.6154, 0.002)
+        and near(comma_ablt, 0.8384, 0.002)
+        and comma_ablt > comma_full,
+        f"{comma_full:+.4f} -> {comma_ablt:+.4f}",
+    )
 
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
