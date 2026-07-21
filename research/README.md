@@ -10,10 +10,9 @@ landing bin for one-off findings and an archive for retired material.
 
 | Arc | Status | Question | Entry point |
 |---|---|---|---|
-| **NLA verbalizer — Qwen2.5-7B layer 20** | Paused; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/nla-verbalizer/README.md`](arcs/nla-verbalizer/README.md) |
-| **Subliminal trait transfer** | Paused (2026-06-10); Step 0 done | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/subliminal/README.md`](arcs/subliminal/README.md) |
-| **Embedding atlas — Qwen2.5-7B W_E** | Active (started 2026-06-10) | What semantic/functional category structure exists already in the static input-embedding table, and how does it compare to the layer-20 geometry? | [`arcs/embedding-atlas/README.md`](arcs/embedding-atlas/README.md) |
-| **RoPE visualization** | Planned | What does Qwen2.5's RoPE positional encoding do to query/key vectors geometrically, and which frequency bands do attention heads actually use? | [`arcs/rope-vis/plans/2026-06-10-rope-vis.md`](arcs/rope-vis/plans/2026-06-10-rope-vis.md) |
+| **NLA verbalizer — Qwen2.5-7B layer 20** | Paused; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/01_nla-verbalizer/README.md`](arcs/01_nla-verbalizer/README.md) |
+| **Subliminal trait transfer** | Paused (2026-06-10); Step 0 done | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/02_subliminal/README.md`](arcs/02_subliminal/README.md) |
+| **Embedding atlas — Qwen2.5-7B structural tracing** | Active, deep arc (started 2026-06-10) | What structural/procedural machinery does the model build on its input-embedding table — and how do the structural-token features it contains get used by Q/K/V, attention (RoPE bands), and FFN, layer by layer? | [`arcs/03_embedding-atlas/README.md`](arcs/03_embedding-atlas/README.md) |
 
 **Flagship: the NLA verbalizer arc.** A focused investigation applying
 Anthropic's released NLA model pair (`kitft/nla-qwen2.5-7b-L20-{av,ar}`) to

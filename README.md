@@ -32,7 +32,7 @@ examples/    The NLA capture / analysis / render / audit pipeline (46 scripts)
 - **`research/`** — Investigations organized into **arcs** under
   `research/arcs/<slug>/`, each cohering around one research question, plus
   `research/observations/` for one-off findings and `research/archive/` for
-  retired material. The flagship arc is `research/arcs/nla-verbalizer/`
+  retired material. The flagship arc is `research/arcs/01_nla-verbalizer/`
   (22 dated observations, 36 figures, a 178-PASS regression audit). The arc
   lifecycle and reproducibility disciplines are in `research/ARC_PROCESS.md`;
   the index is `research/README.md`.

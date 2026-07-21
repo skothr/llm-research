@@ -3,7 +3,7 @@
 How to run a research arc in this workspace so it ends up reproducible,
 honestly framed, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
-layout/convention reference). The [`nla-verbalizer`](arcs/nla-verbalizer/) arc
+layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example every section points at.
 
 An *arc* is a focused, multi-observation investigation cohering around one

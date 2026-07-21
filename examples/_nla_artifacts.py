@@ -3,7 +3,7 @@
 Two artifact locations:
   * CACHE — .cache/nla_artifacts/ — the gitignored working cache the
     capture/derive scripts write to during local development.
-  * DATA  — research/arcs/nla-verbalizer/data/ — the committed git-LFS copy a
+  * DATA  — research/arcs/01_nla-verbalizer/data/ — the committed git-LFS copy a
     clean clone has (see research/ARC_PROCESS.md § "Raw data is a deliverable").
 
 Reads prefer the cache (so a fresh local re-capture is picked up immediately)
@@ -24,9 +24,9 @@ from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE = _REPO_ROOT / ".cache" / "nla_artifacts"
-DATA = _REPO_ROOT / "research" / "arcs" / "nla-verbalizer" / "data"
+DATA = _REPO_ROOT / "research" / "arcs" / "01_nla-verbalizer" / "data"
 FIGURES = (
-    _REPO_ROOT / "research" / "arcs" / "nla-verbalizer" / "observations" / "figures"
+    _REPO_ROOT / "research" / "arcs" / "01_nla-verbalizer" / "observations" / "figures"
 )
 
 

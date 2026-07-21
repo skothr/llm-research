@@ -1,6 +1,6 @@
 """Render category-structure figures (fig5-fig8) from emb_category_stats.pt.
 
-Model-free. Outputs to research/arcs/embedding-atlas/observations/figures/:
+Model-free. Outputs to research/arcs/03_embedding-atlas/observations/figures/:
   fig5_within_between.png       per-class within vs between cosines, raw+centered
   fig6_centroid_matrix.png      class-centroid cosine heatmap (centered)
   fig7_contrast_connectivity.png contrast-direction cosine heatmap (centered) —

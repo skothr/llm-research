@@ -579,7 +579,7 @@ of capture time.
 ## File map
 
 ```
-research/arcs/nla-verbalizer/
+research/arcs/01_nla-verbalizer/
   README.md                                     # This file
   observations/
     2026-05-12-nla-position-scan-qwen25-7b.md   # Per-position h-norm scan

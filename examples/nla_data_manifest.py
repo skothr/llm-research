@@ -1,7 +1,7 @@
 """Generate / verify the raw-dataset manifest for the NLA research arc.
 
 The arc's raw `.pt` artifacts live (committed, git-LFS) under
-`research/arcs/nla-verbalizer/data/`. This script writes a checksummed
+`research/arcs/01_nla-verbalizer/data/`. This script writes a checksummed
 `MANIFEST.json` next to them that records, per file: sha256, size, whether
 it is a capture-root (needs the model to regenerate) or a derived artifact
 (regenerable from other `.pt` by a committed script), the producing script
