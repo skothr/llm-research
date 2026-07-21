@@ -20,19 +20,24 @@ Its extreme tokens mix scripts at the same role: `','` and `'，'`, `' the'`
 and `'的'`, `'.'` and `'。'`, newlines, digits. Characterization vs a seeded
 random 21-dim control (fig15):
 
-- energy fraction vs token-id (BPE merge order = frequency proxy): Spearman
+- norm fraction vs token-id (BPE merge order = frequency proxy): Spearman
   **-0.206** (control -0.003); the first id-decile carries mean fraction
   **0.1143** vs control 0.0753, flattening to ~0.078 after decile 3 —
-  **head-loaded**, not a smooth frequency gradient.
-- script-independence: block mean energy elevated over control for ascii
-  (0.0836), cjk (0.0811), and cyrillic (0.0784) alike (control ~0.0754).
-- top block-energy tokens: `',' '.' '，' ' the' '\n' ' ' '。' '.\n' ' to'`;
+  **head-loaded**, not a smooth frequency gradient. (Metric: the *norm
+  fraction* ‖x_S‖/‖x‖, unsquared — the isotropic floor is √(21/3584) ≈
+  0.0765, matching the observed control ~0.0754; a squared *energy*
+  fraction would floor at 21/3584 ≈ 0.0059. Artifact keys keep the
+  historical `*_energy_frac` name.)
+- script-independence: block mean norm fraction elevated over control for
+  ascii (0.0836), cjk (0.0811), and cyrillic (0.0784) alike (control ~0.0754).
+- top block-norm-fraction tokens: `',' '.' '，' ' the' '\n' ' ' '。' '.\n' ' to'`;
   bottom: rare fragments (`' Rear'`, `'utsch'`, `'.Paths'`).
 
 [INTUITION: a shared "syntax/glue-token" subspace that the tokenizer's most
 frequent structural tokens occupy regardless of language — return to the
-canonical form: a rank-~21 correlated subspace S with energy concentrated in
-the top frequency decile, P(energy in S | top-decile) ≈ 1.5x the floor.]
+canonical form: a rank-~21 correlated subspace S with norm fraction
+concentrated in the top frequency decile, E[‖x_S‖/‖x‖ | top-decile] ≈ 1.5x
+the isotropic floor.]
 
 **F-V2. Outside that block, dimensions are remarkably independent.**
 Off-diagonal |r| mean is 0.0210 (max 0.726, inside the block); kurtosis
@@ -72,13 +77,15 @@ moments in 5s; kurtosis max 116.3 median 0.32
 dim-corr in 16s; |r| mean 0.0210 max 0.726
 knn in 307s; top1 cos mean +0.314 k32 cos mean +0.159
 == dim-corr blocks at |r|>0.3: 1 blocks of size >1; sizes [21]
-block    spearman(energy, token_id) = -0.2064; decile1 0.1143
-control  spearman(energy, token_id) = -0.0027; decile1 0.0753
+block    spearman(norm_frac, token_id) = -0.2064; decile1 0.1143
+control  spearman(norm_frac, token_id) = -0.0027; decile1 0.0753
 negative thr +0.209 hits 60: ' shitty', ' nasty', ' rotten', ...
 542 communities; largest [122942, 1007, 965, 909, 908, ...]
 ```
 
 Figures fig11-fig15 (INVENTORY.md). All numbers re-asserted by AUDIT 8.
+(Transcript label updated 2026-07-21 with the energy→norm_frac print
+rename; the values are unchanged.)
 
 ## Reproducibility
 
@@ -89,7 +96,8 @@ python examples/emb_fullvocab_stats.py --stage full    # S2 (~6 min CPU)
 python examples/emb_fullvocab_analyze.py               # S3 decode
 python examples/emb_structural_block.py                # S4 branch
 python examples/emb_fullvocab_render.py && python examples/emb_structural_block_render.py
-python examples/emb_audit_findings.py                  # 61 PASS | 0 FAIL
+python examples/emb_audit_findings.py    # 61 PASS | 0 FAIL at 2026-06-10;
+                                         # arc-final audit is 94 PASS
 ```
 
 S3/S4 need the S0 matrix dump (cache-only, regenerable from the pinned

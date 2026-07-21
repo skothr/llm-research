@@ -8,10 +8,10 @@ report + emb_trace_analysis.pt with:
      overlap with (a) the 21 W_E block dims and (b) arc-1's layer-20 sink dims.
   2. T1 reader heads — per-(layer, head) block/control read ratios for q/k/v;
      top heads; per-RoPE-band profile of the top q/k readers.
-  3. T3 / prediction P2 — per-layer block-energy persistence, delimiter vs
+  3. T3 / prediction P2 — per-layer block norm-fraction persistence, delimiter vs
      control vs first position, both INCLUDING and EXCLUDING massive-
      activation dims (the confound: a massive dim inside/outside the block
-     distorts energy fractions).
+     distorts norm fractions).
 """
 
 from __future__ import annotations
@@ -140,7 +140,7 @@ def main() -> None:
     out["readers"] = reader_tables
 
     # ---- 3. T3 / P2 persistence -------------------------------------------------
-    print("== T3/P2: block-energy persistence by layer (mean over prompts)")
+    print("== T3/P2: block norm-fraction persistence by layer (mean over prompts)")
     L = tl["prompts"][0]["block_frac"].shape[0]
     prof = {k: torch.zeros(L) for k in ("delim", "ctrl", "first")}
     prof_nomass = {k: torch.zeros(L) for k in ("delim", "ctrl", "first")}

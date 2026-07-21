@@ -9,6 +9,7 @@ import textwrap
 import matplotlib
 
 matplotlib.use("Agg")
+from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 import torch
 
@@ -44,7 +45,7 @@ def main() -> None:
         ax_l = fig.add_axes((0.02, row_y + 0.005, 0.30, row_h_frac - 0.01))
         ax_l.axis("off")
         ax_l.add_patch(
-            plt.Rectangle(
+            Rectangle(
                 (0.0, 0.0),
                 1.0,
                 1.0,

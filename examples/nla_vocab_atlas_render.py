@@ -26,6 +26,7 @@ import torch
 import matplotlib
 
 matplotlib.use("Agg")
+from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -235,7 +236,7 @@ def main() -> None:
                 [1.00, 0.50, 0.05]
             )
             ax_l.add_patch(
-                plt.Rectangle((0.0, row_y - 0.3), t, 0.6, color=bar_color, alpha=0.7)
+                Rectangle((0.0, row_y - 0.3), t, 0.6, color=bar_color, alpha=0.7)
             )
             ax_l.text(
                 -0.05,

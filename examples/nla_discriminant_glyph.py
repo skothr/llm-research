@@ -37,6 +37,7 @@ import torch
 import matplotlib
 
 matplotlib.use("Agg")
+from matplotlib.patches import Circle, Rectangle
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -128,7 +129,7 @@ def draw_discriminant_glyph(
 ) -> None:
     n = len(categories)
     angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
-    ring = plt.Circle(
+    ring = Circle(
         (cx, cy), radius, color="#cccccc", linewidth=0.5, fill=False, alpha=0.4
     )
     ax.add_patch(ring)
@@ -217,7 +218,7 @@ def main() -> None:
         bar_color = (1 - t) * np.array([0.12, 0.46, 0.71]) + t * np.array(
             [1.00, 0.50, 0.05]
         )
-        ax_t.add_patch(plt.Rectangle((0.0, 0.1), t, 0.8, color=bar_color, alpha=0.85))
+        ax_t.add_patch(Rectangle((0.0, 0.1), t, 0.8, color=bar_color, alpha=0.85))
         ax_t.set_xlim(0, 1)
         ax_t.set_ylim(0, 1)
         ax_t.text(

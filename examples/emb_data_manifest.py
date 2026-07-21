@@ -101,6 +101,17 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
     },
+    "emb_de_cosine_check.pt": {
+        "class": "derived",
+        "producing_script": "examples/emb_de_cosine_check.py",
+        "inputs": [
+            "emb_WE_bf16.pt (cache-only W_E dump)",
+            "emb_structural_block.pt (block dims + id validation)",
+            "emb_fullvocab_analysis.pt (census id validation)",
+        ],
+        "requires_model": f"qwen-base@{REVISION[:8]} (S0 dump for W_E cache)",
+        "consumers": ["AUDIT 11", "README finding #6", "2026-07-21 observation"],
+    },
     "emb_trace_weightmap.pt": {
         "class": "capture-root",
         "producing_script": "examples/emb_trace_capture.py",
