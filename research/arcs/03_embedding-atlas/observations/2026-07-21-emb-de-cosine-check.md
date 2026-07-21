@@ -27,6 +27,8 @@ The user's reading is what the geometry shows. Over all 152,064 W_E rows:
 - '的''s top-10 vocab neighbors decode to ' of', ' the', ' a', 'ing', ' for',
   ' and', `'s`, '了', ' by' — English grammatical connectives plus '了' (the
   other ultra-frequent Chinese particle): a grammatical-function neighborhood.
+  (Decodings for neighbors 3-10 come from the Qwen2 BPE table, not committed
+  artifacts; only the top-2 ids [315 = ' of', 279 = ' the'] are audit-locked.)
 
 Finding #6's pairs are therefore *role/block-loading* pairs. The README now
 says so explicitly. Note `"'s "`/`" 's"` (space variants) do not exist as
@@ -50,7 +52,7 @@ top-20 neighbor ids of '的': [315, 279, 264, 287, 369, 323, 594, 34187, ...]
 
 ```bash
 python examples/emb_de_cosine_check.py     # needs cached emb_WE_bf16.pt
-python examples/emb_audit_findings.py      # AUDIT 11 re-derives from the
+python examples/emb_audit_findings.py      # AUDIT 11 (5 claims) re-derives from
                                            # committed emb_de_cosine_check.pt
 ```
 

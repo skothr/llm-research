@@ -36,6 +36,6 @@ artifacts and audit.
 
 **Standing defenses that bounded the exposure:** every load-bearing number
 is re-derived from committed artifacts by `emb_audit_findings.py`
-(93 PASS / 0 FAIL), so silent model-output degradation had no path into the
+(94 PASS / 0 FAIL), so silent model-output degradation had no path into the
 numeric layer; only conversational prose was exposed, and its slips were
 caught by the audit-before-lock discipline.
