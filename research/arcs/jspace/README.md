@@ -6,11 +6,11 @@ band of verbalizable representations — replicate on `Qwen/Qwen2.5-7B-Instruct`
 and how do J-lens readouts at layer 20 relate to the NLA verbalizer readouts
 studied in `research/arcs/nla-verbalizer/`?
 
-**Status (2026-07-20):** stages 1–4 complete at both scales (1.5B bf16
-control + 7B nf4 target); stage 5.1 (verbal-report swaps) complete —
-5.2/5.3 (two-hop, modulation) and stage 6 (NLA cross-tie) remain. Design
-plan (signed off 2026-07-18): `plans/2026-07-18-jspace-design.md`; stage-5
-design addendum: `plans/2026-07-20-stage5-design.md`.
+**Status (2026-07-21):** stages 1–4, 5.1/5.1b, and 6 complete; remaining
+before close: stage 7 audit/synthesis (5.2/5.3 demoted — run only if
+their preconditions pass and time permits). Design plan (signed off
+2026-07-18): `plans/2026-07-18-jspace-design.md`; addenda:
+`plans/2026-07-20-stage5-design.md`, `plans/2026-07-20-stage6-design.md`.
 Observations so far, in `observations/`:
 
 - `2026-07-18-fit-cost-calibration.md` — fitting cost is structural
@@ -42,6 +42,12 @@ Observations so far, in `observations/`:
   random at BOTH scales — only token-indexed directions are causally
   effective here; weight shifts toward the token-steering account at
   open-model scale.
+- `2026-07-21-nla-crosstie-stage6.md` — stage 6 (novel): weak but
+  prompt-specific J-lens↔NLA agreement on concept prompts
+  (null-certified); the NLA-verbalizable content lives in the residual,
+  not the J-space component (removal-damage ≈ random); the NLA capture
+  layer (L20) sits below the 7B J-lens legibility onset (~L22) — a
+  cross-arc architectural finding.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
