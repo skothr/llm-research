@@ -1,6 +1,6 @@
 """Render global-geometry figures (fig1-fig4) from emb_global_stats.pt.
 
-Model-free. Outputs to research/arcs/embedding-atlas/observations/figures/:
+Model-free. Outputs to research/arcs/03_embedding-atlas/observations/figures/:
   fig1_norms.png       row-norm distributions (real vs padded rows)
   fig2_anisotropy.png  cosine-to-mean + random-pair cosine, raw vs centered
   fig3_pca_spectrum.png  eigenvalue spectrum + cumulative variance

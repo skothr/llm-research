@@ -1,7 +1,7 @@
 """Generate / verify the raw-dataset manifest for the embedding-atlas arc.
 
 The arc's `.pt` artifacts live (committed, git-LFS) under
-`research/arcs/embedding-atlas/data/`. This script writes a checksummed
+`research/arcs/03_embedding-atlas/data/`. This script writes a checksummed
 `MANIFEST.json` next to them recording, per file: sha256, size, class
 (capture-root | derived), producing script/command, inputs, model
 requirement, and consumers.
@@ -101,12 +101,58 @@ META: dict[str, dict[str, Any]] = {
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
     },
+    "emb_trace_weightmap.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_capture.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["emb_trace_analysis.pt", "T1 reader-head findings"],
+    },
+    "emb_trace_layers.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_capture.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
+    },
+    "emb_trace_components.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_components.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": ["fig16", "fig17", "fig18", "AUDIT 9", "T1.5 carrier findings"],
+    },
+    "emb_trace_analysis.pt": {
+        "class": "derived",
+        "producing_script": "examples/emb_trace_analyze.py",
+        "inputs": ["emb_trace_layers.pt", "emb_trace_weightmap.pt"],
+        "requires_model": "none",
+        "consumers": [
+            "fig18",
+            "AUDIT 9",
+            "AUDIT 10 (reader cross-ref)",
+            "T0/T1/P2 observation",
+        ],
+    },
+    "emb_trace_attention.pt": {
+        "class": "capture-root",
+        "producing_script": "examples/emb_trace_attention.py",
+        "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
+        "requires_model": f"qwen-base@{REVISION[:8]}",
+        "consumers": [
+            "emb_trace_attention_analyze.py (P1a/P1c/P1d)",
+            "fig19",
+            "fig20",
+            "fig21",
+            "AUDIT 10",
+        ],
+    },
     "emb_category_stats.pt": {
         "class": "derived",
         "producing_script": "examples/emb_category_stats.py",
         "inputs": ["emb_battery_vectors.pt", "emb_global_stats.pt"],
         "requires_model": "none",
-        "consumers": ["fig5", "fig6", "fig7", "AUDIT 5"],
+        "consumers": ["fig5", "fig6", "fig7", "fig8", "AUDIT 5"],
     },
     "emb_pair_directions.pt": {
         "class": "derived",
