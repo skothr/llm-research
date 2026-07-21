@@ -2,9 +2,23 @@
   "arc": "jspace",
   "description": "Raw + derived jspace artifacts: the frozen wikitext-103 fitting corpus, fitted Jacobian-lens tensors (jlens native format) with their .config.json provenance sidecars, and derived metric/table products. Committed via git-LFS so figures and the audit reproduce from a clean clone. The cache/ subdir is excluded.",
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 6,
-  "total_size_bytes": 213892290,
+  "total_files": 7,
+  "total_size_bytes": 217426988,
   "files": [
+    {
+      "filename": "fitting_prompts_c4en_n1000.json",
+      "sha256": "fd76e5a9021228fc19855b30eb28717179b5cbce13ec0de55b54e31b45617b6e",
+      "size_bytes": 3534698,
+      "class": "raw",
+      "producing_script": "examples/jspace_freeze_c4_corpus.py",
+      "producing_command": "python examples/jspace_freeze_c4_corpus.py",
+      "inputs": [],
+      "requires_model": "none",
+      "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); first 1000 records with len(text.strip()) >= 600 in post-shuffle order. Deterministic given the seed. Alternative fitting corpus for the corpus-sensitivity check (broader web-text register than the wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py",
+      "consumers": [
+        "jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"
+      ]
+    },
     {
       "filename": "fitting_prompts_wikitext103_n1000.json",
       "sha256": "a9a6153f4cb067d4ae4914047d3c52f7d1a5c3530eac7899985c166a7e0700e4",

@@ -26,6 +26,9 @@ Observations so far, in `observations/`:
   the paper's ≤10% ceiling (1.5B humped, 7B U-shaped, ~3× lower at 7B);
   the kurtosis workspace-onset signature is inverted on Qwen (verified on
   the paper-native metric, robust across logit/prob space).
+- `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit (1.5B):
+  workspace-band metrics corpus-invariant (L21 peak identical), early band
+  corpus-sensitive; qualifies the H3 @10 magnitude, wikitext stands for 7B.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
@@ -41,7 +44,10 @@ primary branch ("reuse the companion repo's prompt sets; closest method
 match"), per commit 982e061e. Caveat: wikitext-103 is English-only
 Wikipedia register, narrower than the paper's "pretraining-like
 distribution" phrasing and than Qwen2.5's multilingual training mix;
-corpus sensitivity is a deferred robustness item (below).
+corpus sensitivity was checked 2026-07-20 (1.5B n=100 seeded-C4-en refit +
+full metric suite): **workspace-band metrics corpus-invariant, early-band
+(L0–L16) corpus-sensitive** — wikitext stands for the 7B lens; see
+`observations/2026-07-20-corpus-sensitivity-c4-1p5b.md`.
 
 ## Deferred / follow-up directions
 
@@ -52,13 +58,12 @@ informativeness-per-hour:
    ~16 h)** — breaks the H1 (fit budget) / H2 (scale) confound flagged in
    the 2026-07-20 observation. Deferred for cost; the single most
    informative next artifact if the confound starts blocking conclusions.
-2. **Corpus-sensitivity check (seeded C4-en refit)** — the wikitext-103
-   corpus matches the companion repo but is narrower than Qwen's
-   multilingual pretraining mix; averaged-Jacobian estimates inherit the
-   fitting distribution. Cheapest discriminating version: 1.5B n=100 refit
-   on a seeded C4-en sample (~3.2 h GPU) + re-run the stage-3/4 metric
-   suite; if the 1.5B lens is corpus-stable, wikitext stands for 7B too.
-   Any n=500 refit (item 1) should double as this check.
+2. ~~**Corpus-sensitivity check (seeded C4-en refit)**~~ — **RESOLVED
+   2026-07-20**: 1.5B n=100 C4-en refit run; workspace band
+   corpus-invariant (L21 varfrac peak identical at 0.124), early band
+   corpus-sensitive; wikitext stands for 7B. See
+   `observations/2026-07-20-corpus-sensitivity-c4-1p5b.md`. A 7B C4 refit
+   is not justified by these results.
 3. **Split-half lens stability at n=100** — the stage-2 validation gate was
    waived for the first pass; two disjoint n=50 fits per model would bound
    estimator noise (7B ~16 h; 1.5B ~3 h).
