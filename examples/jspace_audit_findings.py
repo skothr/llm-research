@@ -9,6 +9,8 @@ Artifacts read (arc working cache `research/arcs/jspace/data/cache/`):
   * jlens_qwen2.5-1.5b_bf16_n100.pt / .config.json   (fitted J-lens, 1.5B bf16)
   * lens_eval_qwen2.5-{7b_nf4,1.5b_bf16}_n100.pt      (intermediate-concept evals)
   * readout_scan_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt (readout scan summaries)
+  * structure_scan_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt (stage-4 depth map)
+  * verbal_report_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt  (stage-5.1 swap suite)
 
 Unlike the committed git-LFS *layer-subset* deliverables (7 layers, a viewing
 convenience per design Decision 4), the FULL fitted lenses and every derived
@@ -41,6 +43,17 @@ Checks:
      value, active_mean in [22,24], logit-kurtosis endpoints. Values pinned to
      the stored artifact figures at 3dp; the peak/trough *layer indices* are
      the primary claims.
+  E  Verbal-report swap (stage 5.1) — both verbal_report artifacts load; 78
+     items each; every item carries the 4 conditions x strengths {1,2} (8
+     condition keys); baseline retained-subset sizes (predicts-report) re-derived
+     from per_item (1.5B 9, 7B 12). Load-bearing swap-target top5_all rates
+     re-derived FROM per_item (not trusting the summary blindly, with one
+     condition cross-checked against the stored summary metric) and pinned at
+     3dp: 1.5B jlens@2 0.551, nonjspace@2 0.269, random@2/@1 0.103; 7B jlens@2
+     0.192, nonjspace@2 0.205, random@2 0.154. Ordering as booleans (1.5B
+     jlens > nonjspace > random at s=2; 7B cross-condition spread @2 < 0.06).
+     Magnitude-equalization invariant: per model per strength, the injected-norm
+     spread across the 4 conditions < 0.05.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
@@ -568,11 +581,131 @@ def audit_structure_scan() -> None:
         claim_near("[7b] logit-kurt trough value", 0.868, float(lk[kt_i]))
 
 
+VR_CONDS = ("jlens", "nonjspace", "random", "logitlens")
+VR_STRENGTHS = ("1.0", "2.0")
+# spec: pt file, injection layer, retained (predicts-report) subset size, and the
+# load-bearing top5_all pins (condition@strength -> rate, 3dp).
+VR_SPEC: dict[str, dict[str, Any]] = {
+    "1.5b": {
+        "pt": "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        "layer": 21,
+        "retained": 9,
+        "pins": {
+            "jlens@2.0": 0.551,
+            "nonjspace@2.0": 0.269,
+            "random@2.0": 0.103,
+            "random@1.0": 0.103,
+        },
+    },
+    "7b": {
+        "pt": "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        "layer": 22,
+        "retained": 12,
+        "pins": {
+            "jlens@2.0": 0.192,
+            "nonjspace@2.0": 0.205,
+            "random@2.0": 0.154,
+        },
+    },
+}
+
+
+def _vr_rate(items: list[dict[str, Any]], key: str, field: str) -> float:
+    """Mean of a boolean per-condition field over all items, from raw per_item."""
+    return float(np.mean([bool(it["conditions"][key][field]) for it in items]))
+
+
+def _vr_norm_mean(items: list[dict[str, Any]], key: str) -> float:
+    return float(
+        np.mean([float(it["conditions"][key]["injected_norm"]) for it in items])
+    )
+
+
+def audit_verbal_report() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK E: verbal-report swap (stage 5.1; both models)")
+    print("=" * 80)
+    expected_keys = {f"{c}@{s}" for c in VR_CONDS for s in VR_STRENGTHS}
+    for key, spec in VR_SPEC.items():
+        d = load_pt_or_fail(spec["pt"])
+        if d is None:
+            continue
+        items: list[dict[str, Any]] = d["per_item"]
+        summary = d["summary"]
+
+        # ---- structure: 78 items; 4 conditions x strengths {1,2} per item ----
+        claim_eq(f"[{key}] verbal-report n_items == 78", 78, len(items))
+        claim_eq(f"[{key}] verbal-report layer", spec["layer"], int(summary["layer"]))
+        keys_ok = all(set(it["conditions"].keys()) == expected_keys for it in items)
+        claim(
+            f"[{key}] every item has 4 conds x strengths {{1,2}}",
+            keys_ok,
+            f"{sorted(expected_keys)}",
+            "all match" if keys_ok else "MISSING KEYS",
+        )
+
+        # ---- retained (predicts-report) subset re-derived from per_item ----
+        retained = int(sum(1 for it in items if bool(it["jlens_predicts_report"])))
+        claim_eq(f"[{key}] retained (predicts) subset size", spec["retained"], retained)
+
+        # ---- pinned top5_all rates, re-derived FROM per_item ----
+        for pin_key, val in spec["pins"].items():
+            claim_near(
+                f"[{key}] {pin_key} top5_all",
+                val,
+                _vr_rate(items, pin_key, "target_in_top5"),
+                atol=0.001,
+            )
+        # consistency: re-derived (raw per_item) == stored summary metric.
+        rederived = _vr_rate(items, "jlens@2.0", "target_in_top5")
+        stored = float(summary["metrics"]["jlens@2.0"]["target_top5_rate_all"])
+        claim(
+            f"[{key}] jlens@2 top5_all rederived==summary",
+            abs(rederived - stored) < 1e-9,
+            round(stored, 6),
+            round(rederived, 6),
+        )
+
+        # ---- ordering / separation claims (booleans) ----
+        if key == "1.5b":
+            j = _vr_rate(items, "jlens@2.0", "target_in_top5")
+            n = _vr_rate(items, "nonjspace@2.0", "target_in_top5")
+            r = _vr_rate(items, "random@2.0", "target_in_top5")
+            claim(
+                "[1.5b] ordering jlens > nonjspace > random @2",
+                j > n > r,
+                "j > n > r",
+                f"{j:.3f} > {n:.3f} > {r:.3f}",
+            )
+        if key == "7b":
+            vals2 = [_vr_rate(items, f"{c}@2.0", "target_in_top5") for c in VR_CONDS]
+            spread = max(vals2) - min(vals2)
+            claim(
+                "[7b] cross-condition spread @2 < 0.06",
+                spread < 0.06,
+                "< 0.06",
+                round(spread, 4),
+            )
+
+        # ---- magnitude-equalization invariant: per-strength norm spread < 0.05 ----
+        for s in VR_STRENGTHS:
+            norms = [_vr_norm_mean(items, f"{c}@{s}") for c in VR_CONDS]
+            spread = max(norms) - min(norms)
+            claim(
+                f"[{key}] injected-norm spread @{s} < 0.05",
+                spread < 0.05,
+                "< 0.05",
+                round(spread, 5),
+            )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
     audit_readout_scan()
     audit_structure_scan()
+    audit_verbal_report()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")

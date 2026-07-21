@@ -7,8 +7,10 @@ and how do J-lens readouts at layer 20 relate to the NLA verbalizer readouts
 studied in `research/arcs/nla-verbalizer/`?
 
 **Status (2026-07-20):** stages 1–4 complete at both scales (1.5B bf16
-control + 7B nf4 target); next: stage 5 (functional signatures). Design
-plan (signed off 2026-07-18): `plans/2026-07-18-jspace-design.md`.
+control + 7B nf4 target); stage 5.1 (verbal-report swaps) complete —
+5.2/5.3 (two-hop, modulation) and stage 6 (NLA cross-tie) remain. Design
+plan (signed off 2026-07-18): `plans/2026-07-18-jspace-design.md`; stage-5
+design addendum: `plans/2026-07-20-stage5-design.md`.
 Observations so far, in `observations/`:
 
 - `2026-07-18-fit-cost-calibration.md` — fitting cost is structural
@@ -29,6 +31,11 @@ Observations so far, in `observations/`:
 - `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit (1.5B):
   workspace-band metrics corpus-invariant (L21 peak identical), early band
   corpus-sensitive; qualifies the H3 @10 magnitude, wikitext stands for 7B.
+- `2026-07-20-verbal-report-swaps-stage5.md` — stage 5.1: the paper's
+  causal swap ordering (jlens > nonjspace > random) replicates at 1.5B
+  with attenuation (0.55/0.27/0.10 @s=2 vs Claude's 88/59/5%); logit-lens
+  steering control is non-trivial (0.44); 7B is a confounded near-null
+  (weak nf4 lens + compliance failures) — ruling-4 follow-up queued.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
