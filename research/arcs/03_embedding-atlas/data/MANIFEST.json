@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "total_files": 14,
+  "total_files": 15,
   "files": {
     "emb_battery_vectors.pt": {
       "sha256": "97fd0cdb516388c2d1adf7f92b229f74dfcd57ab603457daac075fddf4ceb2e6",
@@ -37,6 +37,24 @@
         "fig7",
         "fig8",
         "AUDIT 5"
+      ]
+    },
+    "emb_de_cosine_check.pt": {
+      "sha256": "a8388e2193d49d1ae21de842e90103fd6853397eccd076dc5d228a11986cb380",
+      "size_bytes": 81797,
+      "class": "derived",
+      "producing_script": "examples/emb_de_cosine_check.py",
+      "producing_command": "python examples/emb_de_cosine_check.py",
+      "inputs": [
+        "emb_WE_bf16.pt (cache-only W_E dump)",
+        "emb_structural_block.pt (block dims + id validation)",
+        "emb_fullvocab_analysis.pt (census id validation)"
+      ],
+      "requires_model": "qwen-base@a09a3545 (S0 dump for W_E cache)",
+      "consumers": [
+        "AUDIT 11",
+        "README finding #6",
+        "2026-07-21 observation"
       ]
     },
     "emb_fullvocab_analysis.pt": {

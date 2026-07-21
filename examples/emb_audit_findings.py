@@ -669,6 +669,55 @@ def main() -> int:
         f"{n_layers_at}L x {n_q_at}H d{head_dim_at} theta{theta_at:.0f}",
     )
 
+    # ---- AUDIT 11: '的' cross-script pairing check (README finding #6) -------
+    # Re-derives the cited cosines from the committed candidate rows — no W_E
+    # cache needed. Rank-in-full-vocab claims check the recorded top-k list
+    # (transcription-locked; full re-derivation would need the 1.09 GB W_E).
+    dc = load_artifact("emb_de_cosine_check.pt")
+    dc_rows = dc["rows_f16"].float()
+    labels = list(dc["candidates"])
+    li = {lab: i for i, lab in enumerate(labels)}
+    de_row = dc_rows[li["的"]]
+    cmask = torch.ones(dc_rows.shape[1], dtype=torch.bool)
+    cmask[dc["block_dims"]] = False
+
+    def _cos(a: torch.Tensor, b: torch.Tensor) -> float:
+        return float(torch.nn.functional.cosine_similarity(a, b, dim=0))
+
+    full = {lab: _cos(dc_rows[i], de_row) for lab, i in li.items()}
+    ablt = {lab: _cos(dc_rows[i][cmask], de_row[cmask]) for lab, i in li.items()}
+    ablt_apo = ablt["'s"]
+    claim(
+        "11 de-check",
+        "cos('的',' of')=0.626 > cos('的',' the')=0.519 — ' of' is the closer token",
+        near(full[" of"], 0.6261, 0.002)
+        and near(full[" the"], 0.5192, 0.002)
+        and full[" of"] > full[" the"],
+        f"of {full[' of']:+.4f} / the {full[' the']:+.4f}",
+    )
+    claim(
+        "11 de-check",
+        "block-ablated ordering: ' of' > \"'s\" > ' the' (0.364/0.334/0.256)",
+        near(ablt[" of"], 0.3642, 0.002)
+        and near(ablt["'s"], 0.3344, 0.002)
+        and near(ablt[" the"], 0.2560, 0.002)
+        and ablt[" of"] > ablt["'s"] > ablt[" the"],
+        f"{ablt[' of']:+.4f} / {ablt_apo:+.4f} / {ablt[' the']:+.4f}",
+    )
+    claim(
+        "11 de-check",
+        "'的' top-2 full-vocab neighbors are ' of' (315) then ' the' (279)",
+        list(dc["topk_ids"][:2]) == [315, 279] and int(dc["n_vocab_rows"]) == 152_064,
+        f"top2 {dc['topk_ids'][:2]} of {dc['n_vocab_rows']} rows",
+    )
+    claim(
+        "11 de-check",
+        "recomputed cosines match the recorded values (float16 row roundtrip)",
+        all(near(full[lab], dc["full_cos_to_de"][lab], 0.002) for lab in labels)
+        and all(near(ablt[lab], dc["ablated_cos_to_de"][lab], 0.002) for lab in labels),
+        f"{len(labels)} candidates x 2 metrics",
+    )
+
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
     print("=" * 80)
@@ -687,6 +736,7 @@ if __name__ == "__main__":
             "emb_fullvocab_stats.pt",
             "emb_fullvocab_analysis.pt",
             "emb_structural_block.pt",
+            "emb_de_cosine_check.pt",
             "emb_trace_analysis.pt",
             "emb_trace_components.pt",
             "emb_trace_attention.pt",
