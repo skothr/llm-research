@@ -112,9 +112,9 @@ def main() -> None:
     blocks = []
     for lbl in uniq[counts > 1][:10]:
         dims = (labels == lbl).nonzero().flatten()
-        # tokens with the largest energy inside the block's dims
-        energy = X[:, dims].norm(dim=1)
-        ext = torch.topk(energy, EXTREME_TOKENS_PER_DIM)
+        # tokens with the largest norm inside the block's dims (unsquared)
+        sub_norm = X[:, dims].norm(dim=1)
+        ext = torch.topk(sub_norm, EXTREME_TOKENS_PER_DIM)
         tok_ids = row_ids[ext.indices].tolist()
         blocks.append(
             {

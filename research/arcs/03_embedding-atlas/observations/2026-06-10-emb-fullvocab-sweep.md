@@ -20,19 +20,24 @@ Its extreme tokens mix scripts at the same role: `','` and `'，'`, `' the'`
 and `'的'`, `'.'` and `'。'`, newlines, digits. Characterization vs a seeded
 random 21-dim control (fig15):
 
-- energy fraction vs token-id (BPE merge order = frequency proxy): Spearman
+- norm fraction vs token-id (BPE merge order = frequency proxy): Spearman
   **-0.206** (control -0.003); the first id-decile carries mean fraction
   **0.1143** vs control 0.0753, flattening to ~0.078 after decile 3 —
-  **head-loaded**, not a smooth frequency gradient.
-- script-independence: block mean energy elevated over control for ascii
-  (0.0836), cjk (0.0811), and cyrillic (0.0784) alike (control ~0.0754).
-- top block-energy tokens: `',' '.' '，' ' the' '\n' ' ' '。' '.\n' ' to'`;
+  **head-loaded**, not a smooth frequency gradient. (Metric: the *norm
+  fraction* ‖x_S‖/‖x‖, unsquared — the isotropic floor is √(21/3584) ≈
+  0.0765, matching the observed control ~0.0754; a squared *energy*
+  fraction would floor at 21/3584 ≈ 0.0059. Artifact keys keep the
+  historical `*_energy_frac` name.)
+- script-independence: block mean norm fraction elevated over control for
+  ascii (0.0836), cjk (0.0811), and cyrillic (0.0784) alike (control ~0.0754).
+- top block-norm-fraction tokens: `',' '.' '，' ' the' '\n' ' ' '。' '.\n' ' to'`;
   bottom: rare fragments (`' Rear'`, `'utsch'`, `'.Paths'`).
 
 [INTUITION: a shared "syntax/glue-token" subspace that the tokenizer's most
 frequent structural tokens occupy regardless of language — return to the
-canonical form: a rank-~21 correlated subspace S with energy concentrated in
-the top frequency decile, P(energy in S | top-decile) ≈ 1.5x the floor.]
+canonical form: a rank-~21 correlated subspace S with norm fraction
+concentrated in the top frequency decile, E[‖x_S‖/‖x‖ | top-decile] ≈ 1.5x
+the isotropic floor.]
 
 **F-V2. Outside that block, dimensions are remarkably independent.**
 Off-diagonal |r| mean is 0.0210 (max 0.726, inside the block); kurtosis

@@ -37,8 +37,9 @@ control): the block's top singular value stays in [8.8, 15.6] across ALL
 29 checkpoints and EXCEEDS the control everywhere (min ratio 1.13 at L4,
 max 3.3x at L28), while the control decays 7.0 -> 3.9. Meanwhile the
 correlation mass remaining in the ORIGINAL 21 dims collapses from 0.109
-(L0 reference) to 0.031 at L1. Naive P2 (energy stays in the original
-dims) fails — the delimiter-specific block-energy fraction collapses
+(L0 reference) to 0.031 at L1. Naive P2 (the signal stays in the original
+dims) fails — the delimiter-specific block norm fraction (‖h_S‖/‖h‖,
+unsquared) collapses
 0.921 -> 0.199 within one layer (fig18) — but the content is fully
 recoverable in a moved basis.
 

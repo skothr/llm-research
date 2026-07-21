@@ -367,7 +367,7 @@ def main() -> int:
     sb = load_artifact("emb_structural_block.pt")
     claim(
         "8 fullvocab",
-        "block energy vs token-id Spearman -0.206 (control -0.003)",
+        "block norm fraction vs token-id Spearman -0.206 (control -0.003)",
         near(sb["block_spearman_vs_id"], -0.2064, 0.002)
         and abs(sb["control_spearman_vs_id"]) < 0.01,
         f"{sb['block_spearman_vs_id']:+.4f} / {sb['control_spearman_vs_id']:+.4f}",

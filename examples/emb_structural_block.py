@@ -5,12 +5,12 @@ connected component of dimensions correlated at |r| > 0.3 — 21 dims whose
 extreme tokens are high-frequency structural tokens across scripts (',' and
 '，', ' the' and '的'). Hypotheses to test against the full population:
 
-  H-A (frequency): block energy tracks token frequency. Proxy: BPE token id
+  H-A (frequency): block norm fraction tracks token frequency. Proxy: BPE token id
       is merge order — lower id ~ more frequent. Test: Spearman correlation
-      between block-energy fraction and token id, vs a seeded random
+      between block norm fraction and token id, vs a seeded random
       21-dim control set.
   H-B (language-independence): the block carries the same kind of signal for
-      ASCII, CJK, and Cyrillic tokens — compare block-energy distributions
+      ASCII, CJK, and Cyrillic tokens — compare block norm-fraction distributions
       per script class, again vs control dims.
 
 Inputs : emb_fullvocab_analysis.pt (block dims), cached W_E, tokenizer.
@@ -81,13 +81,16 @@ def main() -> None:
         "revision": we["revision"],
     }
 
-    # H-A: energy fraction vs token id (frequency proxy)
+    # H-A: norm fraction vs token id (frequency proxy).
+    # Metric is the UNSQUARED norm ratio ||x_S||/||x|| (isotropic floor
+    # sqrt(21/3584) ~= 0.0765), not a squared energy fraction; artifact keys
+    # keep the historical *_energy_frac name for compatibility.
     for name, dims in (("block", block_dims), ("control", control_dims)):
         frac = X[:, dims].norm(dim=1) / norms
         rho = spearman(frac, row_ids.float())
         out[f"{name}_energy_frac"] = frac.to(torch.float16)
         out[f"{name}_spearman_vs_id"] = rho
-        # decile curve: mean energy fraction per token-id decile
+        # decile curve: mean norm fraction per token-id decile
         dec_edges = torch.quantile(row_ids.float(), torch.linspace(0, 1, 11))
         dec_means = []
         for i in range(10):
@@ -97,7 +100,7 @@ def main() -> None:
             dec_means.append(float(frac[m].mean()))
         out[f"{name}_decile_means"] = dec_means
         print(
-            f"{name:8s} spearman(energy, token_id) = {rho:+.4f}; "
+            f"{name:8s} spearman(norm_frac, token_id) = {rho:+.4f}; "
             f"decile means {['%.4f' % v for v in dec_means]}"
         )
 
@@ -133,10 +136,10 @@ def main() -> None:
     out["top_fracs"] = top.values.tolist()
     out["bottom_tokens"] = [strings[int(i)] for i in bot.indices]
     print(
-        "top block-energy tokens:", ", ".join(repr(s) for s in out["top_tokens"][:15])
+        "top block-norm-fraction tokens:", ", ".join(repr(s) for s in out["top_tokens"][:15])
     )
     print(
-        "bottom block-energy tokens:",
+        "bottom block-norm-fraction tokens:",
         ", ".join(repr(s) for s in out["bottom_tokens"][:15]),
     )
 

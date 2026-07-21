@@ -15,7 +15,7 @@ rotary). Identifies candidate structural-reader heads BEFORE any attention
 capture.
 
 T3 data — block persistence (prediction P2): per layer, per tracked
-position, the fraction of residual-stream energy inside the 21-dim block
+position, the residual-stream norm fraction (unsquared, ||h_S||/||h||) inside the 21-dim block
 subspace, for delimiter vs control positions; full hidden vectors at
 tracked positions for a subset of layers (committed) for later analysis.
 
