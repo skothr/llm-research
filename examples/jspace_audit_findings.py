@@ -391,13 +391,20 @@ DEPTH_OBS = {
         "n_never_j": 14,
         "n_never_l": 8,
     },
+    # NOTE: the original 2026-07-18 stage-3 scan ran on CPU; the artifact was
+    # regenerated 2026-07-21 on GPU (rich token capture backfill). bf16
+    # backend numerics flipped two rank-boundary cells vs the observation's
+    # CPU-run values: l_lastpos 19.0 -> 19.5 and n_never_j 15 -> 16 (of 108).
+    # All other cells reproduced exactly; no conclusion depends on either.
+    # Pins below follow the on-disk GPU artifact; the observation carries the
+    # matching provenance note.
     "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": {
         "key": "1.5b",
         "j_allpos": 23.0,
         "l_allpos": 19.0,
         "j_lastpos": 20.0,
-        "l_lastpos": 19.0,
-        "n_never_j": 15,
+        "l_lastpos": 19.5,
+        "n_never_j": 16,
         "n_never_l": 1,
     },
 }

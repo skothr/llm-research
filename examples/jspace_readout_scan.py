@@ -221,6 +221,27 @@ def main() -> None:
         )
         top1 = [int(model_logits[pp].argmax().item()) for pp in range(n_pos)]
 
+        # --- Rich per-item capture (additive; new per_prompt keys only) -------
+        # Per (layer, position) top-k=10 token ids, decoded strings and
+        # probabilities for BOTH lenses, plus the model's own final-layer
+        # reference distribution per position. Enables the "unspoken words"
+        # layer x token trajectory figure without a re-scan.
+        tok = m.tokenizer
+        topk_ids_j = np.full((n_layers, n_pos, TOP10), -1, dtype=np.int64)
+        topk_ids_l = np.full((n_layers, n_pos, TOP10), -1, dtype=np.int64)
+        topk_probs_j = np.full((n_layers, n_pos, TOP10), np.nan)
+        topk_probs_l = np.full((n_layers, n_pos, TOP10), np.nan)
+        topk_strs_j: list[list[list[str]]] = []
+        topk_strs_l: list[list[list[str]]] = []
+        # Model reference distribution (final-layer logits) per position.
+        probs_m = torch.softmax(model_logits.to(torch.float32), dim=-1)
+        m_pv, m_pi = probs_m.topk(TOP10, dim=-1)
+        topk_ids_model = m_pi.to(torch.int64).cpu().numpy()
+        topk_probs_model = m_pv.to(torch.float64).cpu().numpy()
+        topk_strs_model = [
+            [tok.decode([int(t)]) for t in m_pi[pp]] for pp in range(n_pos)
+        ]
+
         # rank[metric] shape [n_layers, n_pos]
         rank_j = np.full((n_layers, n_pos), np.nan)
         rank_l = np.full((n_layers, n_pos), np.nan)
@@ -229,6 +250,19 @@ def main() -> None:
         for li, layer in enumerate(layers):
             rj = ll_j[layer]
             rl = ll_l[layer]
+            # Top-k=10 ids / probs / strings for this layer, both lenses.
+            pj_v, pj_i = torch.softmax(rj.to(torch.float32), dim=-1).topk(TOP10, dim=-1)
+            pl_v, pl_i = torch.softmax(rl.to(torch.float32), dim=-1).topk(TOP10, dim=-1)
+            topk_ids_j[li] = pj_i.to(torch.int64).cpu().numpy()
+            topk_ids_l[li] = pl_i.to(torch.int64).cpu().numpy()
+            topk_probs_j[li] = pj_v.to(torch.float64).cpu().numpy()
+            topk_probs_l[li] = pl_v.to(torch.float64).cpu().numpy()
+            topk_strs_j.append(
+                [[tok.decode([int(t)]) for t in pj_i[pp]] for pp in range(n_pos)]
+            )
+            topk_strs_l.append(
+                [[tok.decode([int(t)]) for t in pl_i[pp]] for pp in range(n_pos)]
+            )
             for pp in range(n_pos):
                 sp_j[li, pp] = spearman(rj[pp], model_logits[pp])
                 sp_l[li, pp] = spearman(rl[pp], model_logits[pp])
@@ -261,6 +295,18 @@ def main() -> None:
                 "spearman_l": sp_l,
                 "rank_j": rank_j,
                 "rank_l": rank_l,
+                # Rich per-item capture (top-k=10; [n_layers, n_pos, 10] for the
+                # lenses, [n_pos, 10] for the model reference). Strings nested as
+                # [layer][pos][k] (lenses) / [pos][k] (model).
+                "topk_ids_j": topk_ids_j,
+                "topk_ids_l": topk_ids_l,
+                "topk_probs_j": topk_probs_j,
+                "topk_probs_l": topk_probs_l,
+                "topk_strs_j": topk_strs_j,
+                "topk_strs_l": topk_strs_l,
+                "topk_ids_model": topk_ids_model,
+                "topk_probs_model": topk_probs_model,
+                "topk_strs_model": topk_strs_model,
             }
         )
         dt = time.time() - t0

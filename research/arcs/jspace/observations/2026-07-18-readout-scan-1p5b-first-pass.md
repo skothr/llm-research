@@ -14,6 +14,14 @@ paper's Claude 4.5-family), possibly under-fit lens (n=100), raw-wikitext
 prompts fed to an instruct model, n=12. Treat as a first calibration point,
 not a refutation.
 
+**Provenance note (added 2026-07-21):** the original run above was CPU;
+the artifact was regenerated on GPU during the rich-token-capture
+backfill. bf16 backend numerics flipped two rank-boundary cells vs the
+tables below: last-position logit depth-of-emergence median 19.0 → 19.5,
+and never-emerged J count 15 → 16 (of 108). All other values reproduced
+exactly (Spearman rows to ≤1e-3). Neither cell carries a conclusion; the
+audit pins the on-disk GPU values with the same note.
+
 ## Finding
 
 Under these conditions the paper's core §2.1 claim — J-lens "uncover[s]

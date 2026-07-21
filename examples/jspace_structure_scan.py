@@ -235,6 +235,7 @@ def main() -> None:
     rpk_acc: list[list[float]] = [[] for _ in layers]  # readout softmax-prob kurtosis
     ck_acc: list[list[float]] = [[] for _ in layers]  # coeff kurtosis
 
+    tok = m.tokenizer  # decode top-atom ids to strings alongside the ids (additive)
     per_prompt: list[dict[str, Any]] = []
     per_prompt_times: list[float] = []
     for pi, prompt in enumerate(prompts):
@@ -250,6 +251,7 @@ def main() -> None:
         rpk_p = np.full((n_layers, n_pos), np.nan)
         ck_p = np.full((n_layers, n_pos), np.nan)
         top_p: list[list[list[int]]] = []
+        top_strs_p: list[list[list[str]]] = []  # decoded [layer][pos][atom]
 
         for li, layer in enumerate(layers):
             h = resid[layer]  # [P, d]
@@ -277,6 +279,9 @@ def main() -> None:
                 act_acc[k][li].extend(res["active"][k].tolist())
             ck_p[li] = res["coeff_kurtosis"]
             top_p.append(res["top_atoms"])
+            top_strs_p.append(
+                [[tok.decode([tid]) for tid in pos_ids] for pos_ids in res["top_atoms"]]
+            )
             rk_acc[li].extend(rk_p[li].tolist())
             rpk_acc[li].extend(rpk_p[li].tolist())
             ck_acc[li].extend(ck_p[li].tolist())
@@ -293,6 +298,7 @@ def main() -> None:
                 "readout_prob_kurtosis": rpk_p,
                 "coeff_kurtosis": ck_p,
                 "top_atoms": top_p,
+                "top_atom_strs": top_strs_p,  # decoded strings for top_atoms
             }
         )
         dt = time.time() - t0

@@ -48,6 +48,10 @@ Observations so far, in `observations/`:
   not the J-space component (removal-damage ≈ random); the NLA capture
   layer (L20) sits below the 7B J-lens legibility onset (~L22) — a
   cross-arc architectural finding.
+- `2026-07-21-quantization-exonerated-1p5b-nf4.md` — 1.5B nf4 control:
+  bf16→nf4 at fixed model/corpus/n moves nothing (L21 peak 0.125 vs
+  0.124); the 7B 3× gap is fit-budget and/or scale, not quantization.
+  Bonus: nf4 backward is 2.97× cheaper → 1.5B n=500 refit is now ~5 h.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
@@ -73,10 +77,12 @@ full metric suite): **workspace-band metrics corpus-invariant, early-band
 Binned here 2026-07-20 (reviewer call), roughly in decreasing
 informativeness-per-hour:
 
-1. **n=500 lens refit (7B ~81 h GPU at measured 585.4 s/prompt; 1.5B
-   ~16 h)** — breaks the H1 (fit budget) / H2 (scale) confound flagged in
-   the 2026-07-20 observation. Deferred for cost; the single most
-   informative next artifact if the confound starts blocking conclusions.
+1. **n=500 lens refit** — breaks the H1 (fit budget) / H2 (scale) confound
+   flagged in the 2026-07-20 observation. Costs revised 2026-07-21 after
+   the nf4 exoneration (quantization is off the table, and nf4 backward
+   is 2.97× cheaper): **1.5B nf4 n=500 ≈ 5 h** — cheap enough to promote;
+   if 1.5B varfrac is n-stable 100→500, H1 weakens and scale carries the
+   7B gap without the 7B refit (~81 h, unchanged at db=2).
 2. ~~**Corpus-sensitivity check (seeded C4-en refit)**~~ — **RESOLVED
    2026-07-20**: 1.5B n=100 C4-en refit run; workspace band
    corpus-invariant (L21 varfrac peak identical at 0.124), early band
