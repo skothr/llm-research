@@ -1,6 +1,8 @@
 # Subliminal trait transfer — is the hidden signal *model-specific semantics*?
 
-**Status:** preliminary / scoping (no experiments run yet).
+**Status:** paused (2026-06-10) — Step 0 (encoding decode-test) complete, see
+[`observations/2026-05-31-step0-protocol-and-filter.md`](observations/2026-05-31-step0-protocol-and-filter.md);
+Steps 1-2 not started. Paused in favor of the embedding-atlas arc.
 **Started:** 2026-05-31.
 
 ## The question

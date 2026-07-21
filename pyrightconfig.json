@@ -1,0 +1,14 @@
+{
+    "venvPath": ".",
+    "venv": ".venv",
+    "exclude": [
+        ".venv",
+        ".cache",
+        "**/__pycache__"
+    ],
+    "extraPaths": [
+        "examples",
+        "../llm-surgeon",
+        "/home/ai/ai-projects/llm-surgeon"
+    ]
+}
