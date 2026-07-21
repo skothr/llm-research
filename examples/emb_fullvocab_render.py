@@ -1,7 +1,7 @@
 """Render full-vocabulary sweep figures (fig11-fig14).
 
 Model-free; reads emb_fullvocab_stats.pt + emb_fullvocab_analysis.pt.
-Outputs to research/arcs/embedding-atlas/observations/figures/:
+Outputs to research/arcs/03_embedding-atlas/observations/figures/:
   fig11_dim_kurtosis.png   per-dimension excess-kurtosis spectrum (feature dims)
   fig12_dim_corr.png       off-diagonal |r| histogram + correlation eigen-spectrum
   fig13_knn_cosine.png     nearest-neighbor cosine distributions (top-1, k=32)

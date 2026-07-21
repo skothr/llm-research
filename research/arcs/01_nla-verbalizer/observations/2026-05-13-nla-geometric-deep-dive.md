@@ -6,7 +6,7 @@
 **Toolkit:** llm_surgeon.probe + nla_geometric_features.py + nla_pairwise_and_hotdims.py + nla_visualize_geometry.py
 **Inputs:** the four artifact `.pt` files in `.cache/nla_artifacts/`
 **Captures analyzed:** 167 h-vectors in R^3584 (113 aggregate, 15 haiku_gen, 10 forced, 29 country CAV pool)
-**Figures:** `research/arcs/nla-verbalizer/observations/figures/fig{1..6}_*.png`
+**Figures:** `research/arcs/01_nla-verbalizer/observations/figures/fig{1..6}_*.png`
 
 ## Finding
 
@@ -131,7 +131,7 @@ python examples/nla_geometric_features.py
 # Pairwise cosines + hot-dim census + PCA + dim-character classification
 python examples/nla_pairwise_and_hotdims.py
 
-# 6 visualization PNGs into research/arcs/nla-verbalizer/observations/figures/
+# 6 visualization PNGs into research/arcs/01_nla-verbalizer/observations/figures/
 python examples/nla_visualize_geometry.py
 ```
 

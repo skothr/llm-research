@@ -2,7 +2,7 @@
 and nla_pairwise_and_hotdims.py.
 
 Reads the artifacts produced by those scripts and writes a set of PNGs
-into research/arcs/nla-verbalizer/observations/figures/.
+into research/arcs/01_nla-verbalizer/observations/figures/.
 
 Panels:
 

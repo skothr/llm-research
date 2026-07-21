@@ -1,7 +1,7 @@
 """Generate / verify the raw-dataset manifest for the embedding-atlas arc.
 
 The arc's `.pt` artifacts live (committed, git-LFS) under
-`research/arcs/embedding-atlas/data/`. This script writes a checksummed
+`research/arcs/03_embedding-atlas/data/`. This script writes a checksummed
 `MANIFEST.json` next to them recording, per file: sha256, size, class
 (capture-root | derived), producing script/command, inputs, model
 requirement, and consumers.

@@ -101,11 +101,11 @@ argues against any universal decodable encoding.
 # into the committed dataset dir.
 HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
     --n-per-condition 120 --batch-size 16 \
-    --out-dir research/arcs/subliminal/data/step0-owl-neutral-decode \
+    --out-dir research/arcs/02_subliminal/data/step0-owl-neutral-decode \
     --dataset-id step0-owl-neutral-decode        # add --no-4bit to force CPU
 ```
 
-The committed dataset is `research/arcs/subliminal/data/step0-owl-neutral-decode/`
+The committed dataset is `research/arcs/02_subliminal/data/step0-owl-neutral-decode/`
 (streams + raw + decode_report.json + manifest.json + pip_freeze.txt). Sampling
 at temperature 1.0 is `statistical_only` — NOT byte-reproducible across
 torch/CUDA builds or batch sizes; the committed file plus its sha256 in the
@@ -134,7 +134,7 @@ pending the research-arc dataset SOP.)
 ## Provenance
 
 - **Backing dataset:** `step0-owl-neutral-decode`
-  (`research/arcs/subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
+  (`research/arcs/02_subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
   sha256 `4fc877fba5136d5fe64052c70cd0e1050eb5aaab62f161bc2e85ef881c6f2c21`
   (also recorded in `data/README.md`, so the manifest itself is tamper-evident).
   Generated at repo commit `0aff26c`; the generator script's content-hash is in

@@ -1,5 +1,5 @@
 """Regression audit for the embedding-atlas arc — re-derives every
-load-bearing number cited in research/arcs/embedding-atlas/observations/
+load-bearing number cited in research/arcs/03_embedding-atlas/observations/
 from the committed .pt artifacts and asserts it against an expected constant.
 
     python examples/emb_audit_findings.py

@@ -47,7 +47,7 @@ replacement for protocol audit or methodological review.
 Self-locating: ARTIFACTS resolves relative to this file's location, so
 this script runs from any CWD — and falls back from the gitignored live
 cache (.cache/nla_artifacts/) to the committed git-LFS copy
-(research/arcs/nla-verbalizer/data/) when the cache is empty, so the
+(research/arcs/01_nla-verbalizer/data/) when the cache is empty, so the
 audit replays from a clean clone. The sibling capture/render scripts
 assume worktree-root CWD and read the live cache; see
 `examples/README_NLA.md` for the convention, including the
@@ -78,7 +78,7 @@ from _nla_artifacts import CACHE as _CACHE, find_artifact
 
 # Per-file artifact resolution. `ARTIFACTS / "name.pt"` resolves each artifact
 # independently — live cache first (gitignored; freshly re-captured), then the
-# committed git-LFS copy under research/arcs/nla-verbalizer/data/ — by delegating
+# committed git-LFS copy under research/arcs/01_nla-verbalizer/data/ — by delegating
 # to the shared _nla_artifacts.find_artifact, the same mechanism the
 # capture/render scripts use. Resolving PER FILE (not per directory) means a
 # PARTIAL cache — one re-captured .pt sitting next to others present only in the

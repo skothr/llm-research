@@ -4,7 +4,7 @@ Model-free. Top panel: per-kind consistency (mean cosine of each pair's
 difference vector to the kind's mean direction) vs the permutation baseline.
 Bottom panel: the per-pair cos-to-mean-direction values as strip plots, so
 outlier pairs are visible individually.
-Output: research/arcs/embedding-atlas/observations/figures/fig10_pair_directions.png
+Output: research/arcs/03_embedding-atlas/observations/figures/fig10_pair_directions.png
 """
 
 from __future__ import annotations

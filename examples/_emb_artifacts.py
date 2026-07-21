@@ -3,7 +3,7 @@
 Two artifact locations:
   * CACHE — .cache/emb_artifacts/ — the gitignored working cache the
     capture/derive scripts write to during local development.
-  * DATA  — research/arcs/embedding-atlas/data/ — the committed git-LFS copy a
+  * DATA  — research/arcs/03_embedding-atlas/data/ — the committed git-LFS copy a
     clean clone has (see research/ARC_PROCESS.md § "Raw data is a deliverable").
 
 Reads prefer the cache (so a fresh local re-capture is picked up immediately)
@@ -28,9 +28,9 @@ from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE = _REPO_ROOT / ".cache" / "emb_artifacts"
-DATA = _REPO_ROOT / "research" / "arcs" / "embedding-atlas" / "data"
+DATA = _REPO_ROOT / "research" / "arcs" / "03_embedding-atlas" / "data"
 FIGURES = (
-    _REPO_ROOT / "research" / "arcs" / "embedding-atlas" / "observations" / "figures"
+    _REPO_ROOT / "research" / "arcs" / "03_embedding-atlas" / "observations" / "figures"
 )
 
 

@@ -150,7 +150,7 @@
     "downstream": [
       {
         "kind": "observation",
-        "ref": "research/arcs/subliminal/observations/2026-05-31-step0-protocol-and-filter.md"
+        "ref": "research/arcs/02_subliminal/observations/2026-05-31-step0-protocol-and-filter.md"
       }
     ],
     "generated_by": "examples/subliminal_step0_decode.py",

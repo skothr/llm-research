@@ -30,7 +30,7 @@ See `MANIFEST.json` for per-file sha256, size, class, producing script,
 inputs, and consumers. Working copies live in the gitignored
 `.cache/emb_artifacts/`; scripts read cache-first with committed fallback
 (`examples/_emb_artifacts.py`) and write only to the cache — promote with
-`cp .cache/emb_artifacts/*.pt research/arcs/embedding-atlas/data/ &&
+`cp .cache/emb_artifacts/*.pt research/arcs/03_embedding-atlas/data/ &&
 python examples/emb_data_manifest.py`.
 
 ## Trust note
