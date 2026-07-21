@@ -222,3 +222,57 @@ Both estimates are labeled assumptions; **time the first GPU run to calibrate**
 5. **Injection scope — DECIDED: `last`-position primary.** `--scope last`
    (default) swaps the report locus; `--scope all` stays a flag for a later
    whole-"thinking"-span sweep.
+
+## 8. Stage 5.1b — prompt style + activation-contrastive triplet (2026-07-20)
+
+Two follow-ups from the stage-5.1 GPU runs (7B swap effect confounded; many
+7B baseline reports were word-piece fragments). Both are opt-in flags; the
+committed plain 4-condition behavior is preserved.
+
+**Prompt style (`--prompt-style {plain,chat}`, default `plain`).** Both styles
+go through the tokenizer chat template with `add_generation_prompt=True`, so the
+report locus is the final prefill token either way (verified: the swap still
+flips the report under `chat`). Exact user-message content:
+
+- `plain` (committed stage-5.1, verbatim): *"Think of a specific {category}.
+  Reply with only that one word — the {category} you thought of — and nothing
+  else."*
+- `chat` (explicit one-word constraint): *"Think of a specific {category}.
+  Answer with exactly one word: the {category} you thought of. Do not write
+  anything else."*
+
+Baseline single-word compliance is reported as `fragment_report_rate` = fraction
+of categories whose baseline report matches no in-category single-token instance.
+(Caveat: this conflates true word-piece fragmentation with valid-but-off-vocab
+answers, e.g. 1.5B "Sad" for *emotion* or "Pen" for *tool*.)
+
+**Activation-contrastive concept vector (`--contrastive`).** Per swap-target
+instance, capture the layer-`L` residual at the final prompt position for 3
+instance paraphrases and 3 category paraphrases (`INSTANCE_TEMPLATES` /
+`CATEGORY_TEMPLATES` in the script), each chat-templated:
+
+- instance: *"Think of {w}."*, *"You are thinking about {w}."*, *"Picture {w}
+  in your mind."*
+- category: same three with *"a {category}"*.
+
+The contrastive concept vector is `v_t = mean_L(instance) − mean_L(category)`.
+Two NEW conditions join the existing four (same equalized-L2 protocol, source
+`u_s = norm(a_s)`):
+
+  - `jspace_comp`    — `u_t = norm(Π_J v_t)`         → paper's **59%** row.
+  - `nonjspace_comp` — `u_t = norm(v_t − Π_J v_t)`   → paper's **5%** row.
+
+with `Π_J v_t` the k=25 gradient-pursuit J-space component of `v_t`
+(activation-space, cf. ruling 4's `w_t`-based proxy). The base `jlens` condition
+is the paper's **88%** row. Artifacts are auto-named
+`verbal_report_{style}_{4c|6c}_{model}_{lensstem}.pt` — the plain-4c committed
+artifacts are never clobbered.
+
+**Note (magnitude equalization under the 6-condition set):** the five
+J-lens-source conditions (jlens/nonjspace/random/jspace_comp/nonjspace_comp)
+share `u_s = a_s`, so their step-0 injected L2 is *exactly* equal; only
+`logitlens` (source `w_s`) drifts — ≈1% on 1.5B bf16, <0.1% on 7B nf4 — because
+its scale is set from the fp32 capture forward while the recorded norm is read
+from the bf16 generate-prefill forward (a measurement artifact, not a
+direction error). A future CHECK-F over 6c artifacts should ratio the injected
+norm per item or exempt logitlens from a tight cross-condition-equality bound.

@@ -36,6 +36,12 @@ Observations so far, in `observations/`:
   with attenuation (0.55/0.27/0.10 @s=2 vs Claude's 88/59/5%); logit-lens
   steering control is non-trivial (0.44); 7B is a confounded near-null
   (weak nf4 lens + compliance failures) — ruling-4 follow-up queued.
+- `2026-07-20-verbal-report-swaps-stage5b.md` — stage 5.1b: chat prompts
+  un-confound the 7B null (jlens 0.269 > random 0.154), but the paper's
+  59% middle tier (J-space component of concept vectors) collapses to
+  random at BOTH scales — only token-indexed directions are causally
+  effective here; weight shifts toward the token-steering account at
+  open-model scale.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
