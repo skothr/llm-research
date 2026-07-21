@@ -12,6 +12,7 @@ from typing import Any
 import matplotlib
 
 matplotlib.use("Agg")
+from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -76,7 +77,7 @@ def main() -> None:
         ax_t = fig.add_axes((0.01, row_y, 0.10, row_h_frac))
         ax_t.axis("off")
         ax_t.add_patch(
-            plt.Rectangle(
+            Rectangle(
                 (0.0, 0.0),
                 1.0,
                 1.0,
@@ -88,7 +89,7 @@ def main() -> None:
         bar_color = (1 - t) * np.array([0.12, 0.46, 0.71]) + t * np.array(
             [1.00, 0.50, 0.05]
         )
-        ax_t.add_patch(plt.Rectangle((0.0, 0.35), t, 0.30, color=bar_color, alpha=0.85))
+        ax_t.add_patch(Rectangle((0.0, 0.35), t, 0.30, color=bar_color, alpha=0.85))
         ax_t.set_xlim(0, 1)
         ax_t.set_ylim(0, 1)
         ax_t.text(
@@ -106,7 +107,7 @@ def main() -> None:
         ax_n = fig.add_axes((0.12, row_y, 0.16, row_h_frac))
         ax_n.axis("off")
         ax_n.add_patch(
-            plt.Rectangle(
+            Rectangle(
                 (0.0, 0.0),
                 1.0,
                 1.0,
@@ -132,7 +133,7 @@ def main() -> None:
         ax_v = fig.add_axes((0.29, row_y, 0.69, row_h_frac))
         ax_v.axis("off")
         ax_v.add_patch(
-            plt.Rectangle(
+            Rectangle(
                 (0.0, 0.0),
                 1.0,
                 1.0,
