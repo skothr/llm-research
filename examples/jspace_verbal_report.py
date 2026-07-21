@@ -34,26 +34,47 @@ as ``jspace_structure_scan``):
                       workspace-review.md`): if this matches ``jlens``, the swap
                       is plain unembedding-direction steering, not workspace.
 
+Stage 5.1b adds two OPT-IN activation-contrastive conditions (``--contrastive``),
+the paper's full triplet against the base ``jlens`` (88%) row. Per target
+instance a **contrastive concept vector** ``v_t`` is captured at layer ``L``:
+mean of ``h_L`` at the final prompt position over 3 instance paraphrases
+(``INSTANCE_TEMPLATES``) minus the mean over 3 category paraphrases
+(``CATEGORY_TEMPLATES``). Then:
+
+  5. ``jspace_comp``    — u_s = norm(a_s), u_t = norm(Pi_J v_t)       [paper 59%]
+  6. ``nonjspace_comp`` — u_s = norm(a_s), u_t = norm(v_t - Pi_J v_t) [paper 5%]
+                          where ``Pi_J v_t`` is the k=25 gradient-pursuit J-space
+                          component of ``v_t`` (activation-space, not ``w_t``).
+
+``--prompt-style {plain,chat}`` (default ``plain`` = the committed stage-5.1
+wording). ``chat`` adds an explicit one-word constraint to raise single-word
+compliance (7B stage-5.1 produced many word-piece "fragment" reports). Both go
+through the tokenizer chat template with ``add_generation_prompt=True``, so the
+report locus is the final prefill token in either style; the exact templates are
+documented in ``2026-07-20-stage5-design.md`` §8. Baseline single-word
+compliance is measured as ``fragment_report_rate`` (fraction of items whose
+baseline report matches no in-category instance).
+
 Success metrics, per condition, over items (and over the subset where the
 baseline J-lens top-1 predicts the report, the paper's "answers correctly"
 filter): swap-target top-5 entry rate in the report distribution (paper metric);
 report-changed rate; report-equals-target rate.
 
 Artifacts follow the arc's ``{"summary", "per_item"}`` convention; output path is
-auto-named by lens stem (never hardcoded — this arc had a clobber incident).
+auto-named by lens stem + prompt-style + condition-set (never hardcoded, never
+clobbering the committed plain 4-condition artifacts — this arc had a clobber
+incident).
 
-Usage (full GPU run):
-    python examples/jspace_verbal_report.py \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
-        --layer 21
-    python examples/jspace_verbal_report.py \
-        --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --layer 22 \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
+Usage (full GPU run, stage 5.1b chat + 6 conditions):
+    python examples/jspace_verbal_report.py --device cuda \
+        --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --layer 22 \
+        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+        --prompt-style chat --contrastive
 
 CPU smoke (no CUDA):
     python examples/jspace_verbal_report.py --device cpu \
         --categories sport,fruit --targets-per-category 1 --strengths 1.0 \
-        --max-new-tokens 4
+        --max-new-tokens 4 --prompt-style chat --contrastive
 """
 
 from __future__ import annotations
@@ -71,11 +92,28 @@ from torch import Tensor
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from jspace_readout_scan import build_model, slug  # noqa: E402
 
-CONDITIONS = ("jlens", "nonjspace", "random", "logitlens")
+BASE_CONDITIONS = ("jlens", "nonjspace", "random", "logitlens")
+# Stage 5.1b: activation-contrastive concept-vector conditions (opt-in via
+# --contrastive). jspace_comp / nonjspace_comp map to the paper's 59% / 5% rows;
+# the base jlens condition maps to the 88% row (paper §3.1, Fig. 8).
+CONTRASTIVE_CONDITIONS = ("jspace_comp", "nonjspace_comp")
 TOP5 = 5
 TOP10 = 10
 STEP_EPS = 1e-12
 GP_K = 25  # gradient-pursuit sparsity for the non-J-space component (paper default)
+
+# Paraphrase templates for the activation-contrastive concept vector (stage 5.1b):
+# v_t = mean_L(instance prompts) - mean_L(category prompts) at the final position.
+INSTANCE_TEMPLATES = (
+    "Think of {w}.",
+    "You are thinking about {w}.",
+    "Picture {w} in your mind.",
+)
+CATEGORY_TEMPLATES = (
+    "Think of a {w}.",
+    "You are thinking about a {w}.",
+    "Picture a {w} in your mind.",
+)
 
 # Candidate instances per category; the actual run keeps only those that encode
 # to a single Qwen token (checked at load by ``single_token_instances``). Counts
@@ -396,16 +434,33 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-seq-len", type=int, default=128)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument(
+        "--prompt-style",
+        default="plain",
+        choices=["plain", "chat"],
+        help="plain = committed stage-5.1 wording; chat = adds an explicit "
+        "one-word constraint (higher single-word compliance).",
+    )
+    p.add_argument(
+        "--contrastive",
+        action="store_true",
+        help="Add the activation-contrastive jspace_comp / nonjspace_comp "
+        "conditions (paper's 59%%/5%% rows); off = committed 4-condition set.",
+    )
+    p.add_argument(
         "--out",
         default=None,
-        help="Output .pt (default: cache/verbal_report_<model>_<lensstem>.pt).",
+        help="Output .pt (default auto-named by style + condition-set + lens stem).",
     )
     return p.parse_args()
 
 
-def default_out(model: str, lens: str) -> str:
+def default_out(model: str, lens: str, style: str, contrastive: bool) -> str:
     stem = Path(lens).stem
-    return f"research/arcs/jspace/data/cache/verbal_report_{slug(model)}_{stem}.pt"
+    condset = "6c" if contrastive else "4c"
+    return (
+        f"research/arcs/jspace/data/cache/"
+        f"verbal_report_{style}_{condset}_{slug(model)}_{stem}.pt"
+    )
 
 
 def single_token_instances(tok: Any, words: list[str]) -> list[tuple[str, int]]:
@@ -567,23 +622,53 @@ class SwapHook:
         return (h,) + tuple(output[1:])
 
 
-def build_prompt(tok: Any, category: str) -> Tensor:
-    messages = [
-        {
-            "role": "user",
-            "content": (
-                f"Think of a specific {category}. Reply with only that one word — "
-                f"the {category} you thought of — and nothing else."
-            ),
-        }
-    ]
+def _chat_ids(tok: Any, content: str) -> Tensor:
     ids = tok.apply_chat_template(
-        messages, add_generation_prompt=True, return_tensors="pt", return_dict=False
+        [{"role": "user", "content": content}],
+        add_generation_prompt=True,
+        return_tensors="pt",
+        return_dict=False,
     )
     # Some transformers versions return a BatchEncoding even for return_dict=False.
     if not torch.is_tensor(ids):
         ids = ids["input_ids"] if hasattr(ids, "__getitem__") else ids.input_ids
     return cast(Tensor, ids)
+
+
+def build_prompt(tok: Any, category: str, style: str) -> Tensor:
+    """Task prompt (both styles chat-templated; report locus = final token).
+
+    plain: the committed stage-5.1 wording (preserved verbatim). chat: adds an
+    explicit "Answer with exactly one word." constraint to raise single-word
+    compliance. Templates mirrored in 2026-07-20-stage5-design.md §8.
+    """
+    if style == "chat":
+        content = (
+            f"Think of a specific {category}. Answer with exactly one word: the "
+            f"{category} you thought of. Do not write anything else."
+        )
+    else:
+        content = (
+            f"Think of a specific {category}. Reply with only that one word — "
+            f"the {category} you thought of — and nothing else."
+        )
+    return _chat_ids(tok, content)
+
+
+def concept_vector(
+    m: Any, layer: int, words: list[str], templates: tuple[str, ...], max_seq_len: int
+) -> Tensor:
+    """Mean layer-``layer`` residual at the final prompt position over
+    ``templates`` x ``words`` (fp32, [d]). The building block of the contrastive
+    concept vector v_t = concept_vector(instance) - concept_vector(category)."""
+    accs: list[Tensor] = []
+    for w in words:
+        for tmpl in templates:
+            ids = _chat_ids(m.tokenizer, tmpl.format(w=w))
+            if ids.shape[1] > max_seq_len:
+                ids = ids[:, :max_seq_len]
+            accs.append(capture_last_residual(m, ids, layer))
+    return torch.stack(accs, dim=0).mean(dim=0)
 
 
 def generate(m: Any, input_ids: Tensor, max_new_tokens: int) -> tuple[int, Tensor, str]:
@@ -650,6 +735,9 @@ def main() -> None:
     device = w_u.device
     jac = lens.jacobians[args.layer].to(device)  # [d, d] fp32
     strengths = [float(x) for x in args.strengths.split(",") if x.strip()]
+    active_conditions = BASE_CONDITIONS + (
+        CONTRASTIVE_CONDITIONS if args.contrastive else ()
+    )
 
     cats = (
         [c.strip() for c in args.categories.split(",")]
@@ -666,15 +754,17 @@ def main() -> None:
     print(
         f"[data] {len(cat_insts)} categories, layer={args.layer}, "
         f"strengths={strengths}, scope={args.scope}, "
-        f"targets/cat={args.targets_per_category}"
+        f"targets/cat={args.targets_per_category}, style={args.prompt_style}, "
+        f"conditions={list(active_conditions)}"
     )
 
     per_item: list[dict[str, Any]] = []
     gen_tokens = 0
+    n_fragment = 0  # baseline reports matching no in-category instance (compliance)
     t_gen = time.time()
 
     for ci, (cat, insts) in enumerate(cat_insts.items()):
-        input_ids = build_prompt(tok, cat)
+        input_ids = build_prompt(tok, cat, args.prompt_style)
         inst_ids = [tid for _, tid in insts]
 
         # Baseline report (no intervention). Identify the named instance from the
@@ -683,10 +773,18 @@ def main() -> None:
         gen_tokens += args.max_new_tokens
         matched = match_instance(base_text, insts)
         if matched is None:
-            # Off-vocab report: fall back to the raw first token as the handle.
+            # Off-vocab / word-piece report: fall back to the raw first token.
             src_word, src_tid = tok.decode([base_tok0]).strip(), base_tok0
+            n_fragment += 1
         else:
             src_word, src_tid = matched
+
+        # Contrastive category baseline mean (once per category), if enabled.
+        cat_concept_base = (
+            concept_vector(m, args.layer, [cat], CATEGORY_TEMPLATES, args.max_seq_len)
+            if args.contrastive
+            else None
+        )
 
         # Pre-report J-lens readout at the injection layer / last prefill position.
         h_last = capture_last_residual(m, input_ids, args.layer)
@@ -737,17 +835,29 @@ def main() -> None:
                 "logitlens": (u_s_logit, u_t_logit),
             }
 
+            # Stage 5.1b: activation-contrastive concept vector v_t and its
+            # J-space / non-J-space components (paper's 59% / 5% rows).
+            if args.contrastive:
+                assert cat_concept_base is not None
+                v_inst = concept_vector(
+                    m, args.layer, [tgt_word], INSTANCE_TEMPLATES, args.max_seq_len
+                )
+                v_t = v_inst - cat_concept_base
+                comp_v = jspace_component(v_t, jac, w_u, GP_K)
+                cond_dirs["jspace_comp"] = (u_s_j, normalize(comp_v))
+                cond_dirs["nonjspace_comp"] = (u_s_j, normalize(v_t - comp_v))
+
             # Ruling 3: equalize injected L2 across conditions per item/strength.
             # Raw injection L2 at the report position h_last is
             # s*|<h_last,u_s>|*||u_t-u_s||; scale every condition to the jlens
-            # reference so all four inject the same magnitude at step 0.
+            # reference so all inject the same magnitude at step 0.
             def raw_l2(u_s: Tensor, u_t: Tensor) -> float:
                 return abs(float(h_last @ u_s)) * float((u_t - u_s).norm())
 
             ref_l2 = raw_l2(u_s_j, u_t_j)
 
             conds: dict[str, dict[str, Any]] = {}
-            for cond in CONDITIONS:
+            for cond in active_conditions:
                 u_s, u_t = cond_dirs[cond]
                 d_c = raw_l2(u_s, u_t)
                 scale = (ref_l2 / d_c) if d_c > STEP_EPS else 0.0
@@ -854,12 +964,18 @@ def main() -> None:
         "n_categories": len(cat_insts),
         "n_items": len(per_item),
         "n_predicts": len(subset_pred),
+        "prompt_style": args.prompt_style,
+        "contrastive": bool(args.contrastive),
+        "n_fragment": n_fragment,
+        "fragment_report_rate": (
+            n_fragment / len(cat_insts) if cat_insts else float("nan")
+        ),
         "jlens_predicts_report_rate": (
             float(np.mean([it["jlens_predicts_report"] for it in per_item]))
             if per_item
             else float("nan")
         ),
-        "conditions": CONDITIONS,
+        "conditions": list(active_conditions),
         "metrics": metrics,
         "gen_tokens": gen_tokens,
         "gen_seconds": gen_elapsed,
@@ -869,17 +985,29 @@ def main() -> None:
             "u_s/u_t per condition (jlens: J-lens vectors a_v=W_U[v]@J_l; "
             "nonjspace: target = w_t minus its k-sparse nonneg J-space component; "
             "random: Gaussian target; logitlens: raw unembedding rows u_s=norm(w_s), "
-            "u_t=norm(w_t) -- the Nanda token-steering control). scale equalizes the "
-            "step-0 injected L2 across all four conditions to the jlens reference "
-            "per item/strength (injected_norm equal within fp tolerance)."
+            "u_t=norm(w_t) -- Nanda token-steering control; jspace_comp / "
+            "nonjspace_comp: J-space / non-J-space components of the activation-"
+            "contrastive concept vector v_t=mean_L(instance)-mean_L(category)). "
+            "scale equalizes the step-0 injected L2 across all conditions to the "
+            "jlens reference per item/strength (injected_norm equal within fp tol)."
         ),
     }
 
-    out = args.out or default_out(args.model, args.lens)
+    out = args.out or default_out(
+        args.model, args.lens, args.prompt_style, args.contrastive
+    )
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     torch.save({"per_item": per_item, "summary": summary}, out)
 
-    print(f"\n=== Verbal-report swap rates (layer {args.layer}) ===")
+    print(
+        f"\n=== Verbal-report swap rates "
+        f"(layer {args.layer}, style={args.prompt_style}, "
+        f"conds={len(active_conditions)}) ==="
+    )
+    print(
+        f"baseline fragment-report rate: {summary['fragment_report_rate']:.3f} "
+        f"({n_fragment}/{len(cat_insts)} categories)"
+    )
     print(
         f"J-lens top-1 predicts report: "
         f"{summary['jlens_predicts_report_rate']:.3f} "

@@ -54,6 +54,22 @@ Checks:
      jlens > nonjspace > random at s=2; 7B cross-condition spread @2 < 0.06).
      Magnitude-equalization invariant: per model per strength, the injected-norm
      spread across the 4 conditions < 0.05.
+  F  Verbal-report swap, stage-5.1b chat + 6-condition (both chat_6c artifacts) —
+     load; 78 items; 6 conditions x strengths {1,2}; predicts-report retained
+     sizes (1.5B 6, 7B 21) re-derived from per_item; fragment-report rates
+     re-derived (chat from the 6c per_item AND cross-checked vs its summary;
+     plain from the committed 4c per_item via category membership: 1.5B
+     0.192/0.192, 7B plain 0.308 -> chat 0.192). top5_all @s=2 pinned at 3dp for
+     all six conditions, re-derived from per_item (one cross-checked vs summary).
+     Ordering/gap booleans: 7B jlens-random @2 > 0.10 (un-confounding); 7B
+     |jspace_comp-random| @2 < 0.02 and 1.5B jspace_comp-random @2 < 0.05
+     (jspace_comp middle-tier NULL -- the 5.1b headline); 7B jlens-logitlens @2
+     < 0.05 (token-steering persists); 1.5B jlens > logitlens > nonjspace @2.
+     Injected-norm invariant in per-item-ratio form: the five J-lens-source
+     conditions within 2% of the jlens condition each item x strength; logitlens
+     is EXEMPT (its w_s source gives a small, bf16-noisy projection -> up to ~78%
+     on 7B; a diagnosed measurement artifact, not a direction error) and only
+     loosely bounded < 100%.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
@@ -700,12 +716,206 @@ def audit_verbal_report() -> None:
             )
 
 
+# Stage 5.1b chat + 6-condition suite. Plain-4c committed artifacts are the
+# fragment-rate plain baseline; the chat_6c artifacts hold the swap tables.
+VR6_CONDS = (
+    "jlens",
+    "logitlens",
+    "nonjspace",
+    "nonjspace_comp",
+    "jspace_comp",
+    "random",
+)
+VR6_JSRC = ("jlens", "nonjspace", "random", "jspace_comp", "nonjspace_comp")
+VR6_SPEC: dict[str, dict[str, Any]] = {
+    "1.5b": {
+        "chat": "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        "plain": "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        "layer": 21,
+        "retained": 6,
+        "frag_chat": 0.192,
+        "frag_plain": 0.192,
+        "pins2": {
+            "jlens": 0.628,
+            "logitlens": 0.564,
+            "nonjspace": 0.308,
+            "nonjspace_comp": 0.218,
+            "jspace_comp": 0.179,
+            "random": 0.141,
+        },
+    },
+    "7b": {
+        "chat": "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        "plain": "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        "layer": 22,
+        "retained": 21,
+        "frag_chat": 0.192,
+        "frag_plain": 0.308,
+        "pins2": {
+            "jlens": 0.269,
+            "logitlens": 0.244,
+            "nonjspace": 0.179,
+            "nonjspace_comp": 0.167,
+            "jspace_comp": 0.154,
+            "random": 0.154,
+        },
+    },
+}
+
+
+def _frag_from_peritem(
+    items: list[dict[str, Any]], categories: dict[str, list[str]]
+) -> float:
+    """Fragment-report rate: fraction of categories whose baseline source word
+    matches no in-category instance (re-derived, one row per category)."""
+    seen: dict[str, str] = {}
+    for it in items:
+        seen[it["category"]] = it["source_word"]
+    frag = sum(1 for c, sw in seen.items() if sw not in categories.get(c, []))
+    return frag / len(seen) if seen else float("nan")
+
+
+def audit_verbal_report_6c() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK F: verbal-report swap, stage-5.1b chat + 6 conditions")
+    print("=" * 80)
+    # CATEGORIES lives in the sibling script; import lazily (no model load).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from jspace_verbal_report import CATEGORIES  # noqa: E402
+
+    expected_keys = {f"{c}@{s}" for c in VR6_CONDS for s in ("1.0", "2.0")}
+    for key, spec in VR6_SPEC.items():
+        d = load_pt_or_fail(spec["chat"])
+        if d is None:
+            continue
+        items: list[dict[str, Any]] = d["per_item"]
+        summary = d["summary"]
+
+        # ---- structure ----
+        claim_eq(f"[{key}] chat_6c n_items == 78", 78, len(items))
+        claim_eq(f"[{key}] chat_6c layer", spec["layer"], int(summary["layer"]))
+        keys_ok = all(set(it["conditions"].keys()) == expected_keys for it in items)
+        claim(
+            f"[{key}] every item has 6 conds x strengths {{1,2}}",
+            keys_ok,
+            "12 keys/item",
+            "all match" if keys_ok else "MISSING KEYS",
+        )
+
+        # ---- retained (predicts) subset re-derived from per_item ----
+        retained = int(sum(1 for it in items if bool(it["jlens_predicts_report"])))
+        claim_eq(f"[{key}] chat retained (predicts) subset", spec["retained"], retained)
+
+        # ---- fragment-report rates: chat (summary + re-derived) and plain ----
+        frag_chat_re = _frag_from_peritem(items, CATEGORIES)
+        claim_near(
+            f"[{key}] chat fragment rate (re-derived)",
+            spec["frag_chat"],
+            frag_chat_re,
+            0.001,
+        )
+        claim_near(
+            f"[{key}] chat fragment rate summary==re-derived",
+            float(summary["fragment_report_rate"]),
+            frag_chat_re,
+            1e-9,
+        )
+        dp = load_pt_or_fail(spec["plain"])
+        if dp is not None:
+            frag_plain = _frag_from_peritem(dp["per_item"], CATEGORIES)
+            claim_near(
+                f"[{key}] plain fragment rate (re-derived)",
+                spec["frag_plain"],
+                frag_plain,
+                0.001,
+            )
+
+        # ---- pinned top5_all @s=2 for all six conditions, re-derived ----
+        for cond, val in spec["pins2"].items():
+            claim_near(
+                f"[{key}] {cond}@2 top5_all",
+                val,
+                _vr_rate(items, f"{cond}@2.0", "target_in_top5"),
+                atol=0.001,
+            )
+        rederived = _vr_rate(items, "jlens@2.0", "target_in_top5")
+        stored = float(summary["metrics"]["jlens@2.0"]["target_top5_rate_all"])
+        claim(
+            f"[{key}] jlens@2 top5_all rederived==summary",
+            abs(rederived - stored) < 1e-9,
+            round(stored, 6),
+            round(rederived, 6),
+        )
+
+        # ---- ordering / gap booleans ----
+        r2 = {c: _vr_rate(items, f"{c}@2.0", "target_in_top5") for c in VR6_CONDS}
+        if key == "7b":
+            claim(
+                "[7b] jlens - random @2 > 0.10 (un-confounding)",
+                (r2["jlens"] - r2["random"]) > 0.10,
+                "> 0.10",
+                round(r2["jlens"] - r2["random"], 4),
+            )
+            claim(
+                "[7b] |jspace_comp - random| @2 < 0.02 (middle-tier NULL)",
+                abs(r2["jspace_comp"] - r2["random"]) < 0.02,
+                "< 0.02",
+                round(abs(r2["jspace_comp"] - r2["random"]), 4),
+            )
+            claim(
+                "[7b] jlens - logitlens @2 < 0.05 (token-steering persists)",
+                (r2["jlens"] - r2["logitlens"]) < 0.05,
+                "< 0.05",
+                round(r2["jlens"] - r2["logitlens"], 4),
+            )
+        if key == "1.5b":
+            claim(
+                "[1.5b] jspace_comp - random @2 < 0.05 (middle-tier NULL)",
+                (r2["jspace_comp"] - r2["random"]) < 0.05,
+                "< 0.05",
+                round(r2["jspace_comp"] - r2["random"], 4),
+            )
+            claim(
+                "[1.5b] jlens > logitlens > nonjspace @2",
+                r2["jlens"] > r2["logitlens"] > r2["nonjspace"],
+                "jlens > logitlens > nonjspace",
+                f"{r2['jlens']:.3f} > {r2['logitlens']:.3f} > {r2['nonjspace']:.3f}",
+            )
+
+        # ---- injected-norm invariant (per-item ratio; logitlens EXEMPT) ----
+        for s in ("1.0", "2.0"):
+            worst_src, worst_logit = 0.0, 0.0
+            for it in items:
+                ref = float(it["conditions"][f"jlens@{s}"]["injected_norm"])
+                if ref <= 0.0:
+                    continue
+                for c in VR6_JSRC:
+                    ratio = float(it["conditions"][f"{c}@{s}"]["injected_norm"]) / ref
+                    worst_src = max(worst_src, abs(ratio - 1.0))
+                lr = float(it["conditions"][f"logitlens@{s}"]["injected_norm"]) / ref
+                worst_logit = max(worst_logit, abs(lr - 1.0))
+            claim(
+                f"[{key}] J-src injected-norm within 2% of jlens @{s}",
+                worst_src < 0.02,
+                "< 0.02",
+                round(worst_src, 5),
+            )
+            claim(
+                f"[{key}] logitlens injected-norm bounded <100% @{s} (bf16-exempt)",
+                worst_logit < 1.0,
+                "< 1.0 (exempt)",
+                round(worst_logit, 4),
+            )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
     audit_readout_scan()
     audit_structure_scan()
     audit_verbal_report()
+    audit_verbal_report_6c()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
