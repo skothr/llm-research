@@ -1,14 +1,14 @@
 """Stage-3 figure: depth-of-emergence and output-predictive Spearman.
 
-DATA-AVAILABILITY NOTE (paper "unspoken words" trajectory grid): the
-``readout_scan_*.pt`` ``per_prompt`` entries store only per-(layer, position)
-scalar arrays — Spearman-to-final-logits (``spearman_j/l``), the rank of the
-model's final top-1 token in each lens readout (``rank_j/l``), and the final
-``top1`` ids. They do NOT store the per-layer top-k token STRINGS, so the
-paper's layer x top-5 "unspoken words" token grid cannot be rendered from
-these artifacts. This figure therefore renders the fallback specified for
-that case: the depth-of-emergence comparison plus the per-layer output-
-predictive Spearman curves, both from the scan summaries, for both models.
+HISTORY NOTE: at first render (2026-07-21 AM) the ``readout_scan_*.pt``
+``per_prompt`` entries stored only per-(layer, position) scalar arrays, so
+the paper's layer x top-5 "unspoken words" token grid could not be rendered
+and this figure was the specified fallback. The rich-capture patch later
+that day added per-layer top-k ids/strings/probs to the scan artifacts;
+the trajectory grid is now rendered by
+``examples/jspace_render_trajectory.py``. This figure remains the
+depth-of-emergence comparison plus the per-layer output-predictive
+Spearman curves, from the scan summaries, for both models.
 
 Two panels:
 

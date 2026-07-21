@@ -180,16 +180,27 @@ def run_eval(
             rl = np.array([min(token_rank(ll_l[l][0], i) for i in ids) for l in layers])
             rank_j_rows.append(rj)
             rank_l_rows.append(rl)
+            best_layer_j = int(layers[int(rj.argmin())])
+            best_layer_l = int(layers[int(rl.argmin())])
+            # Top-10 decoded readout strings at each lens's best layer (additive).
+            topk_strs_j = [
+                tok.decode([int(t)]) for t in ll_j[best_layer_j][0].topk(10).indices
+            ]
+            topk_strs_l = [
+                tok.decode([int(t)]) for t in ll_l[best_layer_l][0].topk(10).indices
+            ]
             instances.append(
                 {
                     "name": it.get("name"),
                     "word": word,
                     "token_ids": ids,
                     "exact_single_token": exact,
-                    "best_layer_j": int(layers[int(rj.argmin())]),
+                    "best_layer_j": best_layer_j,
                     "best_rank_j": int(rj.min()),
-                    "best_layer_l": int(layers[int(rl.argmin())]),
+                    "best_layer_l": best_layer_l,
                     "best_rank_l": int(rl.min()),
+                    "best_layer_topk_strs_j": topk_strs_j,
+                    "best_layer_topk_strs_l": topk_strs_l,
                 }
             )
     ranks_j = np.stack(rank_j_rows)

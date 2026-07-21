@@ -11,3 +11,4 @@ figure + its render script.
 | `2026-07-21-jspace-corpus-invariance.png` | `examples/jspace_render_corpus_invariance.py` | `data/cache/structure_scan_qwen2.5-1.5b-instruct_jlens_*_n100{,_c4en}.pt`, `data/cache/lens_eval_qwen2.5-1.5b_bf16_n100{,_c4en}.pt` | committed (corpus check) |
 | `2026-07-21-jspace-nla-crosstie.png` | `examples/jspace_render_nla_crosstie.py` | `data/cache/nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` | committed (stage 6) |
 | `2026-07-21-jspace-emergence.png` | `examples/jspace_render_emergence.py` | `data/cache/readout_scan_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt` | committed (stage 3) |
+| `2026-07-21-jspace-unspoken-words.png` | `examples/jspace_render_trajectory.py` | `data/cache/readout_scan_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt` (rich `topk_strs_{j,l,model}`) | committed (rich capture) |
