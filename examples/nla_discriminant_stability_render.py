@@ -35,6 +35,7 @@ import torch
 import matplotlib
 
 matplotlib.use("Agg")
+from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -118,7 +119,7 @@ def draw_glyph(
 ) -> None:
     n = len(categories)
     angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
-    ring = plt.Circle(
+    ring = Circle(
         (0.0, 0.0), 1.0, color="#cccccc", linewidth=0.4, fill=False, alpha=0.4
     )
     ax.add_patch(ring)
