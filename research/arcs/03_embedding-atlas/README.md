@@ -7,13 +7,16 @@ or connotation share directions that could act as "handles" for downstream
 layers — and how does that structure compare to the layer-20 geometry found
 in the [nla-verbalizer arc](../01_nla-verbalizer/README.md)?
 
-**Status:** active DEEP arc (user direction 2026-06-11), started 2026-06-10.
-Phase 1 (battery protocol probes) + phase 2 (full-vocabulary sweep, 149,706
-alive rows) landed; four observations; audit at **61 PASS / 0 FAIL**. Phase 3
-(structural tracing through Q/K/V, attention/RoPE bands, and FFN, layer by
-layer) is next and ABSORBS the formerly separate rope-vis arc
-([plan](plans/2026-06-10-rope-vis.md)); pre-registered predictions in
-[plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md).
+**Status:** CLOSED for new experiments 2026-07-15 (deep arc, user direction
+2026-06-11; started 2026-06-10). All three phases landed: phase 1 (battery
+protocol probes), phase 2 (full-vocabulary sweep, 149,706 alive rows), and
+phase 3 (structural tracing T0/T1/T1.5/T2, absorbing the former rope-vis arc
+per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
+**89 PASS / 0 FAIL**; pre-registered predictions
+([plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md))
+adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
+moves to a new basis at L1), P1b/P1e/P3 not run (deferred, below). Remaining follow-ups are recorded under "Deferred
+follow-ups" and are candidates for a successor arc rather than this one.
 
 ## Research direction
 
@@ -28,10 +31,36 @@ Arc 3 opened from the user's (Michael Lannum) direction, 2026-06-10 session:
 
 Scope decisions made at session start: two arcs (embeddings first, RoPE
 second) rather than one; iterate with figures + plain-language measurement
-explanations at checkpoints; the user expanded the battery at CP1 ("add more
-word groups first") — person/royal/religion/abstract/landscape/instrument/
-science/tech/language classes and the gender/antonym/past/capital_of/lang_of
-pair kinds were added in response. Implementation: Claude Code (Fable 5).
+explanations at checkpoints. At checkpoint CP1 the user selected "Add more
+word groups first" from the offered next-step options (a checkpoint decision,
+not a typed message) — the person/royal/religion/abstract/landscape/
+instrument/science/tech/language classes and the gender/antonym/past/
+capital_of/lang_of pair kinds were Claude's expansion in response.
+
+### Collaboration mode (following the arc-01 template)
+
+**What Michael contributed.** The originating "handles" question (verbatim
+above, [session 2026-06-10]); the two-arc scoping and the
+iterate-with-figures cadence; the CP1 broaden-before-deepen decision; the
+deep-arc commitment and the numbered-arc reorganization (2026-06-11); the
+thorough-data discipline that forced the full-149,706-row sweep before any
+claim promotion; the pause/resume and wrap-up calls; the review gate (all
+three stack PRs human-merged, never auto-merged).
+
+**What Claude contributed.** All implementation: the ~22 `emb_*` capture/
+derive/render/audit scripts, the battery class definitions (under the CP1
+direction), the operationalization of the pre-registered predictions
+(P1a-P3), the tracing-phase experiment designs (T0/T1/T1.5/T2), the
+literature review with adversarial novelty verification, all figures and
+observation write-ups, and the audit that re-derives every published number
+from committed artifacts.
+
+**What emerged from the collaboration.** The 21-dim entangled block itself
+(the user's handles framing predicted shared structure; the full-vocab sweep
+implementation surfaced this specific object); the reader/tracker head
+dissociation; the P1c/P1d falsifications — adjudicated mechanically against
+criteria pre-registered on 2026-06-11, before any attention weights were
+captured.
 
 ## Findings so far (held as working hypotheses)
 
@@ -48,7 +77,8 @@ versions:
    ([global-geometry](observations/2026-06-10-emb-global-geometry.md), F-G4)
 3. **Category-coherence hierarchy.** Paradigm sets (digits +0.428, months
    +0.416, weekdays +0.400) >> function words (+0.24-0.29) > topics
-   (+0.08-0.18) > connotation classes (valence +0.045, register +0.052).
+   (+0.08-0.18) > connotation classes (the `positive` class of the valence
+   supergroup +0.045, `formal` of register +0.052).
    ([category-structure](observations/2026-06-10-emb-category-structure.md))
 4. **Cross-script neighbors.** 法国/巴黎 rank among ' France'/' Paris' top
    neighbors — multilingual alignment exists in the raw lookup table.
@@ -68,6 +98,27 @@ versions:
    crisp islands (names, countries, code syntax, a cross-lingual time
    community) over one giant component.
    ([fullvocab-sweep](observations/2026-06-10-emb-fullvocab-sweep.md))
+7. **Sink machinery is dimensionally disjoint from the W_E block.** Qwen's
+   massive-activation dims (458 peak −12,608, 2570, 1427 — three of arc 1's
+   layer-20 "sink dims") arise from layer 1 on the FIRST token, never
+   delimiters; block dims ∩ massive dims = ∅.
+   ([trace-block-through-layers](observations/2026-06-11-emb-trace-block-through-layers.md))
+8. **Block content MOVES at layer 1 — re-encoded, not dissolved.** In-block
+   correlation mass collapses 0.109 → 0.031 at L1, but a basis-free carrier
+   analysis keeps top-SV in [8.8, 15.6] over all layers vs a decaying
+   control; stable mid-network carrier set L4-26; fresh output re-encoding
+   at L27-28 (norm gain 3.28×). Routing is RMSNorm gains + attention, not
+   FFN weight structure.
+   ([trace-block-through-layers](observations/2026-06-11-emb-trace-block-through-layers.md))
+9. **Delimiter tracking is a distinct early-layer head population.** 26/784
+   heads give delimiters ≥3× the offset-matched control attention to
+   preceding delimiters (layers 0-3; top L0H13 0.178 vs 0.041). These are
+   NOT the block-reader heads (top-10 overlap 2/10; reader L0H15 ranks
+   21st) — reading the block and aggregating delimiters dissociate. The
+   matching is carried ~99% by near-DC RoPE bands (static content match,
+   falsifying positional-resonance P1d), and period→comma aggregation peaks
+   at L0, not deeper (falsifying P1c).
+   ([trace-delimiter-attention](observations/2026-07-15-emb-trace-delimiter-attention.md))
 
 ## Limitations
 
@@ -80,7 +131,7 @@ versions:
 - **L3. Dead rows in global stats.** 1,959 near-zero rows (1.3%) are
   included in mu/covariance/random sampling; estimated effect < 0.002 on
   headline cosines but unverified — re-lock excluding them is a follow-up.
-- **L4. The audit is arithmetic-consistency only.** 61 PASS means the
+- **L4. The audit is arithmetic-consistency only.** 89 PASS means the
   observation numbers match the committed artifacts — not that the capture
   protocol, thresholds (MIN_CLASS_N=5, near-zero 1e-3, primary-variant
   policy), or interpretations are right.
@@ -88,8 +139,25 @@ versions:
   spectrum cliff may be a quantization artifact (open question H2 in the
   global-geometry observation).
 
-## Possible next paths
+## Deferred follow-ups (arc closed 2026-07-15; none of these block closure)
 
+Highest-value first; the first two are natural openers for a successor arc:
+
+- **T4 — runtime ablation of the 21 W_E block dims** (the causal arbiter;
+  pre-registered P1e also needs it). F-T1 predicts sink formation survives;
+  the T2 dissociation means ablation now has TWO distinct head populations
+  to read out (block-readers vs delimiter-trackers), plus the carrier SV
+  profile as a degradation measure.
+- **Norm-normalized RoPE-band cosine** — separates "big activations sit in
+  near-DC bands" from "alignment happens there" (T2 P1d caveat); needs a
+  re-capture storing per-band norms, and a pure comma→comma accumulator
+  would fix the P1c proxy limitation in the same run.
+- **P3 population test** (pre-registered, not run) + corpus scaling beyond
+  51 probes before promoting carrier-dim identities (thorough-data
+  discipline).
+- **Carrier identity in vocab space** — what do mid-network carriers
+  (1445, 1865, 2545…) read as through W_U (trace H3); L27 re-encoding vs
+  frequent-token dims 1069/46 (trace H4).
 - **Held-out projection test** of the "handle" framing: project unseen pairs
   (' Stockholm' - ' Sweden') onto the capital_of direction (pair-directions
   H2) — cheap and decisive.
@@ -101,20 +169,23 @@ versions:
 - **Dead-row-excluded re-lock** (L3).
 - **Multilingual alignment subspace** from exonym pairs (category-structure
   H3).
-- **structural tracing phase** (next; absorbs the former rope-vis arc):
-  Q/K/V capture, RoPE-band decomposition, FFN persistence of the 21-dim
-  block, layer-by-layer trace against the pre-registered predictions.
 
 ## Reproducing
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py        # SUMMARY: 61 PASS | 0 FAIL
-python examples/emb_data_manifest.py --check # 9 files, sha256 match
+python examples/emb_audit_findings.py        # SUMMARY: 89 PASS | 0 FAIL
+python examples/emb_data_manifest.py --check # 14 files, sha256 match
 python examples/emb_global_render.py         # figures re-render model-free
-# full re-capture (needs the pinned model locally, ~10 CPU-min):
+python examples/emb_trace_render.py          # fig16-18 (model-free)
+python examples/emb_trace_attention_analyze.py  # T2 P1a/P1c/P1d (model-free)
+python examples/emb_trace_attention_render.py   # fig19-21 (model-free)
+# full re-capture (needs the pinned model locally; ~10 CPU-min each):
 python examples/emb_capture.py --tokenize-only   # battery coverage pre-flight
 python examples/emb_capture.py
+python examples/emb_trace_capture.py             # T0/T1
+python examples/emb_trace_components.py          # T1.5 (51 hooked passes)
+python examples/emb_trace_attention.py           # T2 (eager attention)
 ```
 
 ## File map
@@ -126,12 +197,22 @@ research/arcs/03_embedding-atlas/
     2026-06-10-emb-global-geometry.md         # isotropy null, dead rows, PCA, E-vs-U
     2026-06-10-emb-category-structure.md      # coherence hierarchy, connectivity, neighbors
     2026-06-10-emb-pair-directions.md         # relation-direction consistency
-    figures/ (fig1-fig10 + INVENTORY.md)
-  data/ (6 .pt + MANIFEST.json + README.md)   # git-LFS, ~38 MB
+    2026-06-10-emb-fullvocab-sweep.md         # 21-dim block, handle precision, kNN islands
+    2026-06-11-emb-trace-block-through-layers.md  # T0/T1/T1.5: sinks, readers, carriers
+    2026-07-15-emb-trace-delimiter-attention.md   # T2: P1a/P1c/P1d adjudication
+    figures/ (fig1-fig21 + INVENTORY.md)
+  plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
+  sessions/ (2026-06-11 tracing checkpoint)
+  data/ (14 .pt + MANIFEST.json + README.md)  # git-LFS, ~96 MB
 ```
 
 Scripts (all under `examples/`): `emb_token_battery.py` (battery as data),
 `emb_capture.py` (single model-loading step), `emb_category_stats.py` /
-`emb_pair_directions.py` (derives), `emb_*_render.py` + `emb_neighbors_report.py`
-(figures/report), `emb_audit_findings.py` (audit), `emb_data_manifest.py`
-(manifest), `_emb_artifacts.py` (path resolver).
+`emb_pair_directions.py` / `emb_fullvocab_stats.py` / `emb_fullvocab_analyze.py` /
+`emb_structural_block.py` (derives), `emb_*_render.py` + `emb_neighbors_report.py`
+(figures/report), `emb_trace_capture.py` / `emb_trace_components.py` /
+`emb_trace_attention.py` (tracing captures, model-loading),
+`emb_trace_corpus.py` (51-probe corpus as data), `emb_trace_analyze.py` /
+`emb_trace_attention_analyze.py` (tracing derives, model-free),
+`emb_audit_findings.py` (audit), `emb_data_manifest.py` (manifest),
+`_emb_artifacts.py` (path resolver).
