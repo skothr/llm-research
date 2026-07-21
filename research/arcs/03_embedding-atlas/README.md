@@ -90,8 +90,12 @@ versions:
    ([pair-directions](observations/2026-06-10-emb-pair-directions.md))
 6. **Full-population (all 149,706 alive rows): exactly one entangled
    dimension block** — 21 correlated dims (|r|>0.3), cross-script
-   (','/'，', ' the'/'的'), head-frequency-loaded (first token-id decile
-   1.5x energy floor; Spearman -0.206 vs -0.003 control); outside it,
+   (','/'，', ' the'/'的' — pairs matched by *role/block loading*, not
+   translation equivalence: '的''s nearest-cosine token is ' of' [0.63],
+   consistent with its genitive use, and with the block dims removed it
+   aligns with ' of'/"'s" over ' the'), head-loaded by frequency (first
+   token-id decile carries 1.5x the block norm-fraction floor; Spearman
+   -0.206 vs -0.003 control); outside it,
    dimensions are near-independent (|r| mean 0.021, kurtosis median 0.32).
    Handles are precise at vocab scale (negative -> ' shitty'/' nasty';
    code -> 'namespace') with conservative recall; the kNN graph yields
