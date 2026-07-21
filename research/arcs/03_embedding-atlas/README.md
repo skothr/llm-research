@@ -12,7 +12,7 @@ in the [nla-verbalizer arc](../01_nla-verbalizer/README.md)?
 protocol probes), phase 2 (full-vocabulary sweep, 149,706 alive rows), and
 phase 3 (structural tracing T0/T1/T1.5/T2, absorbing the former rope-vis arc
 per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
-**89 PASS / 0 FAIL**; pre-registered predictions
+**94 PASS / 0 FAIL**; pre-registered predictions
 ([plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md))
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
 moves to a new basis at L1), P1b/P1e/P3 not run (deferred, below). Remaining follow-ups are recorded under "Deferred
@@ -90,8 +90,13 @@ versions:
    ([pair-directions](observations/2026-06-10-emb-pair-directions.md))
 6. **Full-population (all 149,706 alive rows): exactly one entangled
    dimension block** — 21 correlated dims (|r|>0.3), cross-script
-   (','/'，', ' the'/'的'), head-frequency-loaded (first token-id decile
-   1.5x energy floor; Spearman -0.206 vs -0.003 control); outside it,
+   (','/'，', ' the'/'的' — pairs matched by *role/block loading*, not
+   translation equivalence: '的''s nearest-cosine token is ' of' [0.63],
+   consistent with its genitive use, and with the block dims removed it
+   aligns with ' of'/"'s" over ' the' — [de-cosine-check](observations/2026-07-21-emb-de-cosine-check.md),
+   audit §11), head-loaded by frequency (first
+   token-id decile carries 1.5x the block norm-fraction floor; Spearman
+   -0.206 vs -0.003 control); outside it,
    dimensions are near-independent (|r| mean 0.021, kurtosis median 0.32).
    Handles are precise at vocab scale (negative -> ' shitty'/' nasty';
    code -> 'namespace') with conservative recall; the kNN graph yields
@@ -131,7 +136,7 @@ versions:
 - **L3. Dead rows in global stats.** 1,959 near-zero rows (1.3%) are
   included in mu/covariance/random sampling; estimated effect < 0.002 on
   headline cosines but unverified — re-lock excluding them is a follow-up.
-- **L4. The audit is arithmetic-consistency only.** 89 PASS means the
+- **L4. The audit is arithmetic-consistency only.** 94 PASS means the
   observation numbers match the committed artifacts — not that the capture
   protocol, thresholds (MIN_CLASS_N=5, near-zero 1e-3, primary-variant
   policy), or interpretations are right.
@@ -174,8 +179,8 @@ Highest-value first; the first two are natural openers for a successor arc:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py        # SUMMARY: 89 PASS | 0 FAIL
-python examples/emb_data_manifest.py --check # 14 files, sha256 match
+python examples/emb_audit_findings.py        # SUMMARY: 94 PASS | 0 FAIL
+python examples/emb_data_manifest.py --check # 15 files, sha256 match
 python examples/emb_global_render.py         # figures re-render model-free
 python examples/emb_trace_render.py          # fig16-18 (model-free)
 python examples/emb_trace_attention_analyze.py  # T2 P1a/P1c/P1d (model-free)

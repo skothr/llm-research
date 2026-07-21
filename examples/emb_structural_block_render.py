@@ -1,6 +1,6 @@
 """Render the structural-block characterization (fig15).
 
-Model-free; reads emb_structural_block.pt. Left: block vs control energy
+Model-free; reads emb_structural_block.pt. Left: block vs control norm fraction
 fraction per token-id decile (BPE merge order = frequency proxy). Right:
 per-script block vs control means (language-independence check).
 Output: research/arcs/03_embedding-atlas/observations/figures/fig15_structural_block.png
@@ -43,10 +43,10 @@ def main() -> None:
         label=f"random 21-dim control ({sb['control_spearman_vs_id']:+.3f})",
     )
     ax.set_xlabel("token-id decile (1 = lowest ids = earliest BPE merges)")
-    ax.set_ylabel("mean energy fraction in subspace")
+    ax.set_ylabel("mean norm fraction in subspace")
     ax.legend()
     ax.grid(alpha=0.3)
-    ax.set_title("block energy vs token-frequency proxy")
+    ax.set_title("block norm fraction vs token-frequency proxy")
 
     ax = axes[1]
     per: dict[str, dict[str, Any]] = sb["per_script"]
@@ -68,10 +68,10 @@ def main() -> None:
     )
     ax.set_xticks(list(xs))
     ax.set_xticklabels([f"{s}\n(n={per[s]['n']})" for s in scripts], fontsize=8)
-    ax.set_ylabel("mean energy fraction")
+    ax.set_ylabel("mean norm fraction")
     ax.legend()
     ax.grid(axis="y", alpha=0.3)
-    ax.set_title("script-independence of block energy")
+    ax.set_title("script-independence of block norm fraction")
 
     fig.suptitle(
         "fig15 — the 21-dim entangled block: head-frequency-loaded, script-independent"

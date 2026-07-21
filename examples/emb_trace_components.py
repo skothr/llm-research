@@ -4,8 +4,8 @@ Answers three questions the boundary-level trace (emb_trace_capture.py)
 could not:
 
   1. PER-COMPONENT ATTRIBUTION — hooks on each layer's self_attn and mlp
-     modules capture the two residual DELTAS separately, so block-energy
-     changes are attributed to attention vs FFN per layer per position.
+     modules capture the two residual DELTAS separately, so block norm-
+     fraction changes are attributed to attention vs FFN per layer per position.
   2. CARRIER ANALYSIS (basis-free) — per layer, the (21 x 3584) cross-
      correlation between each token's LAYER-0 block coordinates and its
      layer-L residual, accumulated over all corpus tokens. Singular values
