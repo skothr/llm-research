@@ -909,6 +909,162 @@ def audit_verbal_report_6c() -> None:
             )
 
 
+CROSSTIE_7B = "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
+
+
+def audit_crosstie() -> None:
+    print()
+    print("=" * 80)
+    print(
+        "CHECK G: NLA cross-tie (stage 6; 7B nf4 J-lens x NLA AV at hidden_states[20])"
+    )
+    print("=" * 80)
+
+    d = load_pt_or_fail(CROSSTIE_7B)
+    if d is None:
+        return  # load_pt_or_fail already recorded the loud MISSING FAIL
+    s = cast("dict[str, Any]", d["summary"])
+    pp = cast("list[dict[str, Any]]", d["per_prompt"])
+
+    # ---- shape + config identity (the layer-index fact is load-bearing) ----
+    claim_eq("[G] per_prompt count == 25 (24 prompts + 1 control)", 25, len(pp))
+    claim_eq("[G] jlens_layer == 19", 19, s["jlens_layer"])
+    claim_eq("[G] nla_hidden_state == 20", 20, s["nla_hidden_state"])
+    claim_eq("[G] decomp_k == 25", 25, s["decomp_k"])
+    claim_eq("[G] n_neutral == 12", 12, s["n_neutral"])
+    claim_eq("[G] n_concept == 12", 12, s["n_concept"])
+    claim_eq("[G] n_decomp == 12", 12, s["n_decomp"])
+    claim_eq("[G] vocab == 152064", 152064, s["vocab"])
+    floor = float(s["chance_rank_floor"])  # |V|/2 == 76032
+
+    # ---- pinned Experiment-A metrics (rank medians exact; rates to 3dp) ----
+    claim_near(
+        "[G] metric1_rank_median_concept",
+        9585.0,
+        float(s["metric1_rank_median_concept"]),
+        atol=0.5,
+    )
+    claim_near(
+        "[G] metric1_rank_median_neutral",
+        103412.5,
+        float(s["metric1_rank_median_neutral"]),
+        atol=0.5,
+    )
+    claim_near(
+        "[G] null_concept_matched_rank_median",
+        9585.0,
+        float(s["null_concept_matched_rank_median"]),
+        atol=0.5,
+    )
+    claim_near(
+        "[G] null_concept_mismatched_rank_median",
+        16352.75,
+        float(s["null_concept_mismatched_rank_median"]),
+        atol=0.5,
+    )
+    claim_near(
+        "[G] null_concept_matched_pctile",
+        0.159,
+        float(s["null_concept_matched_pctile"]),
+        atol=0.001,
+    )
+
+    # ---- pinned Metric-3 concept-recovery rates ----
+    claim_near(
+        "[G] metric3_jlens_hit_rate",
+        0.333,
+        float(s["metric3_jlens_hit_rate"]),
+        atol=0.001,
+    )
+    claim_near(
+        "[G] metric3_nla_hit_rate", 0.917, float(s["metric3_nla_hit_rate"]), atol=0.001
+    )
+    claim_near(
+        "[G] metric3_both_hit_rate",
+        0.333,
+        float(s["metric3_both_hit_rate"]),
+        atol=0.001,
+    )
+
+    # ---- pinned Experiment-B carrier table ----
+    comp = float(s["expB_carrier_component_mean"])
+    res = float(s["expB_carrier_residual_mean"])
+    ctrl = float(s["expB_carrier_resctrl_mean"])
+    rand = float(s["expB_carrier_randunit_mean"])
+    delta = float(s["expB_carrier_delta_mean"])
+    crm = float(s["expB_component_rank_median"])
+    claim_near("[G] expB_carrier_component_mean", 0.162, comp, atol=0.001)
+    claim_near("[G] expB_carrier_residual_mean", 0.600, res, atol=0.001)
+    claim_near("[G] expB_carrier_resctrl_mean", 0.606, ctrl, atol=0.001)
+    claim_near("[G] expB_carrier_randunit_mean", 0.075, rand, atol=0.001)
+    claim_near("[G] expB_carrier_delta_mean ~ 0", 0.0, delta, atol=0.02)
+    claim_near("[G] expB_component_rank_median", 75166.75, crm, atol=0.5)
+
+    # ---- load-bearing directional booleans (the stage-6 verdicts) ----
+    sep = float(s["null_concept_mismatched_rank_median"]) - float(
+        s["null_concept_matched_rank_median"]
+    )
+    claim(
+        "[G] concept null separates (mismatched - matched > 5000)",
+        sep > 5000.0,
+        ">5000",
+        round(sep, 2),
+    )
+    claim(
+        "[G] residual carrier > 3x component carrier",
+        res > 3.0 * comp,
+        f">3x ({comp:.3f})",
+        round(res, 3),
+    )
+    claim(
+        "[G] |carrier_delta_mean| < 0.05 (J-space ~ norm-matched random)",
+        abs(delta) < 0.05,
+        "<0.05",
+        round(delta, 4),
+    )
+    rel = abs(crm - floor) / floor
+    claim(
+        "[G] component_rank_median within 5% of chance floor",
+        rel < 0.05,
+        f"<5% of {floor:.0f}",
+        f"{crm:.1f} ({rel * 100:.2f}%)",
+    )
+
+    # ---- raw re-derivation: metric1_rank_median_concept from per_prompt ----
+    vals = [
+        float(r["nla_rank_median"])
+        for r in pp
+        if r.get("tag") == "concept"
+        and not np.isnan(float(r.get("nla_rank_median", np.nan)))
+    ]
+    claim_eq("[G] concept prompts carrying a rank median == 12", 12, len(vals))
+    rederived = float(np.median(vals))
+    claim_near(
+        "[G] metric1_rank_median_concept re-derived from per_prompt raw",
+        float(s["metric1_rank_median_concept"]),
+        rederived,
+        atol=1e-6,
+    )
+
+    # ---- persisted-readout integrity (so offline null re-derivation is sound) ----
+    r0 = next(r for r in pp if r.get("tag") == "concept")
+    ro = cast(Any, r0["readout_fp16"]).float()
+    claim_eq("[G] readout_fp16 width == vocab", int(s["vocab"]), int(ro.numel()))
+    claim_eq(
+        "[G] readout_fp16 top-1 == persisted topk[0]",
+        int(r0["readout_topk_ids"][0]),
+        int(ro.argmax().item()),
+    )
+    topk_re = set(ro.topk(int(s["topk"])).indices.tolist())
+    overlap = len(topk_re & set(int(i) for i in r0["readout_topk_ids"]))
+    claim(
+        "[G] readout_fp16 top-k overlaps persisted >= 48/50",
+        overlap >= 48,
+        ">=48",
+        overlap,
+    )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
@@ -916,6 +1072,7 @@ def main() -> None:
     audit_structure_scan()
     audit_verbal_report()
     audit_verbal_report_6c()
+    audit_crosstie()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
