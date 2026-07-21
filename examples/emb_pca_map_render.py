@@ -3,7 +3,7 @@
 Model-free. PCA here is battery-only: computed over the primary anchor rows
 (mean-centered within the battery), NOT the full-vocabulary PCs — the goal is
 the geometry AMONG the curated anchors, maximally spread for inspection.
-Output: research/arcs/embedding-atlas/observations/figures/fig9_pca_map.png
+Output: research/arcs/03_embedding-atlas/observations/figures/fig9_pca_map.png
 """
 
 from __future__ import annotations

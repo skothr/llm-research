@@ -34,7 +34,7 @@ toolkit — install editable with `pip install -e ../llm-surgeon`, then
     `reviews/` — series review passes (adversarial, math, citations, …)
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
-  `research/arcs/nla-verbalizer/`.
+  `research/arcs/01_nla-verbalizer/`.
 - `examples/` — `nla_*.py` capture/analysis/render/audit scripts;
   `examples/README_NLA.md` holds pipeline conventions.
 

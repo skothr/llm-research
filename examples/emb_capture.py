@@ -12,7 +12,7 @@ probes, then writes four artifacts to the working cache:
 
 The full W_E/W_U matrices are NOT persisted (1.09 GB each): the capture-root
 of this arc is the published model weight matrix itself, pinned to REVISION —
-see research/arcs/embedding-atlas/README.md for the stated deviation from
+see research/arcs/03_embedding-atlas/README.md for the stated deviation from
 ARC_PROCESS § "Raw data is a deliverable".
 
 Modes:

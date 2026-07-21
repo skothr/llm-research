@@ -3,7 +3,7 @@
 How to run a research arc in this workspace so it ends up reproducible,
 honestly framed, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
-layout/convention reference). The [`nla-verbalizer`](arcs/nla-verbalizer/) arc
+layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example every section points at.
 
 An *arc* is a focused, multi-observation investigation cohering around one
@@ -69,7 +69,8 @@ question → capture). But each numbered step has a definition of done.
   question can live in the arc README's motivation once it exists.
 - Note the **direction-setting** as it happens (who asked what). The
   human-direction vs AI-implementation split is worth recording honestly; the
-  NLA arc README's "Research direction" section is the template.
+  NLA arc README's "Research direction" section is the template (attribution
+  shape codified in [§ 6 Attribution](#6-arc-readme-synthesis)).
 
 ### 1. Capture → validate → save the raw dataset
 
@@ -163,8 +164,24 @@ number in the observations has a corresponding assertion.
 - **Findings as hypotheses** with explicit scope qualifications (see Framing).
 - **Limitations** section, ranked by how far they constrain the claims.
 - **Possible next paths**, each tied to a question and (if tracked) a ticket.
-- **Attribution**: separate human direction-setting from AI implementation
-  honestly.
+- **Attribution** — separate human direction-setting from AI implementation
+  honestly. The [nla-verbalizer arc](arcs/01_nla-verbalizer/README.md)
+  ("Research direction" + collaboration-mode sections) is the template.
+  Required shape:
+  1. A **"Research direction"** section: the originating user direction(s) as
+     **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a
+     one-line "quotes lightly normalized for typos/punctuation" disclaimer if
+     you touched them. Paraphrases, and checkpoint-menu options the user
+     *selected* rather than typed, are labelled as such in prose and **never**
+     wrapped in quotation marks as if typed. If an intuition is the user's but
+     the README's wording is your paraphrase, say so and leave it un-quoted.
+  2. A three-way **collaboration split**: what the **human** contributed
+     (direction, interpretive judgment, scope) / what **Claude** contributed
+     (implementation, scaffolding, literature) / what **emerged** (neither
+     party alone).
+  3. Every quote must be **verifiable against the session transcript** —
+     recover the originating turn before quoting it; if you can only
+     paraphrase, mark it a paraphrase and point at the transcript.
 - Cross-link: README → observations → figures/INVENTORY → data/MANIFEST.
 
 ### 7. PR
@@ -275,7 +292,7 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 [ ] observations written (evidence-first, fields filled, nulls labeled as null)
 [ ] audit script re-derives every load-bearing number incl. the headline;
         passes from a clean clone; "what it can't catch" stated in README
-[ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution
+[ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution (§6 template)
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
 [ ] PR opened (one arc = one scope-bounded diff)
 ```
