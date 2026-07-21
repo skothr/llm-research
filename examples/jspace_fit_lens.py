@@ -39,6 +39,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--dim-batch", type=int, default=8)
     p.add_argument("--n-prompts", type=int, default=1000)
     p.add_argument("--prompts", type=Path, default=DEFAULT_PROMPTS)
+    p.add_argument(
+        "--corpus-tag",
+        default="",
+        help="Suffix appended to the lens stem (e.g. 'c4en' -> "
+        "jlens_<model>_<mode>_n<n>_c4en), so a refit on a different fitting "
+        "corpus lands in its own artifact instead of clobbering the default "
+        "wikitext lens. Empty (default) keeps the original stem for backward "
+        "compatibility; the exact prompts file is recorded in the sidecar.",
+    )
     p.add_argument("--max-seq-len", type=int, default=128)
     p.add_argument(
         "--checkpoint-every",
@@ -73,6 +82,8 @@ def main() -> int:
 
     model_short = args.model.split("/")[-1].lower().replace("-instruct", "")
     stem = f"jlens_{model_short}_{args.mode}_n{args.n_prompts}"
+    if args.corpus_tag:
+        stem = f"{stem}_{args.corpus_tag}"
     args.out_dir.mkdir(parents=True, exist_ok=True)
     lens_path = args.out_dir / f"{stem}.pt"
     ckpt_path = args.out_dir / f"{stem}.ckpt.pt"
@@ -117,6 +128,7 @@ def main() -> int:
         "n_prompts": len(prompts),
         "max_seq_len": args.max_seq_len,
         "prompts_file": str(args.prompts),
+        "corpus_tag": args.corpus_tag,
         "wall_seconds": round(dt, 1),
         "jlens_source": "github.com/anthropics/jacobian-lens (editable clone)",
         "estimator": "J_l = mean over prompts of mean-over-source-positions of "

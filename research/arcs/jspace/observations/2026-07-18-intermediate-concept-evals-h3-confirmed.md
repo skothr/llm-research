@@ -99,6 +99,15 @@ CUDA_VISIBLE_DEVICES= python examples/jspace_lens_eval.py --evals multihop assoc
 - Consider remaining eval sets (multilingual, poetry, order-ops, typo) for
   the stage-4/5 writeups.
 
+## Qualifier (added 2026-07-20)
+
+The corpus-sensitivity check
+(`2026-07-20-corpus-sensitivity-c4-1p5b.md`) shows the **@10 advantage
+magnitude is fitting-corpus-dependent** (+0.18 wikitext / +0.09 C4-en at
+1.5B, driven by the early band); the J-exclusivity finding (logit 0.00
+early/mid on both corpora) and the @50 rates are corpus-stable. The
+finding stands; the +0.18 figure is corpus-specific.
+
 ## References
 
 - `[gurnee2026-workspace §2.1, §2.4]`;

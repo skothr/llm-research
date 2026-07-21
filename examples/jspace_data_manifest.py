@@ -63,6 +63,21 @@ META: dict[str, dict[str, Any]] = {
         ),
         "consumers": ["jlens_*.pt (frozen fitting corpus)"],
     },
+    "fitting_prompts_c4en_n1000.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_freeze_c4_corpus.py",
+        "inputs": [],
+        "requires_model": "none",
+        "provenance": (
+            "allenai/c4 config en, split train, streamed with "
+            "shuffle(seed=42, buffer_size=10000); first 1000 records with "
+            "len(text.strip()) >= 600 in post-shuffle order. Deterministic "
+            "given the seed. Alternative fitting corpus for the "
+            "corpus-sensitivity check (broader web-text register than the "
+            "wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py"
+        ),
+        "consumers": ["jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"],
+    },
     "heldout_prompts_wikitext103_n30.json": {
         "class": "raw",
         "producing_script": "examples/jspace_readout_scan.py",
