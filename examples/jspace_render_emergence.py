@@ -217,7 +217,7 @@ def main() -> None:
     # reversal callout
     ax_em.annotate(
         "reversal: logit-lens earlier at 1.5B (L19 < L23),\nbut J-lens earlier at 7B (L22 < L24)",
-        xy=(1 + w / 2, series[1]["emg_l"]),
+        xy=(1 + w / 2, series[1]["emg_l"] - 4.0),
         xytext=(0.5, 9.0),
         fontsize=8,
         color="#333333",
@@ -259,7 +259,18 @@ def main() -> None:
         "12 held-out prompts x 9 positions) [gurnee2026-workspace §2.1]",
         fontsize=12,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+    fig.text(
+        0.5,
+        0.006,
+        "data: readout_scan_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt "
+        "(12 held-out prompts x 9 positions, heldout_prompts_wikitext103_n30.json; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

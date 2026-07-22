@@ -246,7 +246,18 @@ def main() -> None:
         "early layers track input register, the mid-late band does not",
         fontsize=12.5,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.96))
+    fig.tight_layout(rect=(0, 0.03, 1, 0.96))
+    fig.text(
+        0.5,
+        0.006,
+        "data: structure_scan_* & lens_eval_qwen2.5-1.5b_bf16_n100{,_c4en}.pt "
+        "(30 held-out prompts, heldout_prompts_{wikitext103,c4en}_n30.json; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)
