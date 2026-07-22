@@ -4,21 +4,19 @@ what the observation files report. Prints per-check PASS/FAIL and exits 1 on
 any failure (stage-7 audit named in
 `research/arcs/jspace/plans/2026-07-18-jspace-design.md`).
 
-Artifacts read (arc working cache `research/arcs/jspace/data/cache/`):
-  * jlens_qwen2.5-7b_nf4_n100.pt    / .config.json   (fitted J-lens, 7B nf4)
-  * jlens_qwen2.5-1.5b_bf16_n100.pt / .config.json   (fitted J-lens, 1.5B bf16)
-  * lens_eval_qwen2.5-{7b_nf4,1.5b_bf16}_n100.pt      (intermediate-concept evals)
-  * readout_scan_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt (readout scan summaries)
-  * structure_scan_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt (stage-4 depth map)
-  * verbal_report_qwen2.5-{7b,1.5b}-instruct_jlens_*.pt  (stage-5.1 swap suite)
+Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
+(`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /
+structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
+this audit re-derives from) are promoted, committed via git-LFS under
+`research/arcs/jspace/data/`, so checks B-L reproduce from a clean clone. The
+FULL fitted lens tensors + their `.config.json` sidecars stay cache-only
+(design Decision 4 — their committed 7-layer subsets suffice for inspection),
+so the lens-integrity blocks (Check A + the refit lenses in H/I/J) resolve to
+`cache/` and record a loud `MISSING` FAIL on a clone without the local cache.
 
-Unlike the committed git-LFS *layer-subset* deliverables (7 layers, a viewing
-convenience per design Decision 4), the FULL fitted lenses and every derived
-eval/scan artifact are cache-only and gitignored — so this audit replays from
-the arc's working cache, the set the observations were derived from. A missing
-artifact is a loud FAIL (never a crash): the check records `MISSING` and the
-dependent checks for that artifact are skipped, so the run still reaches the
-SUMMARY and exits 1.
+A missing artifact is a loud FAIL (never a crash): the check records `MISSING`
+and the dependent checks for that artifact are skipped, so the run still
+reaches the SUMMARY and exits 1.
 
 Checks:
   A  Lens integrity — both lenses load; 27 layers == source_layers == range(27);
@@ -70,6 +68,28 @@ Checks:
      is EXEMPT (its w_s source gives a small, bf16-noisy projection -> up to ~78%
      on 7B; a diagnosed measurement artifact, not a direction error) and only
      loosely bounded < 100%.
+  H  n-budget stability (H1) — nf4 n=500 refit lens integrity; varfrac(k25)
+     peak stays L21 on both n=100 and n=500; peak |delta| < 2% (obs -1.4%).
+  I  quantization exonerated — 1.5B nf4 n=100 control: lens integrity; every
+     structural value (varfrac peak L21/L0/L26/trough, logit-kurtosis) within
+     ~0.006 of bf16; multihop rates + depth-of-emergence + late Spearman
+     reproduce; peak layer == bf16 (L21).
+  J  corpus sensitivity — C4-en refit: lens integrity + corpus_tag; the
+     WORKSPACE-band (L17-26) peak is L21 = 0.124 identical to wikitext (the
+     headline invariance), while the EARLY band diverges (L0 varfrac doubles
+     to 0.174 -> global argmax is L0; logit-kurt L0 drops to 2.64); late-band
+     eval rates + @50 + depth medians corpus-invariant; logit early/mid == 0.
+  K  held-out-sample robustness — diversified C4 held-out set: 1.5B peak stays
+     L21 0.133, depth within +/-2 layers of the base set, J fidelity >= base;
+     7B pinned band-level (peak layer in {22,23}, trough in {16,17}, values in
+     ranges not 3dp per the observation), ~2.6x below 1.5B, <=10% ceiling.
+  L  entailed-property swaps (stage 5.2) — the 8-file swap bank (1.5B chat
+     L18/L21/L24 + plain L21; 7B chat L18/L19/L22 + plain L22) + 4 paper-verbatim
+     probes: clean accuracies; discrete flip rate == 0 everywhere; retention
+     >= 0.9; injected-norm equalized across conditions; headline dlogp(swap)
+     @s=2 (1.5B L18 jlens +2.13 / logit +0.07 / random +0.14; 7B L19 +1.250 /
+     +0.178 / +0.040); jlens dominates both controls at the peak layers; the
+     property effect peaks below the report layer (1.5B L18, 7B L19).
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
@@ -96,7 +116,20 @@ import torch
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "jspace" / "data" / "cache"
+DATA = _REPO_ROOT / "research" / "arcs" / "jspace" / "data"
+CACHE = DATA / "cache"
+
+
+def _resolve(name: str) -> Path:
+    """Prefer the committed ``data/`` copy (so the audit reproduces from a clean
+    clone), falling back to the working ``cache/``. The small derived artifacts
+    (evals, scans, swap banks, cross-tie) are promoted into ``data/`` and
+    git-LFS-tracked; the FULL fitted lens tensors + their ``.config.json``
+    sidecars stay cache-only (design Decision 4 — their committed 7-layer
+    subsets suffice for inspection), so lens-integrity checks resolve to
+    ``cache/`` and are MISSING (loud FAIL) on a clone without the local cache."""
+    d = DATA / name
+    return d if d.exists() else CACHE / name
 
 
 # ---------------------------------------------------------------------------
@@ -128,7 +161,7 @@ def claim_eq(name: str, expected: Any, actual: Any) -> None:
 
 
 def load_pt_or_fail(name: str) -> Any | None:
-    p = CACHE / name
+    p = _resolve(name)
     if not p.exists():
         claim(f"artifact present: {name}", False, "present", "MISSING")
         return None
@@ -136,7 +169,7 @@ def load_pt_or_fail(name: str) -> Any | None:
 
 
 def load_json_or_fail(name: str) -> dict[str, Any] | None:
-    p = CACHE / name
+    p = _resolve(name)
     if not p.exists():
         claim(f"sidecar present: {name}", False, "present", "MISSING")
         return None
@@ -1072,6 +1105,723 @@ def audit_crosstie() -> None:
     )
 
 
+# ===========================================================================
+# Stage-7 consolidation checks H-L: robustness-axis + entailed-swap artifact
+# families added after Check G. Same conventions as A-G (missing artifact =>
+# loud MISSING FAIL, never a crash; values re-derived from the on-disk
+# artifacts and pinned per the observations).
+# ===========================================================================
+
+
+def _audit_lens(
+    key: str,
+    pt: str,
+    cfg_name: str,
+    d_model: int,
+    model: str,
+    mode: str,
+    n_prompts: int,
+) -> dict[str, Any] | None:
+    """Shared lens-integrity block (parallels Check A) for the robustness-refit
+    lenses: 27 layers == source_layers == range(27); d_model; n_prompts; all J
+    finite; min Frobenius > 0; sidecar model/mode/n_prompts consistent. The full
+    fitted lenses are cache-only (Decision 4), so this resolves to cache/."""
+    d = load_pt_or_fail(pt)
+    cfg = load_json_or_fail(cfg_name)
+    if d is None:
+        return None
+    jmat: dict[int, torch.Tensor] = d["J"]
+    source_layers: list[int] = list(d["source_layers"])
+    expected_layers = list(range(27))
+    claim_eq(f"[{key}] J layer count == 27", 27, len(jmat))
+    claim_eq(f"[{key}] source_layers == 0..26", expected_layers, source_layers)
+    claim_eq(f"[{key}] J keys == source_layers", expected_layers, sorted(jmat.keys()))
+    claim_eq(f"[{key}] d_model", d_model, int(d["d_model"]))
+    claim_eq(f"[{key}] n_prompts == {n_prompts}", n_prompts, int(d["n_prompts"]))
+    shapes_ok = all(tuple(jmat[l].shape) == (d_model, d_model) for l in source_layers)
+    claim(
+        f"[{key}] every J_l is (d_model, d_model)",
+        shapes_ok,
+        f"(({d_model}, {d_model}) x27)",
+        "all match" if shapes_ok else "SHAPE MISMATCH",
+    )
+    finite_ok = all(bool(jmat[l].isfinite().all().item()) for l in source_layers)
+    claim(
+        f"[{key}] all J tensors finite",
+        finite_ok,
+        "all finite",
+        "all finite" if finite_ok else "NON-FINITE PRESENT",
+    )
+    min_frob = min(float(jmat[l].float().norm().item()) for l in source_layers)
+    claim(
+        f"[{key}] min per-layer Frobenius norm > 0",
+        min_frob > 0.0,
+        "> 0",
+        round(min_frob, 4),
+    )
+    if cfg is not None:
+        claim_eq(f"[{key}] sidecar model", model, cfg.get("model"))
+        claim_eq(f"[{key}] sidecar mode", mode, cfg.get("mode"))
+        claim_eq(f"[{key}] sidecar n_prompts", n_prompts, int(cfg.get("n_prompts", -1)))
+    return d
+
+
+def _struct_summary(fname: str, key: str) -> tuple[dict[str, Any], list[int]] | None:
+    """Load a structure-scan artifact and run the shared integrity block."""
+    d = load_pt_or_fail(fname)
+    if d is None:
+        return None
+    return _check_struct_common(key, d)
+
+
+def _eval_rates(fname: str) -> dict[str, Any] | None:
+    d = load_pt_or_fail(fname)
+    if d is None:
+        return None
+    return cast("dict[str, Any]", d["summary"]["per_eval"])
+
+
+# ---- reference values from the bf16-wikitext baseline artifacts (Checks C/D):
+#      the exoneration / invariance checks compare the refits against these.
+BF16_VARFRAC_PEAK = 0.1237  # 1.5B bf16 varfrac(k25) peak value at L21
+BF16_DEPTH_J, BF16_DEPTH_L = 23.0, 19.0  # depth-of-emergence allpos medians
+BF16_L26_SPEARMAN_J = 0.8003  # 1.5B bf16 L26 last-pos Spearman (J)
+
+
+STRUCT_NF4_N100 = "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt"
+STRUCT_NF4_N500 = "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt"
+
+
+def audit_n_stability() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK H: n-budget stability (nf4 n=500 refit; H1 exoneration)")
+    print("=" * 80)
+    # ---- n=500 nf4 lens integrity ----
+    _audit_lens(
+        "1.5b-nf4-n500",
+        "jlens_qwen2.5-1.5b_nf4_n500.pt",
+        "jlens_qwen2.5-1.5b_nf4_n500.config.json",
+        1536,
+        "Qwen/Qwen2.5-1.5B-Instruct",
+        "nf4",
+        500,
+    )
+    # ---- n=500 structure scan: peak still L21, value pinned ----
+    r500 = _struct_summary(STRUCT_NF4_N500, "1.5b-nf4-n500")
+    r100 = _struct_summary(STRUCT_NF4_N100, "1.5b-nf4-n100(H)")
+    if r500 is None or r100 is None:
+        return
+    s500, layers = r500
+    s100, _ = r100
+    vf500 = np.array(s500["mean_varfrac"][25], dtype=float)
+    vf100 = np.array(s100["mean_varfrac"][25], dtype=float)
+    p500, p100 = int(vf500.argmax()), int(vf100.argmax())
+    claim_eq("[H] nf4 n=500 varfrac(k25) peak layer == 21", 21, layers[p500])
+    claim_eq("[H] nf4 n=100 varfrac(k25) peak layer == 21", 21, layers[p100])
+    claim_near("[H] nf4 n=500 peak value", 0.1235, float(vf500[p500]), atol=0.002)
+    claim_near("[H] nf4 n=100 peak value", 0.1252, float(vf100[p100]), atol=0.002)
+    # ---- n-stability: peak moves < 2% from n=100 -> n=500 (obs: -1.4%) ----
+    rel = abs(float(vf500[p500]) - float(vf100[p100])) / float(vf100[p100])
+    claim("[H] nf4 peak |delta| n100->n500 < 2%", rel < 0.02, "< 0.02", round(rel, 4))
+    claim_near("[H] nf4 peak relative delta ~ 1.4%", 0.014, rel, atol=0.005)
+
+
+STRUCT_1P5B_NF4 = STRUCT_NF4_N100
+EVAL_1P5B_NF4 = "lens_eval_qwen2.5-1.5b_nf4_n100.pt"
+READOUT_1P5B_NF4 = "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt"
+
+
+def audit_quant_exoneration() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK I: quantization exonerated (1.5B nf4 n=100 control vs bf16)")
+    print("=" * 80)
+    # ---- nf4 lens integrity ----
+    _audit_lens(
+        "1.5b-nf4",
+        "jlens_qwen2.5-1.5b_nf4_n100.pt",
+        "jlens_qwen2.5-1.5b_nf4_n100.config.json",
+        1536,
+        "Qwen/Qwen2.5-1.5B-Instruct",
+        "nf4",
+        100,
+    )
+    # ---- structure: nf4 == bf16 to within ~0.006 on every structural value ----
+    r = _struct_summary(STRUCT_1P5B_NF4, "1.5b-nf4")
+    if r is not None:
+        s, layers = r
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        lk = np.array(s["mean_readout_kurtosis"], dtype=float)
+        peak_i, trough_i = int(vf.argmax()), int(vf.argmin())
+        claim_eq("[I] nf4 varfrac(k25) peak layer == 21", 21, layers[peak_i])
+        claim_near("[I] nf4 varfrac(k25) peak value", 0.125, float(vf[peak_i]))
+        claim_near("[I] nf4 varfrac(k25) L0", 0.079, float(vf[0]))
+        claim_near("[I] nf4 varfrac(k25) final layer", 0.067, float(vf[-1]))
+        claim_eq("[I] nf4 varfrac(k25) trough layer == 14", 14, layers[trough_i])
+        claim_near("[I] nf4 varfrac(k25) trough value", 0.056, float(vf[trough_i]))
+        claim_near("[I] nf4 logit-kurt L0", 4.556, float(lk[0]), atol=0.01)
+        kt_i = int(lk.argmin())
+        claim_eq("[I] nf4 logit-kurt trough layer == 18", 18, layers[kt_i])
+        claim_near("[I] nf4 logit-kurt trough value", 0.906, float(lk[kt_i]))
+        # exoneration boolean: nf4 peak within ~0.006 of the bf16 baseline peak.
+        claim(
+            "[I] nf4 peak within 0.006 of bf16 baseline (same L21)",
+            abs(float(vf[peak_i]) - BF16_VARFRAC_PEAK) < 0.006,
+            f"< 0.006 of {BF16_VARFRAC_PEAK}",
+            round(abs(float(vf[peak_i]) - BF16_VARFRAC_PEAK), 4),
+        )
+    # ---- eval rates: J-exclusivity + late band reproduce under nf4 ----
+    pe = _eval_rates(EVAL_1P5B_NF4)
+    if pe is not None:
+        mh = pe["multihop"]
+        claim_near(
+            "[I] nf4 multihop J@10 overall", 0.592, _rate(mh, "rates_j", "overall", 10)
+        )
+        claim_near(
+            "[I] nf4 multihop logit@10 overall",
+            0.418,
+            _rate(mh, "rates_l", "overall", 10),
+        )
+        claim_near(
+            "[I] nf4 multihop J@10 early", 0.194, _rate(mh, "rates_j", "early", 10)
+        )
+        claim_near("[I] nf4 multihop J@10 mid", 0.126, _rate(mh, "rates_j", "mid", 10))
+        claim_near(
+            "[I] nf4 multihop J@10 late", 0.505, _rate(mh, "rates_j", "late", 10)
+        )
+        claim_near(
+            "[I] nf4 multihop logit@10 early (J-exclusive)",
+            0.00,
+            _rate(mh, "rates_l", "early", 10),
+        )
+        claim_near(
+            "[I] nf4 multihop logit@10 mid (J-exclusive)",
+            0.00,
+            _rate(mh, "rates_l", "mid", 10),
+        )
+        claim_near(
+            "[I] nf4 association J@10 overall (floored)",
+            0.00,
+            _rate(pe["association"], "rates_j", "overall", 10),
+        )
+    # ---- readout: depth-of-emergence + late Spearman unchanged from bf16 ----
+    d = load_pt_or_fail(READOUT_1P5B_NF4)
+    if d is not None:
+        summary = d["summary"]
+        layers_r = list(summary["layers"])
+        rederived = _rederive_emergence(d["per_prompt"], layers_r)
+        stored = summary["depth_of_emergence_top10"]
+        for field in ("median_layer_j_allpos", "median_layer_l_allpos"):
+            claim_eq(
+                f"[I] nf4 {field} rederived==stored", stored[field], rederived[field]
+            )
+        claim_eq(
+            "[I] nf4 depth J allpos == 23 (== bf16)",
+            BF16_DEPTH_J,
+            float(stored["median_layer_j_allpos"]),
+        )
+        claim_eq(
+            "[I] nf4 depth logit allpos == 19 (== bf16)",
+            BF16_DEPTH_L,
+            float(stored["median_layer_l_allpos"]),
+        )
+        j_last = list(summary["layer_mean_spearman_j_last"])
+        l_last = list(summary["layer_mean_spearman_l_last"])
+        claim_near("[I] nf4 L26 Spearman J-last", 0.789, float(j_last[26]))
+        claim_near("[I] nf4 L26 Spearman logit-last", 0.880, float(l_last[26]))
+
+
+STRUCT_1P5B_C4 = (
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt"
+)
+EVAL_1P5B_C4 = "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt"
+READOUT_1P5B_C4 = (
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt"
+)
+
+
+def audit_corpus_sensitivity() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK J: corpus sensitivity (C4-en refit; workspace-band invariance)")
+    print("=" * 80)
+    # ---- c4en lens integrity + corpus_tag ----
+    d = _audit_lens(
+        "1.5b-c4en",
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json",
+        1536,
+        "Qwen/Qwen2.5-1.5B-Instruct",
+        "bf16",
+        100,
+    )
+    cfg = load_json_or_fail("jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json")
+    if cfg is not None:
+        claim_eq("[J] c4en lens corpus_tag == 'c4en'", "c4en", cfg.get("corpus_tag"))
+    del d
+    # ---- structure: workspace-band peak IDENTITY (L21 0.124); early band diverges ----
+    r = _struct_summary(STRUCT_1P5B_C4, "1.5b-c4en")
+    if r is not None:
+        s, layers = r
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        lk = np.array(s["mean_readout_kurtosis"], dtype=float)
+        # workspace band L17..26: peak is L21 = 0.124 on BOTH corpora (headline).
+        band = [i for i, l in enumerate(layers) if 17 <= l <= 26]
+        band_peak = band[int(np.argmax(vf[band]))]
+        claim_eq(
+            "[J] c4en workspace-band(17..26) peak layer == 21", 21, layers[band_peak]
+        )
+        claim_near(
+            "[J] c4en L21 varfrac == 0.124 (peak identity)", 0.124, float(vf[band_peak])
+        )
+        claim(
+            "[J] c4en L21 within 0.003 of bf16 baseline (corpus-invariant)",
+            abs(float(vf[band_peak]) - BF16_VARFRAC_PEAK) < 0.003,
+            f"< 0.003 of {BF16_VARFRAC_PEAK}",
+            round(abs(float(vf[band_peak]) - BF16_VARFRAC_PEAK), 4),
+        )
+        # early-band divergence: L0 varfrac doubles (0.082 -> 0.174) and now
+        # exceeds the workspace peak -> global argmax is L0, not L21.
+        claim_near(
+            "[J] c4en L0 varfrac == 0.174 (early-band divergence)", 0.174, float(vf[0])
+        )
+        claim(
+            "[J] c4en global argmax is L0 (early band > workspace)",
+            int(vf.argmax()) == 0 and float(vf[0]) > float(vf[band_peak]),
+            "L0 > L21",
+            f"L{layers[int(vf.argmax())]} ({vf[0]:.3f} vs {vf[band_peak]:.3f})",
+        )
+        claim_near(
+            "[J] c4en logit-kurt L0 == 2.641 (early-band drop)",
+            2.641,
+            float(lk[0]),
+            atol=0.01,
+        )
+        kt_i = int(lk.argmin())
+        claim_eq("[J] c4en logit-kurt trough layer == 18", 18, layers[kt_i])
+        claim_near("[J] c4en logit-kurt trough value", 0.872, float(lk[kt_i]))
+    # ---- eval: late band + @50 corpus-invariant; logit early/mid stays 0 ----
+    pe = _eval_rates(EVAL_1P5B_C4)
+    if pe is not None:
+        mh = pe["multihop"]
+        claim_near(
+            "[J] c4en multihop J@10 late", 0.485, _rate(mh, "rates_j", "late", 10)
+        )
+        claim_near(
+            "[J] c4en multihop logit@10 late", 0.398, _rate(mh, "rates_l", "late", 10)
+        )
+        claim_near(
+            "[J] c4en multihop J@10 overall", 0.485, _rate(mh, "rates_j", "overall", 10)
+        )
+        claim_near(
+            "[J] c4en multihop J@50 overall", 0.748, _rate(mh, "rates_j", "overall", 50)
+        )
+        claim_near(
+            "[J] c4en multihop J@10 early (reduced)",
+            0.116,
+            _rate(mh, "rates_j", "early", 10),
+        )
+        claim_near(
+            "[J] c4en multihop logit@10 early (J-exclusive)",
+            0.00,
+            _rate(mh, "rates_l", "early", 10),
+        )
+        claim_near(
+            "[J] c4en multihop logit@10 mid (J-exclusive)",
+            0.00,
+            _rate(mh, "rates_l", "mid", 10),
+        )
+        claim_near(
+            "[J] c4en association J@10 overall (floored)",
+            0.00,
+            _rate(pe["association"], "rates_j", "overall", 10),
+        )
+    # ---- readout: depth medians identical; late Spearman within 0.003 ----
+    d = load_pt_or_fail(READOUT_1P5B_C4)
+    if d is not None:
+        summary = d["summary"]
+        stored = summary["depth_of_emergence_top10"]
+        claim_eq(
+            "[J] c4en depth J allpos == 23 (== wikitext)",
+            BF16_DEPTH_J,
+            float(stored["median_layer_j_allpos"]),
+        )
+        claim_eq(
+            "[J] c4en depth logit allpos == 19 (== wikitext)",
+            BF16_DEPTH_L,
+            float(stored["median_layer_l_allpos"]),
+        )
+        j26 = float(list(summary["layer_mean_spearman_j_last"])[26])
+        claim_near("[J] c4en L26 Spearman J-last == 0.803", 0.803, j26)
+        claim(
+            "[J] c4en L26 Spearman J within 0.003 of wikitext",
+            abs(j26 - BF16_L26_SPEARMAN_J) < 0.003,
+            f"< 0.003 of {BF16_L26_SPEARMAN_J}",
+            round(abs(j26 - BF16_L26_SPEARMAN_J), 4),
+        )
+
+
+STRUCT_1P5B_HELDOUT = (
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt"
+)
+READOUT_1P5B_HELDOUT = (
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt"
+)
+STRUCT_7B_HELDOUT = (
+    "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt"
+)
+READOUT_7B_HELDOUT = (
+    "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt"
+)
+
+
+def audit_heldout() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK K: held-out-sample robustness (diversified C4 held-out set)")
+    print("=" * 80)
+    # ---- 1.5B: peak stays L21 0.133; depth within +/-2 of the base set ----
+    r = _struct_summary(STRUCT_1P5B_HELDOUT, "1.5b-heldout")
+    if r is not None:
+        s, layers = r
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        lk = np.array(s["mean_readout_kurtosis"], dtype=float)
+        peak_i = int(vf.argmax())
+        claim_eq("[K] 1.5B heldout varfrac(k25) peak layer == 21", 21, layers[peak_i])
+        claim_near("[K] 1.5B heldout peak value == 0.133", 0.133, float(vf[peak_i]))
+        claim_near("[K] 1.5B heldout L0 varfrac == 0.084", 0.084, float(vf[0]))
+        kt_i = int(lk.argmin())
+        claim_eq("[K] 1.5B heldout logit-kurt trough layer == 17", 17, layers[kt_i])
+        claim_near(
+            "[K] 1.5B heldout logit-kurt trough value == 1.00",
+            1.000,
+            float(lk[kt_i]),
+            atol=0.01,
+        )
+    d = load_pt_or_fail(READOUT_1P5B_HELDOUT)
+    if d is not None:
+        summary = d["summary"]
+        layers_r = list(summary["layers"])
+        rederived = _rederive_emergence(d["per_prompt"], layers_r)
+        stored = summary["depth_of_emergence_top10"]
+        for field in ("median_layer_j_allpos", "median_layer_l_allpos"):
+            claim_eq(
+                f"[K] 1.5B heldout {field} rederived==stored",
+                stored[field],
+                rederived[field],
+            )
+        dj = float(stored["median_layer_j_allpos"])
+        dl = float(stored["median_layer_l_allpos"])
+        claim_eq("[K] 1.5B heldout depth J allpos == 22", 22.0, dj)
+        claim_eq("[K] 1.5B heldout depth logit allpos == 19", 19.0, dl)
+        claim(
+            "[K] 1.5B heldout depth within +/-2 layers of base (23/19)",
+            abs(dj - BF16_DEPTH_J) <= 2.0 and abs(dl - BF16_DEPTH_L) <= 2.0,
+            "|dj-23|<=2 and |dl-19|<=2",
+            f"dj={dj} dl={dl}",
+        )
+        j26 = float(list(summary["layer_mean_spearman_j_last"])[26])
+        claim(
+            "[K] 1.5B heldout J readout fidelity >= base (0.870 vs 0.800)",
+            j26 >= BF16_L26_SPEARMAN_J,
+            f">= {BF16_L26_SPEARMAN_J}",
+            round(j26, 4),
+        )
+    # ---- 7B: band-level pins (low occupancy => quote ranges, not 3dp) ----
+    r7 = _struct_summary(STRUCT_7B_HELDOUT, "7b-heldout")
+    if r7 is not None:
+        s, layers = r7
+        vf = np.array(s["mean_varfrac"][25], dtype=float)
+        peak_i, trough_i = int(vf.argmax()), int(vf.argmin())
+        claim(
+            "[K] 7B heldout varfrac peak layer in {22,23}",
+            layers[peak_i] in (22, 23),
+            "{22,23}",
+            layers[peak_i],
+        )
+        claim(
+            "[K] 7B heldout varfrac trough layer in {16,17}",
+            layers[trough_i] in (16, 17),
+            "{16,17}",
+            layers[trough_i],
+        )
+        claim(
+            "[K] 7B heldout peak value in [0.03,0.07]",
+            0.03 <= float(vf[peak_i]) <= 0.07,
+            "[0.03,0.07]",
+            round(float(vf[peak_i]), 4),
+        )
+        claim(
+            "[K] 7B heldout trough value in [0.005,0.03]",
+            0.005 <= float(vf[trough_i]) <= 0.03,
+            "[0.005,0.03]",
+            round(float(vf[trough_i]), 4),
+        )
+        claim(
+            "[K] 7B heldout varfrac ceiling <= 0.10 (U-profile)",
+            bool((vf <= 0.10).all()),
+            "<= 0.10",
+            round(float(vf.max()), 4),
+        )
+        # ~2.6x below 1.5B on the matched held-out set.
+        if r is not None:
+            vf15 = np.array(r[0]["mean_varfrac"][25], dtype=float)
+            ratio = float(vf15.max()) / float(vf.max())
+            claim(
+                "[K] 1.5B/7B heldout peak ratio in [2.0,3.5] (~2.6x)",
+                2.0 <= ratio <= 3.5,
+                "[2.0,3.5]",
+                round(ratio, 2),
+            )
+    d7 = load_pt_or_fail(READOUT_7B_HELDOUT)
+    if d7 is not None:
+        summary = d7["summary"]
+        layers_r = list(summary["layers"])
+        rederived = _rederive_emergence(d7["per_prompt"], layers_r)
+        stored = summary["depth_of_emergence_top10"]
+        for field in ("median_layer_j_allpos", "median_layer_l_allpos"):
+            claim_eq(
+                f"[K] 7B heldout {field} rederived==stored",
+                stored[field],
+                rederived[field],
+            )
+        finite_ok = np.isfinite(float(stored["median_layer_j_allpos"])) and np.isfinite(
+            float(stored["median_layer_l_allpos"])
+        )
+        claim(
+            "[K] 7B heldout depth medians finite",
+            finite_ok,
+            "finite",
+            "ok" if finite_ok else "NaN",
+        )
+
+
+# ---- Stage-5.2 entailed-property swap bank. Each artifact: per_item(33) +
+# summary.metrics[cond@strength] with property_flip_rate, clean_retention_rate,
+# mean_dlogp_swap_answer, mean_injected_norm. Conditions: jlens/logitlens/random.
+ES_CONDS = ("jlens", "logitlens", "random")
+# key, filename, layer, style, n_correct (clean, /33), is_peak_layer
+ES_BANK: list[tuple[str, str, int, str, int, bool]] = [
+    (
+        "1.5b chat L18",
+        "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        18,
+        "chat",
+        17,
+        True,
+    ),
+    (
+        "1.5b chat L21",
+        "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        21,
+        "chat",
+        17,
+        False,
+    ),
+    (
+        "1.5b chat L24",
+        "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        24,
+        "chat",
+        17,
+        False,
+    ),
+    (
+        "1.5b plain L21",
+        "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+        21,
+        "plain",
+        4,
+        False,
+    ),
+    (
+        "7b chat L18",
+        "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        18,
+        "chat",
+        30,
+        False,
+    ),
+    (
+        "7b chat L19",
+        "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        19,
+        "chat",
+        30,
+        True,
+    ),
+    (
+        "7b chat L22",
+        "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        22,
+        "chat",
+        30,
+        False,
+    ),
+    (
+        "7b plain L22",
+        "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        22,
+        "plain",
+        11,
+        False,
+    ),
+]
+# Headline dlogp(swap-property) @ s=2 at the peak layers (obs tables).
+ES_HEADLINE = {
+    "1.5b chat L18": {"jlens": 2.13, "logitlens": 0.07, "random": 0.14},
+    "7b chat L19": {"jlens": 1.250, "logitlens": 0.178, "random": 0.040},
+}
+ES_PAPERVERBATIM = [
+    "entailed_paperverbatim_chat_all_L19_7b.pt",
+    "entailed_paperverbatim_chat_auto_L19_7b.pt",
+    "entailed_paperverbatim_plain_all_L19_7b.pt",
+    "entailed_paperverbatim_plain_auto_L19_7b.pt",
+]
+
+
+def audit_entailed_swap() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK L: entailed-property swaps (stage 5.2; J-lens-specific graded effect)")
+    print("=" * 80)
+    # dlogp at peak layer per scale, collected for the depth-localization check.
+    peak_jlens_dlogp: dict[str, dict[int, float]] = {"1.5b": {}, "7b": {}}
+    for key, fname, layer, style, n_correct, is_peak in ES_BANK:
+        d = load_pt_or_fail(fname)
+        if d is None:
+            continue
+        s = d["summary"]
+        m = s["metrics"]
+        claim_eq(f"[L] {key} n_items == 33", 33, len(d["per_item"]))
+        claim_eq(f"[L] {key} layer", layer, int(s["layer"]))
+        claim_eq(f"[L] {key} prompt_style", style, s["prompt_style"])
+        claim_eq(
+            f"[L] {key} clean n_correct == {n_correct}/33",
+            n_correct,
+            int(s["n_correct"]),
+        )
+        claim_eq(f"[L] {key} conditions", list(ES_CONDS), list(s["conditions"]))
+        # (1) discrete flip rate == 0 everywhere (both metrics, both strengths).
+        flips = [
+            float(m[f"{c}@{st}"][fld])
+            for c in ES_CONDS
+            for st in ("1.0", "2.0")
+            for fld in ("property_flip_rate", "property_flip_tok1_rate")
+        ]
+        claim(
+            f"[L] {key} property flip rate == 0 (all conds x strengths)",
+            max(flips) == 0.0,
+            "0.0",
+            max(flips),
+        )
+        # (2) retention bound: the swap never breaks the model (>= 0.9 all conds).
+        retains = [
+            float(m[f"{c}@{st}"]["clean_retention_rate"])
+            for c in ES_CONDS
+            for st in ("1.0", "2.0")
+        ]
+        claim(
+            f"[L] {key} clean retention >= 0.9 (all conds)",
+            min(retains) >= 0.9,
+            ">= 0.9",
+            round(min(retains), 4),
+        )
+        # (3) magnitude equalization: injected-norm identical across conditions.
+        for st in ("1.0", "2.0"):
+            norms = [float(m[f"{c}@{st}"]["mean_injected_norm"]) for c in ES_CONDS]
+            spread = max(norms) - min(norms)
+            claim(
+                f"[L] {key} injected-norm equal across conds @{st}",
+                spread < 1e-3,
+                "< 1e-3",
+                round(spread, 6),
+            )
+        scale = "1.5b" if key.startswith("1.5b") else "7b"
+        if style == "chat":
+            peak_jlens_dlogp[scale][layer] = float(
+                m["jlens@2.0"]["mean_dlogp_swap_answer"]
+            )
+        # (4) headline dlogp @s=2 at the peak layers.
+        if key in ES_HEADLINE:
+            for c, val in ES_HEADLINE[key].items():
+                claim_near(
+                    f"[L] {key} {c}@2 dlogp(swap)",
+                    val,
+                    float(m[f"{c}@2.0"]["mean_dlogp_swap_answer"]),
+                    atol=0.01,
+                )
+        # (5) ordering at the peak layers: jlens dominates BOTH controls.
+        #     NB: this is jlens > logitlens AND jlens > random -- NOT the strict
+        #     jlens>logitlens>random chain, which fails at 1.5B L18 where random
+        #     (0.14) exceeds logitlens (0.07). The load-bearing claim is that the
+        #     J-lens direction beats every equalized-magnitude control.
+        if is_peak:
+            j = float(m["jlens@2.0"]["mean_dlogp_swap_answer"])
+            lo = float(m["logitlens@2.0"]["mean_dlogp_swap_answer"])
+            rd = float(m["random@2.0"]["mean_dlogp_swap_answer"])
+            claim(
+                f"[L] {key} jlens dlogp > both controls @2 (J-lens-specific)",
+                j > lo and j > rd,
+                "jlens > max(logit,random)",
+                f"{j:.3f} > max({lo:.3f},{rd:.3f})",
+            )
+            claim(
+                f"[L] {key} jlens dlogp >= 5x larger control @2",
+                j >= 5.0 * max(lo, rd),
+                ">= 5x",
+                round(j / max(lo, rd), 2),
+            )
+    # (6) depth localization: the property effect peaks below the report layer.
+    if {18, 21, 24} <= set(peak_jlens_dlogp["1.5b"]):
+        p = peak_jlens_dlogp["1.5b"]
+        claim(
+            "[L] 1.5b jlens dlogp peaks at L18 (< L21 < L24 report band)",
+            p[18] > p[21] > p[24],
+            "L18 > L21 > L24",
+            f"{p[18]:.2f} > {p[21]:.2f} > {p[24]:.2f}",
+        )
+    if {18, 19, 22} <= set(peak_jlens_dlogp["7b"]):
+        p = peak_jlens_dlogp["7b"]
+        claim(
+            "[L] 7b jlens dlogp peaks at L19 (> L18, > L22 report)",
+            p[19] > p[18] and p[19] > p[22],
+            "L19 max",
+            f"L18={p[18]:.2f} L19={p[19]:.2f} L22={p[22]:.2f}",
+        )
+    # (7) paperverbatim probes: load, flip==0, chat-all headline dlogp ~ +1.60.
+    for fname in ES_PAPERVERBATIM:
+        d = load_pt_or_fail(fname)
+        if d is None:
+            continue
+        s = d["summary"]
+        m = s["metrics"]
+        claim_eq(
+            f"[L] paperverbatim {s['prompt_style']}/{s['swap_scope']} n_items == 3",
+            3,
+            len(d["per_item"]),
+        )
+        pv_flips = [
+            float(m[f"{c}@{st}"]["property_flip_rate"])
+            for c in ES_CONDS
+            for st in ("1.0", "2.0")
+        ]
+        claim(
+            f"[L] paperverbatim {s['prompt_style']}/{s['swap_scope']} flip rate == 0",
+            max(pv_flips) == 0.0,
+            "0.0",
+            max(pv_flips),
+        )
+        if fname == "entailed_paperverbatim_chat_all_L19_7b.pt":
+            claim_near(
+                "[L] paperverbatim chat/all jlens@2 dlogp ~ +1.60",
+                1.60,
+                float(m["jlens@2.0"]["mean_dlogp_swap_answer"]),
+                atol=0.02,
+            )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
@@ -1080,6 +1830,11 @@ def main() -> None:
     audit_verbal_report()
     audit_verbal_report_6c()
     audit_crosstie()
+    audit_n_stability()
+    audit_quant_exoneration()
+    audit_corpus_sensitivity()
+    audit_heldout()
+    audit_entailed_swap()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")

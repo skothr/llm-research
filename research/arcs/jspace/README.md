@@ -67,9 +67,14 @@ Observations so far, in `observations/`:
   landed 2026-07-22 (see 7B replication section).
 
 Load-bearing numbers re-derive from artifacts via
-`examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
-lenses are committed to LFS under `data/` (design-plan Decision 4); full
-lenses are cache-only, regenerable via `examples/jspace_fit_lens.py`.
+`examples/jspace_audit_findings.py` (450 checks at arc close). All small
+derived artifacts (34 files, ~51 MB) are LFS-committed under `data/` and
+MANIFEST-registered (42 files, sha256), so **checks B–L run from a clean
+clone**; check A and the lens-integrity blocks read the full fitted
+lenses, which stay cache-only per Decision 4 (committed layer subsets +
+`jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
+the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
+association eval sets live in that clone).
 
 **Corpus provenance (Decision 1, recorded 2026-07-20):** the frozen
 fitting corpus (`fitting_prompts_wikitext103_n1000.json`) replicates the

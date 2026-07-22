@@ -169,9 +169,320 @@ META: dict[str, dict[str, Any]] = {
         ),
         "consumers": ["jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"],
     },
-    # ---- derived metrics get added here as gates open ----------------------
-    # e.g. "<split_half_stability>.pt" (class derived, inputs the lens .pt)
+    # ---- derived metric/scan/swap artifacts (stage-7 promotion) ------------
+    # The small derived artifacts the audit (examples/jspace_audit_findings.py)
+    # re-derives from, promoted out of data/cache/ into data/ for clean-clone
+    # auditability. Built compactly below via _derived() and merged into META
+    # (the full fitted lenses that produced them stay cache-only, Decision 4).
 }
+
+
+def _derived(
+    script: str,
+    inputs: list[str],
+    model: str,
+    provenance: str,
+    consumers: list[str],
+) -> dict[str, Any]:
+    return {
+        "class": "derived",
+        "producing_script": script,
+        "inputs": inputs,
+        "requires_model": model,
+        "provenance": provenance,
+        "consumers": consumers,
+    }
+
+
+# Full fitted lenses (cache-only, gitignored) named as inputs of the derived set.
+_L15 = "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+_L7B = "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+_L15N4 = "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)"
+_L15N5 = "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, gitignored)"
+_L15C4 = "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)"
+_HW = "heldout_prompts_wikitext103_n30.json"
+_HC4 = "heldout_prompts_c4en_n30.json"
+_EVAL = "examples/jspace_lens_eval.py"
+_READ = "examples/jspace_readout_scan.py"
+_STRUCT = "examples/jspace_structure_scan.py"
+_VR = "examples/jspace_verbal_report.py"
+_ENT = "examples/jspace_entailed_swap.py"
+_XTIE = "examples/jspace_nla_crosstie.py"
+
+_DERIVED: dict[str, dict[str, Any]] = {
+    # -- lens_eval x4 (intermediate-concept top-k readout rates per depth band) --
+    "lens_eval_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _EVAL,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Intermediate-concept eval (multihop + association) top-k readout "
+        "hit-rates per depth band; 1.5B bf16 J-lens vs logit-lens (stage-3 H3).",
+        ["obs 2026-07-18-intermediate-concept-evals-h3-confirmed.md", "audit Check B"],
+    ),
+    "lens_eval_qwen2.5-7b_nf4_n100.pt": _derived(
+        _EVAL,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Intermediate-concept eval top-k readout hit-rates per depth band; 7B "
+        "nf4 J-lens vs logit-lens (stage-3 scale comparison H2).",
+        ["obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md", "audit Check B"],
+    ),
+    "lens_eval_qwen2.5-1.5b_nf4_n100.pt": _derived(
+        _EVAL,
+        [_L15N4],
+        "qwen-1.5b-nf4",
+        "Intermediate-concept eval; 1.5B nf4 quantization control (exoneration).",
+        ["obs 2026-07-21-quantization-exonerated-1p5b-nf4.md", "audit Check I"],
+    ),
+    "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
+        _EVAL,
+        [_L15C4],
+        "qwen-1.5b-bf16",
+        "Intermediate-concept eval; 1.5B C4-en corpus-sensitivity refit.",
+        ["obs 2026-07-20-corpus-sensitivity-c4-1p5b.md", "audit Check J"],
+    ),
+    # -- readout_scan x6 (depth-of-emergence + per-layer Spearman) ------------
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _READ,
+        [_L15, _HW],
+        "qwen-1.5b-bf16",
+        "Readout-scan depth-of-emergence (top-10) + per-layer Spearman, 1.5B "
+        "bf16, wikitext held-out set (stage-3 first pass; GPU-regenerated "
+        "2026-07-21 with rich per-layer token capture).",
+        ["obs 2026-07-18-readout-scan-1p5b-first-pass.md", "audit Check C"],
+    ),
+    "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _READ,
+        [_L7B, _HW],
+        "qwen-7b-nf4",
+        "Readout-scan depth-of-emergence + per-layer Spearman, 7B nf4, wikitext "
+        "held-out set (stage-3 scale comparison).",
+        ["obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md", "audit Check C"],
+    ),
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt": _derived(
+        _READ,
+        [_L15N4, _HW],
+        "qwen-1.5b-nf4",
+        "Readout-scan, 1.5B nf4 quantization control, wikitext held-out set.",
+        ["obs 2026-07-21-quantization-exonerated-1p5b-nf4.md", "audit Check I"],
+    ),
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
+        _READ,
+        [_L15C4, _HW],
+        "qwen-1.5b-bf16",
+        "Readout-scan, 1.5B C4-en corpus refit (evaluated on the same wikitext "
+        "held-out set as the baseline).",
+        ["obs 2026-07-20-corpus-sensitivity-c4-1p5b.md", "audit Check J"],
+    ),
+    "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt": _derived(
+        _READ,
+        [_L15, _HC4],
+        "qwen-1.5b-bf16",
+        "Readout-scan, 1.5B bf16 (wikitext-fit lens) on the diversified C4 "
+        "held-out set (held-out-sample robustness control).",
+        ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
+    ),
+    "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt": _derived(
+        _READ,
+        [_L7B, _HC4],
+        "qwen-7b-nf4",
+        "Readout-scan, 7B nf4 on the diversified C4 held-out set "
+        "(held-out-sample robustness control).",
+        ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
+    ),
+    # -- structure_scan x7 (varfrac / active-atom / readout-kurtosis per depth) --
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _STRUCT,
+        [_L15, _HW],
+        "qwen-1.5b-bf16",
+        "Stage-4 J-space structure map (varfrac k={5,10,25,50} / active-atom / "
+        "readout-kurtosis per depth), 1.5B bf16, wikitext held-out set.",
+        ["obs 2026-07-20-jspace-structure-stage4.md", "audit Check D"],
+    ),
+    "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _STRUCT,
+        [_L7B, _HW],
+        "qwen-7b-nf4",
+        "Stage-4 J-space structure map, 7B nf4, wikitext held-out set.",
+        ["obs 2026-07-20-jspace-structure-stage4.md", "audit Check D"],
+    ),
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt": _derived(
+        _STRUCT,
+        [_L15N4, _HW],
+        "qwen-1.5b-nf4",
+        "Stage-4 structure map, 1.5B nf4 quantization control.",
+        ["obs 2026-07-21-quantization-exonerated-1p5b-nf4.md", "audit Check I"],
+    ),
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt": _derived(
+        _STRUCT,
+        [_L15N5, _HW],
+        "qwen-1.5b-nf4",
+        "Stage-4 structure map, 1.5B nf4 n=500 fit-budget (H1) control.",
+        ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check H"],
+    ),
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
+        _STRUCT,
+        [_L15C4, _HW],
+        "qwen-1.5b-bf16",
+        "Stage-4 structure map, 1.5B C4-en corpus refit.",
+        ["obs 2026-07-20-corpus-sensitivity-c4-1p5b.md", "audit Check J"],
+    ),
+    "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt": _derived(
+        _STRUCT,
+        [_L15, _HC4],
+        "qwen-1.5b-bf16",
+        "Stage-4 structure map, 1.5B bf16 on the diversified C4 held-out set.",
+        ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
+    ),
+    "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt": _derived(
+        _STRUCT,
+        [_L7B, _HC4],
+        "qwen-7b-nf4",
+        "Stage-4 structure map, 7B nf4 on the diversified C4 held-out set.",
+        ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
+    ),
+    # -- verbal_report x4 (stage-5.1 / 5.1b verbal-report swap suites) -------
+    "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _VR,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), "
+        "1.5B bf16 @L21.",
+        ["obs 2026-07-20-verbal-report-swaps-stage5.md", "audit Checks E, F"],
+    ),
+    "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _VR,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
+        ["obs 2026-07-20-verbal-report-swaps-stage5.md", "audit Checks E, F"],
+    ),
+    "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _VR,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
+        ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
+    ),
+    "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _VR,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
+        ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
+    ),
+    # -- entailed_swap x8 (stage-5.2 entailed-property swap bank) -------------
+    "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _ENT,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 "
+        "conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _ENT,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _ENT,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
+        _ENT,
+        [_L15],
+        "qwen-1.5b-bf16",
+        "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
+        ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+    ),
+    # -- paperverbatim x4 (cue-redundancy control probe, --items-json, n=3) --
+    "entailed_paperverbatim_chat_all_L19_7b.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 paper-verbatim / cue-redundancy control probe (--items-json, "
+        "n=3), 7B nf4 @L19, chat all-scope (every pre-answer position).",
+        [
+            "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+            "audit Check L",
+        ],
+    ),
+    "entailed_paperverbatim_chat_auto_L19_7b.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, chat auto-scope.",
+        [
+            "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+            "audit Check L",
+        ],
+    ),
+    "entailed_paperverbatim_plain_all_L19_7b.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain all-scope.",
+        [
+            "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+            "audit Check L",
+        ],
+    ),
+    "entailed_paperverbatim_plain_auto_L19_7b.pt": _derived(
+        _ENT,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain auto-scope.",
+        [
+            "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+            "audit Check L",
+        ],
+    ),
+    # -- nla_crosstie x1 (stage-6 J-lens x NLA activation-vector cross-tie) ---
+    "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        _XTIE,
+        [_L7B],
+        "qwen-7b-nf4",
+        "Stage-6 NLA cross-tie: 7B nf4 J-lens (L19) x NLA activation-vector at "
+        "hidden_states[20]; rank-median + carrier-decomposition metrics (24 "
+        "prompts + 1 control). Excludes its .partial.jsonl / .phase1.pt sidecars.",
+        ["obs 2026-07-21-nla-crosstie-stage6.md", "audit Check G"],
+    ),
+}
+META.update(_DERIVED)
 
 # Disk-derived provenance stub for a top-level deliverable with no META entry
 # yet (a lens `.pt`/sidecar promoted before its registry line was added). Its
@@ -265,12 +576,33 @@ def write_manifest() -> None:
     doc = {
         "arc": "jspace",
         "description": (
-            "Raw + derived jspace artifacts: the frozen wikitext-103 fitting "
-            "corpus, fitted Jacobian-lens tensors (jlens native format) with "
-            "their .config.json provenance sidecars, and derived metric/table "
-            "products. Committed via git-LFS so figures and the audit "
-            "reproduce from a clean clone. The cache/ subdir is excluded."
+            "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en "
+            "fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors "
+            "(jlens native format) with their .config.json provenance sidecars, "
+            "and the promoted derived metric/scan/swap products (lens_eval, "
+            "readout_scan, structure_scan, verbal_report, entailed_swap + "
+            "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
+            "Committed via git-LFS so figures and the audit reproduce from a "
+            "clean clone. The cache/ subdir (full fitted lenses + working "
+            "state) is excluded. The J-lens dependency is pinned in the "
+            "top-level `jlens_pin` field below (the eval prompt sets live in "
+            "that clone)."
         ),
+        "jlens_pin": {
+            "repo": "github.com/anthropics/jacobian-lens (editable clone at "
+            "/home/ai/ai-projects/jacobian-lens)",
+            "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
+            "subject": "Initial release",
+            "date": "2026-07-02",
+            "provenance": (
+                "The J-lens fit/readout implementation (jlens.fit, native .pt "
+                "format) that produced every lens + derived artifact in this "
+                "manifest. The multihop / association intermediate-concept eval "
+                "prompt sets used by examples/jspace_lens_eval.py also live in "
+                "this clone, so the eval tables (audit Check B) are reproducible "
+                "only against this pinned commit."
+            ),
+        },
         "trust_note": (
             "Lens .pt files load via jlens / torch.load (pickle). Safe here: "
             "locally-fitted tensor dumps, not third-party data; the corpus is "
