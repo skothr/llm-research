@@ -7,7 +7,7 @@
   "seed": 42,
   "buffer_size": 10000,
   "offset": 1000,
-  "dedup_against": "research/arcs/jspace/data/fitting_prompts_c4en_n1000.json",
+  "dedup_against": "research/arcs/04_jspace/data/fitting_prompts_c4en_n1000.json",
   "filter": "len(text.strip()) >= 600",
   "n": 30,
   "prompts": [

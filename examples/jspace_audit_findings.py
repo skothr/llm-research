@@ -2,13 +2,13 @@
 arc's committed observations from the on-disk artifacts, and compare against
 what the observation files report. Prints per-check PASS/FAIL and exits 1 on
 any failure (stage-7 audit named in
-`research/arcs/jspace/plans/2026-07-18-jspace-design.md`).
+`research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`).
 
 Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 (`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /
 structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
 this audit re-derives from) are promoted, committed via git-LFS under
-`research/arcs/jspace/data/`, so checks B-L reproduce from a clean clone. The
+`research/arcs/04_jspace/data/`, so checks B-L reproduce from a clean clone. The
 FULL fitted lens tensors + their `.config.json` sidecars stay cache-only
 (design Decision 4 — their committed 7-layer subsets suffice for inspection),
 so the lens-integrity blocks (Check A + the refit lenses in H/I/J) resolve to
@@ -116,7 +116,7 @@ import torch
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-DATA = _REPO_ROOT / "research" / "arcs" / "jspace" / "data"
+DATA = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 CACHE = DATA / "cache"
 
 

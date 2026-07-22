@@ -97,4 +97,4 @@ the 8 measured passes had stable timings (best-effort; no variance capture).
 - `[gurnee2026-workspace §2.1]` — estimator definition;
   `kb/excerpts/gurnee2026-workspace#sec-2-1-jlens-def`
 - `anthropics/jacobian-lens` `jlens/fitting.py` (`jacobian_for_prompt`)
-- Plan: `research/arcs/jspace/plans/2026-07-18-jspace-design.md`
+- Plan: `research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`

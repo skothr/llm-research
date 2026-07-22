@@ -83,10 +83,10 @@ norm-ratio invariant.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --layer 22 --prompt-style chat --contrastive \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 21 --prompt-style chat --contrastive \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 ```
 
 ## Hypotheses

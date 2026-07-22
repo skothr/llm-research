@@ -69,7 +69,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode nf4 --dim-batch 8 --n-prompts 500 --device cuda
 python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
-    --out research/arcs/jspace/data/heldout_prompts_c4en_n30.json
+    --out research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
 # scans: --prompts <c4 heldout> (outputs auto-tag _heldoutc4en; no clobber)
 ```
 

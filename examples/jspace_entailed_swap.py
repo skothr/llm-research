@@ -14,7 +14,7 @@ If only ``jlens`` does, J-space carries relational structure; if ``logitlens``
 does too, the token-steering account (`nanda-workspace-review.md`) extends to
 entailed properties.
 
-Design + protocol: ``research/arcs/jspace/plans/2026-07-21-stage52-entailed-property.md``.
+Design + protocol: ``research/arcs/04_jspace/plans/2026-07-21-stage52-entailed-property.md``.
 Machinery is shared with stage 5.1 (``jspace_verbal_report.py``): ``normalize``,
 ``jlens_atom``, ``concept_ids``, ``topk_ids``, ``rank_of``, ``generate``,
 ``build_model``.
@@ -35,7 +35,7 @@ defect stage 5.1b's logitlens condition hit and part-A fixed.
 Usage (full GPU run, 7B peak layer):
     python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 --device cuda --layer 22 --prompt-style plain \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
+        --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 
 CPU smoke (plumbing, 2 items):
     python examples/jspace_entailed_swap.py --device cpu --limit 2 \
@@ -425,7 +425,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cpu", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
         help="Path to a fitted JacobianLens .pt (JacobianLens.save format).",
     )
     p.add_argument(
@@ -480,7 +480,7 @@ def parse_args() -> argparse.Namespace:
 def default_out(model: str, lens: str, style: str, layer: int) -> str:
     stem = Path(lens).stem
     return (
-        f"research/arcs/jspace/data/cache/"
+        f"research/arcs/04_jspace/data/cache/"
         f"entailed_swap_{style}_L{layer}_{slug(model)}_{stem}.pt"
     )
 

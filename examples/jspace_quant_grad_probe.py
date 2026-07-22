@@ -40,7 +40,7 @@ from typing import cast
 
 import torch
 
-ARC_DATA = Path("research/arcs/jspace/data")
+ARC_DATA = Path("research/arcs/04_jspace/data")
 DEFAULT_PROMPTS = ARC_DATA / "fitting_prompts_wikitext103_n1000.json"
 
 

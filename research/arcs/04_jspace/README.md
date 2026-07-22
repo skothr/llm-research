@@ -4,7 +4,7 @@
 models `[gurnee2026-workspace]` — a sparse, low-variance, causally privileged
 band of verbalizable representations — replicate on `Qwen/Qwen2.5-7B-Instruct`,
 and how do J-lens readouts at layer 20 relate to the NLA verbalizer readouts
-studied in `research/arcs/nla-verbalizer/`?
+studied in `research/arcs/01_nla-verbalizer/`?
 
 **Status (2026-07-22): ARC COMPLETE** — stages 1–6 including 5.2
 (entailed-property swaps) at both scales, the full robustness battery

@@ -3,7 +3,7 @@
 
 Wraps `jlens.fit` (anthropics/jacobian-lens) with this repo's conventions:
 the frozen fitting corpus committed at
-research/arcs/jspace/data/fitting_prompts_wikitext103_n1000.json, atomic
+research/arcs/04_jspace/data/fitting_prompts_wikitext103_n1000.json, atomic
 checkpointing for overnight resumability, and a config sidecar recording
 every knob so the audit can tie the lens artifact to its provenance.
 
@@ -27,7 +27,7 @@ from typing import cast
 
 import torch
 
-ARC_DATA = Path("research/arcs/jspace/data")
+ARC_DATA = Path("research/arcs/04_jspace/data")
 DEFAULT_PROMPTS = ARC_DATA / "fitting_prompts_wikitext103_n1000.json"
 
 

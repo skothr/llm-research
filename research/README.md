@@ -13,7 +13,7 @@ landing bin for one-off findings and an archive for retired material.
 | **NLA verbalizer — Qwen2.5-7B layer 20** | Paused; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/01_nla-verbalizer/README.md`](arcs/01_nla-verbalizer/README.md) |
 | **Subliminal trait transfer** | Paused (2026-06-10); Step 0 done | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/02_subliminal/README.md`](arcs/02_subliminal/README.md) |
 | **Embedding atlas — Qwen2.5-7B structural tracing** | Active, deep arc (started 2026-06-10) | What structural/procedural machinery does the model build on its input-embedding table — and how do the structural-token features it contains get used by Q/K/V, attention (RoPE bands), and FFN, layer by layer? | [`arcs/03_embedding-atlas/README.md`](arcs/03_embedding-atlas/README.md) |
-| **J-space replication — Qwen2.5-7B** | Design stage; plan awaiting review | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-7B-Instruct, and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/jspace/README.md`](arcs/jspace/README.md) |
+| **J-space replication — Qwen2.5-7B** | Complete (2026-07-22); PR #25 | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-7B-Instruct, and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md) |
 
 **Flagship: the NLA verbalizer arc.** A focused investigation applying
 Anthropic's released NLA model pair (`kitft/nla-qwen2.5-7b-L20-{av,ar}`) to

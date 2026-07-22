@@ -85,7 +85,7 @@ fragment-source item), so cross-condition magnitudes here are exact.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 18 --prompt-style chat \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 ```
 (Layer sweep: --layer {18,21,24}; 7B: --mode nf4 --layer 22 + the 7B lens.)
 

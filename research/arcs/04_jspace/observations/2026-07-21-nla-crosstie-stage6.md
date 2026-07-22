@@ -84,7 +84,7 @@ Audit Check G pins the summary values and booleans.
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_nla_crosstie.py --model Qwen/Qwen2.5-7B-Instruct \
-    --mode nf4 --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+    --mode nf4 --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
     --n-neutral 12 --n-concept 12 --n-decomp 12
 ```
 (Phase 1 on GPU, AV phase on CPU; resumes from checkpoint sidecars after
@@ -117,7 +117,7 @@ interruption.)
 
 - `[gurnee2026-workspace §2.3, §4.1]`;
   `kb/notes/interpretability/j-space.md` §5 (single-token limit)
-- NLA arc: `research/arcs/nla-verbalizer/` (capture-layer convention,
+- NLA arc: `research/arcs/01_nla-verbalizer/` (capture-layer convention,
   format-bias caveat L2)
 - Prior: `2026-07-20-jspace-structure-stage4.md` (depth bands),
   `2026-07-20-verbal-report-swaps-stage5b.md` (causal null),

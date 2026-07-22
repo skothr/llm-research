@@ -78,7 +78,7 @@ Usage:
     python examples/jspace_structure_scan.py --n-prompts 30           # 1.5B bf16
     python examples/jspace_structure_scan.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+        --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --n-prompts 30
 
 Run with PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True on the RTX 2080.
@@ -124,7 +124,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cuda", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
         help="Path to a fitted JacobianLens .pt (JacobianLens.save format).",
     )
     p.add_argument(
@@ -168,7 +168,7 @@ def parse_args() -> argparse.Namespace:
 def default_out(model: str, lens: str, tag: str = "") -> str:
     stem = Path(lens).stem
     return (
-        f"research/arcs/jspace/data/cache/structure_scan_{slug(model)}_{stem}{tag}.pt"
+        f"research/arcs/04_jspace/data/cache/structure_scan_{slug(model)}_{stem}{tag}.pt"
     )
 
 

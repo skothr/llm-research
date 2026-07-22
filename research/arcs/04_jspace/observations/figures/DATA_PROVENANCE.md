@@ -5,7 +5,7 @@ recipes behind each committed figure. Companion to `INVENTORY.md` (which maps
 each figure to its render script); every `INVENTORY.md` row links here.
 
 **Artifact locations — `data/` vs `data/cache/`.** Every `.pt` below exists in
-two places under `research/arcs/jspace/data/`:
+two places under `research/arcs/04_jspace/data/`:
 
 - `data/*.pt` — the **committed deliverable** (Git-LFS tracked, sha256-registered
   in `data/MANIFEST.json`). This is the clean-clone source of truth.
@@ -20,7 +20,7 @@ All `n=100` in filenames is the fitted **JacobianLens** rank/config label
 corpus: `data/fitting_prompts_wikitext103_n1000.json` (default) /
 `data/fitting_prompts_c4en_n1000.json` (C4 variant).
 
-Prompt-set files referenced below (all under `research/arcs/jspace/data/`):
+Prompt-set files referenced below (all under `research/arcs/04_jspace/data/`):
 
 - `heldout_prompts_wikitext103_n30.json` — 30 held-out wikitext-103 records
   (records 1001-1030), keys `{"source","selection","n","fitting_set","prompts"}`.
@@ -52,7 +52,7 @@ and `summary.mean_readout_kurtosis` (panel b), vs `summary.layers`.
 **Dump the raw rows:**
 ```python
 import torch
-d = torch.load("research/arcs/jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
+d = torch.load("research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
 s = d["summary"]; print(s["layers"], s["mean_varfrac"][25], s["mean_readout_kurtosis"])
 ```
 
@@ -81,7 +81,7 @@ condition/strength; per-item rows in `per_item` carry
 **Dump the raw rows:**
 ```python
 import torch
-d = torch.load("research/arcs/jspace/data/verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
+d = torch.load("research/arcs/04_jspace/data/verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
 print({k: v["target_top5_rate_all"] for k, v in d["summary"]["metrics"].items()})
 print(d["per_item"][0]["category"], d["per_item"][0]["source_word"], d["per_item"][0]["target_word"])
 ```
@@ -109,8 +109,8 @@ panel (b) `per_eval["multihop"]["rates_j"|"rates_l"][band][10]` per depth band.
 **Dump the raw rows:**
 ```python
 import torch
-sv = torch.load("research/arcs/jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt", weights_only=False)["summary"]
-ev = torch.load("research/arcs/jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)["summary"]
+sv = torch.load("research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt", weights_only=False)["summary"]
+ev = torch.load("research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)["summary"]
 print(sv["mean_varfrac"][25]); print(ev["per_eval"]["multihop"]["rates_j"])
 ```
 
@@ -136,7 +136,7 @@ Per-prompt rows carry the raw text and metrics: `tag`, `prompt`, `nla_rank_media
 **Dump the raw rows:**
 ```python
 import torch
-d = torch.load("research/arcs/jspace/data/nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt", weights_only=False)
+d = torch.load("research/arcs/04_jspace/data/nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt", weights_only=False)
 print(d["summary"]["metric1_rank_median_concept"], d["summary"]["expB_carrier_delta_mean"])
 r = d["per_prompt"][0]; print(r["tag"], repr(r["prompt"]), r.get("nla_rank_median"))
 ```
@@ -160,7 +160,7 @@ panel (b) `summary.depth_of_emergence_top10` (median emergence layer + never-eme
 **Dump the raw rows:**
 ```python
 import torch
-s = torch.load("research/arcs/jspace/data/readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt", weights_only=False)["summary"]
+s = torch.load("research/arcs/04_jspace/data/readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt", weights_only=False)["summary"]
 print(s["layer_mean_spearman_j_last"]); print(s["depth_of_emergence_top10"])
 ```
 
@@ -187,7 +187,7 @@ Local context at the scored position (the figure's caption snippet):
 **Dump the raw rows:**
 ```python
 import torch, json
-d = torch.load("research/arcs/jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
+d = torch.load("research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
 pp = d["per_prompt"][0]; print(pp["positions"][4], pp["seq_len"])
 print([row[4] for row in pp["topk_strs_j"]])  # per-layer top-5 J-lens tokens at pos idx 4
 ```
@@ -216,7 +216,7 @@ equality with `summary.metrics` at load — a mismatch aborts).
 **Dump the raw rows:**
 ```python
 import torch
-d = torch.load("research/arcs/jspace/data/entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
+d = torch.load("research/arcs/04_jspace/data/entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt", weights_only=False)
 correct = [it for it in d["per_item"] if it["baseline_correct"]]
 print([it["conditions"]["jlens@2.0"]["dlogp_swap_answer"] for it in correct][:5])
 print(d["summary"]["metrics"]["jlens@2.0"]["mean_dlogp_swap_answer"])
