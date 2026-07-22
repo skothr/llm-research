@@ -6,11 +6,11 @@ band of verbalizable representations — replicate on `Qwen/Qwen2.5-7B-Instruct`
 and how do J-lens readouts at layer 20 relate to the NLA verbalizer readouts
 studied in `research/arcs/nla-verbalizer/`?
 
-**Status (2026-07-22):** stages 1–6 complete including 5.2
-(entailed-property swaps), plus the full robustness battery (corpus,
-quantization, n-budget, held-out sample — all exonerated at 1.5B);
-remaining: a small set of gated 7B reruns, then stage 7 audit/synthesis
-(5.3 modulation not run — descoped). Design plan (signed off 2026-07-18):
+**Status (2026-07-22): ARC COMPLETE** — stages 1–6 including 5.2
+(entailed-property swaps) at both scales, the full robustness battery
+(corpus, quantization, n-budget, held-out sample), and stage-7
+audit/synthesis. 5.3 modulation descoped. Synthesis below. Design plan
+(signed off 2026-07-18):
 `plans/2026-07-18-jspace-design.md`; addenda: `plans/2026-07-20-stage5-design.md`,
 `plans/2026-07-20-stage6-design.md`, `plans/2026-07-21-stage52-entailed-property.md`.
 Observations so far, in `observations/`:
@@ -122,5 +122,76 @@ in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf
 paper digestion, KB grounding, experiment design — Claude (Fable 5 session
 2026-07-18, with opus/sonnet subagents).
 
-Findings, limitations, and next paths will be synthesized here at arc close
-per `research/ARC_PROCESS.md` step 6.
+## Synthesis (arc close, 2026-07-22)
+
+**Question answered:** the J-space phenomenon *partially* replicates on
+Qwen2.5, splitting cleanly into what transfers and what does not.
+
+**What replicates.**
+1. **The J-lens as a readout instrument.** It surfaces unspoken
+   intermediate concepts where the logit lens finds exactly nothing
+   (multihop early/mid bands, J-exclusive on two fitting corpora); the
+   "unspoken words" trajectories render legibly; depth-of-emergence
+   reverses pro-J-lens at 7B. The J-exclusivity is corpus-, budget-,
+   and quantization-robust; only the @10 magnitude is corpus-dependent.
+2. **The occupancy ceiling.** J-space variance fraction stays in the
+   paper's ≤~10% regime at both scales, with a workspace-like mid-late
+   band (1.5B peak L21) that is invariant to fitting corpus (bit-equal
+   peaks), n-budget (n=100→500: −1.4%), quantization (bf16↔nf4:
+   −1.4%), and held-out sample.
+3. **Relational causality — the arc's strongest positive.** Swapping an
+   unspoken concept along its J-lens vector moves the concept's
+   *entailed property* (spider→ant ⇒ 8→6-legs direction) by +2.13 nats
+   (1.5B, L18) / +1.25 nats (7B, L19) — 30×/7× an equal-magnitude
+   logit-lens token-steering control, which carries no property
+   knowledge. The effect peaks a few layers *below* the report-swap
+   layer at both scales: relational consequences engage earlier in
+   depth than verbalization.
+
+**What does not replicate.**
+1. **The discrete entailed-property flip** (the paper's 8→6): flip rate
+   0.000 at both scales, robust to the paper's verbatim prompt and to
+   all-position editing — the graded effect exists, the top-1 crossing
+   does not, at ≤7B.
+2. **J-space *membership* as the causally privileged ingredient**: the
+   J-space component of activation-derived concept vectors is inert in
+   report swaps (the paper's 59% tier lands at random both scales), and
+   the NLA verbalizer's content lives in the residual, not the J-space
+   component (removal-damage ≈ random removal). Report-token swap
+   effects are largely reachable by raw token steering.
+3. **The kurtosis workspace-onset signature**: inverted on Qwen
+   (high-early → mid-trough → weak late rise), on the paper-native
+   metric, robust across logit/prob space and both corpora.
+4. **7B structure diverges from the small-model picture**: ~3× lower
+   occupancy and a U-shaped depth profile — established as genuine
+   scale/model properties after the four-axis exoneration.
+
+**Reconciled picture.** On open models at this scale, the J_ℓ pullback
+is real and useful: it decodes held concepts token-indexed, and it
+carries *relational* structure that token identity cannot supply. What
+fails to transfer is the stronger claim that a sparse J-space *subspace*
+is the privileged causal locus — component-level interventions behave
+like noise, verbalizable content sits in the residual, and discrete
+behavioral flips don't occur. Whether that gap is capability scale
+(Claude 4.5-family vs ≤7B) or model family remains the open question
+the arc cannot answer from below.
+
+**Novel contributions beyond the paper:** the NLA cross-tie (two
+independent verbalization channels agree weakly and prompt-specifically;
+the NLA capture layer sits below the 7B J-lens legibility onset — a
+cross-arc architectural fact); the L18/L19-vs-L21/L22 depth split
+between relational and report effects; the kurtosis inversion; the
+four-axis robustness methodology with pre-registered decision rules.
+
+**Limitations.** One model family; n=100 lenses (n-stability shown at
+1.5B only); 7B fitted in nf4 (exonerated at 1.5B, untested at 7B-bf16
+which is infeasible here); single-token concept limit throughout;
+30-prompt held-out sets (7B varfrac quoted band-level); the entailed
+flip threshold is bounded below only; stage-6 inherits the NLA arc's
+unaudited AV format bias (mitigated by nulls, not eliminated).
+
+**Next paths.** Dose-response: strength sweep at the L18/L19 peak;
+mid-scale (14B/32B) replication of the discrete flip; richer
+concept-vector constructions for the 59%-tier question; an AV trained
+at L22+ (above the legibility onset) for a clean cross-tie; multilingual
+eval sets; verbal-report stage 5.3 modulation if the arc reopens.

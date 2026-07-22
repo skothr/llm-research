@@ -45,6 +45,7 @@ CPU smoke (plumbing, 2 items):
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 import time
@@ -466,6 +467,13 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Output .pt (default auto-named by style + layer + lens stem).",
     )
+    p.add_argument(
+        "--items-json",
+        default=None,
+        help="Path to a JSON list of item dicts replacing the built-in bank "
+        "(same schema; passed through validate_items). For prompt-variant "
+        "probes; pair with --out to avoid overwriting bank-run artifacts.",
+    )
     return p.parse_args()
 
 
@@ -716,11 +724,14 @@ def main() -> None:  # noqa: C901
     jac = lens.jacobians[args.layer].to(device)
     strengths = [float(x) for x in args.strengths.split(",") if x.strip()]
 
-    items = validate_items(tok, ITEMS)
+    bank: list[dict[str, str]] = ITEMS
+    if args.items_json:
+        bank = json.loads(Path(args.items_json).read_text())
+    items = validate_items(tok, bank)
     if args.limit > 0:
         items = items[: args.limit]
     print(
-        f"[data] {len(items)}/{len(ITEMS)} items valid, layer={args.layer}, "
+        f"[data] {len(items)}/{len(bank)} items valid, layer={args.layer}, "
         f"scope={args.swap_scope}, strengths={strengths}, style={args.prompt_style}"
     )
 

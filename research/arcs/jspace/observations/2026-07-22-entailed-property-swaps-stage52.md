@@ -101,6 +101,33 @@ python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
   are computed from earlier injections than verbalization is.
   [SPECULATION — one model, one sweep]
 
+## Probe addendum: verbatim-prompt / cue-redundancy control (2026-07-22)
+
+Reviewer challenge: the item bank's descriptors enrich the paper's
+minimal prompt (e.g. "creature that spins **silky** webs **to trap
+flies**" vs the paper's "animal that spins webs") — an **undocumented
+deviation** (probable motive: baseline-accuracy insurance on small
+models; not A/B-tested at design time). Redundant cues could let the
+model *re-derive* the concept downstream of a localized swap,
+suppressing discrete flips. Tested directly (`--items-json` probe, 7B
+L19, paper-verbatim + 2 minimal-cue items, scopes auto and **all**
+(every pre-answer position — closes the re-derivation channel)):
+
+| 7B L19 s=2 | jlens Δlogp | logitlens | random | flips |
+|---|--:|--:|--:|--:|
+| chat, all-scope | +1.60 (spider +2.00) | +0.44 | +0.71 | 0 |
+| chat, auto | +0.06 | +0.02 | −0.38 | 0 |
+
+**The flip null survives its best alternative explanation**: the
+paper's exact prompt with maximal-coverage editing still reports "8"
+while "6" gains ~2 nats. The enriched-cue deviation did not drive the
+null. Caveats: n=3 probe; all-scope random control is elevated (+0.71 —
+broadcasting across 56 positions perturbs broadly), narrowing the
+jlens-vs-random contrast in that regime; and the minimal-cue prompt's
+single auto-detected position carried almost no effect (+0.06),
+suggesting sparse-cue prompts hold the concept more diffusely.
+Artifacts: `entailed_paperverbatim_{chat,plain}_{auto,all}_L19_7b.pt`.
+
 ## Follow-ups
 
 - Strength sweep beyond s=2 at the L18/L19 peak (does Δlogp cross
