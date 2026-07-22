@@ -6,12 +6,21 @@ entailed property, 8 legs -> 6 legs
 [gurnee2026-workspace §3.3; kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant].
 At Qwen2.5 scale the top-1 flip does not replicate (flip rate 0.000
 everywhere), but the *graded* version is present, large, and J-lens-specific:
-swapping the concept along its J-lens vector moves the unspoken swap-property's
-log-probability by up to +2.13 nats (1.5B) / +1.25 nats (7B) — ~7-30x the
-equalized-L2 token-steering (logit-lens) control — without breaking the model.
-The effect is depth-localized a few layers below the verbal-report-swap depth
-(peak L18/L19; collapse toward parity at the report layer L21/L22), a
-consistent cross-scale split.
+swapping the concept along its J-lens vector, at the genuinely
+J-lens-detected concept positions, moves the unspoken swap-property's
+log-probability by up to +5.17 nats (1.5B, L18) / +2.17 nats (7B, L19) — far
+above the equalized-L2 token-steering (logit-lens) control — without breaking
+the model. The effect is depth-localized a few layers below the
+verbal-report-swap depth (peak L18/L19; collapse toward parity at the report
+layer L21/L22), a consistent cross-scale split.
+
+``detect_positions()`` falls back to a fixed positional window when no concept
+position is J-lens-detectable at a layer (``scope_used ==
+"auto->window_fallback"``); those items carry ~zero entailed-property movement,
+so the PRIMARY (solid) lines here are the **auto-only** subset — the genuine
+J-lens-detected-position items — and a light dashed companion shows the
+mixed-scope J-lens mean (all baseline-correct items, incl. the window
+fallback) so the downward dilution is visible rather than hidden.
 
 Two panels sharing a y-axis (mean delta-log-p of the unspoken swap property, in
 nats), one per model, x = swap layer:
@@ -20,13 +29,15 @@ nats), one per model, x = swap layer:
   (right) Qwen2.5-7B  (nf4) : layers {18, 19, 22}; peak L19, report-layer L22.
 
 One marker/line set per equalized-L2 condition (J-lens / logit-lens
-token-steering control / random) at strength s=2. Raw per-item points are
-omitted: the distribution is heavily right-skewed (a few items reach
-+13 to +16 nats) so scatter would dominate the shared axis and destroy
-cross-scale comparability; the means are the headline quantity.
+token-steering control / random) at strength s=2, on the auto-only subset.
+Raw per-item points are omitted: the distribution is heavily right-skewed (a
+few items reach +13 to +16 nats) so scatter would dominate the shared axis and
+destroy cross-scale comparability; the means are the headline quantity.
 
-Every rendered value is re-derived from ``per_item`` (baseline-correct subset)
-and checked against ``summary.metrics`` at load time; a mismatch aborts.
+Every rendered value is re-derived from ``per_item``: the mixed-scope mean is
+checked against ``summary.metrics`` (artifact integrity) and the auto/fallback
+partition is checked to recombine to that mixed mean at load time; a mismatch
+aborts.
 
 Deterministic, Agg backend, single PNG.
 
@@ -54,10 +65,11 @@ import numpy as np
 import torch
 from matplotlib.axes import Axes
 
+from _jspace_paths import resolve
+
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-22-jspace-entailed-property.png"
 
@@ -113,9 +125,16 @@ _TOL = 1e-6
 
 
 def load_layer(pt: str) -> dict[str, Any]:
-    """Load one layer's artifact; re-derive per-condition means from per_item
-    (baseline-correct subset) and assert equality with summary.metrics."""
-    p = CACHE / pt
+    """Load one layer's artifact; re-derive per-condition means from per_item.
+
+    The PRIMARY value per condition is the **auto-only** mean (baseline-correct
+    items whose swap positions were J-lens-detected, ``scope_used == "auto"``);
+    the mixed-scope mean (all baseline-correct items, incl. the
+    ``auto->window_fallback`` items) is kept as a companion. Two self-checks:
+    the mixed mean must equal ``summary.metrics`` (artifact integrity), and the
+    auto/fallback partition must recombine to the mixed mean.
+    """
+    p = resolve(pt)
     if not p.exists():
         raise SystemExit(f"missing entailed-swap artifact: {p}")
     d = cast("dict[str, Any]", torch.load(p, weights_only=False))
@@ -123,37 +142,63 @@ def load_layer(pt: str) -> dict[str, Any]:
     per_item = cast("list[dict[str, Any]]", d["per_item"])
     metrics = cast("dict[str, Any]", summary["metrics"])
 
-    out: dict[str, Any] = {"layer": int(summary["layer"]), "conds": {}}
     correct = [it for it in per_item if it["baseline_correct"]]
+    auto = [it for it in correct if it["scope_used"] == "auto"]
+    fb = [it for it in correct if it["scope_used"] == "auto->window_fallback"]
+    if not auto:
+        raise SystemExit(f"no auto-scope baseline-correct items in {pt} — STOP")
+
+    out: dict[str, Any] = {
+        "layer": int(summary["layer"]),
+        "n_correct": len(correct),
+        "n_auto": len(auto),
+        "n_fallback": len(fb),
+        "conds": {},
+    }
     for cond in CONDITIONS:
         k = f"{cond['key']}@{STRENGTH:.1f}"
         m = cast("dict[str, Any]", metrics[k])
-        recs = [it["conditions"][k] for it in correct]
-        dlogp = np.array([r["dlogp_swap_answer"] for r in recs], dtype=float)
-        flip = np.array([1.0 if r["property_flip"] else 0.0 for r in recs])
-        retain = np.array([1.0 if r["clean_retained"] else 0.0 for r in recs])
-        rd_dlogp, rd_flip, rd_retain, rd_n = (
-            float(dlogp.mean()),
-            float(flip.mean()),
-            float(retain.mean()),
-            len(recs),
+        d_all = np.array(
+            [it["conditions"][k]["dlogp_swap_answer"] for it in correct], dtype=float
         )
+        d_auto = np.array(
+            [it["conditions"][k]["dlogp_swap_answer"] for it in auto], dtype=float
+        )
+        d_fb = np.array(
+            [it["conditions"][k]["dlogp_swap_answer"] for it in fb], dtype=float
+        )
+        flip = np.array(
+            [1.0 if it["conditions"][k]["property_flip"] else 0.0 for it in correct]
+        )
+        retain = np.array(
+            [1.0 if it["conditions"][k]["clean_retained"] else 0.0 for it in correct]
+        )
+        mixed_mean = float(d_all.mean())
+        auto_mean = float(d_auto.mean())
+        # (a) mixed mean == summary.metrics (artifact integrity).
         for name, a, b in (
-            ("dlogp", rd_dlogp, float(m["mean_dlogp_swap_answer"])),
-            ("flip", rd_flip, float(m["property_flip_rate"])),
-            ("retain", rd_retain, float(m["clean_retention_rate"])),
-            ("n", float(rd_n), float(m["n_correct"])),
+            ("dlogp", mixed_mean, float(m["mean_dlogp_swap_answer"])),
+            ("flip", float(flip.mean()), float(m["property_flip_rate"])),
+            ("retain", float(retain.mean()), float(m["clean_retention_rate"])),
+            ("n", float(len(correct)), float(m["n_correct"])),
         ):
             if abs(a - b) > _TOL:
                 raise SystemExit(
                     f"VALUE MISMATCH in {pt} [{k}] {name}: "
                     f"re-derived {a} != summary {b} — STOP"
                 )
+        # (b) auto/fallback partition recombines to the mixed mean.
+        recomb = (float(d_auto.sum()) + float(d_fb.sum())) / len(correct)
+        if abs(recomb - mixed_mean) > _TOL:
+            raise SystemExit(
+                f"PARTITION MISMATCH in {pt} [{k}]: "
+                f"auto+fallback {recomb} != mixed {mixed_mean} — STOP"
+            )
         out["conds"][cond["key"]] = {
-            "dlogp": rd_dlogp,
-            "flip": rd_flip,
-            "retain": rd_retain,
-            "n": rd_n,
+            "dlogp_auto": auto_mean,
+            "dlogp_mixed": mixed_mean,
+            "flip": float(flip.mean()),
+            "retain": float(retain.mean()),
         }
     return out
 
@@ -163,11 +208,14 @@ def main() -> None:
     for panel in PANELS:
         rows = {L: load_layer(panel["files"][L]) for L in panel["layers"]}
         data.append({"panel": panel, "rows": rows})
-        peak = rows[panel["peak"]]["conds"]["jlens"]["dlogp"]
-        rep = rows[panel["report"]]["conds"]["jlens"]["dlogp"]
+        peak = rows[panel["peak"]]["conds"]["jlens"]["dlogp_auto"]
+        rep = rows[panel["report"]]["conds"]["jlens"]["dlogp_auto"]
+        na = rows[panel["peak"]]["n_auto"]
+        nc = rows[panel["peak"]]["n_correct"]
         print(
-            f"{panel['key']}: J-lens peak L{panel['peak']} {peak:+.2f} nats, "
-            f"report-layer L{panel['report']} {rep:+.2f} nats (verified vs per_item)"
+            f"{panel['key']}: J-lens AUTO-ONLY peak L{panel['peak']} {peak:+.2f} nats "
+            f"(n={na} auto of {nc} correct), report-layer L{panel['report']} "
+            f"{rep:+.2f} nats (verified: mixed vs summary + auto/fb partition)"
         )
 
     fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.4), sharey=True)
@@ -177,15 +225,17 @@ def main() -> None:
     for d in data:
         for L in d["panel"]["layers"]:
             for cond in CONDITIONS:
-                ymax = max(ymax, d["rows"][L]["conds"][cond["key"]]["dlogp"])
-    ytop = float(np.ceil((ymax + 0.35) * 2) / 2)
+                ymax = max(ymax, d["rows"][L]["conds"][cond["key"]]["dlogp_auto"])
+            ymax = max(ymax, d["rows"][L]["conds"]["jlens"]["dlogp_mixed"])
+    ytop = float(np.ceil((ymax + 0.55) * 2) / 2)
 
     for ax, d in zip(axes, data):
         panel = d["panel"]
         rows = d["rows"]
         layers = panel["layers"]
+        # PRIMARY: auto-only lines per condition (solid).
         for cond in CONDITIONS:
-            ys = [rows[L]["conds"][cond["key"]]["dlogp"] for L in layers]
+            ys = [rows[L]["conds"][cond["key"]]["dlogp_auto"] for L in layers]
             ax.plot(
                 layers,
                 ys,
@@ -198,19 +248,36 @@ def main() -> None:
                 label=cond["label"],
                 zorder=cond["z"],
             )
+        # COMPANION: mixed-scope J-lens (light dashed) — shows the fallback dilution.
+        ys_mixed = [rows[L]["conds"]["jlens"]["dlogp_mixed"] for L in layers]
+        ax.plot(
+            layers,
+            ys_mixed,
+            marker="o",
+            linestyle="--",
+            color="#8fb8de",
+            linewidth=1.5,
+            markersize=6,
+            markerfacecolor="white",
+            markeredgecolor="#8fb8de",
+            markeredgewidth=1.2,
+            label="J-lens, all items (incl. window-fallback)",
+            zorder=1,
+        )
         ax.axhline(0.0, color="#999999", linewidth=0.8, zorder=0)
 
-        # peak + report-layer annotations (J-lens)
+        # peak + report-layer annotations (auto-only J-lens).
         peakL, repL = panel["peak"], panel["report"]
-        peakY = rows[peakL]["conds"]["jlens"]["dlogp"]
-        repY = rows[repL]["conds"]["jlens"]["dlogp"]
+        peakY = rows[peakL]["conds"]["jlens"]["dlogp_auto"]
+        repY = rows[repL]["conds"]["jlens"]["dlogp_auto"]
         ax.annotate(
-            f"peak L{peakL}\nJ-lens {peakY:+.2f} nats",
+            f"peak L{peakL}\nJ-lens {peakY:+.2f} nats (auto)",
             xy=(peakL, peakY),
-            xytext=(peakL + 0.4, peakY + 0.10),
+            xytext=(peakL + 0.35, peakY - 0.95),
             fontsize=8.5,
             fontweight="bold",
             color="#1f77b4",
+            ha="left",
             arrowprops={"arrowstyle": "->", "color": "#1f77b4", "linewidth": 1.0},
         )
         ax.annotate(
@@ -224,8 +291,11 @@ def main() -> None:
         )
 
         ax.set_xticks(layers)
-        ax.set_xticklabels([f"L{L}" for L in layers])
-        ax.set_xlabel("swap layer (source-concept positions)")
+        ax.set_xticklabels(
+            [f"L{L}\nn={rows[L]['n_auto']}/{rows[L]['n_correct']}" for L in layers],
+            fontsize=8.5,
+        )
+        ax.set_xlabel("swap layer (source-concept positions; n = auto/correct)")
         ax.set_xlim(min(layers) - 0.8, max(layers) + 1.4)
         ax.set_ylim(-0.4, ytop)
         ax.grid(True, axis="y", alpha=0.25)
@@ -234,7 +304,8 @@ def main() -> None:
         )
 
     axes[0].set_ylabel(
-        "mean Δlog-p of the unspoken swap property\n(entailed, at answer position) [nats]"
+        "mean Δlog-p of the unspoken swap property\n"
+        "(entailed, at answer position; auto-only subset) [nats]"
     )
     axes[0].legend(loc="upper right", fontsize=8.5, framealpha=0.93)
 
@@ -248,8 +319,8 @@ def main() -> None:
     fig.text(
         0.5,
         0.035,
-        "Discrete property-flip rate = 0.000 at every layer / condition / strength (no top-1 crossing at either scale).  "
-        "Clean-retention 0.94–1.00: the J-lens swap never breaks the model.",
+        "Solid = auto-only (J-lens-detected concept positions); dashed = all baseline-correct items (window fallback dilutes toward 0).  "
+        "Flip rate = 0.000 everywhere (no top-1 crossing); clean-retention 0.94–1.00 — the swap never breaks the model.",
         ha="center",
         fontsize=8.5,
         color="#333333",
@@ -258,7 +329,7 @@ def main() -> None:
         0.5,
         0.006,
         "data: entailed_swap_chat_L{18,21,24}(1.5b)/L{18,19,22}(7b)_qwen2.5-*_n100.pt "
-        "(33 items, jspace_entailed_swap.py ITEMS bank; n=100 lens)  —  "
+        "(33 items, jspace_entailed_swap.py ITEMS bank; n=100 lens; auto-only primary, mixed-scope dashed)  —  "
         "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
         ha="center",
         va="bottom",

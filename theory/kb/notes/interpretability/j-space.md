@@ -6,8 +6,8 @@ maintainer: theory-kb
 primary_sources:
   - gurnee2026-workspace
 secondary_sources:
-  - belrose2023-tuned-lens        # lens lineage; contrast in §5
-  - nanda2026-workspace-review    # Tier B: LessWrong review; critiques in §7
+  - belrose2023-tuned-lens        # lens lineage; contrast in §3 (and §1.1)
+  - nanda2026-workspace-review    # Tier B: LessWrong review; critiques in §5
 related_topics:
   - interpretability/lens-techniques
   - interpretability/sparse-autoencoders
@@ -169,7 +169,7 @@ which stays under 10%. The load-bearing quantity is causal reach, not size.
   the concept" `[gurnee2026-workspace §9.1]`.
 - **Open replication question.** All published quantitative results are on
   Claude-family models; layer bands and success rates on small open-weights
-  models are unmeasured (this repo: `research/arcs/jspace/`).
+  models are unmeasured (this repo: `research/arcs/04_jspace/`).
 
 ## 6. See also
 

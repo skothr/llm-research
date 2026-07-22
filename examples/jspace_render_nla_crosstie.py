@@ -47,10 +47,11 @@ import torch
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
 
+from _jspace_paths import resolve
+
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-21-jspace-nla-crosstie.png"
 
@@ -61,7 +62,7 @@ CONCEPT_COLOR = "#1f77b4"
 
 
 def load() -> dict[str, Any]:
-    p = CACHE / ART
+    p = resolve(ART)
     if not p.exists():
         raise SystemExit(f"missing NLA cross-tie artifact: {p}")
     return cast("dict[str, Any]", torch.load(p, weights_only=False))

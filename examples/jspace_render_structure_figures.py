@@ -39,10 +39,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+from _jspace_paths import resolve
+
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 # jspace has no _nla_artifacts-style FIGURES helper; the arc figures dir is
 # hardcoded here (the one convention divergence from the nla render scripts).
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
@@ -66,7 +67,7 @@ MODELS: list[dict[str, str]] = [
 
 
 def load_summary(pt: str) -> dict[str, Any]:
-    p = CACHE / pt
+    p = resolve(pt)
     if not p.exists():
         raise SystemExit(f"missing structure-scan artifact: {p}")
     return cast("dict[str, Any]", torch.load(p, weights_only=False)["summary"])

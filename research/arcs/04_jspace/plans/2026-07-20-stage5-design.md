@@ -1,7 +1,9 @@
 # Stage 5.1 design addendum — verbal report + swap
 
 Date: 2026-07-20. Status: **reviewed — 5 rulings applied 2026-07-20**; CPU-smoke
-validated; awaiting explicit GPU go signal (C4 refit owns the GPU). Parent plan:
+validated; awaiting explicit GPU go signal (C4 refit owns the GPU).
+**Executed 2026-07-20 → see `observations/2026-07-20-verbal-report-swaps-stage5.md`
+and `observations/2026-07-20-verbal-report-swaps-stage5b.md`.** Parent plan:
 `2026-07-18-jspace-design.md` §"Stage 5", Decision 3
 (staged — verbal report first). Grounds: `[gurnee2026-workspace §3.1;
 kb/excerpts/gurnee2026-workspace#sec-3-1-report-swap]`,

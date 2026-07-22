@@ -2,7 +2,8 @@
 
 Date: 2026-07-21. Status: **design + script + CPU-smoke complete; awaiting GPU
 go signal** (part-A logitlens-norm rerun + the n=500 fit release the device
-first). Parent plan: `2026-07-18-jspace-design.md` §"Stage 5", Decision 3
+first). **Executed 2026-07-22 → see
+`observations/2026-07-22-entailed-property-swaps-stage52.md`.** Parent plan: `2026-07-18-jspace-design.md` §"Stage 5", Decision 3
 (staged). Prior stage: `2026-07-20-stage5-design.md` (report-swap, §3.1).
 Grounds: `[gurnee2026-workspace §3.3; kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant]`,
 the Nanda token-steering critique (`sources/forums/2026-07-06-nanda-workspace-review.md`).

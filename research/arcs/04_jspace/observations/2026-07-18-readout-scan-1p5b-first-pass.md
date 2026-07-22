@@ -39,7 +39,9 @@ favor:
 2. **Depth-of-emergence favors the logit lens:** median layer at which the
    model's final top-1 token enters the lens top-10 = 23.0 (J-lens) vs 19.0
    (logit lens) over all 108 (prompt, position) cells; the J-lens never
-   surfaces it at all in 15/108 cells vs 1/108 for the logit lens.
+   surfaces it at all in 16/108 cells vs 1/108 for the logit lens (the
+   committed bf16-backend value; the note above records the CPU-run
+   15→16 shift).
 3. **Qualitative counterpoint:** early/mid-layer J-lens readouts are
    *coherent but contentless* (whitespace/newline tokens — a "nothing on the
    mind yet" reading), where logit-lens readouts are token junk (`var`,

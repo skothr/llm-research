@@ -39,6 +39,6 @@ On multilingual confounds ("Assessment"):
 **Why captured:** The most substantive early critical review of
 [gurnee2026-workspace]; its lossy-approximation, feature-composition, and
 token-steering counter-hypotheses are carried into the note's open-questions
-section and directly shape the replication design in `research/arcs/jspace/`.
+section and directly shape the replication design in `research/arcs/04_jspace/`.
 The review is *not* the citation for any hard claim; the paper is. This is
 here for provenance.
