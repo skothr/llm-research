@@ -1,0 +1,5 @@
+[
+  {"family": "legs", "descriptor": "The number of legs on the animal that spins webs", "tail": " is", "answer_kind": "number", "concept": "spider", "answer": "8", "swap_concept": "ant", "swap_answer": "6"},
+  {"family": "legs", "descriptor": "The number of legs on the animal that barks", "tail": " is", "answer_kind": "number", "concept": "dog", "answer": "4", "swap_concept": "spider", "swap_answer": "8"},
+  {"family": "capital", "descriptor": "The capital of the country where the Eiffel Tower stands", "tail": " is", "answer_kind": "word", "concept": "France", "answer": "Paris", "swap_concept": "Italy", "swap_answer": "Rome"}
+]

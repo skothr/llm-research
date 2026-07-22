@@ -231,16 +231,25 @@ def draw_panel(
     if emg is not None:
         yline = layers.index(emg)
         ax.axhline(yline, color="#c94b2b", linestyle="--", linewidth=1.1, zorder=3)
+        # Centre the label ON the dashed line (va="center") with a white bbox so it
+        # reads as a line annotation: it straddles the inter-row seam and covers
+        # only cell background, never the tokens (which sit at row centres ±0.5).
         ax.text(
-            TOPK - 0.08,
-            yline + 0.35,
+            TOPK - 0.06,
+            yline,
             f"top-1 turns content → L{emg}",
             ha="right",
-            va="bottom",
-            fontsize=7,
+            va="center",
+            fontsize=6.6,
             color="#c94b2b",
             fontweight="bold",
-            zorder=4,
+            zorder=6,
+            bbox={
+                "boxstyle": "round,pad=0.2",
+                "fc": "white",
+                "ec": "#c94b2b",
+                "alpha": 0.9,
+            },
         )
 
 
@@ -315,7 +324,7 @@ def main() -> None:
         ncol=3,
         fontsize=8.5,
         frameon=False,
-        bbox_to_anchor=(0.5, 0.005),
+        bbox_to_anchor=(0.5, 0.028),
     )
 
     snippet = "...ran a highly critical review by Bill Farrell ... favorably reviewed ... The New York Review of Books..."
@@ -336,7 +345,18 @@ def main() -> None:
         style="italic",
         color="#444444",
     )
-    fig.tight_layout(rect=(0.0, 0.03, 1.0, 0.93))
+    fig.text(
+        0.5,
+        0.006,
+        "data: readout_scan_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt "
+        "(rich topk_strs; prompt 0, token 127/224, heldout_prompts_wikitext103_n30.json; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
+    fig.tight_layout(rect=(0.0, 0.055, 1.0, 0.93))
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

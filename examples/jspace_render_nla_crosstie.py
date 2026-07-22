@@ -207,7 +207,7 @@ def main() -> None:
     ax_c.annotate(
         f"residual vs control:\nDelta = {delta:+.3f} (~ 0)\n"
         "removing the J-space\ncomponent hurts no more\nthan removing a random\nequal-norm direction",
-        xy=(2.0, means[2]),
+        xy=(2.30, means[2] - 0.11),
         xytext=(3.42, 0.30),
         fontsize=8,
         color="#333333",
@@ -248,7 +248,18 @@ def main() -> None:
         "concentrate in the J-space component [gurnee2026-workspace §2.3]",
         fontsize=12,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+    fig.text(
+        0.5,
+        0.006,
+        "data: nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt "
+        "(12 neutral [heldout_prompts_wikitext103_n30.json] + 12 concept [jspace_nla_crosstie.py CONCEPT_PROMPTS] + 12 decomposition; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

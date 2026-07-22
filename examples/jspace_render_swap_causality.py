@@ -135,16 +135,32 @@ def panel(ax: Axes, summary: dict[str, Any], title: str) -> None:
             linewidth=2.0,
             zorder=5,
         )
-        ax.annotate(
-            f"paper {paper:.0%}",
-            (xi, paper),
-            textcoords="offset points",
-            xytext=(0, 3),
-            ha="center",
-            fontsize=7.5,
-            color=PAPER_COLOR,
-            fontweight="bold",
-        )
+        if paper < 0.10:
+            # Low reference line sits inside the (tall) bars, so the label would
+            # collide with them; park it in the inter-group gap just left of the
+            # line, vertically centred on it.
+            ax.annotate(
+                f"paper {paper:.0%}",
+                (xi - width, paper),
+                textcoords="offset points",
+                xytext=(-4, 0),
+                ha="right",
+                va="center",
+                fontsize=7.5,
+                color=PAPER_COLOR,
+                fontweight="bold",
+            )
+        else:
+            ax.annotate(
+                f"paper {paper:.0%}",
+                (xi, paper),
+                textcoords="offset points",
+                xytext=(0, 3),
+                ha="center",
+                fontsize=7.5,
+                color=PAPER_COLOR,
+                fontweight="bold",
+            )
 
     # Chance line.
     ax.axhline(
@@ -224,7 +240,18 @@ def main() -> None:
         "[gurnee2026-workspace §3.1])",
         fontsize=12.5,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    fig.tight_layout(rect=(0, 0.022, 1, 0.97))
+    fig.text(
+        0.5,
+        0.005,
+        "data: verbal_report_chat_6c_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt "
+        "(78 items, jspace_verbal_report.py CATEGORIES bank; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

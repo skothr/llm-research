@@ -188,7 +188,18 @@ def main() -> None:
     )
 
     ax_k.set_xticks(list(range(0, 27, 2)))
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.028, 1, 1))
+    fig.text(
+        0.5,
+        0.006,
+        "data: structure_scan_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100.pt "
+        "(30 held-out prompts, heldout_prompts_wikitext103_n30.json; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

@@ -207,7 +207,7 @@ def main() -> None:
         ax.annotate(
             f"peak L{peakL}\nJ-lens {peakY:+.2f} nats",
             xy=(peakL, peakY),
-            xytext=(peakL + 0.4, peakY + 0.25),
+            xytext=(peakL + 0.4, peakY + 0.10),
             fontsize=8.5,
             fontweight="bold",
             color="#1f77b4",
@@ -247,14 +247,25 @@ def main() -> None:
     )
     fig.text(
         0.5,
-        0.012,
+        0.035,
         "Discrete property-flip rate = 0.000 at every layer / condition / strength (no top-1 crossing at either scale).  "
         "Clean-retention 0.94–1.00: the J-lens swap never breaks the model.",
         ha="center",
         fontsize=8.5,
         color="#333333",
     )
-    fig.tight_layout(rect=(0, 0.045, 1, 0.9))
+    fig.text(
+        0.5,
+        0.006,
+        "data: entailed_swap_chat_L{18,21,24}(1.5b)/L{18,19,22}(7b)_qwen2.5-*_n100.pt "
+        "(33 items, jspace_entailed_swap.py ITEMS bank; n=100 lens)  —  "
+        "MANIFEST sha256-registered · see figures/DATA_PROVENANCE.md",
+        ha="center",
+        va="bottom",
+        fontsize=6.5,
+        color="#9a9a9a",
+    )
+    fig.tight_layout(rect=(0, 0.065, 1, 0.9))
     FIGDIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=180, bbox_inches="tight")
     plt.close(fig)

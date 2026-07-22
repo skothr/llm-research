@@ -112,6 +112,23 @@ META: dict[str, dict[str, Any]] = {
             "(diversified held-out evaluation prompts)"
         ],
     },
+    "paperverbatim_items_n3.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_entailed_swap.py",
+        "inputs": [],
+        "requires_model": "none",
+        "provenance": (
+            "Hand-written 3-item bank for the 2026-07-22 verbatim-prompt / "
+            "cue-redundancy probe (stage-5.2 observation addendum): the "
+            "paper's exact 'animal that spins webs' prompt "
+            "[gurnee2026-workspace sec 3.3] plus two minimal-cue items. "
+            "Consumed via jspace_entailed_swap.py --items-json."
+        ),
+        "consumers": [
+            "entailed_paperverbatim_{chat,plain}_{auto,all}_L19_7b.pt "
+            "(verbatim-prompt probe artifacts)"
+        ],
+    },
     # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
     # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
     # by examples/jspace_promote_lens_subset.py; the full 27-layer set stays

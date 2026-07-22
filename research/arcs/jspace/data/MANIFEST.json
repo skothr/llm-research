@@ -9,8 +9,8 @@
     "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in this clone, so the eval tables (audit Check B) are reproducible only against this pinned commit."
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 42,
-  "total_size_bytes": 268862744,
+  "total_files": 43,
+  "total_size_bytes": 268863381,
   "files": [
     {
       "filename": "entailed_paperverbatim_chat_all_L19_7b.pt",
@@ -419,6 +419,20 @@
       "consumers": [
         "obs 2026-07-21-nla-crosstie-stage6.md",
         "audit Check G"
+      ]
+    },
+    {
+      "filename": "paperverbatim_items_n3.json",
+      "sha256": "7b790cd5731aff052272383fa7fdfbf241f63a1bc5efc97250889727be18188a",
+      "size_bytes": 637,
+      "class": "raw",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [],
+      "requires_model": "none",
+      "provenance": "Hand-written 3-item bank for the 2026-07-22 verbatim-prompt / cue-redundancy probe (stage-5.2 observation addendum): the paper's exact 'animal that spins webs' prompt [gurnee2026-workspace sec 3.3] plus two minimal-cue items. Consumed via jspace_entailed_swap.py --items-json.",
+      "consumers": [
+        "entailed_paperverbatim_{chat,plain}_{auto,all}_L19_7b.pt (verbatim-prompt probe artifacts)"
       ]
     },
     {
