@@ -62,13 +62,13 @@ from matplotlib.patches import Rectangle
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "jspace" / "data" / "cache"
-FIGDIR = _REPO_ROOT / "research" / "arcs" / "jspace" / "observations" / "figures"
+CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
+FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 PROMPTS = (
     _REPO_ROOT
     / "research"
     / "arcs"
-    / "jspace"
+    / "04_jspace"
     / "data"
     / "heldout_prompts_wikitext103_n30.json"
 )

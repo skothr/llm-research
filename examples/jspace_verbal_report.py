@@ -68,7 +68,7 @@ incident).
 Usage (full GPU run, stage 5.1b chat + 6 conditions):
     python examples/jspace_verbal_report.py --device cuda \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --layer 22 \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+        --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --prompt-style chat --contrastive
 
 CPU smoke (no CUDA):
@@ -390,7 +390,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cpu", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
         help="Path to a fitted JacobianLens .pt (JacobianLens.save format).",
     )
     p.add_argument(
@@ -458,7 +458,7 @@ def default_out(model: str, lens: str, style: str, contrastive: bool) -> str:
     stem = Path(lens).stem
     condset = "6c" if contrastive else "4c"
     return (
-        f"research/arcs/jspace/data/cache/"
+        f"research/arcs/04_jspace/data/cache/"
         f"verbal_report_{style}_{condset}_{slug(model)}_{stem}.pt"
     )
 

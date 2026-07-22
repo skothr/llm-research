@@ -17,7 +17,7 @@ Tests the paper's core readability claim (§2.1, [gurnee2026-workspace]): the
 Jacobian readout should be interpretable at earlier layers than the logit lens.
 
 Held-out prompts default to
-``research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json`` — wikitext-103
+``research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json`` — wikitext-103
 records index 1001-1030 under the same len>=600 filter as the fitting corpus,
 strictly disjoint from the first-1000 fitting set. No network access at run time.
 
@@ -47,7 +47,7 @@ QUAL_TOPK = 5
 # Default held-out set (topically-clustered wikitext-103 records 1001-1030). A
 # non-default --prompts set gets a tag in the output name (heldout_tag) so a
 # diversified re-scan never clobbers the committed default-set artifacts.
-DEFAULT_HELDOUT = "research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json"
+DEFAULT_HELDOUT = "research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -57,7 +57,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cpu", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
         help="Path to a fitted JacobianLens .pt (JacobianLens.save format).",
     )
     p.add_argument(
@@ -116,7 +116,7 @@ def heldout_tag(prompts_path: str, override: str | None) -> str:
 
 def default_out(model: str, lens: str, tag: str = "") -> str:
     stem = Path(lens).stem
-    return f"research/arcs/jspace/data/cache/readout_scan_{slug(model)}_{stem}{tag}.pt"
+    return f"research/arcs/04_jspace/data/cache/readout_scan_{slug(model)}_{stem}{tag}.pt"
 
 
 def spearman(a: Tensor, b: Tensor) -> float:

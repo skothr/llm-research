@@ -72,7 +72,7 @@ python examples/jspace_freeze_c4_corpus.py            # deterministic, seed=42
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --dim-batch 8 --n-prompts 100 --device cuda \
-    --prompts research/arcs/jspace/data/fitting_prompts_c4en_n1000.json \
+    --prompts research/arcs/04_jspace/data/fitting_prompts_c4en_n1000.json \
     --corpus-tag c4en
 # then the stage-3/4 suite with --lens .../jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
 ```

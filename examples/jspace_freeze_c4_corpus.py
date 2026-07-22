@@ -2,7 +2,7 @@
 """Freeze a seeded C4-en fitting corpus for the jspace corpus-sensitivity check.
 
 The primary jspace fitting corpus
-(`research/arcs/jspace/data/fitting_prompts_wikitext103_n1000.json`) mirrors
+(`research/arcs/04_jspace/data/fitting_prompts_wikitext103_n1000.json`) mirrors
 the companion repo's `jlens.examples.load_wikitext_prompts` selection, but
 wikitext-103 is English-Wikipedia register — narrower than Qwen2.5's
 multilingual pretraining mix. This script freezes an alternative corpus drawn
@@ -38,7 +38,7 @@ import json
 import sys
 from pathlib import Path
 
-ARC_DATA = Path("research/arcs/jspace/data")
+ARC_DATA = Path("research/arcs/04_jspace/data")
 OUT_PATH = ARC_DATA / "fitting_prompts_c4en_n1000.json"
 
 DATASET = "allenai/c4"

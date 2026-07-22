@@ -2,7 +2,7 @@
 
 Date: 2026-07-20. Status: **design, pre-GPU**. Extends
 `2026-07-18-jspace-design.md` §"Stage 6". Grounding: that spec, the NLA arc
-(`research/arcs/nla-verbalizer/README.md`), `llm_surgeon.probe._nla`, and
+(`research/arcs/01_nla-verbalizer/README.md`), `llm_surgeon.probe._nla`, and
 `theory/kb/notes/interpretability/j-space.md` §5 (single-token limit).
 
 Stage 6 ties the two arcs together: at the activation the NLA verbalizer was
@@ -176,7 +176,7 @@ NLA reads a channel the J-lens misses.
 ## 5. Artifact
 
 `torch.save({"summary", "per_prompt"}, out)`, auto-named
-`research/arcs/jspace/data/cache/nla_crosstie_<model-slug>_<lens-stem>.pt`
+`research/arcs/04_jspace/data/cache/nla_crosstie_<model-slug>_<lens-stem>.pt`
 (e.g. `nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`). Class:
 derived (rederivable from the lens + models). `per_prompt`: prompt text, set
 tag, seq_len, position, J-lens readout top-k ids, per-metric values, AV texts

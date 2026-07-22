@@ -6,7 +6,7 @@ back to layer 0 through the nf4-quantized Qwen2.5-7B-Instruct (the QLoRA
 path: frozen 4-bit weights, differentiable activations), and measures
 per-pass wall time + peak VRAM at the fitting sequence length. These
 measurements calibrate the stage-2 runtime estimates in
-research/arcs/jspace/plans/2026-07-18-jspace-design.md.
+research/arcs/04_jspace/plans/2026-07-18-jspace-design.md.
 
 Usage:
     python examples/jspace_stage1_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4

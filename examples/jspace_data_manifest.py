@@ -1,7 +1,7 @@
 """Generate / verify the raw-dataset manifest for the jspace research arc.
 
 The arc's raw artifacts live (committed, git-LFS) under
-`research/arcs/jspace/data/`: the frozen fitting corpus, the fitted `.pt`
+`research/arcs/04_jspace/data/`: the frozen fitting corpus, the fitted `.pt`
 lens tensors and their `.config.json` provenance sidecars, and derived
 metric/table artifacts. This script writes a checksummed `MANIFEST.json`
 next to them that records, per file: sha256, size, whether it is a `raw`
@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = _REPO_ROOT / "research" / "arcs" / "jspace" / "data"
+DATA_DIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-7b-nf4 |

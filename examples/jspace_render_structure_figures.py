@@ -42,10 +42,10 @@ import torch
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "jspace" / "data" / "cache"
+CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 # jspace has no _nla_artifacts-style FIGURES helper; the arc figures dir is
 # hardcoded here (the one convention divergence from the nla render scripts).
-FIGDIR = _REPO_ROOT / "research" / "arcs" / "jspace" / "observations" / "figures"
+FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-20-jspace-structure-depth-map.png"
 
 HEADLINE_K = 25

@@ -1,11 +1,11 @@
 """Promote a reduced layer subset of each fitted J-lens to git-LFS.
 
 Per the signed-off design plan (Decision 4,
-`research/arcs/jspace/plans/2026-07-18-jspace-design.md`): the FULL fitted lens
+`research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`): the FULL fitted lens
 tensor set (27 layers x d_model^2 fp16, ~127 MB at 1.5B / ~694 MB at 7B) stays
 cache-only under `data/cache/` (gitignored, regenerable via
 `examples/jspace_fit_lens.py`), while a reduced layer subset is committed via
-git-LFS under `research/arcs/jspace/data/` so a clean clone can inspect
+git-LFS under `research/arcs/04_jspace/data/` so a clean clone can inspect
 representative depths without the multi-GB fit.
 
 **Layer-subset adjustment.** Decision 4 names layers {0,5,10,15,20,25,27}. The
@@ -42,7 +42,7 @@ from typing import Any
 import torch
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-ARC_DATA = _REPO_ROOT / "research" / "arcs" / "jspace" / "data"
+ARC_DATA = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 CACHE_DIR = ARC_DATA / "cache"
 
 # Decision 4 layers, with the trailing 27 clamped to the last valid index (26).

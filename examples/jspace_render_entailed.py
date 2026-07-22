@@ -57,8 +57,8 @@ from matplotlib.axes import Axes
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "jspace" / "data" / "cache"
-FIGDIR = _REPO_ROOT / "research" / "arcs" / "jspace" / "observations" / "figures"
+CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
+FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-22-jspace-entailed-property.png"
 
 STRENGTH = 2.0

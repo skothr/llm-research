@@ -58,7 +58,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cpu", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt",
     )
     p.add_argument("--eval-dir", default=DEFAULT_EVAL_DIR)
     p.add_argument(

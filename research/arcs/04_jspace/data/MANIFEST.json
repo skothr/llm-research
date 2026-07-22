@@ -10,7 +10,7 @@
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 43,
-  "total_size_bytes": 268863381,
+  "total_size_bytes": 268863393,
   "files": [
     {
       "filename": "entailed_paperverbatim_chat_all_L19_7b.pt",
@@ -246,8 +246,8 @@
     },
     {
       "filename": "heldout_prompts_c4en_n30.json",
-      "sha256": "ff0322e5745fa9a8f76d6721e6381fbe87dc984474fa8e554ff44c028e9c6a10",
-      "size_bytes": 68050,
+      "sha256": "7b8d05b3165bad69c1dc4009b06a6430e83ad13d910ffa19f413e0acaeb30243",
+      "size_bytes": 68053,
       "class": "raw",
       "producing_script": "examples/jspace_freeze_c4_corpus.py",
       "producing_command": "python examples/jspace_freeze_c4_corpus.py",
@@ -260,8 +260,8 @@
     },
     {
       "filename": "heldout_prompts_wikitext103_n30.json",
-      "sha256": "54273ba92eaf5af2dbe35427b015fdc007482e03f11bcdbbc6965cff7f991851",
-      "size_bytes": 27282,
+      "sha256": "36697cf989c823977df25d42f41875f8540c162e97b67a9a34e3c5246ccbeb5e",
+      "size_bytes": 27285,
       "class": "raw",
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
@@ -274,8 +274,8 @@
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
-      "sha256": "55cfcac8870e68b40efe63422da92ff73f4ff3e680bea728b76bc10b62bab9ba",
-      "size_bytes": 656,
+      "sha256": "d17ebaeb97f71d60310f86126899a84336019112ad87638736df83c84595cd58",
+      "size_bytes": 659,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
@@ -306,8 +306,8 @@
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
-      "sha256": "845ede6c5479f41488825b67074c88c0cb9ee56e8cc3818aa6c9664d43a24fa9",
-      "size_bytes": 653,
+      "sha256": "8922b70c9b296f6f445930061c1a1920704b2b57c4f7913605603730ea3b8b4c",
+      "size_bytes": 656,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",

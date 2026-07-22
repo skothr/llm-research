@@ -1,7 +1,7 @@
 # Cross-arc note: the L20 capture layer sits below the 7B J-lens legibility onset (from the jspace arc)
 
 **Date/context:** 2026-07-22, filed at jspace arc close per its stage-6
-cross-tie (`research/arcs/jspace/observations/2026-07-21-nla-crosstie-stage6.md`).
+cross-tie (`research/arcs/04_jspace/observations/2026-07-21-nla-crosstie-stage6.md`).
 
 **Finding relevant to this arc:** the jspace arc's depth mapping of
 Qwen2.5-7B (stage 3/4) shows J-lens readouts become contentful only

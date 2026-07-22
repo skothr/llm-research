@@ -72,7 +72,7 @@ vs logit-lens = {`(`, `a`, `\xa0`, `Question`, `[`}.
 ```
 CUDA_VISIBLE_DEVICES= python examples/jspace_readout_scan.py \
     --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cpu \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --n-prompts 12
 ```
 

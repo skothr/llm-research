@@ -223,11 +223,11 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 # 1.5B (peak L21), plain completion (paper-faithful) + chat cross-check
 python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 21 --prompt-style plain \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 # 7B (peak L22)
 python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --layer 22 --prompt-style plain \
-    --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
+    --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 # layer sweep: rerun with --layer {18,24} (1.5B) / {19,25} (7B)
 
 # CPU smoke (plumbing, 2 items):

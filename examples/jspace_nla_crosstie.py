@@ -30,13 +30,13 @@ readouts, frees the base; Phase 2 loads the AV (CPU bf16) and verbalizes.
 Usage (primary — 7B nf4 + NLA AV, needs GPU for the base):
     python examples/jspace_nla_crosstie.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+        --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --n-neutral 12 --n-concept 12 --n-decomp 12
 
 Plumbing smoke (no NLA; validates capture/readout/decomposition on any model):
     python examples/jspace_nla_crosstie.py --skip-nla --n-neutral 2 --n-concept 2 \
         --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cpu --jlens-layer 19 \
-        --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
+        --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 """
 
 from __future__ import annotations
@@ -124,7 +124,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cuda", choices=["cuda", "cpu"])
     p.add_argument(
         "--lens",
-        default="research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt",
+        default="research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt",
         help="Fitted JacobianLens .pt (must include --jlens-layer).",
     )
     p.add_argument(
@@ -136,7 +136,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--prompts",
-        default="research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json",
+        default="research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json",
         help="Neutral held-out prompts JSON ({'prompts': [str, ...]}).",
     )
     p.add_argument(
@@ -167,7 +167,7 @@ def parse_args() -> argparse.Namespace:
 
 def default_out(model: str, lens: str) -> str:
     stem = Path(lens).stem
-    return f"research/arcs/jspace/data/cache/nla_crosstie_{slug(model)}_{stem}.pt"
+    return f"research/arcs/04_jspace/data/cache/nla_crosstie_{slug(model)}_{stem}.pt"
 
 
 # ---------------------------------------------------------------------------

@@ -94,10 +94,10 @@ audit-covered (Check D, `examples/jspace_audit_findings.py`).
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-1.5B-Instruct \
-    --mode bf16 --device cuda --lens research/arcs/jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
+    --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --n-prompts 30 --ks 5,10,25,50
 python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-7B-Instruct \
-    --mode nf4 --device cuda --lens research/arcs/jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
+    --mode nf4 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
     --n-prompts 30 --ks 5,10,25,50
 python examples/jspace_render_structure_figures.py
 ```
