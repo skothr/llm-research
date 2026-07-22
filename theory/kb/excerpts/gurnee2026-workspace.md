@@ -127,6 +127,22 @@ $$
 > only a fraction of the model's behavior, and in particular is not involved
 > in pervasive, routine processing like text parsing or grammatical fluency.
 
+## §3.3 Multihop entailed-property swap — spider→ant example {#sec-3-3-spider-ant}
+
+> In the first example, the prompt is "The number of legs on the animal
+> that spins webs is". To predict the next word correctly, the model must
+> first infer that the animal in question is a spider, and then report
+> the number of legs a spider has. The Jacobian lens at intermediate
+> layers confirms that spider is represented at the relevant token
+> positions, even though the word never appears in the prompt or the
+> output. When we swap the spider lens vector for ant, the model's top
+> output changes from "8" to "6", the number of legs on an ant.
+
+(Verified verbatim 2026-07-21. This is the paper's demonstrated
+entailed-property flip: the measured output is a *property* of the
+swapped concept, not the concept token itself — the strongest causal
+form, since token steering alone does not carry the property knowledge.)
+
 ## §4.1 Kurtosis onset signature + metric definition {#sec-4-1-kurtosis-onset}
 
 > The second (panel b) shows the excess kurtosis of J-lens readouts, a

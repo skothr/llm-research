@@ -622,6 +622,25 @@ class SwapHook:
         return (h,) + tuple(output[1:])
 
 
+class PrefillCapture:
+    """Passive forward hook: records the layer output at the last position of the
+    FIRST call (the prefill), i.e. the report locus, in the *same* generate
+    forward whose numerics the injection hooks see. Used to equalize the
+    ``logitlens`` injected L2 with the live coeff (stage-5.2 norm fix): its
+    ``u_s = norm(w_s)`` differs from the five J-lens-source conditions' shared
+    ``u_s = a_s``, so the fp32-capture-vs-bf16-prefill discrepancy does not
+    cancel in its scale (up to 78% per-item at 7B; design §8 note)."""
+
+    def __init__(self) -> None:
+        self.h: Tensor | None = None
+
+    def __call__(self, module: Any, inputs: Any, output: Any) -> Any:
+        if self.h is None:
+            tensor = output if torch.is_tensor(output) else output[0]
+            self.h = tensor[0, -1, :].detach().float()
+        return output
+
+
 def _chat_ids(tok: Any, content: str) -> Tensor:
     ids = tok.apply_chat_template(
         [{"role": "user", "content": content}],
@@ -769,7 +788,20 @@ def main() -> None:
 
         # Baseline report (no intervention). Identify the named instance from the
         # decoded text; its canonical space-prefixed id is the source handle.
-        base_tok0, base_scores, base_text = generate(m, input_ids, args.max_new_tokens)
+        # A passive PrefillCapture records the report-position residual from THIS
+        # generate-prefill forward (h_live) -- the live coeff the injection hooks
+        # will read -- so the logitlens injected L2 is equalized on the same
+        # forward as the injection (stage-5.2 fix), not the fp32 capture below.
+        cap = PrefillCapture()
+        cap_handle = m.layers[args.layer].register_forward_hook(cap)
+        try:
+            base_tok0, base_scores, base_text = generate(
+                m, input_ids, args.max_new_tokens
+            )
+        finally:
+            cap_handle.remove()
+        assert cap.h is not None, "PrefillCapture did not fire during baseline generate"
+        h_live = cap.h
         gen_tokens += args.max_new_tokens
         matched = match_instance(base_text, insts)
         if matched is None:
@@ -848,19 +880,33 @@ def main() -> None:
                 cond_dirs["nonjspace_comp"] = (u_s_j, normalize(v_t - comp_v))
 
             # Ruling 3: equalize injected L2 across conditions per item/strength.
-            # Raw injection L2 at the report position h_last is
-            # s*|<h_last,u_s>|*||u_t-u_s||; scale every condition to the jlens
+            # Raw injection L2 at the report position for residual ``h`` is
+            # s*|<h,u_s>|*||u_t-u_s||; scale every condition to the jlens
             # reference so all inject the same magnitude at step 0.
-            def raw_l2(u_s: Tensor, u_t: Tensor) -> float:
-                return abs(float(h_last @ u_s)) * float((u_t - u_s).norm())
+            def raw_l2(u_s: Tensor, u_t: Tensor, h: Tensor) -> float:
+                return abs(float(h @ u_s)) * float((u_t - u_s).norm())
 
-            ref_l2 = raw_l2(u_s_j, u_t_j)
+            # The five J-lens-source conditions share u_s = u_s_j, so |h.u_s|
+            # cancels in ref_l2/d_c -- their scale is invariant to the choice of
+            # h (fp32 capture h_last used, unchanged, so they reproduce exactly).
+            ref_l2 = raw_l2(u_s_j, u_t_j, h_last)
+            # logitlens (u_s = w_s) does NOT share u_s_j, so its |h.u_s| factor
+            # does not cancel: it must be equalized on the SAME generate-prefill
+            # forward as the injection (h_live), else the fp32-capture-vs-bf16-
+            # prefill mismatch leaks into its magnitude (stage-5.2 fix). Both
+            # numerator and denominator use h_live, giving live norm s*ref_live,
+            # exactly the five J-conditions' shared live norm.
+            ref_l2_live = raw_l2(u_s_j, u_t_j, h_live)
 
             conds: dict[str, dict[str, Any]] = {}
             for cond in active_conditions:
                 u_s, u_t = cond_dirs[cond]
-                d_c = raw_l2(u_s, u_t)
-                scale = (ref_l2 / d_c) if d_c > STEP_EPS else 0.0
+                if cond == "logitlens":
+                    d_c = raw_l2(u_s, u_t, h_live)
+                    scale = (ref_l2_live / d_c) if d_c > STEP_EPS else 0.0
+                else:
+                    d_c = raw_l2(u_s, u_t, h_last)
+                    scale = (ref_l2 / d_c) if d_c > STEP_EPS else 0.0
                 for s in strengths:
                     hook = SwapHook(u_s, u_t, s, args.scope, scale=scale)
                     handle = m.layers[args.layer].register_forward_hook(hook)
