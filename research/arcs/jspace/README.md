@@ -6,11 +6,13 @@ band of verbalizable representations — replicate on `Qwen/Qwen2.5-7B-Instruct`
 and how do J-lens readouts at layer 20 relate to the NLA verbalizer readouts
 studied in `research/arcs/nla-verbalizer/`?
 
-**Status (2026-07-21):** stages 1–4, 5.1/5.1b, and 6 complete; remaining
-before close: stage 7 audit/synthesis (5.2/5.3 demoted — run only if
-their preconditions pass and time permits). Design plan (signed off
-2026-07-18): `plans/2026-07-18-jspace-design.md`; addenda:
-`plans/2026-07-20-stage5-design.md`, `plans/2026-07-20-stage6-design.md`.
+**Status (2026-07-22):** stages 1–6 complete including 5.2
+(entailed-property swaps), plus the full robustness battery (corpus,
+quantization, n-budget, held-out sample — all exonerated at 1.5B);
+remaining: a small set of gated 7B reruns, then stage 7 audit/synthesis
+(5.3 modulation not run — descoped). Design plan (signed off 2026-07-18):
+`plans/2026-07-18-jspace-design.md`; addenda: `plans/2026-07-20-stage5-design.md`,
+`plans/2026-07-20-stage6-design.md`, `plans/2026-07-21-stage52-entailed-property.md`.
 Observations so far, in `observations/`:
 
 - `2026-07-18-fit-cost-calibration.md` — fitting cost is structural
@@ -52,6 +54,17 @@ Observations so far, in `observations/`:
   bf16→nf4 at fixed model/corpus/n moves nothing (L21 peak 0.125 vs
   0.124); the 7B 3× gap is fit-budget and/or scale, not quantization.
   Bonus: nf4 backward is 2.97× cheaper → 1.5B n=500 refit is now ~5 h.
+- `2026-07-22-n500-and-heldout-robustness.md` — the last two axes close:
+  n=500 refit leaves the profile unchanged (peak −1.4%; H1 exonerated by
+  the pre-registered rule) and the diversified C4 held-out set leaves
+  the depth-profile statistics intact — **the 7B gap is genuine scale.**
+- `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2
+  (spider→ant replication): no discrete top-1 property flip at 1.5B, but
+  a large J-lens-SPECIFIC graded effect (+2.13 nats on the unspoken
+  entailed property at L18, ~30× the token-steering control at equal
+  magnitude) — relational structure token steering cannot produce;
+  **revises the 5.1b token-steering-favored conclusion**. 7B chat run
+  pending the VRAM gate.
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted
@@ -77,12 +90,11 @@ full metric suite): **workspace-band metrics corpus-invariant, early-band
 Binned here 2026-07-20 (reviewer call), roughly in decreasing
 informativeness-per-hour:
 
-1. **n=500 lens refit** — breaks the H1 (fit budget) / H2 (scale) confound
-   flagged in the 2026-07-20 observation. Costs revised 2026-07-21 after
-   the nf4 exoneration (quantization is off the table, and nf4 backward
-   is 2.97× cheaper): **1.5B nf4 n=500 ≈ 5 h** — cheap enough to promote;
-   if 1.5B varfrac is n-stable 100→500, H1 weakens and scale carries the
-   7B gap without the 7B refit (~81 h, unchanged at db=2).
+1. ~~**n=500 lens refit**~~ — **RESOLVED 2026-07-22**: run at 1.5B nf4
+   (5.25 h); varfrac n-stable 100→500 (peak −1.4% vs 20% threshold) → H1
+   exonerated, the 7B gap is genuine scale. See
+   `observations/2026-07-22-n500-and-heldout-robustness.md`. The direct
+   7B n=500 (~81 h) remains unjustified absent any instability signal.
 2. ~~**Corpus-sensitivity check (seeded C4-en refit)**~~ — **RESOLVED
    2026-07-20**: 1.5B n=100 C4-en refit run; workspace band
    corpus-invariant (L21 varfrac peak identical at 0.124), early band

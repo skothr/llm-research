@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any, cast
@@ -43,6 +44,10 @@ from torch import Tensor
 
 TOP10 = 10
 QUAL_TOPK = 5
+# Default held-out set (topically-clustered wikitext-103 records 1001-1030). A
+# non-default --prompts set gets a tag in the output name (heldout_tag) so a
+# diversified re-scan never clobbers the committed default-set artifacts.
+DEFAULT_HELDOUT = "research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -57,8 +62,14 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--prompts",
-        default="research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json",
+        default=DEFAULT_HELDOUT,
         help="Held-out prompts JSON ({'prompts': [str, ...]}).",
+    )
+    p.add_argument(
+        "--heldout-tag",
+        default=None,
+        help="Override the output-name held-out tag (auto-derived from a "
+        "non-default --prompts filename otherwise; empty for the default set).",
     )
     p.add_argument("--n-prompts", type=int, default=12)
     p.add_argument("--max-seq-len", type=int, default=512)
@@ -87,9 +98,25 @@ def slug(model: str) -> str:
     return model.split("/")[-1].lower()
 
 
-def default_out(model: str, lens: str) -> str:
+def heldout_tag(prompts_path: str, override: str | None) -> str:
+    """Output-name tag keeping non-default held-out scans from clobbering the
+    committed default-set artifacts (names derive from the lens stem alone).
+    Empty for the default set (preserves existing names); auto-derived from a
+    non-default prompts filename otherwise (heldout_prompts_c4en_n30.json ->
+    '_heldoutc4en'); ``override`` (--heldout-tag) wins if given."""
+    if override:
+        return "_" + override.lstrip("_")
+    if Path(prompts_path).name == Path(DEFAULT_HELDOUT).name:
+        return ""
+    core = re.sub(r"^heldout_prompts_", "", Path(prompts_path).stem)
+    core = re.sub(r"_n\d+$", "", core)
+    core = re.sub(r"[^0-9a-zA-Z]+", "", core)
+    return f"_heldout{core}" if core else "_heldout"
+
+
+def default_out(model: str, lens: str, tag: str = "") -> str:
     stem = Path(lens).stem
-    return f"research/arcs/jspace/data/cache/readout_scan_{slug(model)}_{stem}.pt"
+    return f"research/arcs/jspace/data/cache/readout_scan_{slug(model)}_{stem}{tag}.pt"
 
 
 def spearman(a: Tensor, b: Tensor) -> float:
@@ -326,6 +353,7 @@ def main() -> None:
         "model": args.model,
         "mode": args.mode,
         "lens": args.lens,
+        "prompts": args.prompts,
         "n_prompts": len(prompts),
         "layers": layers,
         "n_mid_positions": args.n_mid,
@@ -345,7 +373,9 @@ def main() -> None:
         "mean_seconds_per_prompt": float(np.mean(per_prompt_times)),
     }
 
-    out = args.out or default_out(args.model, args.lens)
+    out = args.out or default_out(
+        args.model, args.lens, heldout_tag(args.prompts, args.heldout_tag)
+    )
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     torch.save({"per_prompt": per_prompt, "summary": summary}, out)
 

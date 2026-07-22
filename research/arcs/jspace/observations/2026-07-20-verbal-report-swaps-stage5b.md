@@ -117,6 +117,19 @@ python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-1.5B-Instruct \
 - Stage 5.2 two-hop demoted accordingly (Decision 3 staging): run only if
   its precondition check (7B two-hop accuracy) passes and time permits.
 
+## Qualifier (added 2026-07-22)
+
+Stage 5.2 (`2026-07-22-entailed-property-swaps-stage52.md`) bounds the
+token-steering interpretation this observation favored: on *entailed
+properties* (which token identity cannot supply), the J-lens swap moves
+the unspoken property by +2.13 nats vs +0.07 for logit-lens steering at
+equal magnitude. The token-steering account stands for report-token
+effects; it does not extend to relational effects. Also: the 17.7%
+logitlens norm deviation reported above traces to a single degenerate
+fragment-source item (the norm-fix rerun reproduced all rates
+identically at 1.5B); the 7B 78% figure remains real and its
+magnitude-controlled rerun is pending.
+
 ## References
 
 - `[gurnee2026-workspace §3.1, Fig. 8]`

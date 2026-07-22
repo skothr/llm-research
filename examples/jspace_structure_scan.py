@@ -106,7 +106,9 @@ from _jspace_pursuit import (  # noqa: E402
     gradient_pursuit_layer,
 )
 from jspace_readout_scan import (  # noqa: E402
+    DEFAULT_HELDOUT,
     build_model,
+    heldout_tag,
     load_prompts,
     mid_and_last_positions,
     slug,
@@ -127,8 +129,14 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--prompts",
-        default="research/arcs/jspace/data/heldout_prompts_wikitext103_n30.json",
+        default=DEFAULT_HELDOUT,
         help="Held-out prompts JSON ({'prompts': [str, ...]}).",
+    )
+    p.add_argument(
+        "--heldout-tag",
+        default=None,
+        help="Override the output-name held-out tag (auto-derived from a "
+        "non-default --prompts filename otherwise; empty for the default set).",
     )
     p.add_argument("--n-prompts", type=int, default=30)
     p.add_argument("--max-seq-len", type=int, default=512)
@@ -157,9 +165,11 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
-def default_out(model: str, lens: str) -> str:
+def default_out(model: str, lens: str, tag: str = "") -> str:
     stem = Path(lens).stem
-    return f"research/arcs/jspace/data/cache/structure_scan_{slug(model)}_{stem}.pt"
+    return (
+        f"research/arcs/jspace/data/cache/structure_scan_{slug(model)}_{stem}{tag}.pt"
+    )
 
 
 def capture_residuals(
@@ -320,6 +330,7 @@ def main() -> None:
         "model": args.model,
         "mode": args.mode,
         "lens": args.lens,
+        "prompts": args.prompts,
         "n_prompts": len(prompts),
         "layers": layers,
         "ks": ks,
@@ -343,7 +354,9 @@ def main() -> None:
         "mean_seconds_per_prompt": float(np.mean(per_prompt_times)),
     }
 
-    out = args.out or default_out(args.model, args.lens)
+    out = args.out or default_out(
+        args.model, args.lens, heldout_tag(args.prompts, args.heldout_tag)
+    )
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     torch.save({"per_prompt": per_prompt, "summary": summary}, out)
 

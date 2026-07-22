@@ -86,9 +86,31 @@ META: dict[str, dict[str, Any]] = {
         "provenance": (
             "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 "
             "under the same >=600-char filter as the fitting corpus; verified "
-            "zero overlap with fitting_prompts_wikitext103_n1000.json"
+            "zero overlap with fitting_prompts_wikitext103_n1000.json. NOTE: 30 "
+            "CONSECUTIVE records -> topically clustered; the diversified C4 "
+            "held-out set below is the robustness control."
         ),
         "consumers": ["readout_scan_*.pt (held-out evaluation prompts)"],
+    },
+    "heldout_prompts_c4en_n30.json": {
+        "class": "raw",
+        "producing_script": "examples/jspace_freeze_c4_corpus.py",
+        "inputs": [],
+        "requires_model": "none",
+        "provenance": (
+            "allenai/c4 config en, split train, streamed with "
+            "shuffle(seed=42, buffer_size=10000); skip first 1000 accepted "
+            "(the n=1000 fitting slice), then records 1001-1030 with "
+            "len(text.strip()) >= 600 in post-shuffle order; deduped against "
+            "fitting_prompts_c4en_n1000.json; verified zero overlap with it and "
+            "with heldout_prompts_wikitext103_n30.json. Diversified (topically "
+            "un-clustered) held-out control for the held-out-sample-robustness "
+            "check; frozen by examples/jspace_freeze_c4_corpus.py --offset 1000."
+        ),
+        "consumers": [
+            "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt "
+            "(diversified held-out evaluation prompts)"
+        ],
     },
     # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
     # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
