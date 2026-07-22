@@ -39,6 +39,9 @@ slower than the working GPU path). Full numbers + evidence in
 n=100 launched 2026-07-18 (checkpointed); 7B n=100 overnight run pending
 reviewer confirmation; larger n via checkpoint-resume /
 `JacobianLens.merge()` extension if split-half stability at n=100 is poor.
+**Executed → 7B n=100 confirmed and run; see
+`../observations/2026-07-20-scale-comparison-7b-vs-1p5b-h2.md` (and the
+n=500 extension in `../observations/2026-07-22-n500-and-heldout-robustness.md`).**
 
 ## 0. What we are computing
 

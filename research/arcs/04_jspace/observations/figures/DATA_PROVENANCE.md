@@ -10,10 +10,13 @@ two places under `research/arcs/04_jspace/data/`:
 - `data/*.pt` — the **committed deliverable** (Git-LFS tracked, sha256-registered
   in `data/MANIFEST.json`). This is the clean-clone source of truth.
 - `data/cache/*.pt` — a **byte-identical, gitignored working mirror**. The render
-  scripts (`examples/jspace_render_*.py`) set `CACHE = data/cache` and read from
-  here. `data/` and `data/cache/` copies are identical (verified `diff`), so a
-  clean clone re-renders every figure after `git lfs pull` + copying/symlinking
-  `data/*.pt` into `data/cache/` (or pointing a script at `data/`).
+  scripts (`examples/jspace_render_*.py`) and the audit both resolve each
+  artifact **`data/`-first, `cache/`-fallback** via the shared
+  `examples/_jspace_paths.resolve` helper (the audit uses its own equivalent
+  `_resolve`), so a clean clone re-renders every figure directly after
+  `git lfs pull` — no copy/symlink into `data/cache/` is needed. `data/` and
+  `data/cache/` copies are identical (verified `diff`); the cache is only a
+  working mirror for iterative re-capture.
 
 All `n=100` in filenames is the fitted **JacobianLens** rank/config label
 (`jlens_qwen2.5-{1.5b_bf16,7b_nf4}_n100...pt`), not a prompt count. Lens fitting
@@ -209,9 +212,16 @@ Verbatim example items (`ITEMS`):
 - ant → spider: *"The number of legs on the tiny insect that lives in colonies and marches in lines is"* (6 → 8)
 - bee → spider: *"The number of legs on the busy insect that makes honey inside a hive is"* (6 → 8)
 
-Values plotted: mean Δlog-p from `per_item[i]["conditions"]["{cond}@2.0"]["dlogp_swap_answer"]`
-over the `baseline_correct` subset (the render script re-derives these and asserts
-equality with `summary.metrics` at load — a mismatch aborts).
+Values plotted: mean Δlog-p from `per_item[i]["conditions"]["{cond}@2.0"]["dlogp_swap_answer"]`.
+The **primary (solid)** lines are the **auto-only** subset — baseline-correct
+items whose swap positions were J-lens-detected (`scope_used == "auto"`) — the
+genuine J-space-localized effect (jlens peak +5.17 nats @L18 1.5B, +2.17 @L19
+7B). A **light dashed** companion shows the mixed-scope J-lens mean over *all*
+baseline-correct items (incl. the `auto->window_fallback` items, which carry
+~zero movement and dilute the mean down to +2.13 / +1.25). Each x-tick shows
+`n_auto/n_correct` per layer. Self-verification at load: the mixed mean is
+re-derived and asserted equal to `summary.metrics`, and the auto/fallback
+partition is asserted to recombine to that mixed mean — a mismatch aborts.
 
 **Dump the raw rows:**
 ```python

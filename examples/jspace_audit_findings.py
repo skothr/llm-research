@@ -1673,6 +1673,46 @@ ES_HEADLINE = {
     "1.5b chat L18": {"jlens": 2.13, "logitlens": 0.07, "random": 0.14},
     "7b chat L19": {"jlens": 1.250, "logitlens": 0.178, "random": 0.040},
 }
+# Scope split over the baseline-correct subset (auto = genuine J-lens-detected
+# concept positions; fallback = positional-window items with no detected concept
+# position). detect_positions() falls back silently, so the headline mixed number
+# averages both; the fallback subset carries ~zero entailed-property movement, so
+# the auto-only aggregate is the true J-space-localized effect (and is LARGER).
+# (n_auto_correct, n_fallback_correct) per chat key, from the committed artifacts.
+ES_SCOPE_SPLIT: dict[str, tuple[int, int]] = {
+    "1.5b chat L18": (7, 10),
+    "1.5b chat L21": (10, 7),
+    "1.5b chat L24": (15, 2),
+    "7b chat L18": (17, 13),
+    "7b chat L19": (17, 13),
+    "7b chat L22": (18, 12),
+}
+# Auto-only jlens@2 dlogp(swap-property) at the two headline peak layers — the
+# primary figure the stage-5.2 observation now leads with (mixed in parentheses).
+ES_AUTO_HEADLINE = {
+    "1.5b chat L18": 5.168,
+    "7b chat L19": 2.166,
+}
+
+
+def _es_scope_split(per_item: list[dict[str, Any]]) -> tuple[list[Any], list[Any]]:
+    """(auto, fallback) baseline-correct item lists by ``scope_used``."""
+    correct = [it for it in per_item if it["baseline_correct"]]
+    auto = [it for it in correct if it["scope_used"] == "auto"]
+    fb = [it for it in correct if it["scope_used"] == "auto->window_fallback"]
+    return auto, fb
+
+
+def _es_mean_dlogp(items: list[Any], key: str = "jlens@2.0") -> float:
+    """Mean dlogp_swap_answer over ``items`` at condition ``key``."""
+    vals = [
+        float(it["conditions"][key]["dlogp_swap_answer"])
+        for it in items
+        if key in it["conditions"]
+    ]
+    return float(np.mean(vals)) if vals else float("nan")
+
+
 ES_PAPERVERBATIM = [
     "entailed_paperverbatim_chat_all_L19_7b.pt",
     "entailed_paperverbatim_chat_auto_L19_7b.pt",
@@ -1742,6 +1782,31 @@ def audit_entailed_swap() -> None:
         if style == "chat":
             peak_jlens_dlogp[scale][layer] = float(
                 m["jlens@2.0"]["mean_dlogp_swap_answer"]
+            )
+        # (3b) scope split: the headline mixed dlogp averages auto (J-lens-detected
+        #      concept positions) with auto->window_fallback (no concept position
+        #      found; positional-window edit, ~zero property movement). Pin the
+        #      split counts and the auto-only aggregate so the mixing stays visible.
+        if key in ES_SCOPE_SPLIT:
+            auto, fb = _es_scope_split(d["per_item"])
+            exp_a, exp_f = ES_SCOPE_SPLIT[key]
+            claim_eq(f"[L] {key} baseline-correct auto count", exp_a, len(auto))
+            claim_eq(f"[L] {key} baseline-correct fallback count", exp_f, len(fb))
+        if key in ES_AUTO_HEADLINE:
+            auto, _fb = _es_scope_split(d["per_item"])
+            claim_near(
+                f"[L] {key} AUTO-ONLY jlens@2 dlogp(swap)",
+                ES_AUTO_HEADLINE[key],
+                _es_mean_dlogp(auto, "jlens@2.0"),
+                atol=0.01,
+            )
+            claim(
+                f"[L] {key} auto-only jlens@2 > mixed (fallback dilutes down)",
+                _es_mean_dlogp(auto, "jlens@2.0")
+                > float(m["jlens@2.0"]["mean_dlogp_swap_answer"]),
+                "auto-only > mixed",
+                f"{_es_mean_dlogp(auto, 'jlens@2.0'):.3f} > "
+                f"{float(m['jlens@2.0']['mean_dlogp_swap_answer']):.3f}",
             )
         # (4) headline dlogp @s=2 at the peak layers.
         if key in ES_HEADLINE:

@@ -1,4 +1,4 @@
-# Observation: J-space occupancy replicates the ≤10% ceiling; the kurtosis onset signature does not (stage 4)
+# Observation: J-space occupancy is low but the ≤10% ceiling is k-dependent (7B under it, 1.5B breaches at the hump); the kurtosis onset signature does not replicate (stage 4)
 
 **Date/context:** 2026-07-20. Stage 4 of the design plan: gradient-pursuit
 J-space structural characterization on both n=100 lenses
@@ -17,12 +17,14 @@ every varfrac to ≤5e-5 (rounding of the comparison reference).
 
 ## Finding
 
-**The paper's variance-fraction ceiling replicates at both scales; its
-depth *profiles* only partially — and the kurtosis workspace-onset
-signature does not replicate at all.**
+**The paper's variance-fraction ceiling replicates at 7B but is breached
+by the primary model (1.5B) at its hump; the depth *profiles* replicate
+only partially — and the kurtosis workspace-onset signature does not
+replicate at all.**
 
-**1. J-space variance fraction (k=25) stays under the paper's ~10% ceiling,
-with scale-dependent depth shape:**
+**1. J-space variance fraction is low-occupancy at both scales but the
+paper's exact ≤10% ceiling is k-dependent — 7B stays under it, 1.5B
+breaches it at the hump (12.4% at k=25, 15.2% at k=50):**
 
 | layer | 1.5B varfrac | 7B varfrac | | layer | 1.5B varfrac | 7B varfrac |
 |--:|--:|--:|--|--:|--:|--:|

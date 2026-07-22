@@ -922,6 +922,50 @@ def main() -> None:  # noqa: C901
             "mean_injected_norm": rate(lambda c: c["injected_norm"], key),
         }
 
+    # ---- Per-scope split over the baseline-correct subset (auto vs fallback) ----
+    # 'auto' positions are the genuine J-lens-detected concept positions (>=1
+    # source-concept form in the swap-layer top-k); 'auto->window_fallback' items
+    # had none detected and fell back to a fixed positional window, which carries
+    # near-zero entailed-property movement. Recorded additively so downstream
+    # readers can read the auto-only aggregate (the true J-space-localized effect)
+    # without re-deriving from per_item; existing keys are untouched.
+    def rate_over(subset: list[dict[str, Any]], pred: Any, key: str) -> float:
+        vals = [pred(it["conditions"][key]) for it in subset if key in it["conditions"]]
+        return float(np.mean(vals)) if vals else float("nan")
+
+    n_auto = sum(1 for it in per_item if it["scope_used"] == "auto")
+    n_fallback = sum(
+        1 for it in per_item if it["scope_used"] == "auto->window_fallback"
+    )
+    auto_correct = [it for it in correct if it["scope_used"] == "auto"]
+    fb_correct = [it for it in correct if it["scope_used"] == "auto->window_fallback"]
+    metrics_by_scope: dict[str, dict[str, dict[str, Any]]] = {}
+    for scope_name, subset in (
+        ("auto", auto_correct),
+        ("auto->window_fallback", fb_correct),
+    ):
+        metrics_by_scope[scope_name] = {
+            key: {
+                "n": len(subset),
+                "property_flip_rate": rate_over(
+                    subset, lambda c: c["property_flip"], key
+                ),
+                "swap_answer_top5_rate": rate_over(
+                    subset, lambda c: c["swap_answer_in_top5"], key
+                ),
+                "clean_retention_rate": rate_over(
+                    subset, lambda c: c["clean_retained"], key
+                ),
+                "mean_dlogp_swap_answer": rate_over(
+                    subset, lambda c: c["dlogp_swap_answer"], key
+                ),
+                "mean_dlogp_clean_answer": rate_over(
+                    subset, lambda c: c["dlogp_clean_answer"], key
+                ),
+            }
+            for key in cond_keys
+        }
+
     summary: dict[str, Any] = {
         "model": args.model,
         "mode": args.mode,
@@ -933,6 +977,11 @@ def main() -> None:  # noqa: C901
         "prompt_style": args.prompt_style,
         "n_items": len(per_item),
         "n_correct": len(correct),
+        "n_auto": n_auto,
+        "n_fallback": n_fallback,
+        "n_auto_correct": len(auto_correct),
+        "n_fallback_correct": len(fb_correct),
+        "metrics_by_scope": metrics_by_scope,
         "clean_accuracy": (len(correct) / len(per_item)) if per_item else float("nan"),
         "n_correct_top1": int(sum(1 for it in per_item if it["baseline_top1_correct"])),
         "clean_accuracy_top1": (
@@ -980,6 +1029,12 @@ def main() -> None:  # noqa: C901
             f"{mk['clean_retention_rate']:>7.3f} {mk['mean_dlogp_swap_answer']:>8.2f} "
             f"{mk['mean_dlogp_clean_answer']:>8.2f} {mk['mean_injected_norm']:>7.2f}"
         )
+    ja = metrics_by_scope["auto"].get("jlens@2.0", {})
+    print(
+        f"\n[scope] baseline-correct split: auto={len(auto_correct)} "
+        f"fallback={len(fb_correct)} (all items: auto={n_auto} fallback={n_fallback}); "
+        f"auto-only jlens@2 dlogp(swap)={ja.get('mean_dlogp_swap_answer', float('nan')):.3f}"
+    )
     print(f"\n[save] {out}")
     print(
         f"[time] {gen_tokens} gen-tokens in {gen_elapsed:.1f}s "

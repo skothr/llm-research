@@ -3,7 +3,7 @@
 **Date/context:** 2026-07-22. The last two robustness axes on the arc's
 structural claims, both run as isolate-one-axis controls at 1.5B:
 (1) fit budget — n=500 nf4 refit (same corpus/model/quantization as the
-n=100 nf4 lens; 5.25 h at the measured 36.3 s/prompt) + full metric
+n=100 nf4 lens; ~5.1 h — 18,313 s wall, 36.3 s/prompt) + full metric
 suite; (2) held-out activation sample — the original held-out set is 30
 *consecutive* wikitext records (topically clustered around one
 article; flagged in external review), so the scan suite was re-run
@@ -13,10 +13,15 @@ verified disjoint from both existing corpora), same wikitext-fit lens.
 
 ## Finding
 
-**1. Fit budget (H1): exonerated by the pre-registered rule.** 5× more
-fitting data leaves the 1.5B nf4 J-space profile unchanged — varfrac
-peak L21 0.1252 → 0.1235 (−1.4% relative, threshold was 20%), profile
-mean −2.9%, largest single-layer shift −9.5%, same single-humped shape.
+**1. Fit budget (H1): exonerated under the stability threshold adopted
+for this check.** 5× more fitting data leaves the 1.5B nf4 J-space
+profile unchanged — varfrac peak L21 0.1252 → 0.1235 (−1.4% relative,
+under the 20% stability threshold), profile mean −2.9%, largest
+single-layer shift −9.5%, same single-humped shape. (The 20% threshold
+was fixed in the session record before the n=500 data landed, but was
+not committed to the repo in advance — it is not a repo-committed
+pre-registration; the −1.4% margin is comfortable under any plausible
+threshold.)
 With corpus (C4 check), quantization (nf4 control), and now n-budget all
 individually isolated and individually null at 1.5B, **the 7B ~3× lower
 occupancy and U-shaped depth profile stand as a genuine scale/model
@@ -81,7 +86,9 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
 
 ## References
 
-- Pre-registration: agent report 2026-07-21 (rule stated before data);
-  prior: `2026-07-21-quantization-exonerated-1p5b-nf4.md`,
+- Stability threshold (20% varfrac-peak shift): fixed in the session
+  record before the n=500 data landed, but not committed to the repo in
+  advance — a threshold adopted for this check, not a repo-committed
+  pre-registration. Prior: `2026-07-21-quantization-exonerated-1p5b-nf4.md`,
   `2026-07-20-corpus-sensitivity-c4-1p5b.md`,
   `2026-07-20-jspace-structure-stage4.md` (the claims these defend).

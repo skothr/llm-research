@@ -42,10 +42,11 @@ import torch
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
+from _jspace_paths import resolve
+
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-21-jspace-corpus-invariance.png"
 
@@ -63,7 +64,7 @@ BAND_LABELS = ("early\n(L0-8)", "mid\n(L9-18)", "late\n(L19-26)", "overall")
 
 
 def load(pt: str) -> dict[str, Any]:
-    p = CACHE / pt
+    p = resolve(pt)
     if not p.exists():
         raise SystemExit(f"missing artifact: {p}")
     return cast("dict[str, Any]", torch.load(p, weights_only=False))

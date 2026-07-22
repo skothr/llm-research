@@ -59,10 +59,11 @@ from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
+from _jspace_paths import resolve
+
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data" / "cache"
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 PROMPTS = (
     _REPO_ROOT
@@ -102,7 +103,7 @@ def load_prompt(idx: int) -> str:
 
 
 def load_scan(pt: str) -> dict[str, Any]:
-    p = CACHE / pt
+    p = resolve(pt)
     if not p.exists():
         raise SystemExit(f"missing readout-scan artifact: {p}")
     d = cast("dict[str, Any]", torch.load(p, weights_only=False))

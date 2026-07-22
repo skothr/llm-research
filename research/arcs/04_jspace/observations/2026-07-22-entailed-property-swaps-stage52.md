@@ -15,6 +15,24 @@ full rich capture. Clean accuracy: 1.5B chat 17/33, plain 4/33; 7B plain
 11/33. Injected-norm equality verified exact across conditions (the
 logitlens norm-fix landed first; see method note below).
 
+**Scope split — auto vs positional-window fallback (recorded 2026-07-22,
+review response).** `detect_positions()` keeps positions whose swap-layer
+J-lens top-k holds a source-concept form (`scope_used == "auto"`); when a
+layer yields *no* such position it falls back silently to a fixed
+last-N-token window (`"auto->window_fallback"`). Both were folded into
+the original headline aggregate. The split matters: on the
+baseline-correct subset the auto fraction is 7/17 (1.5B L18), 10/17
+(L21), 15/17 (L24); 17/30 (7B L18, L19), 18/30 (L22). Measured on the
+committed artifacts, the fallback items carry **~zero** entailed-property
+movement (jlens Δlogp −0.00 to +0.23 across layers), so mixing them in
+*dilutes the headline downward*. The tables below therefore now lead
+with the **auto-only** aggregate (the genuine J-lens-detected-position
+subset) and keep the mixed number in parentheses; the qualitative
+result is unchanged and the effect is in fact ~2× cleaner. Per-scope
+aggregates and the `n_auto`/`n_fallback` counts are persisted in
+`summary.metrics_by_scope` for runs from this date onward; the audit
+(Check L) pins the auto-only headline and the split counts.
+
 ## Finding
 
 **The paper's discrete top-1 property flip does not replicate at this
@@ -23,34 +41,48 @@ is present, large, and J-lens-specific** — the signature that raw token
 steering cannot produce, since steering the concept token carries no
 knowledge of the concept's properties:
 
-| 1.5B chat, s=2, L18 | Δlogp(swap property) | swap-prop in top-5 | clean retained |
-|---|--:|--:|--:|
-| **jlens** | **+2.13 nats** | 0.235 | 0.941 |
-| logitlens | +0.07 | 0.118 | 1.000 |
-| random | +0.14 | 0.118 | 1.000 |
+| 1.5B chat, s=2, L18 | Δlogp(swap property), auto-only (mixed) | swap-prop in top-5 |
+|---|--:|--:|
+| **jlens** | **+5.17 nats** (mixed +2.13) | 0.235 |
+| logitlens | +0.15 (mixed +0.07) | 0.118 |
+| random | +0.30 (mixed +0.14) | 0.118 |
 
-Swapping the concept along its J-lens vector moves the *unspoken entailed
-property's* log-probability by +2.13 nats — ~30× the token-steering
-control at identical injected magnitude — and lifts the property into the
-top-5 on a quarter of retained items, without breaking the model
-(clean-retention 0.94). The effect is depth-localized at **L18** (at L21,
-the report-swap peak layer, it collapses to +0.26): concept→property
-propagation engages earlier than report emission, consistent with
-computation flowing through subsequent layers.
+(Auto-only n=7 of the 17 baseline-correct items; the other 10 fell back
+to the positional window and carry ~0 movement — see the scope-split note
+above. Clean-retention 0.94, unaffected by the split.)
+
+Swapping the concept along its J-lens vector, at the genuinely
+J-lens-detected concept positions, moves the *unspoken entailed
+property's* log-probability by **+5.17 nats** (mixed-scope +2.13) — an
+absolute gap of **+5.0 nats** (per-item SD 4.9, n=7) over the
+equal-magnitude logit-lens token-steering control (+0.15) — and lifts
+the property into the top-5 on a quarter of retained items, without
+breaking the model (clean-retention 0.94). The multiplier (~34×) is
+denominator-fragile since the control sits near zero, so the absolute
+gap is the figure to cite; the item-level SD exceeds the mean (a few
+high-movement items dominate), so this is a directional effect, not a
+tight estimate. The effect is depth-localized
+at **L18** (auto-only jlens Δlogp L18 +5.17 > L21 +0.44 > L24 +0.10;
+mixed +2.13 > +0.26 > +0.10): concept→property propagation engages
+earlier than report emission, consistent with computation flowing
+through subsequent layers. The depth ordering holds identically on the
+auto-only and mixed subsets.
 
 **7B replication (added same day, gated runs + layer sweep):** clean
 accuracy 0.909 (30/33). The effect reproduces with the same structure:
 
-| 7B chat, s=2 | jlens Δlogp | logitlens | random | retain |
+| 7B chat, s=2 | jlens Δlogp auto-only (mixed) | logitlens auto | random auto | retain |
 |---|--:|--:|--:|--:|
-| **L19** | **+1.250** | +0.178 | +0.040 | 0.967 |
-| L18 | +0.897 | +0.168 | +0.066 | 0.933 |
-| L22 (report layer) | +0.471 | +0.244 | +0.129 | 1.000 |
+| **L19** | **+2.17** (mixed +1.250) | +0.27 | +0.07 | 0.967 |
+| L18 | +1.52 (mixed +0.897) | +0.27 | −0.07 | 0.933 |
+| L22 (report layer) | +0.63 (mixed +0.471) | +0.29 | +0.17 | 1.000 |
 
-Peak at **L19** — the same relative depth as 1.5B's L18 — at 7× the
-token-steering control (31× random), collapsing toward parity at the
-L22 report layer. Discrete flips remain 0.000 at both scales even at
-90% clean accuracy.
+(Auto-only n=17 of 30 baseline-correct at L18/L19, 18 at L22; the
+fallback items again carry ~0 movement.) Peak at **L19** — the same
+relative depth as 1.5B's L18 — at ~8× the token-steering control (~30×
+random) on the auto-only subset, collapsing toward parity at the L22
+report layer. Discrete flips remain 0.000 at both scales even at 90%
+clean accuracy.
 
 **Interpretation — this materially revises the arc's causal story.** The
 5.1b conclusion ("only token-indexed directions steer; weight toward the
@@ -68,11 +100,17 @@ accuracy 11/33).
 
 ## Evidence
 
-Artifacts (gitignored cache): `entailed_swap_chat_L{18,21,24}_*1.5b*`,
+Artifacts (committed under `data/`, gitignored `cache/` mirror):
+`entailed_swap_chat_L{18,21,24}_*1.5b*`,
 `entailed_swap_plain_L21_*1.5b*`, `entailed_swap_plain_L22_*7b*` — full
 transcripts, per-condition top-k ids/strings/probs at the answer
-position, per-layer clean J-lens top-k at concept positions (the
-"concept visible at intermediate layers" premise is checkable per item).
+position, per-layer clean J-lens top-k at concept positions, and per-item
+`scope_used` (`auto` vs `auto->window_fallback`). For the `auto` items
+the "concept visible at intermediate layers" premise is checkable per
+item; the fallback items are precisely those where *no* concept position
+was J-lens-detectable at that layer (hence the positional-window
+substitution and their ~zero movement), which is why the auto-only
+aggregate is the faithful J-space-localized figure.
 Method note: the logitlens magnitude fix (scale from the same
 generate-prefill forward as the injection) was applied before these
 runs; at 1.5B it is a verified no-op (bf16 capture ≈ prefill; the

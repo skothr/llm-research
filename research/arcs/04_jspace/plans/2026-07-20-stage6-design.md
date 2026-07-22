@@ -1,7 +1,8 @@
 # Stage 6 design addendum: the NLA cross-tie
 
-Date: 2026-07-20. Status: **design, pre-GPU**. Extends
-`2026-07-18-jspace-design.md` §"Stage 6". Grounding: that spec, the NLA arc
+Date: 2026-07-20. Status: **design, pre-GPU**.
+**Executed 2026-07-21 → see `observations/2026-07-21-nla-crosstie-stage6.md`.**
+Extends `2026-07-18-jspace-design.md` §"Stage 6". Grounding: that spec, the NLA arc
 (`research/arcs/01_nla-verbalizer/README.md`), `llm_surgeon.probe._nla`, and
 `theory/kb/notes/interpretability/j-space.md` §5 (single-token limit).
 
