@@ -38,17 +38,33 @@ the report-swap peak layer, it collapses to +0.26): concept→property
 propagation engages earlier than report emission, consistent with
 computation flowing through subsequent layers.
 
+**7B replication (added same day, gated runs + layer sweep):** clean
+accuracy 0.909 (30/33). The effect reproduces with the same structure:
+
+| 7B chat, s=2 | jlens Δlogp | logitlens | random | retain |
+|---|--:|--:|--:|--:|
+| **L19** | **+1.250** | +0.178 | +0.040 | 0.967 |
+| L18 | +0.897 | +0.168 | +0.066 | 0.933 |
+| L22 (report layer) | +0.471 | +0.244 | +0.129 | 1.000 |
+
+Peak at **L19** — the same relative depth as 1.5B's L18 — at 7× the
+token-steering control (31× random), collapsing toward parity at the
+L22 report layer. Discrete flips remain 0.000 at both scales even at
+90% clean accuracy.
+
 **Interpretation — this materially revises the arc's causal story.** The
 5.1b conclusion ("only token-indexed directions steer; weight toward the
 token-steering account") holds for *report* swaps but does not extend to
-*relational* effects: the J-lens vector demonstrably carries
-concept-linked structure that the raw unembedding direction does not. At
-1.5B the effect is graded rather than discrete — plausibly a capability/
-scale attenuation of the paper's Claude-scale flip (their 8→6 is the
-top-1-crossing version of the same movement). The 7B chat run (the more
-capable test) is pending GPU headroom [gated; artifact will follow];
-7B plain landed but its low clean-accuracy (11/33) and plain-style
-weakness limit it to a corroborating footnote.
+*relational* effects: at both scales, the J-lens vector demonstrably
+carries concept-linked structure that the raw unembedding direction does
+not, and it engages a few layers below the report-swap depth
+(L18/L19 vs L21/L22 — a consistent cross-scale depth split). The effect
+is graded rather than discrete — plausibly a capability/scale
+attenuation of the paper's Claude-scale flip (their 8→6 is the
+top-1-crossing version of the same movement); moving from 1.5B to 7B
+did not close the gap to a flip, so the threshold, if it exists, lies
+above 7B. 7B plain landed as a corroborating footnote (low clean
+accuracy 11/33).
 
 ## Evidence
 
@@ -87,10 +103,8 @@ python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
 
 ## Follow-ups
 
-- 7B chat L22 run lands via the VRAM gate; fold its table in before arc
-  close (this observation will be updated in place — the arc is pre-PR).
-- Strength sweep beyond s=2 at L18 (does Δlogp cross top-1?) — cheap,
-  the dose-response test.
+- Strength sweep beyond s=2 at the L18/L19 peak (does Δlogp cross
+  top-1?) — cheap, the remaining dose-response axis.
 - Audit check group for the entailed artifacts (stage-7 consolidation).
 
 ## References

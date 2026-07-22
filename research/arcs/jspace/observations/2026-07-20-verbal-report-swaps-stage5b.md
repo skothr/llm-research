@@ -127,8 +127,12 @@ equal magnitude. The token-steering account stands for report-token
 effects; it does not extend to relational effects. Also: the 17.7%
 logitlens norm deviation reported above traces to a single degenerate
 fragment-source item (the norm-fix rerun reproduced all rates
-identically at 1.5B); the 7B 78% figure remains real and its
-magnitude-controlled rerun is pending.
+identically at 1.5B). The 7B magnitude-controlled rerun also landed
+(2026-07-22): all rates reproduce identically (jlens@2 0.269,
+logitlens@2 0.244) with the median per-item norm ratio now 1.0008 —
+so the observation's tables and the audit pins stand unchanged, and
+the magnitude caveat reduces to a handful of degenerate
+fragment-source items at both scales.
 
 ## References
 
