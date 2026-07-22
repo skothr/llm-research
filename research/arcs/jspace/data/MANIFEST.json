@@ -1,10 +1,221 @@
 {
   "arc": "jspace",
-  "description": "Raw + derived jspace artifacts: the frozen wikitext-103 fitting corpus, fitted Jacobian-lens tensors (jlens native format) with their .config.json provenance sidecars, and derived metric/table products. Committed via git-LFS so figures and the audit reproduce from a clean clone. The cache/ subdir is excluded.",
+  "description": "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors (jlens native format) with their .config.json provenance sidecars, and the promoted derived metric/scan/swap products (lens_eval, readout_scan, structure_scan, verbal_report, entailed_swap + paper-verbatim probes, nla_crosstie) the audit re-derives from. Committed via git-LFS so figures and the audit reproduce from a clean clone. The cache/ subdir (full fitted lenses + working state) is excluded. The J-lens dependency is pinned in the top-level `jlens_pin` field below (the eval prompt sets live in that clone).",
+  "jlens_pin": {
+    "repo": "github.com/anthropics/jacobian-lens (editable clone at /home/ai/ai-projects/jacobian-lens)",
+    "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
+    "subject": "Initial release",
+    "date": "2026-07-02",
+    "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in this clone, so the eval tables (audit Check B) are reproducible only against this pinned commit."
+  },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 8,
-  "total_size_bytes": 217495038,
+  "total_files": 42,
+  "total_size_bytes": 268862744,
   "files": [
+    {
+      "filename": "entailed_paperverbatim_chat_all_L19_7b.pt",
+      "sha256": "fc1d164e7c5ff754e614a9a19b75f1e005040ce97bb3ee499dc5263367c4efd5",
+      "size_bytes": 762791,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 paper-verbatim / cue-redundancy control probe (--items-json, n=3), 7B nf4 @L19, chat all-scope (every pre-answer position).",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_paperverbatim_chat_auto_L19_7b.pt",
+      "sha256": "4722e0a8c0fce7010d3e02f6bd8146064d7c4361ce73ca37783d6f1f1dbf5a58",
+      "size_bytes": 46701,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, chat auto-scope.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_paperverbatim_plain_all_L19_7b.pt",
+      "sha256": "7d4baafb747651b900e5d4273aef94630cd39435c771d7c4a3aaba1cc3e13c76",
+      "size_bytes": 157293,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain all-scope.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_paperverbatim_plain_auto_L19_7b.pt",
+      "sha256": "907f41c8bbfd70ec3fa292d7f8da6fcc1079a90daba9860bc26333f225e8b4be",
+      "size_bytes": 45235,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain auto-scope.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "4034b9c9ece5fa096a00ced7163d42036ef677b20db097af6c37cf96e06d3640",
+      "size_bytes": 537977,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "7b9204b6a830fa6810ff3d62065eadb342d7f18756f4eb76154d1c31c51d02a1",
+      "size_bytes": 601819,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "f63799fbe31a112e534a88cf17cc32aed9062c0aab4ec2980c4a9dfb7d6ac802",
+      "size_bytes": 568027,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "d5a02044d45f36f865430282e16f60f304f0498b5d28e66c7b5eb4d669b316c8",
+      "size_bytes": 558457,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "19fd04cbbf67641c3a40e6147079452451276b1ea7112449214359bbf9a1cb04",
+      "size_bytes": 609883,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "70f26b8d7a14292b25b60afc1ae50074ecc78cce1cfb1a2ad59da797e519dddf",
+      "size_bytes": 587513,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "b3b2b71550595c021c5f5d5af293d56d5524b69f50293cc03988d9aaa85c0ad6",
+      "size_bytes": 585087,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
+    {
+      "filename": "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "97bb5786f06717a1fe9284db73b1bb9fac932edb1d33260d2628e62b74e812c8",
+      "size_bytes": 551905,
+      "class": "derived",
+      "producing_script": "examples/jspace_entailed_swap.py",
+      "producing_command": "python examples/jspace_entailed_swap.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
+      "consumers": [
+        "obs 2026-07-22-entailed-property-swaps-stage52.md",
+        "audit Check L"
+      ]
+    },
     {
       "filename": "fitting_prompts_c4en_n1000.json",
       "sha256": "fd76e5a9021228fc19855b30eb28717179b5cbce13ec0de55b54e31b45617b6e",
@@ -123,6 +334,393 @@
       "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26); full set cache-only.",
       "consumers": [
         "clean-clone lens inspection at representative depths"
+      ]
+    },
+    {
+      "filename": "lens_eval_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "b0d4045d8032cf09bae0c3cd160962f621d04bafb00d2bdb6bb066ec8aae2a37",
+      "size_bytes": 115203,
+      "class": "derived",
+      "producing_script": "examples/jspace_lens_eval.py",
+      "producing_command": "python examples/jspace_lens_eval.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Intermediate-concept eval (multihop + association) top-k readout hit-rates per depth band; 1.5B bf16 J-lens vs logit-lens (stage-3 H3).",
+      "consumers": [
+        "obs 2026-07-18-intermediate-concept-evals-h3-confirmed.md",
+        "audit Check B"
+      ]
+    },
+    {
+      "filename": "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt",
+      "sha256": "9c179621429dd687476ecdab25e155832a306648195f49ff11e5e4806e0b7f7a",
+      "size_bytes": 115169,
+      "class": "derived",
+      "producing_script": "examples/jspace_lens_eval.py",
+      "producing_command": "python examples/jspace_lens_eval.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Intermediate-concept eval; 1.5B C4-en corpus-sensitivity refit.",
+      "consumers": [
+        "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
+        "audit Check J"
+      ]
+    },
+    {
+      "filename": "lens_eval_qwen2.5-1.5b_nf4_n100.pt",
+      "sha256": "02a5bd9a3ad149dd26daea32610ddbd68d5cf9a5677a79c1e8479c7516fecb64",
+      "size_bytes": 176125,
+      "class": "derived",
+      "producing_script": "examples/jspace_lens_eval.py",
+      "producing_command": "python examples/jspace_lens_eval.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Intermediate-concept eval; 1.5B nf4 quantization control (exoneration).",
+      "consumers": [
+        "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
+        "audit Check I"
+      ]
+    },
+    {
+      "filename": "lens_eval_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "5c3edf23c7e33a2652f68fa74df633fdf21067693410a6933ff0dda368d228a4",
+      "size_bytes": 116533,
+      "class": "derived",
+      "producing_script": "examples/jspace_lens_eval.py",
+      "producing_command": "python examples/jspace_lens_eval.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Intermediate-concept eval top-k readout hit-rates per depth band; 7B nf4 J-lens vs logit-lens (stage-3 scale comparison H2).",
+      "consumers": [
+        "obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md",
+        "audit Check B"
+      ]
+    },
+    {
+      "filename": "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "92e04c7d7791d6f8e6b900482e96de61a8f5a41bc27ddc6ba719bce8599476a9",
+      "size_bytes": 8311941,
+      "class": "derived",
+      "producing_script": "examples/jspace_nla_crosstie.py",
+      "producing_command": "python examples/jspace_nla_crosstie.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-6 NLA cross-tie: 7B nf4 J-lens (L19) x NLA activation-vector at hidden_states[20]; rank-median + carrier-decomposition metrics (24 prompts + 1 control). Excludes its .partial.jsonl / .phase1.pt sidecars.",
+      "consumers": [
+        "obs 2026-07-21-nla-crosstie-stage6.md",
+        "audit Check G"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "714799efc2d4dac526761c51b7d53d76bee765946cb51c5c0eeaf2728d1c5f63",
+      "size_bytes": 2173693,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Readout-scan depth-of-emergence (top-10) + per-layer Spearman, 1.5B bf16, wikitext held-out set (stage-3 first pass; GPU-regenerated 2026-07-21 with rich per-layer token capture).",
+      "consumers": [
+        "obs 2026-07-18-readout-scan-1p5b-first-pass.md",
+        "audit Check C"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
+      "sha256": "430d8732e54892a3b89ab41e04ce45ce8e6b3cc327750b0d4416de6712baaa57",
+      "size_bytes": 2175259,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Readout-scan, 1.5B C4-en corpus refit (evaluated on the same wikitext held-out set as the baseline).",
+      "consumers": [
+        "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
+        "audit Check J"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
+      "sha256": "4cd1f554c8ba2bfe48405793f6415566a4a85ad015b5d0efc252094f5eb71eb1",
+      "size_bytes": 5458373,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Readout-scan, 1.5B bf16 (wikitext-fit lens) on the diversified C4 held-out set (held-out-sample robustness control).",
+      "consumers": [
+        "obs 2026-07-22-n500-and-heldout-robustness.md",
+        "audit Check K"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
+      "sha256": "264cd790b1511f7bd3cc6d94a96db2d4215b843dd7a9a1da14693fc54639da5c",
+      "size_bytes": 2172599,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Readout-scan, 1.5B nf4 quantization control, wikitext held-out set.",
+      "consumers": [
+        "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
+        "audit Check I"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "f2fd6ab42871d4461c18559993d8a66fa296225c349c557e1c6f5ef706568d01",
+      "size_bytes": 2228511,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Readout-scan depth-of-emergence + per-layer Spearman, 7B nf4, wikitext held-out set (stage-3 scale comparison).",
+      "consumers": [
+        "obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md",
+        "audit Check C"
+      ]
+    },
+    {
+      "filename": "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
+      "sha256": "70e77f4681bd9fcec6cdf5d64286b82717073ea9f0955423f5e0413b690d9140",
+      "size_bytes": 5574311,
+      "class": "derived",
+      "producing_script": "examples/jspace_readout_scan.py",
+      "producing_command": "python examples/jspace_readout_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Readout-scan, 7B nf4 on the diversified C4 held-out set (held-out-sample robustness control).",
+      "consumers": [
+        "obs 2026-07-22-n500-and-heldout-robustness.md",
+        "audit Check K"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "21e70b0144c65e485e20c17196b0fd8afa5210c754e96fffa6b800295defaef5",
+      "size_bytes": 2393801,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-4 J-space structure map (varfrac k={5,10,25,50} / active-atom / readout-kurtosis per depth), 1.5B bf16, wikitext held-out set.",
+      "consumers": [
+        "obs 2026-07-20-jspace-structure-stage4.md",
+        "audit Check D"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
+      "sha256": "ffa8c4cf7b5c94d09b69090d7fa5d10b02e217484a064634f856e399ec398668",
+      "size_bytes": 2380455,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-4 structure map, 1.5B C4-en corpus refit.",
+      "consumers": [
+        "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
+        "audit Check J"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
+      "sha256": "082c44f8c69ca35ba8ecf5830ff8247a83af5caa24fb65b5d8c9890c8692d168",
+      "size_bytes": 2397905,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-4 structure map, 1.5B bf16 on the diversified C4 held-out set.",
+      "consumers": [
+        "obs 2026-07-22-n500-and-heldout-robustness.md",
+        "audit Check K"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
+      "sha256": "49bb04c488f2612f4df874ec74aacaca1af719847ec502a97f1297f0849b1e1a",
+      "size_bytes": 2391875,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Stage-4 structure map, 1.5B nf4 quantization control.",
+      "consumers": [
+        "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
+        "audit Check I"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
+      "sha256": "45bcd6bb766f8d79e318fcf50439e27f0d6e1aaa0925309c49021e154dbc7634",
+      "size_bytes": 2389571,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Stage-4 structure map, 1.5B nf4 n=500 fit-budget (H1) control.",
+      "consumers": [
+        "obs 2026-07-22-n500-and-heldout-robustness.md",
+        "audit Check H"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "c9e96f3d0c959162d9911d29aa786b7c2d7c358aadb72741febd085ab2920487",
+      "size_bytes": 2311851,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-4 J-space structure map, 7B nf4, wikitext held-out set.",
+      "consumers": [
+        "obs 2026-07-20-jspace-structure-stage4.md",
+        "audit Check D"
+      ]
+    },
+    {
+      "filename": "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
+      "sha256": "84595c1844331adb2d435d3d6f744f4836f15cebe93e04fc1cbfb30380ea1615",
+      "size_bytes": 2315955,
+      "class": "derived",
+      "producing_script": "examples/jspace_structure_scan.py",
+      "producing_command": "python examples/jspace_structure_scan.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-4 structure map, 7B nf4 on the diversified C4 held-out set.",
+      "consumers": [
+        "obs 2026-07-22-n500-and-heldout-robustness.md",
+        "audit Check K"
+      ]
+    },
+    {
+      "filename": "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "b7f950d6fa83d2c17f25f41a352c4de484fe866bfa46e118395807f563f33177",
+      "size_bytes": 164979,
+      "class": "derived",
+      "producing_script": "examples/jspace_verbal_report.py",
+      "producing_command": "python examples/jspace_verbal_report.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
+      "consumers": [
+        "obs 2026-07-20-verbal-report-swaps-stage5b.md",
+        "audit Check F"
+      ]
+    },
+    {
+      "filename": "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "5afef56487faa7428aecf0c18818e916e9ebabfbd884e660803d71771c0fcb0c",
+      "size_bytes": 164117,
+      "class": "derived",
+      "producing_script": "examples/jspace_verbal_report.py",
+      "producing_command": "python examples/jspace_verbal_report.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
+      "consumers": [
+        "obs 2026-07-20-verbal-report-swaps-stage5b.md",
+        "audit Check F"
+      ]
+    },
+    {
+      "filename": "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "49a698b72025b450a1f7e50f7e0fb7523d683a6d0f0247119f93bd5894335691",
+      "size_bytes": 113987,
+      "class": "derived",
+      "producing_script": "examples/jspace_verbal_report.py",
+      "producing_command": "python examples/jspace_verbal_report.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), 1.5B bf16 @L21.",
+      "consumers": [
+        "obs 2026-07-20-verbal-report-swaps-stage5.md",
+        "audit Checks E, F"
+      ]
+    },
+    {
+      "filename": "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "c29924890da8f4a1949cd5a3dd0b68161734a7335f975d1404249f8dc6579cfc",
+      "size_bytes": 112805,
+      "class": "derived",
+      "producing_script": "examples/jspace_verbal_report.py",
+      "producing_command": "python examples/jspace_verbal_report.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
+      "consumers": [
+        "obs 2026-07-20-verbal-report-swaps-stage5.md",
+        "audit Checks E, F"
       ]
     }
   ]
