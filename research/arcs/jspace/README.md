@@ -64,7 +64,7 @@ Observations so far, in `observations/`:
   entailed property at L18, ~30× the token-steering control at equal
   magnitude) — relational structure token steering cannot produce;
   **revises the 5.1b token-steering-favored conclusion**. 7B chat run
-  pending the VRAM gate.
+  landed 2026-07-22 (see 7B replication section).
 
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py`. Reduced layer subsets of both fitted

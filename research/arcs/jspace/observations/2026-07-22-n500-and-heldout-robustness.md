@@ -32,8 +32,17 @@ kurtosis trough L18:0.93 → L17:1.00, depth-of-emergence medians within
 ±2 layers; J-lens readout fidelity marginally *better* on the diverse
 set. The article-cluster narrowness shaped the qualitative trajectory
 vocabulary (visible as criticism/reviews register in the trajectory
-figure) but not the depth-profile statistics. 7B held-out scans pending
-GPU headroom [gated].
+figure) but not the depth-profile statistics.
+
+**7B held-out (gated runs, landed):** shape and ordering conclusions
+hold — U-profile with late peak, still ~2.6× below the 1.5B level on
+the matched C4 held-out set — but with honestly larger relative shifts
+than at 1.5B: peak 0.0404@L22 → 0.0518@L23 (+28%, layer ±1), trough
+0.0121@L17 → 0.0166@L16. At 7B's low absolute occupancy, per-sample
+noise is a larger fraction of the signal; 7B varfrac *values* should be
+quoted as band-level (~0.01–0.05), not to three decimals. The
+structural claims (≤10% ceiling, U-shape, ~3× below 1.5B) are
+unaffected.
 
 **Probe status — abandoned per the two-failure rule.** The raw-VJP
 bf16-vs-nf4 fidelity probe failed twice (first: HF_HUB_OFFLINE env bug,
