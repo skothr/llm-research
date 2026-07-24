@@ -1,0 +1,22 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "mode": "nf4",
+  "device": "cuda",
+  "dim_batch": 2,
+  "n_prompts": 100,
+  "max_seq_len": 128,
+  "prompts_file": "research/arcs/04_jspace/data/fitting_prompts_wikitext103_n1000.json",
+  "wall_seconds": 58543.6,
+  "jlens_source": "github.com/anthropics/jacobian-lens (editable clone)",
+  "estimator": "J_l = mean over prompts of mean-over-source-positions of sum-over-targets>=source of dh_final/dh_l (jlens.fit defaults, skip_first=16)",
+  "subset_layers": [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    26
+  ],
+  "full_set_location": "data/cache/ (gitignored; regenerate via examples/jspace_fit_lens.py)"
+}

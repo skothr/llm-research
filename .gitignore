@@ -38,3 +38,8 @@ theory/series/dist/
 .claude/
 debug-images/
 
+
+# Arc data cache dirs: regenerable heavy artifacts (full lens tensors, fit
+# checkpoints, derived scans) live in data/cache/ and stay out of git; the
+# committed deliverables are the top-level data/ files + MANIFEST.json.
+research/arcs/*/data/cache/

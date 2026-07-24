@@ -386,7 +386,7 @@ timeline entries because the timeline focuses on Transformer-era LLMs.
   Framework, Scaling Monosemanticity, Circuit Tracing, Biology).
 - **Notes:** `kb/notes/interpretability/circuit-tracing.md`.
 
-## 2026 (cutoff: 2026-05)
+## 2026 (cutoff: 2026-07)
 
 ### 2026-H1 — Continued reasoning-model and inference-time-compute work
 
@@ -398,6 +398,19 @@ timeline entries because the timeline focuses on Transformer-era LLMs.
   ongoing system cards.
 - **Notes:** `kb/notes/architecture/attention-mechanism.md` §5,
   `kb/notes/post-training/rlvr-and-grpo.md`.
+
+### 2026-H2 — Verbalizable global workspace (J-space)
+
+- **Shift:** Anthropic's Jacobian lens surfaces a sparse, low-variance
+  (<10%), causally privileged "workspace" band of verbalizable
+  representations in Claude models, framed via Global Workspace
+  Theory; alignment-auditing use (evaluation-awareness, hidden goals)
+  demonstrated. First lens technique that is causal-by-construction
+  (averaged model Jacobian) rather than identity (logit lens) or
+  learned (tuned lens).
+- **Sources:** `[gurnee2026-workspace]`.
+- **Notes:** `kb/notes/interpretability/j-space.md`,
+  `kb/notes/interpretability/lens-techniques.md`.
 
 ## Bridges (chronologically off-axis)
 
