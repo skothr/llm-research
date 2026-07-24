@@ -47,7 +47,11 @@ than at 1.5B: peak 0.0404@L22 → 0.0518@L23 (+28%, layer ±1), trough
 noise is a larger fraction of the signal; 7B varfrac *values* should be
 quoted as band-level (~0.01–0.05), not to three decimals. The
 structural claims (≤10% ceiling, U-shape, ~3× below 1.5B) are
-unaffected.
+unaffected. *(Metric note, 2026-07-24: the ceiling comparison here is in
+the arc's absolute varfrac; the paper's ceiling is excess-over-random
+orthogonal-projection FVE — the 7B under-ceiling verdict was re-verified
+under that metric, including on this C4 held-out set; see
+`2026-07-24-paper-metric-varfrac-recompute.md`.)*
 
 **Probe status — abandoned per the two-failure rule.** The raw-VJP
 bf16-vs-nf4 fidelity probe failed twice (first: HF_HUB_OFFLINE env bug,

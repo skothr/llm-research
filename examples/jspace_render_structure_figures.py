@@ -143,7 +143,11 @@ def main() -> None:
         color="#555555",
         linestyle="--",
         linewidth=1.2,
-        label=f"paper's ~{PAPER_CEILING:.0%} ceiling (Claude-family claim)",
+        label=(
+            f"paper's ~{PAPER_CEILING:.0%} ceiling — stated for a DIFFERENT "
+            "metric (excess FVE);\nverdicts verified under that metric in "
+            "2026-07-24-jspace-paper-metric-excess.png"
+        ),
     )
     ax_vf.set_ylabel(f"J-space variance fraction\n(squared-norm, k={HEADLINE_K})")
     ax_vf.set_ylim(0.0, max(PAPER_CEILING, max(sr["vf"].max() for sr in series)) * 1.25)

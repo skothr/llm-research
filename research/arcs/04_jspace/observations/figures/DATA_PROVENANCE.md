@@ -79,7 +79,12 @@ Verbatim category instances (from `CATEGORIES`):
 
 Values plotted: `summary.metrics["{cond}@{s}"]["target_top5_rate_all"]` per
 condition/strength; per-item rows in `per_item` carry
-`category / source_word / target_word / conditions`.
+`category / source_word / target_word / conditions`. Whiskers (added
+2026-07-24, issue #26): Wilson 95% score intervals for each n=78-trial
+proportion; the tier ordering is certified by exact McNemar on the paired
+per-item `target_in_top5` outcomes (`examples/jspace_swap_significance.py`
+report section — jspace_comp≈random null: 1.5B p=0.375, 7B p=1.0 with 0/0
+discordants; jlens>random: p=3e-11 / 0.0039).
 
 **Dump the raw rows:**
 ```python
@@ -213,6 +218,10 @@ Verbatim example items (`ITEMS`):
 - bee → spider: *"The number of legs on the busy insect that makes honey inside a hive is"* (6 → 8)
 
 Values plotted: mean Δlog-p from `per_item[i]["conditions"]["{cond}@2.0"]["dlogp_swap_answer"]`.
+Whiskers (added 2026-07-24, issue #26): seeded bootstrap 95% CI (10k
+resamples, `default_rng(0)` per panel) of the J-lens auto-only mean; the
+jlens>controls gaps are certified by exact sign-flip permutation
+(`examples/jspace_swap_significance.py`).
 The **primary (solid)** lines are the **auto-only** subset — baseline-correct
 items whose swap positions were J-lens-detected (`scope_used == "auto"`) — the
 genuine J-space-localized effect (jlens peak +5.17 nats @L18 1.5B, +2.17 @L19

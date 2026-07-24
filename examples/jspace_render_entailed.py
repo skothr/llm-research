@@ -196,6 +196,7 @@ def load_layer(pt: str) -> dict[str, Any]:
             )
         out["conds"][cond["key"]] = {
             "dlogp_auto": auto_mean,
+            "d_auto_items": d_auto,  # per-item values for the bootstrap CI
             "dlogp_mixed": mixed_mean,
             "flip": float(flip.mean()),
             "retain": float(retain.mean()),
@@ -221,9 +222,22 @@ def main() -> None:
     fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.4), sharey=True)
     axes = cast("list[Axes]", list(axes))
 
+    # Precompute the seeded bootstrap 95% CIs for the J-lens auto-only means
+    # (methodology per examples/jspace_swap_significance.py; added 2026-07-24
+    # with the significance certification, issue #26) so the y-limit can
+    # accommodate the whiskers — a clipped whisker misrepresents the interval.
     ymax = 0.0
     for d in data:
+        rng = np.random.default_rng(0)
+        d["jlens_ci"] = {}
         for L in d["panel"]["layers"]:
+            items = d["rows"][L]["conds"]["jlens"]["d_auto_items"]
+            boots = rng.choice(items, size=(10_000, len(items)), replace=True).mean(
+                axis=1
+            )
+            lo, hi = np.percentile(boots, [2.5, 97.5])
+            d["jlens_ci"][L] = (float(lo), float(hi))
+            ymax = max(ymax, float(hi))
             for cond in CONDITIONS:
                 ymax = max(ymax, d["rows"][L]["conds"][cond["key"]]["dlogp_auto"])
             ymax = max(ymax, d["rows"][L]["conds"]["jlens"]["dlogp_mixed"])
@@ -247,6 +261,22 @@ def main() -> None:
                 markeredgewidth=0.7,
                 label=cond["label"],
                 zorder=cond["z"],
+            )
+        # Whiskers from the precomputed seeded bootstrap CIs.
+        for L, y in zip(
+            layers, [rows[L]["conds"]["jlens"]["dlogp_auto"] for L in layers]
+        ):
+            lo, hi = d["jlens_ci"][L]
+            ax.errorbar(
+                [L],
+                [y],
+                yerr=[[y - lo], [hi - y]],
+                fmt="none",
+                ecolor="#1f77b4",
+                elinewidth=1.1,
+                capsize=3.5,
+                alpha=0.85,
+                zorder=6,
             )
         # COMPANION: mixed-scope J-lens (light dashed) — shows the fallback dilution.
         ys_mixed = [rows[L]["conds"]["jlens"]["dlogp_mixed"] for L in layers]
@@ -320,6 +350,7 @@ def main() -> None:
         0.5,
         0.035,
         "Solid = auto-only (J-lens-detected concept positions); dashed = all baseline-correct items (window fallback dilutes toward 0).  "
+        "Whiskers = seeded bootstrap 95% CI of the J-lens auto-only mean (10k resamples; jlens>controls certified by exact permutation, jspace_swap_significance.py).  "
         "Flip rate = 0.000 everywhere (no top-1 crossing); clean-retention 0.94–1.00 — the swap never breaks the model.",
         ha="center",
         fontsize=8.5,
