@@ -12,8 +12,13 @@ in the README was prose-only. This script derives, purely from the committed
   exact binomial sign-test p, and a seeded bootstrap 95% CI;
 
 on both the auto-detected-position subset and the mixed baseline-correct set
-(subset logic identical to ``jspace_audit_findings.py``). All functions are
-importable so the audit can pin the exact values.
+(subset logic identical to ``jspace_audit_findings.py``). A second section
+certifies the stage-5.1b report-swap tiers from the committed
+``verbal_report_chat_6c`` artifacts: exact McNemar on the paired per-item
+``target_in_top5`` outcomes vs the random control — the load-bearing
+"59% tier lands at random" NULL (1.5B p=0.375; 7B p=1.0 with 0/0
+discordant pairs) and the jlens/logitlens positive tiers. All functions
+are importable so the audit can pin the exact values.
 
 Verified findings (2026-07-23): 1.5B L18 auto n=7 jlens−logitlens gap
 +5.02 nats, 7/7 positive, exact p=0.0156 (the n=7 floor); 7B L19 auto n=17
@@ -117,6 +122,67 @@ def gap_stats(items: list[dict[str, Any]], control: str) -> dict[str, float]:
     }
 
 
+REPORT_FILES: dict[str, str] = {
+    "1.5B chat 6c": (
+        "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
+    ),
+    "7B chat 6c": (
+        "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
+    ),
+}
+# (positive-tier check, null-tier check) — the stage-5.1b headline structure.
+REPORT_PAIRS: list[tuple[str, str]] = [
+    ("jlens", "random"),
+    ("jspace_comp", "random"),
+    ("logitlens", "random"),
+]
+
+
+def mcnemar_exact_p(n01: int, n10: int) -> float:
+    """Two-sided exact McNemar: binomial(n01+n10, 1/2) tail on discordants."""
+    n = n01 + n10
+    if n == 0:
+        return 1.0
+    k = min(n01, n10)
+    tail = sum(comb(n, i) for i in range(k + 1)) / 2**n
+    return min(1.0, 2 * tail)
+
+
+def report_pair_stats(
+    per_item: list[dict[str, Any]], cond_a: str, cond_b: str
+) -> dict[str, float]:
+    """Paired top-5 swap-target outcomes for two conditions at s=2.0."""
+    ka, kb = f"{cond_a}@{STRENGTH}", f"{cond_b}@{STRENGTH}"
+    a = np.array([bool(it["conditions"][ka]["target_in_top5"]) for it in per_item])
+    b = np.array([bool(it["conditions"][kb]["target_in_top5"]) for it in per_item])
+    n01 = int((~a & b).sum())
+    n10 = int((a & ~b).sum())
+    return {
+        "n": float(len(a)),
+        "rate_a": float(a.mean()),
+        "rate_b": float(b.mean()),
+        "n10_only_a": float(n10),
+        "n01_only_b": float(n01),
+        "mcnemar_p": mcnemar_exact_p(n01, n10),
+    }
+
+
+def report_null_section() -> None:
+    """Stage-5.1b certification: exact McNemar on the report-swap tiers."""
+    for label, fname in REPORT_FILES.items():
+        d = torch.load(ARC_DATA / fname, map_location="cpu", weights_only=False)
+        items = d["per_item"]
+        print(f"\n=== {label} ({fname}) — top-5 report-swap tiers @s=2 ===")
+        for cond_a, cond_b in REPORT_PAIRS:
+            g = report_pair_stats(items, cond_a, cond_b)
+            print(
+                f"    {cond_a:11s} vs {cond_b}: rates "
+                f"{g['rate_a']:.3f} vs {g['rate_b']:.3f}  discordant "
+                f"{int(g['n10_only_a'])}/{int(g['n01_only_b'])}  "
+                f"McNemar-p={g['mcnemar_p']:.4f}"
+            )
+
+
 def main() -> None:
     for label, fname in FILES.items():
         d = torch.load(ARC_DATA / fname, map_location="cpu", weights_only=False)
@@ -141,6 +207,7 @@ def main() -> None:
                     f"perm-p={g['perm_p']:.4f}  sign-p={g['sign_p']:.4f}  "
                     f"boot95%=[{g['boot_ci_lo']:+.2f}, {g['boot_ci_hi']:+.2f}]"
                 )
+    report_null_section()
 
 
 if __name__ == "__main__":

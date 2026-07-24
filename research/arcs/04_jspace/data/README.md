@@ -17,8 +17,9 @@ Artifact classes (see the MANIFEST for the per-file registry):
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
   probes), nla_crosstie, and the issue-#26 metric-correction set
-  (`paper_metric_varfrac_*` ×3, `atom_norm_bias_*`) — so checks B–M and every
-  committed figure reproduce from a clean clone after `git lfs pull`.
+  (`paper_metric_varfrac_*` ×8 incl. the four robustness axes + 7B
+  held-out, `atom_norm_bias_*` ×2) — so checks B–M and every committed
+  figure reproduce from a clean clone after `git lfs pull`.
 
 `cache/` is a byte-identical, gitignored working mirror (plus the full
 lenses); render scripts and the audit resolve `data/`-first,

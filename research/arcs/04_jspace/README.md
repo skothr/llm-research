@@ -66,9 +66,12 @@ Observations so far, in `observations/`:
   (issue #26): the paper's 10% ceiling is excess-over-random
   orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
   under the paper's definition **both ceiling verdicts survive** (1.5B
-  L21 excess 11.5% CI [11.3, 11.7], 7B peak 5.0%); stage-5.2 gap
-  significance-certified (exact permutation); pursuit norm-bias bounded
-  (early band contaminated, workspace band clean).
+  L21 excess 11.5% CI [11.3, 11.7], 7B peak 5.0%) and hold on **all four
+  robustness axes** re-run in that metric; stage-5.2 gap
+  significance-certified (exact permutation) and the stage-5.1b 59%-tier
+  null certified (exact McNemar; 7B: 0/0 discordants); pursuit norm-bias
+  bounded at both scales (early band contaminated — 7B via undertrained
+  junk-token atoms, 1.5B via tied-embedding norms — workspace band clean).
 - `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2
   (spider→ant replication): no discrete top-1 property flip at 1.5B, but
   a large J-lens-SPECIFIC graded effect (+5.17 nats on the unspoken
@@ -79,8 +82,10 @@ Observations so far, in `observations/`:
   landed 2026-07-22 (see 7B replication section).
 
 Load-bearing numbers re-derive from artifacts via
-`examples/jspace_audit_findings.py` (450 checks at arc close; 566 after
-Check M — the issue-#26 metric-correction pins — landed 2026-07-24). All small derived artifacts (38 files,
+`examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
+Check M — the issue-#26 metric-correction battery: paper-metric ceiling
++ five robustness axes, swap significance + 5.1b McNemar tiers, and the
+two-scale norm-bias pins — landed 2026-07-24). All small derived artifacts (38 files,
 ~51 MB incl. the four metric-correction artifacts) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
 a clean clone**; check A and the lens-integrity blocks read the full
@@ -171,9 +176,11 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    (**peak excess 5.04%** at L22; naive ≤5.8% through k=50) — cross-scale
    gap ~2.3×. The workspace-like mid-late band (1.5B peak L21) is
    invariant to fitting corpus (bit-equal peaks), n-budget (n=100→500:
-   −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — those
-   robustness contrasts are stated in the naive metric, valid as
-   internal same-metric comparisons. Caveat: early-band (L0–L16)
+   −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — and the
+   invariance was re-verified 2026-07-24 **under the paper metric on all
+   four axes** (L21 excess 11.0–12.1%, bootstrap-unanimous breach on
+   each; 7B held-out band peak 6.3%, unanimous under). Caveat: early-band
+   (L0–L16)
    occupancy/top-atom readings are partly norm-driven (unnormalized-atom
    pursuit selection bias; the workspace band measures norm-neutral) —
    see `observations/2026-07-24-paper-metric-varfrac-recompute.md`.

@@ -1912,6 +1912,27 @@ PM_FILES = {
     "7b grid": (
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
     ),
+    # Robustness axes recomputed under the paper metric (2026-07-24): each
+    # validated bit-exact against its committed structure scan (nf4 axes run
+    # with the model in nf4, matching those scans' capture condition).
+    "1.5b c4en axis": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_"
+        "qwen2.5-1.5b_bf16_n100_c4en.pt"
+    ),
+    "1.5b nf4 axis": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt"
+    ),
+    "1.5b n500 axis": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt"
+    ),
+    "1.5b heldout axis": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_"
+        "qwen2.5-1.5b_bf16_n100_heldoutc4en.pt"
+    ),
+    "7b heldout axis": (
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_"
+        "qwen2.5-7b_nf4_n100_heldoutc4en.pt"
+    ),
 }
 # (file key, layer) -> pinned excess_mean [gurnee2026-workspace §4.2 metric]
 PM_EXCESS_PINS = {
@@ -1923,6 +1944,20 @@ PM_EXCESS_PINS = {
     ("1.5b allpos", 0): 0.1230,
     ("7b grid", 22): 0.0504,
     ("7b grid", 21): 0.0447,
+    ("1.5b c4en axis", 21): 0.1100,
+    ("1.5b nf4 axis", 21): 0.1109,
+    ("1.5b n500 axis", 21): 0.1097,
+    ("1.5b heldout axis", 21): 0.1213,
+    ("7b heldout axis", 23): 0.0627,
+}
+# (file key, layer) -> required boot_frac_over_10pct (1.0 = breach unanimous,
+# 0.0 = under unanimous) — the five-axis invariance certification.
+PM_BOOT_PINS = {
+    ("1.5b c4en axis", 21): 1.0,
+    ("1.5b nf4 axis", 21): 1.0,
+    ("1.5b n500 axis", 21): 1.0,
+    ("1.5b heldout axis", 21): 1.0,
+    ("7b heldout axis", 23): 0.0,
 }
 # subset -> control -> (gap_mean, n_positive, perm_p) from the committed
 # entailed_swap chat artifacts (exact enumeration for n<=20, seeded MC above).
@@ -1937,6 +1972,17 @@ SIG_PINS = {
 NB_FILE = "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
 # layer -> (sel_pctile_median, sel_frac_over_p90)
 NB_PINS = {0: (69.508, 0.3022), 18: (49.770, 0.117), 21: (46.991, 0.1022)}
+NB7B_FILE = "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
+NB7B_PINS = {0: (66.794, 0.0774), 19: (46.464, 0.0322), 26: (27.969, 0.0411)}
+# (label, tier cond) -> (rate_cond, n10_only_cond, n01_only_random, mcnemar_p
+# or None when p < 1e-9) — stage-5.1b report-swap tiers vs random @s=2.
+MCNEMAR_PINS = {
+    ("1.5B chat 6c", "jlens"): (0.6282, 39, 1, None),
+    ("1.5B chat 6c", "jspace_comp"): (0.1795, 4, 1, 0.375),
+    ("7B chat 6c", "jlens"): (0.2692, 9, 0, 0.003906),
+    ("7B chat 6c", "jspace_comp"): (0.1538, 0, 0, 1.0),
+    ("7B chat 6c", "logitlens"): (0.2436, 7, 0, 0.015625),
+}
 
 
 def audit_metric_correction() -> None:
@@ -1971,6 +2017,13 @@ def audit_metric_correction() -> None:
                     float(res[L]["excess_mean"]),
                     atol=0.0005,
                 )
+        for (k2, L), want in PM_BOOT_PINS.items():
+            if k2 == key and L in res:
+                claim_eq(
+                    f"[M] {key} L{L} P(bootstrap mean > 10%) == {want}",
+                    want,
+                    float(res[L]["boot_frac_over_10pct"]),
+                )
         if key == "1.5b allpos":
             for L, want in ((21, 1.0), (22, 1.0), (18, 0.0)):
                 claim_eq(
@@ -1998,7 +2051,12 @@ def audit_metric_correction() -> None:
     #     the committed chat artifacts via the committed script (deterministic).
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from jspace_swap_significance import FILES as SIG_FILES
-    from jspace_swap_significance import gap_stats, subset_split
+    from jspace_swap_significance import (
+        REPORT_FILES,
+        gap_stats,
+        report_pair_stats,
+        subset_split,
+    )
 
     for label, fname in SIG_FILES.items():
         d = load_pt_or_fail(fname)
@@ -2026,6 +2084,39 @@ def audit_metric_correction() -> None:
                 permp,
                 g["perm_p"],
             )
+    # (2b) Stage-5.1b tier certification: exact McNemar on paired per-item
+    #      top-5 outcomes vs the random control (the 59%-tier NULL + the
+    #      jlens/logitlens positive tiers), from the chat_6c artifacts.
+    for label, fname in REPORT_FILES.items():
+        d = load_pt_or_fail(fname)
+        if d is None:
+            continue
+        for (lbl, cond), (rate, n10, n01, pv) in MCNEMAR_PINS.items():
+            if lbl != label:
+                continue
+            g = report_pair_stats(d["per_item"], cond, "random")
+            claim_near(
+                f"[M] {label} {cond}@2 top5_all rate", rate, g["rate_a"], atol=0.0005
+            )
+            claim_eq(
+                f"[M] {label} {cond} vs random discordants == {n10}/{n01}",
+                (n10, n01),
+                (int(g["n10_only_a"]), int(g["n01_only_b"])),
+            )
+            if pv is None:
+                claim(
+                    f"[M] {label} {cond} vs random McNemar-p < 1e-9",
+                    g["mcnemar_p"] < 1e-9,
+                    "< 1e-9",
+                    g["mcnemar_p"],
+                )
+            else:
+                claim_near(
+                    f"[M] {label} {cond} vs random McNemar-p",
+                    pv,
+                    g["mcnemar_p"],
+                    atol=1e-6,
+                )
     # (3) Pursuit norm-bias summary: workspace band norm-neutral, early band
     #     biased toward high-norm (format-token) atoms; tied embeddings at 1.5B.
     d = load_pt_or_fail(NB_FILE)
@@ -2058,6 +2149,38 @@ def audit_metric_correction() -> None:
                 round(float(pl[0]["sel_pctile_median"]), 1),
                 round(float(pl[18]["sel_pctile_median"]), 1),
                 round(float(pl[21]["sel_pctile_median"]), 1),
+            ),
+        )
+    # 7B counterpart: untied W_U (bf16 safetensors source); early-band bias
+    # generalizes (milder), workspace band neutral, late anti-biased.
+    d = load_pt_or_fail(NB7B_FILE)
+    if d is not None:
+        pl = d["per_layer"]
+        claim_eq("[M] norm-bias 7B: W_U untied", False, d["config"]["tied_embeddings"])
+        for L, (med, frac90) in NB7B_PINS.items():
+            claim_near(
+                f"[M] norm-bias 7B L{L} selected-atom norm-pctile median",
+                med,
+                float(pl[L]["sel_pctile_median"]),
+                atol=0.05,
+            )
+            claim_near(
+                f"[M] norm-bias 7B L{L} frac selected > p90 norm",
+                frac90,
+                float(pl[L]["sel_frac_over_p90"]),
+                atol=0.001,
+            )
+        claim(
+            "[M] norm-bias 7B: band split generalizes "
+            "(L19 in [40,60], L0 > 60, L26 < 40)",
+            40 < float(pl[19]["sel_pctile_median"]) < 60
+            and float(pl[0]["sel_pctile_median"]) > 60
+            and float(pl[26]["sel_pctile_median"]) < 40,
+            "band split",
+            (
+                round(float(pl[0]["sel_pctile_median"]), 1),
+                round(float(pl[19]["sel_pctile_median"]), 1),
+                round(float(pl[26]["sel_pctile_median"]), 1),
             ),
         )
 

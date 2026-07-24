@@ -18,7 +18,12 @@ workspace band (median selected-atom percentile 49.8/47.0 at L18/L21) but
 biased in the early band (69.5 at L0, 30% of selections from the top norm
 decile, top-norm atoms are whitespace/quote tokens) and anti-biased at the
 final layers (26.0 at L26). Early-band occupancy / top-atom readings carry
-this contamination; workspace-band results do not.
+this contamination; workspace-band results do not. The 7B replication
+(untied W_U via ``--wu-source safetensors``, 2026-07-24) generalizes the
+band split with a weaker mechanism — L0 66.8 but only 8% from the top
+decile, L19 46.5, L26 28.0; the high-norm tail is undertrained
+multilingual junk tokens and rho(atom, W_U) drops to 0.19-0.30, so the
+frequency coupling was the 1.5B tied embedding specifically.
 
 Needs the FULL fitted lens (cache-only; regenerate via jspace_fit_lens.py) —
 the committed summary artifact in ``data/`` is therefore the auditable
@@ -67,8 +72,56 @@ def parse_args() -> argparse.Namespace:
         help="Committed structure scan providing the selected top_atoms.",
     )
     p.add_argument("--layers", default=DEFAULT_LAYERS)
+    p.add_argument(
+        "--wu-source",
+        default="model",
+        choices=["model", "safetensors"],
+        help="'model' loads via the standard llm_surgeon path (fine for the "
+        "1.5B bf16 default); 'safetensors' reads ONLY the unembedding tensor "
+        "from the local HF snapshot — required for the 7B, whose nf4 runtime "
+        "weights would need bitsandbytes dequantization (the on-disk "
+        "safetensors are the clean bf16 W_U).",
+    )
     p.add_argument("--out", type=Path, default=None)
     return p.parse_args()
+
+
+def wu_from_safetensors(model_id: str) -> tuple[Any, bool]:
+    """(W_U float32, tied) read directly from the local HF snapshot.
+
+    Resolves against llm_surgeon's dedicated model cache first (the cache
+    every arc capture loaded from), then the default HF cache.
+    """
+    import json
+
+    from huggingface_hub import try_to_load_from_cache
+    from llm_surgeon.surgery import MODEL_CACHE_DIR
+    from safetensors import safe_open
+
+    def _cached(fname: str) -> str | None:
+        for cache_dir in (MODEL_CACHE_DIR, None):
+            p = try_to_load_from_cache(model_id, fname, cache_dir=cache_dir)
+            if isinstance(p, str):
+                return p
+        return None
+
+    idx_path = _cached("model.safetensors.index.json")
+    if idx_path is not None:
+        weight_map = json.loads(Path(idx_path).read_text())["weight_map"]
+        tied = "lm_head.weight" not in weight_map
+        key = "model.embed_tokens.weight" if tied else "lm_head.weight"
+        shard = _cached(weight_map[key])
+        if shard is None:
+            raise SystemExit(f"shard {weight_map[key]} not in local HF cache")
+    else:
+        shard = _cached("model.safetensors")
+        if shard is None:
+            raise SystemExit(f"no local safetensors snapshot for {model_id}")
+        with safe_open(shard, framework="pt") as f:
+            tied = "lm_head.weight" not in list(f.keys())
+        key = "model.embed_tokens.weight" if tied else "lm_head.weight"
+    with safe_open(shard, framework="pt") as f:
+        return f.get_tensor(key).float(), tied
 
 
 def spearman(a: np.ndarray, b: np.ndarray) -> float:
@@ -80,11 +133,22 @@ def spearman(a: np.ndarray, b: np.ndarray) -> float:
 def main() -> None:
     args = parse_args()
     layers = [int(x) for x in args.layers.split(",") if x.strip()]
-    m = build_model(argparse.Namespace(model=args.model, mode=args.mode, device="cpu"))
-    tied = m._lm_head.weight.data_ptr() == m._embed_tokens.weight.data_ptr()
-    w_u = m._lm_head.weight.float()
+    if args.wu_source == "safetensors":
+        from llm_surgeon.surgery import MODEL_CACHE_DIR
+        from transformers import AutoTokenizer
+
+        w_u, tied = wu_from_safetensors(args.model)
+        tok = AutoTokenizer.from_pretrained(
+            args.model, cache_dir=MODEL_CACHE_DIR, local_files_only=True
+        )
+    else:
+        m = build_model(
+            argparse.Namespace(model=args.model, mode=args.mode, device="cpu")
+        )
+        tied = m._lm_head.weight.data_ptr() == m._embed_tokens.weight.data_ptr()
+        w_u = m._lm_head.weight.float()
+        tok = m.tokenizer
     wu_norms = w_u.norm(dim=1).numpy()
-    tok = m.tokenizer
     lens = JacobianLens.load(args.lens)
     scan = torch.load(args.scan, map_location="cpu", weights_only=False)
     scan_layers = list(scan["per_prompt"][0]["layers"])

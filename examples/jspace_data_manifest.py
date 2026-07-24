@@ -545,6 +545,19 @@ _DERIVED: dict[str, dict[str, Any]] = {
             "fig 2026-07-24-jspace-paper-metric-excess.png",
         ],
     ),
+    "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
+        "examples/jspace_atom_norm_bias.py",
+        [_L7B, "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"],
+        "qwen-7b-nf4",
+        "7B counterpart of the norm-bias summary (W_U untied, read from the "
+        "bf16 safetensors via --wu-source safetensors, layers "
+        "{0,5,10,15,19,22,26}): early-band bias generalizes (L0 median pctile "
+        "66.8, 8% from top norm decile), workspace band neutral (L19 46.5), "
+        "late anti-biased (L26 28.0); high-norm tail is undertrained "
+        "multilingual junk tokens, rho(atom,W_U) 0.19-0.30 (frequency "
+        "coupling was the 1.5B tied embedding).",
+        ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
+    ),
     "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
         [_L15, "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"],
@@ -559,6 +572,59 @@ _DERIVED: dict[str, dict[str, Any]] = {
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
     ),
 }
+# Paper-metric robustness axes (issue #26, 2026-07-24): the four 1.5B axes +
+# the 7B held-out set, each validated bit-exact against its committed
+# structure scan (nf4 axes captured with the model in nf4, matching those
+# scans). Registered via a loop — the entries differ only in lens/prompts.
+for _axis, _fname, _lens, _model, _detail in [
+    (
+        "corpus (C4-en lens)",
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
+        _L15C4,
+        "qwen-1.5b-bf16",
+        "L21 excess 11.00% (base 11.14%); early band diverges (L0 16.65%).",
+    ),
+    (
+        "quantization (nf4 lens)",
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
+        _L15N4,
+        "qwen-1.5b-nf4",
+        "L21 excess 11.09%; run with --mode nf4 (matches the scan capture).",
+    ),
+    (
+        "n-budget (nf4 n=500 lens)",
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
+        _L15N5,
+        "qwen-1.5b-nf4",
+        "L21 excess 10.97%; run with --mode nf4.",
+    ),
+    (
+        "held-out sample (C4 prompts)",
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
+        _L15,
+        "qwen-1.5b-bf16",
+        "L21 excess 12.13% on the diversified C4 held-out set.",
+    ),
+    (
+        "held-out sample, 7B (C4 prompts)",
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
+        _L7B,
+        "qwen-7b-nf4",
+        "band peak L23 excess 6.27%, under the ceiling (0/2000 resamples over).",
+    ),
+]:
+    _DERIVED[_fname] = _derived(
+        "examples/jspace_paper_metric_varfrac.py",
+        [_lens, _HC4 if "heldout" in _fname else _HW],
+        _model,
+        f"Paper-metric robustness axis — {_axis}: excess-over-random "
+        f"orthogonal-projection FVE at K=median occupancy, scan grid, "
+        f"validated bit-exact vs the committed structure scan "
+        f"(config.validation_max_vf_diff == 0.0). {_detail} All five axes "
+        f"hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+        ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
+    )
+
 META.update(_DERIVED)
 
 # Disk-derived provenance stub for a top-level deliverable with no META entry

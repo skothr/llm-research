@@ -9,8 +9,8 @@
     "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in this clone, so the eval tables (audit Check B) are reproducible only against this pinned commit."
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 47,
-  "total_size_bytes": 270487101,
+  "total_files": 53,
+  "total_size_bytes": 272173773,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -25,6 +25,24 @@
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Pursuit atom-norm selection-bias summary (issue #26): per-layer full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm (tied embedding at 1.5B), and norm-percentile stats of the structure scan's actually-selected atoms. Committed record because the full lens input is cache-only. Workspace band norm-neutral (L18/L21 median pctile ~50), early band biased (L0 median 69.5, 30% from top norm decile, top-norm atoms are format tokens).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
+    {
+      "filename": "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "b0eb04102bdde9657fb6c140074d861a82229670b32412faec0dee740ce0d900",
+      "size_bytes": 5163,
+      "class": "derived",
+      "producing_script": "examples/jspace_atom_norm_bias.py",
+      "producing_command": "python examples/jspace_atom_norm_bias.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "7B counterpart of the norm-bias summary (W_U untied, read from the bf16 safetensors via --wu-source safetensors, layers {0,5,10,15,19,22,26}): early-band bias generalizes (L0 median pctile 66.8, 8% from top norm decile), workspace band neutral (L19 46.5), late anti-biased (L26 28.0); high-norm tail is undertrained multilingual junk tokens, rho(atom,W_U) 0.19-0.30 (frequency coupling was the 1.5B tied embedding).",
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
@@ -479,6 +497,78 @@
       ]
     },
     {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
+      "sha256": "908e2978548a849c3274014c3ccb3412d9dcb26c0a60972b7da4b6d6f44570ca",
+      "size_bytes": 336395,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Paper-metric robustness axis \u2014 corpus (C4-en lens): excess-over-random orthogonal-projection FVE at K=median occupancy, scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 11.00% (base 11.14%); early band diverges (L0 16.65%). All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
+      "sha256": "5c0770b8272decf02f5cd1c1761069783270ce21b4ee8edcae5e691c78a3c7bd",
+      "size_bytes": 336245,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Paper-metric robustness axis \u2014 held-out sample (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy, scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 12.13% on the diversified C4 held-out set. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
+      "sha256": "9f656e0468d20a98033049e774d1801cf00827250aa52fe2743da3fac78e1da2",
+      "size_bytes": 336423,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Paper-metric robustness axis \u2014 quantization (nf4 lens): excess-over-random orthogonal-projection FVE at K=median occupancy, scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 11.09%; run with --mode nf4 (matches the scan capture). All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
+      "sha256": "ff3acf298a075a8dc13b41e7491d37b256fcb787892aa4f1f5a59e6d044941ea",
+      "size_bytes": 336423,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-nf4",
+      "provenance": "Paper-metric robustness axis \u2014 n-budget (nf4 n=500 lens): excess-over-random orthogonal-projection FVE at K=median occupancy, scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 10.97%; run with --mode nf4. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
+    {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
       "sha256": "62c9a574dbf633c2e95ad7113b2ef504959dbdf8c8e0ed54cc18c60d0fb99463",
       "size_bytes": 334415,
@@ -496,6 +586,24 @@
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M",
         "fig 2026-07-24-jspace-paper-metric-excess.png"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
+      "sha256": "c9aa4ebe5039b4cbee65e5b966d3c0f4d49a1dada59b59917ebf0c76f3a20ab1",
+      "size_bytes": 336023,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_c4en_n30.json"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Paper-metric robustness axis \u2014 held-out sample, 7B (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy, scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). band peak L23 excess 6.27%, under the ceiling (0/2000 resamples over). All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
       ]
     },
     {

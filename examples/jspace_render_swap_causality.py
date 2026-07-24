@@ -90,6 +90,14 @@ def load_summary(pt: str) -> dict[str, Any]:
     return cast("dict[str, Any]", torch.load(p, weights_only=False)["summary"])
 
 
+def wilson_ci(p: float, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score 95% interval for a binomial proportion."""
+    denom = 1 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = (z / denom) * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5)
+    return max(0.0, center - half), min(1.0, center + half)
+
+
 def panel(ax: Axes, summary: dict[str, Any], title: str) -> None:
     metrics = cast("dict[str, Any]", summary["metrics"])
     n_items = int(summary["n_items"])
@@ -104,7 +112,7 @@ def panel(ax: Axes, summary: dict[str, Any], title: str) -> None:
 
     for si, s in enumerate(STRENGTHS):
         offset = (si - 0.5) * width
-        for xi, (cond, _label, _paper) in enumerate(CONDITIONS):
+        for xi, (cond, *_) in enumerate(CONDITIONS):
             rate = float(metrics[f"{cond}@{s:.1f}"]["target_top5_rate_all"])
             ax.bar(
                 xi + offset,
@@ -114,6 +122,19 @@ def panel(ax: Axes, summary: dict[str, Any], title: str) -> None:
                 edgecolor="k",
                 linewidth=0.5,
                 zorder=3,
+            )
+            # Wilson 95% interval for the n_items-trial proportion (added
+            # 2026-07-24 with the significance certification, issue #26).
+            lo, hi = wilson_ci(rate, n_items)
+            ax.errorbar(
+                [xi + offset],
+                [rate],
+                yerr=[[rate - lo], [hi - rate]],
+                fmt="none",
+                ecolor="#444444",
+                elinewidth=0.9,
+                capsize=2.2,
+                zorder=4,
             )
             ax.annotate(
                 f"{rate:.2f}",
@@ -126,7 +147,7 @@ def panel(ax: Axes, summary: dict[str, Any], title: str) -> None:
             )
 
     # Paper Claude-family reference markers over the three comparable groups.
-    for xi, (_cond, _label, paper) in enumerate(CONDITIONS):
+    for xi, (*_, paper) in enumerate(CONDITIONS):
         if paper is None:
             continue
         ax.plot(

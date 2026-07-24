@@ -43,6 +43,29 @@ conservative. L0 excess is 12.3% but sits outside the paper's
 workspace-layer scope for the ceiling (Fig 30b evaluates workspace layers)
 and carries the Finding-3 contamination.
 
+**All four robustness axes re-verified under the paper metric** (each run
+validated bit-exact against its committed structure scan; nf4 axes run
+with the model in nf4, matching those scans' capture condition — the
+validation gate rejected a first bf16-mode attempt at max|diff| ≈ 0.10,
+demonstrating it is load-bearing):
+
+| axis | L21 excess (1.5B) | P(boot > 10%) |
+|---|--:|--:|
+| base (bf16 lens, wikitext held-out) | 11.14% | 1.000 |
+| corpus (C4-en lens) | 11.00% | 1.000 |
+| quantization (nf4 lens, n=100) | 11.09% | 1.000 |
+| n-budget (nf4 lens, n=500) | 10.97% | 1.000 |
+| held-out sample (C4 prompts) | 12.13% | 1.000 |
+| held-out sample, **7B** (band peak L23) | 6.27% | 0.000 |
+
+Workspace-band excess is invariant within ±9% relative across every axis,
+the 1.5B breach is bootstrap-unanimous on all of them, and the 7B
+under-verdict is unanimous on its held-out set — the ceiling verdicts are
+now metric-correct AND robustness-certified in that metric. The early-band
+corpus-sensitivity also reproduces in the corrected metric (L0 excess
+11.44% → 16.65% under the C4 lens), so the corpus observation's
+early/workspace split is metric-robust.
+
 **Occupancy saturation note:** median occupancy = 24–25 of k=25 at both
 scales (`ACTIVE_TAU = 1e-3` counts nearly every selected atom as active —
 the stage-4 observation's point 3), so the paper's K = median-occupancy
@@ -70,6 +93,26 @@ selected as peak layers from the same data, so the p-values are post-hoc
 at a data-chosen maximum. The 7B result (n=17, p=1e-4) is the statistically
 stronger citation.
 
+**Stage-5.1b tiers also certified** (exact McNemar on the paired per-item
+`target_in_top5` outcomes at s=2, `verbal_report_chat_6c` artifacts,
+n=78 items):
+
+| pair @s=2 | 1.5B (rates, discordants, p) | 7B |
+|---|---|---|
+| jlens vs random | 0.628/0.141, 39/1, **p≈3e-11** | 0.269/0.154, 9/0, **p=0.0039** |
+| jspace_comp vs random (the 59% tier) | 0.179/0.141, 4/1, p=0.375 | 0.154/0.154, **0/0 discordants**, p=1.0 |
+| logitlens vs random | 0.564/0.141, 34/1, p≈2e-9 | 0.244/0.154, 7/0, p=0.0156 |
+
+The load-bearing NULL — "the paper's 59% middle tier lands at random" —
+is now certified, most sharply at 7B where the J-space-component
+condition produced the *identical* per-item outcome pattern as the random
+control (zero discordant pairs); at 1.5B the null rests on only 5
+discordant pairs (limited power, direction unresolved). The
+token-steering tier (logitlens > random) is likewise real at both scales.
+Swap-causality figure now carries Wilson 95% intervals per rate; the
+entailed-property figure carries seeded-bootstrap 95% CIs on the
+auto-only J-lens means.
+
 ## Finding 3 — pursuit norm-bias: workspace band clean, early band contaminated
 
 Pursuit selects by `argmax⟨a_v, r⟩` with **unnormalized** atoms
@@ -84,6 +127,18 @@ norm-driven, not content-driven. Final layers invert (L26: 26.0). Spearman
 rho(atom norm, W_U row norm) rises 0.23 → 0.72 with depth; at 1.5B W_U is
 the **tied input embedding** (frequency-correlated norms), while 7B is
 untied — a cross-scale structural difference the paper never contemplates.
+
+**7B replication (untied W_U, read from the bf16 safetensors — not the
+nf4 runtime weights):** the pattern generalizes with a weaker mechanism —
+early band biased (L0 median pctile 66.8, but only 8% from the top norm
+decile vs 30% at 1.5B), workspace band neutral (L19: 46.5), late layers
+anti-biased (L26: 28.0). At 7B the high-norm atom tail is
+undertrained/multilingual junk tokens (` Ấ`, `ᐈ`, ` يوس`) rather than
+whitespace, atom-norm CV is larger (0.42–0.60) yet rho(atom norm, W_U
+row norm) much weaker (0.19–0.30) — confirming the frequency-coupling
+mechanism was the tied embedding, while the early-band bias itself is
+scale-robust. Both scales' summaries committed
+(`atom_norm_bias_qwen2.5-{1.5b,7b}-instruct_...pt`).
 
 ## Also verified (no change needed)
 
@@ -150,11 +205,13 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
 
 ## Follow-ups
 
-- Recompute the corpus/quantization/n-budget robustness comparisons under
-  the paper metric if they are ever cited externally — as *internal*
-  invariance comparisons (same metric both sides) they remain valid.
+- ~~Recompute the robustness comparisons under the paper metric~~ —
+  **DONE same-day** (all five axes, table above).
 - Coefficient-mass occupancy recalibration (stage-4 follow-up) would make
   K = median occupancy non-degenerate.
+- The 1.5B jspace_comp-vs-random null rests on 5 discordant pairs
+  (limited power); a larger item bank would sharpen it if the 59%-tier
+  question reopens.
 
 ## References
 
