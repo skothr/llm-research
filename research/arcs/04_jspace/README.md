@@ -62,6 +62,13 @@ Observations so far, in `observations/`:
   under the adopted 20% stability threshold) and the diversified C4
   held-out set leaves
   the depth-profile statistics intact — **the 7B gap is genuine scale.**
+- `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
+  (issue #26): the paper's 10% ceiling is excess-over-random
+  orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
+  under the paper's definition **both ceiling verdicts survive** (1.5B
+  L21 excess 11.5% CI [11.3, 11.7], 7B peak 5.0%); stage-5.2 gap
+  significance-certified (exact permutation); pursuit norm-bias bounded
+  (early band contaminated, workspace band clean).
 - `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2
   (spider→ant replication): no discrete top-1 property flip at 1.5B, but
   a large J-lens-SPECIFIC graded effect (+5.17 nats on the unspoken
@@ -72,12 +79,13 @@ Observations so far, in `observations/`:
   landed 2026-07-22 (see 7B replication section).
 
 Load-bearing numbers re-derive from artifacts via
-`examples/jspace_audit_findings.py` (450 checks at arc close). All small
-derived artifacts (34 files, ~51 MB) are LFS-committed under `data/` and
-MANIFEST-registered (43 files, sha256), so **checks B–L run from a clean
-clone**; check A and the lens-integrity blocks read the full fitted
-lenses, which stay cache-only per Decision 4 (committed layer subsets +
-`jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
+`examples/jspace_audit_findings.py` (450 checks at arc close; 566 after
+Check M — the issue-#26 metric-correction pins — landed 2026-07-24). All small derived artifacts (38 files,
+~51 MB incl. the four metric-correction artifacts) are LFS-committed
+under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
+a clean clone**; check A and the lens-integrity blocks read the full
+fitted lenses, which stay cache-only per Decision 4 (committed layer
+subsets + `jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
 the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
 association eval sets live in that clone).
 
@@ -151,13 +159,24 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    7B 14/108 vs 8/108) — the 7B median flip is one favorable sub-metric,
    not a clean sweep. The J-exclusivity is corpus-, budget-, and
    quantization-robust; only the @10 magnitude is corpus-dependent.
-2. **Low J-space occupancy, with a k-dependent ceiling.** J-space
-   variance fraction is low at both scales, but the paper's exact ≤10%
-   ceiling is k-dependent: 7B stays under it (≤5.8% through k=50) while
-   the 1.5B primary model breaches it at the hump (12.4% at k=25, 15.2%
-   at k=50). The workspace-like mid-late band (1.5B peak L21) is
+2. **Low J-space occupancy; the 1.5B hump breaches the paper's 10%
+   ceiling and 7B stays under — verified on the paper's own metric
+   (2026-07-24).** The paper's ceiling is excess-over-random
+   orthogonal-projection FVE at K = median occupancy
+   `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`, not the absolute
+   reconstruction-energy varfrac the scans record; recomputed under that
+   definition, 1.5B breaches at the hump (**L21 excess 11.50%, CI95
+   [11.29, 11.74]** over all valid positions, 2000/2000 cluster-bootstrap
+   resamples above 10%; naive metric: 12.4% at k=25) and 7B stays under
+   (**peak excess 5.04%** at L22; naive ≤5.8% through k=50) — cross-scale
+   gap ~2.3×. The workspace-like mid-late band (1.5B peak L21) is
    invariant to fitting corpus (bit-equal peaks), n-budget (n=100→500:
-   −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample.
+   −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — those
+   robustness contrasts are stated in the naive metric, valid as
+   internal same-metric comparisons. Caveat: early-band (L0–L16)
+   occupancy/top-atom readings are partly norm-driven (unnormalized-atom
+   pursuit selection bias; the workspace band measures norm-neutral) —
+   see `observations/2026-07-24-paper-metric-varfrac-recompute.md`.
 3. **Relational causality — the arc's strongest positive.** Swapping an
    unspoken concept along its J-lens vector, at the genuinely
    J-lens-detected concept positions, moves the concept's *entailed
@@ -168,8 +187,12 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    SD 4.9, n=7) / **+1.9 nats** (7B L19: jlens +2.17 vs logit +0.27,
    SD 4.1, n=17) on the auto-detected subset; mixed-scope gaps +2.0 /
    +1.1 nats. (The item-level SD exceeds the mean — small n, a few
-   high-movement items dominate — so this is a directional effect, not a
-   tight estimate.) The multiplier framing (~34×/8× auto-only, ~30×/7×
+   high-movement items dominate — but the paired gaps are
+   significance-certified as of 2026-07-24: 1.5B auto 7/7 positive,
+   exact sign-flip p=0.0156, the smallest p an n=7 test can produce;
+   7B auto 15/17, p=0.0001; `examples/jspace_swap_significance.py`,
+   derived from the committed swap artifacts.) The multiplier framing
+   (~34×/8× auto-only, ~30×/7×
    mixed) is denominator-fragile — the control sits near zero — and the
    apparent cross-scale gap in the multiplier is mostly a control-
    denominator artifact, not a signal difference; the absolute gap is
@@ -212,7 +235,12 @@ cross-arc architectural fact); the L18/L19-vs-L21/L22 depth split
 between relational and report effects; the kurtosis inversion; the
 four-axis robustness methodology — one axis (the quantization control)
 genuinely pre-registered in the design plan (§1), the others gated on
-stability thresholds fixed in the session record before each run.
+stability thresholds fixed in the session record before each run; and the
+post-close metric-fidelity pass (issue #26, 2026-07-24): the ceiling
+verdicts restated and confirmed under the paper's actual excess-FVE
+definition, the swap gaps significance-certified by exact permutation,
+and the pursuit's unnormalized-atom norm bias quantified — a choice the
+paper and companion repo leave unspecified.
 
 **Limitations.** One model family; n=100 lenses (n-stability shown at
 1.5B only); 7B fitted in nf4 (exonerated at 1.5B, untested at 7B-bf16

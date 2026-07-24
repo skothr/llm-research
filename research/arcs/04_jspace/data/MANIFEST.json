@@ -9,9 +9,27 @@
     "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in this clone, so the eval tables (audit Check B) are reproducible only against this pinned commit."
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 43,
-  "total_size_bytes": 268863393,
+  "total_files": 47,
+  "total_size_bytes": 270487101,
   "files": [
+    {
+      "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "d7d8ec9ea9796ddccd3f37f3b623419e6ece85bb11a8688ef6cc479d31722ccd",
+      "size_bytes": 4745,
+      "class": "derived",
+      "producing_script": "examples/jspace_atom_norm_bias.py",
+      "producing_command": "python examples/jspace_atom_norm_bias.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Pursuit atom-norm selection-bias summary (issue #26): per-layer full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm (tied embedding at 1.5B), and norm-percentile stats of the structure scan's actually-selected atoms. Committed record because the full lens input is cache-only. Workspace band norm-neutral (L18/L21 median pctile ~50), early band biased (L0 median 69.5, 30% from top norm decile, top-norm atoms are format tokens).",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M"
+      ]
+    },
     {
       "filename": "entailed_paperverbatim_chat_all_L19_7b.pt",
       "sha256": "fc1d164e7c5ff754e614a9a19b75f1e005040ce97bb3ee499dc5263367c4efd5",
@@ -419,6 +437,65 @@
       "consumers": [
         "obs 2026-07-21-nla-crosstie-stage6.md",
         "audit Check G"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
+      "sha256": "d8514feaf60fb56461664b421b8c86708bb59b25b5896d9647df98c2cfcc996f",
+      "size_bytes": 336429,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json",
+        "structure_scan_...1.5b...bf16_n100.pt (validation reference)"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Paper-faithful ceiling metric (excess-over-random orthogonal-projection FVE at K=median occupancy [gurnee2026-workspace sec 4.2 Fig 30b, A.8]) on the committed structure-scan grid (30 heldout wikitext prompts x 9 positions, 27 layers); replicated varfrac@25 validated bit-exact vs the committed scan (config.validation_max_vf_diff == 0.0); per-position excess/fve arrays + cluster-bootstrap CIs. rand_seed_base=10000, n_rand=8.",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M",
+        "fig 2026-07-24-jspace-paper-metric-excess.png"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt",
+      "sha256": "c399a89aa8460ec8a90d26b9a862a2eec87bd76abd38930ef6097e67cc54b697",
+      "size_bytes": 948119,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json"
+      ],
+      "requires_model": "qwen-1.5b-bf16",
+      "provenance": "Paper-metric all-positions sweep (every position in [16, seq_len-2]; n=5362/layer) at L0/L18/L21/L22 \u2014 the paper's measurement population; per-position arrays + cluster-bootstrap (by prompt, 2000 resamples) 95% CIs. The decisive 1.5B ceiling-breach artifact (L21 excess 11.50%, CI [11.29, 11.74], 2000/2000 resamples > 10%). Invocation: --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000.",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M",
+        "fig 2026-07-24-jspace-paper-metric-excess.png"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+      "sha256": "62c9a574dbf633c2e95ad7113b2ef504959dbdf8c8e0ed54cc18c60d0fb99463",
+      "size_bytes": 334415,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)",
+        "heldout_prompts_wikitext103_n30.json",
+        "structure_scan_...7b...nf4_n100.pt (validation reference)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "7B counterpart of the paper-metric recompute (scan grid, bit-exact validation); peak excess 5.04% at L22, all 27 layers under the 10% ceiling. rand_seed_base=30000, n_rand=8.",
+      "consumers": [
+        "obs 2026-07-24-paper-metric-varfrac-recompute.md",
+        "audit Check M",
+        "fig 2026-07-24-jspace-paper-metric-excess.png"
       ]
     },
     {

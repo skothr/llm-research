@@ -1,7 +1,7 @@
 ---
 topic: interpretability/j-space
 status: draft
-last_updated: 2026-07-18
+last_updated: 2026-07-24
 maintainer: theory-kb
 primary_sources:
   - gurnee2026-workspace
@@ -33,8 +33,9 @@ the global workspace of Global Workspace Theory
 For each layer $\ell$, define the **averaged Jacobian**
 
 $$
-J_\ell \;=\; \mathbb{E}_{t,\; t' \ge t,\; \text{prompt}}
-\left[ \frac{\partial h_{\text{final},\,t'}}{\partial h_{\ell,\,t}} \right]
+J_\ell \;=\; \mathbb{E}_{\text{prompt}}\,
+\mathbb{E}_{t}\!\left[\ \sum_{t' \ge t}
+\frac{\partial h_{\text{final},\,t'}}{\partial h_{\ell,\,t}} \right]
 \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}
 $$
 
@@ -44,9 +45,18 @@ where
   at layer $\ell$, token position $t$;
 - $h_{\text{final},t'}$ — final-layer residual-stream activation at a later
   position $t' \ge t$;
-- the expectation runs over source position $t$, all subsequent target
-  positions $t'$ in the context, and ~1000 prompts from a pretraining-like
-  distribution `[gurnee2026-workspace §2.1, eq. J_ℓ; kb/excerpts/gurnee2026-workspace#sec-2-1-jlens-def]`.
+- the reduction is a **sum** over subsequent target positions $t'$, a
+  **mean** over source positions $t$ (first ~16 positions excluded as
+  attention sinks; last position excluded), and a **mean** over ~1000
+  prompts from a pretraining-like distribution, weighted equally per
+  prompt `[gurnee2026-workspace §2.1, eq. J_ℓ + reproduction pseudocode;
+  kb/excerpts/gurnee2026-workspace#sec-2-1-jlens-def]` — verified against
+  the companion `jlens/fitting.py` (identical reduction, `skip_first=16`),
+  2026-07-23. The sum (not mean) over targets means $J_\ell$ carries a
+  per-source weighting by the number of future positions and an overall
+  context-length scale; the readout below is invariant to any *global*
+  scale of $J_\ell$ (RMSNorm scale-invariance), but the position weighting
+  is a real modeling choice.
 
 The **readout** replaces all layers above $\ell$ with this single linear map,
 then applies the model's ordinary output head:
@@ -80,6 +90,19 @@ found by **gradient pursuit** sparse decomposition; the **non-J-space
 component** is the difference. The J-space component carries a small fraction
 of activation variance — "varying by layer, but never more than 10%"
 `[gurnee2026-workspace §2.3, §4.2; kb/excerpts/gurnee2026-workspace#sec-2-3-gradient-pursuit]`.
+
+**Operational definition of the 10% figure** (Fig 30b; verified against the
+archived PDF 2026-07-23): it is an *excess over a random control*,
+$\text{FVE}(\text{top-}K\ \text{pursuit atoms}) -
+\text{FVE}(K\ \text{random atoms})$, where FVE is the
+**orthogonal-projection** fraction $\|\Pi_S h\|^2 / \|h\|^2$ (least-squares
+onto the selected-atom span, §A.8) and $K$ = the median pursuit occupancy
+at each workspace layer — not an absolute reconstruction-energy ratio at a
+fixed $k$. The paper leaves the pursuit's atom normalization and iteration
+count unspecified (the companion repo ships no pursuit code). Replication
+on Qwen2.5 under this exact definition:
+`research/arcs/04_jspace/observations/2026-07-24-paper-metric-varfrac-recompute.md`
+(1.5B breaches at its hump, 11.5% excess at L21; 7B stays under, 5.0% peak).
 
 ## 2. Mechanism
 
