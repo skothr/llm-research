@@ -231,3 +231,42 @@ correct = [it for it in d["per_item"] if it["baseline_correct"]]
 print([it["conditions"]["jlens@2.0"]["dlogp_swap_answer"] for it in correct][:5])
 print(d["summary"]["metrics"]["jlens@2.0"]["mean_dlogp_swap_answer"])
 ```
+
+---
+
+## paper-metric-excess
+`2026-07-24-jspace-paper-metric-excess.png` — render: `examples/jspace_render_paper_metric_figure.py`
+
+**Data artifacts** (`data/` committed + `data/cache/` mirror), produced by
+`examples/jspace_paper_metric_varfrac.py` (issue #26 metric correction):
+- `paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
+  — scan grid (30 held-out wikitext prompts × 9 positions, 27 layers), with
+  the bit-exact validation of the replicated varfrac@25 against the committed
+  structure scan recorded in `config.validation_max_vf_diff`.
+- `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
+  — 7B counterpart (same grid/validation).
+- `paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt`
+  — all valid positions [16, seq_len−2] at L0/L18/L21/L22 (n=5362 positions
+  per layer), per-position `excess`/`fve_j`/`fve_rand`/`prompt_idx` arrays +
+  cluster-bootstrap (by prompt, 2000 resamples, seeded) 95% CIs.
+
+**Prompt set:** `data/heldout_prompts_wikitext103_n30.json` (same 30 held-out
+prompts as the structure scans).
+
+**Metric:** `excess = FVE(top-K pursuit atoms) − FVE(K uniform random vocab
+atoms)`, FVE = orthogonal-projection fraction `||Π_S h||²/||h||²` (QR
+least-squares), K = per-layer median pursuit occupancy (k=25 snapshot,
+ACTIVE_TAU convention) `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`. Random
+draws seeded (`config.rand_seed_base + layer`). Solid lines plot
+`results[L]["excess_mean"]`; faint dashed lines plot `results[L]["vf_ours_mean"]`
+(the arc's original absolute varfrac@25, same artifacts) to visualize the
+metric-correction delta; diamond markers plot the all-positions
+`excess_mean` with `excess_ci95` whiskers.
+
+**Dump the raw rows:**
+```python
+import torch
+d = torch.load("research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt", weights_only=False)
+r = d["results"][21]
+print(r["K_median_occ"], r["excess_mean"], r["excess_ci95"], r["boot_frac_over_10pct"])
+```

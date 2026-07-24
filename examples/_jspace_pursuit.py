@@ -54,6 +54,7 @@ def gradient_pursuit_layer(
     ks: list[int],
     *,
     return_components: bool = False,
+    return_support: bool = False,
 ) -> dict[str, Any]:
     """Batched k-sparse nonnegative gradient pursuit over ``P`` positions.
 
@@ -63,9 +64,14 @@ def gradient_pursuit_layer(
 
     When ``return_components`` is True the result also carries ``"components"``,
     a ``[P, d]`` tensor of the reconstructed J-space component ``A x`` at the
-    final (``k_max``) support — the vector the NLA cross-tie re-verbalizes. The
-    default (False) leaves the returned dict exactly as the structure scan
-    consumes it, so that script's outputs are unchanged.
+    final (``k_max``) support — the vector the NLA cross-tie re-verbalizes.
+    When ``return_support`` is True it also carries ``"support"`` (per-position
+    lists of selected vocab-token ids, selection order) and ``"support_coeffs"``
+    (per-position final nonnegative coefficient tensors, same order) — used by
+    the paper-metric variance recompute (``jspace_paper_metric_varfrac.py``,
+    issue #26) to build the top-K orthogonal projection. Both knobs default off,
+    leaving the returned dict exactly as the structure scan consumes it, so that
+    script's outputs are unchanged.
     """
     device = residuals.device
     n_pos, d = residuals.shape
@@ -172,4 +178,7 @@ def gradient_pursuit_layer(
             if coeffs[p].numel():
                 comps[p] = coeffs[p] @ atoms[p]
         out["components"] = comps
+    if return_support:
+        out["support"] = sel
+        out["support_coeffs"] = coeffs
     return out

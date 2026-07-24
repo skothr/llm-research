@@ -91,6 +91,20 @@ Checks:
      +0.178 / +0.040); jlens dominates both controls at the peak layers; the
      property effect peaks below the report layer (1.5B L18, 7B L19).
 
+  M  metric correction (issue #26, 2026-07-24) — the paper-metric ceiling
+     recompute (excess-over-random orthogonal-projection FVE at K = median
+     occupancy): all three paper_metric_varfrac artifacts load; the stored
+     scan-grid runs replicated the committed structure-scan varfrac@25
+     bit-exactly (validation_max_vf_diff == 0.0); per-layer excess_mean
+     re-derived from the stored per-position arrays; pinned headline values
+     (1.5B grid L21 0.1114 / allpos L21 0.1150 with CI95 [0.1129, 0.1174]
+     and 2000/2000 bootstrap resamples > 10%, L18 0/2000; 7B peak L22
+     0.0504, ALL layers < 0.10). Entailed-swap significance re-derived from
+     the committed chat artifacts via jspace_swap_significance (exact
+     sign-flip permutation: 1.5B auto 7/7 p=0.015625; 7B auto 15/17
+     p=9.2e-5). Pursuit norm-bias summary pinned (workspace band
+     norm-neutral, L0 early band biased, tied W_U).
+
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
 protocol bug shared by capture and observation would pass. See
@@ -1793,7 +1807,7 @@ def audit_entailed_swap() -> None:
             claim_eq(f"[L] {key} baseline-correct auto count", exp_a, len(auto))
             claim_eq(f"[L] {key} baseline-correct fallback count", exp_f, len(fb))
         if key in ES_AUTO_HEADLINE:
-            auto, _fb = _es_scope_split(d["per_item"])
+            auto, _ = _es_scope_split(d["per_item"])
             claim_near(
                 f"[L] {key} AUTO-ONLY jlens@2 dlogp(swap)",
                 ES_AUTO_HEADLINE[key],
@@ -1887,6 +1901,167 @@ def audit_entailed_swap() -> None:
             )
 
 
+PM_FILES = {
+    "1.5b grid": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
+    ),
+    "1.5b allpos": (
+        "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_"
+        "qwen2.5-1.5b_bf16_n100_allpos.pt"
+    ),
+    "7b grid": (
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
+    ),
+}
+# (file key, layer) -> pinned excess_mean [gurnee2026-workspace §4.2 metric]
+PM_EXCESS_PINS = {
+    ("1.5b grid", 21): 0.1114,
+    ("1.5b grid", 0): 0.1144,
+    ("1.5b allpos", 21): 0.1150,
+    ("1.5b allpos", 22): 0.1088,
+    ("1.5b allpos", 18): 0.0885,
+    ("1.5b allpos", 0): 0.1230,
+    ("7b grid", 22): 0.0504,
+    ("7b grid", 21): 0.0447,
+}
+# subset -> control -> (gap_mean, n_positive, perm_p) from the committed
+# entailed_swap chat artifacts (exact enumeration for n<=20, seeded MC above).
+SIG_PINS = {
+    ("1.5B chat L18", "auto", "logitlens"): (5.016859, 7, 0.015625),
+    ("1.5B chat L18", "auto", "random"): (4.869341, 7, 0.015625),
+    ("7B chat L19", "auto", "logitlens"): (1.896514, 15, 9.2e-05),
+    ("7B chat L19", "auto", "random"): (2.092716, 15, 6.1e-05),
+    ("7B chat L19", "mixed", "logitlens"): (1.071866, 20, 0.000405),
+    ("7B chat L19", "mixed", "random"): (1.210485, 23, 1e-05),
+}
+NB_FILE = "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
+# layer -> (sel_pctile_median, sel_frac_over_p90)
+NB_PINS = {0: (69.508, 0.3022), 18: (49.770, 0.117), 21: (46.991, 0.1022)}
+
+
+def audit_metric_correction() -> None:
+    """Check M — issue-#26 metric-fidelity pass (2026-07-24 observation)."""
+    # (1) Paper-metric ceiling recompute: excess-over-random orthogonal-
+    #     projection FVE at K = median occupancy.
+    for key, fname in PM_FILES.items():
+        d = load_pt_or_fail(fname)
+        if d is None:
+            continue
+        cfg = d["config"]
+        res = d["results"]
+        if cfg.get("scan_validated_against"):
+            claim(
+                f"[M] {key} replicated varfrac bit-exact vs committed scan",
+                float(cfg["validation_max_vf_diff"]) == 0.0,
+                "0.0",
+                cfg["validation_max_vf_diff"],
+            )
+        for L, r in res.items():
+            claim(
+                f"[M] {key} L{L} excess_mean == mean(per-position excess)",
+                abs(float(np.mean(r["excess"])) - float(r["excess_mean"])) < 1e-9,
+                "recomputes",
+                float(np.mean(r["excess"])),
+            )
+        for (k2, L), pin in PM_EXCESS_PINS.items():
+            if k2 == key and L in res:
+                claim_near(
+                    f"[M] {key} L{L} excess_mean",
+                    pin,
+                    float(res[L]["excess_mean"]),
+                    atol=0.0005,
+                )
+        if key == "1.5b allpos":
+            for L, want in ((21, 1.0), (22, 1.0), (18, 0.0)):
+                claim_eq(
+                    f"[M] allpos L{L} P(bootstrap mean > 10%) == {want}",
+                    want,
+                    float(res[L]["boot_frac_over_10pct"]),
+                )
+            lo, hi = res[21]["excess_ci95"]
+            claim(
+                "[M] allpos L21 CI95 ~ [0.1129, 0.1174] and lo > 0.10",
+                abs(lo - 0.1129) < 0.0005 and abs(hi - 0.1174) < 0.0005 and lo > 0.10,
+                "[0.1129, 0.1174]",
+                (round(lo, 4), round(hi, 4)),
+            )
+        if key == "7b grid":
+            peak = max(res, key=lambda x: res[x]["excess_mean"])
+            claim_eq("[M] 7B peak excess layer == L22", 22, int(peak))
+            claim(
+                "[M] 7B excess < 0.10 at ALL layers (ceiling holds)",
+                max(float(r["excess_mean"]) for r in res.values()) < 0.10,
+                "< 0.10",
+                round(max(float(r["excess_mean"]) for r in res.values()), 4),
+            )
+    # (2) Entailed-swap significance: recompute the paired-gap statistics from
+    #     the committed chat artifacts via the committed script (deterministic).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from jspace_swap_significance import FILES as SIG_FILES
+    from jspace_swap_significance import gap_stats, subset_split
+
+    for label, fname in SIG_FILES.items():
+        d = load_pt_or_fail(fname)
+        if d is None:
+            continue
+        subs = subset_split(d["per_item"])
+        for (lbl, sname, ctrl), (gap, npos, permp) in SIG_PINS.items():
+            if lbl != label:
+                continue
+            g = gap_stats(subs[sname], ctrl)
+            claim_near(
+                f"[M] {label} {sname} jlens-{ctrl} gap (nats)",
+                gap,
+                g["gap_mean"],
+                atol=0.0005,
+            )
+            claim_eq(
+                f"[M] {label} {sname} jlens-{ctrl} positive items",
+                npos,
+                int(g["n_positive"]),
+            )
+            claim(
+                f"[M] {label} {sname} jlens-{ctrl} perm-p == {permp}",
+                abs(g["perm_p"] - permp) < 5e-6,
+                permp,
+                g["perm_p"],
+            )
+    # (3) Pursuit norm-bias summary: workspace band norm-neutral, early band
+    #     biased toward high-norm (format-token) atoms; tied embeddings at 1.5B.
+    d = load_pt_or_fail(NB_FILE)
+    if d is not None:
+        pl = d["per_layer"]
+        claim_eq(
+            "[M] norm-bias: 1.5B W_U is tied", True, d["config"]["tied_embeddings"]
+        )
+        for L, (med, frac90) in NB_PINS.items():
+            claim_near(
+                f"[M] norm-bias L{L} selected-atom norm-pctile median",
+                med,
+                float(pl[L]["sel_pctile_median"]),
+                atol=0.05,
+            )
+            claim_near(
+                f"[M] norm-bias L{L} frac selected > p90 norm",
+                frac90,
+                float(pl[L]["sel_frac_over_p90"]),
+                atol=0.001,
+            )
+        claim(
+            "[M] norm-bias: workspace band neutral (L18/L21 median in [40,60]), "
+            "early band biased (L0 > 60)",
+            40 < float(pl[18]["sel_pctile_median"]) < 60
+            and 40 < float(pl[21]["sel_pctile_median"]) < 60
+            and float(pl[0]["sel_pctile_median"]) > 60,
+            "band split",
+            (
+                round(float(pl[0]["sel_pctile_median"]), 1),
+                round(float(pl[18]["sel_pctile_median"]), 1),
+                round(float(pl[21]["sel_pctile_median"]), 1),
+            ),
+        )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
@@ -1900,6 +2075,7 @@ def main() -> None:
     audit_corpus_sensitivity()
     audit_heldout()
     audit_entailed_swap()
+    audit_metric_correction()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")

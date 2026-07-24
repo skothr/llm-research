@@ -1,5 +1,22 @@
 # Observation: J-space occupancy is low but the ≤10% ceiling is k-dependent (7B under it, 1.5B breaches at the hump); the kurtosis onset signature does not replicate (stage 4)
 
+> **Addendum 2026-07-24 (metric correction — read first):** the "≤10%
+> ceiling" comparisons below are stated in the arc's absolute
+> reconstruction-energy varfrac; the paper's ceiling is a different
+> quantity (excess-over-random orthogonal-projection FVE at K = median
+> occupancy, `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`). Recomputed
+> under the paper's own metric, **both verdicts survive**: 1.5B breaches
+> at the hump (L21 excess 11.50%, CI95 [11.29, 11.74] over all valid
+> positions, 2000/2000 bootstrap resamples > 10%) and 7B stays under
+> (peak excess 5.04% at L22). The measurements below stand as recorded;
+> the *comparison-to-paper framing* ("k-dependent ceiling") is superseded —
+> at the paper's prescribed K (= median occupancy ≈ 24–25 here, because
+> τ=1e-3 saturates the active count, see point 3) the k choice is not
+> free. Full recompute, significance certification of the stage-5.2 gap,
+> and the pursuit norm-bias quantification (early band contaminated,
+> workspace band clean):
+> `2026-07-24-paper-metric-varfrac-recompute.md`.
+
 **Date/context:** 2026-07-20. Stage 4 of the design plan: gradient-pursuit
 J-space structural characterization on both n=100 lenses
 (`jlens_qwen2.5-1.5b_bf16_n100`, `jlens_qwen2.5-7b_nf4_n100`), 30 held-out
