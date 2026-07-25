@@ -598,6 +598,34 @@ def _check_struct_common(
     return s, layers
 
 
+# Every varfrac(k25) cell quoted in the stage-4 observation's depth table
+# (layer -> 3dp value), pinned in full so table cells can't drift unaudited.
+STRUCT_TABLE_15B = {
+    0: 0.082,
+    5: 0.073,
+    9: 0.082,
+    13: 0.070,
+    17: 0.084,
+    18: 0.094,
+    21: 0.124,
+    22: 0.114,
+    24: 0.098,
+    26: 0.068,
+}
+STRUCT_TABLE_7B = {
+    0: 0.031,
+    5: 0.020,
+    9: 0.019,
+    13: 0.018,
+    17: 0.012,
+    18: 0.020,
+    21: 0.034,
+    22: 0.040,
+    24: 0.036,
+    26: 0.034,
+}
+
+
 def audit_structure_scan() -> None:
     print()
     print("=" * 80)
@@ -616,6 +644,14 @@ def audit_structure_scan() -> None:
         claim_near("[1.5b] varfrac(k25) peak value", 0.124, float(vf[peak_i]))
         claim_near("[1.5b] varfrac(k25) layer-0", 0.082, float(vf[0]))
         claim_near("[1.5b] varfrac(k25) final layer", 0.068, float(vf[-1]))
+        lidx = {int(layer): i for i, layer in enumerate(layers)}
+        for L, want in STRUCT_TABLE_15B.items():
+            claim_near(
+                f"[1.5b] varfrac(k25) obs-table L{L}",
+                want,
+                float(vf[lidx[L]]),
+                atol=0.0005,
+            )
         claim(
             "[1.5b] active_mean(k25) in [23,25] all layers",
             bool((act >= 23.0).all() and (act <= 25.0).all()),
@@ -641,6 +677,14 @@ def audit_structure_scan() -> None:
         claim_eq("[7b] varfrac(k25) late-peak layer == 22", 22, layers[peak_i])
         claim_near("[7b] varfrac(k25) late-peak value", 0.040, float(vf[peak_i]))
         claim_near("[7b] varfrac(k25) layer-0", 0.031, float(vf[0]))
+        lidx = {int(layer): i for i, layer in enumerate(layers)}
+        for L, want in STRUCT_TABLE_7B.items():
+            claim_near(
+                f"[7b] varfrac(k25) obs-table L{L}",
+                want,
+                float(vf[lidx[L]]),
+                atol=0.0005,
+            )
         claim(
             "[7b] active_mean(k25) in [22,24] all layers",
             bool((act >= 22.0).all() and (act <= 24.0).all()),
@@ -1961,6 +2005,25 @@ PM_BOOT_PINS = {
     ("1.5b heldout axis", 21): 1.0,
     ("7b heldout axis", 23): 0.0,
 }
+# (file key, layer) -> (fve_topK_mean, fve_rand_mean): the naive-vs-paper
+# delta decomposition quoted in the 2026-07-24 observation (refit term =
+# fve_topK - vf_ours, control term = -fve_rand; net at 1.5B L21 is -1.2 pt,
+# sign-flipped at 7B L21).
+PM_DECOMP_PINS = {
+    ("1.5b grid", 18): (0.1106, 0.0234),
+    ("1.5b grid", 21): (0.1316, 0.0202),
+    ("1.5b grid", 22): (0.1187, 0.0160),
+    ("7b grid", 21): (0.0536, 0.0089),
+    ("7b grid", 22): (0.0591, 0.0087),
+}
+# (file key, layer) -> K_median_occ, plus a global band [23, 25] asserted per
+# file — the value the paper's K = median-occupancy prescription hangs on
+# (24-25 at 1.5B, 23-24 at 7B).
+PM_K_PINS = {
+    ("1.5b grid", 21): 25,
+    ("1.5b allpos", 21): 25,
+    ("7b grid", 22): 24,
+}
 # subset -> control -> (gap_mean, n_positive, perm_p) from the committed
 # entailed_swap chat artifacts (exact enumeration for n<=20, seeded MC above).
 SIG_PINS = {
@@ -1976,10 +2039,11 @@ NB_FILE = "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt"
 NB_PINS = {0: (69.508, 0.3022), 18: (49.770, 0.117), 21: (46.991, 0.1022)}
 NB7B_FILE = "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt"
 NB7B_PINS = {0: (66.794, 0.0774), 19: (46.464, 0.0322), 26: (27.969, 0.0411)}
-# (label, tier cond) -> (rate_cond, n10_only_cond, n01_only_random, mcnemar_p
-# or None when p < 1e-9) — stage-5.1b report-swap tiers vs random @s=2.
+# (label, tier cond) -> (rate_cond, n10_only_cond, n01_only_random,
+# mcnemar_p two-sided; pins below 1e-6 compare at 5% relative tolerance) —
+# stage-5.1b report-swap tiers vs random @s=2.
 MCNEMAR_PINS = {
-    ("1.5B chat 6c", "jlens"): (0.6282, 39, 1, None),
+    ("1.5B chat 6c", "jlens"): (0.6282, 39, 1, 7.4579e-11),
     ("1.5B chat 6c", "jspace_comp"): (0.1795, 4, 1, 0.375),
     ("7B chat 6c", "jlens"): (0.2692, 9, 0, 0.003906),
     ("7B chat 6c", "jspace_comp"): (0.1538, 0, 0, 1.0),
@@ -2025,6 +2089,45 @@ def audit_metric_correction() -> None:
                     f"[M] {key} L{L} P(bootstrap mean > 10%) == {want}",
                     want,
                     float(res[L]["boot_frac_over_10pct"]),
+                )
+        for L, r in res.items():
+            claim(
+                f"[M] {key} L{L} excess_mean == fve_topK_mean - fve_rand_mean",
+                abs(
+                    (float(r["fve_topK_mean"]) - float(r["fve_rand_mean"]))
+                    - float(r["excess_mean"])
+                )
+                < 1e-6,
+                "identity",
+                float(r["fve_topK_mean"]) - float(r["fve_rand_mean"]),
+            )
+        for (k2, L), (topk, rnd) in PM_DECOMP_PINS.items():
+            if k2 == key and L in res:
+                claim_near(
+                    f"[M] {key} L{L} fve_topK_mean",
+                    topk,
+                    float(res[L]["fve_topK_mean"]),
+                    atol=0.0005,
+                )
+                claim_near(
+                    f"[M] {key} L{L} fve_rand_mean",
+                    rnd,
+                    float(res[L]["fve_rand_mean"]),
+                    atol=0.0005,
+                )
+        kvals = [int(r["K_median_occ"]) for r in res.values()]
+        claim(
+            f"[M] {key} K_median_occ in [23,25] all layers",
+            bool(min(kvals) >= 23 and max(kvals) <= 25),
+            "[23,25]",
+            f"[{min(kvals)},{max(kvals)}]",
+        )
+        for (k2, L), want_k in PM_K_PINS.items():
+            if k2 == key and L in res:
+                claim_eq(
+                    f"[M] {key} L{L} K_median_occ == {want_k}",
+                    want_k,
+                    int(res[L]["K_median_occ"]),
                 )
         if key == "1.5b allpos":
             for L, want in ((21, 1.0), (22, 1.0), (18, 0.0)):
@@ -2105,11 +2208,11 @@ def audit_metric_correction() -> None:
                 (n10, n01),
                 (int(g["n10_only_a"]), int(g["n01_only_b"])),
             )
-            if pv is None:
+            if pv < 1e-6:
                 claim(
-                    f"[M] {label} {cond} vs random McNemar-p < 1e-9",
-                    g["mcnemar_p"] < 1e-9,
-                    "< 1e-9",
+                    f"[M] {label} {cond} vs random McNemar-p ~= {pv:.4g}",
+                    abs(g["mcnemar_p"] - pv) < 0.05 * pv,
+                    pv,
                     g["mcnemar_p"],
                 )
             else:
@@ -2187,6 +2290,37 @@ def audit_metric_correction() -> None:
         )
 
 
+def audit_manifest_census() -> None:
+    """Pin the artifact census quoted in the arc README / data README so the
+    prose counts can't drift from MANIFEST.json again."""
+    mp = DATA / "MANIFEST.json"
+    if not mp.exists():
+        claim("MANIFEST.json present", False, "present", "MISSING")
+        return
+    m = json.loads(mp.read_text())
+    files = m["files"]
+    derived = [f for f in files if f.get("class") == "derived"]
+    claim_eq("[M] MANIFEST total files == 53", 53, len(files))
+    claim_eq("[M] MANIFEST derived files == 44 (README census)", 44, len(derived))
+    derived_mb = sum(f.get("size_bytes", 0) for f in derived) / 1e6
+    claim(
+        "[M] MANIFEST derived bytes ~= 55 MB (README census)",
+        54.0 < derived_mb < 56.0,
+        "~55 MB",
+        f"{derived_mb:.2f} MB",
+    )
+    pm_correction = [
+        f
+        for f in files
+        if f["filename"].startswith(("paper_metric_varfrac_", "atom_norm_bias_"))
+    ]
+    claim_eq(
+        "[M] metric-correction artifacts == 10 (README census)",
+        10,
+        len(pm_correction),
+    )
+
+
 def main() -> None:
     audit_lens_integrity()
     audit_eval_tables()
@@ -2201,6 +2335,7 @@ def main() -> None:
     audit_heldout()
     audit_entailed_swap()
     audit_metric_correction()
+    audit_manifest_census()
     print()
     print("=" * 80)
     print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")

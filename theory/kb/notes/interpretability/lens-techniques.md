@@ -267,7 +267,7 @@ are the same directions the rest of the model considers important.
 | **Logit lens$^\text{ext}$** (Black et al.) | 2021 | retain final transformer layer | n/a | partial recovery on GPT-Neo `[belrose2023-tuned-lens §2 Eq.4]` |
 | **Tuned lens** (Belrose et al.) | 2023 | per-layer affine $(A_\ell, \mathbf{b}_\ell)$ | KL distillation to final layer | unbiased; lower perplexity than logit lens; works across BLOOM, GPT-Neo, OPT, Pythia, GPT-NeoX-20B |
 | **DoLa** (Chuang et al.) | 2023 | none — uses logit lens at two layers | n/a; inference-time method | factuality-improving decoding |
-| **Jacobian lens (J-lens)** (Gurnee et al.) | 2026 | per-layer averaged model Jacobian $J_\ell = \mathbb{E}[\partial \mathbf{h}_{\text{final}}/\partial \mathbf{h}_\ell]$ | n/a (estimated by backprop, not trained) | causal-by-construction; interpretable early-layer readouts; basis of the J-space global-workspace claim — see `kb/notes/interpretability/j-space.md` |
+| **Jacobian lens (J-lens)** (Gurnee et al.) | 2026 | per-layer averaged model Jacobian $J_\ell = \mathbb{E}_{\text{prompt}}\,\mathbb{E}_{t}\big[\sum_{t' \ge t} \partial \mathbf{h}_{\text{final},t'}/\partial \mathbf{h}_{\ell,t}\big]$ (sum over target positions, mean over source positions — see `j-space.md` §1.1) | n/a (estimated by backprop, not trained) | causal-by-construction; interpretable early-layer readouts; basis of the J-space global-workspace claim — see `kb/notes/interpretability/j-space.md` |
 
 `[belrose2023-tuned-lens §3, §5;
 kb/excerpts/belrose2023-tuned-lens#sec-3-tuned-lens]`,

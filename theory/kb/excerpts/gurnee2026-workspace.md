@@ -14,7 +14,10 @@ note: >
   exact-substring match per passage. Equations re-set in LaTeX from the
   extracted text (pdftotext scrambles display-math layout); symbol content
   verified against §2.1. Companion code: github.com/anthropics/jacobian-lens
-  (Apache-2.0); companion external-commentary PDF archived alongside the paper.
+  (Apache-2.0); companion external-commentary PDF (Dehaene/Naccache, Eleos,
+Nanda) archived at
+`theory/sources/papers/gurnee2026-workspace_external-commentary.pdf`
+(registry key `gurnee2026-workspace-commentary`).
 ---
 
 # Excerpts — Gurnee et al. 2026, "Verbalizable Representations Form a Global Workspace in Language Models"

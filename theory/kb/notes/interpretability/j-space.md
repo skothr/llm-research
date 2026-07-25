@@ -137,7 +137,11 @@ percentages verified against the archived PDF):
 Depth structure: workspace behavior onsets around rescaled depth ~38/100 and
 persists to ~92/100 ("sensory → workspace → motor" schema); early-layer
 readouts are noisy and the onset boundary may partly be a lens artifact
-`[gurnee2026-workspace §4.1]`.
+`[gurnee2026-workspace §4.1]`. [CONTRADICTION] The kurtosis workspace-onset
+signature (`[kb/excerpts/gurnee2026-workspace#sec-4-1-kurtosis-onset]`)
+**inverted** on Qwen2.5 replication — high-early/low-mid instead of
+near-zero-early/rise-at-a-third
+(`research/arcs/04_jspace/observations/2026-07-20-jspace-structure-stage4.md`).
 
 ## 3. Variants and lineage
 
@@ -190,9 +194,20 @@ which stays under 10%. The load-bearing quantity is causal reach, not size.
   partly be plain "make the model (not) say word X" steering (same snapshot).
 - **Ablation partiality.** The paper's ablations remove "only a fraction of
   the concept" `[gurnee2026-workspace §9.1]`.
-- **Open replication question.** All published quantitative results are on
-  Claude-family models; layer bands and success rates on small open-weights
-  models are unmeasured (this repo: `research/arcs/04_jspace/`).
+- **Open-weights replication (this repo, `research/arcs/04_jspace/`,
+  2026-07).** Measured on Qwen2.5-1.5B (bf16) and 7B (nf4); three axes
+  diverge from the paper, all certified on the paper's own metric:
+  [CONTRADICTION] the ≤10% occupancy ceiling is **breached** at the 1.5B
+  hump (L21 excess FVE 11.50%, CI95 [11.29, 11.74]; 7B stays under, peak
+  5.04%) — `observations/2026-07-24-paper-metric-varfrac-recompute.md`;
+  [CONTRADICTION] the kurtosis workspace-onset signature is **inverted**
+  (§2 above) — `observations/2026-07-20-jspace-structure-stage4.md`;
+  [CONTRADICTION] the paper's 59% J-space-component report tier lands at
+  **random** at both Qwen scales (jspace_comp vs random: 0 discordant
+  pairs at 7B; 5 at 1.5B, McNemar null) —
+  `observations/2026-07-24-paper-metric-varfrac-recompute.md` Finding 2.
+  Layer bands and the relational-causality replication are recorded in the
+  arc README.
 
 ## 6. See also
 

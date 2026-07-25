@@ -28,11 +28,14 @@ Observations so far, in `observations/`:
 - `2026-07-20-scale-comparison-7b-vs-1p5b-h2.md` — advantage is
   scale-robust, not scale-growing; depth-of-emergence reverses pro-J-lens
   at 7B; includes the post-hoc artifact audit of the overnight 7B run.
-- `2026-07-20-jspace-structure-stage4.md` — J-space occupancy is low but
-  the paper's ≤10% ceiling is k-dependent (7B under it, 1.5B breaches at
-  the hump; 1.5B humped, 7B U-shaped, ~3× lower at 7B); the kurtosis
-  workspace-onset signature is inverted on Qwen (verified on the
-  paper-native metric, robust across logit/prob space).
+- `2026-07-20-jspace-structure-stage4.md` — J-space occupancy is low
+  (1.5B humped, 7B U-shaped, ~3× lower at 7B in absolute varfrac); the
+  kurtosis workspace-onset signature is inverted on Qwen (verified on the
+  paper-native metric, robust across logit/prob space). Its original
+  "k-dependent ceiling" comparison-to-paper framing is **superseded** —
+  the ceiling verdicts are certified on the paper's own metric in
+  `2026-07-24-paper-metric-varfrac-recompute.md` (see the observation's
+  read-first addendum).
 - `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit (1.5B):
   workspace-band metrics corpus-invariant (L21 peak identical), early band
   corpus-sensitive; qualifies the H3 @10 magnitude, wikitext stands for 7B.
@@ -84,21 +87,25 @@ Observations so far, in `observations/`:
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
-+ five robustness axes, swap significance + 5.1b McNemar tiers, and the
-two-scale norm-bias pins — landed 2026-07-24). All small derived artifacts (38 files,
-~51 MB incl. the four metric-correction artifacts) are LFS-committed
++ the four 1.5B robustness axes and the 7B held-out set, swap
+significance + 5.1b McNemar tiers, and the
+two-scale norm-bias pins — landed 2026-07-24; 977 after the final-review
+pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
+naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
+p-value, and the MANIFEST census). All small derived artifacts (44 files,
+~55 MB incl. the ten metric-correction artifacts) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
 a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses, which stay cache-only per Decision 4 (committed layer
 subsets + `jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
 the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
 association eval sets live in that clone). The harness was seeded at stage
-3 rather than at arc close, and the derived-artifact promotion run mid-arc
-rather than at stage 7, on the project owner's standing requirement that
+3 rather than at arc close (`6d567a27`, together with the Decision-4 lens
+layer subsets), on the project owner's standing requirement that
 discovered defects enter the permanent record rather than being fixed
-silently and that every stage's datasets be complete and clean-clone
-reproducible while the arc is still running (2026-07-20 / 2026-07-21
-directions); the ~29 h → ~81 h refit-estimate correction is recorded in
+silently (2026-07-20 / 2026-07-21 directions); the bulk derived-artifact
+promotion (34 files) landed with the stage-7 consolidation (`850b5173`);
+the ~29 h → ~81 h refit-estimate correction is recorded in
 place with the original preserved for the same reason.
 
 **Corpus provenance (Decision 1, recorded 2026-07-20):** the frozen
@@ -195,7 +202,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    resamples above 10%; naive metric: 12.4% at k=25) and 7B stays under
    (**peak excess 5.04%** at L22; naive ≤5.8% through k=50) — cross-scale
    gap ~2.3×. The workspace-like mid-late band (1.5B peak L21) is
-   invariant to fitting corpus (bit-equal peaks), n-budget (n=100→500:
+   invariant to fitting corpus (peak layer and value identical to 3dp:
+   L21, 0.124 on both lenses), n-budget (n=100→500:
    −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — and the
    invariance was re-verified 2026-07-24 **under the paper metric on all
    four axes** (L21 excess 11.0–12.1%, bootstrap-unanimous breach on
