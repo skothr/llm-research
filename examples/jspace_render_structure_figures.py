@@ -5,8 +5,11 @@ Reads the two structure-scan artifacts produced by
 vertically stacked panels sharing the layer x-axis:
 
   (a) J-space variance (squared-norm) fraction vs layer at k=25, both models,
-      with a horizontal reference at 0.10 (the paper's stated ceiling,
-      "never more than 10%" [gurnee2026-workspace §2.3/§4.2]) and markers on
+      with a horizontal reference at 0.10 — the paper's "never more than 10%"
+      ceiling [gurnee2026-workspace §2.3/§4.2], which is stated for a
+      DIFFERENT metric (excess-over-random orthogonal-projection FVE); the
+      ceiling verdicts are certified under that metric in
+      2026-07-24-jspace-paper-metric-excess.png — and markers on
       each model's peak / trough layer.
   (b) J-lens readout excess kurtosis (LOGIT distribution, the paper's metric
       per its footnote 4) vs layer, both models, annotated with the contrast

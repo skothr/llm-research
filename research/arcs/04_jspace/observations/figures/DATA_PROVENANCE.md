@@ -84,7 +84,7 @@ condition/strength; per-item rows in `per_item` carry
 proportion; the tier ordering is certified by exact McNemar on the paired
 per-item `target_in_top5` outcomes (`examples/jspace_swap_significance.py`
 report section — jspace_comp≈random null: 1.5B p=0.375, 7B p=1.0 with 0/0
-discordants; jlens>random: p=3e-11 / 0.0039).
+discordants; jlens>random: p=7.5e-11 / 0.0039).
 
 **Dump the raw rows:**
 ```python

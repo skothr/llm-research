@@ -43,10 +43,15 @@ scans **bit-exactly**, max|diff| = 0.0 at both scales):
 | 1.5B L18, all positions | 9.4% | 8.85% [8.67, 9.06], 0/2000 | under (hump edge) |
 | 7B peak (L22), scan grid | 4.0% | **5.04%** | **under confirmed** |
 
-The two main distortions nearly cancel at the 1.5B workspace band (LS
-refit adds ~+2 pts, the random control subtracts ~2 pts) — a regime
-coincidence, not a general property: at 7B the naive metric *understates*
-(3.4% → 4.5% at L21). Cross-scale gap ~2.3× (was ~3× naive). The
+The two main distortions pull in opposite directions with comparable
+magnitude, so the naive number lands near the corrected one — a regime
+coincidence, not a cancellation and not a general property. Measured from
+the committed artifacts at 1.5B L21 (grid): LS refit +0.8 pt (12.37% →
+13.16%), random control −2.02 pt, net −1.2 pt (the table's 12.4% → 11.1%);
+all-positions L21: refit +0.83, control −2.01, net −1.2. The refit term
+decays with depth (+1.90 at L17 → +0.45 at L22), so "refit ≈ +2 pts" holds
+only at the band's top edge; at 7B L21 the signs flip in net (refit +1.99,
+control −0.89, net +1.1 — the naive metric *understates*, 3.4% → 4.5%). Cross-scale gap ~2.3× (was ~3× naive). The
 all-positions sweep (the paper's population; the committed scan's 9-point
 grid is a subsample) moved L21 from 11.1% → 11.5% — the grid was mildly
 conservative. L0 excess is 12.3% but sits outside the paper's
@@ -76,8 +81,8 @@ corpus-sensitivity also reproduces in the corrected metric (L0 excess
 11.44% → 16.65% under the C4 lens), so the corpus observation's
 early/workspace split is metric-robust.
 
-**Occupancy saturation note:** median occupancy = 24–25 of k=25 at both
-scales (`ACTIVE_TAU = 1e-3` counts nearly every selected atom as active —
+**Occupancy saturation note:** median occupancy = 24–25 of k=25 at 1.5B
+and 23–24 at 7B (`ACTIVE_TAU = 1e-3` counts nearly every selected atom as active —
 the stage-4 observation's point 3), so the paper's K = median-occupancy
 prescription lands at K ≈ 25 here; the arc's k=25 headline was
 procedure-equivalent by accident.
@@ -109,7 +114,7 @@ n=78 items):
 
 | pair @s=2 | 1.5B (rates, discordants, p) | 7B |
 |---|---|---|
-| jlens vs random | 0.628/0.141, 39/1, **p≈3e-11** | 0.269/0.154, 9/0, **p=0.0039** |
+| jlens vs random | 0.628/0.141, 39/1, **p≈7.5e-11** | 0.269/0.154, 9/0, **p=0.0039** |
 | jspace_comp vs random (the 59% tier) | 0.179/0.141, 4/1, p=0.375 | 0.154/0.154, **0/0 discordants**, p=1.0 |
 | logitlens vs random | 0.564/0.141, 34/1, p≈2e-9 | 0.244/0.154, 7/0, p=0.0156 |
 
