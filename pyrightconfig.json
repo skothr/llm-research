@@ -1,14 +1,26 @@
 {
-    "venvPath": ".",
-    "venv": ".venv",
-    "exclude": [
-        ".venv",
-        ".cache",
-        "**/__pycache__"
-    ],
-    "extraPaths": [
-        "examples",
-        "../llm-surgeon",
-        "/home/ai/ai-projects/llm-surgeon"
-    ]
+  // Extends the canonical cross-project base (see drift-audit agent);
+  // adds only the environment wiring. The ML stack (torch 2.11, transformers
+  // 5.5, llm_surgeon editable, jlens editable) lives in the llm/testing venv
+  // — without this, IDE pyright resolves the system python3.10 user site
+  // (torch 1.11) and emits wrong-env noise like "randn_like is not exported".
+  // Merged at the jspace rebase (2026-07-22): main's arc-03 config named a
+  // repo-local .venv + llm-surgeon paths; the llm/testing venv is a superset
+  // (llm_surgeon is an editable install inside it), so it stays authoritative
+  // and the extraPaths/exclude are unioned.
+  "extends": "/home/skothr/.config/pyright/base.json",
+  "venvPath": "/home/ai/ai-projects/llm/testing",
+  "venv": ".venv",
+  "exclude": [
+    ".venv",
+    ".cache",
+    "**/__pycache__"
+  ],
+  "extraPaths": [
+    "examples",
+    "/home/ai/ai-projects/llm/testing",
+    "/home/ai/ai-projects/jacobian-lens",
+    "../llm-surgeon",
+    "/home/ai/ai-projects/llm-surgeon"
+  ]
 }

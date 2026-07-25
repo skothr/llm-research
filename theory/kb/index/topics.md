@@ -119,6 +119,7 @@ rlvr-and-grpo → foundations + variants.
 | activation-patching | draft | `kb/notes/interpretability/activation-patching.md` |
 | probing | draft | `kb/notes/interpretability/probing.md` |
 | circuit-tracing | draft | `kb/notes/interpretability/circuit-tracing.md` |
+| j-space | draft | `kb/notes/interpretability/j-space.md` |
 
 ### evaluation/
 

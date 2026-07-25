@@ -818,6 +818,38 @@ glossary format (cf. "Attention variants and KV-cache compression").
   $\text{logit}^{(L)}(t) - \text{logit}^{(\ell^*)}(t)$ for an
   adaptively chosen early layer $\ell^*$, improving factuality.
   Chuang et al. 2023.
+- **Jacobian lens (J-lens)** — Gurnee et al. 2026: readout
+  $\text{lens}(\mathbf{h}_\ell) = \operatorname{softmax}(W_U
+  \operatorname{norm}(J_\ell \mathbf{h}_\ell))$ where $J_\ell =
+  \mathbb{E}_{t, t' \ge t, \text{prompt}}[\partial
+  \mathbf{h}_{\text{final},t'} / \partial \mathbf{h}_{\ell,t}]$ is the
+  model's final-layer Jacobian averaged over positions and ~1000
+  pretraining-like prompts. Causal-by-construction correction of the
+  logit lens ($J_\ell = I$); learned-map contrast is the tuned lens.
+  `[gurnee2026-workspace §2.1; kb/excerpts/gurnee2026-workspace#sec-2-1-jlens-def]`
+- **J-lens vectors** — the per-vocabulary-token input directions of
+  the J-lens (rows of $W_U J_\ell$ viewed in layer-$\ell$ space); the
+  direction whose presence in $\mathbf{h}_\ell$ most raises that
+  token's readout score. Under superposition, a token-indexed
+  "subframe" of the feature frame
+  `[gurnee2026-workspace §2.3; kb/excerpts/gurnee2026-workspace#sec-2-3-subframe]`.
+- **J-space** — the set of points expressible as a sparse nonnegative
+  combination of $k$ J-lens vectors ($k \le 25$ typical); a union of
+  $k$-dimensional cones. An activation's J-space component (nearest
+  point, via gradient pursuit) carries $\le 10\%$ of activation
+  variance yet mediates report, modulation, internal reasoning,
+  generalization, and selectivity — the paper's operationalization of
+  a global workspace
+  `[gurnee2026-workspace §2.3; kb/excerpts/gurnee2026-workspace#sec-2-3-jspace-def]`.
+- **Gradient pursuit** — greedy sparse-approximation algorithm used
+  to decompose an activation into its $k$-sparse nonnegative J-space
+  coordinates `[gurnee2026-workspace §2.3]`.
+- **Global workspace (GWT, as applied to LLMs)** — from Global
+  Workspace Theory: a shared, capacity-limited store that specialized
+  parallel processors post to and read from, supporting report and
+  flexible reasoning. Applied to LLMs as the functional
+  characterization the J-space is tested against
+  `[gurnee2026-workspace §1.1; kb/excerpts/gurnee2026-workspace#sec-1-1-gwt]`.
 
 ## Probing — vocabulary
 
