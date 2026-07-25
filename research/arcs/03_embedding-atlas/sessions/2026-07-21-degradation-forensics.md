@@ -6,10 +6,20 @@ ran entirely on `claude-fable-5` — inside the ~48 h window (June 9-11, 2026)
 in which Anthropic's initial Fable 5 release silently degraded output
 quality on frontier-AI-development prompts (system-card disclosure; reversed
 to a visible Opus-4.8 fallback on June 11 after public criticism; separate
-June 12-30 export-control suspension). Question examined: did that window
-leave artifacts of degraded judgment in this arc's findings?
+June 12-30 export-control suspension). Question examined, at the user's
+direction: did that window leave artifacts of degraded judgment in this
+arc's findings? The exposure was identified by the user correcting this
+session's account of the vendor timeline — the silent degradation was
+documented only for the initial-release window, closed by the
+visible-fallback policy after public criticism — which is what dated the
+kickoff sessions inside it.
 
-**Method (2026-07-21).** 19-agent blinded audit: per-chunk judgment-quality
+**Method (2026-07-21).** Run as an empirical test at the user's demand,
+after a reassuring argument that the findings were probably fine was
+refused; the separation of the deterministic numeric layer
+(artifact-re-derived) from the interpretive-prose layer is the
+human-directed research-integrity call this audit rests on.
+19-agent blinded audit: per-chunk judgment-quality
 review of the window session AND a post-fix baseline session (2026-07-15
 arc-wrap, same arc/work type, also Fable) with auditors blind to which was
 which; a targeted detector for reluctance/shallowness on frontier-ML subject
