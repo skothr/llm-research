@@ -2,7 +2,7 @@
 
 **Date/context:** 2026-07-20. Corpus-sensitivity check from the README
 deferred-directions list (prompted by an external review of the fitting
-corpus): the 1.5B lens refitted at n=100 on a seeded C4-en sample
+corpus, routed in by the reviewer as a blocking item before stage 5): the 1.5B lens refitted at n=100 on a seeded C4-en sample
 (`allenai/c4` en/train, streaming `shuffle(seed=42, buffer_size=10000)`,
 ≥600-char filter, first 1000 frozen to
 `data/fitting_prompts_c4en_n1000.json`, MANIFEST-registered), then the

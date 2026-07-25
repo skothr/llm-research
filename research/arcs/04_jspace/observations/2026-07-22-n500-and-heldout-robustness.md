@@ -6,7 +6,9 @@ structural claims, both run as isolate-one-axis controls at 1.5B:
 n=100 nf4 lens; ~5.1 h — 18,313 s wall, 36.3 s/prompt) + full metric
 suite; (2) held-out activation sample — the original held-out set is 30
 *consecutive* wikitext records (topically clustered around one
-article; flagged in external review), so the scan suite was re-run
+article — caught by the reviewer independently inspecting the committed
+prompt JSONs in `data/`, an axis the fitting-corpus critique never
+covered and no audit check could have surfaced), so the scan suite was re-run
 against a diversified seeded C4-en held-out set
 (`heldout_prompts_c4en_n30.json`, offset-1000 of the seed-42 stream,
 verified disjoint from both existing corpora), same wikitext-fit lens.

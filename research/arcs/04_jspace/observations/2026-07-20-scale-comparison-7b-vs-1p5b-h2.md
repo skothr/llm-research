@@ -4,7 +4,11 @@
 2026-07-18 observations). Same scripts (`jspace_readout_scan.py`,
 `jspace_lens_eval.py`), same 12 held-out prompts / multihop+association eval
 sets, now on `jlens_qwen2.5-7b_nf4_n100` (7B nf4, dim_batch=2, lm_head
-offloaded, 16.26 h fit) run on GPU. Both lenses are n=100, so **scale (H2)
+offloaded, 16.26 h fit) run on GPU. (The fit ran only after a reviewer
+status check on 2026-07-19 found the queue waiter had falsely reported it
+in progress — the first launch never started; the run was recovered because
+the reviewer's standing rule is to verify unattended runs by their
+artifacts, not by process checks.) Both lenses are n=100, so **scale (H2)
 and lens-fit-budget (H1) are confounded here** — flagged throughout.
 
 ## Finding
@@ -111,8 +115,12 @@ python examples/jspace_lens_eval.py --evals multihop association \
 
 ## Post-hoc audit (2026-07-20, follow-up session)
 
+Run at the reviewer's request: after the unattended overnight/weekend runs
+the reviewer asked for completion and integrity of every artifact to be
+verified directly rather than taken from the prior session's status report.
 An independent verification pass over every artifact behind this observation
-and its 1.5B comparison baseline, after the overnight run:
+and its 1.5B comparison baseline followed — it is what surfaced the items
+below:
 
 - **7B fit completeness:** `jlens_qwen2.5-7b_nf4_n100.pt` contains 27 full
   3584×3584 fp16 matrices, all finite, per-layer Frobenius norms 51.6–84.2;

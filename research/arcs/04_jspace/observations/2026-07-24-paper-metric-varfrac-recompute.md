@@ -1,12 +1,22 @@
 # Observation: the ceiling claims survive the paper-faithful variance metric — 1.5B breach confirmed (L21 excess 11.5%, CI [11.3, 11.7]), 7B stays under (peak 5.0%); swap headline significance certified; pursuit norm-bias bounded
 
-**Date/context:** 2026-07-23/24. Vetting session on the closed arc (issue
-#26): the paper's "never more than 10%" ceiling was verified against the
-archived PDF and found to be a **different metric** than the arc's committed
-variance fraction; the ceiling comparison was then recomputed under the
-paper's definition at both scales, and two adjacent gaps (missing
-significance stats on the stage-5.2 headline; unnormalized-atom selection
-bias in pursuit) were quantified. Scripts:
+**Date/context:** 2026-07-23/24. Reviewer-directed vetting session that
+reopened the already-closed arc (PR #25 awaiting merge). The reviewer opened
+it to solidify their own understanding of J-space/J-lens and personally vet
+the arc's math, probing the approach for significance and robustness — the
+metric mismatch below surfaced as a byproduct of that comprehension
+exercise, not from a scheduled audit. The reviewer then specifically
+directed checking the arc's variance fraction against the paper's own
+definition in the source PDF — plus any other methodology that could differ
+for these Qwen models — and set the evidentiary bar the recompute was held
+to: undeniable concrete proof one way or the other, retraction accepted if
+it went against the arc (issue #26). Under that direction the paper's
+"never more than 10%" ceiling was verified against the archived PDF and
+found to be a **different metric** than the arc's committed variance
+fraction; the ceiling comparison was then recomputed under the paper's
+definition at both scales, and two adjacent gaps (missing significance
+stats on the stage-5.2 headline; unnormalized-atom selection bias in
+pursuit) were quantified. Scripts:
 `examples/jspace_paper_metric_varfrac.py`,
 `examples/jspace_swap_significance.py`, `examples/jspace_atom_norm_bias.py`.
 
@@ -201,7 +211,16 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
 - Verification-method provenance: the paper-metric definition was
   extracted from the archived PDF (§4.2, Fig 30b caption, §A.8) — see the
   KB note `[kb/notes/interpretability/j-space.md]` §1.2 for the corrected
-  operational definition.
+  operational definition. Lineage: the name-vs-computation check that
+  produced issue #26 is an established standard here, not a one-off — the
+  same class of defect (a published metric name that does not match what
+  the script computes) was caught and fixed one arc earlier at the user's
+  insistence ("make sure the terminology is correct"): arc 03's
+  structural-block and trace metrics computed the unsquared norm ratio
+  ‖x_S‖/‖x‖ (isotropic floor 0.0765, matching the observed ~0.0754
+  control) but were published as "energy" (which floors at 0.0059) —
+  renamed across docs, scripts, and figure axes in commit `0c06b197`, with
+  committed artifact keys deliberately frozen for compatibility.
 
 ## Follow-ups
 
