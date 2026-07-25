@@ -1,4 +1,4 @@
-# Observation: the ceiling claims survive the paper-faithful variance metric — 1.5B breach confirmed (L21 excess 11.5%, CI [11.3, 11.7]), 7B stays under (peak 5.0%); swap headline significance certified; pursuit norm-bias bounded
+# Observation: the ceiling claims survive the paper-faithful variance metric — 1.5B breach confirmed (L21 excess 11.2%, CI [11.0, 11.4]), 7B stays under (peak 4.7%); swap headline significance certified; pursuit norm-bias bounded
 
 **Date/context:** 2026-07-23/24. Reviewer-directed vetting session that
 reopened the already-closed arc (PR #25 awaiting merge). The reviewer opened
@@ -31,30 +31,39 @@ occupancy** per layer, over valid positions. The arc's committed metric
 energy `||A·x||² / ||h||²` at fixed k — three mismatches (no LS refit, no
 random control, fixed k), pushing in opposite directions.
 
+**Selection-provenance correction (2026-07-25, final pre-merge review
+F01):** the first recompute ranked the top-K atoms by refit coefficient
+from the k_max=50 pursuit support while K came from the k=25 snapshot — a
+best-of-superset selection the random control never gets, worth ~+0.3 pt
+at the 1.5B headline layer. All eight artifacts were regenerated with the
+K-consistent selection (the selection-order prefix of the k=25 snapshot,
+which is exactly the K-step pursuit support); every number below is the
+K-consistent value. No verdict changed.
+
 Recomputed under the paper's definition (same lenses, same prompts;
 validation gate: replicated varfrac@25 matches the committed structure
 scans **bit-exactly**, max|diff| = 0.0 at both scales):
 
 | | naive (committed) | paper metric (excess FVE) | verdict |
 |---|--:|--:|---|
-| 1.5B L21 (peak), scan grid | 12.4% | 11.1% | breach stands |
-| 1.5B L21, **all valid positions** (n=5362) | — | **11.50%, CI95 [11.29, 11.74], 2000/2000 cluster-bootstrap resamples > 10%** | **breach confirmed** |
-| 1.5B L22, all positions | 11.4% | 10.88% [10.68, 11.11], 2000/2000 | breach confirmed |
-| 1.5B L18, all positions | 9.4% | 8.85% [8.67, 9.06], 0/2000 | under (hump edge) |
-| 7B peak (L22), scan grid | 4.0% | **5.04%** | **under confirmed** |
+| 1.5B L21 (peak), scan grid | 12.4% | 10.8% | breach stands |
+| 1.5B L21, **all valid positions** (n=5362) | — | **11.15%, CI95 [10.95, 11.40], 2000/2000 cluster-bootstrap resamples > 10%** | **breach confirmed** |
+| 1.5B L22, all positions | 11.4% | 10.68% [10.47, 10.91], 2000/2000 | breach confirmed |
+| 1.5B L18, all positions | 9.4% | 8.27% [8.09, 8.46], 0/2000 | under (hump edge) |
+| 7B peak (L22–L23), scan grid | 4.0% | **4.72%** (L23; L22 4.71%) | **under confirmed** |
 
-The two main distortions pull in opposite directions with comparable
-magnitude, so the naive number lands near the corrected one — a regime
-coincidence, not a cancellation and not a general property. Measured from
-the committed artifacts at 1.5B L21 (grid): LS refit +0.8 pt (12.37% →
-13.16%), random control −2.02 pt, net −1.2 pt (the table's 12.4% → 11.1%);
-all-positions L21: refit +0.83, control −2.01, net −1.2. The refit term
-decays with depth (+1.90 at L17 → +0.45 at L22), so "refit ≈ +2 pts" holds
-only at the band's top edge; at 7B L21 the signs flip in net (refit +1.99,
-control −0.89, net +1.1 — the naive metric *understates*, 3.4% → 4.5%). Cross-scale gap ~2.3× (was ~3× naive). The
+The two main distortions pull in opposite directions, so the naive number
+lands near the corrected one — a regime coincidence, not a cancellation
+and not a general property. Measured from the committed (K-consistent)
+artifacts at 1.5B L21 (grid): LS refit +0.5 pt (12.37% → 12.85%), random
+control −2.02 pt, net −1.5 pt (the table's 12.4% → 10.8%); all-positions
+L21: refit +0.48, control −2.01, net −1.5. The refit term decays with
+depth (+1.25 at L17 → +0.29 at L22); at 7B L21 the signs flip in net
+(refit +1.71, control −0.89, net +0.8 — the naive metric *understates*,
+3.4% → 4.2%). Cross-scale gap ~2.4× (was ~3× naive). The
 all-positions sweep (the paper's population; the committed scan's 9-point
-grid is a subsample) moved L21 from 11.1% → 11.5% — the grid was mildly
-conservative. L0 excess is 12.3% but sits outside the paper's
+grid is a subsample) moved L21 from 10.8% → 11.2% — the grid was mildly
+conservative. L0 excess is 10.4% but sits outside the paper's
 workspace-layer scope for the ceiling (Fig 30b evaluates workspace layers)
 and carries the Finding-3 contamination.
 
@@ -66,19 +75,19 @@ demonstrating it is load-bearing):
 
 | axis | L21 excess (1.5B) | P(boot > 10%) |
 |---|--:|--:|
-| base (bf16 lens, wikitext held-out) | 11.14% | 1.000 |
-| corpus (C4-en lens) | 11.00% | 1.000 |
-| quantization (nf4 lens, n=100) | 11.09% | 1.000 |
-| n-budget (nf4 lens, n=500) | 10.97% | 1.000 |
-| held-out sample (C4 prompts) | 12.13% | 1.000 |
-| held-out sample, **7B** (band peak L23) | 6.27% | 0.000 |
+| base (bf16 lens, wikitext held-out) | 10.83% | 1.000 |
+| corpus (C4-en lens) | 10.82% | 1.000 |
+| quantization (nf4 lens, n=100) | 10.83% | 1.000 |
+| n-budget (nf4 lens, n=500) | 10.69% | 1.000 |
+| held-out sample (C4 prompts) | 11.70% | 1.000 |
+| held-out sample, **7B** (band peak L23) | 5.98% | 0.000 |
 
-Workspace-band excess is invariant within ±9% relative across every axis,
-the 1.5B breach is bootstrap-unanimous on all of them, and the 7B
+Workspace-band excess is invariant within +8/−2% relative across every
+axis, the 1.5B breach is bootstrap-unanimous on all of them, and the 7B
 under-verdict is unanimous on its held-out set — the ceiling verdicts are
 now metric-correct AND robustness-certified in that metric. The early-band
 corpus-sensitivity also reproduces in the corrected metric (L0 excess
-11.44% → 16.65% under the C4 lens), so the corpus observation's
+9.67% → 15.43% under the C4 lens), so the corpus observation's
 early/workspace split is metric-robust.
 
 **Occupancy saturation note:** median occupancy = 24–25 of k=25 at 1.5B
@@ -185,7 +194,7 @@ DATA_PROVENANCE rows). Audit coverage: Check M blocks in
 ## Reproducibility
 
 ```
-# paper-metric recompute (GPU; ~15 min 1.5B grid / ~1.3 h all-pos / ~1 h 7B)
+# paper-metric recompute (GPU; ~6 min 1.5B grid / ~10 min all-pos / ~18 min 7B)
 python examples/jspace_paper_metric_varfrac.py \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt
@@ -211,8 +220,8 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   we sweep all layers with the same procedure. The bootstrap unit is the
   prompt (positions within a prompt correlate).
 - 7B numbers are scan-grid (n=270/layer, CI from cluster bootstrap in the
-  committed artifact); at ~5% vs a 10% ceiling the margin does not require
-  the all-positions sweep.
+  committed artifact); at ~4.7% vs a 10% ceiling the margin does not
+  require the all-positions sweep.
 - Verification-method provenance: the paper-metric definition was
   extracted from the archived PDF (§4.2, Fig 30b caption, §A.8) — see the
   KB note `[kb/notes/interpretability/j-space.md]` §1.2 for the corrected

@@ -69,7 +69,7 @@ Observations so far, in `observations/`:
   (issue #26): the paper's 10% ceiling is excess-over-random
   orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
   under the paper's definition **both ceiling verdicts survive** (1.5B
-  L21 excess 11.5% CI [11.3, 11.7], 7B peak 5.0%) and hold on **all four
+  L21 excess 11.2% CI [11.0, 11.4], 7B peak 4.7%) and hold on **all four
   robustness axes** re-run in that metric; stage-5.2 gap
   significance-certified (exact permutation) and the stage-5.1b 59%-tier
   null certified (exact McNemar; 7B: 0/0 discordants); pursuit norm-bias
@@ -89,7 +89,7 @@ Load-bearing numbers re-derive from artifacts via
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
 + the four 1.5B robustness axes and the 7B held-out set, swap
 significance + 5.1b McNemar tiers, and the
-two-scale norm-bias pins — landed 2026-07-24; 977 after the final-review
+two-scale norm-bias pins — landed 2026-07-24; 978 after the final-review
 pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
 naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
 p-value, and the MANIFEST census). All small derived artifacts (44 files,
@@ -197,17 +197,18 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    orthogonal-projection FVE at K = median occupancy
    `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`, not the absolute
    reconstruction-energy varfrac the scans record; recomputed under that
-   definition, 1.5B breaches at the hump (**L21 excess 11.50%, CI95
-   [11.29, 11.74]** over all valid positions, 2000/2000 cluster-bootstrap
+   definition (K-consistent selection, 2026-07-25 F01 fix), 1.5B breaches
+   at the hump (**L21 excess 11.15%, CI95
+   [10.95, 11.40]** over all valid positions, 2000/2000 cluster-bootstrap
    resamples above 10%; naive metric: 12.4% at k=25) and 7B stays under
-   (**peak excess 5.04%** at L22; naive ≤5.8% through k=50) — cross-scale
-   gap ~2.3×. The workspace-like mid-late band (1.5B peak L21) is
+   (**peak excess 4.72%** at L22–L23; naive ≤5.8% through k=50) —
+   cross-scale gap ~2.4×. The workspace-like mid-late band (1.5B peak L21) is
    invariant to fitting corpus (peak layer and value identical to 3dp:
    L21, 0.124 on both lenses), n-budget (n=100→500:
    −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — and the
-   invariance was re-verified 2026-07-24 **under the paper metric on all
-   four axes** (L21 excess 11.0–12.1%, bootstrap-unanimous breach on
-   each; 7B held-out band peak 6.3%, unanimous under). Caveat: early-band
+   invariance was re-verified 2026-07-24/25 **under the paper metric on
+   all four axes** (L21 excess 10.7–11.7%, bootstrap-unanimous breach on
+   each; 7B held-out band peak 6.0%, unanimous under). Caveat: early-band
    (L0–L16)
    occupancy/top-atom readings are partly norm-driven (unnormalized-atom
    pursuit selection bias; the workspace band measures norm-neutral) —
