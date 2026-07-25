@@ -17,6 +17,9 @@ per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
 moves to a new basis at L1), P1b/P1e/P3 not run (deferred, below). Remaining follow-ups are recorded under "Deferred
 follow-ups" and are candidates for a successor arc rather than this one.
+Provenance: the 2026-06-10/11 kickoff sessions ran inside the Fable 5
+silent-degradation window; audited clean at the user's direction —
+[degradation-forensics](sessions/2026-07-21-degradation-forensics.md).
 
 ## Research direction
 
@@ -207,7 +210,7 @@ research/arcs/03_embedding-atlas/
     2026-07-15-emb-trace-delimiter-attention.md   # T2: P1a/P1c/P1d adjudication
     figures/ (fig1-fig21 + INVENTORY.md)
   plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
-  sessions/ (2026-06-11 tracing checkpoint)
+  sessions/ (2026-06-11 tracing checkpoint; 2026-07-21 degradation-window forensics)
   data/ (14 .pt + MANIFEST.json + README.md)  # git-LFS, ~96 MB
 ```
 
