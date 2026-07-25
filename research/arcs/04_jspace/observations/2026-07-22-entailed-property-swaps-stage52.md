@@ -4,7 +4,16 @@
 spider→ant entailed-property flip
 (`[kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant]`: swap the
 unspoken concept's J-lens vector, the *entailed property* in the output
-flips, 8→6 legs). Design:
+flips, 8→6 legs). Direction was external to the arc's own queue: this
+stage was commissioned by the reviewer on 2026-07-21, citing the paper's
+arachnid→insect / 8→6-legs example and explicitly flagging uncertainty
+over whether that protocol had been *demonstrated* or only *proposed* — so
+§3.3 was verified verbatim against the archived PDF first
+(`[kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant]`, verified
+2026-07-21); that check is what licenses framing this stage as a
+replication rather than novel design. The same direction set the run order
+(1.5B n=500 nf4 refit first) and the rich/verified-dataset requirement
+across all three tracks. Design:
 `plans/2026-07-21-stage52-entailed-property.md` — 33 items, 4 property
 families (leg counts, capitals-via-landmark, language-via-country,
 colors), single-token-validated, baseline-gated; swap at J-lens-detected

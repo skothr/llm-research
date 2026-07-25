@@ -189,6 +189,19 @@ number in the observations has a corresponding assertion.
 - Push the branch, open a PR (one arc = one scope-bounded diff). `git lfs pull`
   works for reviewers. Run `/ultrareview <PR#>` if warranted. Merge per the
   repo's manual-merge SOP.
+- **Verify the content actually landed — don't trust the merged badge.**
+  After merge run `git branch -r --no-merged origin/main` (should be empty)
+  and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
+  a stack — a GitHub "merged" badge only means the PR merged into *its
+  base*, which may be a stale intermediate branch. This check was
+  instituted at the project owner's direction on 2026-07-21, after a
+  user-requested verification of the arc-03 4-PR stack found only #20 had
+  reached main, stranding 22 commits of arc-03 content (merge `2400a95f`
+  is the repair). Standing project-owner policy from the same directive:
+  merged branches are the permanent record of merge points and are never
+  deleted — so stacks must be merged top-down (or each PR retargeted with
+  `gh pr edit N --base main`), since the delete-triggered auto-retarget
+  path is unavailable here.
 
 ---
 

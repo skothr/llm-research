@@ -2,7 +2,9 @@
 arc's committed observations from the on-disk artifacts, and compare against
 what the observation files report. Prints per-check PASS/FAIL and exits 1 on
 any failure (stage-7 audit named in
-`research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`).
+`research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`). Written at
+stage 3, not arc close, per the arc's standing auditability requirement
+(see the arc README audit section).
 
 Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 (`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /

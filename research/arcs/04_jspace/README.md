@@ -92,7 +92,14 @@ a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses, which stay cache-only per Decision 4 (committed layer
 subsets + `jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
 the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
-association eval sets live in that clone).
+association eval sets live in that clone). The harness was seeded at stage
+3 rather than at arc close, and the derived-artifact promotion run mid-arc
+rather than at stage 7, on the project owner's standing requirement that
+discovered defects enter the permanent record rather than being fixed
+silently and that every stage's datasets be complete and clean-clone
+reproducible while the arc is still running (2026-07-20 / 2026-07-21
+directions); the ~29 h → ~81 h refit-estimate correction is recorded in
+place with the original preserved for the same reason.
 
 **Corpus provenance (Decision 1, recorded 2026-07-20):** the frozen
 fitting corpus (`fitting_prompts_wikitext103_n1000.json`) replicates the
@@ -143,9 +150,22 @@ in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf
 
 **Attribution:** research direction (target model, replication goal),
 design sign-off with two amendments (the OOM gate and the comms protocol),
-the open-decision calls, and the reviewer verdicts — human; paper
-digestion, KB grounding, drafting the experiment design, implementation,
-and execution — Claude Code sessions (2026-07-18 → 2026-07-22).
+the stage-boundary go/no-go calls and open-decision calls, the reviewer
+verdicts, the arc's auditability standard (defects into the permanent
+record; datasets complete and clean-clone reproducible mid-arc), the
+standing requirement that unattended runs be verified by their artifacts
+rather than by process checks or a prior session's claim (the source of
+the post-hoc audit and the comms/monitoring amendment), and the
+review-before-integration policy — the pre-merge review standard set at
+research integrity, auditability and attribution rather than code
+correctness, with the merge gate reserving integration for a human —
+human; paper digestion, KB grounding, drafting the experiment design,
+implementation, and execution — Claude Code sessions (2026-07-18 →
+2026-07-24). The post-close metric-fidelity reopening (issue #26,
+2026-07-23/24) was human-directed: the reviewer reopened the closed arc to
+vet the math, required the variance fraction be checked against the
+paper's definition in the source PDF, and set the pass/fail evidentiary
+bar the recompute was held to.
 
 ## Synthesis (arc close, 2026-07-22)
 
