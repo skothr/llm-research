@@ -10,7 +10,12 @@ a different quantity:
 
 with FVE the *orthogonal-projection* fraction ``||Π_S h||^2 / ||h||^2``
 (least-squares onto the selected atom span, §A.8) evaluated at
-K = median pursuit occupancy per layer, swept over valid positions. This
+K = median pursuit occupancy per layer, swept over valid positions. The
+top-K atom set is the K-step pursuit support (the selection-order prefix of
+the k-snap snapshot) — NOT a coefficient-ranked K-subset of the k_max
+support, which is a best-of-superset selection the random control never
+gets (measured ~+0.3 pt inflation at 1.5B L21; issue-#26 F01, fixed
+2026-07-25). This
 script computes that metric against a fitted lens, either on the committed
 structure-scan grid (8 evenly spaced interior positions + last token; with
 ``--scan`` it first replicates the stored varfrac@k-snap bit-for-bit as a
@@ -158,7 +163,7 @@ def main() -> None:
     )
 
     # Pass 1: capture + pursuit (support-returning), storing per-position state.
-    store: dict[int, list[tuple[int, list[int], Tensor, Tensor, float, int]]] = {
+    store: dict[int, list[tuple[int, list[int], list[int], Tensor, float, int]]] = {
         L: [] for L in layers
     }
     vf_diffs: list[float] = []
@@ -189,8 +194,8 @@ def main() -> None:
                     store[L].append(
                         (
                             pi,
+                            list(res["support_by_k"][args.k_snap][p]),
                             list(res["support"][p]),
-                            res["support_coeffs"][p].detach().cpu(),
                             h[p].detach().cpu(),
                             float(vf25[p]),
                             int(act25[p]),
@@ -219,15 +224,19 @@ def main() -> None:
         fve_full = np.empty(n)
         fve_r = np.empty(n)
         vf_ours = np.empty(n)
-        for i, (pi, sel, coeffs, h_cpu, vf25, *_) in enumerate(store[L]):
+        for i, (pi, sel_snap, sel_full, h_cpu, vf25, *_) in enumerate(store[L]):
             h = h_cpu.to(w_u.device)
             prompt_idx[i] = pi
             vf_ours[i] = vf25
-            if sel:
-                order = torch.argsort(coeffs, descending=True)
-                top = [sel[int(j)] for j in order[:k_med]]
+            if sel_snap:
+                # K-consistent selection (issue-#26 F01): the selection-order
+                # prefix of the k-snap snapshot IS the K-step pursuit support
+                # (greedy order is deterministic), so no coefficient re-ranking
+                # over a larger support ever touches the top-K set. fve_full
+                # stays the full k_max-support diagnostic (headroom).
+                top = sel_snap[:k_med]
                 a_top = w_u[torch.tensor(top, device=w_u.device)].float() @ jac
-                a_full = w_u[torch.tensor(sel, device=w_u.device)].float() @ jac
+                a_full = w_u[torch.tensor(sel_full, device=w_u.device)].float() @ jac
                 fve_j[i] = orth_fve(h, a_top)
                 fve_full[i] = orth_fve(h, a_full)
             else:
@@ -287,7 +296,11 @@ def main() -> None:
                 "metric": "excess = orthproj-FVE(top-K pursuit atoms) - "
                 "orthproj-FVE(K uniform random vocab atoms); K = median "
                 "occupancy (ACTIVE_TAU convention) at the k-snap pursuit "
-                "snapshot [gurnee2026-workspace §4.2 Fig 30b, §A.8]",
+                "snapshot; top-K = the K-step pursuit support (selection-"
+                "order prefix of the k-snap snapshot — K-consistent, no "
+                "re-ranking from the k_max superset; issue-#26 F01 fix); "
+                "fve_full = full k_max-support diagnostic "
+                "[gurnee2026-workspace §4.2 Fig 30b, §A.8]",
                 "model": args.model,
                 "mode": args.mode,
                 "lens": str(args.lens),

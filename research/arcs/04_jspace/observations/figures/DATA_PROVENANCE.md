@@ -265,7 +265,11 @@ prompts as the structure scans).
 **Metric:** `excess = FVE(top-K pursuit atoms) − FVE(K uniform random vocab
 atoms)`, FVE = orthogonal-projection fraction `||Π_S h||²/||h||²` (QR
 least-squares), K = per-layer median pursuit occupancy (k=25 snapshot,
-ACTIVE_TAU convention) `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`. Random
+ACTIVE_TAU convention); top-K = the K-step pursuit support (selection-order
+prefix of the k=25 snapshot — K-consistent, regenerated 2026-07-25 after
+final-review finding F01 showed the original ranked from the k=50 superset,
+~+0.3 pt inflation, no verdict flips)
+`[gurnee2026-workspace §4.2 Fig 30b, §A.8]`. Random
 draws seeded (`config.rand_seed_base + layer`). Solid lines plot
 `results[L]["excess_mean"]`; faint dashed lines plot `results[L]["vf_ours_mean"]`
 (the arc's original absolute varfrac@25, same artifacts) to visualize the

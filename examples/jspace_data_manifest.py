@@ -200,10 +200,12 @@ def _derived(
     model: str,
     provenance: str,
     consumers: list[str],
+    args: str | None = None,
 ) -> dict[str, Any]:
     return {
         "class": "derived",
         "producing_script": script,
+        "producing_args": args,
         "inputs": inputs,
         "requires_model": model,
         "provenance": provenance,
@@ -508,12 +510,16 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "on the committed structure-scan grid (30 heldout wikitext prompts x 9 "
         "positions, 27 layers); replicated varfrac@25 validated bit-exact vs "
         "the committed scan (config.validation_max_vf_diff == 0.0); per-position "
-        "excess/fve arrays + cluster-bootstrap CIs. rand_seed_base=10000, n_rand=8.",
+        "excess/fve arrays + cluster-bootstrap CIs. rand_seed_base=10000, n_rand=8. "
+        "K-consistent top-K selection (2026-07-25 F01 regeneration).",
         [
             "obs 2026-07-24-paper-metric-varfrac-recompute.md",
             "audit Check M",
             "fig 2026-07-24-jspace-paper-metric-excess.png",
         ],
+        args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
+        "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt "
+        "--n-rand 8 --rand-seed-base 10000",
     ),
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
@@ -522,28 +528,34 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "Paper-metric all-positions sweep (every position in [16, seq_len-2]; "
         "n=5362/layer) at L0/L18/L21/L22 — the paper's measurement population; "
         "per-position arrays + cluster-bootstrap (by prompt, 2000 resamples) 95% "
-        "CIs. The decisive 1.5B ceiling-breach artifact (L21 excess 11.50%, CI "
-        "[11.29, 11.74], 2000/2000 resamples > 10%). "
-        "Invocation: --all-positions --layers 0,18,21,22 --n-rand 4 "
-        "--rand-seed-base 20000.",
+        "CIs. The decisive 1.5B ceiling-breach artifact (L21 excess 11.15%, CI "
+        "[10.95, 11.40], 2000/2000 resamples > 10%; K-consistent selection, "
+        "2026-07-25 F01 regeneration).",
         [
             "obs 2026-07-24-paper-metric-varfrac-recompute.md",
             "audit Check M",
             "fig 2026-07-24-jspace-paper-metric-excess.png",
         ],
+        args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
+        "--all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
     ),
     "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
         [_L7B, _HW, "structure_scan_...7b...nf4_n100.pt (validation reference)"],
         "qwen-7b-nf4",
         "7B counterpart of the paper-metric recompute (scan grid, bit-exact "
-        "validation); peak excess 5.04% at L22, all 27 layers under the 10% "
-        "ceiling. rand_seed_base=30000, n_rand=8.",
+        "validation); peak excess 4.72% at L22-L23, all 27 layers under the 10% "
+        "ceiling. rand_seed_base=30000, n_rand=8. K-consistent top-K selection "
+        "(2026-07-25 F01 regeneration).",
         [
             "obs 2026-07-24-paper-metric-varfrac-recompute.md",
             "audit Check M",
             "fig 2026-07-24-jspace-paper-metric-excess.png",
         ],
+        args="--model Qwen/Qwen2.5-7B-Instruct --mode nf4 "
+        "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
+        "--scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt "
+        "--n-rand 8 --rand-seed-base 30000",
     ),
     "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
@@ -576,41 +588,57 @@ _DERIVED: dict[str, dict[str, Any]] = {
 # the 7B held-out set, each validated bit-exact against its committed
 # structure scan (nf4 axes captured with the model in nf4, matching those
 # scans). Registered via a loop — the entries differ only in lens/prompts.
-for _axis, _fname, _lens, _model, _detail in [
+for _axis, _fname, _lens, _model, _detail, _args in [
     (
         "corpus (C4-en lens)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
         _L15C4,
         "qwen-1.5b-bf16",
-        "L21 excess 11.00% (base 11.14%); early band diverges (L0 16.65%).",
+        "L21 excess 10.82% (base 10.83%); early band diverges (L0 15.43%).",
+        "--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt "
+        "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt "
+        "--n-rand 8 --rand-seed-base 10000",
     ),
     (
         "quantization (nf4 lens)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
         _L15N4,
         "qwen-1.5b-nf4",
-        "L21 excess 11.09%; run with --mode nf4 (matches the scan capture).",
+        "L21 excess 10.83%; run with --mode nf4 (matches the scan capture).",
+        "--mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n100.pt "
+        "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt "
+        "--n-rand 8 --rand-seed-base 10000",
     ),
     (
         "n-budget (nf4 n=500 lens)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
         _L15N5,
         "qwen-1.5b-nf4",
-        "L21 excess 10.97%; run with --mode nf4.",
+        "L21 excess 10.69%; run with --mode nf4.",
+        "--mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n500.pt "
+        "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt "
+        "--n-rand 8 --rand-seed-base 10000",
     ),
     (
         "held-out sample (C4 prompts)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
         _L15,
         "qwen-1.5b-bf16",
-        "L21 excess 12.13% on the diversified C4 held-out set.",
+        "L21 excess 11.70% on the diversified C4 held-out set.",
+        "--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
+        "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt "
+        "--prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 10000",
     ),
     (
         "held-out sample, 7B (C4 prompts)",
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
         _L7B,
         "qwen-7b-nf4",
-        "band peak L23 excess 6.27%, under the ceiling (0/2000 resamples over).",
+        "band peak L23 excess 5.98%, under the ceiling (0/2000 resamples over).",
+        "--model Qwen/Qwen2.5-7B-Instruct --mode nf4 "
+        "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
+        "--scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt "
+        "--prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 30000",
     ),
 ]:
     _DERIVED[_fname] = _derived(
@@ -618,11 +646,13 @@ for _axis, _fname, _lens, _model, _detail in [
         [_lens, _HC4 if "heldout" in _fname else _HW],
         _model,
         f"Paper-metric robustness axis — {_axis}: excess-over-random "
-        f"orthogonal-projection FVE at K=median occupancy, scan grid, "
+        f"orthogonal-projection FVE at K=median occupancy (K-consistent "
+        f"top-K, 2026-07-25 F01 regeneration), scan grid, "
         f"validated bit-exact vs the committed structure scan "
         f"(config.validation_max_vf_diff == 0.0). {_detail} All five axes "
         f"hold the ceiling verdicts (P(boot>10%) unanimous each side).",
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
+        args=_args,
     )
 
 META.update(_DERIVED)
@@ -670,10 +700,15 @@ def _metadata_fields(name: str) -> dict[str, Any]:
     m = META.get(name)
     if m is None:
         return dict(_UNREGISTERED)
+    _args = m.get("producing_args")
     return {
         "class": m["class"],
         "producing_script": m["producing_script"],
-        "producing_command": f"python {m['producing_script']}",
+        "producing_command": (
+            f"python {m['producing_script']} {_args}"
+            if _args
+            else f"python {m['producing_script']}"
+        ),
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],
         "provenance": m["provenance"],

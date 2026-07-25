@@ -65,13 +65,17 @@ def gradient_pursuit_layer(
     When ``return_components`` is True the result also carries ``"components"``,
     a ``[P, d]`` tensor of the reconstructed J-space component ``A x`` at the
     final (``k_max``) support — the vector the NLA cross-tie re-verbalizes.
-    When ``return_support`` is True it also carries ``"support"`` (per-position
-    lists of selected vocab-token ids, selection order) and ``"support_coeffs"``
-    (per-position final nonnegative coefficient tensors, same order) — used by
-    the paper-metric variance recompute (``jspace_paper_metric_varfrac.py``,
-    issue #26) to build the top-K orthogonal projection. Both knobs default off,
-    leaving the returned dict exactly as the structure scan consumes it, so that
-    script's outputs are unchanged.
+    When ``return_support`` is True it also carries ``"support"`` /
+    ``"support_coeffs"`` (per-position selected vocab-token ids and final
+    nonnegative coefficients at ``k_max``, selection order) plus
+    ``"support_by_k"`` / ``"support_coeffs_by_k"`` — the same state snapshotted
+    at every k in ``ks``. The paper-metric variance recompute
+    (``jspace_paper_metric_varfrac.py``, issue #26) builds its top-K orthogonal
+    projection from the ``k_snap`` snapshot, NOT the final state: ranking the
+    top K out of the k_max superset by refit coefficient is a best-of-superset
+    selection the random control never gets (measured ~+0.3 pt at 1.5B L21).
+    Both knobs default off, leaving the returned dict exactly as the structure
+    scan consumes it, so that script's outputs are unchanged.
     """
     device = residuals.device
     n_pos, d = residuals.shape
@@ -96,6 +100,11 @@ def gradient_pursuit_layer(
     varfrac = {k: np.full(n_pos, np.nan) for k in ks}
     active = {k: np.full(n_pos, np.nan) for k in ks}
     ks_set = set(ks)
+    # Per-snapshot support state (issue-#26 F01: the paper-metric top-K must
+    # come from the k-snapshot support, not the final k_max support, or the
+    # coefficient re-ranking over the superset inflates the excess).
+    support_by_k: dict[int, list[list[int]]] = {}
+    support_coeffs_by_k: dict[int, list[Tensor]] = {}
 
     for step in range(1, k_max + 1):
         # (1) batched correlation of current residuals with all atoms.
@@ -126,6 +135,9 @@ def gradient_pursuit_layer(
             r[p] = y[p] - coeffs[p] @ a  # A^T x -> reconstruction, subtract
 
         if step in ks_set:
+            if return_support:
+                support_by_k[step] = [list(s) for s in sel]
+                support_coeffs_by_k[step] = [c.clone() for c in coeffs]
             for p in range(n_pos):
                 comp = coeffs[p] @ atoms[p] if coeffs[p].numel() else y.new_zeros(d)
                 denom = float(y_sqnorm[p])
@@ -144,6 +156,9 @@ def gradient_pursuit_layer(
 
     # Fill snapshots for k values beyond an early stop (state frozen at stop).
     for step in ks:
+        if return_support and step not in support_by_k:
+            support_by_k[step] = [list(s) for s in sel]
+            support_coeffs_by_k[step] = [c.clone() for c in coeffs]
         if np.isnan(varfrac[step]).all():
             for p in range(n_pos):
                 comp = coeffs[p] @ atoms[p] if coeffs[p].numel() else y.new_zeros(d)
@@ -181,4 +196,6 @@ def gradient_pursuit_layer(
     if return_support:
         out["support"] = sel
         out["support_coeffs"] = coeffs
+        out["support_by_k"] = support_by_k
+        out["support_coeffs_by_k"] = support_coeffs_by_k
     return out

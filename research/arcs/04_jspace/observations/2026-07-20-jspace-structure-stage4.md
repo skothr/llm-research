@@ -6,11 +6,12 @@
 > quantity (excess-over-random orthogonal-projection FVE at K = median
 > occupancy, `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`). Recomputed
 > under the paper's own metric, **both verdicts survive**: 1.5B breaches
-> at the hump (L21 excess 11.50%, CI95 [11.29, 11.74] over all valid
+> at the hump (L21 excess 11.15%, CI95 [10.95, 11.40] over all valid
 > positions, 2000/2000 bootstrap resamples > 10%) and 7B stays under
-> (peak excess 5.04% at L22). The measurements below stand as recorded;
+> (peak excess 4.72% at L22–L23). The measurements below stand as recorded;
 > the *comparison-to-paper framing* ("k-dependent ceiling") is superseded —
-> at the paper's prescribed K (= median occupancy ≈ 24–25 here, because
+> at the paper's prescribed K (= median occupancy 24–25 at 1.5B / 23–24
+> at 7B, because
 > τ=1e-3 saturates the active count, see point 3) the k choice is not
 > free. Full recompute, significance certification of the stage-5.2 gap,
 > and the pursuit norm-bias quantification (early band contaminated,

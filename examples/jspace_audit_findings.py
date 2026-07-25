@@ -99,9 +99,10 @@ Checks:
      scan-grid runs replicated the committed structure-scan varfrac@25
      bit-exactly (validation_max_vf_diff == 0.0); per-layer excess_mean
      re-derived from the stored per-position arrays; pinned headline values
-     (1.5B grid L21 0.1114 / allpos L21 0.1150 with CI95 [0.1129, 0.1174]
-     and 2000/2000 bootstrap resamples > 10%, L18 0/2000; 7B peak L22
-     0.0504, ALL layers < 0.10). Entailed-swap significance re-derived from
+     (K-consistent selection, 2026-07-25 F01 fix: 1.5B grid L21 0.1083 /
+     allpos L21 0.1115 with CI95 [0.1095, 0.1140]
+     and 2000/2000 bootstrap resamples > 10%, L18 0/2000; 7B peak L22-L23
+     ~0.0472, ALL layers < 0.10). Entailed-swap significance re-derived from
      the committed chat artifacts via jspace_swap_significance (exact
      sign-flip permutation: 1.5B auto 7/7 p=0.015625; 7B auto 15/17
      p=9.2e-5). Pursuit norm-bias summary pinned (workspace band
@@ -1982,19 +1983,20 @@ PM_FILES = {
 }
 # (file key, layer) -> pinned excess_mean [gurnee2026-workspace §4.2 metric]
 PM_EXCESS_PINS = {
-    ("1.5b grid", 21): 0.1114,
-    ("1.5b grid", 0): 0.1144,
-    ("1.5b allpos", 21): 0.1150,
-    ("1.5b allpos", 22): 0.1088,
-    ("1.5b allpos", 18): 0.0885,
-    ("1.5b allpos", 0): 0.1230,
-    ("7b grid", 22): 0.0504,
-    ("7b grid", 21): 0.0447,
-    ("1.5b c4en axis", 21): 0.1100,
-    ("1.5b nf4 axis", 21): 0.1109,
-    ("1.5b n500 axis", 21): 0.1097,
-    ("1.5b heldout axis", 21): 0.1213,
-    ("7b heldout axis", 23): 0.0627,
+    ("1.5b grid", 21): 0.1083,
+    ("1.5b grid", 0): 0.0967,
+    ("1.5b allpos", 21): 0.1115,
+    ("1.5b allpos", 22): 0.1068,
+    ("1.5b allpos", 18): 0.0827,
+    ("1.5b allpos", 0): 0.1038,
+    ("7b grid", 22): 0.0471,
+    ("7b grid", 23): 0.0472,
+    ("7b grid", 21): 0.0419,
+    ("1.5b c4en axis", 21): 0.1082,
+    ("1.5b nf4 axis", 21): 0.1083,
+    ("1.5b n500 axis", 21): 0.1069,
+    ("1.5b heldout axis", 21): 0.1170,
+    ("7b heldout axis", 23): 0.0598,
 }
 # (file key, layer) -> required boot_frac_over_10pct (1.0 = breach unanimous,
 # 0.0 = under unanimous) — the five-axis invariance certification.
@@ -2010,11 +2012,11 @@ PM_BOOT_PINS = {
 # fve_topK - vf_ours, control term = -fve_rand; net at 1.5B L21 is -1.2 pt,
 # sign-flipped at 7B L21).
 PM_DECOMP_PINS = {
-    ("1.5b grid", 18): (0.1106, 0.0234),
-    ("1.5b grid", 21): (0.1316, 0.0202),
-    ("1.5b grid", 22): (0.1187, 0.0160),
-    ("7b grid", 21): (0.0536, 0.0089),
-    ("7b grid", 22): (0.0591, 0.0087),
+    ("1.5b grid", 18): (0.1044, 0.0234),
+    ("1.5b grid", 21): (0.1285, 0.0202),
+    ("1.5b grid", 22): (0.1171, 0.0160),
+    ("7b grid", 21): (0.0508, 0.0089),
+    ("7b grid", 22): (0.0558, 0.0087),
 }
 # (file key, layer) -> K_median_occ, plus a global band [23, 25] asserted per
 # file — the value the paper's K = median-occupancy prescription hangs on
@@ -2138,14 +2140,19 @@ def audit_metric_correction() -> None:
                 )
             lo, hi = res[21]["excess_ci95"]
             claim(
-                "[M] allpos L21 CI95 ~ [0.1129, 0.1174] and lo > 0.10",
-                abs(lo - 0.1129) < 0.0005 and abs(hi - 0.1174) < 0.0005 and lo > 0.10,
-                "[0.1129, 0.1174]",
+                "[M] allpos L21 CI95 ~ [0.1095, 0.1140] and lo > 0.10",
+                abs(lo - 0.1095) < 0.0005 and abs(hi - 0.1140) < 0.0005 and lo > 0.10,
+                "[0.1095, 0.1140]",
                 (round(lo, 4), round(hi, 4)),
             )
         if key == "7b grid":
             peak = max(res, key=lambda x: res[x]["excess_mean"])
-            claim_eq("[M] 7B peak excess layer == L22", 22, int(peak))
+            claim(
+                "[M] 7B peak excess layer in {22, 23} (L22/L23 tie, 0.0471/0.0472)",
+                int(peak) in (22, 23),
+                "{22, 23}",
+                int(peak),
+            )
             claim(
                 "[M] 7B excess < 0.10 at ALL layers (ceiling holds)",
                 max(float(r["excess_mean"]) for r in res.values()) < 0.10,

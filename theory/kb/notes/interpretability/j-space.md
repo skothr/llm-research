@@ -198,8 +198,8 @@ which stays under 10%. The load-bearing quantity is causal reach, not size.
   2026-07).** Measured on Qwen2.5-1.5B (bf16) and 7B (nf4); three axes
   diverge from the paper, all certified on the paper's own metric:
   [CONTRADICTION] the ≤10% occupancy ceiling is **breached** at the 1.5B
-  hump (L21 excess FVE 11.50%, CI95 [11.29, 11.74]; 7B stays under, peak
-  5.04%) — `observations/2026-07-24-paper-metric-varfrac-recompute.md`;
+  hump (L21 excess FVE 11.15%, CI95 [10.95, 11.40]; 7B stays under, peak
+  4.72%) — `observations/2026-07-24-paper-metric-varfrac-recompute.md`;
   [CONTRADICTION] the kurtosis workspace-onset signature is **inverted**
   (§2 above) — `observations/2026-07-20-jspace-structure-stage4.md`;
   [CONTRADICTION] the paper's 59% J-space-component report tier lands at
