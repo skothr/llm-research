@@ -58,3 +58,18 @@ Verdict vocabulary: `close-resolved` / `close-invalid` / `refine` / `keep` /
 3. #16 close despite the pyright clean-run being unverifiable until #17 lands — acceptable, or keep open pending venv?
 4. History note: the machine-absolute paths above are also in past commits; removing them from HEAD does not remove them from history. A history rewrite is almost certainly not worth it (no credentials involved) — confirm the leave-history-alone default.
 5. One further account-side privacy item was reported privately in-session (not repeated here).
+
+## Decisions (user sign-off, 2026-07-25)
+
+1. **Apply everything** — all verdicts, both new issues, groom-doc PR.
+2. **#2 stays in llm-research**, scope expanded: the skill must carry robust
+   instructions for *exhaustive* paper search/filter (systematic index sweep,
+   not first-hit lookup). Recorded alternative: a dedicated `llm-theory` repo
+   housing KB + skill, wired/symlinked so llm-research and other
+   technical/scientific repos resolve the same KB reference — open design
+   decision, captured in #2's body.
+3. **#16 is NOT closed on code inspection alone** — user directed unblocking
+   the verification instead. The documented venv build was started during the
+   groom (advancing #17); #16 closes after a clean `pyright examples/` run.
+4. **History left alone** — no credentials involved; rewrite cost outweighs
+   the benefit.
