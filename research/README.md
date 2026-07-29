@@ -19,7 +19,7 @@ planned* — a scheduling statement, not a verdict on the results.
 | **NLA verbalizer — Qwen2.5-7B layer 20** | **Paused** 2026-05-15; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/01_nla-verbalizer/README.md`](arcs/01_nla-verbalizer/README.md) |
 | **Subliminal trait transfer** | **Paused** 2026-06-10 at Step 0 | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/02_subliminal/README.md`](arcs/02_subliminal/README.md) |
 | **Embedding atlas — Qwen2.5-7B structural tracing** | **Closed** to new experiments 2026-07-15 | What structural/procedural machinery does the model build on its input-embedding table — and how do the structural-token features it contains get used by Q/K/V, attention (RoPE bands), and FFN, layer by layer? | [`arcs/03_embedding-atlas/README.md`](arcs/03_embedding-atlas/README.md) |
-| **J-space replication — Qwen2.5-1.5B/7B** | **Closed** 2026-07-22; ran to planned completion, results unreviewed | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-Instruct (1.5B bf16 primary, 7B nf4 scale check), and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md) |
+| **J-space replication — Qwen2.5-1.5B/7B** | **Closed** 2026-07-22; ran to planned completion, results unreviewed. **Corpus-robustness results pending re-run** (2026-07-29 C4 data correction — see below) | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-Instruct (1.5B bf16 primary, 7B nf4 scale check), and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md) |
 
 **What each arc actually produced** — negative and null results included,
 because they carry as much of the signal as the positive ones:
@@ -49,6 +49,15 @@ because they carry as much of the signal as the positive ones:
   did not replicate, including the paper's discrete property flip (rate 0.000
   at both scales). Prefer the absolute gaps in nats over the multiplier
   framings — the control sits near zero, so the ratios are denominator-fragile.
+  **Data correction 2026-07-29:** this arc's C4-en corpus slice carried
+  third-party personal data and has been redacted; because the redaction is not
+  length-preserving, the results computed on it are stale pending a re-run in
+  progress — the **corpus-invariance** and **held-out-sample** claims (2 of the
+  4 robustness axes) and the quoted **L21 excess 10.7–11.7%** range, whose
+  endpoints are both C4 rows. The primary wikitext-103 path is unaffected, and
+  the 1.5B ceiling breach does not depend on the C4 rows (wikitext all-positions
+  carries it at CI [10.95, 11.40]). Per-claim blast radius:
+  [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md).
 
 **Where to start.** Arc 01 for depth and the largest body of observations;
 arc 03 or 04 for how the method behaves when a prediction fails or a

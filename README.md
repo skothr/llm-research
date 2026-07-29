@@ -26,6 +26,19 @@ externally reviewed, or replicated by anyone else, and the findings should be
 read as provisional. The [Methodology](#methodology) below is the part offered
 with confidence: it exists to make being wrong visible.
 
+> **Open data correction — 2026-07-29.** Arc 04's seeded **C4-en** corpus slice
+> carried 120 pieces of third-party personal data and has been redacted. The
+> redaction is not length-preserving, so the results computed on that corpus —
+> the **corpus-invariance and held-out-sample** conclusions — are stale pending
+> a re-run now in progress. Arc 04's **primary results are unaffected**: its
+> primary fitting corpus is wikitext-103, which was scanned and is unmodified.
+> No other arc used C4. Full disclosure — per-class counts, root cause, exact
+> blast radius, known limits, and the reproduction recipe — is in
+> [`research/arcs/04_jspace/README.md`](research/arcs/04_jspace/README.md) and
+> [`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md).
+> Surfaced here because a correction of this kind should be visible at the entry
+> point rather than found two levels down.
+
 ## What's here
 
 ```
