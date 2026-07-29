@@ -28,17 +28,27 @@ from jspace_redact_corpus import (  # noqa: E402
 )
 
 # (text, expected number of redactions)
+#
+# All fixtures are SYNTHETIC. Reserved-for-documentation values only:
+# `example.com` (RFC 2606) and the 555-01xx phone block (RFC 3600 / NANP
+# fictional range). Street names are invented.
+#
+# This matters: an earlier draft of this file used real addresses copied out of
+# the C4 corpus while tuning the regex. That silently reintroduced data the
+# redaction had just removed — a redaction that relocates PII is not a
+# redaction. Never paste a real match from the corpus into a fixture; if you
+# need a new shape, invent one.
 POSITIVE = [
-    ("Reach me at jane.doe@example.gov for details.", 1),
+    ("Reach me at jane.doe@example.com for details.", 1),
     # The trailing full stop is the regression: an early `(?![\\d.])` guard
     # rejected it, which hid 22 real phone numbers in the C4 corpus.
-    ("Reach me at jane.doe@example.gov or (555) 123-4567.", 2),
-    ("Call 555.123.4567 today", 1),
-    ("Call 555-123-4567 today", 1),
-    ("Call +1 555-123-4567.", 1),
-    ("Ship to 1200 Newport Rd, Springfield IL 62704.", 2),
-    ("Our office is at 4224 Khouri Court.", 1),
-    ("Mail 77 N. Northwest Highway", 1),
+    ("Reach me at jane.doe@example.com or (555) 010-4567.", 2),
+    ("Call 555.010.4567 today", 1),
+    ("Call 555-010-4567 today", 1),
+    ("Call +1 555-010-4567.", 1),
+    ("Ship to 1200 Fictional Rd, Springfield IL 62704.", 2),
+    ("Our office is at 4224 Invented Court.", 1),
+    ("Mail 77 N. Imaginary Highway", 1),
 ]
 
 NEGATIVE = [
