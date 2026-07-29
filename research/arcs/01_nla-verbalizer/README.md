@@ -52,13 +52,21 @@ they're different *kinds* of work, and conflating them in
 documentation hides where ideas came from. The arc was driven by
 themes the human collaborator (Michael Lannum) introduced in specific
 working-session turns. Quotes below are from the session transcripts,
-lightly normalized for typos and punctuation.
+lightly normalized for typos and punctuation (markdown emphasis inside a
+turn is dropped — theme 4's `*wouldn't*` is quoted as "wouldn't").
+
+**The nine theme headings are Claude's compressions, not the user's words** —
+each one names a cluster of turns after the fact. Only the block quotes are
+verbatim. Each is tagged with the date of the originating turn; the arc ran
+as one long resumed session over 2026-05-12 → 05-14, so a theme's turns can
+carry different dates, and the themes are not in chronological order (theme 7
+precedes theme 8 by topic, not by time).
 
 ### Theme 1 — Test Anthropic's NLA technique on open-source models
 
 > *"Can we try to do something with Anthropic's new interpretability
 > stuff for open source models (released last thursday)?"*  
-> — session start, 2026-05-12
+> — session start, [session 2026-05-12]
 
 The framing that opened the arc. The plural "models" implicitly scoped
 beyond just Qwen2.5-7B; cross-model replication (theme covered by
@@ -69,11 +77,14 @@ open work because the released NLA pair is Qwen-specific.
 
 > *"yeah lets test the plumbing first by script and see if we can get
 > something interpretable out of an embedding"*  
+> — [session 2026-05-12]  
 > *"I want to understand what layer/embedding is being sampled for this
 > NLA interpretation, and go through the 'thought' at each token more
 > thoroughly"*  
+> — [session 2026-05-12]  
 > *"did we generate the NLA for the tokens the model generates too? I
-> want to see those as it 'thinks through' what it's 'writing'"*
+> want to see those as it 'thinks through' what it's 'writing'"*  
+> — [session 2026-05-13]
 
 Established the methodology before scaling up: validate the round-trip
 on simple inputs, understand the specific layer (20 of 28; ~71% depth),
@@ -88,8 +99,10 @@ viz was a direct ask (theme covered partly by `nla_gen_trajectory.py`
 > (showcased in Anthropic announcement). Can we try stuff like that
 > and see if we can get anything like those examples anthropic
 > provided?"*  
+> — [session 2026-05-12]  
 > *"let's go with the poem one like Anthropic's example, not the haiku
-> since that was an outlier"*
+> since that was an outlier"*  
+> — [session 2026-05-13]
 
 The original motivating curiosity: can the announcement-headline
 behaviors (planning ahead in poetry, awareness of being evaluated)
@@ -104,7 +117,8 @@ incomplete (open as [D2](#d2-eval-aware--knows-its-being-tested-probe) and [D8](
 > normally generate (including part of its false output), and see if
 > it still thinks along the lines of the context, or if it reacts
 > differently since it's doing something the model isn't trained to
-> do?"*
+> do?"*  
+> — [session 2026-05-13]
 
 Direct ask that produced `nla_forced_continuation.py` and the
 counterfactual surprise / OOD-detection observations. The probe found
@@ -119,7 +133,8 @@ candidate.
 > *"Is this block 20 probing the only available option? Or can the NLA
 > interpreter model be configured for other layer probes? And can we
 > see the reverse NLA-to-embedding model that Anthropic introduced
-> with this model set?"*
+> with this model set?"*  
+> — [session 2026-05-13]
 
 Pushed early exploration of the AR direction (text → h) alongside the
 AV direction (h → text), which enabled the entire interpolation-flipbook
@@ -131,7 +146,8 @@ in unidirectional-AV territory.
 > *"would it be possible to extract the feature vectors that 'mean'
 > the 'idea' of something being country like here with France, which
 > we could identify pattern-wise across different contexts involving
-> some relevance to things being countries?"*
+> some relevance to things being countries?"*  
+> — [session 2026-05-13]
 
 Seed of the CAV-style country-direction observation and ultimately the
 23-category mean-contrast basis. Asked the right question: not "what
@@ -144,10 +160,12 @@ unit, not individual activations.
 
 > *"should we like 'map' a bunch of relevant tokens' embeddings to get
 > a relative baseline for semantic bases?"*  
+> — [session 2026-05-14]  
 > *"let's make sure we map a bunch of articles, punctuation, etc. Get a
 > wide lay of the embedding space landscape. This kind of provides us
 > a complex 'grid' of sorts, or a set of entangled axes or something
-> to provide direction in such high dimensional space"*
+> to provide direction in such high dimensional space"*  
+> — [session 2026-05-14]
 
 The vocab atlas (128 anchors × 23 categories) is the operational
 realization of this idea. Without this push, the arc would have stayed
@@ -163,9 +181,11 @@ function-words / structural).
 > interpretation and do some probing to see if we can identify
 > numerical/geometric feature patterns that could be interesting to
 > visualize"*  
+> — [session 2026-05-13]  
 > *"I want to head in the visual direction, /goal find path to novel
 > visualization design, something that allows a useful view into
-> feature/embedding/NLA interpretability"*
+> feature/embedding/NLA interpretability"*  
+> — [session 2026-05-13]
 
 The largest unrealized seed from the arc. The current state landed on
 static matplotlib PNGs (heatmaps, glyphs, flipbooks); the "novel
@@ -178,7 +198,12 @@ built.
 
 > *"does every NLA output include those phrases like 'Structured format
 > [...]', or did we add that to describe different parts of the
-> output? Weirdly consistent"*
+> output? Weirdly consistent"*  
+> — [session 2026-05-13]
+
+The `[...]` inside that quote is the **user's own**, standing in for the
+rest of the NLA phrase — not an editorial elision. ("Structured" is
+normalized from a typo in the original turn.)
 
 Methodological observation that was filed and deferred. If true, the
 AV decoder has format-baked-in biases that confound interpretive
