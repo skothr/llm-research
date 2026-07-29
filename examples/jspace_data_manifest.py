@@ -767,8 +767,7 @@ def write_manifest() -> None:
             "that clone)."
         ),
         "jlens_pin": {
-            "repo": "github.com/anthropics/jacobian-lens (editable clone at "
-            "/home/ai/ai-projects/jacobian-lens)",
+            "repo": "https://github.com/anthropics/jacobian-lens",
             "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
             "subject": "Initial release",
             "date": "2026-07-02",
@@ -777,8 +776,11 @@ def write_manifest() -> None:
                 "format) that produced every lens + derived artifact in this "
                 "manifest. The multihop / association intermediate-concept eval "
                 "prompt sets used by examples/jspace_lens_eval.py also live in "
-                "this clone, so the eval tables (audit Check B) are reproducible "
-                "only against this pinned commit."
+                "that repository, so the eval tables (audit Check B) are "
+                "reproducible only against this pinned commit. Check it out at "
+                "the commit above and point JSPACE_EVAL_DIR at its "
+                "data/evaluations (the default assumes a sibling checkout at "
+                "../jacobian-lens)."
             ),
         },
         "trust_note": (

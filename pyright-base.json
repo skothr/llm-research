@@ -1,0 +1,56 @@
+{
+  // Shared pyright rule baseline for this repo. Both pyrightconfig.json files
+  // (repo root and theory/series/) extend it with a relative path, so a clean
+  // clone type-checks without any machine-specific configuration.
+  //
+  // This is an in-repo snapshot of the author's cross-project pyright base;
+  // it is vendored rather than referenced so the repo stays self-contained.
+
+  "exclude": [
+    "**/__pycache__",
+    "output",
+    "dist",
+    "build",
+    "node_modules",
+    "old",
+    ".venv",
+    "venv",
+    ".tox"
+  ],
+
+  "typeCheckingMode": "standard",
+
+  // reportUnnecessaryTypeIgnoreComment is deliberately left ON (its default in
+  // standard mode is off): every `# pyright: ignore[X]` is debt, and the rule
+  // fires exactly when a stub or type has caught up and the ignore can go.
+
+  // ── Stub-lag mutes (noise from incomplete third-party stubs, not user bugs) ──
+  //
+  // reportPrivateImportUsage: torch's `__init__.pyi` does not re-export most of
+  //   its public runtime surface (`torch.float32`, `torch.zeros`, `torch.tensor`,
+  //   `torch.from_numpy`, ...), so every use fires with no user-side fix.
+  // reportMissingTypeStubs: bitsandbytes / llama_cpp / gguf ship no stubs; one
+  //   diagnostic per import otherwise.
+  // reportMissingModuleSource: fires whenever pyright finds a stub (.pyi) with
+  //   no matching runtime source — typeshed `types-*` distributions, stub-only
+  //   wheels, editable installs whose source is off the search path. Not
+  //   actionable from user code.
+  "reportPrivateImportUsage": "none",
+  "reportMissingTypeStubs": "none",
+  "reportMissingModuleSource": "none",
+
+  // ── Anti-pattern-forming mutes (the escape hatch is worse than the warning) ──
+  //
+  // reportPrivateUsage: would force `__all__` ceremony or per-call ignores
+  //   instead of the conventional underscore-means-private idiom.
+  // reportImplicitOverride: `@override` on every override; near-zero bug-catch
+  //   rate, large boilerplate cost.
+  // reportUnusedFunction / reportUnusedClass: `_name` does not suppress these
+  //   (only locals/params honor it), so the escape hatch is a stale ignore or
+  //   an `__all__` entry added purely to silence the rule. Research code
+  //   legitimately carries scratch helpers.
+  "reportPrivateUsage": "none",
+  "reportImplicitOverride": "none",
+  "reportUnusedFunction": "none",
+  "reportUnusedClass": "none"
+}
