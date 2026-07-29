@@ -5,11 +5,11 @@
 **Inputs:** `vocab_atlas.pt` (eop), `mid_seq_vocab_atlas.pt`, `pairwise_and_hotdims.pt`
 **Output:** `mid_seq_native_compare.pt`
 **Figures:** `fig33_native_signal_lift.png`, `fig34_cross_protocol_axis_cos.png`
-**Linear:** MAIN-70 (followup to MAIN-44)
+**Private-tracker ID:** MAIN-70, a follow-up to MAIN-44 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-70 predicted
 
-MAIN-44 found that 23 end-of-prompt-derived discriminants project mid-seq h's nearly orthogonally (+0.0491 aggregate). The natural follow-up: build mid-seq-NATIVE discriminants (same `mean(cat) - mean(non-cat)` recipe applied to mid-seq captures) and check whether in-protocol signal lifts to match the eop in-protocol +0.4022. Prediction: yes, ~+0.4 (confirming protocol-coupling). Also map per-category cross-protocol axis stability via the 23×23 cosine matrix.
+[MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) found that 23 end-of-prompt-derived discriminants project mid-seq h's nearly orthogonally (+0.0491 aggregate). The natural follow-up: build mid-seq-NATIVE discriminants (same `mean(cat) - mean(non-cat)` recipe applied to mid-seq captures) and check whether in-protocol signal lifts to match the eop in-protocol +0.4022. Prediction: yes, ~+0.4 (confirming protocol-coupling). Also map per-category cross-protocol axis stability via the 23×23 cosine matrix.
 
 ## What actually happened
 
@@ -72,7 +72,7 @@ A discriminant glyph is **only meaningful for h captured at the same protocol th
 1. **Per-protocol glyph family.** Have multiple discriminant sets (eop, mid-seq, mid-generation, etc.), and pick the matching one based on the capture protocol. Honest but uses N times the visual real estate.
 2. **Stable-axis-only glyph.** Build a glyph using only the top-K most-stable axes (the 5 content-category axes here). Smaller glyph, but the axes are interpretable as carrying a position-invariant semantic component. Probably the right primitive for cross-protocol comparison views.
 
-The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discriminants on interpolated h's. The strong t=0.421 transition there (MAIN-25) is **still real** — fig21 confirmed it via cosine-to-vocab-anchors (no discriminants) — but the per-step glyph readings on fig25 should be interpreted with caution since the h's at intermediate t are out-of-protocol for the eop discriminants.
+The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discriminants on interpolated h's. The strong t=0.421 transition there ([MAIN-25](2026-05-13-nla-interpolation-flipbook.md)) is **still real** — fig21 confirmed it via cosine-to-vocab-anchors (no discriminants) — but the per-step glyph readings on fig25 should be interpreted with caution since the h's at intermediate t are out-of-protocol for the eop discriminants.
 
 ## Cross-arc lessons
 
