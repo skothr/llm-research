@@ -1,4 +1,7 @@
-"""MAIN-48 — Concept arithmetic atlas.
+"""Concept arithmetic atlas.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-14-nla-concept-arithmetic-atlas.md
 
 Tests whether NLA preserves word2vec-style additive/subtractive structure
 on layer-20 end-of-prompt h vectors. AV-decode each arithmetic
