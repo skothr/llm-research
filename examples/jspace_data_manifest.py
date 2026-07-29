@@ -782,9 +782,14 @@ def write_manifest() -> None:
             ),
         },
         "trust_note": (
-            "Lens .pt files load via jlens / torch.load (pickle). Safe here: "
-            "locally-fitted tensor dumps, not third-party data; the corpus is "
-            "plain JSON. Verify sha256 with `--check` before loading on an "
+            "Lens .pt files load via jlens / torch.load (pickle). Safe here in "
+            "the deserialization sense: every .pt is a locally-fitted tensor "
+            "dump produced by this repo's own scripts, never an externally "
+            "supplied pickle; the corpora are plain JSON. That is a statement "
+            "about pickle trust ONLY — the corpora themselves ARE third-party "
+            "data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see "
+            "LICENSE-DATA.md) and the C4 files are PII-redacted (see "
+            "README.md). Verify sha256 with `--check` before loading on an "
             "untrusted copy."
         ),
         "total_files": len(entries),
