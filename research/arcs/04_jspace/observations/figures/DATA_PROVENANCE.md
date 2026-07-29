@@ -81,10 +81,14 @@ Values plotted: `summary.metrics["{cond}@{s}"]["target_top5_rate_all"]` per
 condition/strength; per-item rows in `per_item` carry
 `category / source_word / target_word / conditions`. Whiskers (added
 2026-07-24, issue #26): Wilson 95% score intervals for each n=78-trial
-proportion; the tier ordering is certified by exact McNemar on the paired
-per-item `target_in_top5` outcomes (`examples/jspace_swap_significance.py`
-report section — jspace_comp≈random null: 1.5B p=0.375, 7B p=1.0 with 0/0
-discordants; jlens>random: p=7.5e-11 / 0.0039).
+proportion; the two positive tiers are significance-certified by exact McNemar
+on the paired per-item `target_in_top5` outcomes
+(`examples/jspace_swap_significance.py` report section — jlens>random:
+p=7.5e-11 / 0.0039). The jspace_comp≈random tier is **bounded, not certified**
+(corrected 2026-07-28): 1.5B p=0.375 on 5 discordants; at 7B, `p=1.0` with 0/0
+discordants is an algebraic identity, and the result there is the equivalence
+bound it implies — |Δ| ≤ 3.8pp at exact 95%. See the correction note in
+`../2026-07-24-paper-metric-varfrac-recompute.md`.
 
 **Dump the raw rows:**
 ```python

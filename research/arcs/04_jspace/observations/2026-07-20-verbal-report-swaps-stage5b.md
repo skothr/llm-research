@@ -1,5 +1,16 @@
 # Observation: 7B swap effect emerges with clean prompts, but the paper's concept-vector middle tier does not replicate (stage 5.1b)
 
+> **Addendum 2026-07-28 (inference correction — read first):** the wording
+> below concludes that "the J-space component of an activation-derived concept
+> vector is **inert**." The measurements stand exactly as recorded (7B 0.154 vs
+> random 0.154; 1.5B 0.179 vs random 0.141), but *inert* overstates what a
+> non-detection licenses. The corrected reading is an equivalence bound: at 7B,
+> 0 discordant pairs of 78 pin |Δ| ≤ 3.8pp (exact 95%); at 1.5B, p=0.375 on 5
+> discordants is looser. No effect is detected and the bound is tight — but
+> that is a measured bound, not a demonstration of exact zero. Full derivation
+> and the superseded "certified" framing:
+> [`2026-07-24-paper-metric-varfrac-recompute.md`](2026-07-24-paper-metric-varfrac-recompute.md).
+
 **Date/context:** 2026-07-20, follow-up to
 `2026-07-20-verbal-report-swaps-stage5.md` resolving its two confounds:
 (1) chat-template prompt style with an explicit one-word constraint

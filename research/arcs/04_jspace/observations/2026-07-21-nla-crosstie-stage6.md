@@ -54,7 +54,9 @@ vs floor 76,032). The J-space component (varfrac ~2–3% at this layer)
 is not where the AV's signal sits.
 
 **Interpretation.** The arc's three causal/content probes now agree:
-stage 5.1b (J-space membership of concept vectors causally inert),
+stage 5.1b (no causal contribution from J-space membership of concept
+vectors detected; bounded ≤3.8pp at 7B — see that observation's
+2026-07-28 addendum),
 stage 6 experiment B (J-space component carries ~none of the verbalizable
 content at the NLA layer), and the depth mismatch (the workspace band the
 J-space framing needs starts above the layer where this model's

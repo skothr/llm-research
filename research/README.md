@@ -8,20 +8,51 @@ landing bin for one-off findings and an archive for retired material.
 
 ## Arcs
 
+Two of the four arcs are **paused mid-program**; the other two were closed to
+new experiments — arc 04 having run its planned stages, arc 03 by direction
+with three of its seven registered predictions still unrun. No arc has been
+externally reviewed or replicated. "Closed" here means *no further experiments
+planned* — a scheduling statement, not a verdict on the results.
+
 | Arc | Status | Question | Entry point |
 |---|---|---|---|
-| **NLA verbalizer — Qwen2.5-7B layer 20** | Paused; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/01_nla-verbalizer/README.md`](arcs/01_nla-verbalizer/README.md) |
-| **Subliminal trait transfer** | Paused (2026-06-10); Step 0 done | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/02_subliminal/README.md`](arcs/02_subliminal/README.md) |
-| **Embedding atlas — Qwen2.5-7B structural tracing** | Active, deep arc (started 2026-06-10) | What structural/procedural machinery does the model build on its input-embedding table — and how do the structural-token features it contains get used by Q/K/V, attention (RoPE bands), and FFN, layer by layer? | [`arcs/03_embedding-atlas/README.md`](arcs/03_embedding-atlas/README.md) |
-| **J-space replication — Qwen2.5-1.5B/7B** | Complete (2026-07-22); PR #25 | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-Instruct (1.5B bf16 primary, 7B nf4 scale check), and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md) |
+| **NLA verbalizer — Qwen2.5-7B layer 20** | **Paused** 2026-05-15; synthesis written | What do Anthropic's released NLA verbalizer/reconstructor models surface about layer-20 hidden-state geometry? | [`arcs/01_nla-verbalizer/README.md`](arcs/01_nla-verbalizer/README.md) |
+| **Subliminal trait transfer** | **Paused** 2026-06-10 at Step 0 | Is the hidden trait signal in subliminal learning non-semantic statistics (HA), or semantic in the model's *own* representational coordinates (HC)? | [`arcs/02_subliminal/README.md`](arcs/02_subliminal/README.md) |
+| **Embedding atlas — Qwen2.5-7B structural tracing** | **Closed** to new experiments 2026-07-15 | What structural/procedural machinery does the model build on its input-embedding table — and how do the structural-token features it contains get used by Q/K/V, attention (RoPE bands), and FFN, layer by layer? | [`arcs/03_embedding-atlas/README.md`](arcs/03_embedding-atlas/README.md) |
+| **J-space replication — Qwen2.5-1.5B/7B** | **Closed** 2026-07-22; ran to planned completion, results unreviewed | Does the J-lens/J-space global-workspace phenomenon `[gurnee2026-workspace]` replicate on Qwen2.5-Instruct (1.5B bf16 primary, 7B nf4 scale check), and how do J-lens readouts relate to the NLA verbalizer at layer 20? | [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md) |
 
-**Flagship: the NLA verbalizer arc.** A focused investigation applying
-Anthropic's released NLA model pair (`kitft/nla-qwen2.5-7b-L20-{av,ar}`) to
-local Qwen2.5-7B-Instruct (observations spanning 2026-05-12 to 05-15) —
-22 dated observation files, 36 figures, a
-178-PASS / 0-FAIL regression audit, and one working synthesis (*layer-20
-h-space appears to have discrete attractor basins separated by sharp
-boundaries*, held as a hypothesis, not a settled claim). Start there.
+**What each arc actually produced** — negative and null results included,
+because they carry as much of the signal as the positive ones:
+
+- **Arc 01 (NLA verbalizer)** — the deepest arc by volume, and the source of
+  the working synthesis that layer-20 h-space has discrete attractor basins
+  separated by sharp boundaries. Held as a hypothesis, not a settled claim;
+  the arc's own limitations section flags an unaudited AV-decoder format bias
+  that, if real, would re-frame every interpretive claim built on it.
+- **Arc 02 (subliminal)** — one null, narrow by construction: a literal
+  ASCII/base-N encoding channel was **not detected** in a local Qwen
+  reproduction of the paper's protocol (z=1.02, p=0.31, n=120). The paper
+  released no dataset — its `v1.0.0` has zero assets and its teacher is closed —
+  so this tests a local reproduction, not their data. The decisive HA-vs-HC
+  test was never run.
+- **Arc 03 (embedding atlas)** — predictions were registered on 2026-06-11,
+  before the captures they constrain, and adjudicated mechanically at close:
+  **P1a PASS, P1c FAIL, P1d FAIL**; P2 refined-not-falsified; P1b, P1e and P3
+  never run. Two falsified predictions, recorded in advance and reported as
+  findings, are the clearest evidence in this repo that the pre-registration is
+  not decorative — the three unrun ones are the honest limit on that claim.
+- **Arc 04 (J-space)** — a **partial** replication that came out **weaker than
+  the original**, with a causal split: J-lens steering moves entailed
+  properties, while J-space *membership* swaps produce **no detectable
+  effect** — bounded at ±3.8pp (7B, 0 discordant pairs of 78), which is a tight
+  null but a measured bound, not a demonstration of zero. Four specific things
+  did not replicate, including the paper's discrete property flip (rate 0.000
+  at both scales). Prefer the absolute gaps in nats over the multiplier
+  framings — the control sits near zero, so the ratios are denominator-fragile.
+
+**Where to start.** Arc 01 for depth and the largest body of observations;
+arc 03 or 04 for how the method behaves when a prediction fails or a
+replication comes out weak.
 
 ## Layout
 
@@ -75,8 +106,8 @@ preliminary` has run no experiments yet.
 **Figures** — generated plots under an arc's `observations/figures/`, with an
 `INVENTORY.md` giving per-figure provenance (which script + commit produced
 each one). PNGs are tracked via **git-LFS** — run `git lfs install` before
-working the repo, or figures show as phantom modifications. See the
-`project-repo-lfs-rewrite` memory.
+working the repo, or figures show as phantom modifications. Recovery for an
+LFS-less clone is in the root [`README.md`](../README.md#prerequisites--git-lfs-is-required).
 
 **Datasets** — the raw `.pt` artifacts a figure or audit is generated from
 live in an arc's `data/` directory, also git-LFS-tracked (rule
