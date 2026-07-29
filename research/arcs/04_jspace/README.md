@@ -253,24 +253,141 @@ informativeness-per-hour:
 excerpts in `theory/kb/excerpts/gurnee2026-workspace.md`, archived paper PDF
 in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf`.
 
-**Attribution:** research direction (target model, replication goal),
-design sign-off with two amendments (the OOM gate and the comms protocol),
-the stage-boundary go/no-go calls and open-decision calls, the reviewer
-verdicts, the arc's auditability standard (defects into the permanent
-record; datasets complete and clean-clone reproducible mid-arc), the
-standing requirement that unattended runs be verified by their artifacts
-rather than by process checks or a prior session's claim (the source of
-the post-hoc audit and the comms/monitoring amendment), and the
-review-before-integration policy — the pre-merge review standard set at
-research integrity, auditability and attribution rather than code
-correctness, with the merge gate reserving integration for a human —
-human; paper digestion, KB grounding, drafting the experiment design,
-implementation, and execution — Claude Code sessions (2026-07-18 →
-2026-07-24). The post-close metric-fidelity reopening (issue #26,
-2026-07-23/24) was human-directed: the reviewer reopened the closed arc to
-vet the math, required the variance fraction be checked against the
-paper's definition in the source PDF, and set the pass/fail evidentiary
-bar the recompute was held to.
+## Attribution
+
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
+2026-07-24 (Michael Lannum), lightly normalized for typos and punctuation;
+markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
+elision. This section follows the attribution shape in
+[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis), for
+which [arc 02](../02_subliminal/README.md#research-direction) is the
+reference implementation.
+
+**Originating direction** [session 2026-07-18]:
+
+> *"Let's move into a new worktree for the next arc, 04_jspace. Here's the
+> direction. Anthropic released new research a few days ago about 'J-Space',
+> a hidden state vector subspace that acts as a sort of global workspace as
+> it's processed through the transformer layers, allowing a sort of stable
+> representation of concepts the LLM could say. First do the research you
+> need to understand J-Space from a technical standpoint. Make sure to add
+> the source material to ./theory and the kb for reference. Then I want to
+> try to calculate/explore J-Space in the Qwen model we've been using. Once
+> you're at that point let me know so I can review the informed design/test
+> plan."*
+
+That turn fixes all three of the arc's framing choices: the replication
+goal, the target model, and the review-the-plan-before-running gate.
+
+**Design sign-off, with two amendments** [session 2026-07-18]:
+
+> *"Otherwise this sounds like a good plan, I read through Nanda's critique
+> and I agree on most of the points. The NLA comparison cross-tie is a very
+> good idea. If you OOM on the 2080 pause before switching right to CPU —
+> I'll want runtime estimates for CPU vs. GPU [...] Also remember to push
+> notify updates and milestones to me as you work or if you need me."*
+
+The OOM gate (amendment 1) is why the 7B fit was calibrated and offloaded
+rather than dropped to CPU; the comms protocol (amendment 2) is why the
+long unattended runs were checkpointed and reported. The J-space↔NLA
+cross-tie was **Claude's** proposal, endorsed here — not the user's.
+
+**The artifact-verification standard** [session 2026-07-20], after a weekend
+of unattended runs:
+
+> *"can you check on where we are in this arc and verify completion/integrity
+> of the tests that ran?"*
+
+> *"Okay, well is all of that fixed up, logged, and documented for the repo
+> at least (transparency, correctness, auditability)?"*
+
+These two turns are the origin of the post-hoc integrity audit, of the
+standing rule that an unattended run is verified by its **artifacts** rather
+than by a process check or a prior session's claim, and of the arc's
+auditability standard (defects go into the permanent record; datasets stay
+complete and clean-clone reproducible *mid*-arc, not at close).
+
+**The figures-and-data standards** [session 2026-07-21, 2026-07-24]:
+
+> *"we should always be generating supporting plots/visualization figures for
+> interesting or important result datasets. Make sure to show rich,
+> meaningful data, and replicate any figures shown in the Anthropic paper
+> (if possible)."*
+
+> *"make sure we capture and store all data that could be useful [...] make
+> sure to include per-layer token strings and any other data that could be
+> useful!"*
+
+> *"every rendered figure should be based on computed auditable datasets, so
+> it also needs to have accompanying datasets committed somewhere in the
+> repo"*
+
+**The metric-fidelity reopening** (issue #26) [session 2026-07-23]. The arc
+had already been closed. It was reopened by this turn:
+
+> *"I want to focus on solidifying my own intuition/understanding of J-Space
+> and the J-Lens in the context of this research arc. This will also help me
+> learn and vet the math we've used to compute everything, and probe our
+> approach for significance and robustness."*
+
+and the evidentiary bar the recompute was held to was set by this one:
+
+> *"run whatever testing/calculations you need until you have undeniable
+> concrete proof one way or the other"*
+
+The request was framed as the user's own learning, not as a defect report —
+the K-inconsistent variance-fraction defect surfaced *because* the math was
+walked through end-to-end to explain it. Requiring the variance fraction be
+checked against the paper's own definition in the source PDF was also the
+user's call.
+
+**The review-before-integration policy** [session 2026-07-22]:
+
+> *"Run a thorough opus workflow PR review on #25. Maintain high standards
+> for research integrity, auditability, and attribution/transparency. [...]"*
+
+— i.e. the pre-merge bar set at research integrity, auditability and
+attribution rather than code correctness, with integration reserved for a
+human merge.
+
+### Human / Claude / emergent split
+
+**User (Michael Lannum).** The originating direction above (target model,
+replication goal, KB-grounding requirement, plan-review gate); the design
+sign-off and its two amendments; every stage-boundary go/no-go and
+open-decision call; the auditability, artifact-verification, figures, and
+rich-data standards quoted above; the reviewer verdicts and the
+review-before-integration policy; the post-close reopening and its
+evidentiary bar. Also two substantive methodological catches Claude had
+missed: that the steering experiment had **drifted from the paper's prompt**
+(*"So why did you change the prompt from the Anthropic paper's example? [...]
+Could we be overloading the spider focus or something?"*, [session
+2026-07-22]), and that the fitting/held-out corpora were **narrower than
+claimed** (*"what variety of prompts were we using over the n=N prompt
+averaged jacobian calculations? I see two wikitexts json files and one with a
+bunch of prompts that discuss criticism"*, [session 2026-07-22]) — the
+observation that led to the corpus-sensitivity refit.
+
+**Claude Code.** Paper digestion and KB grounding; the staged experiment
+design; the J-space↔NLA cross-tie proposal; all implementation (fitting,
+scans, evals, steering, figures, manifest and audit scripts); the OOM
+calibration and offload strategy; the write-ups; the math walk-through that
+surfaced the metric defect; and the corrective recompute.
+
+**Emergent.** The K-consistency defect itself (issue #26) — the user asked
+for an explanation, not an audit, and Claude's attempt to give a faithful one
+is what exposed it; neither the request nor the implementation would have
+found it alone. Likewise the bounded-equivalence restatement of the 7B tier
+result (the ≤3.8pp bound from 0 discordant pairs of 78), which came out of
+an adversarial review pass rather than from either party's plan.
+
+**Verifiability.** Every quote above is recoverable from the session
+transcripts for 2026-07-18 → 2026-07-24; the transcripts are not committed to
+this repo (they carry machine-local paths and tool output). Claims in this
+section that are *not* quoted are Claude's characterization of the user's
+direction, not the user's wording.
 
 ## Synthesis (arc close, 2026-07-22)
 

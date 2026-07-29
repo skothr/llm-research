@@ -17,30 +17,42 @@ per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
 moves to a new basis at L1), P1b/P1e/P3 not run (deferred, below). Remaining follow-ups are recorded under "Deferred
 follow-ups" and are candidates for a successor arc rather than this one.
-Provenance: the 2026-06-10/11 kickoff sessions ran inside the Fable 5
-silent-degradation window; audited clean at the user's direction —
+Provenance: the 2026-06-10/11 kickoff sessions ran on `claude-fable-5`
+within days of that model's release, so a reported (but here
+**unconfirmed** — see the note's sourcing breakdown) initial-release
+quality-degradation window would have covered them; audited clean at the
+user's direction —
 [degradation-forensics](sessions/2026-07-21-degradation-forensics.md).
 
 ## Research direction
 
-Arc 3 opened from the user's (Michael Lannum) direction, 2026-06-10 session:
+Arc 3 opened from the user's (Michael Lannum) direction, 2026-06-10 session.
+Quotes are verbatim from the session transcript, lightly normalized for
+punctuation (`--` → `—`); any `[...]` marks an editorial elision, and the
+elision is stated wherever it removes something load-bearing.
 
 > *"explore the complete set of token embeddings for correlations and
 > interesting connections between groups of words (related in one way or
-> another — like we did with countries [...]) Words with similar or related
+> another — like we did with countries, but also things like check for
+> similarities/correlations/features for different types of words different
+> subjects, try out). Words with similar or related
 > function, use, topic/connotation, etc. may have shared features that act
 > as 'handles' for the model layers to execute that function hidden in our
-> construction of language."*
+> construction of language."*  
+> — [session 2026-06-10]
 
 Scope decisions made at session start: two arcs (embeddings first, RoPE
 second) rather than one; iterate with figures + plain-language measurement
 explanations at checkpoints. At checkpoint CP1 the user selected "Add more
 word groups first" from the offered next-step options (a checkpoint decision,
-not a typed message) — the person/royal/religion/abstract/landscape/
-instrument/science/tech/language classes and the gender/antonym/past/
-capital_of/lang_of pair kinds were Claude's expansion in response.
+not a typed message). The *direction* to broaden beyond countries into
+"different types of words / different subjects" is the user's, in the
+originating turn above; the specific
+person/royal/religion/abstract/landscape/instrument/science/tech/language
+classes and the gender/antonym/past/capital_of/lang_of pair kinds are
+Claude's operationalization of it.
 
-### Collaboration mode (following the arc-01 template)
+### Collaboration mode (following the arc-02 attribution template)
 
 **What Michael contributed.** The originating "handles" question (verbatim
 above, [session 2026-06-10]); the two-arc scoping and the
