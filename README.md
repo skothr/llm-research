@@ -55,9 +55,12 @@ examples/    Per-arc capture / analysis / render / audit pipelines
   (arc 01), `emb_*` (arc 03), `jspace_*` (arc 04). Each family covers capture
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives that arc's load-bearing numerical
-  claims from committed artifacts. Conventions are in `examples/README_NLA.md`.
-  Some scripts import `llm_surgeon` (model loading, probing, surgery); the rest
-  are render/analysis-only (torch / numpy / matplotlib).
+  claims from committed artifacts. `examples/README_NLA.md` documents the
+  `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
+  the same artifact/audit shape but have no separate conventions doc; their
+  arc READMEs carry the per-arc detail. Some scripts import `llm_surgeon`
+  (model loading, probing, surgery); the rest are render/analysis-only
+  (torch / numpy / matplotlib).
 
 ## Methodology
 
@@ -67,39 +70,50 @@ it is the part of this work offered with any confidence — and because where it
 is *not* applied uniformly, that should be visible from the entry point rather
 than discovered two levels down.
 
-- **Predictions before runs — where an arc was planned up front.** Arc 03
-  registered its predictions on 2026-06-11, before any attention weights were
-  captured, and adjudicated them mechanically at close: P1a PASS, P1c FAIL,
-  P1d FAIL
+- **Predictions before runs — unevenly.** Arc 03 is the strongest case: seven
+  predictions registered on 2026-06-11, before the attention captures they
+  constrain, adjudicated mechanically at close as **P1a PASS, P1c FAIL, P1d
+  FAIL**, with P2 refined-not-falsified and **P1b, P1e and P3 never run**
   ([`plans/2026-06-11-predictions.md`](research/arcs/03_embedding-atlas/plans/2026-06-11-predictions.md)).
-  Arc 04 pre-registered one robustness axis (the quantization control) in its
-  design plan and fixed the thresholds for the rest in the session record
-  before each run. Arcs 01 and 02 grew from open-ended questions and were
-  **not** pre-registered. The practice is not uniform; each arc README says
-  which it is.
+  Arc 02's plan states falsifiable predictions per hypothesis and an explicit
+  pre-commitment clause, though the arc paused before the tests they govern.
+  Arc 04's README records one robustness axis (the quantization control) as
+  genuinely pre-registered in its design plan, the rest gated on thresholds
+  fixed before each run. Arc 01 grew from open-ended themes with no
+  pre-registration. Three of the four registers are partial — read each arc's
+  own account rather than this summary.
 - **Audit scripts.** `examples/*_audit_findings.py` re-derive an arc's
-  load-bearing numbers from its committed `.pt` artifacts, so a figure quoted
-  in prose that has drifted from the artifact it came from fails the audit.
-  Arcs 01, 03, and 04 each have one; arc 02 has none, having produced no
-  numerical claims past Step 0. These audits check **arithmetic consistency
-  only** — they cannot catch a methodological error, a capture-protocol bug,
-  or interpretive overreach, and the arc READMEs say so explicitly.
-- **Datasets committed and pinned.** Raw `.pt` artifacts live in each arc's
-  `data/` (Git LFS) with a `MANIFEST.json` recording per-file sha256 and
-  provenance, so a clean clone re-renders every figure and replays every audit.
+  load-bearing numbers from its committed artifacts, so a figure quoted in
+  prose that has drifted from the artifact it came from fails the audit. Arcs
+  01, 03, and 04 each have one. Arc 02 has none: its Step-0 numbers (a z-test,
+  a power calculation) predate the audit-script convention and are small enough
+  to check by hand against the committed JSONL. These audits check
+  **arithmetic consistency only** — they cannot catch a methodological error, a
+  capture-protocol bug, or interpretive overreach. Arcs 01 and 03 state that
+  limitation in their READMEs; arc 04 states it in its audit block.
+- **Datasets committed and pinned.** Arcs 01, 03, and 04 commit raw `.pt`
+  artifacts under the arc's `data/` (Git LFS) with a `MANIFEST.json` recording
+  per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an
+  interim manifest schema. The intent is that a clean clone re-renders every
+  figure and replays every audit — with one documented exception: arc 04's
+  fitted-lens tensors are cache-only by design, so 11 of its checks report
+  `MISSING` on a clean clone (see [Running the research pipeline](#running-the-research-pipeline)).
 - **Human/AI division of labor, recorded per arc.** Every arc README states
   what Claude Code sessions implemented and what was directed, constrained, and
   signed off by hand — down to which framings are the agent's paraphrase rather
   than the author's own words (arc 02) and which methodological problems the
   agent missed until a human raised them (arc 01, theme 9).
-- **Negative results kept at full detail.** Arc 03's two falsified predictions
-  and arc 04's four non-replications are written up at the same length as the
-  positive results. They are the strongest available evidence that the
-  pre-registration and audit machinery is not decorative.
+- **Negative results kept, not buried.** Arc 03's two falsified predictions and
+  arc 04's four non-replications each get their own numbered write-up with the
+  measurements attached, and the negatives have dedicated observation files.
+  They are the strongest available evidence that the pre-registration and audit
+  machinery is not decorative.
 
-Counts that move as arcs develop — audit checks, observation totals — are kept
-in the arc READMEs where they are maintained, not here. Re-run the relevant
-audit rather than trusting a number quoted at the top level.
+Counts that move as arcs develop — observation totals, figure totals, script
+totals — are kept in the arc READMEs where they are maintained, not here. Audit
+check-counts are the exception: they appear below with the date they were
+re-derived, because a reader needs an expected value to compare a local run
+against. Re-run the audit rather than trusting any number quoted here.
 
 This is exploratory, self-directed work: unpublished, unreviewed, and open to
 being wrong — the discipline above is there to make being wrong visible.
@@ -168,11 +182,13 @@ python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 920 PASS | 11 F
 
 Arc 04's 11 failures on a clean clone are **expected**, not regressions: its
 five full fitted-lens tensors and their sidecars are cache-only by design, and
-the audit reports each as a loud `MISSING` rather than skipping it. With the
-local cache present the same run reports 978 PASS. Arc 02 has no audit — it
-was paused at Step 0 with no numerical claims. See the arc READMEs for what
-each audit does and does not catch (arithmetic consistency only — never
-methodology or interpretation).
+the audit reports each as a loud `MISSING` rather than skipping it. (Five
+lenses plus five sidecars is ten; the eleventh is a sidecar checked twice
+inside CHECK J — a known duplicate, tracked separately.) With the local cache
+present the same run reports 978 PASS. Arc 02 has no audit script; its Step-0
+numbers are checkable by hand against the committed JSONL. See the arc READMEs
+for what each audit does and does not catch (arithmetic consistency only —
+never methodology or interpretation).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced
