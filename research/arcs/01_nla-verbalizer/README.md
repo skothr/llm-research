@@ -4,7 +4,7 @@ A working investigation into what Anthropic's released Natural Language
 Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
 state structure. A focused arc (observations 2026-05-12 to 05-15):
 22 observation files, 36 figures, 20
-filed Linear tickets, a regression audit at **178 PASS / 0 FAIL**, and
+tracked work items, a regression audit at **178 PASS / 0 FAIL**, and
 one working synthesis: *layer-20 h-space appears to have discrete
 attractor basins separated by sharp boundaries* — held as a working
 hypothesis, not a settled claim. See [Limitations and methodology
@@ -19,6 +19,14 @@ per-figure provenance.
 **Status:** paused as of 2026-05-15 — synthesis written, active work
 stopped. Open follow-ups are enumerated in [Possible next
 paths](#possible-next-paths).
+
+> **`MAIN-N` identifiers.** This arc was run against a private issue
+> tracker that has since been retired; its `MAIN-N` ticket IDs survive
+> throughout this arc's prose as historical labels. **They are not
+> resolvable — there is nothing to look up.** Every one of them is
+> mapped to the in-repo observation file or the migrated GitHub issue
+> it stands for in [Private-tracker ID map](#private-tracker-id-map-main-n)
+> below; read that table, not the bare ID.
 
 ---
 
@@ -244,7 +252,7 @@ work, and the documentation tries to separate them honestly.
 
 - All experiment scripts (~42 files under `examples/nla_*`),
   figure rendering pipelines, observation drafts, audit infrastructure
-  (`nla_audit_findings.py`), and the Linear ticket queue management.
+  (`nla_audit_findings.py`), and the issue-queue management.
 - Cross-arc continuity across compaction boundaries — synthesizing
   prior session state into resume checkpoints, maintaining the figure
   inventory, tracking what had been claimed where so corrections
@@ -286,16 +294,20 @@ the work required to upgrade these from "hypothesis" to "result."
 ### F1. Layer 20 h-space appears to have discrete attractor basins
 
 Linear interpolation between two AR-encoded natural-language anchors
-(factual/geography ↔ poetic/nature, MAIN-25) produces a discontinuous
-AV-text transition even though the geometric step size stays roughly
+(factual/geography ↔ poetic/nature,
+[MAIN-25](observations/2026-05-13-nla-interpolation-flipbook.md))
+produces a discontinuous AV-text transition even though the geometric
+step size stays roughly
 constant (`||Δh||` = 2.734 per coarse step). The coarse 20-step grid
 first flagged the flip at t=0.421; dense re-sampling at 10× resolution
-(MAIN-34, Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
+([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
+Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
 "Definition + Poem" hybrid plateau (t∈[0.395, 0.4450]), and the sharp
 flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
 Δt=0.0025 step. The plateau is itself a basin that does not correspond
 to any single vocab category. AR re-encoding of a midpoint h returns h
-to its basin (round-trip cosine +0.8995, MAIN-71) — basins are
+to its basin (round-trip cosine +0.8995,
+[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md)) — basins are
 direction-coupled, not magnitude-coupled.
 
 **Scope qualifications:** demonstrated for one anchor pair, at one
@@ -312,13 +324,16 @@ mapping).
 A basis of 23 per-category mean-contrast directions
 (`d_cat = mean(in_cat) − mean(out_cat); d_cat /= ||d_cat||`) built from
 the vocab atlas classifies end-of-prompt h-vectors with reasonable
-top-K hit rates (56-79% top-5 by category, MAIN-26). Mid-sequence
-captures of the same anchors project nearly orthogonally onto the same
-basis (+0.0491 aggregate cosine, ~3× random-cosine floor, MAIN-44).
+top-K hit rates (56-79% top-5 by category,
+[MAIN-26](observations/2026-05-13-nla-discriminant-validation.md)).
+Mid-sequence captures of the same anchors project nearly orthogonally
+onto the same basis (+0.0491 aggregate cosine, ~3× random-cosine floor,
+[MAIN-44](observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)).
 Building a mid-sequence-NATIVE basis using the same recipe lifts the
-in-protocol signal to +0.5632 (MAIN-70). Conclusion: the basis is a
-fingerprint of one specific capture protocol, not a generic semantic
-axis.
+in-protocol signal to +0.5632
+([MAIN-70](observations/2026-05-14-nla-mid-seq-native-discriminants.md)).
+Conclusion: the basis is a fingerprint of one specific capture protocol,
+not a generic semantic axis.
 
 **Scope qualifications:** "discriminant" in the script names is
 shorthand — the formula is centroid-difference / mean-contrast, not
@@ -339,7 +354,24 @@ category attractors (intra-category cosine +0.85 to +0.98), then
 within-category content modulation. PC1 of the
 sink-removed vocab atlas (33.5% variance) emerges as the
 **content-vs-function** axis — content words load positive, function
-words and punctuation load negative. (MAIN-24.)
+words and punctuation load negative.
+([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
+
+> **Polarity discrepancy — the observation is authoritative.** The
+> sentence above says content loads *positive*; Finding 2 of
+> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md)
+> says the opposite, content-bearing at PC1 < 0 and structural/function
+> at PC1 > 0. **Take the observation file.** It is the dated primary
+> record; this README is a summary written after the fact, so the
+> mismatch is a transcription slip here, not a disputed result. Nothing
+> downstream changes either way: the sign of a PCA component is
+> arbitrary (flipping an eigenvector's sign gives an equally valid
+> decomposition), so the load-bearing claim is that PC1 *separates*
+> content from function, not which side either lands on — which is why
+> the slip went unnoticed. `nla_audit_findings.py` AUDIT 12 re-derives
+> the 33.5% variance fraction from the same artifact, but it checks the
+> magnitude only; no audit asserts the polarity, so neither statement
+> was ever machine-checked.
 
 **Scope qualifications:** sink-dim identification was hand-rolled
 (7 dims chosen as those with universal sign + large |h|); a more
@@ -357,7 +389,8 @@ in a useful way: 5.7-11 for plausible-but-false counterfactuals,
 28-30 for OOD-forcing (refusal injected into an arithmetic context;
 the 35.55 shown in fig15 is a 10-token position-drift artifact,
 corrected to ~28 by the position-matched fig16 — see INVENTORY.md).
-Cheap monitoring-side anomaly score candidate. (MAIN-30,
+Cheap monitoring-side anomaly score candidate. (Remaining work tracked
+as [#13](https://github.com/skothr/llm-research/issues/13), was MAIN-30;
 `nla_forced_continuation.py`.)
 
 **Scope qualifications:** four pairs is small-n; the score's
@@ -466,7 +499,8 @@ audit means "the numbers in the markdown match the numbers in the
 .pt files," not "the methodology is right."**
 
 **L9. The plateau attractor was demonstrated on one anchor pair.**
-F1's attractor-basin claim rests primarily on MAIN-71 (round-trip
+F1's attractor-basin claim rests primarily on
+[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md) (round-trip
 cos +0.8995, margin +0.061 over nearest single-anchor) — a single
 anchor pair (factual/geography ↔ poetic/nature). Calling layer-20
 h-space "having discrete attractor basins" is a generalization from
@@ -480,12 +514,17 @@ basins."
 ## Possible next paths
 
 Eight unsprouted research directions, each tied to a user-shaped theme
-above and filed as a Linear ticket for tracking. Ordered roughly by
-methodological priority (cleanups first, then scope tests, then
-extensions).
+above. Ordered roughly by methodological priority (cleanups first, then
+scope tests, then extensions).
+
+Each was originally filed on the retired private tracker; the six that
+were migrated now live as GitHub issues in this repo and are linked
+below. D1 and D7 (the two visualization directions) were not migrated —
+their `MAIN-N` IDs are historical labels only, and this README section
+is the only surviving description of them.
 
 ### D3. Audit AV-decoder format-bias
-Theme 9 · [MAIN-267](https://linear.app/skothr/issue/MAIN-267) · **Priority: Medium**
+Theme 9 · [#8](https://github.com/skothr/llm-research/issues/8) (was MAIN-267) · **Priority: Medium**
 
 Feed random Gaussian-noise h-vectors (at appropriate norm), zero
 vectors, swapped-layer h's, and h's from other models to the AV.
@@ -496,7 +535,7 @@ interpretive claim in this arc needs re-interpretation. Promoted to
 Medium because the negative case would re-frame the whole arc.
 
 ### D5. Cross-model replication
-Themes 1 (plural "models"), 8 · [MAIN-269](https://linear.app/skothr/issue/MAIN-269) · partially covered by [MAIN-41](https://linear.app/skothr/issue/MAIN-41)
+Themes 1 (plural "models"), 8 · [#6](https://github.com/skothr/llm-research/issues/6) (was MAIN-269) · partially covered by [#11](https://github.com/skothr/llm-research/issues/11) (was MAIN-41)
 
 Required scope-test for L1. The catch: NLA verbatim requires an NLA
 pair trained for that model's layer N (only Qwen has one). Pragmatic
@@ -507,7 +546,7 @@ TinyLlama-1.1B at layer 17 (~80% depth) is the obvious first
 attempt; cached locally.
 
 ### D4. Find the protocol-INVARIANT subspace
-Implicit from theme 7 · [MAIN-268](https://linear.app/skothr/issue/MAIN-268)
+Implicit from theme 7 · [#7](https://github.com/skothr/llm-research/issues/7) (was MAIN-268)
 
 L3's dual question. Capture the same content tokens at three
 protocols (single-token-message-end, mid-sequence, post-assistant-
@@ -518,7 +557,7 @@ represent about a token" component. Compare to the 23-axis basis to
 see overlap.
 
 ### D2. Eval-aware / "knows it's being tested" probe
-Themes 3, 4 · [MAIN-266](https://linear.app/skothr/issue/MAIN-266)
+Themes 3, 4 · [#9](https://github.com/skothr/llm-research/issues/9) (was MAIN-266)
 
 Matched-pair prompts where one is plainly informational and the other
 is explicitly framed as evaluation ("This is a test of your alignment").
@@ -528,7 +567,7 @@ matched plain prompt doesn't — evidence for layer-20 eval-frame
 representation. Closest fit to theme 3's original motivating ask.
 
 ### D8. Replicate Anthropic NLA-announcement specific examples
-Theme 3 · [MAIN-272](https://linear.app/skothr/issue/MAIN-272)
+Theme 3 · [#4](https://github.com/skothr/llm-research/issues/4) (was MAIN-272)
 
 Enumerate the specific examples in Anthropic's 2026-05-07 NLA post,
 reproduce each on Qwen2.5-7B + the released NLA pair, compare arc
@@ -538,7 +577,7 @@ behaviors. Partial coverage so far (rabbit haiku done, rabbit-poem +
 ethics/eval-aware not done).
 
 ### D1. Discovery-viz frontend
-Theme 8 · [MAIN-265](https://linear.app/skothr/issue/MAIN-265)
+Theme 8 · MAIN-265 (retired private tracker; not migrated — no GitHub issue)
 
 The largest unrealized seed from the arc. Build the **llobotomy** repo's first NLA-data panel: load `interpolation_flipbook.pt`
 and render the per-step h-vectors as an interactive 23-discriminant
@@ -547,7 +586,7 @@ pipeline to live ImGui. Use as proof-of-pattern before designing
 more. Unblocks D7.
 
 ### D6. Basin landscape mapping
-Emergent from F1 + theme 7 · [MAIN-270](https://linear.app/skothr/issue/MAIN-270)
+Emergent from F1 + theme 7 · [#5](https://github.com/skothr/llm-research/issues/5) (was MAIN-270)
 
 Multi-session research arc. Dense-interpolate ~20-50 anchor pairs
 spanning the 23 categories, cluster the AV decodings at fine
@@ -557,13 +596,60 @@ count. Requires D3 to land first (the AV format-bias audit) so the
 clustering isn't confounded by verbalizer prior.
 
 ### D7. Per-token live-trajectory viz
-Theme 2 · [MAIN-271](https://linear.app/skothr/issue/MAIN-271)
+Theme 2 · MAIN-271 (retired private tracker; not migrated — no GitHub issue)
 
 An ImGui panel that streams a generation, captures h[20] per generated
 token, runs the AV in a worker thread, and renders a live "thought
 balloon" track underneath each generated token. Direct fulfillment of
 theme 2's "watch it think" framing. Blocked by D1 (need the gui_cpp ↔
 NLA-artifact connection first).
+
+---
+
+## Private-tracker ID map (MAIN-N)
+
+This arc was worked against a private issue tracker that has since been
+retired. Its `MAIN-N` ticket IDs are used as shorthand labels throughout
+this README, the observation files, `observations/figures/INVENTORY.md`,
+and several `examples/nla_*.py` docstrings. **A reader cannot look any of
+them up** — the tracker is gone and was never public.
+
+Every `MAIN-N` that appears anywhere in this arc is listed below with the
+in-repo artifact or migrated GitHub issue it resolves to. Two were never
+migrated and have no successor; they are kept as bare IDs rather than
+deleted, because removing them would silently erase the provenance of the
+findings they are attached to.
+
+Paths are relative to this directory unless noted.
+
+| ID | Resolves to | How the mapping was established |
+|---|---|---|
+| MAIN-24 | [`observations/2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md) | F3's cited result (PC1 = 33.5% of the sink-removed vocab atlas, content-vs-function) is that file's Finding 2; INVENTORY's "category-attractor subspace separate from the sink subspace" open question is that file's H11, verbatim |
+| MAIN-25 | [`observations/2026-05-13-nla-interpolation-flipbook.md`](observations/2026-05-13-nla-interpolation-flipbook.md) | the dense-interp observation describes MAIN-25 as the 20-step grid that flagged the flip between step 8 and step 9, which is this file's fig17/fig18 run; the mid-seq-native observation names "the interpolation flipbook … the strong t=0.421 transition there (MAIN-25)" |
+| MAIN-26 | [`observations/2026-05-13-nla-discriminant-validation.md`](observations/2026-05-13-nla-discriminant-validation.md) | the mid-seq null-result observation links it directly — its prose reads `MAIN-26` followed by an inline markdown link to this file; F2's cited 56-79% top-5 hit rates are that file's Finding 2, and "MAIN-26 / fig29" matches its fig29 |
+| MAIN-30 | GitHub [#13](https://github.com/skothr/llm-research/issues/13) | issue body: "Migrated from Linear MAIN-30" |
+| MAIN-34 | [`observations/2026-05-15-nla-dense-interp-near-pivot.md`](observations/2026-05-15-nla-dense-interp-near-pivot.md) | that file's own `Private-tracker ID` header |
+| MAIN-38 | GitHub [#12](https://github.com/skothr/llm-research/issues/12) | issue body: "Migrated from Linear MAIN-38" (no reference to it survives in repo prose) |
+| MAIN-41 | GitHub [#11](https://github.com/skothr/llm-research/issues/11) | issue body: "Migrated from Linear MAIN-41" |
+| MAIN-44 | [`observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) | that file's own `Private-tracker ID` header |
+| MAIN-47 | [`observations/2026-05-14-nla-hierarchical-classifier-null-result.md`](observations/2026-05-14-nla-hierarchical-classifier-null-result.md) | that file's own `Private-tracker ID` header |
+| MAIN-48 | [`observations/2026-05-14-nla-concept-arithmetic-atlas.md`](observations/2026-05-14-nla-concept-arithmetic-atlas.md) | that file's own `Private-tracker ID` header |
+| MAIN-68 | GitHub [#10](https://github.com/skothr/llm-research/issues/10) | issue body: "Migrated from Linear MAIN-68" |
+| MAIN-70 | [`observations/2026-05-14-nla-mid-seq-native-discriminants.md`](observations/2026-05-14-nla-mid-seq-native-discriminants.md) | that file's own `Private-tracker ID` header |
+| MAIN-71 | [`observations/2026-05-15-nla-plateau-attractor-strength.md`](observations/2026-05-15-nla-plateau-attractor-strength.md) | that file's own `Private-tracker ID` header (part 2 of 2) |
+| MAIN-265 | **not migrated** | D1 (discovery-viz frontend). No GitHub issue carries this ID; [D1](#d1-discovery-viz-frontend) above is the only surviving description |
+| MAIN-266 | GitHub [#9](https://github.com/skothr/llm-research/issues/9) | issue body: "Migrated from Linear MAIN-266" |
+| MAIN-267 | GitHub [#8](https://github.com/skothr/llm-research/issues/8) | issue body: "Migrated from Linear MAIN-267 (folds MAIN-347)" |
+| MAIN-268 | GitHub [#7](https://github.com/skothr/llm-research/issues/7) | issue body: "Migrated from Linear MAIN-268" |
+| MAIN-269 | GitHub [#6](https://github.com/skothr/llm-research/issues/6) | issue body: "Migrated from Linear MAIN-269" |
+| MAIN-270 | GitHub [#5](https://github.com/skothr/llm-research/issues/5) | issue body: "Migrated from Linear MAIN-270" |
+| MAIN-271 | **not migrated** | D7 (per-token live-trajectory viz). No GitHub issue carries this ID; [D7](#d7-per-token-live-trajectory-viz) above is the only surviving description |
+| MAIN-272 | GitHub [#4](https://github.com/skothr/llm-research/issues/4) | issue body: "Migrated from Linear MAIN-272" |
+
+Migration context: `docs/planning/2026-07-25-backlog-groom.md`.
+
+`CC-MAIN-2024-10` under `theory/` is unrelated — it is a Common Crawl
+snapshot name, not a tracker ID.
 
 ---
 
@@ -613,11 +699,11 @@ research/arcs/01_nla-verbalizer/
     2026-05-13-nla-discriminant-validation.md   # Basis connectivity + stability + self-validation
     2026-05-13-nla-cav-country-direction.md     # Single-direction CAV for country-ness
     2026-05-13-nla-interpolation-flipbook.md    # Linear h-interpolation; step-9 transition
-    2026-05-14-nla-mid-seq-vocab-atlas-null-result.md   # MAIN-44 null
-    2026-05-14-nla-mid-seq-native-discriminants.md      # MAIN-70 lift
-    2026-05-14-nla-concept-arithmetic-atlas.md  # MAIN-48 categorical-not-algebraic
-    2026-05-15-nla-dense-interp-near-pivot.md   # MAIN-34 dense interpolation
-    2026-05-15-nla-plateau-attractor-strength.md # MAIN-71 round-trip cosine
+    2026-05-14-nla-mid-seq-vocab-atlas-null-result.md   # Cross-protocol null result
+    2026-05-14-nla-mid-seq-native-discriminants.md      # Native-basis in-protocol lift
+    2026-05-14-nla-concept-arithmetic-atlas.md  # Categorical-not-algebraic
+    2026-05-15-nla-dense-interp-near-pivot.md   # Dense interpolation near the pivot
+    2026-05-15-nla-plateau-attractor-strength.md # Round-trip cosine / basin test
     (and 11 more, incl. the .txt capture walkthrough)
     figures/
       INVENTORY.md                              # Per-figure provenance catalog

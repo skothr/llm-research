@@ -1,4 +1,7 @@
-"""MAIN-70 — Mid-seq native discriminants + cross-protocol axis stability.
+"""Mid-seq native discriminants + cross-protocol axis stability.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-14-nla-mid-seq-native-discriminants.md
 
 Builds discriminants from BOTH protocols and projects each protocol's
 captures onto each discriminant family. Tests whether the within-protocol
@@ -162,7 +165,7 @@ def main() -> None:
     ax.set_title(
         "fig33 — In-protocol vs cross-protocol within-class signal\n"
         "If mid-native bars (green) match eop-native (blue), discriminants are "
-        "protocol-coupled by construction.\nOrange shows MAIN-44's collapsed "
+        "protocol-coupled by construction.\nOrange shows the collapsed "
         "cross-protocol projection (mid-h projected onto eop-derived axes).",
         fontsize=10,
     )

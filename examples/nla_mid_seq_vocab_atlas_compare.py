@@ -1,4 +1,7 @@
-"""Compare mid-sequence vocab atlas (MAIN-44) to end-of-prompt baseline.
+"""Compare the mid-sequence vocab atlas to the end-of-prompt baseline.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-14-nla-mid-seq-vocab-atlas-null-result.md
 
 Loads:
   vocab_atlas.pt        - end-of-prompt captures (existing)
@@ -13,8 +16,8 @@ For each category C, computes:
 The discriminant basis d_C is derived from the end-of-prompt atlas only;
 mid-sequence captures are projected onto it as a cross-protocol test of
 whether token-presence detection works once the anchor is mid-sequence
-(MAIN-26 finding: at end-of-prompt, emotion->emotion projection was only
-+0.083 ± 0.061).
+(finding from `observations/2026-05-13-nla-discriminant-validation.md`:
+at end-of-prompt, emotion->emotion projection was only +0.083 ± 0.061).
 
 Output: .cache/nla_artifacts/mid_seq_compare.pt
 """
@@ -134,10 +137,10 @@ def main() -> None:
         f"{'':>10} {'':>10}  {eop_acc_agg:>7.2%} {mid_acc_agg:>7.2%}"
     )
 
-    # Specific MAIN-26 case: happy -> emotion
+    # The discriminant-validation baseline case: happy -> emotion
     for e in by_cat.get("emotion", []):
         if e["word"] == "happy":
-            print(f"\n  MAIN-26 anchor 'happy' (emotion):")
+            print("\n  anchor 'happy' (emotion):")
             print(
                 f"    {e['protocol']:>4}: signal={e['signal']:+.4f}  "
                 f"argmax={e['argmax_cat']!r} ({'correct' if e['argmax_correct'] else 'WRONG'})  "

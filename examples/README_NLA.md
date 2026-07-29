@@ -80,8 +80,11 @@ or pseudo-inverse). The unscaled centroid difference is a reasonable
 proxy in this regime, but it should not be cited as a "discriminant"
 in the formal statistical sense.
 
-Downstream quantitative results (e.g. MAIN-70's +0.5632 in-protocol
-signal, MAIN-44's +0.0491 cross-protocol signal) are correct for
+Downstream quantitative results (e.g. the +0.5632 in-protocol signal in
+[`2026-05-14-nla-mid-seq-native-discriminants.md`](../research/arcs/01_nla-verbalizer/observations/2026-05-14-nla-mid-seq-native-discriminants.md),
+the +0.0491 cross-protocol signal in
+[`2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](../research/arcs/01_nla-verbalizer/observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md))
+are correct for
 *what they actually compute* (mean-contrast projection). The
 "discriminant" label is shorthand; readers extending or publishing
 this work should call it the "mean-contrast" or "centroid-difference"

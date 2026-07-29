@@ -5,7 +5,7 @@
 **Inputs:** `vocab_atlas.pt`, AV `kitft/nla-qwen2.5-7b-L20-av`
 **Output:** `concept_arithmetic_atlas.pt`
 **Figure:** `fig35_concept_arithmetic_atlas.png`
-**Linear:** MAIN-48
+**Private-tracker ID:** MAIN-48 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-48 predicted
 
@@ -45,11 +45,11 @@ Similarly `happy − sad` (||raw||=49.98) rescaled to 150 decoded as: "Fibonacci
 
 NLA layer-20 representations are **categorically structured but not algebraically composable in the word2vec sense**:
 
-1. **Category direction is a robust axis** (consistent with `country − capital` working and with MAIN-70's fig34 showing emotion has the strongest cross-protocol axis stability at +0.17).
+1. **Category direction is a robust axis** (consistent with `country − capital` working and with [MAIN-70](2026-05-14-nla-mid-seq-native-discriminants.md)'s fig34 showing emotion has the strongest cross-protocol axis stability at +0.17).
 2. **Within-category specific identity is encoded differently than across-category position.** The "Paris-ness within capital-ness" direction isn't the same as the "Berlin-ness within capital-ness" direction shifted in some consistent way. word2vec's geometric assumption — that `vec(France) − vec(Paris)` equals `vec(Germany) − vec(Berlin)` — does not hold in this layer.
 3. **Sum of two concept vectors collapses to the larger-magnitude one.** The smaller concept contribution gets absorbed without changing the dominant decode. This is not the same as averaging the two concepts.
 
-This refines the MAIN-44 + MAIN-70 picture: the basis is protocol-coupled (per-protocol family of discriminants), and even within a protocol, the arithmetic structure of h is **categorical, not algebraic**. Categories have stable axes (confirmed); within-category positions are constructed in a way that doesn't compose by subtraction (falsified).
+This refines the [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) + MAIN-70 picture: the basis is protocol-coupled (per-protocol family of discriminants), and even within a protocol, the arithmetic structure of h is **categorical, not algebraic**. Categories have stable axes (confirmed); within-category positions are constructed in a way that doesn't compose by subtraction (falsified).
 
 ## Implications for viz primitives
 
@@ -62,6 +62,6 @@ A more productive use: arithmetic to **isolate axes** rather than predict tokens
 The arc now has three converging findings:
 - **MAIN-44/70**: basis is protocol-coupled; content categories have small position-invariant component.
 - **MAIN-48 (this)**: within a protocol, arithmetic structure is categorical not algebraic.
-- **MAIN-25** (the headline): stepwise category-flip at t=0.421 during linear interpolation between AR-encoded anchors.
+- **[MAIN-25](2026-05-13-nla-interpolation-flipbook.md)** (the headline): stepwise category-flip at t=0.421 during linear interpolation between AR-encoded anchors.
 
-Reading these together: at layer 20, h-space has **discrete category attractors** rather than a smooth product-of-axes geometry. Interpolation flips between attractors (MAIN-25); arithmetic moves between attractor regions but doesn't smoothly navigate within them (MAIN-48); discriminants pick out the attractor regions per protocol (MAIN-70). The next probe should test the attractor hypothesis directly: dense interpolation near t=0.421 (MAIN-34) to see if the flip is a sharp discontinuity or a smooth-but-fast transition. That's already filed.
+Reading these together: at layer 20, h-space has **discrete category attractors** rather than a smooth product-of-axes geometry. Interpolation flips between attractors (MAIN-25); arithmetic moves between attractor regions but doesn't smoothly navigate within them (MAIN-48); discriminants pick out the attractor regions per protocol (MAIN-70). The next probe should test the attractor hypothesis directly: dense interpolation near t=0.421 ([MAIN-34](2026-05-15-nla-dense-interp-near-pivot.md)) to see if the flip is a sharp discontinuity or a smooth-but-fast transition. That's already filed.

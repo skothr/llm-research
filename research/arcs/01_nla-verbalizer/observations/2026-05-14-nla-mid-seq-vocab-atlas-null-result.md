@@ -1,11 +1,11 @@
-# Mid-Sequence Vocab Atlas: Null Result + Refines MAIN-26
+# Mid-Sequence Vocab Atlas: Null Result + Refines the Discriminant-Validation Reading
 
 **Date:** 2026-05-14
 **Toolkit:** `nla_mid_seq_vocab_atlas_capture.py`, `nla_mid_seq_vocab_atlas_compare.py`, `nla_mid_seq_vocab_atlas_render.py`
 **Inputs:** `vocab_atlas.pt` (end-of-prompt), `pairwise_and_hotdims.pt` (sink dim labels)
 **Outputs:** `mid_seq_vocab_atlas.pt`, `mid_seq_compare.pt`
 **Figures:** `fig31_mid_seq_signal_vs_noise.png`, `fig32_mid_seq_argmax_accuracy.png`
-**Linear:** MAIN-44
+**Private-tracker ID:** MAIN-44 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-44 predicted
 
@@ -79,6 +79,6 @@ The discriminant glyph (fig25/26) is the right primitive **only for h's captured
 
 ## Cross-arc lessons
 
-This is the **second null result of the arc** (MAIN-47 was the first). Both came from over-extrapolating a single finding. MAIN-26 looked at one position protocol (end-of-prompt of varying-length prefix) and produced an interpretation ("end-of-prompt integration overwhelms token identity") that turned out too narrow. MAIN-44's failure refines it: the integration interpretation can't explain why mid-sequence is also a different subspace — the basis is protocol-coupled in a more general way.
+This is the **second null result of the arc** ([MAIN-47](2026-05-14-nla-hierarchical-classifier-null-result.md) was the first). Both came from over-extrapolating a single finding. MAIN-26 looked at one position protocol (end-of-prompt of varying-length prefix) and produced an interpretation ("end-of-prompt integration overwhelms token identity") that turned out too narrow. MAIN-44's failure refines it: the integration interpretation can't explain why mid-sequence is also a different subspace — the basis is protocol-coupled in a more general way.
 
 When designing the next round of probes, the methodological discipline: **always test the basis at the protocol it was derived from AND at one alternative protocol before claiming the basis "measures" something interpretable.** Within-protocol signal is necessary but not sufficient — the cross-protocol behavior reveals what the basis *isn't* doing.
