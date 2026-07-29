@@ -18,11 +18,12 @@ PAUSING (the GPU is also the machine's gaming GPU)
     python examples/jspace_rerun_queue.py --status
     python examples/jspace_rerun_queue.py --resume    # pick up where it left off
 
-`--pause` signals the running queue, which stops the in-flight fit and waits.
-Work already checkpointed is kept, so a pause costs at most one checkpoint
-interval (~19 min at 1.5B, ~47 min at 7B — see `checkpoint_every` per job).
-VRAM is released, so the game gets the full card. `--resume` clears the flag;
-the queue re-waits for VRAM and restarts the fit from its checkpoint.
+`--pause` signals the running queue, which stops the in-flight fit *at once* —
+it does NOT wait for the next checkpoint, so the GPU frees within seconds.
+Everything already checkpointed is kept and the rest is redone on resume, so a
+pause costs at most one checkpoint interval (<=19 min at 1.5B, <=47 min at 7B —
+see `checkpoint_every` per job). `--resume` clears the flag; the queue re-waits
+for VRAM and restarts the fit from its last checkpoint.
 
 Resumability is three layers: this script SKIPS a job whose final artifact
 exists, restarts a paused job from its checkpoint, and `jspace_fit_lens.py`
@@ -313,8 +314,9 @@ def main() -> int:
         PAUSE_FLAG.touch()
         print(f"[queue] pause requested ({PAUSE_FLAG}).")
         print(
-            "        The in-flight fit stops after its current checkpoint; "
-            "VRAM is released. Resume with --resume."
+            "        The in-flight fit stops immediately and VRAM frees within "
+            "seconds; work since its\n        last checkpoint is redone on "
+            "--resume."
         )
         return 0
     if args.resume:
