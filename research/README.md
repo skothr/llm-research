@@ -8,10 +8,11 @@ landing bin for one-off findings and an archive for retired material.
 
 ## Arcs
 
-Two of the four arcs are **paused mid-program**, not finished; the other two
-ran to their planned completion and were closed. No arc has been externally
-reviewed or replicated. "Closed" here means *no further experiments planned* —
-it is a scheduling statement, not a verdict on the results.
+Two of the four arcs are **paused mid-program**; the other two were closed to
+new experiments — arc 04 having run its planned stages, arc 03 by direction
+with three of its seven registered predictions still unrun. No arc has been
+externally reviewed or replicated. "Closed" here means *no further experiments
+planned* — a scheduling statement, not a verdict on the results.
 
 | Arc | Status | Question | Entry point |
 |---|---|---|---|
@@ -28,16 +29,23 @@ because they carry as much of the signal as the positive ones:
   separated by sharp boundaries. Held as a hypothesis, not a settled claim;
   the arc's own limitations section flags an unaudited AV-decoder format bias
   that, if real, would re-frame every interpretive claim built on it.
-- **Arc 02 (subliminal)** — one null: the literal-encoding channel (ASCII /
-  base-N in the released number data) is ruled out. The decisive HA-vs-HC test
-  was never run.
-- **Arc 03 (embedding atlas)** — predictions were registered on 2026-06-11 and
-  adjudicated at close: **P1a PASS, P1c FAIL, P1d FAIL.** Two falsified
-  predictions, recorded in advance and reported as findings, are the clearest
-  evidence in this repo that the pre-registration is not decorative.
+- **Arc 02 (subliminal)** — one null, narrow by construction: a literal
+  ASCII/base-N encoding channel was **not detected** in a local Qwen
+  reproduction of the paper's protocol (z=1.02, p=0.31, n=120). The paper
+  released no dataset — its `v1.0.0` has zero assets and its teacher is closed —
+  so this tests a local reproduction, not their data. The decisive HA-vs-HC
+  test was never run.
+- **Arc 03 (embedding atlas)** — predictions were registered on 2026-06-11,
+  before the captures they constrain, and adjudicated mechanically at close:
+  **P1a PASS, P1c FAIL, P1d FAIL**; P2 refined-not-falsified; P1b, P1e and P3
+  never run. Two falsified predictions, recorded in advance and reported as
+  findings, are the clearest evidence in this repo that the pre-registration is
+  not decorative — the three unrun ones are the honest limit on that claim.
 - **Arc 04 (J-space)** — a **partial** replication that came out **weaker than
   the original**, with a causal split: J-lens steering moves entailed
-  properties, while J-space *membership* swaps are inert. Four specific things
+  properties, while J-space *membership* swaps produce **no detectable
+  effect** — bounded at ±3.8pp (7B, 0 discordant pairs of 78), which is a tight
+  null but a measured bound, not a demonstration of zero. Four specific things
   did not replicate, including the paper's discrete property flip (rate 0.000
   at both scales). Prefer the absolute gaps in nats over the multiplier
   framings — the control sits near zero, so the ratios are denominator-fragile.
