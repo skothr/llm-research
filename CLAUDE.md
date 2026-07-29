@@ -17,6 +17,22 @@ figure / audit pipeline (`examples/`). Depends on the sibling `llm-surgeon`
 toolkit — install editable with `pip install -e ../llm-surgeon`, then
 `pip install -e .` for this repo's direct deps (torch, numpy, matplotlib).
 
+**Every checkout needs its own `.venv` — including each worktree.** Pyright
+resolves `venvPath` relative to the config file, so a worktree (the mandated
+way of working here) does not see the main checkout's environment. Link it
+back before type checking, run from the worktree root:
+
+```bash
+ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/
+```
+
+Skip this and `pyright examples/` reports hundreds of phantom
+`reportMissingImports` errors against correct code — 237 in a worktree with
+the sibling checkouts present, 304 without them, every one of them a `torch`,
+`numpy`, `matplotlib`, `transformers`, `datasets` or `pytest` import. Deleting
+`venvPath` is not a workaround: pyright does not fall back to the interpreter
+that launched it, so the same errors persist.
+
 ## Structure
 
 - `theory/` — Knowledge-base substrate (**GROUND TRUTH** for technical claims).
