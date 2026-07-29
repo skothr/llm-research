@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from time import time
 from typing import Any, cast
@@ -48,7 +49,15 @@ from torch import Tensor
 
 BANDS: dict[str, tuple[int, int]] = {"early": (0, 8), "mid": (9, 18), "late": (19, 26)}
 THRESHOLDS = (10, 50)
-DEFAULT_EVAL_DIR = "/home/ai/ai-projects/jacobian-lens/data/evaluations"
+# The multihop / association eval prompt sets ship with the pinned J-lens
+# checkout, not with this repo (see research/arcs/04_jspace/data/MANIFEST.json
+# -> jlens_pin for the repo URL and commit). The default assumes the sibling
+# layout this repo already documents for llm-surgeon; point JSPACE_EVAL_DIR or
+# --eval-dir elsewhere for any other layout. Paths are resolved relative to the
+# working directory, and the scripts here are run from the repo root.
+DEFAULT_EVAL_DIR = os.environ.get(
+    "JSPACE_EVAL_DIR", "../jacobian-lens/data/evaluations"
+)
 
 
 def parse_args() -> argparse.Namespace:
