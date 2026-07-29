@@ -8,9 +8,9 @@
     "date": "2026-07-02",
     "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in this clone, so the eval tables (audit Check B) are reproducible only against this pinned commit."
   },
-  "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here: locally-fitted tensor dumps, not third-party data; the corpus is plain JSON. Verify sha256 with `--check` before loading on an untrusted copy.",
+  "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 53,
-  "total_size_bytes": 272174413,
+  "total_size_bytes": 272130728,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -254,8 +254,8 @@
     },
     {
       "filename": "fitting_prompts_c4en_n1000.json",
-      "sha256": "fd76e5a9021228fc19855b30eb28717179b5cbce13ec0de55b54e31b45617b6e",
-      "size_bytes": 3534698,
+      "sha256": "a9ad43775363f44ad17f411d32d8210d9f9c10915bf8d6f128f495e58c051364",
+      "size_bytes": 3491293,
       "class": "raw",
       "producing_script": "examples/jspace_freeze_c4_corpus.py",
       "producing_command": "python examples/jspace_freeze_c4_corpus.py",
@@ -282,8 +282,8 @@
     },
     {
       "filename": "heldout_prompts_c4en_n30.json",
-      "sha256": "7b8d05b3165bad69c1dc4009b06a6430e83ad13d910ffa19f413e0acaeb30243",
-      "size_bytes": 68053,
+      "sha256": "1e533fdeebda8f69805593cef85240ecb68527f6e405740fcb9a0343ff134c9f",
+      "size_bytes": 67773,
       "class": "raw",
       "producing_script": "examples/jspace_freeze_c4_corpus.py",
       "producing_command": "python examples/jspace_freeze_c4_corpus.py",

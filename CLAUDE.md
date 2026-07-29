@@ -105,6 +105,45 @@ Each observation file (`YYYY-MM-DD-<slug>.md`) includes: Date and context
 (experiment, model, params) · Finding · Evidence (output/transcript excerpts) ·
 Reproducibility (exact commands/code) · Hypotheses · Follow-ups · References.
 
+# Third-party data — vet BEFORE first use, not before commit
+
+**Any external dataset, corpus, or model artifact entering this repo gets a
+rights-and-privacy check at the moment it is selected**, recorded in the arc's
+decision log alongside the scientific rationale. This is a hard gate, not a
+pre-commit cleanup step: by commit time the experiments are already run and
+re-running them is the expensive part.
+
+Record all four, or don't use the dataset:
+
+1. **Licence + attribution requirements.** Name the licence and what it
+   obliges (ODC-BY §4.2/4.3 want the licence URI and a source-attribution
+   notice; CC BY-SA wants attribution and is *not* one-way compatible with
+   GPLv3 below 4.0). Put them in a `LICENSE-DATA.md` beside the data. The
+   repo's own `GPL-3.0-only` covers code and original prose **only** and must
+   be explicitly scoped away from third-party data.
+2. **Does it contain personal data?** Scraped-web corpora (C4, OSCAR,
+   RefinedWeb, The Pile, anything Common-Crawl-derived) are filtered for
+   *quality*, never for *privacy*, and carry contact details at a measurable
+   base rate. Curated encyclopedic sources (WikiText, Wikipedia dumps) largely
+   do not. **Assume PII is present in any web-scraped corpus and prove
+   otherwise** — `examples/jspace_redact_corpus.py --report` is the starting
+   scanner; extend its pattern classes rather than writing a new one.
+3. **The realism/privacy tradeoff, stated explicitly.** A corpus chosen for
+   being *more representative of real text* is, for exactly that reason, more
+   likely to contain real people's data. If the scientific argument for a
+   dataset is its breadth or naturalness, that argument is itself the signal
+   to check. Arc 04 is the worked example — see its README warning.
+4. **Redistribution decision.** Committing raw third-party text republishes it
+   under your name. Prefer committing a deterministic regeneration script plus
+   a checksum where "raw data is a deliverable" (below) still holds; where the
+   text itself must be committed, redact PII first and document the redaction,
+   its class coverage, its known limits, and how to reproduce it exactly.
+
+No licence can authorise republishing a third party's personal data —
+data-subject rights attach to the person, not the licensor. Treat PII removal
+as a scientific-integrity and ethics obligation, independent of any liability
+question.
+
 # Git LFS is REQUIRED
 
 `research/**/figures/*.png` and `research/**/data/*.pt` are tracked via Git LFS

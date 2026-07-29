@@ -1,5 +1,77 @@
 # Arc: jspace — replicating the J-lens / J-space on Qwen2.5-1.5B/7B-Instruct
 
+> ## ⚠ DATA CORRECTION 2026-07-29 — C4 corpus PII redacted; corpus-robustness results pending re-run
+>
+> **What happened.** This arc's corpus-sensitivity axis used a seeded slice of
+> **C4-en** — Common Crawl web text. C4's cleaning filters for quality, not for
+> personal data, so the committed slice carried **120 pieces of third-party
+> PII**: 27 email addresses, 44 phone numbers, 39 street addresses, 10 postal
+> codes, across 62 documents. Several documents paired a named individual with
+> a direct email and phone. This was published in a public repo for ~9 days.
+> It has been redacted. Rationale, counts, limits, and the exact reproduction
+> recipe: [`data/README.md`](data/README.md); licensing:
+> [`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).
+>
+> **Why it wasn't caught.** Decision 1 (`plans/2026-07-18-jspace-design.md:19-21`)
+> chose C4 for a sound scientific reason — wikitext-103 is narrow Wikipedia
+> register, and the paper specifies a "pretraining-like distribution." No
+> privacy, licensing, or ethics check was recorded at any point in the arc: a
+> search for `privacy|PII|redact|consent|personal data|ODC-BY|terms of use`
+> across the arc returns nothing. Provenance discipline here was exemplary on
+> *reproducibility* (seed, buffer size, filter, offset, dedup proofs, sha256)
+> and silent on *rights*. The generalizable lesson — a corpus chosen for being
+> more representative of real text is, for that same reason, more likely to
+> contain real people's data — is now a standing pre-use check in the repo
+> `CLAUDE.md`.
+>
+> **What is NOT affected.** The **primary results are unaffected.** The arc's
+> primary fitting corpus is wikitext-103, which was scanned and is unmodified
+> (its only two matches are encyclopedic biography of a figure who died in
+> 1976 — reviewed, not personal data). The headline ceiling verdicts (1.5B L21
+> excess 11.15%, CI [10.95, 11.40]; 7B 4.72%), all stage-5/5.1b/5.2 swap
+> results, the NLA cross-tie, the quantization axis, and the n-budget axis are
+> **C4-free** and stand as recorded. 41 of 53 committed artifacts carry no C4
+> dependency.
+>
+> **What IS affected — pending re-run.** The redaction is not
+> length-preserving, so any lens re-fit on this corpus will differ slightly
+> from the committed artifacts, which were fit on the pre-redaction text.
+>
+> *Affected data files (12):* `data/fitting_prompts_c4en_n1000.json`,
+> `data/heldout_prompts_c4en_n30.json` (both now redacted); and 10 derived
+> artifacts computed from them — `lens_eval_*_c4en.pt`,
+> `readout_scan_*_c4en.pt`, `structure_scan_*_c4en.pt`,
+> `paper_metric_varfrac_*_c4en.pt`, plus the `*_heldoutc4en.pt` readout,
+> structure, and paper-metric scans at both scales. (Verified: these `.pt`
+> files contain **no** PII themselves — their decoded strings are individual
+> BPE tokens, not contiguous text — so they are stale, not unsafe.)
+>
+> *Affected figure (1):* `observations/figures/2026-07-21-jspace-corpus-invariance.png`.
+>
+> *Affected observations (4):* `2026-07-20-corpus-sensitivity-c4-1p5b.md`
+> (whole file), `2026-07-22-n500-and-heldout-robustness.md` (held-out C4 axis),
+> `2026-07-24-paper-metric-varfrac-recompute.md` (2 of 4 robustness-axis rows),
+> `2026-07-18-intermediate-concept-evals-h3-confirmed.md:105-109` (the
+> corpus-dependence qualifier on the @10 magnitude).
+>
+> *Affected audit checks:* J and K wholly, M partially — ~25 pinned values in
+> `examples/jspace_audit_findings.py`.
+>
+> *Affected conclusions:* the **corpus-invariance** and **held-out-sample**
+> robustness claims, i.e. 2 of the 4 axes in "invariant on all four axes"
+> (README below). Both endpoints of the quoted **"L21 excess 10.7–11.7%"**
+> range are C4 rows and must be recomputed. The most exposed single claim is
+> the bootstrap-unanimity of the C4 corpus axis, whose margin above the 10%
+> ceiling is only 0.008 — a ~1-point shift would soften "unanimous on each
+> axis" to "on three of four." The 1.5B breach itself does **not** depend on
+> it (the wikitext all-positions artifact carries that at CI [10.95, 11.40]).
+>
+> **Status.** Redaction: **done**. Re-run: **planned, not yet executed** —
+> ~4–5 h GPU, dominated by one 2.2 h lens refit. Plan:
+> [`plans/2026-07-29-c4-redaction-rerun.md`](plans/2026-07-29-c4-redaction-rerun.md).
+> Every affected number below should be read as **provisional pending that
+> re-run**, and this warning stays until it completes.
+
 **Research question:** Does the J-space phenomenon reported for Claude-family
 models `[gurnee2026-workspace]` — a sparse, low-variance, causally privileged
 band of verbalizable representations — replicate on Qwen2.5-Instruct
