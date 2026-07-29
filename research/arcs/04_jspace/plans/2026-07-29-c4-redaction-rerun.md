@@ -70,10 +70,27 @@ calibration gives as 3.2 h — see the correction note under Step 1).
 | Job | Why it is needed | Est. | Actual |
 |---|---|---|---|
 | `c4en-1.5b` refit | channel 1; the C4-fit lens is cache-only, nothing to reuse | 3.2 h | **3.12 h** |
-| `wikitext-1.5b` refit | channel 2 at 1.5B needs the full 27-layer lens back | 3.2 h | — |
-| `wikitext-7b` refit | channel 2 at 7B, same reason. **The actual long pole.** | 16.3 h | — |
+| `wikitext-1.5b` refit | channel 2 at 1.5B needs the full 27-layer lens back | 3.2 h | **3.54 h** (2 segments) |
+| `wikitext-7b` refit | channel 2 at 7B, same reason. **The actual long pole.** | 16.3 h | in progress |
 | 10 derived scans | Step 2 | ~1 h | — |
 | **Total** | | **~23.7 h** | |
+
+The 1.5B wikitext fit ran in two segments (08:05:10-09:27:52 and
+14:07:48-16:17:21 UTC) because the GPU was handed back to the desktop in
+between; 3.54 h is the sum of both. About 1,090 s at the end of segment 1 was
+past its last checkpoint and was redone on resume, so the *reproducible*
+single-segment cost is nearer 3.24 h — in line with the 3.2 h calibration and
+with the never-paused c4en run's 3.12 h.
+
+> **Caveat on that lens's sidecar.** `jlens_qwen2.5-1.5b_bf16_n100.config.json`
+> records `wall_seconds = 7769.1` (2.16 h) — segment 2 only. It was written by
+> the pre-#40 code, which timed the current process rather than the whole fit,
+> and it under-reports by 39%. It has **not** been hand-edited: sidecars are
+> cache-only and nothing consumes `wall_seconds` (it appears in no audit
+> check), so patching a timing field by hand would cost provenance trust for no
+> gain. The correct figures are the ones in the table above. Fits run after
+> #40 record `wall_seconds` across all segments plus a
+> `wall_seconds_segments` breakdown, so this cannot recur.
 
 The 16.3 h figure is measured wall-clock from the arc's original 7B fit
 ("FIT done in 16.26 h"), not a projection, so it does not carry the Step-1

@@ -243,7 +243,13 @@ def run(job: Job, dry_run: bool) -> bool:
         )
         return True
 
-    started = time.time()
+    # Compute time only: a paused job spends hours holding no GPU, and folding
+    # that into the reported figure makes it useless for comparing against the
+    # per-job estimate. `DONE wikitext-1.5b in 8.22 h (est 3.2)` on 2026-07-29
+    # was 3.5 h of fitting around a 4.7 h Factorio break.
+    wall_started = time.time()
+    compute_seconds = 0.0
+    segments = 0
     while True:
         wait_for_vram(job.free_mib, job.tag)
         print(
@@ -251,7 +257,10 @@ def run(job: Job, dry_run: bool) -> bool:
             f"{job.checkpoint_every} prompts) -> {LOGS / f'fit_{job.tag}.log'}",
             flush=True,
         )
+        seg_started = time.time()
         rc = run_once(job)
+        compute_seconds += time.time() - seg_started
+        segments += 1
         if rc is None:
             # Paused mid-fit. Block here, then loop to re-wait for VRAM and
             # restart from the checkpoint.
@@ -259,11 +268,19 @@ def run(job: Job, dry_run: bool) -> bool:
             continue
         break
 
-    elapsed = (time.time() - started) / 3600
+    elapsed = compute_seconds / 3600
+    wall_elapsed = (time.time() - wall_started) / 3600
+    # Only worth spelling out the distinction when the two actually differ.
+    span = (
+        f"{elapsed:.2f} h of compute over {segments} segments "
+        f"({wall_elapsed:.2f} h wall, incl. pauses)"
+        if segments > 1
+        else f"{elapsed:.2f} h"
+    )
     if rc != 0:
         print(
-            f"[queue] FAIL {job.tag}: exit {rc} after {elapsed:.2f} h "
-            f"(incl. any pause) — see {LOGS / f'fit_{job.tag}.log'}",
+            f"[queue] FAIL {job.tag}: exit {rc} after {span} "
+            f"— see {LOGS / f'fit_{job.tag}.log'}",
             flush=True,
         )
         return False
@@ -272,7 +289,7 @@ def run(job: Job, dry_run: bool) -> bool:
         # broken; treat it as failure rather than letting the queue advance.
         print(f"[queue] FAIL {job.tag}: exit 0 but {job.out.name} missing", flush=True)
         return False
-    print(f"[queue] DONE {job.tag} in {elapsed:.2f} h (est {job.hours})", flush=True)
+    print(f"[queue] DONE {job.tag} in {span} (est {job.hours} h)", flush=True)
     return True
 
 
