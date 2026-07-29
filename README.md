@@ -3,9 +3,12 @@
 LLM-interpretability research, organized as a citation-grounded theory
 knowledge base plus reproducible experimental arcs. Built on the
 [`llm-surgeon`](https://github.com/skothr/llm-surgeon) toolkit for layer-level model surgery and
-probing. The flagship investigation applies Anthropic's released NLA
+probing. The largest investigation applies Anthropic's released NLA
 (Natural Language Autoencoder) verbalizer/reconstructor model pair to
-local Qwen2.5-7B-Instruct and probes layer-20 hidden-state geometry.
+local Qwen2.5-7B-Instruct and probes layer-20 hidden-state geometry; three
+further arcs cover subliminal trait transfer, the structure of Qwen2.5-7B's
+input-embedding table, and a partial replication of the J-lens / J-space
+global-workspace result.
 
 This repository is a **research workspace**, not a software product. It
 collects the work product — the synthesized theory, the dated observations,
@@ -14,12 +17,21 @@ to the standard described under "Epistemic discipline" below: load-bearing
 technical claims cite a primary source, and findings are framed as
 hypotheses until the evidence settles them.
 
+It is also **exploratory, self-directed, agent-assisted** work. Much of the
+implementation — capture and analysis scripts, figures, audit infrastructure,
+observation drafts — was carried out by Claude Code sessions under direction;
+the research questions, scope calls, and sign-off are the author's, and each
+arc README records that split explicitly. Nothing here has been published,
+externally reviewed, or replicated by anyone else, and the findings should be
+read as provisional. The [Methodology](#methodology) below is the part offered
+with confidence: it exists to make being wrong visible.
+
 ## What's here
 
 ```
 theory/      Citation-grounded LLM-theory knowledge base + a 5-paper LaTeX series
 research/    Experimental research, organized into arcs (focused investigations)
-examples/    The NLA capture / analysis / render / audit pipeline (46 scripts)
+examples/    Per-arc capture / analysis / render / audit pipelines
 ```
 
 - **`theory/`** — A knowledge-base substrate (v2 layout): `kb/notes/` digested
@@ -32,16 +44,65 @@ examples/    The NLA capture / analysis / render / audit pipeline (46 scripts)
 - **`research/`** — Investigations organized into **arcs** under
   `research/arcs/<slug>/`, each cohering around one research question, plus
   `research/observations/` for one-off findings and `research/archive/` for
-  retired material. The flagship arc is `research/arcs/01_nla-verbalizer/`
-  (22 dated observations, 36 figures, a 178-PASS regression audit). The arc
-  lifecycle and reproducibility disciplines are in `research/ARC_PROCESS.md`;
-  the index is `research/README.md`.
-- **`examples/`** — The `nla_*.py` scripts implementing the NLA pipeline:
-  capture (writes `.pt` artifacts), analysis, figure render (matplotlib), and
-  `nla_audit_findings.py`, which re-derives every load-bearing numerical claim
-  from raw artifacts. Conventions are in `examples/README_NLA.md`. Of the 46
-  scripts, 18 import `llm_surgeon`; the rest are render/analysis-only
-  (torch / numpy / matplotlib).
+  retired material. Four arcs exist; **two are paused mid-program**, not
+  finished. The largest is `research/arcs/01_nla-verbalizer/`; the two
+  carrying the most informative epistemics are `03_embedding-atlas` (predictions
+  registered before the runs, two of them falsified) and `04_jspace` (a partial
+  replication that came out weaker than the original, with a causal split).
+  The arc lifecycle and reproducibility disciplines are in
+  `research/ARC_PROCESS.md`; the per-arc status index is `research/README.md`.
+- **`examples/`** — Per-arc pipeline scripts, prefixed by arc: `nla_*`
+  (arc 01), `emb_*` (arc 03), `jspace_*` (arc 04). Each family covers capture
+  (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
+  `*_audit_findings.py` that re-derives that arc's load-bearing numerical
+  claims from committed artifacts. Conventions are in `examples/README_NLA.md`.
+  Some scripts import `llm_surgeon` (model loading, probing, surgery); the rest
+  are render/analysis-only (torch / numpy / matplotlib).
+
+## Methodology
+
+The arcs under `research/arcs/` are run to a common discipline, specified in
+[`research/ARC_PROCESS.md`](research/ARC_PROCESS.md). It is stated here because
+it is the part of this work offered with any confidence — and because where it
+is *not* applied uniformly, that should be visible from the entry point rather
+than discovered two levels down.
+
+- **Predictions before runs — where an arc was planned up front.** Arc 03
+  registered its predictions on 2026-06-11, before any attention weights were
+  captured, and adjudicated them mechanically at close: P1a PASS, P1c FAIL,
+  P1d FAIL
+  ([`plans/2026-06-11-predictions.md`](research/arcs/03_embedding-atlas/plans/2026-06-11-predictions.md)).
+  Arc 04 pre-registered one robustness axis (the quantization control) in its
+  design plan and fixed the thresholds for the rest in the session record
+  before each run. Arcs 01 and 02 grew from open-ended questions and were
+  **not** pre-registered. The practice is not uniform; each arc README says
+  which it is.
+- **Audit scripts.** `examples/*_audit_findings.py` re-derive an arc's
+  load-bearing numbers from its committed `.pt` artifacts, so a figure quoted
+  in prose that has drifted from the artifact it came from fails the audit.
+  Arcs 01, 03, and 04 each have one; arc 02 has none, having produced no
+  numerical claims past Step 0. These audits check **arithmetic consistency
+  only** — they cannot catch a methodological error, a capture-protocol bug,
+  or interpretive overreach, and the arc READMEs say so explicitly.
+- **Datasets committed and pinned.** Raw `.pt` artifacts live in each arc's
+  `data/` (Git LFS) with a `MANIFEST.json` recording per-file sha256 and
+  provenance, so a clean clone re-renders every figure and replays every audit.
+- **Human/AI division of labor, recorded per arc.** Every arc README states
+  what Claude Code sessions implemented and what was directed, constrained, and
+  signed off by hand — down to which framings are the agent's paraphrase rather
+  than the author's own words (arc 02) and which methodological problems the
+  agent missed until a human raised them (arc 01, theme 9).
+- **Negative results kept at full detail.** Arc 03's two falsified predictions
+  and arc 04's four non-replications are written up at the same length as the
+  positive results. They are the strongest available evidence that the
+  pre-registration and audit machinery is not decorative.
+
+Counts that move as arcs develop — audit checks, observation totals — are kept
+in the arc READMEs where they are maintained, not here. Re-run the relevant
+audit rather than trusting a number quoted at the top level.
+
+This is exploratory, self-directed work: unpublished, unreviewed, and open to
+being wrong — the discipline above is there to make being wrong visible.
 
 ## Prerequisites — Git LFS is REQUIRED
 
@@ -94,13 +155,24 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 
 ## Running the research pipeline
 
-NLA scripts read and write `.pt` artifacts under `.cache/nla_artifacts/`
-(gitignored). The capture scripts produce artifacts; render scripts turn them
-into figures; the audit re-derives claims:
+Capture scripts write `.pt` artifacts (working cache under `.cache/`,
+gitignored; the committed copies live in each arc's `data/`). Render scripts
+turn artifacts into figures; each arc's audit re-derives that arc's claims
+from them. Verified from a clean clone on 2026-07-28:
 
 ```bash
-python examples/nla_audit_findings.py   # re-derive load-bearing numbers from .pt artifacts
+python examples/nla_audit_findings.py      # arc 01 → SUMMARY: 178 PASS | 0 FAIL
+python examples/emb_audit_findings.py      # arc 03 → SUMMARY:  94 PASS | 0 FAIL
+python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 920 PASS | 11 FAIL
 ```
+
+Arc 04's 11 failures on a clean clone are **expected**, not regressions: its
+five full fitted-lens tensors and their sidecars are cache-only by design, and
+the audit reports each as a loud `MISSING` rather than skipping it. With the
+local cache present the same run reports 978 PASS. Arc 02 has no audit — it
+was paused at Step 0 with no numerical claims. See the arc READMEs for what
+each audit does and does not catch (arithmetic consistency only — never
+methodology or interpretation).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced

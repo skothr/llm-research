@@ -8,7 +8,8 @@ band of verbalizable representations — replicate on Qwen2.5-Instruct
 J-lens readouts at layer 20 relate to the NLA verbalizer readouts studied in
 `research/arcs/01_nla-verbalizer/`?
 
-**Status (2026-07-22): ARC COMPLETE** — stages 1–6 including 5.2
+**Status (2026-07-22): closed** — ran to planned completion; results
+unreviewed and unreplicated outside this repo. Stages 1–6 including 5.2
 (entailed-property swaps) at both scales, the full robustness battery
 (corpus, quantization, n-budget, held-out sample), and stage-7
 audit/synthesis. 5.3 modulation descoped. Synthesis below. Design plan
@@ -72,7 +73,9 @@ Observations so far, in `observations/`:
   L21 excess 11.2% CI [11.0, 11.4], 7B peak 4.7%) and hold on **all four
   robustness axes** re-run in that metric; stage-5.2 gap
   significance-certified (exact permutation) and the stage-5.1b 59%-tier
-  null certified (exact McNemar; 7B: 0/0 discordants); pursuit norm-bias
+  **not detected at either scale** by exact McNemar — undetected rather than
+  certified-null: 1.5B p=0.375 on 5 discordants, and the 7B row has 0/0
+  discordants, where p=1.0 is an identity carrying no power; pursuit norm-bias
   bounded at both scales (early band contaminated — 7B via undertrained
   junk-token atoms, 1.5B via tied-embedding norms — workspace band clean).
 - `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2
@@ -97,7 +100,17 @@ p-value, and the MANIFEST census). All small derived artifacts (44 files,
 under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
 a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses, which stay cache-only per Decision 4 (committed layer
-subsets + `jspace_fit_lens.py` regenerate them). The jlens dependency is pinned in
+subsets + `jspace_fit_lens.py` regenerate them).
+
+**Expected result on a clean clone** (no local `cache/`, verified
+2026-07-28): `SUMMARY: 920 PASS | 11 FAIL`, exit code 1. All 11 failures are
+the designed `MISSING` reports for the five cache-only fitted lenses and their
+`.config.json` sidecars — *not* regressions. The 978-check figure above
+requires the local cache, where check A and the refit blocks in H/I/J also
+run. Any FAIL naming something other than a `jlens_*.pt` / `jlens_*.config.json`
+artifact is a genuine regression.
+
+The jlens dependency is pinned in
 the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
 association eval sets live in that clone). The harness was seeded at stage
 3 rather than at arc close (`6d567a27`, together with the Decision-4 lens
@@ -242,11 +255,15 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    all-position editing — the graded effect exists, the top-1 crossing
    does not, at ≤7B.
 2. **J-space *membership* as the causally privileged ingredient**: the
-   J-space component of activation-derived concept vectors is inert in
-   report swaps (the paper's 59% tier lands at random both scales), and
-   the NLA verbalizer's content lives in the residual, not the J-space
-   component (removal-damage ≈ random removal). Report-token swap
-   effects are largely reachable by raw token steering.
+   J-space component of activation-derived concept vectors shows **no
+   detectable effect** in report swaps — the paper's 59% tier is
+   indistinguishable from random at both scales, though by tests with
+   little power to separate them (1.5B p=0.375 on 5 discordants; 7B 0/0
+   discordants, where McNemar has none). Read as failure to detect, not as
+   demonstrated inertness. The NLA verbalizer's content likewise lives in
+   the residual, not the J-space component (removal-damage ≈ random
+   removal). Report-token swap effects are largely reachable by raw token
+   steering.
 3. **The kurtosis workspace-onset signature**: inverted on Qwen
    (high-early → mid-trough → weak late rise), on the paper-native
    metric, robust across logit/prob space and both corpora.
