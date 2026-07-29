@@ -5,11 +5,11 @@
 **Inputs:** `interpolation_flipbook.pt` (cached h_A, h_B), AV `kitft/nla-qwen2.5-7b-L20-av`
 **Output:** `dense_interp_near_pivot.pt`
 **Figures:** `fig36_dense_interp_flipbook.png`, `fig37_dense_interp_diagnostic.png`
-**Linear:** MAIN-34
+**Private-tracker ID:** MAIN-34 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-34 tested
 
-MAIN-25 found a "stepwise transition at t=0.421" in linear h-space interpolation between AR-encoded anchors (factual/geography ↔ poetic/nature). The 20-step grid showed AV-text format flipping between step 8 (t=0.421) and step 9 (t=0.474) — Δt=0.053. The question for MAIN-34: at ~10× density (Δt ≈ 0.0025 in the critical zone [0.395, 0.455]), does the transition remain a single-step discontinuity (consistent with the MAIN-44/48 synthesis: discrete category attractors), or does it smooth out (would mean the 20-step finding was undersampled)?
+[MAIN-25](2026-05-13-nla-interpolation-flipbook.md) found a "stepwise transition at t=0.421" in linear h-space interpolation between AR-encoded anchors (factual/geography ↔ poetic/nature). The 20-step grid showed AV-text format flipping between step 8 (t=0.421) and step 9 (t=0.474) — Δt=0.053. The question for MAIN-34: at ~10× density (Δt ≈ 0.0025 in the critical zone [0.395, 0.455]), does the transition remain a single-step discontinuity (consistent with the synthesis from [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) + [MAIN-48](2026-05-14-nla-concept-arithmetic-atlas.md): discrete category attractors), or does it smooth out (would mean the 20-step finding was undersampled)?
 
 ## What actually happened — three regions, not two
 
@@ -52,6 +52,6 @@ This refines the synthesis: **layer-20 h-space has discrete attractor basins sep
 
 ## Follow-ups this opens
 
-- **MAIN-71**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min).
+- **[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md)**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min).
 - **Test plateau attractor strength.** Does AR-re-encoding an h from the hybrid plateau collapse it back to the plateau (a self-attracting state), or does it drift toward one of the anchor regions? Tests whether the plateau is a real attractor or just a transit zone.
 - **Probe other anchor pairs.** Different anchor-text pairs would produce different intermediate plateaus. Atlas of these would map the basin structure of layer 20 across content types.
