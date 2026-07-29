@@ -1,4 +1,7 @@
-"""Render fig31 + fig32 for MAIN-44 mid-sequence vocab atlas comparison.
+"""Render fig31 + fig32 for the mid-sequence vocab atlas comparison.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-14-nla-mid-seq-vocab-atlas-null-result.md
 
 fig31 - side-by-side bar chart per category: signal (within-class
         projection) for end-of-prompt vs mid-sequence + max-noise overlay.

@@ -1,4 +1,7 @@
-"""Render fig35 for MAIN-48: concept arithmetic atlas.
+"""Render fig35 for the concept arithmetic atlas.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-14-nla-concept-arithmetic-atlas.md
 
 Multi-row text-table figure showing each arithmetic combination,
 the predicted result, and the actual AV reading.
