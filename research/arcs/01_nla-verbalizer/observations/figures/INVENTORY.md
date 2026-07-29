@@ -10,7 +10,7 @@ Catalogue of all 36 figures in this directory (fig1-fig11, fig13-fig37 — fig12
 - **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py`).
 - **Sink dims:** {277, 458, 1427, 1627, 2107, 2570, 3110} — identified by the `classify_dim_character` heuristic in `nla_pairwise_and_hotdims.py`. "Sink-removed" preprocessing zeros these 7 component indices.
 - **Feature dims:** {20, 32, 392, 608, 1121, 1790, 2604, 2953} — same heuristic, content-bearing dims.
-- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19 cover Path B, vocab atlas, discriminant validation, MAIN-44/47/48/34/70/71; 20-21 the round-trip faithfulness foundation; 17 the concept-arithmetic decode identities). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
+- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19 cover Path B, vocab atlas, discriminant validation, the two null results, concept arithmetic, dense interpolation and the plateau attractor; 20-21 the round-trip faithfulness foundation; 17 the concept-arithmetic decode identities). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
 
 ---
 
@@ -135,7 +135,7 @@ Full 128-anchor sink-removed PCA scatter. PC1 (33.5%) separates content-bearing 
 Cosine of the 20 interpolation steps (fig17) onto all 128 vocab anchors, with top-3 nearest anchors per step on the left and a per-category heatmap on the right. **Independent confirmation of the t=0.421 pivot**: top-3 anchors flip from `Madrid/Berlin/Tokyo` (capital category) to `autumn/snow/Berlin` (transition) to `autumn/snow/sky` (nature) at exactly t=0.421.
 
 ### fig22_anchor_cosine_matrix.png
-Full 128×128 anchor pairwise cosine matrix, ordered by category. Visible block structure: content macro-cluster (top-left), function-words middle, punctuation+numbers+math_op bottom-right. **All categories have intra-cos > +0.84 even after sink removal** — there's a category-attractor subspace separate from the sink subspace (open question, see MAIN-24).
+Full 128×128 anchor pairwise cosine matrix, ordered by category. Visible block structure: content macro-cluster (top-left), function-words middle, punctuation+numbers+math_op bottom-right. **All categories have intra-cos > +0.84 even after sink removal** — there's a category-attractor subspace separate from the sink subspace (open question — stated as H11 in [`2026-05-13-nla-vocab-atlas-grid.md`](../2026-05-13-nla-vocab-atlas-grid.md), filed at the time as MAIN-24 on the retired private tracker).
 
 ---
 
@@ -172,7 +172,7 @@ Source scripts: `examples/nla_discriminant_connectivity.py` (fig27 + fig29) + `n
 ### fig29_self_validation.png
 167×23 heatmap: existing captures projected onto each discriminant, ordered by source pool. Black dots mark the expected category per row. Shows top-5 hit rates per category: country 79%, codemath 73%, nature 56%.
 
-**Caveat surfaced by MAIN-47:** the 34% top-1 number was inflated low by labeling artifacts (country_test pool contains weird-framing prompts intentionally not country-content). See MAIN-68 follow-up for strict-prompt re-validation.
+**Caveat surfaced by [MAIN-47](../2026-05-14-nla-hierarchical-classifier-null-result.md):** the 34% top-1 number was inflated low by labeling artifacts (country_test pool contains weird-framing prompts intentionally not country-content). Strict-prompt re-validation is tracked as [#10](https://github.com/skothr/llm-research/issues/10) (was MAIN-68).
 
 ---
 
@@ -192,7 +192,7 @@ The diagnostic from MAIN-47's resolution: the 34% baseline was a sum of 3 differ
 Source scripts: `examples/nla_mid_seq_vocab_atlas_{capture,compare,render}.py`. Data: `mid_seq_vocab_atlas.pt`, `mid_seq_compare.pt`, joined with `vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Carrier prompt: `"The text contains many words. Here is one specific word: {anchor} continues throughout subsequent discussion paragraphs."` — anchor lands at token pos 36-38 of ~48 (~75% of sequence, 10-12 trailing-context tokens). Position-finding by prefix-tokenize-and-count (BPE is left-to-right so the left segment's token count is invariant to right context).
 
 ### fig31_mid_seq_signal_vs_noise.png
-Two-panel bar chart per category. **Top**: within-class signal (`mean over a in C of cos(h_a_sink_removed, d_C)`) at end-of-prompt (blue) vs mid-sequence (orange). **Bottom**: max off-class projection (noise floor) under both protocols. The 23 discriminants `d_C` are derived from the end-of-prompt vocab atlas only; mid-seq h's are projected onto them as a cross-protocol test. **Null result**: mid-seq signal is ~8× weaker than end-of-prompt (aggregate +0.0491 vs +0.4022); MAIN-44 hypothesis rejected. The basis is end-of-prompt-protocol-coupled, not just topic-coupled.
+Two-panel bar chart per category. **Top**: within-class signal (`mean over a in C of cos(h_a_sink_removed, d_C)`) at end-of-prompt (blue) vs mid-sequence (orange). **Bottom**: max off-class projection (noise floor) under both protocols. The 23 discriminants `d_C` are derived from the end-of-prompt vocab atlas only; mid-seq h's are projected onto them as a cross-protocol test. **Null result**: mid-seq signal is ~8× weaker than end-of-prompt (aggregate +0.0491 vs +0.4022); the [MAIN-44](../2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) hypothesis is rejected. The basis is end-of-prompt-protocol-coupled, not just topic-coupled.
 
 ### fig32_mid_seq_argmax_accuracy.png
 Argmax-over-23-discriminants classification accuracy per category, end-of-prompt vs mid-sequence. Aggregate drops 75.4% → 32.0% — but 6 categories *increase* under mid-seq (nature 50%→100%, emotion 50%→100%, quantifier 80%→100%, conjunction 17%→67%, pronoun 29%→43%, p_special 0%→25%), suggesting end-of-prompt's high cross-category correlation was eating accuracy for those categories. Most categories lose accuracy because the within-class direction (derived from end-of-prompt mean) doesn't align with mid-seq h.
@@ -201,10 +201,12 @@ Argmax-over-23-discriminants classification accuracy per category, end-of-prompt
 
 ## Mid-seq native discriminants + cross-protocol stability (fig33, fig34)
 
-Source script: `examples/nla_mid_seq_native_compare.py`. Data: `vocab_atlas.pt` + `mid_seq_vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Output: `mid_seq_native_compare.pt`. Follow-up to MAIN-44; produced for MAIN-70.
+Source script: `examples/nla_mid_seq_native_compare.py`. Data: `vocab_atlas.pt` + `mid_seq_vocab_atlas.pt` + `pairwise_and_hotdims.pt`. Output: `mid_seq_native_compare.pt`. Observation: [`2026-05-14-nla-mid-seq-native-discriminants.md`](../2026-05-14-nla-mid-seq-native-discriminants.md), a follow-up to [`2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](../2026-05-14-nla-mid-seq-vocab-atlas-null-result.md).
 
 ### fig33_native_signal_lift.png
 Three-bar grouping per category. Blue = `eop-h × eop-discr` (in-protocol, the baseline). Green = `mid-h × mid-discr` (in-protocol using NATIVE discriminants — predicted to lift). Orange = `mid-h × eop-discr` (the MAIN-44 cross-protocol collapse). Green dominates: aggregate signal **+0.5632** (40% higher than blue's +0.4022), argmax accuracy 97.10%. Confirms the basis is protocol-coupled by construction — a per-protocol family of discriminants each gives strong within-protocol classification.
+
+> **Stale caption, committed PNG only.** The title baked into this PNG still reads "Orange shows MAIN-44's collapsed cross-protocol projection", naming a retired private tracker. The source string in `nla_mid_seq_native_compare.py` was corrected on 2026-07-29; the PNG was deliberately not re-rendered, because re-running that script also rewrites `mid_seq_native_compare.pt` and churns the `MANIFEST.json` checksums the audit reads. The next legitimate re-render of fig33 clears it.
 
 ### fig34_cross_protocol_axis_cos.png
 23×23 cosine heatmap of `d_eop_C` vs `d_mid_D`. Diagonal entries (annotated with values) measure per-category axis stability across capture position. Mean diagonal **+0.0784**, max **+0.1704** (emotion), min **+0.0126** (p_quote). Mean off-diagonal **-0.0009**. Content-bearing categories (country, capital, nature, codemath, emotion, refusal) have the largest cross-protocol cosines (+0.13-0.17), while punctuation and function-word categories' axes are essentially position-determined (~+0.03). Each category's axis at one protocol is closer to its own axis at the other protocol than to a random category's axis — but only modestly. Refines MAIN-44's "fully protocol-coupled" framing: there's a small protocol-invariant component, but only for content categories.
@@ -213,7 +215,7 @@ Three-bar grouping per category. Blue = `eop-h × eop-discr` (in-protocol, the b
 
 ## Concept arithmetic atlas (fig35)
 
-Source scripts: `examples/nla_concept_arithmetic_atlas.py`, `nla_concept_arithmetic_render.py`. Data: `vocab_atlas.pt` per-anchor h's + AV `kitft/nla-qwen2.5-7b-L20-av`. Output: `concept_arithmetic_atlas.pt`. Done for MAIN-48.
+Source scripts: `examples/nla_concept_arithmetic_atlas.py`, `nla_concept_arithmetic_render.py`. Data: `vocab_atlas.pt` per-anchor h's + AV `kitft/nla-qwen2.5-7b-L20-av`. Output: `concept_arithmetic_atlas.pt`. Observation: [`2026-05-14-nla-concept-arithmetic-atlas.md`](../2026-05-14-nla-concept-arithmetic-atlas.md).
 
 ### fig35_concept_arithmetic_atlas.png
 Multi-row text-table: 7 arithmetic combinations on layer-20 h vectors (rescaled to ||h||=150 before AV-decoding). Categories color-coded: analogy (blue), subtraction (red), axis (green), compound (purple). Each row pairs the arithmetic expression + prediction with the AV reading. **Headline finding**: word2vec-style specific-identity analogies FAIL (3/3) — `Paris − France + Germany` decodes as London (right category, wrong identity), `Tokyo − Japan + France` decodes as Spain (wrong category), `Berlin − Germany + UK` collapses to UK. **Category-level axis directions DO preserve** — `country_centroid − capital_centroid` decodes as country-flavored content. **Compound (additive) follows the larger-magnitude term** — `country + emotion` decodes as China (country dominates). Pure subtraction of similar-magnitude vectors yields incoherent noise after rescaling. Confirms layer-20 representations are categorically structured but not algebraically composable in the word2vec sense.
@@ -224,7 +226,7 @@ CJK glyphs render as boxes in DejaVu Serif (AV occasionally outputs Chinese comm
 
 ## Dense interpolation near t=0.421 (fig36, fig37)
 
-Source scripts: `examples/nla_dense_interp_near_pivot.py`, `nla_dense_interp_render.py`. Data: cached `h_A`, `h_B` from `interpolation_flipbook.pt` + AV `kitft/nla-qwen2.5-7b-L20-av` + vocab atlas + sink classifier. Output: `dense_interp_near_pivot.pt`. Done for MAIN-34. 30 steps: 25 dense in [0.395, 0.455] (Δt ≈ 0.0025), 5 sparse context points {0.0, 0.25, 0.5, 0.75, 1.0}.
+Source scripts: `examples/nla_dense_interp_near_pivot.py`, `nla_dense_interp_render.py`. Data: cached `h_A`, `h_B` from `interpolation_flipbook.pt` + AV `kitft/nla-qwen2.5-7b-L20-av` + vocab atlas + sink classifier. Output: `dense_interp_near_pivot.pt`. Observation: [`2026-05-15-nla-dense-interp-near-pivot.md`](../2026-05-15-nla-dense-interp-near-pivot.md). 30 steps: 25 dense in [0.395, 0.455] (Δt ≈ 0.0025), 5 sparse context points {0.0, 0.25, 0.5, 0.75, 1.0}.
 
 ### fig36_dense_interp_flipbook.png
 Vertical flipbook strip: t-bar column (color gradient blue→orange + dense-zone highlighted yellow), top-3 vocab-anchor cosines column, and AV-decode first-paragraph column per step. **Headline finding**: dense sampling reveals a **HYBRID "Definition + Poem" plateau** spanning 19 consecutive dense-zone steps (t=0.395 to t=0.4450), all decoded with the same intermediate format. Sharp transition at t=0.4475-0.4500 to "What is Spring?" poetic-nature format (one Δt=0.0025 step). Three regions total: factual (t<0.30) → hybrid plateau (t∈[0.395, 0.4450]) → poetic/nature (t>0.4475).
