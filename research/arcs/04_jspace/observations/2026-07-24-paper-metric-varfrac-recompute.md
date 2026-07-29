@@ -117,7 +117,9 @@ selected as peak layers from the same data, so the p-values are post-hoc
 at a data-chosen maximum. The 7B result (n=17, p=1e-4) is the statistically
 stronger citation.
 
-**Stage-5.1b tiers also certified** (exact McNemar on the paired per-item
+**Stage-5.1b tiers adjudicated** — the two positive tiers significance-certified,
+the 59% tier bounded rather than certified (see the correction below)
+(exact McNemar on the paired per-item
 `target_in_top5` outcomes at s=2, `verbal_report_chat_6c` artifacts,
 n=78 items):
 
@@ -127,11 +129,40 @@ n=78 items):
 | jspace_comp vs random (the 59% tier) | 0.179/0.141, 4/1, p=0.375 | 0.154/0.154, **0/0 discordants**, p=1.0 |
 | logitlens vs random | 0.564/0.141, 34/1, p≈2e-9 | 0.244/0.154, 7/0, p=0.0156 |
 
-The load-bearing NULL — "the paper's 59% middle tier lands at random" —
-is now certified, most sharply at 7B where the J-space-component
-condition produced the *identical* per-item outcome pattern as the random
-control (zero discordant pairs); at 1.5B the null rests on only 5
-discordant pairs (limited power, direction unresolved). The
+> **[CORRECTION 2026-07-28]** The paragraph below replaces this file's
+> original reading, which asserted the null was "now certified, most sharply
+> at 7B where the J-space-component condition produced the *identical*
+> per-item outcome pattern as the random control (zero discordant pairs); at
+> 1.5B the null rests on only 5 discordant pairs (limited power, direction
+> unresolved)." **"Certified" was wrong** — a hypothesis test cannot establish
+> a null, and at 0/0 discordants exact McNemar returns `p=1.0` as an algebraic
+> identity, so the p-value carried no information. The *ranking* was right for
+> the wrong reason: 7B is the stronger row, but because of the equivalence
+> bound below, not the p-value. Numbers unchanged; the table above is
+> untouched and remains audit-pinned. Recorded rather than silently rewritten,
+> per the arc's standing requirement that discovered defects enter the record.
+
+The load-bearing NULL — "the paper's 59% middle tier lands at random" — holds,
+but as a **bounded equivalence result**, not a certified null. The distinction
+is what each row licenses:
+
+- **7B, 0/0 discordants, n=78.** Exact McNemar is a binomial tail over the
+  discordant pairs alone, so `p=1.0` here is an identity and carries nothing.
+  The *data* are informative, though, and sharply so: observing zero
+  discordant pairs in 78 puts an exact one-sided 95% bound of **3.77pp** on
+  the discordant rate (`1 − 0.05^(1/78)`; rule-of-three ≈ 3/78). Since the
+  paired marginal difference is bounded by the discordant rate, this pins
+  |P(jspace_comp) − P(random)| **≤ ~3.8pp**. The J-space-component condition
+  reproduced the random control's per-item `target_in_top5` outcome on every
+  one of the 78 items.
+- **1.5B, 4/1 discordants, p=0.375.** 5 discordants out of 78 — a looser
+  bound, direction unresolved.
+
+So 7B is the **tighter** of the two rows, not the empty one. The honest
+reading is "any effect of J-space membership on report swaps is at most a few
+percentage points, and we detect none" — an equivalence statement, which is
+strictly more informative than "not rejected" and strictly weaker than
+"certified." That is what the arc's causal-split conclusion rests on. The
 token-steering tier (logitlens > random) is likewise real at both scales.
 Swap-causality figure now carries Wilson 95% intervals per rate; the
 entailed-property figure carries seeded-bootstrap 95% CIs on the
