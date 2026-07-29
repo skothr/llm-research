@@ -178,15 +178,30 @@ fitted lenses, which stay cache-only per Decision 4 (committed layer
 subsets + `jspace_fit_lens.py` regenerate them).
 
 **Expected result on a clean clone** (no local `cache/`, verified
-2026-07-28): `SUMMARY: 920 PASS | 11 FAIL`, exit code 1. All 11 failures are
+2026-07-29): `SUMMARY: 920 PASS | 10 FAIL`, exit code 1. All 10 failures are
 the designed `MISSING` reports for the five cache-only fitted lenses and their
-`.config.json` sidecars — *not* regressions. Five lenses plus five sidecars is
-ten; the eleventh is the `jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json`
-presence check running twice inside CHECK J (a duplicate that also inflates the
-with-cache PASS total by one — tracked, not yet fixed). The 978-check figure
-above requires the local cache, where check A and the refit blocks in H/I/J
-also run. Any FAIL naming something other than a `jlens_*.pt` /
-`jlens_*.config.json` artifact is a genuine regression.
+five `.config.json` sidecars — *not* regressions. Any FAIL naming something
+other than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
+regression.
+
+> Until 2026-07-29 this read `11 FAIL`. The extra one was a duplicate
+> registration of the `jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json` presence
+> check inside CHECK J, fixed with #33. The earlier note here also claimed the
+> duplicate "inflates the with-cache PASS total by one" — **that was wrong**:
+> `load_json_or_fail` registers a claim only on the *missing* branch, so with a
+> populated cache the duplicated call was silent and contributed nothing to the
+> total. The same fix pass disambiguated two further checks that shared one
+> label (`jlens@2 top5_all rederived==summary`, emitted by both the
+> verbal-report and chat-6c audits at each scale) — a reporting defect, not a
+> miscount: a failure could not be attributed to either artifact.
+
+The 978-check figure above requires the local cache, where check A and the
+refit blocks in H/I/J also run. **978 is carried over unverified** — it was
+last measured with a warm cache on 2026-07-25, and the cache is currently
+empty. Neither 2026-07-29 fix changes it (one was silent on the with-cache
+path; the other only renamed labels), but it will be re-derived and restated
+when the C4-redaction re-run repopulates the cache
+([plans/2026-07-29-c4-redaction-rerun.md](plans/2026-07-29-c4-redaction-rerun.md)).
 
 **What this audit does not catch.** Like the arc-01 and arc-03 audits, it
 checks **arithmetic consistency only** — that a number in prose still matches
