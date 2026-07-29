@@ -14,8 +14,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
-
 
 from _nla_artifacts import FIGURES as FIGDIR
 from _nla_artifacts import load_artifact

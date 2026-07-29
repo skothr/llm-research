@@ -14,8 +14,6 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
-import torch
-
 
 from _nla_artifacts import FIGURES as FIGDIR, load_artifact
 
