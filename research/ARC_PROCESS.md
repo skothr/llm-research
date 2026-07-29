@@ -4,7 +4,10 @@ How to run a research arc in this workspace so it ends up reproducible,
 honestly framed, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
-is the worked example every section points at.
+is the worked example most sections point at — with one exception: for
+**attribution** (§ 0, § 6) the reference implementation is
+[`02_subliminal`](arcs/02_subliminal/), not arc 01. Arc 01 predates the
+codified attribution shape and does not satisfy all of it.
 
 An *arc* is a focused, multi-observation investigation cohering around one
 research question. A single loose finding is an *observation*; when several
@@ -69,8 +72,9 @@ question → capture). But each numbered step has a definition of done.
   question can live in the arc README's motivation once it exists.
 - Note the **direction-setting** as it happens (who asked what). The
   human-direction vs AI-implementation split is worth recording honestly; the
-  NLA arc README's "Research direction" section is the template (attribution
-  shape codified in [§ 6 Attribution](#6-arc-readme-synthesis)).
+  [subliminal arc](arcs/02_subliminal/README.md) README's "Research direction"
+  section is the template (attribution shape codified in
+  [§ 6 Attribution](#6-arc-readme-synthesis)).
 
 ### 1. Capture → validate → save the raw dataset
 
@@ -165,8 +169,12 @@ number in the observations has a corresponding assertion.
 - **Limitations** section, ranked by how far they constrain the claims.
 - **Possible next paths**, each tied to a question and (if tracked) a ticket.
 - **Attribution** — separate human direction-setting from AI implementation
-  honestly. The [nla-verbalizer arc](arcs/01_nla-verbalizer/README.md)
-  ("Research direction" + collaboration-mode sections) is the template.
+  honestly. The [subliminal arc](arcs/02_subliminal/README.md) ("Research
+  direction" section) is the template: it and the requirements below were
+  written in the same commit (`5040118e`, 2026-07-18), so it is the reference
+  implementation of this shape rather than a predecessor of it. Arc 01's
+  "Research direction — user-shaped themes" is the informal precursor the
+  shape was generalized *from*; follow arc 02 where the two differ.
   Required shape:
   1. A **"Research direction"** section: the originating user direction(s) as
      **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a

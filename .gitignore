@@ -31,8 +31,29 @@ theory/series/dist/
 # OS / editor
 .DS_Store
 *.swp
+.idea
 .idea/
+.vscode
 .vscode/
+
+# Shell / tooling dotfiles that the sandbox materializes at the repo root as
+# /dev/null bind mounts. They are character devices, not directories, so the
+# trailing-slash patterns above do not match them — hence the bare forms too.
+# Public repo: none of these should ever be committed by a `git add -A`.
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.mcp.json
+.ripgreprc
+# .gitmodules is masked the same way, and leaving it untracked is not an
+# option: `git add -A` aborts with "can only add regular files, symbolic
+# links or git-directories" rather than skipping it. IF THIS REPO EVER GAINS
+# A REAL SUBMODULE, DELETE THE NEXT LINE — .gitmodules must be tracked for
+# submodules to work.
+.gitmodules
 
 # Claude Code worktrees / scratch (also keeps concurrent sessions out of git)
 .claude/

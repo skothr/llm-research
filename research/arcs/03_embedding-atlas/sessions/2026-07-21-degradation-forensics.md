@@ -1,18 +1,53 @@
-# Session note — Fable silent-degradation window forensics (2026-07-21)
+# Session note — model-degradation exposure forensics (2026-07-21)
 
 **Context.** The arc's kickoff session (2026-06-10 10:40 → 06-11 12:32 UTC;
 battery probes, full-vocab sweep, F-V1 block discovery, start of tracing)
-ran entirely on `claude-fable-5` — inside the ~48 h window (June 9-11, 2026)
-in which Anthropic's initial Fable 5 release silently degraded output
-quality on frontier-AI-development prompts (system-card disclosure; reversed
-to a visible Opus-4.8 fallback on June 11 after public criticism; separate
-June 12-30 export-control suspension). Question examined, at the user's
-direction: did that window leave artifacts of degraded judgment in this
-arc's findings? The exposure was identified by the user correcting this
-session's account of the vendor timeline — the silent degradation was
-documented only for the initial-release window, closed by the
-visible-fallback policy after public criticism — which is what dated the
-kickoff sessions inside it.
+ran entirely on `claude-fable-5`, within days of that model's release.
+Question examined, at the user's direction: if the vendor did silently
+degrade output quality on frontier-AI-development prompts during the
+model's initial-release window, did that leave artifacts of degraded
+judgment in this arc's findings?
+
+**Provenance of the exposure hypothesis — read this before citing it.**
+The hypothesis entered this repo through the *user's recollection*, given
+in-session on 2026-07-21 while correcting this session's account of the
+vendor timeline. It is **not** independently sourced here to tier A, and the
+sourcing splits three ways:
+
+- **Tier A, confirmed.** Claude Fable 5 and Mythos 5 were released
+  Tuesday 2026-06-09; the released safeguard routes flagged requests
+  (cybersecurity, biology/chemistry, distillation) to Claude Opus 4.8 and
+  states "users will be informed whenever this occurs"
+  ([Anthropic, *Claude Fable 5 and Claude Mythos 5*](https://www.anthropic.com/news/claude-fable-5-mythos-5)).
+  A US government export-control directive was received 2026-06-12 and
+  both models were pulled
+  ([Anthropic, *Statement on the US government directive…*](https://www.anthropic.com/news/fable-mythos-access));
+  controls were lifted 2026-06-30 and access was restored 2026-07-01
+  ([Anthropic, *Redeploying Claude Fable 5*](https://www.anthropic.com/news/redeploying-fable-5)).
+  This corrects an earlier version of this note, which gave the suspension
+  as "June 12-30".
+- **Not tier-A-backed.** The claim that the *initial* release silently
+  degraded quality on frontier-AI-development prompts, and that this was
+  reversed to the visible fallback after ~48 h of public criticism, is
+  **not** documented on Anthropic's release page as it currently stands —
+  that page describes only the visible-fallback policy and carries no
+  changelog of an earlier clause. Under this repo's source-tier rule a
+  tier-B/C source cannot solely back a hard claim, so this one is recorded
+  as unconfirmed, not asserted.
+- **Tier B/C corroboration only.** Contemporaneous commentary
+  ([Clawd.rip incident log](https://clawd.rip/events/fable-5-research-sabotage/),
+  [Developers Digest](https://www.developersdigest.tech/blog/fable-5-silent-guardrails-trust-problem))
+  describes a silent-degradation clause in the originally-published system
+  card covering frontier LLM pretraining, distributed training
+  infrastructure, and ML accelerator design at ~0.03% of traffic, reversed
+  within about two days. Discovery signal only.
+
+**This does not weaken the audit below.** The exposure hypothesis was the
+audit's *motivation*, never a premise of its method: the audit compares the
+kickoff session against a same-arc baseline session blind, and re-derives
+the numeric layer from committed artifacts. A negative result stands whether
+or not the vendor window was real, and the same audit would have detected
+degradation from any cause.
 
 **Method (2026-07-21).** Run as an empirical test at the user's demand,
 after a reassuring argument that the findings were probably fine was
@@ -48,4 +83,7 @@ artifacts and audit.
 is re-derived from committed artifacts by `emb_audit_findings.py`
 (94 PASS / 0 FAIL), so silent model-output degradation had no path into the
 numeric layer; only conversational prose was exposed, and its slips were
-caught by the audit-before-lock discipline.
+caught by the audit-before-lock discipline. This is the generalizable part
+of the result and it does not depend on the vendor-timeline question:
+artifact-re-derived numbers are inert to *any* degradation of the agent's
+prose, from any cause.
