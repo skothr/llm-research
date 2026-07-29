@@ -130,8 +130,9 @@ first token, not the delimiters.
 ## Reproducibility
 
 ```bash
-# capture (loads the model; ~10 min CPU). offline HF cache required:
-HF_HUB_CACHE=/media/skothr/G-Drive/models HF_HUB_OFFLINE=1 \
+# capture (loads the model; ~10 min CPU). The model must already be in the HF
+# hub cache; export HF_HUB_CACHE first if yours is not at the default location.
+HF_HUB_OFFLINE=1 \
   python examples/emb_trace_attention.py       # -> .cache/emb_artifacts/emb_trace_attention.pt
 python examples/emb_trace_attention_analyze.py # model-free adjudication (all numbers above)
 python examples/emb_trace_attention_render.py  # fig19-fig21 (model-free)
