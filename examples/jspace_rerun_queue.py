@@ -112,7 +112,9 @@ JOBS: list[Job] = [
         prompts="fitting_prompts_c4en_n1000.json",
         corpus_tag="c4en",
         free_mib=5900,
-        hours=2.2,
+        # 3.2 h from calibration (115 s/prompt x 100); observed 3.12 h on
+        # 2026-07-29. The plan originally said 2.2 h — a transcription error.
+        hours=3.2,
         checkpoint_every=10,
     ),
     Job(
