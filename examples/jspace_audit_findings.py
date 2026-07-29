@@ -778,7 +778,10 @@ def audit_verbal_report() -> None:
         rederived = _vr_rate(items, "jlens@2.0", "target_in_top5")
         stored = float(summary["metrics"]["jlens@2.0"]["target_top5_rate_all"])
         claim(
-            f"[{key}] jlens@2 top5_all rederived==summary",
+            # Artifact named in the label: audit_verbal_report_6c runs the same
+            # consistency check on the chat-6c artifact, and an identical label
+            # made a failure impossible to attribute to one or the other (#33).
+            f"[{key}] verbal-report jlens@2 top5_all rederived==summary",
             abs(rederived - stored) < 1e-9,
             round(stored, 6),
             round(rederived, 6),
@@ -943,7 +946,9 @@ def audit_verbal_report_6c() -> None:
         rederived = _vr_rate(items, "jlens@2.0", "target_in_top5")
         stored = float(summary["metrics"]["jlens@2.0"]["target_top5_rate_all"])
         claim(
-            f"[{key}] jlens@2 top5_all rederived==summary",
+            # `items`/`summary` here are the chat-6c artifact; the plain
+            # verbal-report artifact carries the same check under its own label.
+            f"[{key}] chat-6c jlens@2 top5_all rederived==summary",
             abs(rederived - stored) < 1e-9,
             round(stored, 6),
             round(rederived, 6),
@@ -1186,11 +1191,16 @@ def _audit_lens(
     """Shared lens-integrity block (parallels Check A) for the robustness-refit
     lenses: 27 layers == source_layers == range(27); d_model; n_prompts; all J
     finite; min Frobenius > 0; sidecar model/mode/n_prompts consistent. The full
-    fitted lenses are cache-only (Decision 4), so this resolves to cache/."""
+    fitted lenses are cache-only (Decision 4), so this resolves to cache/.
+
+    Returns the parsed **sidecar config** (not the lens), so a caller needing an
+    extra sidecar assertion reuses it instead of calling `load_json_or_fail` a
+    second time — that second call re-registered the `sidecar present` claim and
+    double-counted it on a clean clone (#33). No caller uses the lens dict."""
     d = load_pt_or_fail(pt)
     cfg = load_json_or_fail(cfg_name)
     if d is None:
-        return None
+        return cfg
     jmat: dict[int, torch.Tensor] = d["J"]
     source_layers: list[int] = list(d["source_layers"])
     expected_layers = list(range(27))
@@ -1224,7 +1234,7 @@ def _audit_lens(
         claim_eq(f"[{key}] sidecar model", model, cfg.get("model"))
         claim_eq(f"[{key}] sidecar mode", mode, cfg.get("mode"))
         claim_eq(f"[{key}] sidecar n_prompts", n_prompts, int(cfg.get("n_prompts", -1)))
-    return d
+    return cfg
 
 
 def _struct_summary(fname: str, key: str) -> tuple[dict[str, Any], list[int]] | None:
@@ -1408,7 +1418,7 @@ def audit_corpus_sensitivity() -> None:
     print("CHECK J: corpus sensitivity (C4-en refit; workspace-band invariance)")
     print("=" * 80)
     # ---- c4en lens integrity + corpus_tag ----
-    d = _audit_lens(
+    cfg = _audit_lens(
         "1.5b-c4en",
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json",
@@ -1417,10 +1427,8 @@ def audit_corpus_sensitivity() -> None:
         "bf16",
         100,
     )
-    cfg = load_json_or_fail("jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json")
     if cfg is not None:
         claim_eq("[J] c4en lens corpus_tag == 'c4en'", "c4en", cfg.get("corpus_tag"))
-    del d
     # ---- structure: workspace-band peak IDENTITY (L21 0.124); early band diverges ----
     r = _struct_summary(STRUCT_1P5B_C4, "1.5b-c4en")
     if r is not None:
