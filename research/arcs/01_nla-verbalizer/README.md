@@ -355,10 +355,23 @@ within-category content modulation. PC1 of the
 sink-removed vocab atlas (33.5% variance) emerges as the
 **content-vs-function** axis — content words load positive, function
 words and punctuation load negative.
-([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2 —
-note that observation states the polarity the other way round, content
-at PC1 < 0; PCA component sign is arbitrary, so only the separation is
-load-bearing.)
+([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
+
+> **Polarity discrepancy — the observation is authoritative.** The
+> sentence above says content loads *positive*; Finding 2 of
+> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md)
+> says the opposite, content-bearing at PC1 < 0 and structural/function
+> at PC1 > 0. **Take the observation file.** It is the dated primary
+> record; this README is a summary written after the fact, so the
+> mismatch is a transcription slip here, not a disputed result. Nothing
+> downstream changes either way: the sign of a PCA component is
+> arbitrary (flipping an eigenvector's sign gives an equally valid
+> decomposition), so the load-bearing claim is that PC1 *separates*
+> content from function, not which side either lands on — which is why
+> the slip went unnoticed. `nla_audit_findings.py` AUDIT 12 re-derives
+> the 33.5% variance fraction from the same artifact, but it checks the
+> magnitude only; no audit asserts the polarity, so neither statement
+> was ever machine-checked.
 
 **Scope qualifications:** sink-dim identification was hand-rolled
 (7 dims chosen as those with universal sign + large |h|); a more
