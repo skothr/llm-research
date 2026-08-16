@@ -182,6 +182,18 @@ def load_pt_or_fail(name: str) -> Any | None:
     if not p.exists():
         claim(f"artifact present: {name}", False, "present", "MISSING")
         return None
+    # A default clone leaves the large lens cache as LFS pointer stubs
+    # (.lfsconfig fetchexclude); report that state instead of letting
+    # torch.load crash on the pointer text.
+    with open(p, "rb") as fh:
+        if fh.read(24).startswith(b"version https://git-lfs"):
+            claim(
+                f"artifact present: {name}",
+                False,
+                "present",
+                'LFS pointer stub — run git lfs pull --include="research/arcs/04_jspace/data/cache/**"',
+            )
+            return None
     return torch.load(p, weights_only=False)
 
 

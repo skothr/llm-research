@@ -117,8 +117,12 @@ Artifact classes (see the MANIFEST for the per-file registry):
   **amended 2026-08-16**: the three redacted-corpus lenses — both wikitext +
   the c4en — are now LFS-committed in `cache/` with their sidecars and
   fit/scan logs, so a clean clone re-scans without the ~23 h refit; the two
-  nf4 lenses and all `.ckpt.pt` fit-resume checkpoints remain uncommitted),
-  and the hand-written paper-verbatim item bank.
+  nf4 lenses and all `.ckpt.pt` fit-resume checkpoints remain uncommitted.
+  The lens download is **opt-in**: `.lfsconfig` excludes `cache/` from
+  default LFS pulls (~905 MB), leaving pointer stubs until
+  `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
+  --exclude=""` fetches them), and the hand-written paper-verbatim item
+  bank.
 - `derived`: the promoted metric/scan/swap products the audit
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
