@@ -33,8 +33,8 @@ computed on that corpus — the **corpus-invariance** and **held-out-sample**
 checks and the **H3 @10 corpus-dependence qualifier** — was recomputed on
 the redacted text (2026-08-15/16). Outcome: two audit pins moved, each by
 less than 0.02, both in the held-out channel, and no headline conclusion
-changed; the two failure modes pre-registered before the
-re-run did not materialise. Arc 04's primary fitting corpus is wikitext-103,
+changed; the two failure modes pre-registered before the re-run did
+not materialise. Arc 04's primary fitting corpus is wikitext-103,
 which was scanned and left unmodified, and no other arc used C4. The full
 record — per-class counts, root cause, per-claim blast radius, and the
 reproduction recipe — is in
@@ -113,8 +113,10 @@ than discovered two levels down.
   per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an
   interim manifest schema. The intent is that a clean clone re-renders every
   figure and replays every audit — with one documented exception: arc 04's
-  fitted-lens tensors are cache-only by design, so 11 of its checks report
-  `MISSING` on a clean clone (see [Running the research pipeline](#running-the-research-pipeline)).
+  full fitted-lens tensors sit behind an opt-in LFS download (three are
+  committed; the two 1.5B nf4 lenses are pending issue #47), so 7 of its
+  checks fail on a default clone — 3 LFS-stub reports + 4 `MISSING`
+  (see [Running the research pipeline](#running-the-research-pipeline)).
 - **Human/AI division of labor, recorded per arc.** Every arc README states
   what Claude Code sessions implemented and what was directed, constrained, and
   signed off by hand — down to which framings are the agent's paraphrase rather
@@ -199,15 +201,17 @@ python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 921 PASS | 7 FA
 ```
 
 Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
-three redacted-corpus fitted lenses are LFS-committed but excluded from
-default LFS pulls (`.lfsconfig` — the ~905 MiB lens download is opt-in), so
-the audit reports each as an `LFS pointer stub` naming the pull command, and
-the two nf4 lenses and their sidecars are regenerate-only pending the
-scheduled refit (issue #47), each reported as a loud `MISSING` rather than
-skipped — 3 stubs + 4 `MISSING` = 7. After
+three lenses refit in the C4-redaction re-run are LFS-committed but excluded
+from default LFS pulls (`.lfsconfig` — the ~905 MiB lens download is
+opt-in), so the audit reports each as an `LFS pointer stub` naming the pull
+command, and the two 1.5B nf4 lenses and their sidecars are regenerate-only
+pending the scheduled refit (issue #47), each reported as a loud `MISSING`
+rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
 the same run reports **956 PASS | 4 FAIL** (the nf4 `MISSING` reports only)
-with no GPU work. Arc 02 has no audit script; its Step-0
+with no GPU work; the check total grows from 928 to 960 between the two
+states because the lens-dependent blocks register their claims only when
+the lens tensors are on disk. Arc 02 has no audit script; its Step-0
 numbers are checkable by hand against the committed JSONL. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
 never methodology or interpretation) and for the historical pre-re-run
