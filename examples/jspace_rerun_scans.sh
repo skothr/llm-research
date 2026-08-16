@@ -109,8 +109,8 @@ done
 # jspace_lens_eval.py needs its evaluation-set dir (DEFAULT_EVAL_DIR, a path
 # into the pinned jacobian-lens checkout). Import the module and read the
 # constant it will actually use — single source of truth regardless of how
-# that default is expressed (literal today; JSPACE_EVAL_DIR-overridable env
-# lookup after #43) — checked now rather than 20 minutes into the run.
+# that default is expressed (a __file__-anchored, JSPACE_EVAL_DIR-overridable
+# computed default since #43) — checked now rather than 20 minutes into the run.
 EVAL_DIR="$("${PY}" -c "
 import sys
 sys.path.insert(0, 'examples')
