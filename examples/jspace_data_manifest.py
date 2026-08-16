@@ -761,10 +761,10 @@ def write_manifest() -> None:
             "readout_scan, structure_scan, verbal_report, entailed_swap + "
             "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
             "Committed via git-LFS so figures and the audit reproduce from a "
-            "clean clone. The cache/ subdir (full fitted lenses + working "
-            "state) is excluded. The J-lens dependency is pinned in the "
-            "top-level `jlens_pin` field below (the eval prompt sets live in "
-            "that clone)."
+            "clean clone. See data/README.md for what the cache/ subdir does "
+            "and does not commit. The J-lens dependency is pinned in the "
+            "top-level `jlens_pin` field below; the eval prompt sets ship "
+            "with that pinned checkout, not with this repo."
         ),
         "jlens_pin": {
             "repo": "https://github.com/anthropics/jacobian-lens",
