@@ -107,12 +107,18 @@ for f in "${LENS_C4EN}" "${LENS_WT_1P5B}" "${LENS_WT_7B}" "${HELDOUT_C4EN}"; do
     [[ -f "${f}" ]] || fail "missing required input: ${f} (Step 0/1 incomplete?)"
 done
 # jspace_lens_eval.py needs its evaluation-set dir (DEFAULT_EVAL_DIR, a path
-# into the sibling jacobian-lens checkout). Derive the same default the python
-# script will use rather than duplicating a literal here; checked now rather
-# than 20 minutes into the run. Override with JSPACE_EVAL_DIR if needed (must
-# then also be visible to jspace_lens_eval.py itself).
-EVAL_DIR="${JSPACE_EVAL_DIR:-$(sed -n 's/^DEFAULT_EVAL_DIR = "\(.*\)"$/\1/p' examples/jspace_lens_eval.py)}"
-[[ -n "${EVAL_DIR}" && -d "${EVAL_DIR}" ]] || fail "lens-eval set dir missing or underivable: '${EVAL_DIR}'"
+# into the pinned jacobian-lens checkout). Import the module and read the
+# constant it will actually use — single source of truth regardless of how
+# that default is expressed (literal today; JSPACE_EVAL_DIR-overridable env
+# lookup after #43) — checked now rather than 20 minutes into the run.
+EVAL_DIR="$("${PY}" -c "
+import sys
+sys.path.insert(0, 'examples')
+import jspace_lens_eval
+print(jspace_lens_eval.DEFAULT_EVAL_DIR)
+")" || fail "could not import examples/jspace_lens_eval.py to derive the eval dir"
+[[ -n "${EVAL_DIR}" && -d "${EVAL_DIR}" ]] || fail \
+    "lens-eval set dir missing: '${EVAL_DIR}' — point JSPACE_EVAL_DIR at the pinned jacobian-lens checkout's data/evaluations"
 
 mkdir -p "${LOGDIR}"
 
