@@ -52,12 +52,24 @@ THRESHOLDS = (10, 50)
 # The multihop / association eval prompt sets ship with the pinned J-lens
 # checkout, not with this repo (see research/arcs/04_jspace/data/MANIFEST.json
 # -> jlens_pin for the repo URL and commit). The default assumes the sibling
-# layout this repo already documents for llm-surgeon; point JSPACE_EVAL_DIR or
-# --eval-dir elsewhere for any other layout. Paths are resolved relative to the
-# working directory, and the scripts here are run from the repo root.
-DEFAULT_EVAL_DIR = os.environ.get(
-    "JSPACE_EVAL_DIR", "../jacobian-lens/data/evaluations"
-)
+# layout this repo already documents for llm-surgeon, anchored on this file's
+# location rather than the working directory — hopping out of
+# .claude/worktrees/<name>/ when running from a linked worktree, the same
+# layout the pyrightconfig extraPaths handle. Point JSPACE_EVAL_DIR or
+# --eval-dir elsewhere for any other layout.
+
+
+def _default_eval_dir() -> str:
+    root = Path(__file__).resolve().parent.parent
+    parts = root.parts
+    if ".claude" in parts:
+        i = parts.index(".claude")
+        if i + 1 < len(parts) and parts[i + 1] == "worktrees":
+            root = Path(*parts[:i])
+    return str(root.parent / "jacobian-lens" / "data" / "evaluations")
+
+
+DEFAULT_EVAL_DIR = os.environ.get("JSPACE_EVAL_DIR", _default_eval_dir())
 
 
 def parse_args() -> argparse.Namespace:
