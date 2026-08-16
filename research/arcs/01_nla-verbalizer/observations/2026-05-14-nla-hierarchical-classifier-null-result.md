@@ -4,11 +4,11 @@
 **Toolkit:** `nla_hierarchical_classifier.py`
 **Inputs:** `vocab_atlas.pt` + `pairwise_and_hotdims.pt`
 **Figure:** `fig30_hierarchical_accuracy.png`
-**Linear:** MAIN-47
+**Private-tracker ID:** MAIN-47 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-47 predicted
 
-Self-validation (MAIN-26 / fig29) showed country-source captures had only 34% top-1 accuracy against the country discriminant — country and capital seemed to constantly swap. The hypothesis: build a sub-discriminator from `mean(country_h) − mean(capital_h)` (and similar for other sibling pairs with discriminant cos > +0.85). Apply when a capture's top-2 first-level categories form a sibling pair. Predicted lift toward 70%+ top-1 accuracy.
+Self-validation ([MAIN-26](2026-05-13-nla-discriminant-validation.md) / fig29) showed country-source captures had only 34% top-1 accuracy against the country discriminant — country and capital seemed to constantly swap. The hypothesis: build a sub-discriminator from `mean(country_h) − mean(capital_h)` (and similar for other sibling pairs with discriminant cos > +0.85). Apply when a capture's top-2 first-level categories form a sibling pair. Predicted lift toward 70%+ top-1 accuracy.
 
 ## What actually happened
 

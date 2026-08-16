@@ -145,12 +145,13 @@ def classify_dim_character(stats: dict[str, float]) -> str:
     well below the 0.55 cutoff; feature dims have cv ≈ 0.65-0.67, well
     above) so the labels are robust to ±20% threshold perturbations
     against THIS data, but the cuts themselves are not data-derived.
-    All downstream analysis (sink removal, discriminants, MAIN-44/70/71
-    framings) is conditioned on these labels. The audit (`nla_audit_findings.py`
-    AUDIT 4) locks the OUTPUT (the 7-sink + 8-feature set by index), so
-    drift in the input data would surface as label-set drift — but the
-    audit can't detect a wrong cutoff choice. A sensitivity-analysis run
-    is filed as a future probe.
+    All downstream analysis (sink removal, discriminants, the
+    protocol-coupling and attractor-basin framings) is conditioned on
+    these labels. The audit (`nla_audit_findings.py` AUDIT 4) locks the
+    OUTPUT (the 7-sink + 8-feature set by index), so drift in the input
+    data would surface as label-set drift — but the audit can't detect a
+    wrong cutoff choice. A sensitivity-analysis run is filed as a future
+    probe.
 
     Decision tree (cuts chosen from the observed top-20 spread):
 

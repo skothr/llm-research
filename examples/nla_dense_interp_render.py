@@ -1,4 +1,7 @@
-"""Render fig36 + fig37 for MAIN-34 dense interpolation near t=0.421.
+"""Render fig36 + fig37 for the dense interpolation near t=0.421.
+
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-15-nla-dense-interp-near-pivot.md
 
 fig36: flipbook-style strip with t-bar + AV-text per row.
        Dense-zone rows highlighted (yellow background).
