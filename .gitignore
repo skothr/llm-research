@@ -69,13 +69,15 @@ debug-images/
 research/arcs/*/data/cache/
 
 # Arc-04 exception (owner decision 2026-08-16, follow-up to PR #38): the
-# three lenses refit in the C4-redaction re-run are committed via LFS so a
-# clean clone can re-scan without the ~23 h refit. Default-deny inside cache/ with explicit
-# whitelists, so the byte-identical working mirrors of data/ artifacts that
-# also live there can never be swept up by a bulk git add. Fit-resume
-# .ckpt.pt checkpoints and the PAUSE flag stay local (covered by the
-# default-deny). The jlens_* whitelists deliberately also cover the two
-# nf4 lenses scheduled in issue #47.
+# three lenses refit in the C4-redaction re-run are committed via LFS so
+# a clean clone can re-scan without the ~23 h refit. Default-deny inside
+# cache/ with explicit whitelists, so the byte-identical working mirrors
+# of data/ artifacts that also live there can never be swept up by a
+# bulk git add. The PAUSE flag is covered by the default-deny; fit-resume
+# .ckpt.pt checkpoints are NOT (the jlens_*.pt whitelist re-includes
+# them) — they stay local only via the explicit re-deny below the
+# whitelists, so keep that line. The jlens_* whitelists deliberately
+# also cover the two 1.5B nf4 lenses scheduled in issue #47.
 !research/arcs/04_jspace/data/cache/
 research/arcs/04_jspace/data/cache/*
 !research/arcs/04_jspace/data/cache/jlens_*.pt

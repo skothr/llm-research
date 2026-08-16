@@ -259,14 +259,14 @@ a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
 decision 2026-08-16 after the C4-redaction re-run: the **three lenses
-refit in that re-run are now LFS-committed in `data/cache/`** (~905 MiB
-/ ~949 MB — both wikitext lenses + the c4en lens, with their
+refit in that re-run are now LFS-committed in `data/cache/`**
+(~905 MiB / ~949 MB — both wikitext lenses + the c4en lens, with their
 `.config.json` sidecars and fit/scan logs) so a clean clone can re-scan
 without repeating the ~23 h refit. The two 1.5B nf4 lenses
 (quantization / n-budget axes) remain regenerate-only for now; their
-refit-and-commit is scheduled as issue #47.
-Fit-resume `.ckpt.pt` checkpoints stay uncommitted — their content is
-superseded by the final lenses they produced.
+refit-and-commit is scheduled as issue #47. Fit-resume `.ckpt.pt`
+checkpoints stay uncommitted — their content is superseded by the final
+lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers

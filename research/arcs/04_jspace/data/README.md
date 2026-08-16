@@ -124,10 +124,10 @@ Artifact classes (see the MANIFEST for the per-file registry):
   C4-redaction re-run — both wikitext + the c4en — are now LFS-committed
   in `cache/` with their sidecars and fit/scan logs, so a clean clone
   re-scans without the ~23 h refit; the two 1.5B nf4 lenses
-  (refit-and-commit scheduled as issue #47) and all `.ckpt.pt` fit-resume
-  checkpoints remain uncommitted. The lens
-  download is **opt-in**: `.lfsconfig` excludes `cache/` from default LFS
-  pulls (~905 MiB), leaving pointer stubs until
+  (refit-and-commit scheduled as issue #47) and all `.ckpt.pt`
+  fit-resume checkpoints remain uncommitted. The lens download is
+  **opt-in**: `.lfsconfig` excludes `cache/` from default LFS pulls
+  (~905 MiB), leaving pointer stubs until
   `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
   --exclude=""` fetches them.
 - `derived`: the promoted metric/scan/swap products the audit
@@ -140,10 +140,9 @@ Artifact classes (see the MANIFEST for the per-file registry):
 
 `cache/` is a byte-identical working mirror (plus the full lenses) —
 gitignored except for the `jlens_*` lens/sidecar whitelist (which
-deliberately also covers the two nf4 lenses scheduled in issue #47) and
-the fit/scan logs (see the arc-04 exception in the top-level
-`.gitignore`); render scripts and
-the audit resolve `data/`-first, `cache/`-fallback via
-`examples/_jspace_paths.resolve`. Committed cache files carry no MANIFEST
-entries: their integrity record is the LFS pointer itself (each pins the
-file's sha256 as its oid).
+deliberately also covers the two 1.5B nf4 lenses scheduled in issue
+#47) and the fit/scan logs (see the arc-04 exception in the top-level
+`.gitignore`); render scripts and the audit resolve `data/`-first,
+`cache/`-fallback via `examples/_jspace_paths.resolve`. Committed cache
+files carry no MANIFEST entries: their integrity record is the LFS
+pointer itself (each pins the file's sha256 as its oid).
