@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from time import time
 from typing import Any, cast
@@ -48,7 +49,33 @@ from torch import Tensor
 
 BANDS: dict[str, tuple[int, int]] = {"early": (0, 8), "mid": (9, 18), "late": (19, 26)}
 THRESHOLDS = (10, 50)
-DEFAULT_EVAL_DIR = "/home/ai/ai-projects/jacobian-lens/data/evaluations"
+# The multihop / association eval prompt sets ship with the pinned J-lens
+# checkout, not with this repo (see research/arcs/04_jspace/data/MANIFEST.json
+# -> jlens_pin for the repo URL and commit). The default assumes the sibling
+# layout this repo already documents for llm-surgeon, anchored on this file's
+# location rather than the working directory — hopping out of
+# .claude/worktrees/<name>/ when running from a linked worktree, the same
+# layout the pyrightconfig extraPaths handle. Point JSPACE_EVAL_DIR or
+# --eval-dir elsewhere for any other layout.
+
+
+def _default_eval_dir() -> str:
+    root = Path(__file__).resolve().parent.parent
+    # A linked-worktree checkout sits at <main-root>/.claude/worktrees/<name>
+    # and has a .git *file* (gitdir pointer), not a directory. The file check
+    # keeps a normal clone that merely lives under a .claude/worktrees-shaped
+    # ancestor path from being truncated, and the reverse scan strips at the
+    # innermost (deepest) .claude/worktrees pair rather than an ancestor's.
+    parts = root.parts
+    if (root / ".git").is_file():
+        for i in range(len(parts) - 2, -1, -1):
+            if parts[i] == ".claude" and parts[i + 1] == "worktrees":
+                root = Path(*parts[:i])
+                break
+    return str(root.parent / "jacobian-lens" / "data" / "evaluations")
+
+
+DEFAULT_EVAL_DIR = os.environ.get("JSPACE_EVAL_DIR", _default_eval_dir())
 
 
 def parse_args() -> argparse.Namespace:

@@ -1,26 +1,38 @@
 {
-  // Extends the canonical cross-project base (see drift-audit agent);
-  // adds only the environment wiring. The ML stack (torch 2.11, transformers
-  // 5.5, llm_surgeon editable, jlens editable) lives in the llm/testing venv
-  // — without this, IDE pyright resolves the system python3.10 user site
-  // (torch 1.11) and emits wrong-env noise like "randn_like is not exported".
-  // Merged at the jspace rebase (2026-07-22): main's arc-03 config named a
-  // repo-local .venv + llm-surgeon paths; the llm/testing venv is a superset
-  // (llm_surgeon is an editable install inside it), so it stays authoritative
-  // and the extraPaths/exclude are unioned.
-  "extends": "/home/skothr/.config/pyright/base.json",
-  "venvPath": "/home/ai/ai-projects/llm/testing",
+  // Every path here is relative, so a clean clone of this public repo
+  // type-checks with no machine-specific edits. Shared rule settings live in
+  // ./pyright-base.json (vendored in-repo for the same reason).
+  //
+  // Environment: create the venv this repo documents in CLAUDE.md —
+  //   python3 -m venv .venv
+  //   .venv/bin/pip install -e ../llm-surgeon    # llm_surgeon — all arcs
+  //   .venv/bin/pip install -e ../jacobian-lens  # jlens — jspace_* scripts
+  //   .venv/bin/pip install -e '.[dev]'          # torch/numpy/mpl + pytest
+  // Without a resolvable .venv, pyright falls back to the ambient interpreter
+  // and emits wrong-environment noise (e.g. an old torch that does not export
+  // `randn_like`). A git worktree is its own checkout and needs its own entry,
+  // most cheaply as a link back to the main one:
+  //   ln -s ../../../.venv .venv     # run inside .claude/worktrees/<name>/
+  "extends": "./pyright-base.json",
+  "venvPath": ".",
   "venv": ".venv",
   "exclude": [
     ".venv",
     ".cache",
     "**/__pycache__"
   ],
+  // Sibling checkouts (`../llm-surgeon`, `../jacobian-lens`) are pip-installed
+  // editable, but setuptools' editable wheels use an import-hook finder that
+  // pyright cannot follow, so their source roots are listed explicitly.
+  // The `../../../../` pair covers the same two siblings as seen from a git
+  // worktree, which this repo's workflow places at
+  // <repo>/.claude/worktrees/<name>/ — four levels below the siblings' parent.
+  // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "examples",
-    "/home/ai/ai-projects/llm/testing",
-    "/home/ai/ai-projects/jacobian-lens",
     "../llm-surgeon",
-    "/home/ai/ai-projects/llm-surgeon"
+    "../jacobian-lens",
+    "../../../../llm-surgeon",
+    "../../../../jacobian-lens"
   ]
 }

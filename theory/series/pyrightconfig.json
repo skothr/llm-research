@@ -1,5 +1,5 @@
 {
-  "extends": "/home/skothr/.config/pyright/base.json",
+  "extends": "../../pyright-base.json",
   "include": ["."],
   "extraPaths": ["."],
   "pythonVersion": "3.12"
