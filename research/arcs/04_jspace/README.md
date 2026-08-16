@@ -80,12 +80,16 @@
 > **956 PASS | 4 FAIL** (post-re-pin log committed at
 > `data/audit_2026-08-16.log`; re-derive it with
 > `python examples/jspace_audit_findings.py` — the three re-fit lenses are
-> LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed).
+> LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
+> the lens download is opt-in, see "Expected result on a clean clone" below).
 > The 4 remaining FAILs
 > are the designed `MISSING` reports for the two deliberately-unrefit nf4
 > lenses and their sidecars (`jlens_qwen2.5-1.5b_nf4_n100` and `_n500`) — the
 > quantization and n-budget axes are C4-free, so refitting them (8.3 h) would
-> buy a green audit and no correction; owner decision 2026-07-29.
+> buy a green audit and no correction; owner decision 2026-07-29. That
+> decision was reversed 2026-08-16 on data-completeness grounds — the refits
+> are scheduled as issue #47; until they land, the two `MISSING` reports
+> remain the designed state.
 >
 > Drift beyond audit tolerance was confined to the **held-out-C4 channel** —
 > the channel whose evaluated text was directly redacted (see the attribution
@@ -259,8 +263,9 @@ redacted-corpus lenses are now LFS-committed in `data/cache/`** (~905 MB —
 both wikitext lenses + the c4en lens, with their `.config.json` sidecars and
 fit/scan logs) so a clean clone can re-scan without repeating the ~23 h
 refit. The two nf4 lenses (quantization / n-budget axes) remain
-regenerate-only, and fit-resume `.ckpt.pt` checkpoints stay uncommitted —
-their content is superseded by the final lenses they produced.
+regenerate-only for now — their refit-and-commit is scheduled as issue
+#47 — and fit-resume `.ckpt.pt` checkpoints stay uncommitted — their
+content is superseded by the final lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MB most readers
@@ -301,9 +306,9 @@ repopulated three of the five (both wikitext lenses + the c4en lens), and the
 measured result in that state is **956 PASS | 4 FAIL** (2026-08-16,
 `data/audit_2026-08-16.log`), the 4 being the presence
 checks for the two nf4 lenses and their sidecars, which were deliberately not
-refit. A fully-green run would need those two refits (8.3 h, declined
-2026-07-29); until someone runs them, 978 stays an unverified historical
-figure and 956/4 is the measured one.
+refit. A fully-green run would need those two refits (8.3 h — declined
+2026-07-29, then scheduled 2026-08-16 as issue #47); until they land, 978
+stays an unverified historical figure and 956/4 is the measured one.
 
 **What this audit does not catch.** Like the arc-01 and arc-03 audits, it
 checks **arithmetic consistency only** — that a number in prose still matches
