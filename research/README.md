@@ -52,7 +52,7 @@ because they carry as much of the signal as the positive ones:
   **Data correction (2026-07-29, closed 2026-08-16):** this arc's C4-en corpus
   slice carried third-party personal data and was redacted; the redaction is
   not length-preserving, so every C4-computed result was regenerated on the
-  redacted text. Two audit pins moved at the third decimal — the held-out
+  redacted text. Two audit pins moved, each by less than 0.02 — the held-out
   logit-kurtosis trough (1.000 → 1.019) and the 7B held-out L23 excess
   (0.0598 → 0.0588, confounded with refit nondeterminism) — while the
   **corpus-invariance** and **held-out** conclusions otherwise re-derive
