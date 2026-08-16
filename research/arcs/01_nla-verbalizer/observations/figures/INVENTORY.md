@@ -10,7 +10,7 @@ Catalogue of all 36 figures in this directory (fig1-fig11, fig13-fig37 — fig12
 - **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py`).
 - **Sink dims:** {277, 458, 1427, 1627, 2107, 2570, 3110} — identified by the `classify_dim_character` heuristic in `nla_pairwise_and_hotdims.py`. "Sink-removed" preprocessing zeros these 7 component indices.
 - **Feature dims:** {20, 32, 392, 608, 1121, 1790, 2604, 2953} — same heuristic, content-bearing dims.
-- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19 cover Path B, vocab atlas, discriminant validation, the two null results, concept arithmetic — audit 17 is the decode identities — dense interpolation and the plateau attractor; 20-21 the round-trip faithfulness foundation). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
+- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19, in order: Path B, the vocab atlas, discriminant validation, the stability scan, the mid-seq vocab-atlas null result, the mid-seq native-discriminant lift, concept arithmetic — audit 17, the decode identities — dense interpolation, and the plateau attractor; 20-21 the round-trip faithfulness foundation). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
 
 ---
 

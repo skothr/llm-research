@@ -5,9 +5,8 @@ Observation: research/arcs/01_nla-verbalizer/observations/
 
 Tests whether the stepwise category transition at t=0.421 reported in
 `research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-interpolation-flipbook.md`
-stays sharp at
-~10× resolution or smooths out (would mean the 20-step flipbook was
-undersampled).
+stays sharp at ~10× resolution or smooths out (would mean the 20-step
+flipbook was undersampled).
 
 Reuses cached h_A, h_B from `interpolation_flipbook.pt` (no AR reload).
 AV-decodes each interpolated h.
