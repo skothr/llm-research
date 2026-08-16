@@ -41,7 +41,7 @@ measured in the same worktree on 2026-07-29:
 | State | Errors | Dominant rule |
 |---|---|---|
 | `.venv` linked | **0** | — |
-| link removed after a previously-resolved run | 374 | 355 `reportAttributeAccessIssue`, 1 `reportMissingImports` |
+| link removed after a previously-resolved run | 374 | 355 `reportAttributeAccessIssue` (+19 others, incl. 1 `reportMissingImports`) |
 | never linked, sibling checkouts present | 237 | all `reportMissingImports` |
 | never linked, no siblings | 304 | all `reportMissingImports` |
 
