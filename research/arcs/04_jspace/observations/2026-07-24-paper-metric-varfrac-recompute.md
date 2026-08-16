@@ -1,5 +1,39 @@
 # Observation: the ceiling claims survive the paper-faithful variance metric — 1.5B breach confirmed (L21 excess 11.2%, CI [11.0, 11.4]), 7B stays under (peak 4.7%); swap headline significance certified; pursuit norm-bias bounded
 
+> **2026-08-16 addendum — C4-redaction re-run (read first).** Three rows of
+> the robustness table below — **corpus (C4-en lens)** and **held-out sample
+> (C4 prompts)** at 1.5B and at 7B — were computed on
+> a C4-en corpus that carried third-party PII and was redacted 2026-07-29
+> (`../data/README.md`). Those artifacts were regenerated on the redacted
+> corpus 2026-08-15/16 (commit `a9df3a55`) and re-derived by
+> `examples/jspace_audit_findings.py`
+> (`../data/audit_2026-08-16.log`).
+>
+> **All values below re-derive within audit tolerance except the 7B held-out
+> row.** Restated:
+>
+> | table row | as written below | re-derived 2026-08-16 |
+> |---|--:|--:|
+> | corpus (C4-en lens), L21 excess | 10.82% | 10.823% |
+> | held-out sample (C4 prompts), L21 excess | 11.70% | 11.689% |
+> | held-out sample **7B** (band peak L23) | 5.98% | **5.88%** |
+> | L0 excess under the C4 lens | 15.43% | 15.419% |
+>
+> `P(boot > 10%)` is unchanged on every row: 1.000 on all 1.5B axes, 0.000 at
+> 7B. The "invariant within +8/−2% relative across every axis" claim and the
+> "bootstrap-unanimous on all of them" claim both stand; the C4-axis margin
+> above the 0.100 ceiling is 0.0083. The base/quantization/n-budget rows and
+> the all-positions figures (L21 11.2%, CI [11.0, 11.4]) are C4-free and were
+> not recomputed. Findings 2, 3 and the stage-5.1b correction note below rest
+> on wikitext-derived artifacts and are untouched.
+>
+> The 7B held-out row moved by −0.10 pt. It cannot be attributed to the
+> redaction alone: the cache-only 7B wikitext lens had to be refit for this
+> re-run and the refit does **not** reproduce the original (relative
+> Frobenius Δ 1.7e-2 at L0 decaying to 4.2e-4 at L26, measured against the
+> committed `jlens_qwen2.5-7b_nf4_n100_layer-subset.pt`), whereas the 1.5B
+> bf16 refit reproduces its subset exactly.
+
 **Date/context:** 2026-07-23/24. Reviewer-directed vetting session that
 reopened the already-closed arc (PR #25 awaiting merge). The reviewer opened
 it to solidify their own understanding of J-space/J-lens and personally vet
