@@ -26,6 +26,23 @@ externally reviewed, or replicated by anyone else, and the findings should be
 read as provisional. The [Methodology](#methodology) below is the part offered
 with confidence: it exists to make being wrong visible.
 
+**Data correction — closed 2026-08-16.** Arc 04's seeded **C4-en** corpus
+slice carried 120 pieces of third-party personal data and was redacted on
+2026-07-29; because the redaction is not length-preserving, every result
+computed on that corpus — the **corpus-invariance** and **held-out-sample**
+checks and the **H3 @10 corpus-dependence qualifier** — was recomputed on
+the redacted text (2026-08-15/16). Outcome: two audit pins moved, each by
+less than 0.02, both in the held-out channel, and no headline conclusion
+changed; the two failure modes pre-registered before the re-run did
+not materialise. Arc 04's primary fitting corpus is wikitext-103,
+which was scanned and left unmodified, and no other arc used C4. The full
+record — per-class counts, root cause, per-claim blast radius, and the
+reproduction recipe — is in
+[`research/arcs/04_jspace/README.md`](research/arcs/04_jspace/README.md) and
+[`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md).
+Surfaced here because a correction of this kind should be visible at the
+entry point rather than discovered two levels down.
+
 ## What's here
 
 ```
@@ -96,8 +113,10 @@ than discovered two levels down.
   per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an
   interim manifest schema. The intent is that a clean clone re-renders every
   figure and replays every audit — with one documented exception: arc 04's
-  fitted-lens tensors are cache-only by design, so 11 of its checks report
-  `MISSING` on a clean clone (see [Running the research pipeline](#running-the-research-pipeline)).
+  full fitted-lens tensors sit behind an opt-in LFS download (three are
+  committed; the two 1.5B nf4 lenses are pending issue #47), so 7 of its
+  checks fail on a default clone — 3 LFS-stub reports + 4 `MISSING`
+  (see [Running the research pipeline](#running-the-research-pipeline)).
 - **Human/AI division of labor, recorded per arc.** Every arc README states
   what Claude Code sessions implemented and what was directed, constrained, and
   signed off by hand — down to which framings are the agent's paraphrase rather
@@ -172,24 +191,31 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Verified from a clean clone on 2026-07-28:
+from them. Verified from a clean clone (arcs 01/03 on 2026-07-28; arc 04 on
+2026-08-16, after the C4-redaction re-run):
 
 ```bash
 python examples/nla_audit_findings.py      # arc 01 → SUMMARY: 178 PASS | 0 FAIL
 python examples/emb_audit_findings.py      # arc 03 → SUMMARY:  94 PASS | 0 FAIL
-python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 920 PASS | 10 FAIL
+python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 921 PASS | 7 FAIL
 ```
 
-Arc 04's 10 failures on a clean clone are **expected**, not regressions: its
-five full fitted-lens tensors and their five sidecars are cache-only by design,
-and the audit reports each as a loud `MISSING` rather than skipping it. (This
-read `11 FAIL` before 2026-07-29, when one sidecar was checked twice inside
-CHECK J; fixed.) With the local cache present the same run reports 978 PASS —
-a figure last measured 2026-07-25 and due to be re-derived when the
-C4-redaction re-run repopulates the cache. Arc 02 has no audit script; its Step-0
+Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
+three lenses refit in the C4-redaction re-run are LFS-committed but excluded
+from default LFS pulls (`.lfsconfig` — the ~905 MiB lens download is
+opt-in), so the audit reports each as an `LFS pointer stub` naming the pull
+command, and the two 1.5B nf4 lenses and their sidecars are regenerate-only
+pending the scheduled refit (issue #47), each reported as a loud `MISSING`
+rather than skipped — 3 stubs + 4 `MISSING` = 7. After
+`git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
+the same run reports **956 PASS | 4 FAIL** (the nf4 `MISSING` reports only)
+with no GPU work; the check total grows from 928 to 960 between the two
+states because the lens-dependent blocks register their claims only when
+the lens tensors are on disk. Arc 02 has no audit script; its Step-0
 numbers are checkable by hand against the committed JSONL. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
-never methodology or interpretation).
+never methodology or interpretation) and for the historical pre-re-run
+figures (`920 | 10`; the cache-present `978` was never re-verified).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced
