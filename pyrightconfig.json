@@ -5,7 +5,9 @@
   //
   // Environment: create the venv this repo documents in CLAUDE.md —
   //   python3 -m venv .venv
-  //   .venv/bin/pip install -e ../llm-surgeon && .venv/bin/pip install -e .
+  //   .venv/bin/pip install -e ../llm-surgeon    # llm_surgeon — all arcs
+  //   .venv/bin/pip install -e ../jacobian-lens  # jlens — jspace_* scripts
+  //   .venv/bin/pip install -e '.[dev]'          # torch/numpy/mpl + pytest
   // Without a resolvable .venv, pyright falls back to the ambient interpreter
   // and emits wrong-environment noise (e.g. an old torch that does not export
   // `randn_like`). A git worktree is its own checkout and needs its own entry,
