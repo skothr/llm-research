@@ -639,7 +639,7 @@ Paths are relative to this directory unless noted.
 | MAIN-71 | [`observations/2026-05-15-nla-plateau-attractor-strength.md`](observations/2026-05-15-nla-plateau-attractor-strength.md) | that file's own `Private-tracker ID` header (part 2 of 2) |
 | MAIN-265 | **not migrated** | D1 (discovery-viz frontend). No GitHub issue carries this ID; [D1](#d1-discovery-viz-frontend) above is the only surviving description |
 | MAIN-266 | GitHub [#9](https://github.com/skothr/llm-research/issues/9) | issue body: "Migrated from Linear MAIN-266" |
-| MAIN-267 | GitHub [#8](https://github.com/skothr/llm-research/issues/8) | issue body: "Migrated from Linear MAIN-267 (folds MAIN-347)" |
+| MAIN-267 | GitHub [#8](https://github.com/skothr/llm-research/issues/8) | issue body: "Migrated from Linear MAIN-267 (folds MAIN-347; …)" |
 | MAIN-268 | GitHub [#7](https://github.com/skothr/llm-research/issues/7) | issue body: "Migrated from Linear MAIN-268" |
 | MAIN-269 | GitHub [#6](https://github.com/skothr/llm-research/issues/6) | issue body: "Migrated from Linear MAIN-269" |
 | MAIN-270 | GitHub [#5](https://github.com/skothr/llm-research/issues/5) | issue body: "Migrated from Linear MAIN-270" |
@@ -647,7 +647,7 @@ Paths are relative to this directory unless noted.
 | MAIN-272 | GitHub [#4](https://github.com/skothr/llm-research/issues/4) | issue body: "Migrated from Linear MAIN-272" |
 | MAIN-347 | GitHub [#8](https://github.com/skothr/llm-research/issues/8), folded into MAIN-267 | the only surviving mention is #8's own migration note, quoted in the MAIN-267 row above |
 
-Migration context: `docs/planning/2026-07-25-backlog-groom.md`.
+Migration context: `docs/planning/2026-07-25-backlog-groom.md` (repo root).
 
 `CC-MAIN-2024-10` under `theory/` is unrelated — it is a Common Crawl
 snapshot name, not a tracker ID.
