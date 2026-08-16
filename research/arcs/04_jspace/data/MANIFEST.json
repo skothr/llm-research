@@ -1,6 +1,6 @@
 {
   "arc": "jspace",
-  "description": "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors (jlens native format) with their .config.json provenance sidecars, and the promoted derived metric/scan/swap products (lens_eval, readout_scan, structure_scan, verbal_report, entailed_swap + paper-verbatim probes, nla_crosstie) the audit re-derives from. Committed via git-LFS so figures and the audit reproduce from a clean clone. See data/README.md for what the cache/ subdir does and does not commit. The J-lens dependency is pinned in the top-level `jlens_pin` field below; the eval prompt sets ship with that pinned checkout, not with this repo.",
+  "description": "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors (jlens native format) with their .config.json provenance sidecars, and the promoted derived metric/scan/swap products (lens_eval, readout_scan, structure_scan, verbal_report, entailed_swap + paper-verbatim probes, nla_crosstie) the audit re-derives from. Committed via git-LFS so figures and the audit reproduce from a clean clone. See README.md beside this manifest for what the cache/ subdir does and does not commit. The J-lens dependency is pinned in the top-level `jlens_pin` field below; the eval prompt sets ship with that pinned checkout, not with this repo.",
   "jlens_pin": {
     "repo": "https://github.com/anthropics/jacobian-lens",
     "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
