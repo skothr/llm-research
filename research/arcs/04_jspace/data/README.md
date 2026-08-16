@@ -126,7 +126,7 @@ Artifact classes (see the MANIFEST for the per-file registry):
   refit; the two nf4 lenses (refit-and-commit scheduled as issue #47) and
   all `.ckpt.pt` fit-resume checkpoints remain uncommitted. The lens
   download is **opt-in**: `.lfsconfig` excludes `cache/` from default LFS
-  pulls (~905 MB), leaving pointer stubs until
+  pulls (~905 MiB), leaving pointer stubs until
   `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
   --exclude=""` fetches them.
 - `derived`: the promoted metric/scan/swap products the audit
