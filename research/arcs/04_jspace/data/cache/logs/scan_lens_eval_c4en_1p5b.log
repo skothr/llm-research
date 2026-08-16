@@ -1,0 +1,28 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  19%|█▊        | 63/338 [00:00<00:00, 568.07it/s]Loading weights:  45%|████▌     | 153/338 [00:00<00:00, 753.02it/s]Loading weights:  76%|███████▌  | 256/338 [00:00<00:00, 868.51it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 865.37it/s]
+[load] model + lens in 2.9s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[bands] early=(0, 8) mid=(9, 18) late=(19, 26)
+
+=== multihop  (items=93, instances=103, inexact-token=9, 24.7s) ===
+band        J@10    J@50  logit@10  logit@50  ΔJ-L@10  ΔJ-L@50
+early       0.12    0.20      0.00      0.00     0.12     0.20
+mid         0.14    0.32      0.00      0.00     0.14     0.32
+late        0.49    0.65      0.40      0.64     0.09     0.01
+overall     0.49    0.75      0.40      0.64     0.09     0.11
+  examples (multihop): best (layer, rank) per lens
+    'carnival-ocean'       concept='Brazil' tok=' Brazil' | J: L18 rank 47  | logit: L22 rank 122
+    'amazon-language'      concept='Brazil' tok=' Brazil' | J: L26 rank 4  | logit: L26 rank 6
+    'mars-color'           concept='Mars' tok=' Mars' | J: L26 rank 44  | logit: L26 rank 56
+
+=== association  (items=102, instances=102, inexact-token=3, 26.3s) ===
+band        J@10    J@50  logit@10  logit@50  ΔJ-L@10  ΔJ-L@50
+early       0.00    0.00      0.00      0.02     0.00    -0.02
+mid         0.00    0.02      0.01      0.02    -0.01     0.00
+late        0.00    0.00      0.00      0.02     0.00    -0.02
+overall     0.00    0.02      0.01      0.02    -0.01     0.00
+  examples (association): best (layer, rank) per lens
+    'grief'                concept='grief' tok=' grief' | J: L10 rank 7372  | logit: L8 rank 28141
+    'pregnant'             concept='pregnant' tok=' pregnant' | J: L12 rank 1705  | logit: L25 rank 21697
+    'lie'                  concept='lie' tok=' lie' | J: L0 rank 1584  | logit: L25 rank 2506
+
+[save] research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt

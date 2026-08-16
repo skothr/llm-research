@@ -1,0 +1,23 @@
+# Committed LFS defaults for every clone of this repo (git-lfs reads
+# .lfsconfig after the user's git config; a local `git config lfs.*`
+# overrides it).
+#
+# The arc-04 fitted-lens cache (~905 MiB / ~949 MB across three .pt files)
+# is far larger than everything else in LFS combined (~417 MB of figures,
+# datasets, and paper PDFs), and most uses of the repo — reading the
+# research, running audit checks B-M, re-rendering figures — never load
+# the full lenses. So a default clone/pull skips downloading them: the
+# files appear as LFS pointer stubs, and the audit reports them as such
+# rather than crashing.
+#
+# To fetch the lenses when you want them (check A + the lens-integrity
+# blocks, or re-running scans without a refit):
+#
+#     git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""
+#
+# (the explicit --exclude="" overrides this file's exclusion for that pull),
+# or clear the exclusion permanently for your clone:
+#
+#     git config lfs.fetchexclude ""
+[lfs]
+	fetchexclude = research/arcs/04_jspace/data/cache
