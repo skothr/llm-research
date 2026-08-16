@@ -26,6 +26,22 @@ externally reviewed, or replicated by anyone else, and the findings should be
 read as provisional. The [Methodology](#methodology) below is the part offered
 with confidence: it exists to make being wrong visible.
 
+**Data correction — closed 2026-08-16.** Arc 04's seeded **C4-en** corpus
+slice carried 120 pieces of third-party personal data and was redacted on
+2026-07-29; because the redaction is not length-preserving, every result
+computed on that corpus — the **corpus-invariance and held-out-sample**
+checks — was recomputed on the redacted text (2026-08-15/16). Outcome: two
+audit pins moved at the third decimal, both in the held-out channel, and no
+headline conclusion changed; the two failure modes pre-registered before the
+re-run did not materialise. Arc 04's primary fitting corpus is wikitext-103,
+which was scanned and left unmodified, and no other arc used C4. The full
+record — per-class counts, root cause, per-claim blast radius, and the
+reproduction recipe — is in
+[`research/arcs/04_jspace/README.md`](research/arcs/04_jspace/README.md) and
+[`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md).
+Surfaced here because a correction of this kind should be visible at the
+entry point rather than discovered two levels down.
+
 ## What's here
 
 ```
