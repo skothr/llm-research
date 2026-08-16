@@ -200,7 +200,7 @@ python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 921 PASS | 7 FA
 
 Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
 three redacted-corpus fitted lenses are LFS-committed but excluded from
-default LFS pulls (`.lfsconfig` — the ~905 MB lens download is opt-in), so
+default LFS pulls (`.lfsconfig` — the ~905 MiB lens download is opt-in), so
 the audit reports each as an `LFS pointer stub` naming the pull command, and
 the two nf4 lenses and their sidecars are regenerate-only pending the
 scheduled refit (issue #47), each reported as a loud `MISSING` rather than
