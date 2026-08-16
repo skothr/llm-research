@@ -1,0 +1,945 @@
+=== jspace C4-redaction re-run, Step 2 (10 derived artifacts) ===
+repo root : .claude/worktrees/jspace-c4-rerun-2026-07-29
+python    : .venv/bin/python
+logs      : research/arcs/04_jspace/data/cache/logs
+started   : 2026-08-16T06:13:36Z (epoch 1786860816)
+
+--- [1/10] structure_c4en_1p5b ---
+target: research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_structure_c4en_1p5b.log
++ .venv/bin/python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-prompts 30 --ks 5\,10\,25\,50 --out research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:00<05:05,  1.10it/s]Loading weights:   4%|▍         | 15/338 [00:01<00:16, 19.78it/s]Loading weights:   8%|▊         | 28/338 [00:01<00:08, 35.59it/s]Loading weights:  15%|█▌        | 51/338 [00:01<00:04, 67.90it/s]Loading weights:  19%|█▉        | 64/338 [00:01<00:03, 78.29it/s]Loading weights:  23%|██▎       | 77/338 [00:01<00:02, 88.01it/s]Loading weights:  29%|██▉       | 99/338 [00:01<00:02, 114.11it/s]Loading weights:  34%|███▎      | 114/338 [00:01<00:01, 113.14it/s]Loading weights:  40%|███▉      | 135/338 [00:01<00:01, 131.54it/s]Loading weights:  44%|████▍     | 150/338 [00:01<00:01, 125.56it/s]Loading weights:  51%|█████     | 171/338 [00:02<00:01, 140.87it/s]Loading weights:  55%|█████▌    | 187/338 [00:02<00:01, 135.38it/s]Loading weights:  61%|██████    | 207/338 [00:02<00:00, 144.74it/s]Loading weights:  66%|██████▌   | 222/338 [00:02<00:00, 132.35it/s]Loading weights:  72%|███████▏  | 243/338 [00:02<00:00, 145.07it/s]Loading weights:  76%|███████▋  | 258/338 [00:02<00:00, 135.06it/s]Loading weights:  83%|████████▎ | 279/338 [00:02<00:00, 148.09it/s]Loading weights:  87%|████████▋ | 295/338 [00:03<00:00, 138.44it/s]Loading weights:  93%|█████████▎| 314/338 [00:03<00:00, 144.97it/s]Loading weights:  97%|█████████▋| 329/338 [00:03<00:00, 133.75it/s]Loading weights: 100%|██████████| 338/338 [00:03<00:00, 103.53it/s]
+[load] model + lens in 6.8s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[wu] W_U (151936, 1536) torch.bfloat16 on cuda:0
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json
+[scan] 27 layers, ks=[5, 10, 25, 50], positions=8 mid + last
+[prompt 1/30] seq=224 pos=9 mean_varfrac(k=25)=0.1307 13.0s
+[prompt 2/30] seq=165 pos=9 mean_varfrac(k=25)=0.1183 11.8s
+[prompt 3/30] seq=176 pos=9 mean_varfrac(k=25)=0.1357 11.9s
+[prompt 4/30] seq=140 pos=9 mean_varfrac(k=25)=0.1138 11.9s
+[prompt 5/30] seq=287 pos=9 mean_varfrac(k=25)=0.1185 12.9s
+[prompt 6/30] seq=141 pos=9 mean_varfrac(k=25)=0.1204 12.9s
+[prompt 7/30] seq=172 pos=9 mean_varfrac(k=25)=0.1298 11.9s
+[prompt 8/30] seq=168 pos=9 mean_varfrac(k=25)=0.1295 11.8s
+[prompt 9/30] seq=123 pos=9 mean_varfrac(k=25)=0.1227 11.8s
+[prompt 10/30] seq=174 pos=9 mean_varfrac(k=25)=0.1193 11.7s
+[prompt 11/30] seq=182 pos=9 mean_varfrac(k=25)=0.1137 11.5s
+[prompt 12/30] seq=145 pos=9 mean_varfrac(k=25)=0.1276 11.5s
+[prompt 13/30] seq=241 pos=9 mean_varfrac(k=25)=0.1204 11.5s
+[prompt 14/30] seq=132 pos=9 mean_varfrac(k=25)=0.1195 11.5s
+[prompt 15/30] seq=198 pos=9 mean_varfrac(k=25)=0.1130 11.5s
+[prompt 16/30] seq=151 pos=9 mean_varfrac(k=25)=0.1216 11.5s
+[prompt 17/30] seq=172 pos=9 mean_varfrac(k=25)=0.1215 11.5s
+[prompt 18/30] seq=152 pos=9 mean_varfrac(k=25)=0.1274 11.5s
+[prompt 19/30] seq=313 pos=9 mean_varfrac(k=25)=0.1198 11.6s
+[prompt 20/30] seq=142 pos=9 mean_varfrac(k=25)=0.1210 11.5s
+[prompt 21/30] seq=200 pos=9 mean_varfrac(k=25)=0.1256 11.6s
+[prompt 22/30] seq=186 pos=9 mean_varfrac(k=25)=0.1178 11.5s
+[prompt 23/30] seq=258 pos=9 mean_varfrac(k=25)=0.1241 11.5s
+[prompt 24/30] seq=219 pos=9 mean_varfrac(k=25)=0.1286 11.5s
+[prompt 25/30] seq=237 pos=9 mean_varfrac(k=25)=0.1169 11.5s
+[prompt 26/30] seq=174 pos=9 mean_varfrac(k=25)=0.1126 11.5s
+[prompt 27/30] seq=350 pos=9 mean_varfrac(k=25)=0.1232 11.5s
+[prompt 28/30] seq=170 pos=9 mean_varfrac(k=25)=0.1137 11.4s
+[prompt 29/30] seq=238 pos=9 mean_varfrac(k=25)=0.1163 11.4s
+[prompt 30/30] seq=242 pos=9 mean_varfrac(k=25)=0.1151 11.5s
+
+=== Per-layer J-space structure (k=25) ===
+layer  varfrac_mean  varfrac_med  active_mean  rd_logit_kurt  rd_prob_kurt  coef_kurt
+    0        0.1751       0.1763        23.81           2.65     122730.96       5.32
+    1        0.1613       0.1650        23.93           2.46     119552.85       3.86
+    2        0.1645       0.1644        23.96           2.21     114497.13       3.56
+    3        0.1467       0.1469        23.88           2.21     113445.59       3.51
+    4        0.1333       0.1310        23.99           1.95     117032.23       3.79
+    5        0.1341       0.1307        23.97           1.80     120821.87       3.56
+    6        0.1381       0.1355        24.13           1.60     115158.71       2.99
+    7        0.1371       0.1318        24.17           1.40     110565.05       2.57
+    8        0.1420       0.1413        24.14           1.33     107074.79       2.31
+    9        0.1372       0.1351        24.23           1.26     104604.18       2.50
+   10        0.1417       0.1372        24.29           1.14     101973.40       2.17
+   11        0.1241       0.1241        24.06           1.36     105312.10       2.12
+   12        0.1143       0.1100        24.12           1.05     101087.09       2.28
+   13        0.1080       0.1012        24.09           0.95     101861.85       1.57
+   14        0.0993       0.0953        24.13           1.03     101698.94       1.74
+   15        0.0924       0.0883        24.19           0.99      99760.79       1.26
+   16        0.0808       0.0791        24.23           1.07      94874.94       1.67
+   17        0.1001       0.0976        24.27           0.93      91651.03       1.28
+   18        0.1095       0.1101        24.44           0.87      89114.21       1.02
+   19        0.1178       0.1117        24.56           1.13      93787.85       0.90
+   20        0.1156       0.1111        24.69           1.26     101354.66       1.52
+   21        0.1242       0.1236        24.81           1.31     101459.09       2.48
+   22        0.1146       0.1128        24.83           1.47     110421.31       3.36
+   23        0.1056       0.1018        24.93           1.53     107584.84       4.23
+   24        0.0986       0.0968        24.85           1.78     110066.01       5.42
+   25        0.0904       0.0874        24.89           1.73     107833.26       5.59
+   26        0.0677       0.0670        24.91           1.44     100193.68       4.65
+
+=== varfrac_mean trajectory by k ===
+layer k=  5 k= 10 k= 25 k= 50
+    0 0.077 0.100 0.175 0.236
+    1 0.070 0.097 0.161 0.218
+    2 0.066 0.095 0.165 0.225
+    3 0.057 0.080 0.147 0.199
+    4 0.052 0.075 0.133 0.185
+    5 0.054 0.075 0.134 0.180
+    6 0.055 0.078 0.138 0.183
+    7 0.058 0.084 0.137 0.181
+    8 0.063 0.089 0.142 0.186
+    9 0.062 0.087 0.137 0.178
+   10 0.064 0.091 0.142 0.183
+   11 0.054 0.079 0.124 0.164
+   12 0.052 0.072 0.114 0.152
+   13 0.048 0.069 0.108 0.142
+   14 0.044 0.062 0.099 0.130
+   15 0.042 0.059 0.092 0.122
+   16 0.036 0.049 0.081 0.113
+   17 0.047 0.065 0.100 0.129
+   18 0.053 0.072 0.110 0.138
+   19 0.059 0.080 0.118 0.146
+   20 0.059 0.080 0.116 0.144
+   21 0.065 0.087 0.124 0.150
+   22 0.062 0.082 0.115 0.137
+   23 0.058 0.076 0.106 0.125
+   24 0.052 0.069 0.099 0.116
+   25 0.050 0.066 0.090 0.105
+   26 0.033 0.046 0.068 0.079
+
+[save] research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[time] mean 11.7s/prompt over 30 prompts; total 351.5s
+
+=== Top J-space atoms (prompt 1, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | '�'  'summer'  '战士来说'  '�'  '터'  ' Lantern'
+      1 | '�'  '鳣'  ' '  'цен'  '�'  'notes'
+      2 | ' '  ' Covenant'  'цен'  '鳣'  'spect'  'banana'
+      3 | 'flash'  'Dr'  'storeId'  ' ):'  '(.'  'ชา'
+      4 | 'Jar'  ' Hawaii'  ' {%'  '重点'  ' пациент'  ' "'
+      5 | 'String'  '鳣'  'カード'  ' 그렇지'  '��'  'author'
+      6 | '��'  'Bruce'  'แ'  '保护'  '前'  '语'
+      7 | '语'  '字'  '��'  'ticket'  'focus'  'แ'
+      8 | '语'  'image'  'Bruce'  'แ'  ' �'  'american'
+      9 | '语'  'カード'  ' Spect'  'key'  ' �'  '亲'
+     10 | '语'  'แ'  ' Spect'  'author'  'Image'  'ないこと'
+     11 | '词条'  'Miami'  'text'  'Bruce'  ' �'  'Samsung'
+     12 | 'String'  '卡'  '词条'  '笔'  'Bruce'  ' "'
+     13 | '卡'  'text'  '前'  '"He'  '词条'  'Miami'
+     14 | '卡'  'String'  '词条'  '这篇文章'  'ˌ'  'Kim'
+     15 | ' �'  '卡'  'pages'  'Kim'  'แ'  'Miami'
+     16 | 'Kim'  'Context'  '前'  'แ'  '��'  ' McC'
+     17 | '是什么'  'Context'  '卡'  '段'  'ย'  '前'
+     18 | 'text'  '这段'  '是什么'  '卡'  '申'  'Question'
+     19 | '申'  'He'  'text'  '是什么'  '这段'  '莉'
+     20 | 'What'  '      '  '申'  '莉'  '这段'  '결'
+     21 | 'What'  ' Given'  '这段'  'Question'  '      '  '莉'
+     22 | 'Based'  'What'  'Question'  '�'  '(Source'  '}_'
+     23 | ' Based'  'What'  'Question'  'ม'  '_is'  '�'
+     24 | ' Based'  'What'  'Does'  'Question'  '分析'  'Try'
+     25 | ' Based'  'What'  'Question'  '可'  'Does'  '"So'
+     26 | ' Based'  'Is'  'What'  '"So'  '�'  'Prop'
+
+=== Top J-space atoms (prompt 2, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' médica'  'цен'  ':'  'grav'  'spaces'  '密'
+      1 | ' '  'цен'  'storeId'  ' Medicine'  'focus'  'SEA'
+      2 | 'цен'  ' '  'spect'  'SEA'  '卡'  ' Medicine'
+      3 | 'цен'  'gram'  ' Patients'  'แข'  ' �'  '송'
+      4 | 'цен'  'カード'  'Virginia'  '剑'  ' 저'  'Dr'
+      5 | 'цен'  '直接'  'String'  '卡'  ' 저'  ' �'
+      6 | ' �'  ' Spect'  ' Manus'  'protect'  ' �'  '卡'
+      7 | 'Image'  ' �'  '证据'  'focus'  '字'  ' <:'
+      8 | ' �'  ' Patients'  'script'  '语'  ' Cait'  'แ'
+      9 | '语'  ' �'  ' �'  'Virginia'  '套'  ' Cait'
+     10 | ' �'  '套'  '亚'  '�'  '"He'  'text'
+     11 | 'text'  ' América'  '句话'  '卡'  ' Cait'  '"He'
+     12 | '卡'  '前'  ' América'  '语'  ' ]'  '这篇文章'
+     13 | '卡'  '前'  ' América'  'text'  '无法'  '"He'
+     14 | '卡'  '前'  'String'  '"He'  ' América'  '是一'
+     15 | '卡'  ' �'  '无法'  ' América'  '是一'  'He'
+     16 | 'Context'  ' América'  'ар'  '前'  '是一'  '丙'
+     17 | 'Context'  '卡'  '信息'  ' Yas'  '松'  '中'
+     18 | 'text'  'Zh'  'ր'  '女'  '这段'  '描述'
+     19 | 'Zh'  '莉'  '这段'  '申'  ' Lö'  '  \n  \n'
+     20 | 'What'  '莉'  'Context'  '卡'  '       '  'Question'
+     21 | 'What'  'Question'  'Zh'  '       '  '这段'  'https'
+     22 | 'Question'  'What'  ' Based'  'ар'  'Zh'  '韩'
+     23 | 'What'  'Question'  ' Based'  '句子'  '  \n  \n'  'Zh'
+     24 | 'Question'  ' Based'  'What'  '分析'  '\x00'  '请'
+     25 | 'What'  'Question'  ' Based'  '任务'  '可'  '分析'
+     26 | 'What'  'Question'  'F'  'Try'  'Answer'  'Inter'
+[ok] structure_c4en_1p5b in 360s; research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt refreshed (mtime 1786861176)
+
+--- [2/10] paper_metric_c4en_1p5b ---
+target: research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_paper_metric_c4en_1p5b.log
++ .venv/bin/python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-prompts 30 --n-rand 8 --rand-seed-base 10000 --out research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  22%|██▏       | 75/338 [00:00<00:00, 740.13it/s]Loading weights:  51%|█████     | 171/338 [00:00<00:00, 866.14it/s]Loading weights:  83%|████████▎ | 280/338 [00:00<00:00, 942.30it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 945.02it/s]
+[setup] 30 prompts, layers=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], |V|=151936, mode=scan grid
+[pursuit] prompt 1/30 pos=9
+[pursuit] prompt 2/30 pos=9
+[pursuit] prompt 3/30 pos=9
+[pursuit] prompt 4/30 pos=9
+[pursuit] prompt 5/30 pos=9
+[pursuit] prompt 6/30 pos=9
+[pursuit] prompt 7/30 pos=9
+[pursuit] prompt 8/30 pos=9
+[pursuit] prompt 9/30 pos=9
+[pursuit] prompt 10/30 pos=9
+[pursuit] prompt 11/30 pos=9
+[pursuit] prompt 12/30 pos=9
+[pursuit] prompt 13/30 pos=9
+[pursuit] prompt 14/30 pos=9
+[pursuit] prompt 15/30 pos=9
+[pursuit] prompt 16/30 pos=9
+[pursuit] prompt 17/30 pos=9
+[pursuit] prompt 18/30 pos=9
+[pursuit] prompt 19/30 pos=9
+[pursuit] prompt 20/30 pos=9
+[pursuit] prompt 21/30 pos=9
+[pursuit] prompt 22/30 pos=9
+[pursuit] prompt 23/30 pos=9
+[pursuit] prompt 24/30 pos=9
+[pursuit] prompt 25/30 pos=9
+[pursuit] prompt 26/30 pos=9
+[pursuit] prompt 27/30 pos=9
+[pursuit] prompt 28/30 pos=9
+[pursuit] prompt 29/30 pos=9
+[pursuit] prompt 30/30 pos=9
+[validate] replicated-vs-stored varfrac@25 max|diff| = 0.000e+00
+L 0 K=24 n=270 ours@25=0.1751 fveTopK=0.2096 fveRand=0.0554 EXCESS=+0.1542 CI95=[+0.1502,+0.1582] P(>10%)=1.000
+L 1 K=24 n=270 ours@25=0.1613 fveTopK=0.1941 fveRand=0.0687 EXCESS=+0.1254 CI95=[+0.1220,+0.1288] P(>10%)=1.000
+L 2 K=24 n=270 ours@25=0.1645 fveTopK=0.1984 fveRand=0.0667 EXCESS=+0.1317 CI95=[+0.1282,+0.1350] P(>10%)=1.000
+L 3 K=24 n=270 ours@25=0.1467 fveTopK=0.1746 fveRand=0.0559 EXCESS=+0.1187 CI95=[+0.1156,+0.1217] P(>10%)=1.000
+L 4 K=24 n=270 ours@25=0.1333 fveTopK=0.1603 fveRand=0.0553 EXCESS=+0.1051 CI95=[+0.1017,+0.1085] P(>10%)=0.998
+L 5 K=24 n=270 ours@25=0.1341 fveTopK=0.1569 fveRand=0.0529 EXCESS=+0.1040 CI95=[+0.1010,+0.1070] P(>10%)=0.997
+L 6 K=24 n=270 ours@25=0.1381 fveTopK=0.1566 fveRand=0.0514 EXCESS=+0.1052 CI95=[+0.1021,+0.1081] P(>10%)=1.000
+L 7 K=24 n=270 ours@25=0.1371 fveTopK=0.1542 fveRand=0.0453 EXCESS=+0.1089 CI95=[+0.1060,+0.1118] P(>10%)=1.000
+L 8 K=24 n=270 ours@25=0.1420 fveTopK=0.1574 fveRand=0.0429 EXCESS=+0.1145 CI95=[+0.1115,+0.1174] P(>10%)=1.000
+L 9 K=24 n=270 ours@25=0.1372 fveTopK=0.1506 fveRand=0.0388 EXCESS=+0.1118 CI95=[+0.1086,+0.1153] P(>10%)=1.000
+L10 K=24 n=270 ours@25=0.1417 fveTopK=0.1543 fveRand=0.0382 EXCESS=+0.1162 CI95=[+0.1125,+0.1199] P(>10%)=1.000
+L11 K=24 n=270 ours@25=0.1241 fveTopK=0.1382 fveRand=0.0348 EXCESS=+0.1034 CI95=[+0.1002,+0.1064] P(>10%)=0.983
+L12 K=24 n=270 ours@25=0.1143 fveTopK=0.1286 fveRand=0.0318 EXCESS=+0.0967 CI95=[+0.0937,+0.0998] P(>10%)=0.018
+L13 K=24 n=270 ours@25=0.1080 fveTopK=0.1183 fveRand=0.0283 EXCESS=+0.0900 CI95=[+0.0872,+0.0929] P(>10%)=0.000
+L14 K=24 n=270 ours@25=0.0993 fveTopK=0.1097 fveRand=0.0274 EXCESS=+0.0823 CI95=[+0.0798,+0.0849] P(>10%)=0.000
+L15 K=24 n=270 ours@25=0.0924 fveTopK=0.1024 fveRand=0.0247 EXCESS=+0.0777 CI95=[+0.0751,+0.0802] P(>10%)=0.000
+L16 K=24 n=270 ours@25=0.0808 fveTopK=0.0954 fveRand=0.0219 EXCESS=+0.0735 CI95=[+0.0712,+0.0758] P(>10%)=0.000
+L17 K=24 n=270 ours@25=0.1001 fveTopK=0.1085 fveRand=0.0239 EXCESS=+0.0846 CI95=[+0.0819,+0.0871] P(>10%)=0.000
+L18 K=25 n=270 ours@25=0.1095 fveTopK=0.1174 fveRand=0.0241 EXCESS=+0.0933 CI95=[+0.0908,+0.0959] P(>10%)=0.000
+L19 K=25 n=270 ours@25=0.1178 fveTopK=0.1243 fveRand=0.0221 EXCESS=+0.1021 CI95=[+0.0991,+0.1054] P(>10%)=0.907
+L20 K=25 n=270 ours@25=0.1156 fveTopK=0.1211 fveRand=0.0198 EXCESS=+0.1014 CI95=[+0.0985,+0.1043] P(>10%)=0.809
+L21 K=25 n=270 ours@25=0.1242 fveTopK=0.1271 fveRand=0.0189 EXCESS=+0.1082 CI95=[+0.1058,+0.1110] P(>10%)=1.000
+L22 K=25 n=270 ours@25=0.1146 fveTopK=0.1166 fveRand=0.0156 EXCESS=+0.1010 CI95=[+0.0983,+0.1039] P(>10%)=0.756
+L23 K=25 n=270 ours@25=0.1056 fveTopK=0.1067 fveRand=0.0137 EXCESS=+0.0930 CI95=[+0.0910,+0.0948] P(>10%)=0.000
+L24 K=25 n=270 ours@25=0.0986 fveTopK=0.0997 fveRand=0.0144 EXCESS=+0.0853 CI95=[+0.0831,+0.0879] P(>10%)=0.000
+L25 K=25 n=270 ours@25=0.0904 fveTopK=0.0908 fveRand=0.0140 EXCESS=+0.0769 CI95=[+0.0749,+0.0788] P(>10%)=0.000
+L26 K=25 n=270 ours@25=0.0677 fveTopK=0.0688 fveRand=0.0134 EXCESS=+0.0554 CI95=[+0.0538,+0.0571] P(>10%)=0.000
+
+[VERDICT-INPUT] peak excess L0: +0.1542 (BREACHED the 10% ceiling)
+[saved] research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[ok] paper_metric_c4en_1p5b in 383s; research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt refreshed (mtime 1786861559)
+
+--- [3/10] readout_c4en_1p5b ---
+target: research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_readout_c4en_1p5b.log
++ .venv/bin/python examples/jspace_readout_scan.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-prompts 12 --out research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 64/338 [00:00<00:00, 630.30it/s]Loading weights:  47%|████▋     | 160/338 [00:00<00:00, 809.50it/s]Loading weights:  78%|███████▊  | 263/338 [00:00<00:00, 907.48it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 900.41it/s]
+[load] model + lens in 2.9s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[data] 12 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json
+[scan] 27 layers x 2 lens modes (positions: 8 mid + last)
+[prompt 1/12] seq=224 pos=9 9.7s
+[prompt 2/12] seq=165 pos=9 8.7s
+[prompt 3/12] seq=176 pos=9 8.7s
+[prompt 4/12] seq=140 pos=9 8.8s
+[prompt 5/12] seq=287 pos=9 9.2s
+[prompt 6/12] seq=141 pos=9 9.0s
+[prompt 7/12] seq=172 pos=9 8.8s
+[prompt 8/12] seq=168 pos=9 8.9s
+[prompt 9/12] seq=123 pos=9 9.1s
+[prompt 10/12] seq=174 pos=9 8.9s
+[prompt 11/12] seq=182 pos=9 8.8s
+[prompt 12/12] seq=145 pos=9 8.6s
+
+=== Per-layer mean Spearman (last position; J-lens vs logit-lens) ===
+layer    J-lens     logit   J-logit
+    0    0.2786    0.2776    0.0010
+    1    0.3516    0.3591   -0.0076
+    2    0.3873    0.3782    0.0091
+    3    0.3598    0.3996   -0.0398
+    4    0.3261    0.3766   -0.0506
+    5    0.3520    0.4030   -0.0510
+    6    0.3751    0.4282   -0.0531
+    7    0.3690    0.4047   -0.0357
+    8    0.3503    0.4183   -0.0680
+    9    0.3168    0.4139   -0.0971
+   10    0.3378    0.4195   -0.0816
+   11    0.3441    0.4436   -0.0995
+   12    0.3606    0.4665   -0.1059
+   13    0.3644    0.4749   -0.1105
+   14    0.3479    0.4731   -0.1253
+   15    0.3607    0.4976   -0.1368
+   16    0.3633    0.4909   -0.1276
+   17    0.3904    0.4923   -0.1020
+   18    0.3525    0.4942   -0.1416
+   19    0.3885    0.5053   -0.1169
+   20    0.4110    0.5483   -0.1374
+   21    0.4723    0.6034   -0.1311
+   22    0.5437    0.6621   -0.1184
+   23    0.6060    0.6923   -0.0863
+   24    0.6816    0.7143   -0.0327
+   25    0.7376    0.8010   -0.0634
+   26    0.8026    0.8617   -0.0591
+
+=== Depth-of-emergence (median layer, model top-1 in lens top-10) ===
+  all positions : J-lens=23.0  logit=19.0  (never: J=17 logit=1 / 108)
+  last position : J-lens=20.0  logit=19.5
+
+[save] research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[time] mean 8.9s/prompt over 12 prompts
+
+=== Trajectory prompt 1 (final position) ===
+  prompt[:90]: ' " By the end of 1984 , From Time Immemorial had ... received some two hundred [ favorable'
+  MODEL top-5: ['Does', 'What', 'Can', 'Is', 'In']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | [' \n', ' \n\n', ' \n\n\n', '   \n', ' \n\n\n\n'] | ['var', '``', 'Thus', 'a', 'to']
+      1 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['a', 'y', 'Thus', '``', ' Thus']
+      2 | [' \n', ' \n\n', ' \n\n\n', '   \n', '  \n'] | ['a', 's', ' amacıyla', 'Thus', 'thus']
+      3 | [' \n', ' \n\n', '   \n', ' \n\n\n', '     \n'] | ['a', '////////////////////////////////////////////////////////////////', 'thus', '//------------------------------------------------------------------------------------------------', ' Hyper']
+      4 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['solution', 'a', 'thus', '<<<<<<<', '//------------------------------------------------------------------------------------------------']
+      5 | [' \n', ' \n\n', '   \n', ' "', '     \n']   | ['s', 'a', '<<<<<<<', ' Manifest', 'y']
+      6 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', 'go', 'y', '.\n\n']
+      7 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', '(', 'p', '<<<<<<<']
+      8 | [' \n\n', ' \n', '   \n', '  \n\n', ' \n    \n'] | ['a', 'p', '   ', '...', '<|endoftext|>']
+      9 | [' \n', ' \n\n', '   \n', '     \n', '  \n\n'] | ['a', 'p', '____', 's', '...']
+     10 | [' \n', ' \n\n', '   \n', '  \n\n', '  \n']  | ['a', 's', '\\', '\ufeff\n\n', '<<<<<<<']
+     11 | [' \n\n', ' \n', '  \n\n', '   \n', '  \n']  | ['a', 's', '...', 'p', '   ']
+     12 | [' \n\n', ' \n', '  \n\n', '   \n', ' "**']  | ['a', 's', '\\', '   ', '\ufeff\n\n']
+     13 | [' \n\n', ' \n', '  \n\n', '   \n', '  \n']  | ['a', 's', '(', 'is', '   ']
+     14 | [' \n\n', '  \n\n', ' \n', '   \n', '  \n']  | ['a', 's', '(', 'Question', '说明']
+     15 | [' \n\n', '  \n\n', ' \n', '   \n', '  \n']  | ['s', 'a', '(', '   ', ' ']
+     16 | [' \n\n', '  \n\n', '   \n', ' \n', '  \n']  | ['s', 'a', '(', '   ', ' ']
+     17 | ['  \n\n', ' \n\n', 'paragraph', 'text', 'Context'] | ['s', '(', 'a', '[', 'https']
+     18 | ['描述', 'Question', 'Summary', 'Describe', 'describe'] | ['(', 'a', '\xa0', 'Question', '[']
+     19 | ['描述', 'Describe', 'Explanation', 'Question', 'Summary'] | ['What', 'a', '(', '[', '是什么']
+     20 | ['Question', 'What', 'Describe', '描述', 'Summary'] | ['What', ' What', '   ', '[', 'a']
+     21 | ['What', 'Question', 'Which', ' What', 'what'] | ['What', ' What', 'Question', '   ', ' what']
+     22 | ['Based', 'Question', 'What', 'Does', ' Based'] | ['Question', 'Based', ' Based', 'What', ' Question']
+     23 | ['Question', 'Based', 'What', ' Based', 'Does'] | ['Question', 'Based', 'What', ' Based', ' What']
+     24 | ['Based', 'Question', 'Does', 'What', ' Based'] | ['Based', 'Question', ' Based', 'What', 'Does']
+     25 | ['What', 'Question', 'Based', 'Does', 'Answer'] | ['What', 'Question', 'Based', 'Does', ' What']
+     26 | ['Does', 'Based', 'What', 'Is', 'Question']  | ['Based', 'What', 'Is', 'Does', 'Can']
+
+=== Trajectory prompt 2 (final position) ===
+  prompt[:90]: ' In the house journal of the American Council on Foreign Relations , Foreign Affairs , Wil'
+  MODEL top-5: ['F', 'What', 'Question', 'Q', 'Answer']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['s', 'y', 'a', 'to', 'var']
+      1 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['s', 'a', 'y', 't', 'p']
+      2 | [' \n', ' \n\n', ' \n\n\n', '   \n', ' \n\n\n\n\n'] | ['s', 'a', 't', 'y', 'T']
+      3 | [' \n', ' \n\n', '   \n', ' \n\n\n', '     \n'] | ['s', 'a', '(', '[', ' ']
+      4 | [' \n', '   \n', ' \n\n', '  \n', ' \n\n\n'] | ['s', 'solution', 'a', 'Solution', '(']
+      5 | [' \n', '   \n', ' \n\n', '     \n', ' \n\n\n'] | ['s', '(', 'a', '[', 'y']
+      6 | [' \n', '   \n', ' \n\n', '  \n', '     \n'] | ['s', 'a', 'y', 'e', '<<<<<<<']
+      7 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', '<<<<<<<', '   ', '(']
+      8 | [' \n', ' \n\n', '   \n', ' \n\n\n', '  \n\n'] | ['a', '   ', 's', '<|endoftext|>', '<<<<<<<']
+      9 | [' \n', ' \n\n', '   \n', '  \n', '     \n'] | ['a', 's', '   ', '____', 'p']
+     10 | [' \n', ' \n\n', '   \n', ' \n\n\n', '  \n'] | ['s', 'a', '   ', '<<<<<<<', '<|endoftext|>']
+     11 | [' \n\n', ' \n', '  \n\n', ' \n\n\n', '   \n'] | ['a', 's', '   ', '...', '\\']
+     12 | [' \n', ' \n\n', '   \n', '  \n\n', '  \n']  | ['a', 's', '   ', 'e', ' ']
+     13 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n\n\n'] | ['a', 's', 'e', '   ', ' ']
+     14 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n\n\n'] | ['a', 's', '   ', 'p', '(']
+     15 | [' \n\n', ' \n', '   \n', '  \n\n', ' \n\n\n'] | ['a', 's', '   ', ' ', 'i']
+     16 | [' \n\n', ' \n', '   \n', '："', '  \n\n']    | ['s', 'a', '   ', 'i', ' ']
+     17 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n  \n'] | ['s', 'a', '____', '[', '   ']
+     18 | ['描述', 'Summary', 'Question', 'Context', ' Description'] | ['a', '[', '(', 's', '   ']
+     19 | ['Question', 'Summary', 'Context', '原文', 'Explanation'] | ['a', '   ', '  ', '[', 'Question']
+     20 | ['Question', ' \n\n', '  \n\n', 'Summary', 'What'] | ['a', 'Question', '   ', '[', '  ']
+     21 | ['Question', 'What', ' Question', 'Answer', 'Which'] | ['Question', ' Question', 'What', 'a', '  ']
+     22 | ['Question', 'Answer', 'What', 'Which', ' Question'] | ['Question', ' Question', 'Answer', 'What', '答案']
+     23 | ['Question', 'Answer', 'What', ' Question', 'Based'] | ['Question', ' Question', 'Answer', 'What', 'Q']
+     24 | ['Question', 'Answer', 'What', ' Question', 'Based'] | ['Question', ' Question', 'Answer', 'What', 'question']
+     25 | ['Question', 'Answer', 'What', 'Which', 'After'] | ['Question', 'Answer', ' Question', 'What', 'Translate']
+     26 | ['Question', 'Answer', 'What', 'In', 'F']    | ['Question', 'Answer', 'Q', 'What', ' Question']
+[ok] readout_c4en_1p5b in 113s; research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt refreshed (mtime 1786861671)
+
+--- [4/10] lens_eval_c4en_1p5b ---
+target: research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_lens_eval_c4en_1p5b.log
++ .venv/bin/python examples/jspace_lens_eval.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --evals multihop association --out research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  19%|█▊        | 63/338 [00:00<00:00, 568.07it/s]Loading weights:  45%|████▌     | 153/338 [00:00<00:00, 753.02it/s]Loading weights:  76%|███████▌  | 256/338 [00:00<00:00, 868.51it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 865.37it/s]
+[load] model + lens in 2.9s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[bands] early=(0, 8) mid=(9, 18) late=(19, 26)
+
+=== multihop  (items=93, instances=103, inexact-token=9, 24.7s) ===
+band        J@10    J@50  logit@10  logit@50  ΔJ-L@10  ΔJ-L@50
+early       0.12    0.20      0.00      0.00     0.12     0.20
+mid         0.14    0.32      0.00      0.00     0.14     0.32
+late        0.49    0.65      0.40      0.64     0.09     0.01
+overall     0.49    0.75      0.40      0.64     0.09     0.11
+  examples (multihop): best (layer, rank) per lens
+    'carnival-ocean'       concept='Brazil' tok=' Brazil' | J: L18 rank 47  | logit: L22 rank 122
+    'amazon-language'      concept='Brazil' tok=' Brazil' | J: L26 rank 4  | logit: L26 rank 6
+    'mars-color'           concept='Mars' tok=' Mars' | J: L26 rank 44  | logit: L26 rank 56
+
+=== association  (items=102, instances=102, inexact-token=3, 26.3s) ===
+band        J@10    J@50  logit@10  logit@50  ΔJ-L@10  ΔJ-L@50
+early       0.00    0.00      0.00      0.02     0.00    -0.02
+mid         0.00    0.02      0.01      0.02    -0.01     0.00
+late        0.00    0.00      0.00      0.02     0.00    -0.02
+overall     0.00    0.02      0.01      0.02    -0.01     0.00
+  examples (association): best (layer, rank) per lens
+    'grief'                concept='grief' tok=' grief' | J: L10 rank 7372  | logit: L8 rank 28141
+    'pregnant'             concept='pregnant' tok=' pregnant' | J: L12 rank 1705  | logit: L25 rank 21697
+    'lie'                  concept='lie' tok=' lie' | J: L0 rank 1584  | logit: L25 rank 2506
+
+[save] research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt
+[ok] lens_eval_c4en_1p5b in 56s; research/arcs/04_jspace/data/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt refreshed (mtime 1786861727)
+
+--- [5/10] structure_heldoutc4en_1p5b ---
+target: research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_structure_heldoutc4en_1p5b.log
++ .venv/bin/python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt --prompts research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json --n-prompts 30 --ks 5\,10\,25\,50 --out research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  20%|██        | 69/338 [00:00<00:00, 685.48it/s]Loading weights:  48%|████▊     | 161/338 [00:00<00:00, 803.30it/s]Loading weights:  76%|███████▌  | 257/338 [00:00<00:00, 865.12it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 887.13it/s]
+[load] model + lens in 3.2s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[wu] W_U (151936, 1536) torch.bfloat16 on cuda:0
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers, ks=[5, 10, 25, 50], positions=8 mid + last
+[prompt 1/30] seq=149 pos=9 mean_varfrac(k=25)=0.1057 14.3s
+[prompt 2/30] seq=274 pos=9 mean_varfrac(k=25)=0.0946 12.5s
+[prompt 3/30] seq=403 pos=9 mean_varfrac(k=25)=0.0993 13.0s
+[prompt 4/30] seq=335 pos=9 mean_varfrac(k=25)=0.0972 13.7s
+[prompt 5/30] seq=343 pos=9 mean_varfrac(k=25)=0.0871 12.3s
+[prompt 6/30] seq=344 pos=9 mean_varfrac(k=25)=0.0986 12.7s
+[prompt 7/30] seq=509 pos=9 mean_varfrac(k=25)=0.0910 12.9s
+[prompt 8/30] seq=397 pos=9 mean_varfrac(k=25)=0.0794 12.6s
+[prompt 9/30] seq=327 pos=9 mean_varfrac(k=25)=0.0937 12.2s
+[prompt 10/30] seq=191 pos=9 mean_varfrac(k=25)=0.0946 11.9s
+[prompt 11/30] seq=512 pos=9 mean_varfrac(k=25)=0.0932 12.2s
+[prompt 12/30] seq=155 pos=9 mean_varfrac(k=25)=0.1049 11.8s
+[prompt 13/30] seq=395 pos=9 mean_varfrac(k=25)=0.0992 12.1s
+[prompt 14/30] seq=512 pos=9 mean_varfrac(k=25)=0.1004 12.3s
+[prompt 15/30] seq=512 pos=9 mean_varfrac(k=25)=0.0977 12.1s
+[prompt 16/30] seq=363 pos=9 mean_varfrac(k=25)=0.0935 15.1s
+[prompt 17/30] seq=512 pos=9 mean_varfrac(k=25)=0.0964 13.4s
+[prompt 18/30] seq=141 pos=9 mean_varfrac(k=25)=0.0893 13.2s
+[prompt 19/30] seq=365 pos=9 mean_varfrac(k=25)=0.0967 13.2s
+[prompt 20/30] seq=393 pos=9 mean_varfrac(k=25)=0.0917 13.2s
+[prompt 21/30] seq=219 pos=9 mean_varfrac(k=25)=0.0919 13.3s
+[prompt 22/30] seq=512 pos=9 mean_varfrac(k=25)=0.1005 13.3s
+[prompt 23/30] seq=206 pos=9 mean_varfrac(k=25)=0.0846 13.1s
+[prompt 24/30] seq=512 pos=9 mean_varfrac(k=25)=0.0934 13.8s
+[prompt 25/30] seq=214 pos=9 mean_varfrac(k=25)=0.0850 14.3s
+[prompt 26/30] seq=512 pos=9 mean_varfrac(k=25)=0.0945 14.1s
+[prompt 27/30] seq=512 pos=9 mean_varfrac(k=25)=0.1005 13.6s
+[prompt 28/30] seq=294 pos=9 mean_varfrac(k=25)=0.1016 14.2s
+[prompt 29/30] seq=225 pos=9 mean_varfrac(k=25)=0.0846 14.2s
+[prompt 30/30] seq=512 pos=9 mean_varfrac(k=25)=0.0886 14.5s
+
+=== Per-layer J-space structure (k=25) ===
+layer  varfrac_mean  varfrac_med  active_mean  rd_logit_kurt  rd_prob_kurt  coef_kurt
+    0        0.0844       0.0758        23.83           3.42     118749.83       5.15
+    1        0.0681       0.0618        24.05           3.28     109553.93       3.25
+    2        0.0700       0.0656        23.80           3.85     120051.84       3.94
+    3        0.0759       0.0699        23.82           4.34     113565.25       3.61
+    4        0.0779       0.0704        23.70           3.47     119877.59       3.25
+    5        0.0835       0.0759        23.66           4.06     118153.76       3.05
+    6        0.0888       0.0841        23.86           3.41     113282.29       3.68
+    7        0.0988       0.0909        23.83           2.41     116372.42       3.13
+    8        0.1012       0.0959        23.89           2.29     115085.96       3.46
+    9        0.0937       0.0870        23.99           1.96     113167.16       3.72
+   10        0.0988       0.0923        24.00           1.76     110229.14       3.97
+   11        0.0967       0.0905        24.07           1.49     103533.21       4.23
+   12        0.0855       0.0818        23.87           1.35     107223.75       4.75
+   13        0.0786       0.0746        24.03           1.21     102775.03       3.71
+   14        0.0738       0.0704        24.03           1.13      97086.37       4.05
+   15        0.0802       0.0759        24.08           1.13     103406.34       2.85
+   16        0.0698       0.0661        24.10           1.36     104688.80       3.43
+   17        0.0957       0.0935        24.21           1.02      97414.38       2.40
+   18        0.1024       0.0998        24.21           1.03      94735.74       1.87
+   19        0.1215       0.1176        24.34           1.24      98036.42       1.30
+   20        0.1220       0.1188        24.51           1.32      99387.17       1.42
+   21        0.1330       0.1322        24.70           1.38     102893.63       1.70
+   22        0.1254       0.1259        24.74           1.47     108302.82       2.57
+   23        0.1193       0.1190        24.77           1.54     113767.12       3.29
+   24        0.1096       0.1116        24.63           1.72     114997.17       3.47
+   25        0.1074       0.1090        24.92           1.65     114752.22       5.03
+   26        0.0844       0.0846        24.88           1.45     113288.45       4.58
+
+=== varfrac_mean trajectory by k ===
+layer k=  5 k= 10 k= 25 k= 50
+    0 0.034 0.046 0.084 0.140
+    1 0.029 0.038 0.068 0.117
+    2 0.029 0.038 0.070 0.119
+    3 0.029 0.041 0.076 0.121
+    4 0.029 0.039 0.078 0.121
+    5 0.031 0.043 0.084 0.128
+    6 0.033 0.049 0.089 0.132
+    7 0.037 0.054 0.099 0.142
+    8 0.039 0.056 0.101 0.145
+    9 0.036 0.052 0.094 0.139
+   10 0.039 0.057 0.099 0.147
+   11 0.038 0.055 0.097 0.139
+   12 0.033 0.046 0.086 0.126
+   13 0.030 0.045 0.079 0.121
+   14 0.029 0.042 0.074 0.110
+   15 0.032 0.046 0.080 0.115
+   16 0.031 0.041 0.070 0.107
+   17 0.042 0.058 0.096 0.129
+   18 0.046 0.064 0.102 0.135
+   19 0.058 0.080 0.122 0.152
+   20 0.060 0.082 0.122 0.152
+   21 0.068 0.092 0.133 0.164
+   22 0.066 0.088 0.125 0.151
+   23 0.063 0.084 0.119 0.143
+   24 0.054 0.074 0.110 0.133
+   25 0.059 0.078 0.107 0.125
+   26 0.040 0.058 0.084 0.099
+
+[save] research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[time] mean 13.2s/prompt over 30 prompts; total 395.2s
+
+=== Top J-space atoms (prompt 1, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' Glouce'  '卡车'  ':.'  ' .\n\n'  'ationToken'  '.'
+      1 | ' Glouce'  '.:'  '-win'  ' Leaf'  'ласт'  'rolled'
+      2 | ' Glouce'  'ปาก'  'rolled'  ' Michigan'  'anness'  ' Sel'
+      3 | ' Michigan'  ' Glouce'  'ClientRect'  'DET'  'éd'  'ปาก'
+      4 | ' Michigan'  ' Alfred'  ' pozostał'  '(_.'  ' Glouce'  'ész'
+      5 | ' Alfred'  'もちろ'  'ously'  ' Sel'  ' '  ' Sch'
+      6 | ' Alfred'  ' Glouce'  'もちろ'  '卡'  'ッ'  '.<'
+      7 | ' Wolfgang'  'DET'  ' Ezek'  'ッ'  '卡'  ' Chester'
+      8 | '标'  '卡'  'Archivo'  '(_.'  'ッ'  ' Sie'
+      9 | ' Asked'  '约翰'  ' Sergei'  ' Chester'  '保荐'  'Archivo'
+     10 | '归'  ' Asked'  ' Schwartz'  '传真'  '卡'  ' Sergei'
+     11 | ' Chester'  '电话'  ' Wolfgang'  '卡'  '标'  '邮件'
+     12 | ' Asked'  '©'  ' Chester'  ' Sergei'  '书面'  ' Wolfe'
+     13 | ' Asked'  ' Chester'  '濠'  ' Sergei'  'もちろ'  '卡'
+     14 | '濠'  ' Asked'  '卡'  '_.'  ' Chester'  '电话'
+     15 | '咨询服务'  ' Publishing'  '濠'  ' Asked'  ' Strauss'  '电话'
+     16 | ' Sz'  '咨询服务'  '淇'  'EMAIL'  '卡'  'qualified'
+     17 | 'info'  '�'  ' Sz'  'ศ'  '有限责任'  'qualified'
+     18 | 'info'  'üns'  'ศ'  ' Sz'  ' Wir'  '.\n'
+     19 | '联系电话'  '<|endoftext|>'  ' His'  'Ark'  'ễn'  ' Sz'
+     20 | '<|endoftext|>'  ' She'  ' His'  'Ark'  '联系电话'  ' Phone'
+     21 | ' Phone'  ' Thank'  '联系'  ' Alternatively'  '他会'  '<|endoftext|>'
+     22 | ' Phone'  ' Thanks'  ' Contact'  ' Please'  '他会'  '我们'
+     23 | ' Thanks'  ' Contact'  ' Phone'  ' Alternatively'  '他已经'  '他'
+     24 | ' Thank'  ' Contact'  '他已经'  ' Feel'  ' Based'  '他'
+     25 | '<|endoftext|>'  ' Feel'  ' Based'  '他已经'  ' We'  ' Contact'
+     26 | '<|endoftext|>'  ' Feel'  ' We'  ' He'  ' Based'  '.email'
+
+=== Top J-space atoms (prompt 2, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | '卡车'  ' Glouce'  ' Pennsylvania'  ' purse'  ':.'  '.'
+      1 | ' Glouce'  'ласт'  ' Template'  'rolled'  'ClientRect'  ' '
+      2 | ' Glouce'  ' pozostał'  ' :'  ' Template'  'rolled'  ' '
+      3 | ' Auburn'  ' :'  ' authorised'  '.['  ' '  '滩'
+      4 | '约'  ' pozostał'  ' centre'  'แข'  ' Pennsylvania'  ' Alfred'
+      5 | ' прежде'  '滩'  ' centre'  ' Cumberland'  'Philadelphia'  '.['
+      6 | ' прежде'  ' Alfred'  '滩'  '新京报'  ' Chrysler'  " '"
+      7 | ' прежде'  '新京报'  '(_.'  ' Chrysler'  ' Page'  ' 그렇지'
+      8 | '书面'  '(_.'  ' Sym'  ' прежде'  '新京报'  'คล'
+      9 | '新京报'  ' Chrysler'  '淮安'  ' emphas'  '互'  ' Roths'
+     10 | '新京报'  ' organis'  ' Chrysler'  '业务'  ' partnered'  ' CFO'
+     11 | ' Partnership'  '业务'  '律师事务'  ' emphas'  '新京报'  'SEM'
+     12 | '新京报'  '业务'  '{:'  ' Partnership'  ' clients'  '�'
+     13 | '业务'  '新京报'  ' Projects'  ' emphas'  '.\n'  '{@'
+     14 | '业务'  ' Partnership'  '新京报'  '.\n'  '此外'  '{@'
+     15 | '业务'  ' New'  ' Partnership'  '.\n'  ' Strauss'  '新京报'
+     16 | '业务'  ' Partnership'  '.\n'  '执业'  '律师事务'  '此外'
+     17 | '此外'  ' New'  '工作'  '业务'  '�'  'ё'
+     18 | '此外'  '业务'  ' Highlights'  ' Rodr'  '工作'  'ện'
+     19 | '此外'  ' New'  ' García'  'ện'  '<|endoftext|>'  'Assistant'
+     20 | ' Additionally'  '//------------------------------------------------------------------------------\n'  '工作'  ' Rodr'  ' New'  '<|endoftext|>'
+     21 | ' Our'  ' Additionally'  ' Clients'  '//------------------------------------------------------------------------------\n'  '最近'  'òa'
+     22 | ' Additionally'  ' Our'  '我们'  ' Clients'  '最近'  'òa'
+     23 | '此外'  ' Our'  ' Clients'  '最近'  '我们'  '###############################################################################\n'
+     24 | ' Our'  '我们'  ' Additionally'  ' recent'  ' Clients'  '<|endoftext|>'
+     25 | ' Our'  '<|endoftext|>'  '我们'  ' Based'  '      \n      \n'  ' Additionally'
+     26 | '<|endoftext|>'  ' Our'  ' We'  ' Based'  ' мы'  '      \n      \n'
+[ok] structure_heldoutc4en_1p5b in 400s; research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt refreshed (mtime 1786862127)
+
+--- [6/10] paper_metric_heldoutc4en_1p5b ---
+target: research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_paper_metric_heldoutc4en_1p5b.log
++ .venv/bin/python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt --prompts research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 10000 --out research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  14%|█▎        | 46/338 [00:00<00:00, 456.59it/s]Loading weights:  40%|████      | 136/338 [00:00<00:00, 697.65it/s]Loading weights:  68%|██████▊   | 231/338 [00:00<00:00, 793.92it/s]Loading weights:  97%|█████████▋| 328/338 [00:00<00:00, 856.78it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 816.12it/s]
+[setup] 30 prompts, layers=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], |V|=151936, mode=scan grid
+[pursuit] prompt 1/30 pos=9
+[pursuit] prompt 2/30 pos=9
+[pursuit] prompt 3/30 pos=9
+[pursuit] prompt 4/30 pos=9
+[pursuit] prompt 5/30 pos=9
+[pursuit] prompt 6/30 pos=9
+[pursuit] prompt 7/30 pos=9
+[pursuit] prompt 8/30 pos=9
+[pursuit] prompt 9/30 pos=9
+[pursuit] prompt 10/30 pos=9
+[pursuit] prompt 11/30 pos=9
+[pursuit] prompt 12/30 pos=9
+[pursuit] prompt 13/30 pos=9
+[pursuit] prompt 14/30 pos=9
+[pursuit] prompt 15/30 pos=9
+[pursuit] prompt 16/30 pos=9
+[pursuit] prompt 17/30 pos=9
+[pursuit] prompt 18/30 pos=9
+[pursuit] prompt 19/30 pos=9
+[pursuit] prompt 20/30 pos=9
+[pursuit] prompt 21/30 pos=9
+[pursuit] prompt 22/30 pos=9
+[pursuit] prompt 23/30 pos=9
+[pursuit] prompt 24/30 pos=9
+[pursuit] prompt 25/30 pos=9
+[pursuit] prompt 26/30 pos=9
+[pursuit] prompt 27/30 pos=9
+[pursuit] prompt 28/30 pos=9
+[pursuit] prompt 29/30 pos=9
+[pursuit] prompt 30/30 pos=9
+[validate] replicated-vs-stored varfrac@25 max|diff| = 0.000e+00
+L 0 K=24 n=270 ours@25=0.0844 fveTopK=0.1516 fveRand=0.0511 EXCESS=+0.1004 CI95=[+0.0963,+0.1043] P(>10%)=0.577
+L 1 K=24 n=270 ours@25=0.0681 fveTopK=0.1323 fveRand=0.0556 EXCESS=+0.0767 CI95=[+0.0741,+0.0790] P(>10%)=0.000
+L 2 K=24 n=270 ours@25=0.0700 fveTopK=0.1287 fveRand=0.0515 EXCESS=+0.0772 CI95=[+0.0744,+0.0798] P(>10%)=0.000
+L 3 K=24 n=270 ours@25=0.0759 fveTopK=0.1216 fveRand=0.0489 EXCESS=+0.0727 CI95=[+0.0704,+0.0751] P(>10%)=0.000
+L 4 K=24 n=270 ours@25=0.0779 fveTopK=0.1182 fveRand=0.0462 EXCESS=+0.0720 CI95=[+0.0697,+0.0745] P(>10%)=0.000
+L 5 K=24 n=270 ours@25=0.0835 fveTopK=0.1247 fveRand=0.0500 EXCESS=+0.0747 CI95=[+0.0717,+0.0778] P(>10%)=0.000
+L 6 K=24 n=270 ours@25=0.0888 fveTopK=0.1245 fveRand=0.0483 EXCESS=+0.0762 CI95=[+0.0732,+0.0792] P(>10%)=0.000
+L 7 K=24 n=270 ours@25=0.0988 fveTopK=0.1295 fveRand=0.0442 EXCESS=+0.0853 CI95=[+0.0819,+0.0887] P(>10%)=0.000
+L 8 K=24 n=270 ours@25=0.1012 fveTopK=0.1318 fveRand=0.0426 EXCESS=+0.0892 CI95=[+0.0856,+0.0925] P(>10%)=0.000
+L 9 K=24 n=270 ours@25=0.0937 fveTopK=0.1275 fveRand=0.0406 EXCESS=+0.0869 CI95=[+0.0833,+0.0908] P(>10%)=0.000
+L10 K=24 n=270 ours@25=0.0988 fveTopK=0.1347 fveRand=0.0414 EXCESS=+0.0933 CI95=[+0.0900,+0.0968] P(>10%)=0.000
+L11 K=24 n=270 ours@25=0.0967 fveTopK=0.1264 fveRand=0.0382 EXCESS=+0.0882 CI95=[+0.0851,+0.0912] P(>10%)=0.000
+L12 K=24 n=270 ours@25=0.0855 fveTopK=0.1159 fveRand=0.0357 EXCESS=+0.0802 CI95=[+0.0775,+0.0831] P(>10%)=0.000
+L13 K=24 n=270 ours@25=0.0786 fveTopK=0.1096 fveRand=0.0328 EXCESS=+0.0768 CI95=[+0.0742,+0.0793] P(>10%)=0.000
+L14 K=24 n=270 ours@25=0.0738 fveTopK=0.1020 fveRand=0.0306 EXCESS=+0.0715 CI95=[+0.0690,+0.0741] P(>10%)=0.000
+L15 K=24 n=270 ours@25=0.0802 fveTopK=0.1017 fveRand=0.0291 EXCESS=+0.0726 CI95=[+0.0701,+0.0752] P(>10%)=0.000
+L16 K=24 n=270 ours@25=0.0698 fveTopK=0.0955 fveRand=0.0256 EXCESS=+0.0700 CI95=[+0.0675,+0.0725] P(>10%)=0.000
+L17 K=24 n=270 ours@25=0.0957 fveTopK=0.1112 fveRand=0.0279 EXCESS=+0.0833 CI95=[+0.0803,+0.0863] P(>10%)=0.000
+L18 K=24 n=270 ours@25=0.1024 fveTopK=0.1152 fveRand=0.0261 EXCESS=+0.0891 CI95=[+0.0863,+0.0920] P(>10%)=0.000
+L19 K=24 n=270 ours@25=0.1215 fveTopK=0.1285 fveRand=0.0254 EXCESS=+0.1031 CI95=[+0.0995,+0.1066] P(>10%)=0.961
+L20 K=25 n=270 ours@25=0.1220 fveTopK=0.1298 fveRand=0.0236 EXCESS=+0.1062 CI95=[+0.1024,+0.1098] P(>10%)=1.000
+L21 K=25 n=270 ours@25=0.1330 fveTopK=0.1390 fveRand=0.0221 EXCESS=+0.1169 CI95=[+0.1133,+0.1204] P(>10%)=1.000
+L22 K=25 n=270 ours@25=0.1254 fveTopK=0.1288 fveRand=0.0174 EXCESS=+0.1114 CI95=[+0.1074,+0.1152] P(>10%)=1.000
+L23 K=25 n=270 ours@25=0.1193 fveTopK=0.1222 fveRand=0.0150 EXCESS=+0.1072 CI95=[+0.1034,+0.1109] P(>10%)=1.000
+L24 K=25 n=270 ours@25=0.1096 fveTopK=0.1129 fveRand=0.0140 EXCESS=+0.0989 CI95=[+0.0950,+0.1025] P(>10%)=0.295
+L25 K=25 n=270 ours@25=0.1074 fveTopK=0.1081 fveRand=0.0133 EXCESS=+0.0947 CI95=[+0.0912,+0.0980] P(>10%)=0.000
+L26 K=25 n=270 ours@25=0.0844 fveTopK=0.0857 fveRand=0.0129 EXCESS=+0.0728 CI95=[+0.0703,+0.0751] P(>10%)=0.000
+
+[VERDICT-INPUT] peak excess L21: +0.1169 (BREACHED the 10% ceiling)
+[saved] research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[ok] paper_metric_heldoutc4en_1p5b in 440s; research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt refreshed (mtime 1786862567)
+
+--- [7/10] readout_heldoutc4en_1p5b ---
+target: research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_readout_heldoutc4en_1p5b.log
++ .venv/bin/python examples/jspace_readout_scan.py --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt --prompts research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json --n-prompts 30 --out research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  15%|█▌        | 52/338 [00:00<00:00, 505.34it/s]Loading weights:  44%|████▍     | 148/338 [00:00<00:00, 753.92it/s]Loading weights:  72%|███████▏  | 244/338 [00:00<00:00, 839.55it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 836.83it/s]
+[load] model + lens in 3.1s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers x 2 lens modes (positions: 8 mid + last)
+[prompt 1/30] seq=149 pos=9 10.5s
+[prompt 2/30] seq=274 pos=9 9.8s
+[prompt 3/30] seq=403 pos=9 9.7s
+[prompt 4/30] seq=335 pos=9 9.9s
+[prompt 5/30] seq=343 pos=9 9.8s
+[prompt 6/30] seq=344 pos=9 9.8s
+[prompt 7/30] seq=509 pos=9 9.9s
+[prompt 8/30] seq=397 pos=9 9.6s
+[prompt 9/30] seq=327 pos=9 9.5s
+[prompt 10/30] seq=191 pos=9 9.5s
+[prompt 11/30] seq=512 pos=9 10.0s
+[prompt 12/30] seq=155 pos=9 9.3s
+[prompt 13/30] seq=395 pos=9 9.7s
+[prompt 14/30] seq=512 pos=9 9.6s
+[prompt 15/30] seq=512 pos=9 9.6s
+[prompt 16/30] seq=363 pos=9 9.7s
+[prompt 17/30] seq=512 pos=9 9.8s
+[prompt 18/30] seq=141 pos=9 9.2s
+[prompt 19/30] seq=365 pos=9 9.8s
+[prompt 20/30] seq=393 pos=9 10.4s
+[prompt 21/30] seq=219 pos=9 9.9s
+[prompt 22/30] seq=512 pos=9 10.0s
+[prompt 23/30] seq=206 pos=9 9.7s
+[prompt 24/30] seq=512 pos=9 10.2s
+[prompt 25/30] seq=214 pos=9 9.4s
+[prompt 26/30] seq=512 pos=9 9.6s
+[prompt 27/30] seq=512 pos=9 9.6s
+[prompt 28/30] seq=294 pos=9 9.6s
+[prompt 29/30] seq=225 pos=9 9.5s
+[prompt 30/30] seq=512 pos=9 9.9s
+
+=== Per-layer mean Spearman (last position; J-lens vs logit-lens) ===
+layer    J-lens     logit   J-logit
+    0    0.2833    0.2102    0.0731
+    1    0.3429    0.2554    0.0875
+    2    0.3138    0.2647    0.0492
+    3    0.2559    0.2888   -0.0329
+    4    0.3442    0.2825    0.0618
+    5    0.4093    0.3001    0.1092
+    6    0.4244    0.3267    0.0976
+    7    0.4385    0.3295    0.1090
+    8    0.4299    0.3389    0.0910
+    9    0.4739    0.3375    0.1364
+   10    0.5031    0.3487    0.1544
+   11    0.5270    0.3642    0.1629
+   12    0.5519    0.3643    0.1877
+   13    0.5922    0.3706    0.2216
+   14    0.5977    0.3725    0.2252
+   15    0.5967    0.3890    0.2077
+   16    0.5445    0.3975    0.1469
+   17    0.6115    0.4156    0.1960
+   18    0.5658    0.4283    0.1375
+   19    0.6054    0.4535    0.1520
+   20    0.6119    0.4868    0.1251
+   21    0.6300    0.5396    0.0904
+   22    0.6676    0.5850    0.0826
+   23    0.7039    0.6206    0.0833
+   24    0.7406    0.6613    0.0793
+   25    0.8227    0.7146    0.1081
+   26    0.8689    0.7957    0.0732
+
+=== Depth-of-emergence (median layer, model top-1 in lens top-10) ===
+  all positions : J-lens=22.0  logit=19.0  (never: J=19 logit=5 / 270)
+  last position : J-lens=22.0  logit=17.0
+
+[save] research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[time] mean 9.7s/prompt over 30 prompts
+
+=== Trajectory prompt 1 (final position) ===
+  prompt[:90]: 'Sorry, currently we do not have any vacancies.\nThough, we are always interested in open-mi'
+  MODEL top-5: [' He', ' We', '<|endoftext|>', ' His', ' You']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | ['.', '.\n\n', ' \n\n', ':.', ';.']          | [' \n', ' \n\n', '<|endoftext|>', ' The', ' (']
+      1 | ['.\n\n', ' .\n\n', ' .\n', '.', '.\n']      | [' \n', '\xa0', ' ', ' (', '<|endoftext|>']
+      2 | ['.\n', ' .\n', '.\n\n', ' .\n\n', '.']      | [' \n', ' \n\n', ' ', ' (', '\xa0']
+      3 | ['.[', '.\n', '.".', '."\n', ':.']           | [' \n', ' \n\n', ' ', ' (', '\xa0']
+      4 | ['.[', '.".', '."[', '.</', '."']            | [' \n', ' \n\n', '<|endoftext|>', ' ', ' (']
+      5 | ['.\n', '."\n', '.\n\n\n', '.</', '.\n\n\n\n'] | [' \n', '<|endoftext|>', ' ', ' (', ' \n\n']
+      6 | ['.</', '.[', '.\n\n\n\n', '.\n', '.\n\n\n'] | ['<|endoftext|>', ' \n', '\xa0', ' ', ' \n\n']
+      7 | ['.”', '”.', '.</', '.\n\n\n', '.(']         | ['<|endoftext|>', ' (', '\xa0', ' ', ' \n']
+      8 | ['.”', '.".', '.\n', '.(', '."\n']           | ['<|endoftext|>', '\xa0', ' (', ' ', ' P']
+      9 | ['.".', '."', '.(', '.”', '!.']              | ['<|endoftext|>', '\\\n', '\xa0', ' (', ' ']
+     10 | ['."', '."\n', '.”', '.".', '.",']           | ['<|endoftext|>', ' \n', ' (', ' ', '\xa0']
+     11 | ['.".', '."', '.”', '."\n', '.\n']           | ['<|endoftext|>', ' \n', '\xa0', ' (', ' ']
+     12 | ['.\n', '."\n', '".\n', '.”', '.\n\n\n']     | ['<|endoftext|>', ' ', ' (', '\xa0', ' P']
+     13 | ['.\n', '."\n', '..\n', '".\n', '.\n\n\n']   | ['<|endoftext|>', ' ', ' (', '\xa0', ' [']
+     14 | ['.\n', '.\n\n\n', '."\n', '".\n', '.\\']    | ['<|endoftext|>', ' ', ' (', ' [', ' D']
+     15 | ['.\n\n\n', '.\n', '.\n\n\n\n', '."\n', '!\n'] | ['<|endoftext|>', ' ', ' (', ' [', '.\n']
+     16 | ['.\n\n\n', '.\n', '.\n\n\n\n', '."\n', '!\n'] | ['<|endoftext|>', ' ', ' (', ' S', ' \n']
+     17 | ['.\n', '!\n', '.\n\n\n', '."\n', '!"\n']    | ['<|endoftext|>', '.\n', ' ', ' (', ' We']
+     18 | ['!\n', '.\n', '.\n\n\n', '?\n', '!\n\n\n']  | ['<|endoftext|>', ' (', ' ', '.\n', '\xa0']
+     19 | ['!\n', '.\n', '<|endoftext|>', '!\n\n\n', '.\n\n\n'] | ['<|endoftext|>', '.\n', ' (', ' Please', '\n\n\n']
+     20 | ['<|endoftext|>', '!\n', '.\n', ' :)\n', '!\n\n\n'] | ['<|endoftext|>', ' (', ' Please', ' All', '联系电话']
+     21 | ['!\n', ' Contact', '<|endoftext|>', ' Please', '.\n'] | ['<|endoftext|>', '联系电话', ' We', ' Please', ' (']
+     22 | [' Contact', ' Email', ' Phone', ' Please', ' Otherwise'] | ['<|endoftext|>', ' We', '联系电话', ' Contact', ' (']
+     23 | [' Contact', ' Email', ' Thank', ' Thanks', ' Please'] | ['<|endoftext|>', ' We', ' Contact', ' Thanks', '联系电话']
+     24 | [' Contact', ' Thank', ' Please', ' Thanks', ' Email'] | ['<|endoftext|>', ' We', ' Thanks', ' Thank', ' Please']
+     25 | [' Please', ' Contact', ' Thanks', ' Based', ' Thank'] | ['<|endoftext|>', ' We', ' Please', ' He', ' Thanks']
+     26 | ['<|endoftext|>', ' He', ' We', ' Please', ' Based'] | ['<|endoftext|>', ' He', ' We', ' His', ' You']
+
+=== Trajectory prompt 2 (final position) ===
+  prompt[:90]: 'Trowers & Hamlins is one of the largest international law firms in the United Arab Emirate'
+  MODEL top-5: [' We', ' Our', '<|endoftext|>', ' In', ' The']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | ['.', '.\n\n', ':.', '".', ' \n\n']          | [' \n', ' \n\n', '<|endoftext|>', ' ', ' This']
+      1 | [':.', '.', ' .', '.:', ' ;']                | [' \n', '<|endoftext|>', '\xa0', ' \n\n', ' ']
+      2 | [' .\n', ' ;', ' :', ' ".\n', " '."]         | ['<|endoftext|>', ' (', ' \n', '\xa0', ' ']
+      3 | ["'.\n", " '.", ' .\n', '.\n', '".\n']       | [' (', '\xa0', ' ', '<|endoftext|>', '.\n\n']
+      4 | ['.\n', "'.\n", '.[', '..\n', '<|endoftext|>'] | ['<|endoftext|>', ' ', ' (', '.\n\n', ' \n']
+      5 | ['.\n', "'.\n", '".\n', '.\n\n', '."\n']     | ['<|endoftext|>', ' \n', ' (', ' \n\n', ' ']
+      6 | ['.\n', '..\n', "'.\n", '".\n', '.\n\n']     | [' ', '<|endoftext|>', ' \n', ' (', ' \n\n']
+      7 | ["'.\n", '.\n', '..\n', ".'\n", '".\n']      | [' ', '<|endoftext|>', ' (', '.\n\n', '.\n']
+      8 | ['.\n', '..\n', "'.\n", '...\n', ".'\n"]     | [' ', '<|endoftext|>', ' (', '.\n\n', ' \n']
+      9 | ['.\n', '..\n', "'.\n", '...\n', ".'\n"]     | ['<|endoftext|>', ' ', '.\n\n', ' (', '.\n']
+     10 | ['.\n', "'.\n", '."\n', '".\n', '..\n']      | ['<|endoftext|>', ' ', ' \n', '.\n', '.\n\n']
+     11 | ['.\n', '."\n', "'.\n", '".\n', ".'\n"]      | ['<|endoftext|>', ' ', '.\n', ' \n', ' (']
+     12 | ['.\n', "'.\n", '."\n', '..\n', '".\n']      | ['<|endoftext|>', ' ', '\xa0', '.\n', ' \n']
+     13 | ['.\n', '".\n', '."\n', "'.\n", '..\n']      | ['<|endoftext|>', ' ', '.\n', '.\n\n', '\xa0']
+     14 | ['.\n', "'.\n", '".\n', '."\n', ".'\n"]      | ['<|endoftext|>', ' ', ' \n', '.\n\n', '.\n']
+     15 | ['.\n', "'.\n", '".\n', ".'\n", '."\n']      | ['<|endoftext|>', ' ', '.\n', '.\n\n', ' \n']
+     16 | ['.\n', '".\n', '."\n', "'.\n", ".'\n"]      | ['<|endoftext|>', ' ', '.\n', '.\n\n', ' \n']
+     17 | ['.\n', "'.\n", '".\n', '."\n', ".'\n"]      | ['<|endoftext|>', '.\n', ' ', '.\n\n', ' \n']
+     18 | ['.\n', "'.\n", '".\n', '!\n', '..\n']       | ['<|endoftext|>', '.\n\n', ' ', '.\n', ' \n']
+     19 | ['.\n', '!\n', '..\n', '。\n', '<|endoftext|>'] | ['<|endoftext|>', '.\n', ' \n', '.\n\n', ' ']
+     20 | ['.\n', '<|endoftext|>', ' Clients', '!\n', '..\n'] | ['<|endoftext|>', '.\n', ' \n', ' In', ' Additionally']
+     21 | ['.\n', ' Clients', ' Our', ' Additionally', ' Members'] | ['<|endoftext|>', '.\n', ' We', ' In', ' \n']
+     22 | [' Our', ' Clients', ' Additionally', '.\n', ' We'] | ['<|endoftext|>', ' We', ' Our', ' In', '.\n']
+     23 | [' Our', ' Clients', ' We', ' Additionally', 'Our'] | ['<|endoftext|>', ' Our', ' We', ' In', ' our']
+     24 | [' Our', ' We', 'Our', ' Clients', ' Additionally'] | ['<|endoftext|>', ' We', ' Our', ' our', ' In']
+     25 | [' Our', ' We', ' Based', ' Additionally', ' Clients'] | ['<|endoftext|>', ' We', ' Our', ' our', ' In']
+     26 | [' Our', ' We', '<|endoftext|>', ' Based', ' In'] | ['<|endoftext|>', ' We', ' Our', ' In', ' The']
+[ok] readout_heldoutc4en_1p5b in 298s; research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt refreshed (mtime 1786862864)
+
+--- [8/10] structure_heldoutc4en_7b ---
+target: research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_structure_heldoutc4en_7b.log
++ .venv/bin/python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt --prompts research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json --n-prompts 30 --ks 5\,10\,25\,50 --out research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:01<05:58,  1.06s/it]Loading weights:   1%|          | 2/339 [00:01<05:31,  1.02it/s]Loading weights:   1%|          | 4/339 [00:02<02:19,  2.40it/s]Loading weights:   1%|▏         | 5/339 [00:02<01:47,  3.11it/s]Loading weights:   2%|▏         | 6/339 [00:02<01:27,  3.79it/s]Loading weights:   5%|▍         | 16/339 [00:02<00:20, 15.63it/s]Loading weights:   6%|▌         | 19/339 [00:02<00:22, 14.44it/s]Loading weights:   8%|▊         | 28/339 [00:03<00:13, 22.53it/s]Loading weights:   9%|▉         | 31/339 [00:03<00:16, 18.84it/s]Loading weights:  12%|█▏        | 40/339 [00:03<00:11, 26.30it/s]Loading weights:  13%|█▎        | 44/339 [00:03<00:12, 22.90it/s]Loading weights:  15%|█▌        | 52/339 [00:03<00:10, 28.59it/s]Loading weights:  17%|█▋        | 56/339 [00:04<00:11, 24.25it/s]Loading weights:  19%|█▉        | 64/339 [00:04<00:09, 29.23it/s]Loading weights:  20%|██        | 68/339 [00:04<00:11, 24.52it/s]Loading weights:  22%|██▏       | 76/339 [00:04<00:09, 29.15it/s]Loading weights:  24%|██▎       | 80/339 [00:05<00:10, 24.32it/s]Loading weights:  26%|██▌       | 88/339 [00:05<00:08, 28.92it/s]Loading weights:  27%|██▋       | 92/339 [00:05<00:10, 24.17it/s]Loading weights:  29%|██▉       | 100/339 [00:05<00:08, 28.88it/s]Loading weights:  31%|███       | 104/339 [00:05<00:09, 24.61it/s]Loading weights:  33%|███▎      | 112/339 [00:06<00:07, 29.19it/s]Loading weights:  34%|███▍      | 116/339 [00:06<00:08, 24.85it/s]Loading weights:  37%|███▋      | 124/339 [00:06<00:07, 29.33it/s]Loading weights:  38%|███▊      | 128/339 [00:06<00:08, 24.82it/s]Loading weights:  40%|████      | 136/339 [00:07<00:06, 29.36it/s]Loading weights:  41%|████▏     | 140/339 [00:07<00:08, 22.65it/s]Loading weights:  44%|████▎     | 148/339 [00:07<00:07, 24.86it/s]Loading weights:  45%|████▍     | 151/339 [00:08<00:10, 18.13it/s]Loading weights:  47%|████▋     | 160/339 [00:08<00:07, 23.76it/s]Loading weights:  48%|████▊     | 163/339 [00:08<00:08, 20.24it/s]Loading weights:  51%|█████     | 172/339 [00:08<00:06, 26.49it/s]Loading weights:  52%|█████▏    | 175/339 [00:08<00:07, 21.76it/s]Loading weights:  54%|█████▍    | 184/339 [00:09<00:05, 28.12it/s]Loading weights:  55%|█████▌    | 188/339 [00:09<00:06, 24.16it/s]Loading weights:  58%|█████▊    | 196/339 [00:09<00:04, 28.93it/s]Loading weights:  59%|█████▉    | 200/339 [00:09<00:05, 24.40it/s]Loading weights:  61%|██████▏   | 208/339 [00:10<00:04, 28.91it/s]Loading weights:  63%|██████▎   | 212/339 [00:10<00:05, 24.55it/s]Loading weights:  65%|██████▍   | 220/339 [00:10<00:04, 29.58it/s]Loading weights:  66%|██████▌   | 224/339 [00:10<00:04, 24.89it/s]Loading weights:  68%|██████▊   | 232/339 [00:10<00:03, 29.66it/s]Loading weights:  70%|██████▉   | 236/339 [00:11<00:04, 24.81it/s]Loading weights:  72%|███████▏  | 244/339 [00:11<00:03, 29.47it/s]Loading weights:  73%|███████▎  | 248/339 [00:11<00:03, 24.94it/s]Loading weights:  76%|███████▌  | 256/339 [00:11<00:02, 29.76it/s]Loading weights:  77%|███████▋  | 260/339 [00:12<00:03, 25.16it/s]Loading weights:  79%|███████▉  | 268/339 [00:12<00:02, 29.78it/s]Loading weights:  80%|████████  | 272/339 [00:12<00:02, 25.03it/s]Loading weights:  83%|████████▎ | 280/339 [00:12<00:02, 29.49it/s]Loading weights:  84%|████████▍ | 284/339 [00:12<00:02, 24.42it/s]Loading weights:  86%|████████▌ | 292/339 [00:13<00:01, 29.19it/s]Loading weights:  87%|████████▋ | 296/339 [00:13<00:01, 24.49it/s]Loading weights:  90%|████████▉ | 304/339 [00:13<00:01, 29.03it/s]Loading weights:  91%|█████████ | 308/339 [00:13<00:01, 24.32it/s]Loading weights:  93%|█████████▎| 316/339 [00:14<00:00, 28.91it/s]Loading weights:  94%|█████████▍| 320/339 [00:14<00:00, 24.32it/s]Loading weights:  97%|█████████▋| 328/339 [00:14<00:00, 29.17it/s]Loading weights:  98%|█████████▊| 332/339 [00:14<00:00, 24.83it/s]Loading weights: 100%|██████████| 339/339 [00:14<00:00, 22.96it/s]
+[load] model + lens in 20.9s; JacobianLens(d_model=3584, n_prompts=100, source_layers=[0..26] (27 layers))
+[wu] W_U (152064, 3584) torch.bfloat16 on cuda:0
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers, ks=[5, 10, 25, 50], positions=8 mid + last
+[prompt 1/30] seq=149 pos=9 mean_varfrac(k=25)=0.0348 26.8s
+[prompt 2/30] seq=274 pos=9 mean_varfrac(k=25)=0.0320 25.2s
+[prompt 3/30] seq=403 pos=9 mean_varfrac(k=25)=0.0332 24.4s
+[prompt 4/30] seq=335 pos=9 mean_varfrac(k=25)=0.0304 24.8s
+[prompt 5/30] seq=343 pos=9 mean_varfrac(k=25)=0.0282 24.5s
+[prompt 6/30] seq=344 pos=9 mean_varfrac(k=25)=0.0327 24.1s
+[prompt 7/30] seq=509 pos=9 mean_varfrac(k=25)=0.0272 26.0s
+[prompt 8/30] seq=397 pos=9 mean_varfrac(k=25)=0.0214 26.0s
+[prompt 9/30] seq=327 pos=9 mean_varfrac(k=25)=0.0262 24.6s
+[prompt 10/30] seq=191 pos=9 mean_varfrac(k=25)=0.0335 25.8s
+[prompt 11/30] seq=512 pos=9 mean_varfrac(k=25)=0.0305 25.1s
+[prompt 12/30] seq=155 pos=9 mean_varfrac(k=25)=0.0311 24.2s
+[prompt 13/30] seq=395 pos=9 mean_varfrac(k=25)=0.0318 25.4s
+[prompt 14/30] seq=512 pos=9 mean_varfrac(k=25)=0.0290 25.0s
+[prompt 15/30] seq=512 pos=9 mean_varfrac(k=25)=0.0225 24.5s
+[prompt 16/30] seq=363 pos=9 mean_varfrac(k=25)=0.0263 23.6s
+[prompt 17/30] seq=512 pos=9 mean_varfrac(k=25)=0.0279 24.5s
+[prompt 18/30] seq=141 pos=9 mean_varfrac(k=25)=0.0264 25.3s
+[prompt 19/30] seq=365 pos=9 mean_varfrac(k=25)=0.0307 25.5s
+[prompt 20/30] seq=393 pos=9 mean_varfrac(k=25)=0.0252 26.7s
+[prompt 21/30] seq=219 pos=9 mean_varfrac(k=25)=0.0286 25.9s
+[prompt 22/30] seq=512 pos=9 mean_varfrac(k=25)=0.0284 25.9s
+[prompt 23/30] seq=206 pos=9 mean_varfrac(k=25)=0.0221 25.9s
+[prompt 24/30] seq=512 pos=9 mean_varfrac(k=25)=0.0288 27.1s
+[prompt 25/30] seq=214 pos=9 mean_varfrac(k=25)=0.0300 25.4s
+[prompt 26/30] seq=512 pos=9 mean_varfrac(k=25)=0.0280 26.0s
+[prompt 27/30] seq=512 pos=9 mean_varfrac(k=25)=0.0299 27.7s
+[prompt 28/30] seq=294 pos=9 mean_varfrac(k=25)=0.0271 27.5s
+[prompt 29/30] seq=225 pos=9 mean_varfrac(k=25)=0.0254 25.8s
+[prompt 30/30] seq=512 pos=9 mean_varfrac(k=25)=0.0276 26.6s
+
+=== Per-layer J-space structure (k=25) ===
+layer  varfrac_mean  varfrac_med  active_mean  rd_logit_kurt  rd_prob_kurt  coef_kurt
+    0        0.0274       0.0250        23.37           2.85     121899.96       5.18
+    1        0.0275       0.0248        23.21           2.21     104936.10       3.88
+    2        0.0283       0.0261        23.60           2.93     122167.56       3.97
+    3        0.0280       0.0248        23.39           2.89     119873.57       4.10
+    4        0.0224       0.0200        23.25           3.14     120964.77       3.70
+    5        0.0202       0.0170        23.30           2.05     115916.81       3.41
+    6        0.0203       0.0177        23.28           1.97     113004.89       2.88
+    7        0.0217       0.0179        23.00           2.20     107770.51       3.43
+    8        0.0217       0.0173        23.18           2.28     112499.28       3.69
+    9        0.0207       0.0159        22.96           1.86     109459.14       3.50
+   10        0.0213       0.0170        23.03           1.93     109497.14       4.02
+   11        0.0185       0.0153        23.05           1.83     112100.69       3.38
+   12        0.0179       0.0137        22.97           1.30     107143.27       4.65
+   13        0.0187       0.0149        23.18           1.10     108588.59       4.75
+   14        0.0211       0.0158        22.92           0.98     105159.03       5.85
+   15        0.0202       0.0166        22.77           0.93     100360.48       5.97
+   16        0.0162       0.0132        23.01           0.82      94170.39       5.43
+   17        0.0164       0.0122        23.06           0.75      81799.65       5.87
+   18        0.0238       0.0207        23.10           0.77      83146.62       5.63
+   19        0.0359       0.0330        23.15           0.82      80805.53       4.97
+   20        0.0417       0.0390        23.19           0.84      82903.55       4.50
+   21        0.0444       0.0417        23.22           0.92      89141.86       4.36
+   22        0.0501       0.0494        23.09           1.03      97060.10       4.63
+   23        0.0526       0.0499        23.13           1.10     106605.29       5.31
+   24        0.0449       0.0430        23.26           1.19     107574.53       6.63
+   25        0.0503       0.0467        23.02           1.27     108030.99       7.49
+   26        0.0388       0.0331        22.57           1.19     108461.45       9.56
+
+=== varfrac_mean trajectory by k ===
+layer k=  5 k= 10 k= 25 k= 50
+    0 0.013 0.017 0.027 0.044
+    1 0.014 0.018 0.027 0.041
+    2 0.014 0.019 0.028 0.041
+    3 0.014 0.018 0.028 0.039
+    4 0.011 0.015 0.022 0.035
+    5 0.011 0.013 0.020 0.033
+    6 0.009 0.013 0.020 0.034
+    7 0.009 0.013 0.022 0.034
+    8 0.009 0.013 0.022 0.035
+    9 0.008 0.013 0.021 0.035
+   10 0.008 0.012 0.021 0.033
+   11 0.007 0.010 0.018 0.031
+   12 0.007 0.011 0.018 0.031
+   13 0.008 0.012 0.019 0.031
+   14 0.008 0.012 0.021 0.033
+   15 0.007 0.011 0.020 0.029
+   16 0.006 0.011 0.016 0.029
+   17 0.006 0.009 0.016 0.027
+   18 0.008 0.014 0.024 0.039
+   19 0.013 0.021 0.036 0.054
+   20 0.015 0.025 0.042 0.063
+   21 0.015 0.026 0.044 0.067
+   22 0.018 0.030 0.050 0.073
+   23 0.019 0.033 0.053 0.075
+   24 0.019 0.030 0.045 0.064
+   25 0.022 0.033 0.050 0.069
+   26 0.017 0.024 0.039 0.054
+
+[save] research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+[time] mean 25.5s/prompt over 30 prompts; total 765.9s
+
+=== Top J-space atoms (prompt 1, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' .'  ' :'  ' .\n'  '..'  '.'  ' Ấ'
+      1 | ' ;'  ' .'  ' :\n'  '.'  '/bower'  ' :'
+      2 | ' .\n'  ' ;'  '/preferences'  '.'  ' :'  ':<?'
+      3 | ' .\n'  ' ;'  '..<'  '.'  '/preferences'  '/autoload'
+      4 | ' .\n'  ' ;'  '/preferences'  '.'  '!.'  '..<'
+      5 | '.'  ' .\n'  ' Also'  ' ()=>'  '/preferences'  '/autoload'
+      6 | ' Then'  '"crypto'  '._'  ' .\n'  '.'  ' .'
+      7 | ' ;'  ' _.'  ';;;;;;;;'  '.'  ' Therefore'  ' Also'
+      8 | '.'  ' Giul'  '['  '�'  ' This'  ' Also'
+      9 | ",'#"  '\u200b\u200b'  ' 若要'  '.'  '-Owned'  '亦'
+     10 | ",'#"  '-Owned'  ' .'  '.\n'  ' 若要'  '\u200c'
+     11 | '\u200b\u200b'  ",'#"  '.['  ' .\n'  ' ('  '-Owned'
+     12 | '.['  ",'#"  '\u200b\u200b'  ' .\n'  ' @'  '�'
+     13 | ",'#"  '.\n'  '.['  '�'  ' –'  ' @'
+     14 | ",'#"  '若您'  '.\n'  '\u200b\u200b'  ' –'  '�'
+     15 | '.\n'  ",'#"  '\u200b\u200b'  '若您'  ' @'  ' Cah'
+     16 | '.\n'  ",'#"  '\u200b\u200b'  '�'  '若您'  ' –'
+     17 | '.\n'  ",'#"  ').\n'  '\u200b\u200b'  ' Christoph'  ' ?>\n\n\n'
+     18 | '.\n'  ",'#"  ',www'  '<|endoftext|>'  '\u200b'  '�'
+     19 | ' Christoph'  '.\n'  '<|endoftext|>'  ',www'  '\u200b\u200b'  ' hereby'
+     20 | '.\n'  '<|endoftext|>'  ',www'  ' Christoph'  'meye'  ' Giz'
+     21 | '他是'  '.\n'  '\u200b\u200b'  '<|endoftext|>'  ' →\n\n'  ' Recruitment'
+     22 | '<|endoftext|>'  '.\n'  '\u200b\u200b'  ',www'  ' Please'  ' We'
+     23 | '<|endoftext|>'  '.\n'  '\u200b\n\n'  ' 若要'  '他是'  ' We'
+     24 | '<|endoftext|>'  ' We'  ' 若要'  ' Please'  '\u200b\u200b'  ' He'
+     25 | '<|endoftext|>'  ' We'  ' He'  ' 若要'  ' Based'  ' Please'
+     26 | ' ›'  '<|endoftext|>'  ' 若要'  ' Based'  '\x0b'  ' He'
+
+=== Top J-space atoms (prompt 2, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' .'  ' :'  ' ,'  '.\n'  ' ，'  ' «'
+      1 | ' ;'  ' .\n'  '/bower'  '.'  '!.'  ' -'
+      2 | ' .\n'  ' ;'  '.'  '/preferences'  ' "\'.'  ' |-'
+      3 | ' .\n'  ' ;'  '.'  '/preferences'  ' !['  '/gin'
+      4 | ' :'  ' .\n'  '!.'  ' ;'  '｜'  ' Additionally'
+      5 | ' .\n'  ':animated'  '/animate'  '.'  ' ;'  ' -'
+      6 | ' Additionally'  '/animate'  '.\n'  ' .\n'  ' However'  ' consequently'
+      7 | '.\n'  " '"  ' "'  '牠'  ' "\''  ' notable'
+      8 | '.\n\n'  " '"  '\t'  ' ("'  ' "\''  'ˋ'
+      9 | ' "'  '由於'  '.\n'  " '"  " ('"  ' "\''
+     10 | ' Honour'  " '"  ' ("'  'foundland'  ' "'  '.\n'
+     11 | " ('"  ' Honour'  ' "'  '.\n'  '".\n'  '.\r\n\r\n'
+     12 | ' Honour'  ' "['  '.\n'  " ('"  " '"  '".\n'
+     13 | ' Honour'  '.\n'  '部份'  '/tos'  ' "\''  ' "'
+     14 | ' Honour'  '.\n'  '".\n'  '/tos'  '部份'  " '"
+     15 | ' Honour'  '.\n'  '�建'  " '"  '".\n'  '/slick'
+     16 | ' Honour'  '.\n'  "'.\n"  '/slick'  'ˋ'  ' clients'
+     17 | '.\n'  "'.\n"  ' Honour'  'ˋ'  ' Swords'  ' Depths'
+     18 | '.\n'  '此外'  ' also'  ' Swords'  ' Honour'  ' Defence'
+     19 | ' Additionally'  ' specialised'  '.\n'  ' Swords'  ' ());\n\n'  ' clients'
+     20 | '此外'  '.\n'  ' recognised'  ' Clients'  '\u200b\n\n'  '<|endoftext|>'
+     21 | ' Additionally'  '.\n'  '\u200b\n\n'  ' Our'  ' recognised'  ' recent'
+     22 | ' Additionally'  '.\n'  'our'  '\u200b\n\n'  '<|endoftext|>'  ' recognised'
+     23 | ' Our'  '.\n'  '\u200b\n\n'  '<|endoftext|>'  ' additionally'  ' Clients'
+     24 | ' Our'  '<|endoftext|>'  ' Clients'  '\u200b\n\n'  ' Additionally'  'T'
+     25 | ' Our'  '<|endoftext|>'  ' Clients'  'T'  '\u200b\n\n'  '.\n'
+     26 | '<|endoftext|>'  ' Our'  ' Clients'  ' Recent'  ' Diy'  ' We'
+[ok] structure_heldoutc4en_7b in 790s; research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt refreshed (mtime 1786863654)
+
+--- [9/10] paper_metric_heldoutc4en_7b ---
+target: research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+log   : research/arcs/04_jspace/data/cache/logs/scan_paper_metric_heldoutc4en_7b.log
++ .venv/bin/python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --out research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:01<05:58,  1.06s/it]Loading weights:   1%|          | 2/339 [00:01<05:31,  1.02it/s]Loading weights:   1%|          | 4/339 [00:02<02:14,  2.49it/s]Loading weights:   3%|▎         | 10/339 [00:02<00:40,  8.20it/s]Loading weights:   6%|▋         | 22/339 [00:02<00:14, 21.89it/s]Loading weights:   8%|▊         | 28/339 [00:02<00:11, 26.91it/s]Loading weights:  10%|█         | 34/339 [00:02<00:14, 21.58it/s]Loading weights:  12%|█▏        | 40/339 [00:03<00:13, 21.51it/s]Loading weights:  13%|█▎        | 44/339 [00:03<00:13, 21.59it/s]Loading weights:  17%|█▋        | 58/339 [00:03<00:07, 39.22it/s]

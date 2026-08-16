@@ -1,0 +1,30 @@
+[queue] 3 job(s), ~21.7 h of unfinished work
+[queue] pause any time: examples/jspace_rerun_queue.py --pause
+[queue] c4en-1.5b: 6540 MiB free (1/2)
+[queue] c4en-1.5b: 6531 MiB free (2/2)
+[queue] START c4en-1.5b (~2.2 h, checkpoint every 10 prompts) -> research/arcs/04_jspace/data/cache/logs/fit_c4en-1.5b.log
+[queue] DONE c4en-1.5b in 3.14 h (est 2.2)
+[queue] wikitext-1.5b: 6177 MiB free (1/2)
+[queue] wikitext-1.5b: 6177 MiB free (2/2)
+[queue] START wikitext-1.5b (~3.2 h, checkpoint every 10 prompts) -> research/arcs/04_jspace/data/cache/logs/fit_wikitext-1.5b.log
+[queue] stopping wikitext-1.5b (pause requested)
+[queue] PAUSED at wikitext-1.5b — waiting for --resume
+[queue] resumed at wikitext-1.5b
+[queue] wikitext-1.5b: 6444 MiB free (1/2)
+[queue] wikitext-1.5b: 6454 MiB free (2/2)
+[queue] START wikitext-1.5b (~3.2 h, checkpoint every 10 prompts) -> research/arcs/04_jspace/data/cache/logs/fit_wikitext-1.5b.log
+[queue] DONE wikitext-1.5b in 8.22 h (est 3.2)
+[queue] wikitext-7b: 6709 MiB free (1/2)
+[queue] wikitext-7b: 6709 MiB free (2/2)
+[queue] START wikitext-7b (~16.3 h, checkpoint every 5 prompts) -> research/arcs/04_jspace/data/cache/logs/fit_wikitext-7b.log
+[queue] stopping wikitext-7b (pause requested)
+[queue] PAUSED at wikitext-7b — waiting for --resume
+[queue] 3 job(s), ~16.3 h of unfinished work
+[queue] pause any time: examples/jspace_rerun_queue.py --pause
+[queue] SKIP c4en-1.5b: jlens_qwen2.5-1.5b_bf16_n100_c4en.pt already present
+[queue] SKIP wikitext-1.5b: jlens_qwen2.5-1.5b_bf16_n100.pt already present
+[queue] wikitext-7b: 6806 MiB free (1/2)
+[queue] wikitext-7b: 6839 MiB free (2/2)
+[queue] START wikitext-7b (~16.3 h, checkpoint every 5 prompts) -> research/arcs/04_jspace/data/cache/logs/fit_wikitext-7b.log
+[queue] DONE wikitext-7b in 11.49 h (est 16.3 h)
+[queue] all jobs complete

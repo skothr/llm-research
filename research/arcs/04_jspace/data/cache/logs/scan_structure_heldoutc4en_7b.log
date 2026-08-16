@@ -1,0 +1,158 @@
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:01<05:58,  1.06s/it]Loading weights:   1%|          | 2/339 [00:01<05:31,  1.02it/s]Loading weights:   1%|          | 4/339 [00:02<02:19,  2.40it/s]Loading weights:   1%|▏         | 5/339 [00:02<01:47,  3.11it/s]Loading weights:   2%|▏         | 6/339 [00:02<01:27,  3.79it/s]Loading weights:   5%|▍         | 16/339 [00:02<00:20, 15.63it/s]Loading weights:   6%|▌         | 19/339 [00:02<00:22, 14.44it/s]Loading weights:   8%|▊         | 28/339 [00:03<00:13, 22.53it/s]Loading weights:   9%|▉         | 31/339 [00:03<00:16, 18.84it/s]Loading weights:  12%|█▏        | 40/339 [00:03<00:11, 26.30it/s]Loading weights:  13%|█▎        | 44/339 [00:03<00:12, 22.90it/s]Loading weights:  15%|█▌        | 52/339 [00:03<00:10, 28.59it/s]Loading weights:  17%|█▋        | 56/339 [00:04<00:11, 24.25it/s]Loading weights:  19%|█▉        | 64/339 [00:04<00:09, 29.23it/s]Loading weights:  20%|██        | 68/339 [00:04<00:11, 24.52it/s]Loading weights:  22%|██▏       | 76/339 [00:04<00:09, 29.15it/s]Loading weights:  24%|██▎       | 80/339 [00:05<00:10, 24.32it/s]Loading weights:  26%|██▌       | 88/339 [00:05<00:08, 28.92it/s]Loading weights:  27%|██▋       | 92/339 [00:05<00:10, 24.17it/s]Loading weights:  29%|██▉       | 100/339 [00:05<00:08, 28.88it/s]Loading weights:  31%|███       | 104/339 [00:05<00:09, 24.61it/s]Loading weights:  33%|███▎      | 112/339 [00:06<00:07, 29.19it/s]Loading weights:  34%|███▍      | 116/339 [00:06<00:08, 24.85it/s]Loading weights:  37%|███▋      | 124/339 [00:06<00:07, 29.33it/s]Loading weights:  38%|███▊      | 128/339 [00:06<00:08, 24.82it/s]Loading weights:  40%|████      | 136/339 [00:07<00:06, 29.36it/s]Loading weights:  41%|████▏     | 140/339 [00:07<00:08, 22.65it/s]Loading weights:  44%|████▎     | 148/339 [00:07<00:07, 24.86it/s]Loading weights:  45%|████▍     | 151/339 [00:08<00:10, 18.13it/s]Loading weights:  47%|████▋     | 160/339 [00:08<00:07, 23.76it/s]Loading weights:  48%|████▊     | 163/339 [00:08<00:08, 20.24it/s]Loading weights:  51%|█████     | 172/339 [00:08<00:06, 26.49it/s]Loading weights:  52%|█████▏    | 175/339 [00:08<00:07, 21.76it/s]Loading weights:  54%|█████▍    | 184/339 [00:09<00:05, 28.12it/s]Loading weights:  55%|█████▌    | 188/339 [00:09<00:06, 24.16it/s]Loading weights:  58%|█████▊    | 196/339 [00:09<00:04, 28.93it/s]Loading weights:  59%|█████▉    | 200/339 [00:09<00:05, 24.40it/s]Loading weights:  61%|██████▏   | 208/339 [00:10<00:04, 28.91it/s]Loading weights:  63%|██████▎   | 212/339 [00:10<00:05, 24.55it/s]Loading weights:  65%|██████▍   | 220/339 [00:10<00:04, 29.58it/s]Loading weights:  66%|██████▌   | 224/339 [00:10<00:04, 24.89it/s]Loading weights:  68%|██████▊   | 232/339 [00:10<00:03, 29.66it/s]Loading weights:  70%|██████▉   | 236/339 [00:11<00:04, 24.81it/s]Loading weights:  72%|███████▏  | 244/339 [00:11<00:03, 29.47it/s]Loading weights:  73%|███████▎  | 248/339 [00:11<00:03, 24.94it/s]Loading weights:  76%|███████▌  | 256/339 [00:11<00:02, 29.76it/s]Loading weights:  77%|███████▋  | 260/339 [00:12<00:03, 25.16it/s]Loading weights:  79%|███████▉  | 268/339 [00:12<00:02, 29.78it/s]Loading weights:  80%|████████  | 272/339 [00:12<00:02, 25.03it/s]Loading weights:  83%|████████▎ | 280/339 [00:12<00:02, 29.49it/s]Loading weights:  84%|████████▍ | 284/339 [00:12<00:02, 24.42it/s]Loading weights:  86%|████████▌ | 292/339 [00:13<00:01, 29.19it/s]Loading weights:  87%|████████▋ | 296/339 [00:13<00:01, 24.49it/s]Loading weights:  90%|████████▉ | 304/339 [00:13<00:01, 29.03it/s]Loading weights:  91%|█████████ | 308/339 [00:13<00:01, 24.32it/s]Loading weights:  93%|█████████▎| 316/339 [00:14<00:00, 28.91it/s]Loading weights:  94%|█████████▍| 320/339 [00:14<00:00, 24.32it/s]Loading weights:  97%|█████████▋| 328/339 [00:14<00:00, 29.17it/s]Loading weights:  98%|█████████▊| 332/339 [00:14<00:00, 24.83it/s]Loading weights: 100%|██████████| 339/339 [00:14<00:00, 22.96it/s]
+[load] model + lens in 20.9s; JacobianLens(d_model=3584, n_prompts=100, source_layers=[0..26] (27 layers))
+[wu] W_U (152064, 3584) torch.bfloat16 on cuda:0
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers, ks=[5, 10, 25, 50], positions=8 mid + last
+[prompt 1/30] seq=149 pos=9 mean_varfrac(k=25)=0.0348 26.8s
+[prompt 2/30] seq=274 pos=9 mean_varfrac(k=25)=0.0320 25.2s
+[prompt 3/30] seq=403 pos=9 mean_varfrac(k=25)=0.0332 24.4s
+[prompt 4/30] seq=335 pos=9 mean_varfrac(k=25)=0.0304 24.8s
+[prompt 5/30] seq=343 pos=9 mean_varfrac(k=25)=0.0282 24.5s
+[prompt 6/30] seq=344 pos=9 mean_varfrac(k=25)=0.0327 24.1s
+[prompt 7/30] seq=509 pos=9 mean_varfrac(k=25)=0.0272 26.0s
+[prompt 8/30] seq=397 pos=9 mean_varfrac(k=25)=0.0214 26.0s
+[prompt 9/30] seq=327 pos=9 mean_varfrac(k=25)=0.0262 24.6s
+[prompt 10/30] seq=191 pos=9 mean_varfrac(k=25)=0.0335 25.8s
+[prompt 11/30] seq=512 pos=9 mean_varfrac(k=25)=0.0305 25.1s
+[prompt 12/30] seq=155 pos=9 mean_varfrac(k=25)=0.0311 24.2s
+[prompt 13/30] seq=395 pos=9 mean_varfrac(k=25)=0.0318 25.4s
+[prompt 14/30] seq=512 pos=9 mean_varfrac(k=25)=0.0290 25.0s
+[prompt 15/30] seq=512 pos=9 mean_varfrac(k=25)=0.0225 24.5s
+[prompt 16/30] seq=363 pos=9 mean_varfrac(k=25)=0.0263 23.6s
+[prompt 17/30] seq=512 pos=9 mean_varfrac(k=25)=0.0279 24.5s
+[prompt 18/30] seq=141 pos=9 mean_varfrac(k=25)=0.0264 25.3s
+[prompt 19/30] seq=365 pos=9 mean_varfrac(k=25)=0.0307 25.5s
+[prompt 20/30] seq=393 pos=9 mean_varfrac(k=25)=0.0252 26.7s
+[prompt 21/30] seq=219 pos=9 mean_varfrac(k=25)=0.0286 25.9s
+[prompt 22/30] seq=512 pos=9 mean_varfrac(k=25)=0.0284 25.9s
+[prompt 23/30] seq=206 pos=9 mean_varfrac(k=25)=0.0221 25.9s
+[prompt 24/30] seq=512 pos=9 mean_varfrac(k=25)=0.0288 27.1s
+[prompt 25/30] seq=214 pos=9 mean_varfrac(k=25)=0.0300 25.4s
+[prompt 26/30] seq=512 pos=9 mean_varfrac(k=25)=0.0280 26.0s
+[prompt 27/30] seq=512 pos=9 mean_varfrac(k=25)=0.0299 27.7s
+[prompt 28/30] seq=294 pos=9 mean_varfrac(k=25)=0.0271 27.5s
+[prompt 29/30] seq=225 pos=9 mean_varfrac(k=25)=0.0254 25.8s
+[prompt 30/30] seq=512 pos=9 mean_varfrac(k=25)=0.0276 26.6s
+
+=== Per-layer J-space structure (k=25) ===
+layer  varfrac_mean  varfrac_med  active_mean  rd_logit_kurt  rd_prob_kurt  coef_kurt
+    0        0.0274       0.0250        23.37           2.85     121899.96       5.18
+    1        0.0275       0.0248        23.21           2.21     104936.10       3.88
+    2        0.0283       0.0261        23.60           2.93     122167.56       3.97
+    3        0.0280       0.0248        23.39           2.89     119873.57       4.10
+    4        0.0224       0.0200        23.25           3.14     120964.77       3.70
+    5        0.0202       0.0170        23.30           2.05     115916.81       3.41
+    6        0.0203       0.0177        23.28           1.97     113004.89       2.88
+    7        0.0217       0.0179        23.00           2.20     107770.51       3.43
+    8        0.0217       0.0173        23.18           2.28     112499.28       3.69
+    9        0.0207       0.0159        22.96           1.86     109459.14       3.50
+   10        0.0213       0.0170        23.03           1.93     109497.14       4.02
+   11        0.0185       0.0153        23.05           1.83     112100.69       3.38
+   12        0.0179       0.0137        22.97           1.30     107143.27       4.65
+   13        0.0187       0.0149        23.18           1.10     108588.59       4.75
+   14        0.0211       0.0158        22.92           0.98     105159.03       5.85
+   15        0.0202       0.0166        22.77           0.93     100360.48       5.97
+   16        0.0162       0.0132        23.01           0.82      94170.39       5.43
+   17        0.0164       0.0122        23.06           0.75      81799.65       5.87
+   18        0.0238       0.0207        23.10           0.77      83146.62       5.63
+   19        0.0359       0.0330        23.15           0.82      80805.53       4.97
+   20        0.0417       0.0390        23.19           0.84      82903.55       4.50
+   21        0.0444       0.0417        23.22           0.92      89141.86       4.36
+   22        0.0501       0.0494        23.09           1.03      97060.10       4.63
+   23        0.0526       0.0499        23.13           1.10     106605.29       5.31
+   24        0.0449       0.0430        23.26           1.19     107574.53       6.63
+   25        0.0503       0.0467        23.02           1.27     108030.99       7.49
+   26        0.0388       0.0331        22.57           1.19     108461.45       9.56
+
+=== varfrac_mean trajectory by k ===
+layer k=  5 k= 10 k= 25 k= 50
+    0 0.013 0.017 0.027 0.044
+    1 0.014 0.018 0.027 0.041
+    2 0.014 0.019 0.028 0.041
+    3 0.014 0.018 0.028 0.039
+    4 0.011 0.015 0.022 0.035
+    5 0.011 0.013 0.020 0.033
+    6 0.009 0.013 0.020 0.034
+    7 0.009 0.013 0.022 0.034
+    8 0.009 0.013 0.022 0.035
+    9 0.008 0.013 0.021 0.035
+   10 0.008 0.012 0.021 0.033
+   11 0.007 0.010 0.018 0.031
+   12 0.007 0.011 0.018 0.031
+   13 0.008 0.012 0.019 0.031
+   14 0.008 0.012 0.021 0.033
+   15 0.007 0.011 0.020 0.029
+   16 0.006 0.011 0.016 0.029
+   17 0.006 0.009 0.016 0.027
+   18 0.008 0.014 0.024 0.039
+   19 0.013 0.021 0.036 0.054
+   20 0.015 0.025 0.042 0.063
+   21 0.015 0.026 0.044 0.067
+   22 0.018 0.030 0.050 0.073
+   23 0.019 0.033 0.053 0.075
+   24 0.019 0.030 0.045 0.064
+   25 0.022 0.033 0.050 0.069
+   26 0.017 0.024 0.039 0.054
+
+[save] research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt
+[time] mean 25.5s/prompt over 30 prompts; total 765.9s
+
+=== Top J-space atoms (prompt 1, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' .'  ' :'  ' .\n'  '..'  '.'  ' Ấ'
+      1 | ' ;'  ' .'  ' :\n'  '.'  '/bower'  ' :'
+      2 | ' .\n'  ' ;'  '/preferences'  '.'  ' :'  ':<?'
+      3 | ' .\n'  ' ;'  '..<'  '.'  '/preferences'  '/autoload'
+      4 | ' .\n'  ' ;'  '/preferences'  '.'  '!.'  '..<'
+      5 | '.'  ' .\n'  ' Also'  ' ()=>'  '/preferences'  '/autoload'
+      6 | ' Then'  '"crypto'  '._'  ' .\n'  '.'  ' .'
+      7 | ' ;'  ' _.'  ';;;;;;;;'  '.'  ' Therefore'  ' Also'
+      8 | '.'  ' Giul'  '['  '�'  ' This'  ' Also'
+      9 | ",'#"  '\u200b\u200b'  ' 若要'  '.'  '-Owned'  '亦'
+     10 | ",'#"  '-Owned'  ' .'  '.\n'  ' 若要'  '\u200c'
+     11 | '\u200b\u200b'  ",'#"  '.['  ' .\n'  ' ('  '-Owned'
+     12 | '.['  ",'#"  '\u200b\u200b'  ' .\n'  ' @'  '�'
+     13 | ",'#"  '.\n'  '.['  '�'  ' –'  ' @'
+     14 | ",'#"  '若您'  '.\n'  '\u200b\u200b'  ' –'  '�'
+     15 | '.\n'  ",'#"  '\u200b\u200b'  '若您'  ' @'  ' Cah'
+     16 | '.\n'  ",'#"  '\u200b\u200b'  '�'  '若您'  ' –'
+     17 | '.\n'  ",'#"  ').\n'  '\u200b\u200b'  ' Christoph'  ' ?>\n\n\n'
+     18 | '.\n'  ",'#"  ',www'  '<|endoftext|>'  '\u200b'  '�'
+     19 | ' Christoph'  '.\n'  '<|endoftext|>'  ',www'  '\u200b\u200b'  ' hereby'
+     20 | '.\n'  '<|endoftext|>'  ',www'  ' Christoph'  'meye'  ' Giz'
+     21 | '他是'  '.\n'  '\u200b\u200b'  '<|endoftext|>'  ' →\n\n'  ' Recruitment'
+     22 | '<|endoftext|>'  '.\n'  '\u200b\u200b'  ',www'  ' Please'  ' We'
+     23 | '<|endoftext|>'  '.\n'  '\u200b\n\n'  ' 若要'  '他是'  ' We'
+     24 | '<|endoftext|>'  ' We'  ' 若要'  ' Please'  '\u200b\u200b'  ' He'
+     25 | '<|endoftext|>'  ' We'  ' He'  ' 若要'  ' Based'  ' Please'
+     26 | ' ›'  '<|endoftext|>'  ' 若要'  ' Based'  '\x0b'  ' He'
+
+=== Top J-space atoms (prompt 2, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' .'  ' :'  ' ,'  '.\n'  ' ，'  ' «'
+      1 | ' ;'  ' .\n'  '/bower'  '.'  '!.'  ' -'
+      2 | ' .\n'  ' ;'  '.'  '/preferences'  ' "\'.'  ' |-'
+      3 | ' .\n'  ' ;'  '.'  '/preferences'  ' !['  '/gin'
+      4 | ' :'  ' .\n'  '!.'  ' ;'  '｜'  ' Additionally'
+      5 | ' .\n'  ':animated'  '/animate'  '.'  ' ;'  ' -'
+      6 | ' Additionally'  '/animate'  '.\n'  ' .\n'  ' However'  ' consequently'
+      7 | '.\n'  " '"  ' "'  '牠'  ' "\''  ' notable'
+      8 | '.\n\n'  " '"  '\t'  ' ("'  ' "\''  'ˋ'
+      9 | ' "'  '由於'  '.\n'  " '"  " ('"  ' "\''
+     10 | ' Honour'  " '"  ' ("'  'foundland'  ' "'  '.\n'
+     11 | " ('"  ' Honour'  ' "'  '.\n'  '".\n'  '.\r\n\r\n'
+     12 | ' Honour'  ' "['  '.\n'  " ('"  " '"  '".\n'
+     13 | ' Honour'  '.\n'  '部份'  '/tos'  ' "\''  ' "'
+     14 | ' Honour'  '.\n'  '".\n'  '/tos'  '部份'  " '"
+     15 | ' Honour'  '.\n'  '�建'  " '"  '".\n'  '/slick'
+     16 | ' Honour'  '.\n'  "'.\n"  '/slick'  'ˋ'  ' clients'
+     17 | '.\n'  "'.\n"  ' Honour'  'ˋ'  ' Swords'  ' Depths'
+     18 | '.\n'  '此外'  ' also'  ' Swords'  ' Honour'  ' Defence'
+     19 | ' Additionally'  ' specialised'  '.\n'  ' Swords'  ' ());\n\n'  ' clients'
+     20 | '此外'  '.\n'  ' recognised'  ' Clients'  '\u200b\n\n'  '<|endoftext|>'
+     21 | ' Additionally'  '.\n'  '\u200b\n\n'  ' Our'  ' recognised'  ' recent'
+     22 | ' Additionally'  '.\n'  'our'  '\u200b\n\n'  '<|endoftext|>'  ' recognised'
+     23 | ' Our'  '.\n'  '\u200b\n\n'  '<|endoftext|>'  ' additionally'  ' Clients'
+     24 | ' Our'  '<|endoftext|>'  ' Clients'  '\u200b\n\n'  ' Additionally'  'T'
+     25 | ' Our'  '<|endoftext|>'  ' Clients'  'T'  '\u200b\n\n'  '.\n'
+     26 | '<|endoftext|>'  ' Our'  ' Clients'  ' Recent'  ' Diy'  ' We'
