@@ -69,8 +69,8 @@ debug-images/
 research/arcs/*/data/cache/
 
 # Arc-04 exception (owner decision 2026-08-16, follow-up to PR #38): the
-# redacted-corpus lens cache is committed via LFS so a clean clone can
-# re-scan without the ~23 h refit. Default-deny inside cache/ with explicit
+# three lenses refit in the C4-redaction re-run are committed via LFS so a
+# clean clone can re-scan without the ~23 h refit. Default-deny inside cache/ with explicit
 # whitelists, so the byte-identical working mirrors of data/ artifacts that
 # also live there can never be swept up by a bulk git add. Fit-resume
 # .ckpt.pt checkpoints and the PAUSE flag stay local (covered by the
@@ -83,6 +83,7 @@ research/arcs/04_jspace/data/cache/*
 !research/arcs/04_jspace/data/cache/jlens_*.segments.json
 !research/arcs/04_jspace/data/cache/*.log
 !research/arcs/04_jspace/data/cache/logs/
+research/arcs/04_jspace/data/cache/logs/*
 !research/arcs/04_jspace/data/cache/logs/*.log
 research/arcs/04_jspace/data/cache/jlens_*.ckpt.pt
 research/arcs/04_jspace/data/cache/jlens_*layer-subset*

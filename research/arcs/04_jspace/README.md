@@ -258,13 +258,13 @@ under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
 a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
-decision 2026-08-16 after the C4-redaction re-run: the **three
-redacted-corpus lenses are now LFS-committed in `data/cache/`** (~905 MiB /
-~949 MB —
-both wikitext lenses + the c4en lens, with their `.config.json` sidecars and
-fit/scan logs) so a clean clone can re-scan without repeating the ~23 h
-refit. The two nf4 lenses (quantization / n-budget axes) remain
-regenerate-only for now; their refit-and-commit is scheduled as issue #47.
+decision 2026-08-16 after the C4-redaction re-run: the **three lenses
+refit in that re-run are now LFS-committed in `data/cache/`** (~905 MiB
+/ ~949 MB — both wikitext lenses + the c4en lens, with their
+`.config.json` sidecars and fit/scan logs) so a clean clone can re-scan
+without repeating the ~23 h refit. The two 1.5B nf4 lenses
+(quantization / n-budget axes) remain regenerate-only for now; their
+refit-and-commit is scheduled as issue #47.
 Fit-resume `.ckpt.pt` checkpoints stay uncommitted — their content is
 superseded by the final lenses they produced.
 
@@ -283,9 +283,12 @@ never load), so there are two states, both measured 2026-08-16:
 
 Neither state's failures are regressions. Any FAIL naming something other
 than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
-regression. (An LFS-less or pre-2026-08-16 checkout, with no lenses and the
-pre-re-run artifacts, gave `920 PASS | 10 FAIL` — measured 2026-07-29; the
-historical decomposition below still applies to it.)
+regression. (A pre-2026-08-16 checkout — no committed lenses, pre-re-run
+artifacts — gave `920 PASS | 10 FAIL`, measured 2026-07-29; the historical
+decomposition below still applies to it. An LFS-less clone of the current
+head is a different, noisier state: every `data/*.pt` deliverable is a
+pointer stub, so the audit reports one stub FAIL per artifact — run
+`git lfs install && git lfs pull` first.)
 
 > Until 2026-07-29 this read `11 FAIL`. The extra one was a duplicate
 > registration of the `jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json` presence

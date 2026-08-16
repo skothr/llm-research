@@ -141,10 +141,11 @@ def _resolve(name: str) -> Path:
     """Prefer the committed ``data/`` copy (so the audit reproduces from a clean
     clone), falling back to the working ``cache/``. The small derived artifacts
     (evals, scans, swap banks, cross-tie) are promoted into ``data/`` and
-    git-LFS-tracked; the FULL fitted lens tensors + their ``.config.json``
-    sidecars stay cache-only (design Decision 4 — their committed 7-layer
-    subsets suffice for inspection), so lens-integrity checks resolve to
-    ``cache/`` and are MISSING (loud FAIL) on a clone without the local cache."""
+    git-LFS-tracked; the FULL fitted lens tensors + their sidecars live in
+    ``cache/`` — since the 2026-08-16 Decision-4 amendment the three refit
+    lenses are LFS-committed there behind an opt-in download, so on a default
+    clone their checks report LFS-pointer-stub FAILs (and the two nf4 lenses
+    pending issue #47 report MISSING)."""
     d = DATA / name
     return d if d.exists() else CACHE / name
 
@@ -187,12 +188,18 @@ def load_pt_or_fail(name: str) -> Any | None:
     # torch.load crash on the pointer text.
     with open(p, "rb") as fh:
         if fh.read(24).startswith(b"version https://git-lfs"):
-            claim(
-                f"artifact present: {name}",
-                False,
-                "present",
-                'LFS pointer stub — run git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""',
-            )
+            # The recovery command depends on which LFS population the stub
+            # belongs to: cache/ tensors are excluded by the committed
+            # .lfsconfig fetchexclude and need the opt-in pull; everything
+            # else is fetched by a plain `git lfs pull`.
+            if "cache" in p.parts:
+                hint = (
+                    "LFS pointer stub — run git lfs pull"
+                    ' --include="research/arcs/04_jspace/data/cache/**" --exclude=""'
+                )
+            else:
+                hint = "LFS pointer stub — run git lfs install && git lfs pull"
+            claim(f"artifact present: {name}", False, "present", hint)
             return None
     return torch.load(p, weights_only=False)
 
