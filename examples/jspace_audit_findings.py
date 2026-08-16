@@ -1562,9 +1562,11 @@ def audit_heldout() -> None:
         claim_near("[K] 1.5B heldout L0 varfrac == 0.084", 0.084, float(vf[0]))
         kt_i = int(lk.argmin())
         claim_eq("[K] 1.5B heldout logit-kurt trough layer == 17", 17, layers[kt_i])
+        # Re-pinned 2026-08-16 after the C4-redaction re-run (was 1.000 on the
+        # pre-redaction held-out text).
         claim_near(
-            "[K] 1.5B heldout logit-kurt trough value == 1.00",
-            1.000,
+            "[K] 1.5B heldout logit-kurt trough value == 1.019",
+            1.019,
             float(lk[kt_i]),
             atol=0.01,
         )
@@ -2004,7 +2006,8 @@ PM_EXCESS_PINS = {
     ("1.5b nf4 axis", 21): 0.1083,
     ("1.5b n500 axis", 21): 0.1069,
     ("1.5b heldout axis", 21): 0.1170,
-    ("7b heldout axis", 23): 0.0598,
+    # Re-pinned 2026-08-16 after the C4-redaction re-run (was 0.0598).
+    ("7b heldout axis", 23): 0.0588,
 }
 # (file key, layer) -> required boot_frac_over_10pct (1.0 = breach unanimous,
 # 0.0 = under unanimous) — the five-axis invariance certification.
