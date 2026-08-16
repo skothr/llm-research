@@ -16,19 +16,80 @@ Usage:
 The saved lens (fp16, jlens native format) lands in the arc cache dir with a
 `.config.json` sidecar. Re-running with the same arguments resumes from the
 checkpoint. Progress lines go to stdout (one per checkpoint interval).
+
+A fit that is interrupted and resumed runs as several *segments*. Each one's
+duration is appended to a `{stem}.segments.json` ledger beside the checkpoint,
+so the sidecar can report total compute rather than just the last segment —
+before 2026-07-29 it reported the last segment, which under-reported a paused
+1.5B fit by 39% (2.16 h recorded against 3.53 h actually spent). See #40.
 """
 
 import argparse
 import json
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 import torch
 
 ARC_DATA = Path("research/arcs/04_jspace/data")
 DEFAULT_PROMPTS = ARC_DATA / "fitting_prompts_wikitext103_n1000.json"
+
+
+def read_segments(path: Path) -> list[dict[str, Any]]:
+    """Previously-recorded segments of this fit, oldest first.
+
+    Never raises. A missing, truncated, or hand-edited ledger degrades the
+    reported total to a lower bound; it must never take down a 16 h fit.
+    """
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    if not isinstance(obj, list):
+        return []
+    return [
+        s
+        for s in cast("list[Any]", obj)
+        if isinstance(s, dict) and isinstance(s.get("seconds"), (int, float))
+    ]
+
+
+def append_segment(
+    path: Path, started: datetime, seconds: float
+) -> list[dict[str, Any]]:
+    """Append one segment and return the full ledger. Never raises."""
+    segments = read_segments(path)
+    segments.append(
+        {"started": started.isoformat(timespec="seconds"), "seconds": round(seconds, 1)}
+    )
+    try:
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        tmp.write_text(json.dumps(segments, indent=2), encoding="utf-8")
+        tmp.replace(path)
+    except OSError as e:
+        # Losing the ledger costs provenance precision, not the fit.
+        print(f"WARN: could not write {path}: {e}", flush=True)
+    return segments
+
+
+def checkpoint_n_done(path: Path) -> int | None:
+    """`n_done` from a fit checkpoint without materialising its tensors.
+
+    `mmap=True` reads the metadata in ~0.01 s with no RSS growth, which matters
+    because the 7B checkpoint is ~1.4 GB and this runs at startup. Returns None
+    if there is no readable checkpoint — i.e. the fit is starting fresh.
+    """
+    if not path.exists():
+        return None
+    try:
+        state = torch.load(path, map_location="cpu", weights_only=False, mmap=True)
+        n = state.get("n_done")
+        return int(n) if isinstance(n, (int, float)) else None
+    except (OSError, ValueError, RuntimeError, KeyError, AttributeError):
+        return None
 
 
 def parse_args() -> argparse.Namespace:
@@ -101,12 +162,30 @@ def main() -> int:
         torch.cuda.empty_cache()
         print("OFFLOAD: lm_head -> cpu", flush=True)
 
+    seg_path = args.out_dir / f"{stem}.segments.json"
+    prior = read_segments(seg_path)
+    prior_seconds = sum(float(s["seconds"]) for s in prior)
+    n_done = checkpoint_n_done(ckpt_path)
+
+    if n_done is None:
+        verb = "FIT start (fresh, no checkpoint)"
+    else:
+        verb = (
+            f"FIT resume from checkpoint: {n_done}/{len(prompts)} prompts done, "
+            f"{len(prior)} prior segment(s) totalling {prior_seconds / 3600:.2f} h"
+        )
+        if not prior:
+            # Checkpoint without a ledger: the fit began before the ledger
+            # existed, or the ledger was lost. Say so rather than silently
+            # reporting a total that excludes everything before now.
+            verb += " [NO LEDGER — reported total will be a LOWER BOUND]"
     print(
-        f"FIT start: {args.model} mode={args.mode} d_model={model.d_model} "
+        f"{verb}: {args.model} mode={args.mode} d_model={model.d_model} "
         f"layers={model.n_layers} dim_batch={args.dim_batch} "
         f"n_prompts={len(prompts)} checkpoint={ckpt_path}",
         flush=True,
     )
+    started_at = datetime.now(timezone.utc)
     t0 = time.perf_counter()
     lens = jlens.fit(
         model,
@@ -118,6 +197,12 @@ def main() -> int:
         resume=True,
     )
     dt = time.perf_counter() - t0
+    segments = append_segment(seg_path, started_at, dt)
+    total_seconds = sum(float(s["seconds"]) for s in segments)
+    # A checkpoint that predates its ledger means earlier segments were never
+    # recorded, so the total is a floor. Flag it in the artifact rather than
+    # letting a reader take an under-count at face value.
+    total_is_lower_bound = n_done is not None and not prior
 
     lens.save(str(lens_path))
     sidecar = {
@@ -129,16 +214,28 @@ def main() -> int:
         "max_seq_len": args.max_seq_len,
         "prompts_file": str(args.prompts),
         "corpus_tag": args.corpus_tag,
-        "wall_seconds": round(dt, 1),
+        # Total compute across all segments of this fit, NOT just the last one
+        # — a resumed fit has several. `wall_seconds_segments` is the breakdown;
+        # a length > 1 means the fit was interrupted and resumed.
+        "wall_seconds": round(total_seconds, 1),
+        "wall_seconds_segments": [float(s["seconds"]) for s in segments],
+        "wall_seconds_is_lower_bound": total_is_lower_bound,
         "jlens_source": "github.com/anthropics/jacobian-lens (editable clone)",
         "estimator": "J_l = mean over prompts of mean-over-source-positions of "
         "sum-over-targets>=source of dh_final/dh_l (jlens.fit defaults, "
         "skip_first=16)",
     }
     (args.out_dir / f"{stem}.config.json").write_text(json.dumps(sidecar, indent=2))
+    span = (
+        f"{total_seconds / 3600:.2f} h total over {len(segments)} segments "
+        f"(this one {dt / 3600:.2f} h)"
+        if len(segments) > 1
+        else f"{dt / 3600:.2f} h"
+    )
     print(
-        f"FIT done in {dt / 3600:.2f} h -> {lens_path} "
-        f"(+ config sidecar); layers={list(lens.jacobians)[:3]}...",
+        f"FIT done in {span}{' [LOWER BOUND]' if total_is_lower_bound else ''} "
+        f"-> {lens_path} (+ config sidecar); "
+        f"layers={list(lens.jacobians)[:3]}...",
         flush=True,
     )
     return 0

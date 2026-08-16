@@ -177,15 +177,16 @@ from them. Verified from a clean clone on 2026-07-28:
 ```bash
 python examples/nla_audit_findings.py      # arc 01 → SUMMARY: 178 PASS | 0 FAIL
 python examples/emb_audit_findings.py      # arc 03 → SUMMARY:  94 PASS | 0 FAIL
-python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 920 PASS | 11 FAIL
+python examples/jspace_audit_findings.py   # arc 04 → SUMMARY: 920 PASS | 10 FAIL
 ```
 
-Arc 04's 11 failures on a clean clone are **expected**, not regressions: its
-five full fitted-lens tensors and their sidecars are cache-only by design, and
-the audit reports each as a loud `MISSING` rather than skipping it. (Five
-lenses plus five sidecars is ten; the eleventh is a sidecar checked twice
-inside CHECK J — a known duplicate, tracked separately.) With the local cache
-present the same run reports 978 PASS. Arc 02 has no audit script; its Step-0
+Arc 04's 10 failures on a clean clone are **expected**, not regressions: its
+five full fitted-lens tensors and their five sidecars are cache-only by design,
+and the audit reports each as a loud `MISSING` rather than skipping it. (This
+read `11 FAIL` before 2026-07-29, when one sidecar was checked twice inside
+CHECK J; fixed.) With the local cache present the same run reports 978 PASS —
+a figure last measured 2026-07-25 and due to be re-derived when the
+C4-redaction re-run repopulates the cache. Arc 02 has no audit script; its Step-0
 numbers are checkable by hand against the committed JSONL. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
 never methodology or interpretation).
