@@ -1,6 +1,9 @@
-"""MAIN-71 (part 2) — Test plateau attractor strength via AR round-trip.
+"""Test plateau attractor strength via AR round-trip.
 
-Take a plateau-mid h (from MAIN-34 dense interp at t=0.420, inside the
+Observation: research/arcs/01_nla-verbalizer/observations/
+             2026-05-15-nla-plateau-attractor-strength.md
+
+Take a plateau-mid h (from the dense interp at t=0.420, inside the
 "Definition + Poem" hybrid plateau), AR-encode its AV text, capture the
 new h_pred, and measure cosine + distances. If the plateau is a true
 attractor, the round-trip should land near the original h (cos > 0.85).

@@ -24,7 +24,6 @@ from typing import Any, cast
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-import torch
 import matplotlib
 
 matplotlib.use("Agg")

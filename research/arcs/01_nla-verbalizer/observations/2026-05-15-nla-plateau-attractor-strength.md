@@ -5,11 +5,11 @@
 **Inputs:** `dense_interp_near_pivot.pt` + AR `kitft/nla-qwen2.5-7b-L20-ar`
 **Output:** `plateau_attractor_test.pt`
 **Figures:** (none — this is a numerical-table finding)
-**Linear:** MAIN-71 (part 2 of 2)
+**Private-tracker ID:** MAIN-71, part 2 of 2 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
 ## What MAIN-71 tested
 
-MAIN-34 found a stable "Definition + Poem" hybrid plateau spanning t ∈ [0.395, 0.4450] in the linear interpolation between AR-encoded anchors A (factual/geography) and B (poetic/nature). Question: is this plateau a **true attractor basin** (AR re-encoding stays in the basin) or just a transit zone (AR re-encoding drifts toward an anchor)?
+[MAIN-34](2026-05-15-nla-dense-interp-near-pivot.md) found a stable "Definition + Poem" hybrid plateau spanning t ∈ [0.395, 0.4450] in the linear interpolation between AR-encoded anchors A (factual/geography) and B (poetic/nature). Question: is this plateau a **true attractor basin** (AR re-encoding stays in the basin) or just a transit zone (AR re-encoding drifts toward an anchor)?
 
 Procedure: take plateau-mid h (from dense interp step t=0.420), run its AV text through AR to produce h_pred, compare h_pred to original h and to anchors via cosine. Baseline references: same round-trip for h_A (t=0.000) and h_B (t=1.000).
 
@@ -41,7 +41,7 @@ The plateau's margin is much smaller than the anchors' margins. This is geometri
 
 ## Stronger statement we can make now
 
-Combining MAIN-25, MAIN-34, MAIN-44/70, MAIN-48, and this work:
+Combining [MAIN-25](2026-05-13-nla-interpolation-flipbook.md), MAIN-34, [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)/[70](2026-05-14-nla-mid-seq-native-discriminants.md), [MAIN-48](2026-05-14-nla-concept-arithmetic-atlas.md), and this work:
 
 **Layer-20 h-space has discrete attractor basins separated by sharp boundaries. Basins include both the named vocab categories AND hybrid combinations not in the original atlas (like "Definition + Poem"). AR re-encoding of a basin's AV-text returns h to the basin's directional region. The basin structure is direction-coupled, not magnitude-coupled. Linear interpolation between two basin-residing h's traverses one or more intermediate basins with sharp boundaries between them.**
 
