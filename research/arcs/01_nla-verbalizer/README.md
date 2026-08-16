@@ -3,8 +3,8 @@
 A working investigation into what Anthropic's released Natural Language
 Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
 state structure. A focused arc (observations 2026-05-12 to 05-15):
-22 observation files, 36 figures, 20
-tracked work items, a regression audit at **178 PASS / 0 FAIL**, and
+22 observation files, 36 figures, 22 tracked work items, a regression
+audit at **178 PASS / 0 FAIL**, and
 one working synthesis: *layer-20 h-space appears to have discrete
 attractor basins separated by sharp boundaries* — held as a working
 hypothesis, not a settled claim. See [Limitations and methodology
@@ -353,18 +353,17 @@ baseline (the mean cosine between any two *sink-removed* h's — not
 category attractors (intra-category cosine +0.85 to +0.98), then
 within-category content modulation. PC1 of the
 sink-removed vocab atlas (33.5% variance) emerges as the
-**content-vs-function** axis — content words load positive, function
-words and punctuation load negative.
+**content-vs-function** axis — content-bearing words load negative
+(PC1 < 0), function words and punctuation load positive (PC1 > 0).
 ([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
 
-> **Polarity discrepancy — the observation is authoritative.** The
-> sentence above says content loads *positive*; Finding 2 of
-> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md)
-> says the opposite, content-bearing at PC1 < 0 and structural/function
-> at PC1 > 0. **Take the observation file.** It is the dated primary
-> record; this README is a summary written after the fact, so the
-> mismatch is a transcription slip here, not a disputed result. Nothing
-> downstream changes either way: the sign of a PCA component is
+> **Polarity note — corrected 2026-08-16.** Until then the sentence
+> above carried the signs inverted — a transcription slip relative to
+> Finding 2 of
+> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md),
+> the dated primary record (content-bearing at PC1 < 0,
+> structural/function at PC1 > 0), which this summary now matches.
+> Nothing downstream changes either way: the sign of a PCA component is
 > arbitrary (flipping an eigenvector's sign gives an equally valid
 > decomposition), so the load-bearing claim is that PC1 *separates*
 > content from function, not which side either lands on — which is why
@@ -610,9 +609,11 @@ NLA-artifact connection first).
 
 This arc was worked against a private issue tracker that has since been
 retired. Its `MAIN-N` ticket IDs are used as shorthand labels throughout
-this README, the observation files, `observations/figures/INVENTORY.md`,
-and several `examples/nla_*.py` docstrings. **A reader cannot look any of
-them up** — the tracker is gone and was never public.
+this README, the observation files, and
+`observations/figures/INVENTORY.md` (the `examples/nla_*.py` docstrings
+that carried them were rewritten to cite observation files instead).
+**A reader cannot look any of them up** — the tracker is gone and was
+never public.
 
 Every `MAIN-N` that appears anywhere in this arc is listed below with the
 in-repo artifact or migrated GitHub issue it resolves to. Two were never
@@ -624,8 +625,8 @@ Paths are relative to this directory unless noted.
 
 | ID | Resolves to | How the mapping was established |
 |---|---|---|
-| MAIN-24 | [`observations/2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md) | F3's cited result (PC1 = 33.5% of the sink-removed vocab atlas, content-vs-function) is that file's Finding 2; INVENTORY's "category-attractor subspace separate from the sink subspace" open question is that file's H11, verbatim |
-| MAIN-25 | [`observations/2026-05-13-nla-interpolation-flipbook.md`](observations/2026-05-13-nla-interpolation-flipbook.md) | the dense-interp observation describes MAIN-25 as the 20-step grid that flagged the flip between step 8 and step 9, which is this file's fig17/fig18 run; the mid-seq-native observation names "the interpolation flipbook … the strong t=0.421 transition there (MAIN-25)" |
+| MAIN-24 | [`observations/2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md) | F3's cited result (PC1 = 33.5% of the sink-removed vocab atlas, content-vs-function) is that file's Finding 2; INVENTORY's "category-attractor subspace separate from the sink subspace" open question is that file's H11, nearly verbatim (H11's heading says "category subspace") |
+| MAIN-25 | [`observations/2026-05-13-nla-interpolation-flipbook.md`](observations/2026-05-13-nla-interpolation-flipbook.md) | the dense-interp observation describes MAIN-25 as the 20-step grid that flagged the flip between step 8 and step 9, which is this file's fig17/fig18 run; the mid-seq-native observation cites it for "the strong t=0.421 transition", with the ID's inline link pointing at this file |
 | MAIN-26 | [`observations/2026-05-13-nla-discriminant-validation.md`](observations/2026-05-13-nla-discriminant-validation.md) | the mid-seq null-result observation links it directly — its prose reads `MAIN-26` followed by an inline markdown link to this file; F2's cited 56-79% top-5 hit rates are that file's Finding 2, and "MAIN-26 / fig29" matches its fig29 |
 | MAIN-30 | GitHub [#13](https://github.com/skothr/llm-research/issues/13) | issue body: "Migrated from Linear MAIN-30" |
 | MAIN-34 | [`observations/2026-05-15-nla-dense-interp-near-pivot.md`](observations/2026-05-15-nla-dense-interp-near-pivot.md) | that file's own `Private-tracker ID` header |
@@ -637,13 +638,13 @@ Paths are relative to this directory unless noted.
 | MAIN-68 | GitHub [#10](https://github.com/skothr/llm-research/issues/10) | issue body: "Migrated from Linear MAIN-68" |
 | MAIN-70 | [`observations/2026-05-14-nla-mid-seq-native-discriminants.md`](observations/2026-05-14-nla-mid-seq-native-discriminants.md) | that file's own `Private-tracker ID` header |
 | MAIN-71 | [`observations/2026-05-15-nla-plateau-attractor-strength.md`](observations/2026-05-15-nla-plateau-attractor-strength.md) | that file's own `Private-tracker ID` header (part 2 of 2) |
-| MAIN-265 | **not migrated** | D1 (discovery-viz frontend). No GitHub issue carries this ID; [D1](#d1-discovery-viz-frontend) above is the only surviving description |
+| MAIN-265 | **not migrated** | D1 (discovery-viz frontend). No GitHub issue was migrated from it (issue #30's prose quotes the MAIN-265..272 range, nothing more); [D1](#d1-discovery-viz-frontend) above is the only surviving description |
 | MAIN-266 | GitHub [#9](https://github.com/skothr/llm-research/issues/9) | issue body: "Migrated from Linear MAIN-266" |
 | MAIN-267 | GitHub [#8](https://github.com/skothr/llm-research/issues/8) | issue body: "Migrated from Linear MAIN-267 (folds MAIN-347; …)" |
 | MAIN-268 | GitHub [#7](https://github.com/skothr/llm-research/issues/7) | issue body: "Migrated from Linear MAIN-268" |
 | MAIN-269 | GitHub [#6](https://github.com/skothr/llm-research/issues/6) | issue body: "Migrated from Linear MAIN-269" |
 | MAIN-270 | GitHub [#5](https://github.com/skothr/llm-research/issues/5) | issue body: "Migrated from Linear MAIN-270" |
-| MAIN-271 | **not migrated** | D7 (per-token live-trajectory viz). No GitHub issue carries this ID; [D7](#d7-per-token-live-trajectory-viz) above is the only surviving description |
+| MAIN-271 | **not migrated** | D7 (per-token live-trajectory viz). No GitHub issue was migrated from it; [D7](#d7-per-token-live-trajectory-viz) above is the only surviving description |
 | MAIN-272 | GitHub [#4](https://github.com/skothr/llm-research/issues/4) | issue body: "Migrated from Linear MAIN-272" |
 | MAIN-347 | GitHub [#8](https://github.com/skothr/llm-research/issues/8), folded into MAIN-267 | the only surviving mention is #8's own migration note, quoted in the MAIN-267 row above |
 

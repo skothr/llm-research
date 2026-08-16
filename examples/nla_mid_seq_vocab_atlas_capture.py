@@ -4,8 +4,8 @@ Observation: research/arcs/01_nla-verbalizer/observations/
              2026-05-14-nla-mid-seq-vocab-atlas-null-result.md
 
 Tests the interpretation reached in
-`observations/2026-05-13-nla-discriminant-validation.md`: the
-23-discriminant basis classifies
+`research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-discriminant-validation.md`:
+the 23-discriminant basis classifies
 prompt-TOPIC rather than token-presence because end-of-prompt h has
 integrated the full user message into a topic representation. Capturing
 h[20] at a MID-SEQUENCE anchor position — inside a carrier that
