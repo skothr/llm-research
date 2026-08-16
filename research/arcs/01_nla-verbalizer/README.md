@@ -645,6 +645,7 @@ Paths are relative to this directory unless noted.
 | MAIN-270 | GitHub [#5](https://github.com/skothr/llm-research/issues/5) | issue body: "Migrated from Linear MAIN-270" |
 | MAIN-271 | **not migrated** | D7 (per-token live-trajectory viz). No GitHub issue carries this ID; [D7](#d7-per-token-live-trajectory-viz) above is the only surviving description |
 | MAIN-272 | GitHub [#4](https://github.com/skothr/llm-research/issues/4) | issue body: "Migrated from Linear MAIN-272" |
+| MAIN-347 | GitHub [#8](https://github.com/skothr/llm-research/issues/8), folded into MAIN-267 | the only surviving mention is #8's own migration note, quoted in the MAIN-267 row above |
 
 Migration context: `docs/planning/2026-07-25-backlog-groom.md`.
 
