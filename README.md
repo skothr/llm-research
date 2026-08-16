@@ -32,8 +32,8 @@ slice carried 120 pieces of third-party personal data and was redacted on
 computed on that corpus — the **corpus-invariance** and **held-out-sample**
 checks and the **H3 @10 corpus-dependence qualifier** — was recomputed on
 the redacted text (2026-08-15/16). Outcome: two audit pins moved, each by
-less than 0.02, both in the held-out channel, and no
-headline conclusion changed; the two failure modes pre-registered before the
+less than 0.02, both in the held-out channel, and no headline conclusion
+changed; the two failure modes pre-registered before the
 re-run did not materialise. Arc 04's primary fitting corpus is wikitext-103,
 which was scanned and left unmodified, and no other arc used C4. The full
 record — per-class counts, root cause, per-claim blast radius, and the
@@ -202,15 +202,16 @@ Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
 three redacted-corpus fitted lenses are LFS-committed but excluded from
 default LFS pulls (`.lfsconfig` — the ~905 MB lens download is opt-in), so
 the audit reports each as an `LFS pointer stub` naming the pull command, and
-the two nf4 lenses are regenerate-only pending their scheduled refit (issue
-#47), reported as a loud `MISSING` rather than skipped. After
+the two nf4 lenses and their sidecars are regenerate-only pending the
+scheduled refit (issue #47), each reported as a loud `MISSING` rather than
+skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
 the same run reports **956 PASS | 4 FAIL** (the nf4 `MISSING` reports only)
 with no GPU work. Arc 02 has no audit script; its Step-0
 numbers are checkable by hand against the committed JSONL. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
 never methodology or interpretation) and for the historical pre-re-run
-figures (`920 | 10`, cache-present `978`).
+figures (`920 | 10`; the cache-present `978` was never re-verified).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced
