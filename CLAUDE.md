@@ -25,6 +25,36 @@ pip install -e '.[dev]'            # torch, numpy, matplotlib + pytest
 Missing either one fails only at `import` inside a script, which for the arc-04
 fits is after model load, at the start of a multi-hour GPU run.
 
+**Every checkout needs its own `.venv` — including each worktree.** Pyright
+resolves `venvPath` relative to the config file, so a worktree (the mandated
+way of working here) does not see the main checkout's environment. Link it
+back before type checking, run from the worktree root:
+
+```bash
+ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/
+```
+
+Skip this and `pyright examples/` reports hundreds of phantom errors against
+correct code. The symptom is **not stable**, which is the trap — all four rows
+measured in the same worktree on 2026-07-29:
+
+| State | Errors | Dominant rule |
+|---|---|---|
+| `.venv` linked | **0** | — |
+| link removed after a previously-resolved run | 374 | 355 `reportAttributeAccessIssue` (+19 others, incl. 1 `reportMissingImports`) |
+| never linked, sibling checkouts present | 237 | all `reportMissingImports` |
+| never linked, no siblings | 304 | all `reportMissingImports` |
+
+The 374 row is the dangerous one. A wall of `reportMissingImports` reads as
+environmental and sends you looking at your setup. But 355
+`reportAttributeAccessIssue` — "Attribute `savefig` is unknown" — reads as
+*real type bugs in your own code*: the modules resolve, their types do not.
+If you are about to "fix" a pile of attribute errors in code that was green
+yesterday, check for `.venv` first.
+
+Deleting `venvPath` is not a workaround: pyright does not fall back to the
+interpreter that launched it, so the errors persist unchanged.
+
 ## Structure
 
 - `theory/` — Knowledge-base substrate (**GROUND TRUTH** for technical claims).
