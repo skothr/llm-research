@@ -6,9 +6,9 @@
 # is far larger than everything else in LFS combined (~417 MB of figures,
 # datasets, and paper PDFs), and most uses of the repo — reading the
 # research, running audit checks B-M, re-rendering figures — never load
-# the full lenses. So a
-# default clone/pull skips downloading them: the files appear as LFS pointer
-# stubs, and the audit reports them as such rather than crashing.
+# the full lenses. So a default clone/pull skips downloading them: the
+# files appear as LFS pointer stubs, and the audit reports them as such
+# rather than crashing.
 #
 # To fetch the lenses when you want them (check A + the lens-integrity
 # blocks, or re-running scans without a refit):

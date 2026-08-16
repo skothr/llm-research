@@ -144,8 +144,8 @@ def _resolve(name: str) -> Path:
     git-LFS-tracked; the FULL fitted lens tensors + their sidecars live in
     ``cache/`` — since the 2026-08-16 Decision-4 amendment the three refit
     lenses are LFS-committed there behind an opt-in download, so on a default
-    clone their checks report LFS-pointer-stub FAILs (and the two nf4 lenses
-    pending issue #47 report MISSING)."""
+    clone their checks report LFS-pointer-stub FAILs (and the two 1.5B
+    nf4 lenses pending issue #47 report MISSING)."""
     d = DATA / name
     return d if d.exists() else CACHE / name
 
@@ -191,8 +191,10 @@ def load_pt_or_fail(name: str) -> Any | None:
             # The recovery command depends on which LFS population the stub
             # belongs to: cache/ tensors are excluded by the committed
             # .lfsconfig fetchexclude and need the opt-in pull; everything
-            # else is fetched by a plain `git lfs pull`.
-            if "cache" in p.parts:
+            # else is fetched by a plain `git lfs pull`. Containment under
+            # CACHE, not a component-name match — a clone path containing
+            # a directory named "cache" must not trip this.
+            if p.is_relative_to(CACHE):
                 hint = (
                     "LFS pointer stub — run git lfs pull"
                     ' --include="research/arcs/04_jspace/data/cache/**" --exclude=""'
