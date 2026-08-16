@@ -262,17 +262,24 @@ refit. The two nf4 lenses (quantization / n-budget axes) remain
 regenerate-only, and fit-resume `.ckpt.pt` checkpoints stay uncommitted —
 their content is superseded by the final lenses they produced.
 
-**Expected result on a clean clone** (after `git lfs install && git lfs
-pull`, which now delivers the three committed lenses): `SUMMARY: 956 PASS |
-4 FAIL`, exit code 1 — measured 2026-08-16 with exactly this artifact set on
-disk (`data/audit_2026-08-16.log`). The 4 failures are the designed
-`MISSING` reports for the two regenerate-only nf4 lenses and their
-`.config.json` sidecars — *not* regressions. Any FAIL naming something other
+**Expected result on a clean clone.** The lens cache is excluded from
+default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MB most readers
+never load), so there are two states, both measured 2026-08-16:
+
+- **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
+  stubs): `SUMMARY: 921 PASS | 7 FAIL`, exit code 1. The 7 = three
+  `LFS pointer stub` reports for the committed lenses (the audit detects the
+  stub and prints the pull command) + the designed `MISSING` reports for the
+  two regenerate-only nf4 lenses and their sidecars.
+- **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
+  --exclude=""`: `SUMMARY: 956 PASS | 4 FAIL` (`data/audit_2026-08-16.log`),
+  the 4 being the nf4 `MISSING` reports only.
+
+Neither state's failures are regressions. Any FAIL naming something other
 than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
-regression. (An LFS-less or pre-2026-08-16 checkout, with no lenses on disk,
-gave `920 PASS | 10 FAIL` — measured 2026-07-29, before the re-run changed
-artifact contents and two pins; the historical decomposition below still
-applies to it.)
+regression. (An LFS-less or pre-2026-08-16 checkout, with no lenses and the
+pre-re-run artifacts, gave `920 PASS | 10 FAIL` — measured 2026-07-29; the
+historical decomposition below still applies to it.)
 
 > Until 2026-07-29 this read `11 FAIL`. The extra one was a duplicate
 > registration of the `jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json` presence
