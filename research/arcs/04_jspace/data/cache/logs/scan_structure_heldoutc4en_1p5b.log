@@ -1,0 +1,159 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  20%|██        | 69/338 [00:00<00:00, 685.48it/s]Loading weights:  48%|████▊     | 161/338 [00:00<00:00, 803.30it/s]Loading weights:  76%|███████▌  | 257/338 [00:00<00:00, 865.12it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 887.13it/s]
+[load] model + lens in 3.2s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[wu] W_U (151936, 1536) torch.bfloat16 on cuda:0
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers, ks=[5, 10, 25, 50], positions=8 mid + last
+[prompt 1/30] seq=149 pos=9 mean_varfrac(k=25)=0.1057 14.3s
+[prompt 2/30] seq=274 pos=9 mean_varfrac(k=25)=0.0946 12.5s
+[prompt 3/30] seq=403 pos=9 mean_varfrac(k=25)=0.0993 13.0s
+[prompt 4/30] seq=335 pos=9 mean_varfrac(k=25)=0.0972 13.7s
+[prompt 5/30] seq=343 pos=9 mean_varfrac(k=25)=0.0871 12.3s
+[prompt 6/30] seq=344 pos=9 mean_varfrac(k=25)=0.0986 12.7s
+[prompt 7/30] seq=509 pos=9 mean_varfrac(k=25)=0.0910 12.9s
+[prompt 8/30] seq=397 pos=9 mean_varfrac(k=25)=0.0794 12.6s
+[prompt 9/30] seq=327 pos=9 mean_varfrac(k=25)=0.0937 12.2s
+[prompt 10/30] seq=191 pos=9 mean_varfrac(k=25)=0.0946 11.9s
+[prompt 11/30] seq=512 pos=9 mean_varfrac(k=25)=0.0932 12.2s
+[prompt 12/30] seq=155 pos=9 mean_varfrac(k=25)=0.1049 11.8s
+[prompt 13/30] seq=395 pos=9 mean_varfrac(k=25)=0.0992 12.1s
+[prompt 14/30] seq=512 pos=9 mean_varfrac(k=25)=0.1004 12.3s
+[prompt 15/30] seq=512 pos=9 mean_varfrac(k=25)=0.0977 12.1s
+[prompt 16/30] seq=363 pos=9 mean_varfrac(k=25)=0.0935 15.1s
+[prompt 17/30] seq=512 pos=9 mean_varfrac(k=25)=0.0964 13.4s
+[prompt 18/30] seq=141 pos=9 mean_varfrac(k=25)=0.0893 13.2s
+[prompt 19/30] seq=365 pos=9 mean_varfrac(k=25)=0.0967 13.2s
+[prompt 20/30] seq=393 pos=9 mean_varfrac(k=25)=0.0917 13.2s
+[prompt 21/30] seq=219 pos=9 mean_varfrac(k=25)=0.0919 13.3s
+[prompt 22/30] seq=512 pos=9 mean_varfrac(k=25)=0.1005 13.3s
+[prompt 23/30] seq=206 pos=9 mean_varfrac(k=25)=0.0846 13.1s
+[prompt 24/30] seq=512 pos=9 mean_varfrac(k=25)=0.0934 13.8s
+[prompt 25/30] seq=214 pos=9 mean_varfrac(k=25)=0.0850 14.3s
+[prompt 26/30] seq=512 pos=9 mean_varfrac(k=25)=0.0945 14.1s
+[prompt 27/30] seq=512 pos=9 mean_varfrac(k=25)=0.1005 13.6s
+[prompt 28/30] seq=294 pos=9 mean_varfrac(k=25)=0.1016 14.2s
+[prompt 29/30] seq=225 pos=9 mean_varfrac(k=25)=0.0846 14.2s
+[prompt 30/30] seq=512 pos=9 mean_varfrac(k=25)=0.0886 14.5s
+
+=== Per-layer J-space structure (k=25) ===
+layer  varfrac_mean  varfrac_med  active_mean  rd_logit_kurt  rd_prob_kurt  coef_kurt
+    0        0.0844       0.0758        23.83           3.42     118749.83       5.15
+    1        0.0681       0.0618        24.05           3.28     109553.93       3.25
+    2        0.0700       0.0656        23.80           3.85     120051.84       3.94
+    3        0.0759       0.0699        23.82           4.34     113565.25       3.61
+    4        0.0779       0.0704        23.70           3.47     119877.59       3.25
+    5        0.0835       0.0759        23.66           4.06     118153.76       3.05
+    6        0.0888       0.0841        23.86           3.41     113282.29       3.68
+    7        0.0988       0.0909        23.83           2.41     116372.42       3.13
+    8        0.1012       0.0959        23.89           2.29     115085.96       3.46
+    9        0.0937       0.0870        23.99           1.96     113167.16       3.72
+   10        0.0988       0.0923        24.00           1.76     110229.14       3.97
+   11        0.0967       0.0905        24.07           1.49     103533.21       4.23
+   12        0.0855       0.0818        23.87           1.35     107223.75       4.75
+   13        0.0786       0.0746        24.03           1.21     102775.03       3.71
+   14        0.0738       0.0704        24.03           1.13      97086.37       4.05
+   15        0.0802       0.0759        24.08           1.13     103406.34       2.85
+   16        0.0698       0.0661        24.10           1.36     104688.80       3.43
+   17        0.0957       0.0935        24.21           1.02      97414.38       2.40
+   18        0.1024       0.0998        24.21           1.03      94735.74       1.87
+   19        0.1215       0.1176        24.34           1.24      98036.42       1.30
+   20        0.1220       0.1188        24.51           1.32      99387.17       1.42
+   21        0.1330       0.1322        24.70           1.38     102893.63       1.70
+   22        0.1254       0.1259        24.74           1.47     108302.82       2.57
+   23        0.1193       0.1190        24.77           1.54     113767.12       3.29
+   24        0.1096       0.1116        24.63           1.72     114997.17       3.47
+   25        0.1074       0.1090        24.92           1.65     114752.22       5.03
+   26        0.0844       0.0846        24.88           1.45     113288.45       4.58
+
+=== varfrac_mean trajectory by k ===
+layer k=  5 k= 10 k= 25 k= 50
+    0 0.034 0.046 0.084 0.140
+    1 0.029 0.038 0.068 0.117
+    2 0.029 0.038 0.070 0.119
+    3 0.029 0.041 0.076 0.121
+    4 0.029 0.039 0.078 0.121
+    5 0.031 0.043 0.084 0.128
+    6 0.033 0.049 0.089 0.132
+    7 0.037 0.054 0.099 0.142
+    8 0.039 0.056 0.101 0.145
+    9 0.036 0.052 0.094 0.139
+   10 0.039 0.057 0.099 0.147
+   11 0.038 0.055 0.097 0.139
+   12 0.033 0.046 0.086 0.126
+   13 0.030 0.045 0.079 0.121
+   14 0.029 0.042 0.074 0.110
+   15 0.032 0.046 0.080 0.115
+   16 0.031 0.041 0.070 0.107
+   17 0.042 0.058 0.096 0.129
+   18 0.046 0.064 0.102 0.135
+   19 0.058 0.080 0.122 0.152
+   20 0.060 0.082 0.122 0.152
+   21 0.068 0.092 0.133 0.164
+   22 0.066 0.088 0.125 0.151
+   23 0.063 0.084 0.119 0.143
+   24 0.054 0.074 0.110 0.133
+   25 0.059 0.078 0.107 0.125
+   26 0.040 0.058 0.084 0.099
+
+[save] research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[time] mean 13.2s/prompt over 30 prompts; total 395.2s
+
+=== Top J-space atoms (prompt 1, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | ' Glouce'  '卡车'  ':.'  ' .\n\n'  'ationToken'  '.'
+      1 | ' Glouce'  '.:'  '-win'  ' Leaf'  'ласт'  'rolled'
+      2 | ' Glouce'  'ปาก'  'rolled'  ' Michigan'  'anness'  ' Sel'
+      3 | ' Michigan'  ' Glouce'  'ClientRect'  'DET'  'éd'  'ปาก'
+      4 | ' Michigan'  ' Alfred'  ' pozostał'  '(_.'  ' Glouce'  'ész'
+      5 | ' Alfred'  'もちろ'  'ously'  ' Sel'  ' '  ' Sch'
+      6 | ' Alfred'  ' Glouce'  'もちろ'  '卡'  'ッ'  '.<'
+      7 | ' Wolfgang'  'DET'  ' Ezek'  'ッ'  '卡'  ' Chester'
+      8 | '标'  '卡'  'Archivo'  '(_.'  'ッ'  ' Sie'
+      9 | ' Asked'  '约翰'  ' Sergei'  ' Chester'  '保荐'  'Archivo'
+     10 | '归'  ' Asked'  ' Schwartz'  '传真'  '卡'  ' Sergei'
+     11 | ' Chester'  '电话'  ' Wolfgang'  '卡'  '标'  '邮件'
+     12 | ' Asked'  '©'  ' Chester'  ' Sergei'  '书面'  ' Wolfe'
+     13 | ' Asked'  ' Chester'  '濠'  ' Sergei'  'もちろ'  '卡'
+     14 | '濠'  ' Asked'  '卡'  '_.'  ' Chester'  '电话'
+     15 | '咨询服务'  ' Publishing'  '濠'  ' Asked'  ' Strauss'  '电话'
+     16 | ' Sz'  '咨询服务'  '淇'  'EMAIL'  '卡'  'qualified'
+     17 | 'info'  '�'  ' Sz'  'ศ'  '有限责任'  'qualified'
+     18 | 'info'  'üns'  'ศ'  ' Sz'  ' Wir'  '.\n'
+     19 | '联系电话'  '<|endoftext|>'  ' His'  'Ark'  'ễn'  ' Sz'
+     20 | '<|endoftext|>'  ' She'  ' His'  'Ark'  '联系电话'  ' Phone'
+     21 | ' Phone'  ' Thank'  '联系'  ' Alternatively'  '他会'  '<|endoftext|>'
+     22 | ' Phone'  ' Thanks'  ' Contact'  ' Please'  '他会'  '我们'
+     23 | ' Thanks'  ' Contact'  ' Phone'  ' Alternatively'  '他已经'  '他'
+     24 | ' Thank'  ' Contact'  '他已经'  ' Feel'  ' Based'  '他'
+     25 | '<|endoftext|>'  ' Feel'  ' Based'  '他已经'  ' We'  ' Contact'
+     26 | '<|endoftext|>'  ' Feel'  ' We'  ' He'  ' Based'  '.email'
+
+=== Top J-space atoms (prompt 2, last position) ===
+  layer | top atom tokens (by coefficient)
+      0 | '卡车'  ' Glouce'  ' Pennsylvania'  ' purse'  ':.'  '.'
+      1 | ' Glouce'  'ласт'  ' Template'  'rolled'  'ClientRect'  ' '
+      2 | ' Glouce'  ' pozostał'  ' :'  ' Template'  'rolled'  ' '
+      3 | ' Auburn'  ' :'  ' authorised'  '.['  ' '  '滩'
+      4 | '约'  ' pozostał'  ' centre'  'แข'  ' Pennsylvania'  ' Alfred'
+      5 | ' прежде'  '滩'  ' centre'  ' Cumberland'  'Philadelphia'  '.['
+      6 | ' прежде'  ' Alfred'  '滩'  '新京报'  ' Chrysler'  " '"
+      7 | ' прежде'  '新京报'  '(_.'  ' Chrysler'  ' Page'  ' 그렇지'
+      8 | '书面'  '(_.'  ' Sym'  ' прежде'  '新京报'  'คล'
+      9 | '新京报'  ' Chrysler'  '淮安'  ' emphas'  '互'  ' Roths'
+     10 | '新京报'  ' organis'  ' Chrysler'  '业务'  ' partnered'  ' CFO'
+     11 | ' Partnership'  '业务'  '律师事务'  ' emphas'  '新京报'  'SEM'
+     12 | '新京报'  '业务'  '{:'  ' Partnership'  ' clients'  '�'
+     13 | '业务'  '新京报'  ' Projects'  ' emphas'  '.\n'  '{@'
+     14 | '业务'  ' Partnership'  '新京报'  '.\n'  '此外'  '{@'
+     15 | '业务'  ' New'  ' Partnership'  '.\n'  ' Strauss'  '新京报'
+     16 | '业务'  ' Partnership'  '.\n'  '执业'  '律师事务'  '此外'
+     17 | '此外'  ' New'  '工作'  '业务'  '�'  'ё'
+     18 | '此外'  '业务'  ' Highlights'  ' Rodr'  '工作'  'ện'
+     19 | '此外'  ' New'  ' García'  'ện'  '<|endoftext|>'  'Assistant'
+     20 | ' Additionally'  '//------------------------------------------------------------------------------\n'  '工作'  ' Rodr'  ' New'  '<|endoftext|>'
+     21 | ' Our'  ' Additionally'  ' Clients'  '//------------------------------------------------------------------------------\n'  '最近'  'òa'
+     22 | ' Additionally'  ' Our'  '我们'  ' Clients'  '最近'  'òa'
+     23 | '此外'  ' Our'  ' Clients'  '最近'  '我们'  '###############################################################################\n'
+     24 | ' Our'  '我们'  ' Additionally'  ' recent'  ' Clients'  '<|endoftext|>'
+     25 | ' Our'  '<|endoftext|>'  '我们'  ' Based'  '      \n      \n'  ' Additionally'
+     26 | '<|endoftext|>'  ' Our'  ' We'  ' Based'  ' мы'  '      \n      \n'

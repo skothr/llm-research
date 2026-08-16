@@ -67,3 +67,14 @@ debug-images/
 # checkpoints, derived scans) live in data/cache/ and stay out of git; the
 # committed deliverables are the top-level data/ files + MANIFEST.json.
 research/arcs/*/data/cache/
+
+# Arc-04 exception (owner decision 2026-08-16, follow-up to PR #38): the
+# redacted-corpus lens cache is committed via LFS so a clean clone can
+# re-scan without the ~23 h refit. Fit-resume checkpoints stay uncommitted —
+# their content is superseded by the final lens files they produced.
+!research/arcs/04_jspace/data/cache/
+!research/arcs/04_jspace/data/cache/*.log
+!research/arcs/04_jspace/data/cache/logs/
+!research/arcs/04_jspace/data/cache/logs/*.log
+research/arcs/04_jspace/data/cache/*.ckpt.pt
+research/arcs/04_jspace/data/cache/PAUSE
