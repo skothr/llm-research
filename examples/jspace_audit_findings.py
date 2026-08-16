@@ -191,7 +191,7 @@ def load_pt_or_fail(name: str) -> Any | None:
                 f"artifact present: {name}",
                 False,
                 "present",
-                'LFS pointer stub — run git lfs pull --include="research/arcs/04_jspace/data/cache/**"',
+                'LFS pointer stub — run git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""',
             )
             return None
     return torch.load(p, weights_only=False)

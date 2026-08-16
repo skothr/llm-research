@@ -53,6 +53,8 @@
 > the designed `MISSING` presence reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
+> (Their refit-and-commit has since been scheduled as issue #47 on
+> data-completeness grounds; until it lands, `MISSING` is the designed state.)
 > Only two pinned values moved beyond tolerance, both in the held-out-C4
 > channel: the 1.5B held-out logit-kurtosis trough (1.000 → 1.019) and the 7B
 > held-out L23 excess (0.0598 → 0.0588). Which conclusions that does and does
@@ -113,16 +115,17 @@ Artifact classes (see the MANIFEST for the per-file registry):
 - `raw`: frozen fitting/held-out corpora (wikitext-103 + seeded C4-en),
   fitted-lens **layer subsets** (`jlens_*_layer-subset.pt` + `.config.json`
   sidecars; design Decision 4 — the full 27-layer lenses stay in the
-  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`;
-  **amended 2026-08-16**: the three redacted-corpus lenses — both wikitext +
-  the c4en — are now LFS-committed in `cache/` with their sidecars and
-  fit/scan logs, so a clean clone re-scans without the ~23 h refit; the two
-  nf4 lenses and all `.ckpt.pt` fit-resume checkpoints remain uncommitted.
-  The lens download is **opt-in**: `.lfsconfig` excludes `cache/` from
-  default LFS pulls (~905 MB), leaving pointer stubs until
+  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`), and
+  the hand-written paper-verbatim item bank.
+  **Decision 4 amended 2026-08-16**: the three redacted-corpus lenses —
+  both wikitext + the c4en — are now LFS-committed in `cache/` with their
+  sidecars and fit/scan logs, so a clean clone re-scans without the ~23 h
+  refit; the two nf4 lenses (refit-and-commit scheduled as issue #47) and
+  all `.ckpt.pt` fit-resume checkpoints remain uncommitted. The lens
+  download is **opt-in**: `.lfsconfig` excludes `cache/` from default LFS
+  pulls (~905 MB), leaving pointer stubs until
   `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""` fetches them), and the hand-written paper-verbatim item
-  bank.
+  --exclude=""` fetches them.
 - `derived`: the promoted metric/scan/swap products the audit
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
