@@ -14,9 +14,14 @@ sessions is how the knobs drift.
 
 PAUSING (the GPU is also the machine's gaming GPU)
 --------------------------------------------------
-    python examples/jspace_rerun_queue.py --pause     # yield the GPU
+    python examples/jspace_rerun_queue.py --pause-at-checkpoint   # cheapest
+    python examples/jspace_rerun_queue.py --pause                 # right now
     python examples/jspace_rerun_queue.py --status
     python examples/jspace_rerun_queue.py --resume    # pick up where it left off
+
+Prefer `--pause-at-checkpoint` unless you need the card immediately: it waits
+for the next checkpoint write and pauses straight after, costing ~no rework,
+where `--pause` discards everything since the last one.
 
 `--pause` signals the running queue, which stops the in-flight fit *at once* —
 it does NOT wait for the next checkpoint, so the GPU frees within seconds.
@@ -310,13 +315,68 @@ def cmd_status() -> int:
     return 0
 
 
+def active_job() -> Job | None:
+    """The job the queue is on: the first whose final artifact is absent."""
+    return next((j for j in JOBS if not j.out.exists()), None)
+
+
+def cmd_pause_at_checkpoint() -> int:
+    """Arm the pause to fire the moment the in-flight fit next checkpoints.
+
+    `--pause` stops immediately and redoes everything since the last
+    checkpoint — at 7B that is up to ~47 min. This waits for the next
+    checkpoint write and sets the flag straight after, so the pause costs
+    almost nothing. The running queue needs no knowledge of this: it polls for
+    the flag, and we simply choose when the flag appears.
+    """
+    job = active_job()
+    if job is None:
+        print("[queue] nothing in flight — all jobs have their artifact.")
+        return 1
+    ckpt = CACHE / f"{job.out.stem}.ckpt.pt"
+    if not ckpt.exists():
+        print(
+            f"[queue] {job.tag} has not checkpointed yet ({ckpt.name} absent). "
+            "Nothing to wait for — use --pause to stop now and restart it from "
+            "scratch, or wait for the first checkpoint."
+        )
+        return 1
+
+    before = ckpt.stat().st_mtime
+    print(
+        f"[queue] armed: will pause {job.tag} the moment it next checkpoints "
+        f"(last write {time.strftime('%H:%M:%S', time.localtime(before))}, "
+        f"every {job.checkpoint_every} prompts). Ctrl-C to cancel; nothing is "
+        "paused until then.",
+        flush=True,
+    )
+    while ckpt.stat().st_mtime == before:
+        time.sleep(PAUSE_POLL_SECONDS)
+    # Give the atomic replace a moment to settle before killing the writer.
+    time.sleep(PAUSE_POLL_SECONDS)
+    PAUSE_FLAG.touch()
+    print(
+        f"[queue] checkpoint written at "
+        f"{time.strftime('%H:%M:%S', time.localtime(ckpt.stat().st_mtime))} — "
+        f"pause flag set. {job.tag} stops within seconds, losing ~nothing. "
+        "Resume with --resume.",
+        flush=True,
+    )
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument(
         "--pause",
         action="store_true",
-        help="yield the GPU after the current checkpoint",
+        help="stop the in-flight fit now; work since its last checkpoint is redone",
+    )
+    mode.add_argument(
+        "--pause-at-checkpoint",
+        action="store_true",
+        help="wait for the next checkpoint write, then pause — costs ~no rework",
     )
     mode.add_argument("--resume", action="store_true", help="clear the pause flag")
     mode.add_argument("--status", action="store_true")
@@ -326,6 +386,8 @@ def main() -> int:
 
     if args.status:
         return cmd_status()
+    if args.pause_at_checkpoint:
+        return cmd_pause_at_checkpoint()
     if args.pause:
         CACHE.mkdir(parents=True, exist_ok=True)
         PAUSE_FLAG.touch()
