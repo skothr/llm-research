@@ -5,7 +5,9 @@ Reads the 1.5B structure-scan and lens-eval artifacts fit on two corpora
 
   (a) J-space variance fraction (k=25) vs source layer, wikitext vs C4
       overlaid, annotating the early-band divergence (L0 doubles on C4:
-      0.082 -> 0.174) and the identical mid-late peak (L21 = 0.124 on both).
+      0.082 -> 0.175 on the post-redaction C4 lens, 2026-08-16) and the
+      identical mid-late peak (L21 = 0.124 on both). Both callouts are
+      rendered from the artifacts, not hardcoded.
 
   (b) Multihop intermediate-concept hit rate (best rank in band enters
       top-10) per depth band, wikitext vs C4, with the logit-lens rate
@@ -91,7 +93,7 @@ def main() -> None:
     layers_w, vf_w = varfrac(sw)
     layers_c, vf_c = varfrac(sc)
     rj_w, rl_w = band_j10(ew)
-    rj_c, rl_c = band_j10(ec)
+    rj_c, _ = band_j10(ec)  # C4 logit rate is not annotated in the figure
 
     print(
         f"varfrac L0 wiki={vf_w[0]:.3f} C4={vf_c[0]:.3f} | "

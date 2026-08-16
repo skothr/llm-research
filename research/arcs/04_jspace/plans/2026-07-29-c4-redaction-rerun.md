@@ -1,7 +1,10 @@
 # Plan: re-run the C4-dependent results on the redacted corpus
 
-**Status:** planned, not started. Redaction landed 2026-07-29; this is the
-compute half.
+**Status:** executed and complete. Redaction landed 2026-07-29; the compute
+half ran 2026-08-15/16 (Steps 0–3 in commit `a9df3a55`; Step 4 prose,
+figure and inventory restatement 2026-08-16). Outcome, drift and
+the two pre-committed exposures: the correction record at the top of
+[`../README.md`](../README.md).
 **Owner gate:** GPU time on the RTX 2080 (8 GB) — see § Cost.
 **Trigger for writing this:** third-party PII found in the committed C4-en
 corpora (`data/README.md`), redacted 2026-07-29. Artifacts computed on the
@@ -220,6 +223,11 @@ superseded values preserved, not an in-place rewrite.
 
 Remove the warning banner from the arc README only when Steps 0–4 are all
 complete. Until then it stays, and the affected numbers read as provisional.
+
+**Done 2026-08-16.** The banner was converted rather than removed: it is now a
+dated correction record (what was redacted, what was re-run and at what cost,
+what moved, what did not, and both pre-committed exposures reported as
+watched-and-not-materialised). Deleting it would delete the disclosure.
 
 ---
 
