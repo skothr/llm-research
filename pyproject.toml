@@ -17,12 +17,22 @@ authors = [{ name = "Michael Lannum" }]
 # torch is also pulled in transitively by llm-surgeon, but the render/analysis
 # scripts that do NOT import llm_surgeon still need it, so it is declared
 # directly. Install the sibling editable first: pip install -e ../llm-surgeon
+#
+# jlens (anthropics/jacobian-lens) is a SECOND sibling editable install, needed
+# by every examples/jspace_*.py script. It is not on PyPI, so it cannot be
+# listed below; install it the same way: pip install -e ../jacobian-lens
+# Its absence is not caught until a script fails at `import jlens` — which on
+# 2026-07-29 was at the start of a multi-hour GPU fit.
 dependencies = [
     "llm-surgeon",
     "torch>=2.0",
     "numpy",
     "matplotlib",
 ]
+
+[project.optional-dependencies]
+# pip install -e '.[dev]' — needed to run examples/tests/.
+dev = ["pytest"]
 
 [tool.setuptools]
 # This repo is a research workspace, not an importable package. The example

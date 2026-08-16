@@ -1,5 +1,18 @@
 # Observation: J-lens advantage appears on intermediate-concept metrics (H3 confirmed)
 
+> **2026-08-16 addendum — C4-redaction re-run (read first).** Only the
+> "Qualifier (added 2026-07-20)" section at the end of this file touches C4:
+> the C4-en lens it cites was refit on the redacted corpus 2026-08-15/16
+> (commit `a9df3a55`, background in `../data/README.md`). **Every value in
+> that qualifier re-derives within audit tolerance** from the regenerated
+> `lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt`
+> (`../data/audit_2026-08-16.log`): the C4 @10
+> advantage is +0.087 (quoted +0.09), from J@10 overall 0.4854 vs logit@10
+> 0.3981; the early/mid logit rates are still exactly 0.00 on both corpora,
+> so the J-exclusivity finding is unchanged; C4 J@50 overall is 0.7476. The
+> wikitext measurements in the body of this observation carry no C4
+> dependency and were not recomputed.
+
 **Date/context:** 2026-07-18, same session and setup as
 `2026-07-18-readout-scan-1p5b-first-pass.md` (Qwen2.5-1.5B-Instruct bf16 CPU,
 lens `jlens_qwen2.5-1.5b_bf16_n100`). Ran the companion repo's own

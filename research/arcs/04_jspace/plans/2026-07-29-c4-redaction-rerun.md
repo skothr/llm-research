@@ -1,7 +1,10 @@
 # Plan: re-run the C4-dependent results on the redacted corpus
 
-**Status:** planned, not started. Redaction landed 2026-07-29; this is the
-compute half.
+**Status:** executed and complete. Redaction landed 2026-07-29; the compute
+half ran 2026-08-15/16 (Steps 0–3 in commit `a9df3a55`; Step 4 prose,
+figure and inventory restatement 2026-08-16). Outcome, drift and
+the two pre-committed exposures: the correction record at the top of
+[`../README.md`](../README.md).
 **Owner gate:** GPU time on the RTX 2080 (8 GB) — see § Cost.
 **Trigger for writing this:** third-party PII found in the committed C4-en
 corpora (`data/README.md`), redacted 2026-07-29. Artifacts computed on the
@@ -48,6 +51,64 @@ are wikitext-fit and are **not** affected.
 
 ---
 
+## Cost
+
+**Revised 2026-07-29, after the run started.** The original estimate of 4-5 h
+was wrong in two independent ways, both discovered by executing it.
+
+**(1) Channel 2 is not re-scan-only from a cold cache.** The § Scope table says
+channel 2 needs "no refit — re-scan only". That holds only if the wikitext
+lenses are on disk. They are cache-only per Decision 4, and the cache is empty
+in any fresh checkout (this is the arc's designed state, not a loss). The
+committed `jlens_*_layer-subset.pt` files cannot stand in: they carry **7 of 27
+layers** (0, 5, 10, 15, 20, 25, 26), while every committed channel-2 scan is
+all-27-layer, and `jspace_readout_scan.py:196-202` defaults
+`layers = lens.source_layers` and rejects anything outside it — a subset lens
+would silently yield a 7-layer artifact rather than erroring. So channel 2
+requires refitting **both** wikitext lenses.
+
+**(2) The Step-1 runtime was transcribed wrong** (2.2 h for what the
+calibration gives as 3.2 h — see the correction note under Step 1).
+
+| Job | Why it is needed | Est. | Actual |
+|---|---|---|---|
+| `c4en-1.5b` refit | channel 1; the C4-fit lens is cache-only, nothing to reuse | 3.2 h | **3.12 h** |
+| `wikitext-1.5b` refit | channel 2 at 1.5B needs the full 27-layer lens back | 3.2 h | **3.54 h** (2 segments) |
+| `wikitext-7b` refit | channel 2 at 7B, same reason. **The actual long pole.** | 16.3 h | in progress |
+| 10 derived scans | Step 2 | ~1 h | — |
+| **Total** | | **~23.7 h** | |
+
+The 1.5B wikitext fit ran in two segments (08:05:10-09:27:52 and
+14:07:48-16:17:21 UTC) because the GPU was handed back to the desktop in
+between; 3.54 h is the sum of both. About 1,090 s at the end of segment 1 was
+past its last checkpoint and was redone on resume, so the *reproducible*
+single-segment cost is nearer 3.24 h — in line with the 3.2 h calibration and
+with the never-paused c4en run's 3.12 h.
+
+> **Caveat on that lens's sidecar.** `jlens_qwen2.5-1.5b_bf16_n100.config.json`
+> records `wall_seconds = 7769.1` (2.16 h) — segment 2 only. It was written by
+> the pre-#40 code, which timed the current process rather than the whole fit,
+> and it under-reports by 39%. It has **not** been hand-edited: sidecars are
+> cache-only and nothing consumes `wall_seconds` (it appears in no audit
+> check), so patching a timing field by hand would cost provenance trust for no
+> gain. The correct figures are the ones in the table above. Fits run after
+> #40 record `wall_seconds` across all segments plus a
+> `wall_seconds_segments` breakdown, so this cannot recur.
+
+The 16.3 h figure is measured wall-clock from the arc's original 7B fit
+("FIT done in 16.26 h"), not a projection, so it does not carry the Step-1
+transcription risk.
+
+**Deliberately out of scope:** the `jlens_qwen2.5-1.5b_nf4_n100` (~3.2 h) and
+`_nf4_n500` (~5.1 h) lenses. They back the quantization and n-budget axes,
+which are C4-free and therefore **not stale** — refitting them would buy only a
+fully-green audit (clearing the remaining `MISSING` presence reports), not any
+correction. Owner decision 2026-07-29: not worth 8.3 h.
+
+**Execution:** `examples/jspace_rerun_queue.py` runs the three fits in sequence
+behind a VRAM gate, with `--pause` / `--resume` so the card can be handed back
+to the desktop mid-run without losing more than one checkpoint interval.
+
 ## Step 0 — regenerate the corpus in the membership-preserving order
 
 **Ordering is load-bearing.** The freeze filter is `len(text.strip()) >= 600`
@@ -75,7 +136,7 @@ against the committed sha256, **stop** — the upstream stream or the `datasets`
 shuffle RNG has changed, and that is itself a finding to record before
 proceeding.
 
-## Step 1 — channel 1: refit the C4 lens (the long pole)
+## Step 1 — channel 1: refit the C4 lens
 
 ```bash
 python examples/jspace_fit_lens.py \
@@ -83,7 +144,18 @@ python examples/jspace_fit_lens.py \
     --corpus-tag c4en --n-prompts 100 --model Qwen/Qwen2.5-1.5B-Instruct --dtype bf16
 ```
 
-**2.2 h** (8,044 s measured, 115 s/prompt — `observations/2026-07-18-fit-cost-calibration.md:20-21`).
+**3.2 h** (115 s/prompt x 100 —
+`observations/2026-07-18-fit-cost-calibration.md:20`, which gives "n=100 -> 3.2 h"
+for 1.5B bf16 dim_batch=8). **Observed 2026-07-29: 3.12 h**, within 3% of
+calibration.
+
+> Corrected 2026-07-29. This line originally read "**2.2 h** (8,044 s measured,
+> 115 s/prompt)" and cited the same calibration rows — which say 3.2 h, not 2.2.
+> The two halves were also internally inconsistent: 115 s/prompt x 100 prompts
+> is 11,500 s, not 8,044. The error propagated into the total (see § Cost) and
+> was caught only by the run itself overrunning. The 7B figure below is a
+> measured wall-clock from the original fit, not a projection, so it is not
+> affected.
 Writes to the gitignored cache; commit only the layer subset if the arc's
 Decision-4 policy is extended to it (it currently is not — the c4en lens stays
 cache-only).
@@ -151,6 +223,11 @@ superseded values preserved, not an in-place rewrite.
 
 Remove the warning banner from the arc README only when Steps 0–4 are all
 complete. Until then it stays, and the affected numbers read as provisional.
+
+**Done 2026-08-16.** The banner was converted rather than removed: it is now a
+dated correction record (what was redacted, what was re-run and at what cost,
+what moved, what did not, and both pre-committed exposures reported as
+watched-and-not-materialised). Deleting it would delete the disclosure.
 
 ---
 
