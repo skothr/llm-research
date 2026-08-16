@@ -61,11 +61,17 @@ THRESHOLDS = (10, 50)
 
 def _default_eval_dir() -> str:
     root = Path(__file__).resolve().parent.parent
+    # A linked-worktree checkout sits at <main-root>/.claude/worktrees/<name>
+    # and has a .git *file* (gitdir pointer), not a directory. The file check
+    # keeps a normal clone that merely lives under a .claude/worktrees-shaped
+    # ancestor path from being truncated, and the reverse scan strips at the
+    # innermost (deepest) .claude/worktrees pair rather than an ancestor's.
     parts = root.parts
-    if ".claude" in parts:
-        i = parts.index(".claude")
-        if i + 1 < len(parts) and parts[i + 1] == "worktrees":
-            root = Path(*parts[:i])
+    if (root / ".git").is_file():
+        for i in range(len(parts) - 2, -1, -1):
+            if parts[i] == ".claude" and parts[i + 1] == "worktrees":
+                root = Path(*parts[:i])
+                break
     return str(root.parent / "jacobian-lens" / "data" / "evaluations")
 
 

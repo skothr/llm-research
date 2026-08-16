@@ -20,9 +20,12 @@
 
   "typeCheckingMode": "standard",
 
-  // reportUnnecessaryTypeIgnoreComment is deliberately left ON (its default in
-  // standard mode is off): every `# pyright: ignore[X]` is debt, and the rule
-  // fires exactly when a stub or type has caught up and the ignore can go.
+  // reportUnnecessaryTypeIgnoreComment is not set here, so pyright's
+  // standard-mode default (off) applies. Turning it on is attractive —
+  // every `# pyright: ignore[X]` is debt, and the rule fires exactly when
+  // a stub or type has caught up and the ignore can go — but the switch
+  // belongs in the canonical upstream base this file is vendored from,
+  // not in a divergent local copy.
 
   // ── Stub-lag mutes (noise from incomplete third-party stubs, not user bugs) ──
   //
