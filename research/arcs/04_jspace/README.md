@@ -263,9 +263,9 @@ redacted-corpus lenses are now LFS-committed in `data/cache/`** (~905 MB —
 both wikitext lenses + the c4en lens, with their `.config.json` sidecars and
 fit/scan logs) so a clean clone can re-scan without repeating the ~23 h
 refit. The two nf4 lenses (quantization / n-budget axes) remain
-regenerate-only for now — their refit-and-commit is scheduled as issue
-#47 — and fit-resume `.ckpt.pt` checkpoints stay uncommitted — their
-content is superseded by the final lenses they produced.
+regenerate-only for now; their refit-and-commit is scheduled as issue #47.
+Fit-resume `.ckpt.pt` checkpoints stay uncommitted — their content is
+superseded by the final lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MB most readers

@@ -9,7 +9,9 @@ two places under `research/arcs/04_jspace/data/`:
 
 - `data/*.pt` — the **committed deliverable** (Git-LFS tracked, sha256-registered
   in `data/MANIFEST.json`). This is the clean-clone source of truth.
-- `data/cache/*.pt` — a **byte-identical, gitignored working mirror**. The render
+- `data/cache/*.pt` — a **byte-identical working mirror**, gitignored except
+  for the full fitted `jlens_*` lenses, which since 2026-08-16 are
+  LFS-committed there behind an opt-in download (see `data/README.md`). The render
   scripts (`examples/jspace_render_*.py`) and the audit both resolve each
   artifact **`data/`-first, `cache/`-fallback** via the shared
   `examples/_jspace_paths.resolve` helper (the audit uses its own equivalent
