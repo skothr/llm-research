@@ -1,5 +1,44 @@
 # Observation: n-budget (H1) and held-out-sample axes both exonerated — the 7B gap is genuine scale (1.5B controls)
 
+> **2026-08-16 addendum — C4-redaction re-run (read first).** The held-out
+> axis in this observation is evaluated on `heldout_prompts_c4en_n30.json`,
+> which carried third-party PII and was redacted 2026-07-29
+> (`../data/README.md`). Its scans were regenerated on the redacted text
+> 2026-08-15/16 (commit `a9df3a55`); the n-budget half of this observation is
+> C4-free and untouched. Values below re-derive from the regenerated
+> artifacts via `examples/jspace_audit_findings.py`
+> (`../data/audit_2026-08-16.log`).
+>
+> **1.5B held-out — all values quoted below re-derive within audit tolerance
+> except the kurtosis trough:** peak still **L21 at 0.133**, L0 still
+> **0.084**, depth-of-emergence medians still J 22 / logit 19 (within ±2 of
+> the base 23/19), readout fidelity still better on the diverse set (0.869 vs
+> the base 0.800). The **kurtosis trough is now L17: 1.019, not L17: 1.00**
+> — the trough layer is unchanged, the value moved by +0.019 (n=30, the
+> smallest sample in the audit; the audit pin was updated from 1.000 to 1.019
+> at atol 0.01).
+>
+> **7B held-out — the three-decimal values shifted, the band-level claims
+> did not:** peak **0.0526 @L23** (quoted 0.0518 @L23; the shift vs the
+> clustered wikitext set is now +30%, quoted +28%), trough **0.0162 @L16**
+> (quoted 0.0166 @L16), 1.5B/7B peak ratio **2.53×** (quoted ~2.6×). The
+> observation's own instruction — quote 7B varfrac at band level
+> (~0.01–0.05), not to three decimals — is what these shifts illustrate.
+>
+> **Attribution caveat for the 7B numbers.** The full 27-layer wikitext
+> lenses are cache-only and had to be refit for this re-run, so a 7B
+> held-out scan changed for two reasons at once. Checked against the
+> committed `jlens_*_layer-subset.pt` files (from the original fits): the
+> **1.5B bf16 refit reproduces the original exactly** (max |Δ| = 0 over the
+> seven committed layers), so the 1.5B moves above are the redacted text
+> alone; the **7B nf4 refit does not** (relative Frobenius Δ 1.7e-2 at L0
+> decaying to 4.2e-4 at L26), so the 7B moves cannot be attributed to the
+> redaction alone.
+>
+> The n=500 figures below (peak 0.1252 → 0.1235, −1.4%) are unaffected: that
+> axis is fit on wikitext and evaluated on the wikitext held-out set, with no
+> C4 dependency anywhere.
+
 **Date/context:** 2026-07-22. The last two robustness axes on the arc's
 structural claims, both run as isolate-one-axis controls at 1.5B:
 (1) fit budget — n=500 nf4 refit (same corpus/model/quantization as the

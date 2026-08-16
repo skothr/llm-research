@@ -1,9 +1,9 @@
 # jspace arc — data
 
-> ## ⚠ The C4-en corpora are REDACTED (2026-07-29)
+> ## ⚠ The C4-en corpora are REDACTED (2026-07-29; dependent artifacts re-run 2026-08-16)
 >
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
-> **not** byte-identical to the text the committed artifacts were computed on.
+> **not** byte-identical to the raw upstream text.
 > **120 pieces of third-party personal data were removed** from them:
 >
 > | Class | fitting (n=1000) | held-out (n=30) |
@@ -29,10 +29,35 @@
 > **Consequence for the data.** Redaction replaces each match with a bracketed
 > sentinel (`[EMAIL]`, `[PHONE]`, `[STREET-ADDRESS]`, `[POSTAL-CODE]`). It is
 > **not length-preserving**, so a redacted document tokenises differently from
-> its original. Any lens re-fit on this corpus will differ slightly from the
-> committed C4-derived artifacts, which were fit **before** redaction. The
-> affected results are listed in the warning at the top of
-> [`../README.md`](../README.md) and are scheduled for re-run.
+> its original. A lens re-fit on the redacted corpus therefore differs slightly
+> from the artifacts committed before 2026-08-16, which were fit **before**
+> redaction.
+>
+> **Correction closed 2026-08-16.** All 12 affected files are now on the
+> redacted corpus: the two corpus JSONs (redacted 2026-07-29) plus the 10
+> derived artifacts, regenerated 2026-08-15/16 in commit `a9df3a55` — three
+> lens refits via `examples/jspace_rerun_queue.py` (c4en-1.5B 3.14 h;
+> wikitext-1.5B 8.22 h of queue wall-clock across two segments, 3.54 h of it
+> GPU time; wikitext-7B 11.49 h) and ten scans via
+> `examples/jspace_rerun_scans.sh`. All three regenerated paper-metric
+> artifacts validate bit-exact against their structure scans
+> (`validation_max_vf_diff = 0.0`), and the 10 sha256/size entries in
+> `MANIFEST.json` were rewritten by `examples/jspace_data_manifest.py`; the
+> corpus JSONs themselves are unchanged since the redaction commit.
+>
+> The audit re-derived every pinned number from the regenerated artifacts:
+> **954 PASS | 6 FAIL** before re-pinning, **956 PASS | 4 FAIL** after
+> (post-re-pin log committed at `audit_2026-08-16.log`; re-derivable with
+> `python examples/jspace_audit_findings.py`). The 4
+> remaining FAILs are
+> the designed `MISSING` presence reports for the two nf4 lenses
+> (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
+> deliberately not refit — the quantization and n-budget axes are C4-free.
+> Only two pinned values moved beyond tolerance, both in the held-out-C4
+> channel: the 1.5B held-out logit-kurtosis trough (1.000 → 1.019) and the 7B
+> held-out L23 excess (0.0598 → 0.0588). Which conclusions that does and does
+> not touch is set out in the correction record at the top of
+> [`../README.md`](../README.md).
 >
 > **Scope.** Only the two C4-en files are redacted. The **wikitext-103 corpora
 > — the arc's primary fitting corpora — are unmodified**, and every result on

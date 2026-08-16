@@ -21,6 +21,9 @@ venv/
 *.log
 *.out
 *.toc
+# Promoted audit snapshot (arc-04 C4-redaction re-run) — deliberately tracked
+# despite the LaTeX-byproduct *.log rule above; observation addenda cite it.
+!research/arcs/04_jspace/data/audit_2026-08-16.log
 *.bbl
 *.blg
 *.fls

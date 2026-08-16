@@ -13,9 +13,17 @@ on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR �
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (`examples/`). Depends on the sibling `llm-surgeon`
-toolkit — install editable with `pip install -e ../llm-surgeon`, then
-`pip install -e .` for this repo's direct deps (torch, numpy, matplotlib).
+figure / audit pipeline (`examples/`). Depends on **two** sibling editable
+installs — neither is on PyPI, so neither can be declared in `pyproject.toml`:
+
+```bash
+pip install -e ../llm-surgeon      # llm_surgeon.probe / .surgery — all arcs
+pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e '.[dev]'            # torch, numpy, matplotlib + pytest
+```
+
+Missing either one fails only at `import` inside a script, which for the arc-04
+fits is after model load, at the start of a multi-hour GPU run.
 
 **Every checkout needs its own `.venv` — including each worktree.** Pyright
 resolves `venvPath` relative to the config file, so a worktree (the mandated

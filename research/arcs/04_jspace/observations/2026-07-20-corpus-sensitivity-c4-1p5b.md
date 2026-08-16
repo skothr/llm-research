@@ -1,5 +1,35 @@
 # Observation: J-space workspace band is corpus-invariant; early layers are not (C4 sensitivity check, 1.5B)
 
+> **2026-08-16 addendum — C4-redaction re-run (read first).** The C4-en
+> fitting corpus this observation's lens was fit on carried third-party PII
+> and was redacted 2026-07-29 (`../data/README.md`). The lens was refit and
+> the whole metric suite re-run on the redacted corpus 2026-08-15/16 (commit
+> `a9df3a55`); every C4-side number below is re-derived from the regenerated
+> artifacts by `examples/jspace_audit_findings.py`
+> (`../data/audit_2026-08-16.log`). The wikitext-side
+> comparison values carry no C4 dependency and were not recomputed.
+>
+> **All values quoted below re-derive within audit tolerance, except two
+> early-band readings that shift in the third significant figure:** L0
+> varfrac on the C4 lens is **0.175** (quoted 0.174; the pin passes) and L0
+> logit-kurtosis is **2.6455** (quoted 2.64). Both are in the early band this
+> observation already reports as the corpus-sensitive one, and neither
+> changes its sign, size or direction. Surviving unchanged: the headline L21
+> varfrac peak (0.1242 on the C4 lens vs 0.1237 on the wikitext lens —
+> identical to 3dp, as claimed), the depth-of-emergence medians (J 23.0 /
+> logit 19.0), the L26 Spearman (0.8026, Δ 0.0023 from wikitext's 0.8003),
+> multihop late J@10 0.4854 and logit@10 0.3981, J@50 overall 0.7476,
+> early-band J@10 0.1165, the exact-0.00 logit early/mid rates, the floored
+> association rates, and the kurtosis trough at L18 (0.8727). The overall
+> @10 advantage is +0.087 on C4 (quoted +0.09).
+>
+> **Superseded value — fit cost.** The "8,044 s wall (~115 s/prompt)" below
+> is wrong in itself: 8,044 s over 100 prompts is 80 s/prompt, not 115. The
+> refit measured **3.12 h** (~112 s/prompt over 100 prompts) — which does
+> match the 115 s/prompt calibration; 3.14 h including process startup, as
+> recorded by `examples/jspace_rerun_queue.py`. The original figure is
+> preserved below rather than edited in place.
+
 **Date/context:** 2026-07-20. Corpus-sensitivity check from the README
 deferred-directions list (prompted by an external review of the fitting
 corpus, routed in by the reviewer as a blocking item before stage 5): the 1.5B lens refitted at n=100 on a seeded C4-en sample

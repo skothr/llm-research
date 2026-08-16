@@ -115,6 +115,16 @@ on wikitext-103 vs C4-en fitting corpora (the `{,_c4en}` filename suffix). Panel
 (b) reads the `lens_eval` multihop eval item set (internal to
 `examples/jspace_lens_eval.py`).
 
+**Regenerated 2026-08-16 (C4-redaction re-run).** The two `_c4en` artifacts
+above were recomputed on the redacted C4-en corpus (redaction 2026-07-29,
+`../../data/README.md`; regeneration commit `a9df3a55`): the C4 lens refit by
+`examples/jspace_rerun_queue.py` (3.14 h) and the scans by
+`examples/jspace_rerun_scans.sh`, after which this figure was re-rendered.
+The two wikitext artifacts are C4-free and unchanged. Plotted values moved in
+the third significant figure only, and only in the early band the figure
+annotates: L0 varfrac on the C4 lens is now 0.175 (the annotation's 0.174
+before the re-run); L21 stays 0.124 on both lenses.
+
 Values plotted: panel (a) `summary.mean_varfrac[25]` vs layer, both corpora;
 panel (b) `per_eval["multihop"]["rates_j"|"rates_l"][band][10]` per depth band.
 
