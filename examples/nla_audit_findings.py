@@ -863,7 +863,7 @@ def main() -> None:
             print(f"  (skipping AUDIT 14: {stab_path} not present)")
 
         # AUDIT 15: Mid-sequence vocab atlas — null result numbers.
-        # Source: observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md
+        # Source: research/arcs/01_nla-verbalizer/observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md
         print()
         print("AUDIT 15: Mid-sequence vocab atlas (cross-protocol null result)")
         mid_path = ARTIFACTS / "mid_seq_vocab_atlas.pt"
@@ -920,7 +920,7 @@ def main() -> None:
                 )
 
             # AUDIT 16: Mid-seq NATIVE discriminants.
-            # Source: observations/2026-05-14-nla-mid-seq-native-discriminants.md
+            # Source: research/arcs/01_nla-verbalizer/observations/2026-05-14-nla-mid-seq-native-discriminants.md
             print()
             print("AUDIT 16: Mid-seq native discriminants (in-protocol lift)")
             # Recompute discriminants from mid-seq captures
@@ -996,7 +996,7 @@ def main() -> None:
             print(f"  (skipping AUDIT 15/16: {mid_path} not present)")
 
         # AUDIT 17: Concept arithmetic atlas.
-        # Source: observations/2026-05-14-nla-concept-arithmetic-atlas.md
+        # Source: research/arcs/01_nla-verbalizer/observations/2026-05-14-nla-concept-arithmetic-atlas.md
         print()
         print("AUDIT 17: Concept arithmetic atlas")
         arith_path = ARTIFACTS / "concept_arithmetic_atlas.pt"
@@ -1077,7 +1077,7 @@ def main() -> None:
             print(f"  (skipping AUDIT 17: {arith_path} not present)")
 
         # AUDIT 18: Dense interpolation near t=0.421.
-        # Source: observations/2026-05-15-nla-dense-interp-near-pivot.md
+        # Source: research/arcs/01_nla-verbalizer/observations/2026-05-15-nla-dense-interp-near-pivot.md
         print()
         print("AUDIT 18: Dense interpolation near pivot")
         dense_path = ARTIFACTS / "dense_interp_near_pivot.pt"
@@ -1114,7 +1114,7 @@ def main() -> None:
             print(f"  (skipping AUDIT 18: {dense_path} not present)")
 
         # AUDIT 19: Plateau attractor strength.
-        # Source: observations/2026-05-15-nla-plateau-attractor-strength.md
+        # Source: research/arcs/01_nla-verbalizer/observations/2026-05-15-nla-plateau-attractor-strength.md
         print()
         print("AUDIT 19: Plateau attractor strength")
         plat_path = ARTIFACTS / "plateau_attractor_test.pt"

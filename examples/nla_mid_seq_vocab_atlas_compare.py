@@ -16,7 +16,8 @@ For each category C, computes:
 The discriminant basis d_C is derived from the end-of-prompt atlas only;
 mid-sequence captures are projected onto it as a cross-protocol test of
 whether token-presence detection works once the anchor is mid-sequence
-(finding from `observations/2026-05-13-nla-discriminant-validation.md`:
+(finding from
+`research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-discriminant-validation.md`:
 at end-of-prompt, emotion->emotion projection was only +0.083 ± 0.061).
 
 Output: .cache/nla_artifacts/mid_seq_compare.pt

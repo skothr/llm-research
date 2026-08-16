@@ -4,7 +4,8 @@ Observation: research/arcs/01_nla-verbalizer/observations/
              2026-05-15-nla-dense-interp-near-pivot.md
 
 Tests whether the stepwise category transition at t=0.421 reported in
-`observations/2026-05-13-nla-interpolation-flipbook.md` stays sharp at
+`research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-interpolation-flipbook.md`
+stays sharp at
 ~10× resolution or smooths out (would mean the 20-step flipbook was
 undersampled).
 
