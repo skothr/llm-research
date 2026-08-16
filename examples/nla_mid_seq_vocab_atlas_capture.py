@@ -5,12 +5,12 @@ Observation: research/arcs/01_nla-verbalizer/observations/
 
 Tests the interpretation reached in
 `research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-discriminant-validation.md`:
-the 23-discriminant basis classifies
-prompt-TOPIC rather than token-presence because end-of-prompt h has
-integrated the full user message into a topic representation. Capturing
-h[20] at a MID-SEQUENCE anchor position — inside a carrier that
-continues past the anchor — should preserve token-specific identity
-before integration overwhelms it.
+the 23-discriminant basis classifies prompt-TOPIC rather than
+token-presence because end-of-prompt h has integrated the full user
+message into a topic representation. Capturing h[20] at a MID-SEQUENCE
+anchor position — inside a carrier that continues past the anchor —
+should preserve token-specific identity before integration overwhelms
+it.
 
 Carrier template (see PRE + SUFFIX constants below for the canonical strings):
     "The text contains many words. Here is one specific word: {anchor} continues
