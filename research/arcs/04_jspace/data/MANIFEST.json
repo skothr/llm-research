@@ -10,7 +10,7 @@
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 53,
-  "total_size_bytes": 272130728,
+  "total_size_bytes": 272199400,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -391,8 +391,8 @@
     },
     {
       "filename": "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt",
-      "sha256": "9c179621429dd687476ecdab25e155832a306648195f49ff11e5e4806e0b7f7a",
-      "size_bytes": 115169,
+      "sha256": "aa092c345e4729d5019781cfc30307fd69a88e8b93b5d4efc3462c86c2d8e84e",
+      "size_bytes": 174561,
       "class": "derived",
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
@@ -498,8 +498,8 @@
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
-      "sha256": "3d6ce653ee37ca153bda290f94bb44c443842e621111330ccb851f5f00982bd1",
-      "size_bytes": 336331,
+      "sha256": "acbd07d1db6be89deaf679ae8c0074965759a04792e1bba335a1469254b025ac",
+      "size_bytes": 336523,
       "class": "derived",
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-rand 8 --rand-seed-base 10000",
@@ -516,7 +516,7 @@
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
-      "sha256": "37c6b92740c37a440e60ae54b0369c72301e841e00825df25032d34f0b899f22",
+      "sha256": "095c302b9f55e5a308f574aa113bd952c216bb576e8edaa6acc2539bbfebbc1b",
       "size_bytes": 336501,
       "class": "derived",
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
@@ -590,8 +590,8 @@
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
-      "sha256": "a3009ee6f0f875ee258a578a7c271f5b9e0bd9b5e756eb1f21d78f82fb63d3d2",
-      "size_bytes": 336151,
+      "sha256": "4cad74d0b1bbe110eb2716b8ce23f0f60a997d85b8f895dc3213586d228163bc",
+      "size_bytes": 335831,
       "class": "derived",
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 30000",
@@ -640,8 +640,8 @@
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
-      "sha256": "430d8732e54892a3b89ab41e04ce45ce8e6b3cc327750b0d4416de6712baaa57",
-      "size_bytes": 2175259,
+      "sha256": "7845ffe86a16ba02c4a2276bf9a267be31a228e6b5bc674ecc9a0d5037b446e4",
+      "size_bytes": 2175515,
       "class": "derived",
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
@@ -658,8 +658,8 @@
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
-      "sha256": "4cd1f554c8ba2bfe48405793f6415566a4a85ad015b5d0efc252094f5eb71eb1",
-      "size_bytes": 5458373,
+      "sha256": "74de6f444823115da2a78db74fcc89d5ee8fd3fb62f5a6dbf5e9f138796eff46",
+      "size_bytes": 5460485,
       "class": "derived",
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
@@ -712,8 +712,8 @@
     },
     {
       "filename": "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
-      "sha256": "70e77f4681bd9fcec6cdf5d64286b82717073ea9f0955423f5e0413b690d9140",
-      "size_bytes": 5574311,
+      "sha256": "7b449ff0bcfe13f1cf1e287d35b9579ab34ba323ecb224620e6019a530f18e12",
+      "size_bytes": 5577959,
       "class": "derived",
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
@@ -748,8 +748,8 @@
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
-      "sha256": "ffa8c4cf7b5c94d09b69090d7fa5d10b02e217484a064634f856e399ec398668",
-      "size_bytes": 2380455,
+      "sha256": "d745080c44138981052a8c5a6013e07646b3da461e4448bdf9f4179eb17efe29",
+      "size_bytes": 2381351,
       "class": "derived",
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
@@ -766,8 +766,8 @@
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
-      "sha256": "082c44f8c69ca35ba8ecf5830ff8247a83af5caa24fb65b5d8c9890c8692d168",
-      "size_bytes": 2397905,
+      "sha256": "497b8711ddf4336c7492b8eba7f64b4a1a38cb92076c36f5762258d2a80839b7",
+      "size_bytes": 2399057,
       "class": "derived",
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
@@ -838,8 +838,8 @@
     },
     {
       "filename": "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
-      "sha256": "84595c1844331adb2d435d3d6f744f4836f15cebe93e04fc1cbfb30380ea1615",
-      "size_bytes": 2315955,
+      "sha256": "aa81f84a80f4e5a13d6ab45db4db1306d73df8ad80a0a412d99e9c30ed24f6f9",
+      "size_bytes": 2317299,
       "class": "derived",
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
