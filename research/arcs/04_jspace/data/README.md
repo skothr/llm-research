@@ -113,8 +113,12 @@ Artifact classes (see the MANIFEST for the per-file registry):
 - `raw`: frozen fitting/held-out corpora (wikitext-103 + seeded C4-en),
   fitted-lens **layer subsets** (`jlens_*_layer-subset.pt` + `.config.json`
   sidecars; design Decision 4 — the full 27-layer lenses stay in the
-  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`), and
-  the hand-written paper-verbatim item bank.
+  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`;
+  **amended 2026-08-16**: the three redacted-corpus lenses — both wikitext +
+  the c4en — are now LFS-committed in `cache/` with their sidecars and
+  fit/scan logs, so a clean clone re-scans without the ~23 h refit; the two
+  nf4 lenses and all `.ckpt.pt` fit-resume checkpoints remain uncommitted),
+  and the hand-written paper-verbatim item bank.
 - `derived`: the promoted metric/scan/swap products the audit
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
@@ -123,6 +127,10 @@ Artifact classes (see the MANIFEST for the per-file registry):
   held-out, `atom_norm_bias_*` ×2) — so checks B–M and every committed
   figure reproduce from a clean clone after `git lfs pull`.
 
-`cache/` is a byte-identical, gitignored working mirror (plus the full
-lenses); render scripts and the audit resolve `data/`-first,
-`cache/`-fallback via `examples/_jspace_paths.resolve`.
+`cache/` is a byte-identical working mirror (plus the full lenses) —
+gitignored except for the three committed lenses, their sidecars, and logs
+(see the arc-04 exception in the top-level `.gitignore`); render scripts and
+the audit resolve `data/`-first, `cache/`-fallback via
+`examples/_jspace_paths.resolve`. Committed cache files carry no MANIFEST
+entries: their integrity record is the LFS pointer itself (each pins the
+file's sha256 as its oid).

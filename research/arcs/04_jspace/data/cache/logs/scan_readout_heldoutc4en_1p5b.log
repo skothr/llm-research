@@ -1,0 +1,136 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  15%|█▌        | 52/338 [00:00<00:00, 505.34it/s]Loading weights:  44%|████▍     | 148/338 [00:00<00:00, 753.92it/s]Loading weights:  72%|███████▏  | 244/338 [00:00<00:00, 839.55it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 836.83it/s]
+[load] model + lens in 3.1s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[data] 30 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
+[scan] 27 layers x 2 lens modes (positions: 8 mid + last)
+[prompt 1/30] seq=149 pos=9 10.5s
+[prompt 2/30] seq=274 pos=9 9.8s
+[prompt 3/30] seq=403 pos=9 9.7s
+[prompt 4/30] seq=335 pos=9 9.9s
+[prompt 5/30] seq=343 pos=9 9.8s
+[prompt 6/30] seq=344 pos=9 9.8s
+[prompt 7/30] seq=509 pos=9 9.9s
+[prompt 8/30] seq=397 pos=9 9.6s
+[prompt 9/30] seq=327 pos=9 9.5s
+[prompt 10/30] seq=191 pos=9 9.5s
+[prompt 11/30] seq=512 pos=9 10.0s
+[prompt 12/30] seq=155 pos=9 9.3s
+[prompt 13/30] seq=395 pos=9 9.7s
+[prompt 14/30] seq=512 pos=9 9.6s
+[prompt 15/30] seq=512 pos=9 9.6s
+[prompt 16/30] seq=363 pos=9 9.7s
+[prompt 17/30] seq=512 pos=9 9.8s
+[prompt 18/30] seq=141 pos=9 9.2s
+[prompt 19/30] seq=365 pos=9 9.8s
+[prompt 20/30] seq=393 pos=9 10.4s
+[prompt 21/30] seq=219 pos=9 9.9s
+[prompt 22/30] seq=512 pos=9 10.0s
+[prompt 23/30] seq=206 pos=9 9.7s
+[prompt 24/30] seq=512 pos=9 10.2s
+[prompt 25/30] seq=214 pos=9 9.4s
+[prompt 26/30] seq=512 pos=9 9.6s
+[prompt 27/30] seq=512 pos=9 9.6s
+[prompt 28/30] seq=294 pos=9 9.6s
+[prompt 29/30] seq=225 pos=9 9.5s
+[prompt 30/30] seq=512 pos=9 9.9s
+
+=== Per-layer mean Spearman (last position; J-lens vs logit-lens) ===
+layer    J-lens     logit   J-logit
+    0    0.2833    0.2102    0.0731
+    1    0.3429    0.2554    0.0875
+    2    0.3138    0.2647    0.0492
+    3    0.2559    0.2888   -0.0329
+    4    0.3442    0.2825    0.0618
+    5    0.4093    0.3001    0.1092
+    6    0.4244    0.3267    0.0976
+    7    0.4385    0.3295    0.1090
+    8    0.4299    0.3389    0.0910
+    9    0.4739    0.3375    0.1364
+   10    0.5031    0.3487    0.1544
+   11    0.5270    0.3642    0.1629
+   12    0.5519    0.3643    0.1877
+   13    0.5922    0.3706    0.2216
+   14    0.5977    0.3725    0.2252
+   15    0.5967    0.3890    0.2077
+   16    0.5445    0.3975    0.1469
+   17    0.6115    0.4156    0.1960
+   18    0.5658    0.4283    0.1375
+   19    0.6054    0.4535    0.1520
+   20    0.6119    0.4868    0.1251
+   21    0.6300    0.5396    0.0904
+   22    0.6676    0.5850    0.0826
+   23    0.7039    0.6206    0.0833
+   24    0.7406    0.6613    0.0793
+   25    0.8227    0.7146    0.1081
+   26    0.8689    0.7957    0.0732
+
+=== Depth-of-emergence (median layer, model top-1 in lens top-10) ===
+  all positions : J-lens=22.0  logit=19.0  (never: J=19 logit=5 / 270)
+  last position : J-lens=22.0  logit=17.0
+
+[save] research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt
+[time] mean 9.7s/prompt over 30 prompts
+
+=== Trajectory prompt 1 (final position) ===
+  prompt[:90]: 'Sorry, currently we do not have any vacancies.\nThough, we are always interested in open-mi'
+  MODEL top-5: [' He', ' We', '<|endoftext|>', ' His', ' You']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | ['.', '.\n\n', ' \n\n', ':.', ';.']          | [' \n', ' \n\n', '<|endoftext|>', ' The', ' (']
+      1 | ['.\n\n', ' .\n\n', ' .\n', '.', '.\n']      | [' \n', '\xa0', ' ', ' (', '<|endoftext|>']
+      2 | ['.\n', ' .\n', '.\n\n', ' .\n\n', '.']      | [' \n', ' \n\n', ' ', ' (', '\xa0']
+      3 | ['.[', '.\n', '.".', '."\n', ':.']           | [' \n', ' \n\n', ' ', ' (', '\xa0']
+      4 | ['.[', '.".', '."[', '.</', '."']            | [' \n', ' \n\n', '<|endoftext|>', ' ', ' (']
+      5 | ['.\n', '."\n', '.\n\n\n', '.</', '.\n\n\n\n'] | [' \n', '<|endoftext|>', ' ', ' (', ' \n\n']
+      6 | ['.</', '.[', '.\n\n\n\n', '.\n', '.\n\n\n'] | ['<|endoftext|>', ' \n', '\xa0', ' ', ' \n\n']
+      7 | ['.”', '”.', '.</', '.\n\n\n', '.(']         | ['<|endoftext|>', ' (', '\xa0', ' ', ' \n']
+      8 | ['.”', '.".', '.\n', '.(', '."\n']           | ['<|endoftext|>', '\xa0', ' (', ' ', ' P']
+      9 | ['.".', '."', '.(', '.”', '!.']              | ['<|endoftext|>', '\\\n', '\xa0', ' (', ' ']
+     10 | ['."', '."\n', '.”', '.".', '.",']           | ['<|endoftext|>', ' \n', ' (', ' ', '\xa0']
+     11 | ['.".', '."', '.”', '."\n', '.\n']           | ['<|endoftext|>', ' \n', '\xa0', ' (', ' ']
+     12 | ['.\n', '."\n', '".\n', '.”', '.\n\n\n']     | ['<|endoftext|>', ' ', ' (', '\xa0', ' P']
+     13 | ['.\n', '."\n', '..\n', '".\n', '.\n\n\n']   | ['<|endoftext|>', ' ', ' (', '\xa0', ' [']
+     14 | ['.\n', '.\n\n\n', '."\n', '".\n', '.\\']    | ['<|endoftext|>', ' ', ' (', ' [', ' D']
+     15 | ['.\n\n\n', '.\n', '.\n\n\n\n', '."\n', '!\n'] | ['<|endoftext|>', ' ', ' (', ' [', '.\n']
+     16 | ['.\n\n\n', '.\n', '.\n\n\n\n', '."\n', '!\n'] | ['<|endoftext|>', ' ', ' (', ' S', ' \n']
+     17 | ['.\n', '!\n', '.\n\n\n', '."\n', '!"\n']    | ['<|endoftext|>', '.\n', ' ', ' (', ' We']
+     18 | ['!\n', '.\n', '.\n\n\n', '?\n', '!\n\n\n']  | ['<|endoftext|>', ' (', ' ', '.\n', '\xa0']
+     19 | ['!\n', '.\n', '<|endoftext|>', '!\n\n\n', '.\n\n\n'] | ['<|endoftext|>', '.\n', ' (', ' Please', '\n\n\n']
+     20 | ['<|endoftext|>', '!\n', '.\n', ' :)\n', '!\n\n\n'] | ['<|endoftext|>', ' (', ' Please', ' All', '联系电话']
+     21 | ['!\n', ' Contact', '<|endoftext|>', ' Please', '.\n'] | ['<|endoftext|>', '联系电话', ' We', ' Please', ' (']
+     22 | [' Contact', ' Email', ' Phone', ' Please', ' Otherwise'] | ['<|endoftext|>', ' We', '联系电话', ' Contact', ' (']
+     23 | [' Contact', ' Email', ' Thank', ' Thanks', ' Please'] | ['<|endoftext|>', ' We', ' Contact', ' Thanks', '联系电话']
+     24 | [' Contact', ' Thank', ' Please', ' Thanks', ' Email'] | ['<|endoftext|>', ' We', ' Thanks', ' Thank', ' Please']
+     25 | [' Please', ' Contact', ' Thanks', ' Based', ' Thank'] | ['<|endoftext|>', ' We', ' Please', ' He', ' Thanks']
+     26 | ['<|endoftext|>', ' He', ' We', ' Please', ' Based'] | ['<|endoftext|>', ' He', ' We', ' His', ' You']
+
+=== Trajectory prompt 2 (final position) ===
+  prompt[:90]: 'Trowers & Hamlins is one of the largest international law firms in the United Arab Emirate'
+  MODEL top-5: [' We', ' Our', '<|endoftext|>', ' In', ' The']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | ['.', '.\n\n', ':.', '".', ' \n\n']          | [' \n', ' \n\n', '<|endoftext|>', ' ', ' This']
+      1 | [':.', '.', ' .', '.:', ' ;']                | [' \n', '<|endoftext|>', '\xa0', ' \n\n', ' ']
+      2 | [' .\n', ' ;', ' :', ' ".\n', " '."]         | ['<|endoftext|>', ' (', ' \n', '\xa0', ' ']
+      3 | ["'.\n", " '.", ' .\n', '.\n', '".\n']       | [' (', '\xa0', ' ', '<|endoftext|>', '.\n\n']
+      4 | ['.\n', "'.\n", '.[', '..\n', '<|endoftext|>'] | ['<|endoftext|>', ' ', ' (', '.\n\n', ' \n']
+      5 | ['.\n', "'.\n", '".\n', '.\n\n', '."\n']     | ['<|endoftext|>', ' \n', ' (', ' \n\n', ' ']
+      6 | ['.\n', '..\n', "'.\n", '".\n', '.\n\n']     | [' ', '<|endoftext|>', ' \n', ' (', ' \n\n']
+      7 | ["'.\n", '.\n', '..\n', ".'\n", '".\n']      | [' ', '<|endoftext|>', ' (', '.\n\n', '.\n']
+      8 | ['.\n', '..\n', "'.\n", '...\n', ".'\n"]     | [' ', '<|endoftext|>', ' (', '.\n\n', ' \n']
+      9 | ['.\n', '..\n', "'.\n", '...\n', ".'\n"]     | ['<|endoftext|>', ' ', '.\n\n', ' (', '.\n']
+     10 | ['.\n', "'.\n", '."\n', '".\n', '..\n']      | ['<|endoftext|>', ' ', ' \n', '.\n', '.\n\n']
+     11 | ['.\n', '."\n', "'.\n", '".\n', ".'\n"]      | ['<|endoftext|>', ' ', '.\n', ' \n', ' (']
+     12 | ['.\n', "'.\n", '."\n', '..\n', '".\n']      | ['<|endoftext|>', ' ', '\xa0', '.\n', ' \n']
+     13 | ['.\n', '".\n', '."\n', "'.\n", '..\n']      | ['<|endoftext|>', ' ', '.\n', '.\n\n', '\xa0']
+     14 | ['.\n', "'.\n", '".\n', '."\n', ".'\n"]      | ['<|endoftext|>', ' ', ' \n', '.\n\n', '.\n']
+     15 | ['.\n', "'.\n", '".\n', ".'\n", '."\n']      | ['<|endoftext|>', ' ', '.\n', '.\n\n', ' \n']
+     16 | ['.\n', '".\n', '."\n', "'.\n", ".'\n"]      | ['<|endoftext|>', ' ', '.\n', '.\n\n', ' \n']
+     17 | ['.\n', "'.\n", '".\n', '."\n', ".'\n"]      | ['<|endoftext|>', '.\n', ' ', '.\n\n', ' \n']
+     18 | ['.\n', "'.\n", '".\n', '!\n', '..\n']       | ['<|endoftext|>', '.\n\n', ' ', '.\n', ' \n']
+     19 | ['.\n', '!\n', '..\n', '。\n', '<|endoftext|>'] | ['<|endoftext|>', '.\n', ' \n', '.\n\n', ' ']
+     20 | ['.\n', '<|endoftext|>', ' Clients', '!\n', '..\n'] | ['<|endoftext|>', '.\n', ' \n', ' In', ' Additionally']
+     21 | ['.\n', ' Clients', ' Our', ' Additionally', ' Members'] | ['<|endoftext|>', '.\n', ' We', ' In', ' \n']
+     22 | [' Our', ' Clients', ' Additionally', '.\n', ' We'] | ['<|endoftext|>', ' We', ' Our', ' In', '.\n']
+     23 | [' Our', ' Clients', ' We', ' Additionally', 'Our'] | ['<|endoftext|>', ' Our', ' We', ' In', ' our']
+     24 | [' Our', ' We', 'Our', ' Clients', ' Additionally'] | ['<|endoftext|>', ' We', ' Our', ' our', ' In']
+     25 | [' Our', ' We', ' Based', ' Additionally', ' Clients'] | ['<|endoftext|>', ' We', ' Our', ' our', ' In']
+     26 | [' Our', ' We', '<|endoftext|>', ' Based', ' In'] | ['<|endoftext|>', ' We', ' Our', ' In', ' The']

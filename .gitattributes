@@ -25,6 +25,12 @@ research/**/figures/*.png filter=lfs diff=lfs merge=lfs -text
 # § "Raw data is a deliverable".
 research/**/data/*.pt filter=lfs diff=lfs merge=lfs -text
 
+# Git LFS — the arc-04 committed lens cache (see the .gitignore arc-04
+# exception): full fitted lens tensors are 120-660 MB each, far past the
+# point where LFS is optional. The data/*.pt rule above does not reach into
+# cache/ (its glob requires the file directly inside a data/ directory).
+research/**/data/cache/*.pt filter=lfs diff=lfs merge=lfs -text
+
 # Git LFS — track archived primary-source PDFs. Paper snapshots (print-to-PDF
 # of HTML publications, arxiv PDFs) run 1–15 MB each; same bloat rationale as
 # the figures rule. First population: gurnee2026-workspace (2026-07-18).

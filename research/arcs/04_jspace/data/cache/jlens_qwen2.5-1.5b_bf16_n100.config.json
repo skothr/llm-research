@@ -1,0 +1,13 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "mode": "bf16",
+  "device": "cuda",
+  "dim_batch": 8,
+  "n_prompts": 100,
+  "max_seq_len": 128,
+  "prompts_file": "research/arcs/04_jspace/data/fitting_prompts_wikitext103_n1000.json",
+  "corpus_tag": "",
+  "wall_seconds": 7769.1,
+  "jlens_source": "github.com/anthropics/jacobian-lens (editable clone)",
+  "estimator": "J_l = mean over prompts of mean-over-source-positions of sum-over-targets>=source of dh_final/dh_l (jlens.fit defaults, skip_first=16)"
+}

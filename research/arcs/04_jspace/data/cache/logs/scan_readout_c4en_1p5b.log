@@ -1,0 +1,118 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 64/338 [00:00<00:00, 630.30it/s]Loading weights:  47%|████▋     | 160/338 [00:00<00:00, 809.50it/s]Loading weights:  78%|███████▊  | 263/338 [00:00<00:00, 907.48it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 900.41it/s]
+[load] model + lens in 2.9s; JacobianLens(d_model=1536, n_prompts=100, source_layers=[0..26] (27 layers))
+[data] 12 held-out prompts from research/arcs/04_jspace/data/heldout_prompts_wikitext103_n30.json
+[scan] 27 layers x 2 lens modes (positions: 8 mid + last)
+[prompt 1/12] seq=224 pos=9 9.7s
+[prompt 2/12] seq=165 pos=9 8.7s
+[prompt 3/12] seq=176 pos=9 8.7s
+[prompt 4/12] seq=140 pos=9 8.8s
+[prompt 5/12] seq=287 pos=9 9.2s
+[prompt 6/12] seq=141 pos=9 9.0s
+[prompt 7/12] seq=172 pos=9 8.8s
+[prompt 8/12] seq=168 pos=9 8.9s
+[prompt 9/12] seq=123 pos=9 9.1s
+[prompt 10/12] seq=174 pos=9 8.9s
+[prompt 11/12] seq=182 pos=9 8.8s
+[prompt 12/12] seq=145 pos=9 8.6s
+
+=== Per-layer mean Spearman (last position; J-lens vs logit-lens) ===
+layer    J-lens     logit   J-logit
+    0    0.2786    0.2776    0.0010
+    1    0.3516    0.3591   -0.0076
+    2    0.3873    0.3782    0.0091
+    3    0.3598    0.3996   -0.0398
+    4    0.3261    0.3766   -0.0506
+    5    0.3520    0.4030   -0.0510
+    6    0.3751    0.4282   -0.0531
+    7    0.3690    0.4047   -0.0357
+    8    0.3503    0.4183   -0.0680
+    9    0.3168    0.4139   -0.0971
+   10    0.3378    0.4195   -0.0816
+   11    0.3441    0.4436   -0.0995
+   12    0.3606    0.4665   -0.1059
+   13    0.3644    0.4749   -0.1105
+   14    0.3479    0.4731   -0.1253
+   15    0.3607    0.4976   -0.1368
+   16    0.3633    0.4909   -0.1276
+   17    0.3904    0.4923   -0.1020
+   18    0.3525    0.4942   -0.1416
+   19    0.3885    0.5053   -0.1169
+   20    0.4110    0.5483   -0.1374
+   21    0.4723    0.6034   -0.1311
+   22    0.5437    0.6621   -0.1184
+   23    0.6060    0.6923   -0.0863
+   24    0.6816    0.7143   -0.0327
+   25    0.7376    0.8010   -0.0634
+   26    0.8026    0.8617   -0.0591
+
+=== Depth-of-emergence (median layer, model top-1 in lens top-10) ===
+  all positions : J-lens=23.0  logit=19.0  (never: J=17 logit=1 / 108)
+  last position : J-lens=20.0  logit=19.5
+
+[save] research/arcs/04_jspace/data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt
+[time] mean 8.9s/prompt over 12 prompts
+
+=== Trajectory prompt 1 (final position) ===
+  prompt[:90]: ' " By the end of 1984 , From Time Immemorial had ... received some two hundred [ favorable'
+  MODEL top-5: ['Does', 'What', 'Can', 'Is', 'In']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | [' \n', ' \n\n', ' \n\n\n', '   \n', ' \n\n\n\n'] | ['var', '``', 'Thus', 'a', 'to']
+      1 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['a', 'y', 'Thus', '``', ' Thus']
+      2 | [' \n', ' \n\n', ' \n\n\n', '   \n', '  \n'] | ['a', 's', ' amacıyla', 'Thus', 'thus']
+      3 | [' \n', ' \n\n', '   \n', ' \n\n\n', '     \n'] | ['a', '////////////////////////////////////////////////////////////////', 'thus', '//------------------------------------------------------------------------------------------------', ' Hyper']
+      4 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['solution', 'a', 'thus', '<<<<<<<', '//------------------------------------------------------------------------------------------------']
+      5 | [' \n', ' \n\n', '   \n', ' "', '     \n']   | ['s', 'a', '<<<<<<<', ' Manifest', 'y']
+      6 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', 'go', 'y', '.\n\n']
+      7 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', '(', 'p', '<<<<<<<']
+      8 | [' \n\n', ' \n', '   \n', '  \n\n', ' \n    \n'] | ['a', 'p', '   ', '...', '<|endoftext|>']
+      9 | [' \n', ' \n\n', '   \n', '     \n', '  \n\n'] | ['a', 'p', '____', 's', '...']
+     10 | [' \n', ' \n\n', '   \n', '  \n\n', '  \n']  | ['a', 's', '\\', '\ufeff\n\n', '<<<<<<<']
+     11 | [' \n\n', ' \n', '  \n\n', '   \n', '  \n']  | ['a', 's', '...', 'p', '   ']
+     12 | [' \n\n', ' \n', '  \n\n', '   \n', ' "**']  | ['a', 's', '\\', '   ', '\ufeff\n\n']
+     13 | [' \n\n', ' \n', '  \n\n', '   \n', '  \n']  | ['a', 's', '(', 'is', '   ']
+     14 | [' \n\n', '  \n\n', ' \n', '   \n', '  \n']  | ['a', 's', '(', 'Question', '说明']
+     15 | [' \n\n', '  \n\n', ' \n', '   \n', '  \n']  | ['s', 'a', '(', '   ', ' ']
+     16 | [' \n\n', '  \n\n', '   \n', ' \n', '  \n']  | ['s', 'a', '(', '   ', ' ']
+     17 | ['  \n\n', ' \n\n', 'paragraph', 'text', 'Context'] | ['s', '(', 'a', '[', 'https']
+     18 | ['描述', 'Question', 'Summary', 'Describe', 'describe'] | ['(', 'a', '\xa0', 'Question', '[']
+     19 | ['描述', 'Describe', 'Explanation', 'Question', 'Summary'] | ['What', 'a', '(', '[', '是什么']
+     20 | ['Question', 'What', 'Describe', '描述', 'Summary'] | ['What', ' What', '   ', '[', 'a']
+     21 | ['What', 'Question', 'Which', ' What', 'what'] | ['What', ' What', 'Question', '   ', ' what']
+     22 | ['Based', 'Question', 'What', 'Does', ' Based'] | ['Question', 'Based', ' Based', 'What', ' Question']
+     23 | ['Question', 'Based', 'What', ' Based', 'Does'] | ['Question', 'Based', 'What', ' Based', ' What']
+     24 | ['Based', 'Question', 'Does', 'What', ' Based'] | ['Based', 'Question', ' Based', 'What', 'Does']
+     25 | ['What', 'Question', 'Based', 'Does', 'Answer'] | ['What', 'Question', 'Based', 'Does', ' What']
+     26 | ['Does', 'Based', 'What', 'Is', 'Question']  | ['Based', 'What', 'Is', 'Does', 'Can']
+
+=== Trajectory prompt 2 (final position) ===
+  prompt[:90]: ' In the house journal of the American Council on Foreign Relations , Foreign Affairs , Wil'
+  MODEL top-5: ['F', 'What', 'Question', 'Q', 'Answer']
+  layer | J-lens top-5                                 | logit-lens top-5
+      0 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['s', 'y', 'a', 'to', 'var']
+      1 | [' \n', ' \n\n', ' \n\n\n', '   \n', '     \n'] | ['s', 'a', 'y', 't', 'p']
+      2 | [' \n', ' \n\n', ' \n\n\n', '   \n', ' \n\n\n\n\n'] | ['s', 'a', 't', 'y', 'T']
+      3 | [' \n', ' \n\n', '   \n', ' \n\n\n', '     \n'] | ['s', 'a', '(', '[', ' ']
+      4 | [' \n', '   \n', ' \n\n', '  \n', ' \n\n\n'] | ['s', 'solution', 'a', 'Solution', '(']
+      5 | [' \n', '   \n', ' \n\n', '     \n', ' \n\n\n'] | ['s', '(', 'a', '[', 'y']
+      6 | [' \n', '   \n', ' \n\n', '  \n', '     \n'] | ['s', 'a', 'y', 'e', '<<<<<<<']
+      7 | [' \n', ' \n\n', '   \n', '     \n', '  \n'] | ['a', 's', '<<<<<<<', '   ', '(']
+      8 | [' \n', ' \n\n', '   \n', ' \n\n\n', '  \n\n'] | ['a', '   ', 's', '<|endoftext|>', '<<<<<<<']
+      9 | [' \n', ' \n\n', '   \n', '  \n', '     \n'] | ['a', 's', '   ', '____', 'p']
+     10 | [' \n', ' \n\n', '   \n', ' \n\n\n', '  \n'] | ['s', 'a', '   ', '<<<<<<<', '<|endoftext|>']
+     11 | [' \n\n', ' \n', '  \n\n', ' \n\n\n', '   \n'] | ['a', 's', '   ', '...', '\\']
+     12 | [' \n', ' \n\n', '   \n', '  \n\n', '  \n']  | ['a', 's', '   ', 'e', ' ']
+     13 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n\n\n'] | ['a', 's', 'e', '   ', ' ']
+     14 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n\n\n'] | ['a', 's', '   ', 'p', '(']
+     15 | [' \n\n', ' \n', '   \n', '  \n\n', ' \n\n\n'] | ['a', 's', '   ', ' ', 'i']
+     16 | [' \n\n', ' \n', '   \n', '："', '  \n\n']    | ['s', 'a', '   ', 'i', ' ']
+     17 | [' \n\n', ' \n', '  \n\n', '   \n', ' \n  \n'] | ['s', 'a', '____', '[', '   ']
+     18 | ['描述', 'Summary', 'Question', 'Context', ' Description'] | ['a', '[', '(', 's', '   ']
+     19 | ['Question', 'Summary', 'Context', '原文', 'Explanation'] | ['a', '   ', '  ', '[', 'Question']
+     20 | ['Question', ' \n\n', '  \n\n', 'Summary', 'What'] | ['a', 'Question', '   ', '[', '  ']
+     21 | ['Question', 'What', ' Question', 'Answer', 'Which'] | ['Question', ' Question', 'What', 'a', '  ']
+     22 | ['Question', 'Answer', 'What', 'Which', ' Question'] | ['Question', ' Question', 'Answer', 'What', '答案']
+     23 | ['Question', 'Answer', 'What', ' Question', 'Based'] | ['Question', ' Question', 'Answer', 'What', 'Q']
+     24 | ['Question', 'Answer', 'What', ' Question', 'Based'] | ['Question', ' Question', 'Answer', 'What', 'question']
+     25 | ['Question', 'Answer', 'What', 'Which', 'After'] | ['Question', 'Answer', ' Question', 'What', 'Translate']
+     26 | ['Question', 'Answer', 'What', 'In', 'F']    | ['Question', 'Answer', 'Q', 'What', ' Question']

@@ -79,7 +79,8 @@
 > 6 FAIL**; after re-pinning the two values that legitimately moved,
 > **956 PASS | 4 FAIL** (post-re-pin log committed at
 > `data/audit_2026-08-16.log`; re-derive it with
-> `python examples/jspace_audit_findings.py` once the lenses are refit).
+> `python examples/jspace_audit_findings.py` — the three re-fit lenses are
+> LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed).
 > The 4 remaining FAILs
 > are the designed `MISSING` reports for the two deliberately-unrefit nf4
 > lenses and their sidecars (`jlens_qwen2.5-1.5b_nf4_n100` and `_n500`) — the
@@ -251,17 +252,27 @@ p-value, and the MANIFEST census). All small derived artifacts (44 files,
 ~55 MB incl. the ten metric-correction artifacts) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
 a clean clone**; check A and the lens-integrity blocks read the full
-fitted lenses, which stay cache-only per Decision 4 (committed layer
-subsets + `jspace_fit_lens.py` regenerate them).
+fitted lenses. Decision 4 originally kept all five cache-only (committed
+layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
+decision 2026-08-16 after the C4-redaction re-run: the **three
+redacted-corpus lenses are now LFS-committed in `data/cache/`** (~905 MB —
+both wikitext lenses + the c4en lens, with their `.config.json` sidecars and
+fit/scan logs) so a clean clone can re-scan without repeating the ~23 h
+refit. The two nf4 lenses (quantization / n-budget axes) remain
+regenerate-only, and fit-resume `.ckpt.pt` checkpoints stay uncommitted —
+their content is superseded by the final lenses they produced.
 
-**Expected result on a clean clone** (no local `cache/`, last measured
-2026-07-29; **not** re-measured after the 2026-08-16 re-run, which changed
-artifact contents and two pins but neither the 53-file committed set nor the
-claim count): `SUMMARY: 920 PASS | 10 FAIL`, exit code 1. All 10 failures are
-the designed `MISSING` reports for the five cache-only fitted lenses and their
-five `.config.json` sidecars — *not* regressions. Any FAIL naming something
-other than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
-regression.
+**Expected result on a clean clone** (after `git lfs install && git lfs
+pull`, which now delivers the three committed lenses): `SUMMARY: 956 PASS |
+4 FAIL`, exit code 1 — measured 2026-08-16 with exactly this artifact set on
+disk (`data/audit_2026-08-16.log`). The 4 failures are the designed
+`MISSING` reports for the two regenerate-only nf4 lenses and their
+`.config.json` sidecars — *not* regressions. Any FAIL naming something other
+than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
+regression. (An LFS-less or pre-2026-08-16 checkout, with no lenses on disk,
+gave `920 PASS | 10 FAIL` — measured 2026-07-29, before the re-run changed
+artifact contents and two pins; the historical decomposition below still
+applies to it.)
 
 > Until 2026-07-29 this read `11 FAIL`. The extra one was a duplicate
 > registration of the `jlens_qwen2.5-1.5b_bf16_n100_c4en.config.json` presence
