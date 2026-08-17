@@ -6,9 +6,10 @@ The arc's `.pt` artifacts live (committed, git-LFS) under
 (capture-root | derived), producing script/command, inputs, model
 requirement, and consumers.
 
-Two modes:
-    python examples/emb_data_manifest.py            # (re)write MANIFEST.json
-    python examples/emb_data_manifest.py --check     # verify, exit 1 on drift
+Two modes, both explicit — neither is the default, so a bare invocation (or a
+mistyped flag) can never silently overwrite the committed manifest:
+    python examples/emb_data_manifest.py --check    # verify, exit 1 on drift
+    python examples/emb_data_manifest.py --write    # (re)write MANIFEST.json
 
 ARC DEVIATION NOTE (vs ARC_PROCESS § "Raw data is a deliverable"): the true
 capture-root of this arc is the published Qwen2.5-7B-Instruct weight matrix
@@ -21,6 +22,8 @@ consume IS committed.
 
 from __future__ import annotations
 
+import argparse
+import datetime as dt
 import hashlib
 import json
 import sys
@@ -195,7 +198,16 @@ def _metadata_fields(name: str) -> dict[str, Any]:
     }
 
 
-def build() -> dict[str, Any]:
+def on_disk_total_bytes() -> int:
+    """Summed size of the committed .pt artifacts, straight off the filesystem
+    — the value `total_size_bytes` in the manifest must equal."""
+    return sum(p.stat().st_size for p in DATA_DIR.glob("*.pt"))
+
+
+def build(generated: str) -> dict[str, Any]:
+    """Assemble the manifest document. `generated` is carried through rather
+    than stamped fresh in --check mode, so a re-verification of an unchanged
+    directory never reads as drift."""
     files = sorted(p for p in DATA_DIR.glob("*.pt"))
     entries: dict[str, Any] = {}
     for p in files:
@@ -218,39 +230,85 @@ def build() -> dict[str, Any]:
         "arc": "embedding-atlas",
         "base_id": "Qwen/Qwen2.5-7B-Instruct",
         "revision": REVISION,
+        "generated": generated,
         "total_files": len(entries),
+        "total_size_bytes": sum(e["size_bytes"] for e in entries.values()),
         "files": entries,
     }
 
 
-def main() -> int:
-    doc = build()
-    if "--check" in sys.argv:
-        if not MANIFEST.exists():
-            print("MANIFEST.json missing")
-            return 1
-        committed = json.loads(MANIFEST.read_text())
-        if committed == doc:
-            mb = sum(e["size_bytes"] for e in doc["files"].values()) / 1e6
-            print(
-                f"MANIFEST CHECK: OK  ({doc['total_files']} files, sha256 + metadata match, {mb:.1f} MB)"
-            )
-            return 0
-        print(
-            "MANIFEST CHECK: DRIFT detected — regenerate with: python examples/emb_data_manifest.py"
-        )
-        for name in sorted(set(committed.get("files", {})) | set(doc["files"])):
-            a = committed.get("files", {}).get(name)
-            b = doc["files"].get(name)
-            if a != b:
-                print(f"  differs/missing: {name}")
+def check() -> int:
+    if not MANIFEST.exists():
+        print("MANIFEST CHECK: MANIFEST.json missing")
         return 1
-    MANIFEST.write_text(json.dumps(doc, indent=2) + "\n")
-    mb = sum(e["size_bytes"] for e in doc["files"].values()) / 1e6
+    committed = json.loads(MANIFEST.read_text())
+    generated = committed.get("generated")
+    if not isinstance(generated, str) or not generated:
+        print(
+            "MANIFEST CHECK: DRIFT — no `generated` date field; "
+            "regenerate with: python examples/emb_data_manifest.py --write"
+        )
+        return 1
+    doc = build(generated)
+
+    # Independent of the per-file sha256 comparison: the recorded total must
+    # equal what is actually on disk right now.
+    total = on_disk_total_bytes()
+    if committed.get("total_size_bytes") != total:
+        print(
+            f"MANIFEST CHECK: DRIFT — total_size_bytes "
+            f"{committed.get('total_size_bytes')!r} != on-disk {total}"
+        )
+        return 1
+
+    if committed == doc:
+        print(
+            f"MANIFEST CHECK: OK  ({doc['total_files']} files, sha256 + metadata "
+            f"match, {total / 1e6:.1f} MB, generated {generated})"
+        )
+        return 0
     print(
-        f"wrote {MANIFEST.relative_to(_REPO_ROOT)}  ({doc['total_files']} files, {mb:.1f} MB)"
+        "MANIFEST CHECK: DRIFT detected — regenerate with: "
+        "python examples/emb_data_manifest.py --write"
+    )
+    for name in sorted(set(committed.get("files", {})) | set(doc["files"])):
+        a = committed.get("files", {}).get(name)
+        b = doc["files"].get(name)
+        if a != b:
+            print(f"  differs/missing: {name}")
+    for key in ("arc", "base_id", "revision", "total_files"):
+        if committed.get(key) != doc[key]:
+            print(f"  differs: {key}: {committed.get(key)!r} != {doc[key]!r}")
+    return 1
+
+
+def write() -> int:
+    doc = build(dt.date.today().isoformat())
+    MANIFEST.write_text(json.dumps(doc, indent=2) + "\n")
+    print(
+        f"wrote {MANIFEST.relative_to(_REPO_ROOT)}  ({doc['total_files']} files, "
+        f"{doc['total_size_bytes'] / 1e6:.1f} MB, generated {doc['generated']})"
     )
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(
+        description=(
+            "Generate or verify research/arcs/03_embedding-atlas/data/MANIFEST.json. "
+            "One of --check / --write is required: writing is never the default, "
+            "so no invocation can overwrite the committed manifest by accident."
+        )
+    )
+    mode = ap.add_mutually_exclusive_group(required=True)
+    mode.add_argument(
+        "--check", action="store_true", help="verify the manifest; exit 1 on drift"
+    )
+    mode.add_argument(
+        "--write", action="store_true", help="(re)write MANIFEST.json from disk"
+    )
+    args = ap.parse_args(argv)
+    return check() if args.check else write()
 
 
 if __name__ == "__main__":
