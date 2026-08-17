@@ -36,12 +36,13 @@ because they carry as much of the signal as the positive ones:
   reproduction of the paper's protocol — **zero** owl-lexicon hits across all
   five decode schemes in either condition (owl n=104, neutral n=109 after the
   format/range/count filter) — no variance in either arm, so no z or p is
-  defined and the informative quantities are the zero-hit count and the power
-  floor (~931 per condition, audit-locked), with the planted-encoding positive
-  control passing in the same run, so the null is an absence rather than a
-  broken decoder. The paper released no dataset — its `v1.0.0` has zero
-  assets and its teacher is closed — so this tests a local reproduction, not
-  their data. The decisive HA-vs-HC test was never run.
+  defined and the informative quantities are the zero-hit count and the
+  reject-rate power floor (~931/condition for the incidental 13.3-vs-9.2%
+  gap, audit-locked), with the planted-encoding positive control passing in
+  the same run, so the null is an absence rather than a broken decoder. The
+  paper released no dataset — its `v1.0.0` has zero assets and its teacher is
+  closed — so this tests a local reproduction, not their data. The decisive
+  HA-vs-HC test was never run.
 - **Arc 03 (embedding atlas)** — predictions were registered on 2026-06-11,
   before the captures they constrain, and adjudicated mechanically at close:
   **P1a PASS, P1c FAIL, P1d FAIL**; P2 refined-not-falsified; P1b, P1e and P3

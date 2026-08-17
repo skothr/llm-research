@@ -85,7 +85,7 @@ def read_artifact(name: str) -> Path:
     if is_lfs_pointer(p):
         raise FileNotFoundError(
             f"{name!r} at {p} is a git-LFS pointer stub, not the real artifact "
-            f"— the clone never populated LFS objects. Recover with: "
+            f"— the clone never populated LFS objects. To recover, "
             f"{LFS_RECOVERY_HINT}"
         )
     return p

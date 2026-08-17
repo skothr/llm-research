@@ -313,7 +313,7 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         )
         claim(
             "generator has evolved past its capture-time hash (823b5e68, 1ed05dad, "
-            "2026-08-17 edit)",
+            "two 2026-08-17 edits)",
             sha256_bytes(gen_b) != MANIFEST_GENERATOR_SHA256_CAPTURE,
             "differs from capture-time hash",
             "differs",

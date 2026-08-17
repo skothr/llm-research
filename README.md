@@ -249,7 +249,7 @@ committing its run as `data/audit_2026-08-17.log`:
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
 python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 103 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
-python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 951 PASS | 7 FAIL   (default clone; the committed log is the 986 | 4 with-cache run)
+python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 951 PASS | 7 FAIL
 ```
 
 Arc 02's audit needs no GPU and no network and finishes in under a second; its
@@ -266,12 +266,15 @@ pending the scheduled refit (issue #47), each reported as a loud `MISSING`
 rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
 the same run reports **986 PASS | 4 FAIL** (the nf4 `MISSING` reports only)
-with no GPU work; the check total grows from 958 to 990 between the two
-states because the lens-dependent blocks register their claims only when the
-lens tensors are on disk. See the arc READMEs for what each audit does and does
-not catch (arithmetic consistency only — never methodology or interpretation)
-and for the historical pre-re-run figures (`920 | 10`; the cache-present `978`
-was never re-verified). Pre-sweep totals (178, 94, `921 | 7` / `956 | 4`) are
+with no GPU work — and that with-cache run is the one arc 04's committed
+`data/audit_2026-08-17.log` records, so the `951 | 7` quoted in the block
+above is the default-clone figure, not the logged one. The check total grows
+from 958 to 990 between the two states because the lens-dependent blocks
+register their claims only when the lens tensors are on disk. See the arc
+READMEs for what each audit does and does not catch (arithmetic consistency
+only — never methodology or interpretation) and for the historical pre-re-run
+figures (`920 | 10`; the cache-present `978` was never re-verified).
+Pre-sweep totals (178, 94, `921 | 7` / `956 | 4`) are
 in git history; arc 04's last pre-sweep run is committed as
 [`data/audit_2026-08-16.log`](research/arcs/04_jspace/data/audit_2026-08-16.log).
 

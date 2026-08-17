@@ -2,7 +2,8 @@
 
 Design workflow `wf_fff920a2` (5 agents): QLoRA-feasibility / influence-estimator /
 reproduce-eval-protocol -> synthesized spec -> adversarial HA-vs-HC critique.
-Preserved verbatim below. **Status: design, NOT yet signed off.** The
+Reproduced below with the changes listed under **Editorial changes to the
+body**, and nothing else. **Status: design, NOT yet signed off.** The
 load-bearing conclusion (the adversarial critique found the naive influence
 probe cannot separate HA from HC without a statistical-fingerprint projection)
 and the resulting open decision are tracked in the arc; the runnable plan will
@@ -13,8 +14,28 @@ the RTX 2080 is 8 GiB = 8192 MiB = 8.59 GB — while every VRAM *budget* below i
 summed in decimal GB, as the tooling reports it. So each "~6 GB peak fits 8 GiB"
 comparison mixes bases and, in that direction, understates the headroom: ~6 GB is
 ~5.6 GiB against an 8 GiB card. Every such comparison in this document is
-conservative for that reason; none is corrected in place, because the text below
-is preserved verbatim.
+conservative for that reason; the mixed-base comparisons are not recomputed in
+place.
+
+**Editorial changes to the body.** The text below is the workflow's own output
+with exactly four classes of edit applied, all made on 2026-08-17:
+
+1. **Unit relabeling.** Every reference to the card's capacity as "8GB"/"8 GB"
+   now reads "8 GiB", per the 2026-08-17 owner ruling on binary-vs-decimal
+   units and the convention above, plus one inserted cross-reference to that
+   convention at the first mixed-base comparison. Decimal-GB *budget* figures
+   are left as the tooling reported them.
+2. **Path wording.** Three "All paths absolute" / "Relevant files (absolute)"
+   labels corrected to "repo-relative", which is what the listed paths always
+   were.
+3. **Dated editor's notes.** Two added where a flagged item has since been
+   fixed or superseded — one bracketed inline (§ "Notes / things that look
+   off"), one as a blockquote (§ 6) — each stamped `2026-08-17` and labelled
+   as an editor's addition.
+4. **One heading retitled** — § 6's "interim dataset-manifest convention" to
+   "pre-SOP dataset-manifest convention".
+
+No claim, number, recommendation, or conclusion in the body is changed.
 
 ---
 

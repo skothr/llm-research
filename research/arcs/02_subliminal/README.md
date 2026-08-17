@@ -1,20 +1,23 @@
 # Subliminal trait transfer — is the hidden signal *model-specific semantics*?
 
-**Status:** paused (2026-06-10) — Step 0 (encoding decode-test) complete, see
+**Status:** paused (recorded 2026-06-10) — Step 0 (encoding decode-test)
+complete, see
 [`observations/2026-05-31-step0-protocol-and-filter.md`](observations/2026-05-31-step0-protocol-and-filter.md);
-Steps 1-2 not started. Paused `[NORMALIZED]` "where we are" for a repo-wide
-reorganization [session 2026-06-01], then superseded by the embedding-atlas
-arc (03, opened 2026-06-10, closed 2026-07-15); not resumed — Step 1 is
-additionally blocked on the design issue below.
+Steps 1-2 not started. Work stopped 2026-06-01, paused where it stood
+[session 2026-06-01] for a repo-wide reorganization, and was recorded as
+paused on 2026-06-10, when the embedding-atlas arc (03) opened and superseded
+it (03 closed 2026-07-15); not resumed — Step 1 is additionally blocked on the
+design issue below.
+
 **Started:** 2026-05-31.
 
-**Compute context** (transcript-verified): the Step-0 capture ran on CPU after
-the 4-bit GPU load hit a CUDA out-of-memory error against a co-tenant process
-(the dataset manifest records `device: cpu`), which capped the run at n=120
-per condition — the committed dataset itself completed and audits
-byte-for-byte. A follow-on scale-up generation for the Step-1 SFT corpus
-(n=12,000 per condition) stalled on GPU and was killed without producing an
-artifact; no data was lost or truncated.
+**Compute context** (transcript-verified, [session 2026-05-31 → 06-01]): the
+Step-0 capture ran on CPU after the 4-bit GPU load hit a CUDA out-of-memory
+error against a co-tenant process (the dataset manifest records
+`device: cpu`), which capped the run at n=120 per condition — the committed
+dataset itself completed and audits byte-for-byte. A follow-on scale-up
+generation for the Step-1 SFT corpus (n=12,000 per condition) stalled on GPU
+and was killed without producing an artifact; no data was lost or truncated.
 
 ## The question
 
@@ -47,7 +50,8 @@ from. Shape, provenance labels and public-repo constraints per
 Quotes are the human's typed turns, taken from the session listed under
 **Verifiability**; `[NORMALIZED]` means typo and punctuation fixes with
 markdown emphasis inside the turn dropped, and `[...]` marks an editorial
-elision. This arc was opened in one working session by Michael Lannum.
+elision — elisions never remove the direction the quote is cited for. This arc
+was opened in one working session by Michael Lannum.
 
 ### Research direction
 
@@ -77,12 +81,25 @@ per-number nudges" wording above is a Claude paraphrase of this — kept
 un-quoted for that reason. The user typed "superposition" and "focus the
 checking mathematically"; "resultant" and "per-number nudges" are Claude's.
 
+**The pause** [session 2026-06-01] `[VERBATIM]`:
+
+> *"can we actually pause this arc where we are, make sure our stopping point
+> is well-documented [...]"*
+
+The elision drops the repo-wide reorganization that the same turn moved on to,
+which is not what the quote is cited for. This is where the arc's stopping
+point became a deliverable rather than a side effect: Step 0's results, the
+unresolved Step-1 design question, and a resume checkpoint were written up and
+committed before attention moved off the arc — which is why a pause taken on
+2026-06-01 is still legible here.
+
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The originating question and hypothesis (C); the
 superposition intuition and the "focus it mathematically" push toward an
-aggregate estimator; the call to land the research-directory reorg as its own
-PR first, deferring subliminal to a separate later PR.
+aggregate estimator; the call to pause at a well-documented stopping point;
+the call to land the research-directory reorg as its own PR first, deferring
+subliminal to a separate later PR.
 
 **Claude Code.** Verifying the paper against arXiv:2507.14805 (the
 "imbue"-persona wording; the same-base requirement); the (A)/(B)/(C) framing
@@ -153,9 +170,10 @@ test is undefined, so no p-value is being asserted here. What carries the
 result is the zero-hit count itself (0 of 104 owl streams and 0 of 109 neutral
 streams, under each of the five schemes) together with the sample size behind
 it: n = 120/condition settles an all-or-nothing literal channel, and is far
-short of the ~931/condition a small rate *difference* would need (limitation 4
-below). Kept after the ported format+range+count filter: owl 104/120,
-neutral 109/120. The
+short of the ~931/condition that resolving a small rate *difference* would
+need — that floor is the one derived for the incidental 13.3-vs-9.2%
+reject-rate gap, not for the decode null (limitation 4 below). Kept after the
+ported format+range+count filter: owl 104/120, neutral 109/120. The
 positive control passed in the same run (a planted `[111,119,108]` decodes to
 "owl" and trips the lexicon), so the null is a real absence, not a broken
 decoder. Paired with the source finding that the released filter has **no**

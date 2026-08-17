@@ -87,20 +87,19 @@ pause/resume calls across the tracing phase. Their substance is corroborated
 by what the record shows was built; their wording is Claude's, and no part of
 either is quoted.
 
-**Claude Code.** All implementation: the 25 `emb_*` capture/
-derive/render/audit scripts (plus the `_emb_artifacts.py` resolver), the
-battery class definitions (under the CP1 direction), the operationalization
-of the pre-registered predictions (P1a-P3), the tracing-phase experiment
-designs (T0/T1/T1.5/T2), the literature review with adversarial novelty
-verification, all figures and observation write-ups, and the audit that
-re-derives every published number from committed artifacts.
+**Claude Code.** All implementation: the 25 `emb_*` capture/derive/render/
+audit scripts (plus the `_emb_artifacts.py` resolver), the battery class
+definitions (under the CP1 direction), the operationalization of the
+pre-registered predictions (P1a-P3), the tracing-phase experiment designs
+(T0/T1/T1.5/T2), the literature review with adversarial novelty verification,
+all figures and observation write-ups, and the audit that re-derives every
+published number from committed artifacts.
 
-**Emergent.** The 21-dim entangled block itself
-(the user's handles framing predicted shared structure; the full-vocab sweep
-implementation surfaced this specific object); the reader/tracker head
-dissociation; the P1c/P1d falsifications — adjudicated mechanically against
-criteria pre-registered on 2026-06-11, before any attention weights were
-captured.
+**Emergent.** The 21-dim entangled block itself (the user's handles framing
+predicted shared structure; the full-vocab sweep implementation surfaced this
+specific object); the reader/tracker head dissociation; the P1c/P1d
+falsifications — adjudicated mechanically against criteria pre-registered on
+2026-06-11, before any attention weights were captured.
 
 ### Verifiability
 

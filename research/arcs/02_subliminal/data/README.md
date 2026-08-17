@@ -128,3 +128,10 @@ The 5 UNVERIFIABLE entries are printed, not scored: the paper's 23–38% reject
 band and its protocol facts (external citations — their data was never
 released), `prompts.jsonl` as capture-time ground truth (re-derived, above),
 the Qwen snapshot revision, and the capture-time hardware/environment facts.
+
+A sixth claim is environment-dependent: resolving the manifest's
+`generation.generator_git_commit` needs the repo's history, so from a shallow
+clone, a source copy without `.git`, or a box without `git`, that check moves
+to the UNVERIFIABLE list rather than failing. Under those conditions
+`102 PASS | 0 FAIL | 6 UNVERIFIABLE` is the same green result. See the arc
+README's audit section for the same note.
