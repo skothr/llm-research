@@ -34,8 +34,9 @@ The C4-fit lens itself (`jlens_qwen2.5-1.5b_bf16_n100_c4en.pt`) is **cache-only
 and gitignored** (Decision 4), so channel 1 has no committed lens to reuse —
 it must refit from scratch. *(Superseded 2026-08-16: Decision 4 was amended
 after this re-run and the refit c4en lens is now LFS-committed under
-`data/cache/` behind an opt-in fetch — see `data/README.md`.)* The two committed `jlens_*_layer-subset.pt` files
-are wikitext-fit and are **not** affected.
+`data/cache/` behind an opt-in fetch — see `data/README.md`.)* The two
+committed `jlens_*_layer-subset.pt` files are wikitext-fit and are **not**
+affected.
 
 **Confirmed NOT in scope** (verified, not assumed):
 - Both `jlens_*_layer-subset.pt`, all `entailed_swap_*`, `entailed_paperverbatim_*`,
@@ -187,7 +188,7 @@ reverse.**
 
 ```bash
 python examples/jspace_audit_findings.py     # expect FAILs in checks J, K, and part of M
-python examples/jspace_data_manifest.py      # rewrite the 12 sha256 entries
+python examples/jspace_data_manifest.py --write   # rewrite the 12 sha256 entries
 ```
 
 Pins expected to move (~25, in `jspace_audit_findings.py`):

@@ -78,8 +78,9 @@ component conditions depend on. [INFERENCE with named alternatives]
 
 ## Evidence
 
-Artifacts (derived scans committed under `data/`; the full lens is LFS-committed in `data/cache/`, fetched opt-in; distinct names — the plain-4c
-artifacts verified intact):
+Artifacts (derived scans committed under `data/`; the full lens is
+LFS-committed in `data/cache/`, fetched opt-in; distinct names — the
+plain-4c artifacts verified intact):
 `verbal_report_chat_6c_qwen2.5-{1.5b,7b}-instruct_jlens_*.pt`, 78 items,
 full transcripts + norms per item. Runs exit 0 (7B in background: model
 load alone exceeds the 600 s tool cap). Qualitative: 7B fruit

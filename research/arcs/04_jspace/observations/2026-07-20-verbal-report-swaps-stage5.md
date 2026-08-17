@@ -61,7 +61,8 @@ columns (top5_pred) are directional only and carry no weight here.
 
 ## Evidence
 
-Artifacts (derived scans committed under `data/`; the full lens is LFS-committed in `data/cache/`, fetched opt-in):
+Artifacts (derived scans committed under `data/`; the full lens is
+LFS-committed in `data/cache/`, fetched opt-in):
 `verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`,
 `verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` — 78
 items each, full transcripts + J-lens top-10 + per-trial injected norms

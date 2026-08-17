@@ -64,7 +64,8 @@ scale ambiguity). Trajectory (7B, prompt 1, final position) shows the same
 `换句话`, `℠`, `-strokes`); both converge to `Answer`/`Based`/`Output` by
 layer 26.
 
-Derived artifacts (derived scans committed under `data/`; the full lens is LFS-committed in `data/cache/`, fetched opt-in):
+Derived artifacts (derived scans committed under `data/`; the full lens is
+LFS-committed in `data/cache/`, fetched opt-in):
 `readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`,
 `lens_eval_qwen2.5-7b_nf4_n100.pt`. Fit: 9.5 s/prompt scan on GPU;
 multihop 65 s, association 74 s. (The 7B eval initially clobbered the

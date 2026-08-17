@@ -45,7 +45,8 @@ reasoning about what is being redistributed:
 | `emb_global_stats.pt` | ~3.4 MB | **Statistics only** — per-row norms, the global mean, eigenspectra, the top-50 principal directions |
 | all others | — | **Statistics only** — derived from the files above by the committed scripts in `examples/` |
 
-That is 2,073 of 152,064 rows (~1.4% of the table) present verbatim. The
+That is 2,062 distinct rows of the 152,064-row table (~1.4%) present
+verbatim (2,073 stored rows; 11 token ids appear in two artifacts). The
 principal directions in `emb_global_stats.pt` are a rank-50 linear summary of
 the centered table, not rows of it.
 
