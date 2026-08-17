@@ -44,7 +44,7 @@ A modern LLM serving system is a layered loop:
    Modern stacks use **iteration-level (continuous) batching** — a
    batch is reformed every step rather than every request — so the
    batch shape changes per iteration `[kwon2023 §2.3;
-   kb/excerpts/kwon2023#sec-2]`.
+   kb/excerpts/kwon2023]`.
 3. **KV cache manager.** Allocate / map / evict KV blocks. PagedAttention
    `[kwon2023 §4]` for vLLM; RadixAttention `[zheng2024-sglang §3]` for
    SGLang. See `kb/notes/inference/kv-cache-management.md`.
@@ -69,7 +69,7 @@ within-layer optimization plateaus.
 
 **Continuous batching** (also "iteration-level scheduling," due to Yu
 et al., Orca, OSDI 2022) is the precondition for everything else. The
-key idea `[kwon2023 §2.3; kb/excerpts/kwon2023#sec-2]`:
+key idea `[kwon2023 §2.3; kb/excerpts/kwon2023]`:
 
 > Fine-grained batching mechanisms, such as cellular batching and
 > iteration-level scheduling, have been proposed. Unlike traditional

@@ -113,7 +113,7 @@ sums input-side and output-side gradients into the same matrix.
 | **LLaMA-3 8B** | **untied** | 128K | 4096 | 1.05B (525M each) | `[meta-llama3 §3.1]` |
 | **OLMo 2** | **untied** | ~50K | varies | varies | `[olmo2 §3.1]` |
 | **DeepSeek-V3** | **untied** | 128K | 7168 | 1.84B (920M each) | `[deepseek-v3 §2.1]` |
-| Phi-4 | tied (small) | 100K | 5120 | 512M | `[phi4 §2.1; kb/excerpts/phi4#sec-2-1]` |
+| Phi-4 | tied (small) | 100K | 5120 | 512M | `[phi4 §2.1; kb/excerpts/phi4]` |
 | Qwen3 (small) | tied | 152K | varies | varies | `[qwen3 §2.1]` |
 | Qwen3 (235B) | untied | 152K | varies | varies | `[qwen3 §2.1]` |
 
@@ -248,3 +248,6 @@ space bias) is constant. The trade flips.
 - `kb/notes/interpretability/lens-techniques.md` — logit-lens applies
   $E_{\text{out}}$ to intermediate hidden states.
 - `kb/notes/interpretability/probing.md` — embeddings as features.
+- `research/arcs/03_embedding-atlas/` — this repo's empirical survey of
+  embedding-matrix geometry across open-weights models (tied vs untied,
+  norm/anisotropy structure); the measurements behind the claims here.

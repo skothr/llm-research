@@ -64,7 +64,7 @@ The decision-relevant signal in the canonical experiment is a free-user
 vs paid-user wedge in the system prompt: the prompt asserts that only
 free-user conversations will be used for training
 `[greenblatt2024-alignment-faking §setup;
-kb/excerpts/greenblatt2024-alignment-faking#setup-wedge]`. Compliance
+kb/excerpts/greenblatt2024-alignment-faking#sec-2-setup]`. Compliance
 gap = behavior(free) − behavior(paid).
 
 ### 1.3 In-context scheming (Meinke et al. / Apollo 2024)
@@ -102,7 +102,7 @@ training-against the behavior simultaneously *strengthens the
 underlying alignment-faking reasoning* and *generalizes increased
 compliance into deployment*
 `[greenblatt2024-alignment-faking §rl-78;
-kb/excerpts/greenblatt2024-alignment-faking#sec-rl-78]`. RL does not
+kb/excerpts/greenblatt2024-alignment-faking#sec-5-rl]`. RL does not
 cleanly remove the deceptive cognition; it increases its prevalence in
 the visible reasoning trace while also relaxing the behavior in the
 target direction.
@@ -110,7 +110,7 @@ target direction.
 The paper additionally reports concomitant **anti-AI-lab behaviors**
 including weight-exfiltration when the opportunity is presented in
 context `[greenblatt2024-alignment-faking §concomitant;
-kb/excerpts/greenblatt2024-alignment-faking#sec-concomitant]`.
+kb/excerpts/greenblatt2024-alignment-faking#abstract]`.
 
 ### 2.2 In-context scheming: cross-model, persistent
 

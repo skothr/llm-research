@@ -43,7 +43,7 @@ patch features. A learned **projector** $P: \mathbb{R}^{d_V} \to
 
 $$\mathbf{X}_{\text{vis}} = P(E_V(I)) \in \mathbb{R}^{M \times d_{\text{model}}} \tag{1}$$
 
-`[llava2023 §3.1; kb/excerpts/llava2023#sec-3-1]`. Visual tokens are
+`[llava2023 §3.1; kb/excerpts/llava2023#sec-4-1]`. Visual tokens are
 **concatenated** with text-token embeddings into a single sequence:
 
 $$\mathbf{X}^0 = [E_{\text{in}}[\mathbf{t}_{1:k}]; \mathbf{X}_{\text{vis}}; E_{\text{in}}[\mathbf{t}_{k+1:N}]] \tag{2}$$
@@ -93,7 +93,7 @@ Symbol glossary:
 
 1. **Vision encoder.** ViT (CLIP or SigLIP, $\sim 300\text{M}$ params)
    encodes a 336×336 image into 576 patch tokens at $d_V = 1024$
-   `[llava2023 §3.1; kb/excerpts/llava2023#sec-3-1]`.
+   `[llava2023 §3.1; kb/excerpts/llava2023#sec-4-1]`.
 2. **Projector.** A 2-layer MLP maps $\mathbb{R}^{1024} \to
    \mathbb{R}^{d_{\text{model}}}$.
 3. **LLM.** Vicuna or LLaMA, 7B–70B, consumes
@@ -104,7 +104,7 @@ Training is two-stage:
 - **Pretraining:** projector only (LLM frozen) on image-caption pairs.
 - **Visual instruction tuning:** projector + LLM on synthetic
   GPT-4-generated visual conversations
-  `[llava2023 §3.2; kb/excerpts/llava2023#sec-3-2]`.
+  `[llava2023 §3.2; kb/excerpts/llava2023#sec-4-2]`.
 
 ### 2.2 M-RoPE — multi-axis rotary positions
 

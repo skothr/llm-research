@@ -9,8 +9,11 @@
 # Sequential build is required: each paper's main.tex declares
 # \externaldocument cross-refs to its four siblings via xr-hyper, so
 # their main.aux files must exist before a paper's later passes can
-# resolve cross-paper labels. We do two full sweeps over all five
-# papers so cross-refs settle (3 pdflatex passes per paper + bibtex).
+# resolve cross-paper labels. So the build runs four pdflatex passes per
+# paper across three sweeps over all five papers: sweep 1 is one pdflatex
+# plus bibtex, sweep 2 is three more pdflatex passes to settle the
+# xr-hyper cross-refs, and sweep 3 adds a conditional fifth pass for any
+# paper still reporting unresolved cites.
 #
 # pdflatex's exit code is unreliable under -interaction=nonstopmode
 # (it exits non-zero on benign hyperref/xr-hyper interaction warnings

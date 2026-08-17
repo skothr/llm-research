@@ -142,7 +142,7 @@ d_h)$, and the kernel moves up the roofline.
 The IO complexity result is~\citep[Thm.~2]{dao2022}: standard
 attention requires $\Theta(N d_h + N^2)$ \glsterm{hbm}{HBM} accesses, \glsterm{flashattention}{FlashAttention}
 requires $\Theta(N^2 d_h^2 / M)$. For typical $d_h \in [64, 128]$ and
-$M \sim 100$KB, $d_h^2 / M \sim 1/10$ to $1/6$, and Proposition~3
+$M \sim 100$~KiB, $d_h^2 / M \sim 1/10$ to $1/6$, and Proposition~3
 proves this is asymptotically optimal among exact algorithms. End-to-end
 wall-clock: $\sim\!3\times$ on GPT-2 at $S = 1024$, $\sim\!2.4\times$
 on Long-Range Arena at $S = 1\text{K}\text{--}4\text{K}$, and the first

@@ -428,3 +428,12 @@ read differentially across depth.
   residual-stream + LayerNorm + unembedding setup that lens
   techniques exploit. Without weight-tied / shared-unembedding
   decoder-only architecture, the lens framework needs adaptation.
+- `kb/excerpts/anthropic2026-nla.md` — natural language autoencoders
+  (NLA): a *learned text* readout of a residual-stream activation
+  (verbalizer + reconstructor trained round-trip), where a lens reads
+  out a vocabulary distribution through the model's own unembedding.
+  The same "what is this layer holding?" question, a different
+  decoder.
+- `research/arcs/01_nla-verbalizer/` — this repo's open-weights NLA
+  replication arc; the practical contrast between lens readouts and a
+  verbalizer readout is worked there.

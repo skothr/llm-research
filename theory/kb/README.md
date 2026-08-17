@@ -20,6 +20,25 @@ synthesis with primary-source quotation.
   path from `theory/`. Anchor is the markdown heading slug.
 - `[kb/excerpts/<paper-key>#<heading>]` — points to a verbatim excerpt.
 
+## Linting the KB
+
+`kb/lint.py` checks every citation in `kb/**/*.md` (notes, `glossary.md`,
+`index/`) against reality: paper-keys resolve in `index/papers.json` (both the
+`[paper-key §X]` and bare `[paper-key]` forms), excerpt and note
+cross-references resolve to
+a real **file and a real anchor**, `topics.md` leaves have notes, and notes carry
+frontmatter. Run it from `theory/` after any citation edit; it exits non-zero on
+the first error class:
+
+```bash
+python3 kb/lint.py
+```
+
+Anchors it accepts in a target file: a `{#attr}` attribute, the
+`## #anchor — Title` heading convention used by older excerpt files, a plain
+markdown heading slug, and the `#§3.1` section-number shorthand used for note
+cross-references.
+
 ## Tagging analogies and intuition
 
 Lines or paragraphs that are not formal claims must be prefixed with an

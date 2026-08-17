@@ -1,7 +1,8 @@
 # Glossary linking — design spec
 
 **Date:** 2026-05-06
-**Status:** approved (brainstorming complete; awaiting writing-plans handoff)
+**Status:** implemented 2026-05-06 (`theory/series/gen_glossary.py`,
+`theory/series/mark_glossary_terms.py`, tests under `theory/series/tests/`)
 **Scope:** the 5-paper LaTeX series at `theory/series/` and the canonical glossary at `theory/kb/glossary.md`.
 
 ## 1. Motivation
@@ -269,7 +270,8 @@ output. Documented in `theory/series/README.md`'s Build section.
 
 ## 5. Testing strategy
 
-**Tier 1 — pytest unit tests** at `theory/series/tests/test_glossary.py`:
+**Tier 1 — pytest unit tests** at `theory/series/tests/test_gen_glossary.py`
+and `theory/series/tests/test_mark_glossary.py`:
 - All 3 entry-shape parses (plain, parenthetical-alias, math-in-def).
 - Skip-region tokenization (math envs, command args, `\nogls`,
   already-wrapped).

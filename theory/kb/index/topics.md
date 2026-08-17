@@ -143,12 +143,13 @@ rlvr-and-grpo → foundations + variants.
 ## Total
 
 - 9 areas
-- 53 leaf topics
+- 55 leaf topics
 
-## Phase 2 input
+## Phase 2 input (historical — Phase 2 completed 2026-05-04)
 
-Per-topic deep research (Phase 2) will populate the corresponding
-`kb/notes/<area>/<topic>.md` for each leaf above. Candidate paper
-inventory is in `theory/kb/index/papers.json` (expanded post-Phase 1)
-and the per-area landscape reports under
-`theory/plans/landscape-sweep/`.
+Per-topic deep research (Phase 2) populated the corresponding
+`kb/notes/<area>/<topic>.md` for each leaf above; every leaf now has a
+note. The candidate paper inventory it drew from is
+`theory/kb/index/papers.json` (expanded post-Phase 1) and the per-area
+landscape reports under `theory/plans/landscape-sweep/`. Kept as the
+record of what Phase 2 was scoped against, not as a pending action.

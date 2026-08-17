@@ -5,9 +5,14 @@ LLM theoretical-framework workspace. Two-layered:
 1. **`kb/`** — knowledge base. Modular, citation-grounded notes plus
    verbatim source excerpts plus structured indices. Source of truth for
    technical claims throughout this project.
-2. **`series/`** — placeholder for a future multi-paper LaTeX series,
-   outlined only after the KB is complete (see
-   `docs/design/2026-05-03-theory-expansion-design.md` §11).
+2. **`series/`** — the built five-paper LaTeX series drawn from the KB
+   (architecture, training, reasoning, interpretability,
+   evaluation-alignment), cross-referenced with `xr-hyper`. Built PDFs are
+   committed at `series/paper-N/main.pdf`, with by-topic symlinks collected
+   into `series/dist/`. Rebuild with `bash theory/series/build.sh` — there is
+   no `theory/Makefile`. The series was audited by the 2026-05-06 six-lens
+   review wave; findings and their resolution are in `reviews/`. Structure
+   and per-paper layout: `series/README.md`.
 
 ## Layout
 
@@ -21,7 +26,8 @@ theory/
 ├── sources/           # primary source PDFs + selectively archived forum threads
 ├── plans/             # phase-scoped research/construction plans
 ├── archive/           # historical snapshots (pre-expansion v1, dated PDFs)
-├── series/            # placeholder for future LaTeX paper series (Phase 5+)
+├── series/            # 5-paper LaTeX series (built; see series/README.md)
+├── reviews/           # 2026-05-06 six-lens review wave + resolution log
 └── docs/design/  # design specs for the KB expansion
 ```
 
@@ -46,8 +52,20 @@ discipline" for the full rule.
 
 ## Status
 
-- v1 (pre-expansion) — single LaTeX/PDF "core architecture" doc covering
-  Transformer 2017 → LLaMA 2023. Archived under
-  `archive/2026-05-03-pre-expansion/`.
-- v2 (in progress) — KB-substrate expansion to bleeding-edge breadth and
-  depth.
+- **v1 (pre-expansion, archived)** — single LaTeX/PDF "core architecture" doc
+  covering Transformer 2017 → LLaMA 2023. Under
+  `archive/2026-05-03-pre-expansion/`; its `Makefile` is not the current build
+  path.
+- **v2 KB substrate — complete.** 55 leaf topic notes across architecture,
+  training, post-training, inference, scaling, reasoning, interpretability,
+  evaluation, and alignment, with verbatim excerpts, `index/papers.json`, and
+  a cited glossary. Phase 2 closed 2026-05-04.
+- **v2 LaTeX series — complete.** All five papers written and built (70
+  sections, ~394 pp); PDFs committed at `series/paper-N/main.pdf`.
+- **2026-05-06 review wave — applied.** Six independent fresh-context
+  reviewers (adversarial content, cross-paper coherence, math correctness,
+  citation tier, frontier currency, pedagogy) audited the series; the
+  triage and per-finding resolution are in `reviews/00-summary.md`.
+- **Since then: maintenance mode.** Changes are corrections, currency
+  refreshes, and new cross-links from the research arcs — not new phases.
+  Run `python3 kb/lint.py` from `theory/` after any citation edit.

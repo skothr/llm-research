@@ -91,7 +91,7 @@ sequences `[radford2019-gpt2 §2.2; kb/excerpts/radford2019-gpt2#sec-2-2]`.
 
 Vocabulary sizes have grown dramatically: GPT-2 used 50,257; cl100k
 (GPT-3.5/4) uses 100,256; o200k (GPT-4o) uses 200K; Phi-4 uses
-tiktoken's 100K vocab `[phi4 §2.1; kb/excerpts/phi4#sec-2-1]`.
+tiktoken's 100K vocab `[phi4 §2.1; kb/excerpts/phi4]`.
 
 ### 2.3 Byte-Latent Transformer — tokenizer-free (BLT, Meta 2024)
 
@@ -125,7 +125,7 @@ viable at non-trivial scale.
 | GPT-4o (o200k) | ~200,000 | ~0.9 | tiktoken; multilingual coverage |
 | Mistral-NeMo | 131,072 | ~1.0 | tekken (Mistral's variant of tiktoken) |
 | DeepSeek-V3 | 128,000 | ~1.0 | byte-level BPE `[deepseek-v3 §2.1]` |
-| Phi-4 | 100,000 | ~1.0 | tiktoken cl100k `[phi4 §2.1; kb/excerpts/phi4#sec-2-1]` |
+| Phi-4 | 100,000 | ~1.0 | tiktoken cl100k `[phi4 §2.1; kb/excerpts/phi4]` |
 
 Larger $|V|$ → fewer tokens per document → faster generation per token
 of *content*, but **larger embedding matrix** $|V| \cdot d_{\text{model}}$

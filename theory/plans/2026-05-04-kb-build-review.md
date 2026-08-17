@@ -40,8 +40,9 @@ Phase 5 brainstorm document committed. KB now 54 draft / 0 stubs._
 - **Phase 4** — citation hygiene sweep (9 author-misattributions or
   topic-year placeholders renamed; 12 papers added: 9 verified + 3
   foundational fills); cross-area `kb/index/contradictions.md` lens.
-- Lint (`theory/plans/_phase2/lint.py`) reports **0 errors / 0
-  warnings**.
+- Lint (then `theory/plans/_phase2/lint.py`; moved to `theory/kb/lint.py`
+  on 2026-08-17 and extended to validate citation *anchors*) reports
+  **0 errors / 0 warnings**.
 
 ## Quality bar status
 

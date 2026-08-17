@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 ## Agentic benchmarks
 
 - **Agentic benchmark** — Evaluation in which a model autonomously plans, takes actions in an environment, observes results, and replans, scored by an end-state verifier rather than a turn-by-turn rubric. Distinct from question-answering eval. Canonical examples: SWE-bench, GAIA, OSWorld, tau-bench `[jimenez2024-swebench, mialon2023-gaia, xie2024-osworld, yao2024-tau-bench]`.

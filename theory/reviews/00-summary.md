@@ -104,3 +104,29 @@ NITs are accumulating tax that's worth a single batched sweep but not blocking.
 The structural theses of all five papers — five-axis convergence (P1),
 six-stage pipeline (P2), reasoning triangle (P3), method-pluralism (P4),
 layered defense (P5) — survive intact across all six review lenses.
+
+## Resolution (verified 2026-08-17)
+
+Status of each BLOCKER / MAJOR against the current `theory/series/` sources.
+Line numbers are the evidence found on re-verification, not the original fix
+commits. "Not re-verified" means the finding was not checked in this pass — it
+is not a claim that the fix is missing.
+
+| ID | Status | Evidence |
+|---|---|---|
+| B1 | **APPLIED** | Decontamination / Qwen2-7B-control update paragraph at `paper-3/sections/14-contradictions.tex:176-192`, citing the new key `deepseek-r1-nature-2025` (`kb/index/papers.json:3872`, `series/references.bib:408`). |
+| M1 | **APPLIED** | The AIME figure reads $15.6\%\!\to\!77.9\%$ at `paper-3/sections/14-contradictions.tex:87` and `:152`; the corrected pair also appears at `03-self-consistency.tex:173`, `05-process-reward-models.tex:304`, `10-search-vs-rl.tex:128,157,162`. No `71\%` variant remains. |
+| M2 | **APPLIED** (flag option) | `\deepencite{rlvr-limits-2025 §3-§5, KB-excerpt-pending}` at `paper-2/sections/14-contradictions.tex:278` and `paper-3/sections/14-contradictions.tex:89`. The KB excerpt itself is still pending, which is what the finding's recommended option allowed. |
+| M3 | **APPLIED** | `\deepencite{sadasivan2023-detection §main-result, citation-pending}` at `paper-5/sections/14-contradictions.tex:145`, matching the §12 usage at `12-watermarking.tex:285`. |
+| M4 | **APPLIED** | All three sites cite `\citet[\S 3, Eq.~2]{hoffmann2022-chinchilla}`: `paper-3/sections/04-inference-compute-scaling.tex:328` and `:398`, `paper-3/sections/10-search-vs-rl.tex:205`. No `Eq.~10` occurrence remains in Paper 3. |
+| M5 | **APPLIED** | The token-level GRPO objective is cited to `\citep[\S 4.1, Eq.\ 3]{shao2024}` at `paper-3/sections/07-rlvr-grpo-dapo.tex:102`, with `deepseek-r1` demoted to the sequence-level restatement at `:103-106`. |
+| M6 | **APPLIED** | "Caveat: closed-vendor row labels age faster than the architectural picture" paragraph at `paper-1/sections/13-frontier-snapshot.tex:225-250`, naming the Claude 4-family, GPT-5/5.x, and Gemini 2.5 Deep Think releases and date-stamping the retained 2025-Q1 labels. |
+| M7 | **APPLIED** | Mistral Large 3 MoE note (675B total / 41B active) at `paper-1/sections/13-frontier-snapshot.tex:140-143`, citing `mistral-large3-2025` and stating why the Mistral Large 2 row is retained. |
+| M8 | **APPLIED** | "Update (post-2025-09): deliberative alignment as a partial sharpener" at `paper-5/sections/10-scheming.tex:262-270`, plus the cite at `paper-5/sections/14-contradictions.tex:109`; new bib key `openai2025-deliberative-alignment` at `series/references.bib:1289`. |
+| M9 | **APPLIED in substance; location differs from the report** | The one-sided framing is gone from the contradiction's home section: `paper-3/sections/14-contradictions.tex:97-105` reads "The 2026 picture is contested rather than settled … one camp's first-order [reading]" and cites 2025-Q3+ counter-evidence (`wen2025-cot-passk`). The report located this at Paper 3 §11, which is `11-cot-faithfulness.tex` and carries no Yue framing at all. The "consensus leans toward Yue with caveats" sentence still stands at `paper-2/sections/11-rlvr-and-grpo.tex:409` and `paper-2/sections/14-contradictions.tex:286` — both caveated and both forward-pointing to Paper 3, but treat them as the open remainder of M9. |
+| M10 | **APPLIED** | Explicit tier-B hedge in the `\deepencite{}` at `paper-1/sections/13-frontier-snapshot.tex:242-245`: closed-vendor system cards "are tier-B per `theory/sources/README.md` and back the version-lineage / API-surface claims, not the architectural cells; those cells remain 'ND.'" |
+| M11 | **APPLIED** | The intuition box at `paper-3/sections/07-rlvr-grpo-dapo.tex:168-191` gates the claim: "Under the \citet{rlvr-limits-2025} reading discussed in \cref{sec:contradictions} … a claim contested by the R1 narrative … and not yet decisively settled." |
+
+**MINORs and NITs: not re-verified in this pass.** The 19 MINOR and 6 NIT
+findings were not individually checked against the current sources; their
+status is unknown — neither confirmed open nor confirmed applied.

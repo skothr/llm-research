@@ -68,7 +68,7 @@ distinct strategies for keeping $V$ tight:
   string equality, ceiling raised by domain difficulty rather than
   distractor count `[rein2023-gpqa §abstract; kb/excerpts/rein2023-gpqa#abstract]`.
 - **FrontierMath:** open-ended, with a single canonical numerical /
-  symbolic answer parsed by a domain-specific checker `[glazer2024-frontiermath §sec-verification; kb/excerpts/glazer2024-frontiermath#sec-verification]`.
+  symbolic answer parsed by a domain-specific checker `[glazer2024-frontiermath §sec-verification; kb/excerpts/glazer2024-frontiermath#sec-2-2]`.
 - **HLE (Humanity's Last Exam):** mixed MCQ + short-answer; $V$
   combines string match for short-answer items and choice match for
   MCQ items `[phan2025-hle §abstract; kb/excerpts/phan2025-hle#abstract]`.
@@ -93,7 +93,7 @@ filters:
 Resulting size: 12,032 questions across 14 super-categories. At
 launch (June 2024), top frontier models scored 16–33 percentage
 points lower than their MMLU score
-`[wang2024-mmlu-pro §sec-delta; kb/excerpts/wang2024-mmlu-pro#sec-delta]`.
+`[wang2024-mmlu-pro §sec-delta; kb/excerpts/wang2024-mmlu-pro#sec-6-1-rankings]`.
 Prompt-format sensitivity dropped from 4–5% to ~2%, partly because
 10-way reduces the **answer-letter-prior effect** (where models
 have a learned preference for option B over D, etc.).
@@ -139,27 +139,27 @@ geometry, category theory.
 The methodologically critical design choice: every problem has a
 **single canonical numerical or symbolic answer** that can be parsed
 by an automated checker
-`[glazer2024-frontiermath §sec-verification; kb/excerpts/glazer2024-frontiermath#sec-verification]`.
+`[glazer2024-frontiermath §sec-verification; kb/excerpts/glazer2024-frontiermath#sec-2-2]`.
 Problems requiring proof or open-ended argument are excluded — this
 is what enables contamination-resistant scoring without LLM-as-judge.
 
 The headline at launch (Nov 2024): **<2% solve rate** for the
 strongest contemporary models
-`[glazer2024-frontiermath §sec-launch-result; kb/excerpts/glazer2024-frontiermath#sec-launch-result]`.
+`[glazer2024-frontiermath §sec-launch-result; kb/excerpts/glazer2024-frontiermath#sec-4-2-1]`.
 
 The difficulty calibration:
 
 > Problems demand multiple hours to days of effort from domain
 > specialists.
 
-`[glazer2024-frontiermath §sec-difficulty; kb/excerpts/glazer2024-frontiermath#sec-difficulty]`
+`[glazer2024-frontiermath §sec-difficulty; kb/excerpts/glazer2024-frontiermath#sec-2-5]`
 
 This places FrontierMath one tier above competition math (AIME, Putnam,
 IMO) on the human-effort axis. The contrast with AIME 2024 (now
 ~83–100% on frontier reasoning models per Artificial Analysis) is the
 key design rationale: FrontierMath was constructed precisely as
 post-saturation backup
-`[glazer2024-frontiermath §sec-saturation; kb/excerpts/glazer2024-frontiermath#sec-saturation]`.
+`[glazer2024-frontiermath §sec-saturation; kb/excerpts/glazer2024-frontiermath#abstract]`.
 
 ### 2.4 HLE (Humanity's Last Exam) — broad-domain frontier
 
@@ -325,7 +325,7 @@ Claude with extended thinking) deserve to be ranked on the same
 leaderboards as non-reasoning models is contested. Reasoning models
 spend 10–100× more tokens at inference, which is a different cost
 profile. **MMLU-Pro reports CoT-vs-direct as a diagnostic**
-`[wang2024-mmlu-pro §sec-cot; kb/excerpts/wang2024-mmlu-pro#sec-cot]`,
+`[wang2024-mmlu-pro §sec-cot; kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`,
 which partly normalizes for this; FrontierMath does not. Whether to
 add a "compute-budget" axis to leaderboards is an open community
 question.

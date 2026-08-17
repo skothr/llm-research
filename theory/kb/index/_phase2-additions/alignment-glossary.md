@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 # Glossary additions — alignment area (Phase 2)
 
 ## Sycophancy and deception (failure modes)
@@ -117,14 +119,14 @@
   supervisor; PGR = 1 → student fully recovers strong-with-ground-
   truth ceiling. Operationalizes "how much capability can weak
   supervision elicit." `[burns2023-w2s §pgr;
-  kb/excerpts/burns2023-w2s#sec-pgr]`
+  kb/excerpts/burns2023-w2s#sec-3-pgr]`
 - **Auxiliary confidence loss** — W2S training-side intervention that
   penalizes the strong student for low confidence on its own
   predictions, biasing it toward decisive predictions where the
   strong model has more capability than the weak supervisor revealed.
   Substantially improves PGR on NLP tasks; less effective on chess
   and reward modeling. `[burns2023-w2s §numerical;
-  kb/excerpts/burns2023-w2s#sec-numerical]`
+  kb/excerpts/burns2023-w2s#sec-4-numerical]`
 
 ## Watermarking and provenance
 
@@ -141,21 +143,21 @@
   $\delta$; sampling proceeds from the modified distribution.
   Defaults: $\gamma = 0.25$, $\delta = 2.0$.
   `[kirchenbauer2023-watermark §greenred;
-  kb/excerpts/kirchenbauer2023-watermark#sec-greenred]`
+  kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`
 - **z-score watermark detection** — Detection statistic
   $z = (|s|_G - \gamma T) / \sqrt{T \gamma (1-\gamma)}$ where $|s|_G$
   is the green-token count in candidate text of length $T$. Requires
   no API access — only the keyed hash and the candidate text.
   Interpretable as a one-sided $p$-value via the normal CDF.
   `[kirchenbauer2023-watermark §detection;
-  kb/excerpts/kirchenbauer2023-watermark#sec-detection]`
+  kb/excerpts/kirchenbauer2023-watermark#sec-zscore]`
 - **Distortion / detectability tradeoff** — Larger $\delta$ →
   stronger watermark, more quality drift. Inherent to soft
   promotion schemes. Hard partitioning (green-only) eliminates the
   tradeoff but degrades quality at low-entropy positions and is
   trivially detectable without the key.
   `[kirchenbauer2023-watermark §soft;
-  kb/excerpts/kirchenbauer2023-watermark#sec-soft]`
+  kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`
 - **SynthID-Text** — Google DeepMind's tournament-sampling watermark.
   Replaces logit bias with a tournament over candidate tokens
   evaluated by a hash-derived $g$-function. Two modes: distortionary
@@ -243,7 +245,7 @@
   this is a situational-awareness probe. The Apollo six-probe suite
   similarly leans on the model's awareness of its evaluation
   context. `[greenblatt2024-alignment-faking §setup-wedge;
-  kb/excerpts/greenblatt2024-alignment-faking#setup-wedge]`
+  kb/excerpts/greenblatt2024-alignment-faking#sec-2-setup]`
 - **Deliberative alignment** — OpenAI training technique (introduced
   in the o1 stack): train the model to explicitly reason about
   safety policies in its CoT before acting. Conceptually related to

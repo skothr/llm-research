@@ -60,7 +60,7 @@ This is the structural difference from QA benchmarks: in MMLU, the
 agent's action is a single multiple-choice letter and $V$ is
 string-equality; in SWE-bench, the agent's action is a sequence of
 file edits and $V$ is `pytest` outcome on the post-state codebase
-`[jimenez2024-swebench §sec-eval-protocol; kb/excerpts/jimenez2024-swebench#sec-eval-protocol]`.
+`[jimenez2024-swebench §sec-eval-protocol; kb/excerpts/jimenez2024-swebench#sec-2-2-eval]`.
 
 ## 2. Mechanism — how each benchmark instantiates $V$
 
@@ -85,7 +85,7 @@ The verifier is
 
 $$V(s_T, g) = \mathbb{1}\Big[\bigwedge_{t \in \text{F2P}} \mathrm{pass}(t, s_T)\Big] \cdot \mathbb{1}\Big[\bigwedge_{t \in \text{P2P}} \mathrm{pass}(t, s_T)\Big]$$
 
-`[jimenez2024-swebench §sec-eval-protocol; kb/excerpts/jimenez2024-swebench#sec-eval-protocol]`.
+`[jimenez2024-swebench §sec-eval-protocol; kb/excerpts/jimenez2024-swebench#sec-2-2-eval]`.
 
 The headline metric is `% resolved` over the 2,294 (or 500 in the
 Verified subset) instances. At launch (Oct 2023), Claude 2 resolved
@@ -110,7 +110,7 @@ The verifier is exact-match-after-normalization on the agent's final
 answer field — not LLM-as-judge.
 
 GAIA is stratified into Levels 1/2/3 by tool-chain depth
-`[mialon2023-gaia §sec-dataset; kb/excerpts/mialon2023-gaia#sec-dataset]`.
+`[mialon2023-gaia §sec-dataset; kb/excerpts/mialon2023-gaia#sec-3]`.
 
 The headline gap at launch:
 
@@ -130,7 +130,7 @@ is 369 tasks across Ubuntu/Windows/macOS. Each task ships:
 - A natural-language task description $\rho$ (e.g., "find the file
   matching pattern X and copy it to ~/results/").
 - A **per-task evaluator script** that checks the final OS state
-  $s_T$ against the goal `[xie2024-osworld §sec-task-spec; kb/excerpts/xie2024-osworld#sec-task-spec]`.
+  $s_T$ against the goal `[xie2024-osworld §sec-task-spec; kb/excerpts/xie2024-osworld#sec-2-2-3-1-env-design]`.
 
 The action space is mouse/keyboard events on a real GUI (via VNC or
 similar), not a structured API. This means the agent must do
@@ -139,7 +139,7 @@ into pixel coordinates. The launch result was
 
 > Human performance: 72.36%; best model: 12.24% (GPT-4V).
 
-`[xie2024-osworld §sec-results; kb/excerpts/xie2024-osworld#sec-results]`
+`[xie2024-osworld §sec-results; kb/excerpts/xie2024-osworld#sec-4-results]`
 
 The dominant failure mode reported:
 
@@ -163,7 +163,7 @@ adds two pieces missing in the others:
 
 The verifier is end-state check on a domain DB (retail / airline
 DB rows match the goal state). What's new is the **pass^k metric**
-`[yao2024-tau-bench §sec-passk; kb/excerpts/yao2024-tau-bench#sec-passk]`:
+`[yao2024-tau-bench §sec-passk; kb/excerpts/yao2024-tau-bench#sec-3-passk]`:
 
 $$\mathrm{pass}^k(\text{agent}, \text{task}) = \mathbb{1}\Big[\bigwedge_{i=1}^{k} V(s_T^{(i)}, g) = 1\Big]$$
 
@@ -174,7 +174,7 @@ which is the standard pass@k). The headline finding:
 > on <50% of the tasks, and are quite inconsistent (pass^8 <25% in
 > retail).
 
-`[yao2024-tau-bench §sec-result; kb/excerpts/yao2024-tau-bench#sec-result]`
+`[yao2024-tau-bench §sec-result; kb/excerpts/yao2024-tau-bench#sec-5-1-results]`
 
 ## 3. Variants and lineage
 
