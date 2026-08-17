@@ -67,7 +67,8 @@ research/arcs/<slug>/
 ```
 
 Generated artifacts (figures, datasets) are committed — drift detection beats
-regenerability-in-principle (see the `generated-artifact-policy` memory).
+regenerability-in-principle: a committed artifact that drifted from its
+generator is detectable; a regenerable-in-principle one is not.
 git-LFS rules already cover `research/**/figures/*.png`,
 `research/**/data/*.pt` and `research/**/data/cache/*.pt`.
 
@@ -203,8 +204,8 @@ exists.
 ### 4. Observation writeups
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. The field list
-  is in the repo `CLAUDE.md` § *Research arcs & observations*; arc 04's
-  observations are the canonical spelling of it. Copy this skeleton:
+  is in the repo `CLAUDE.md` § *Research arcs & observations*. Copy this
+  skeleton:
 
   ```markdown
   # Observation: <one-line headline stating the finding, not the topic>
@@ -225,9 +226,12 @@ exists.
   ## References
   ```
 
-  The heading spellings are canonical: cross-links from the arc README and
-  from other observations anchor on them, so `## Findings` or `## Repro`
-  breaks a link rather than reading as a synonym.
+  These six heading spellings are canonical **for new observations**:
+  cross-links from the arc README and from other observations anchor on them,
+  so `## Findings` or `## Repro` breaks a link rather than reading as a
+  synonym. Existing arcs predate the rule and are not retrofitted — arc 03
+  uses `## Findings`, and arc 04 deviates in places — so read the skeleton
+  above as the reference, not any one arc's files.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
 - **Append the attribution block now, not at close.** If this observation
@@ -273,8 +277,8 @@ it against an expected constant, printing `PASS`/`FAIL` and a final
   carries the same stub check against arc 03's artifacts.
 - **State the expected result with its measurement date and the log.** The arc
   README quotes the summary line, the date it was measured, and the committed
-  run behind it — arc 04: `956 PASS | 4 FAIL`, 2026-08-16,
-  `data/audit_2026-08-16.log` — and accounts for every non-zero FAIL (there,
+  run behind it — arc 04: `986 PASS | 4 FAIL`, 2026-08-17,
+  `data/audit_2026-08-17.log` — and accounts for every non-zero FAIL (there,
   presence checks for two lenses deliberately not refit). Where the expected
   count depends on what a reader has fetched, state each state separately
   (arc 04 gives both the default-clone and the full-cache totals). A bare
@@ -379,11 +383,12 @@ stated rationale that a fresh local re-capture is picked up immediately. That
 is the older pattern; new arcs do not copy it.
 
 **Manifest.** A `data/MANIFEST.json` (generator:
-`examples/<family>_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
-`class` (capture-root | derived), `producing_script`, `producing_command`,
-`inputs` (upstream `.pt`), `requires_model` (none | base | +av/+ar/…),
-`consumers` (figures / downstream artifacts / audit). The generator's `--check`
-mode re-verifies every sha256 — run it in the audit step as a drift detector.
+`examples/<family>_data_manifest.py`) records per file: `filename`, `sha256`,
+`size_bytes`, `class` (capture-root | derived), `producing_script`,
+`producing_command`, `inputs` (upstream `.pt`), `requires_model`
+(none | base | +av/+ar/…), `consumers` (figures / downstream artifacts /
+audit). The generator's `--check` mode re-verifies every sha256 — run it in
+the audit step as a drift detector.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*
 (protocol sanity, shapes, no NaNs/collapse) and *locked* (audit re-derives the
@@ -555,11 +560,13 @@ user endorsed, named as such.>
 
 Every quote above is recoverable from the sessions below. The transcripts are
 machine-local and are not committed to this repo — they carry local paths and
-tool output — so they are referenced by session id and date only.
+tool output — so they are referenced by session id and date only. A session id
+here is the 8-character prefix of the local session UUID; that prefix is the
+repo-wide convention and is what a later reader matches on.
 
 | Session | Span | Covers |
 |---|---|---|
-| `<session-uuid>` | YYYY-MM-DD | <what was directed in it> |
+| `<session-id>` | YYYY-MM-DD | <what was directed in it> |
 
 Claims in this section that are not in quotation marks are Claude's
 characterization of the user's direction, not the user's wording. Blocks
