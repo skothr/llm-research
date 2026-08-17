@@ -59,7 +59,10 @@ PC1 0.0121 top10 0.0468 top50 0.1213 PR 1003
 U norms: median 0.697; U-space month within-cos +0.439
 ```
 
-Figures: fig1 (norms), fig2 (anisotropy), fig3 (PCA spectrum), fig4 (E vs U);
+Figures: [`figures/fig1_norms.png`](figures/fig1_norms.png) (norms),
+[`figures/fig2_anisotropy.png`](figures/fig2_anisotropy.png) (anisotropy),
+[`figures/fig3_pca_spectrum.png`](figures/fig3_pca_spectrum.png) (PCA
+spectrum), [`figures/fig4_e_vs_u.png`](figures/fig4_e_vs_u.png) (E vs U);
 provenance in [`figures/INVENTORY.md`](figures/INVENTORY.md).
 
 ## Reproducibility

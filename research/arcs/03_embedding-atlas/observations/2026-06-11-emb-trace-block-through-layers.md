@@ -7,7 +7,9 @@ forward passes on a 51-text committed probe corpus
 chat template, prefill only; 1,130 accumulated non-first positions).
 Scripts: `emb_trace_capture.py` (T0/T1), `emb_trace_components.py` (T1.5),
 analyses `emb_trace_analyze.py`. Locked by AUDIT 9 (14 claims; total 75
-PASS / 0 FAIL). Figures fig16-fig18. Pre-registered predictions:
+PASS / 0 FAIL at 2026-06-11 — 15 claims / total 99 PASS after the
+2026-08-17 carrier-band addition, see the Correction section).
+Figures fig16-fig18. Pre-registered predictions:
 [../plans/2026-06-11-predictions.md](../plans/2026-06-11-predictions.md).
 
 ## Findings
@@ -43,7 +45,10 @@ unsquared) collapses
 0.921 -> 0.199 within one layer (fig18) — but the content is fully
 recoverable in a moved basis.
 
-**F-T3. Four regimes, with named carriers.** (i) L0: top carriers are the
+**F-T3. Four regimes, with named carriers.** (CORRECTED 2026-08-17 — two
+numbers in regime (iii) below did not re-derive; see the Correction section
+after the findings. The four-regime structure and the stable-band claim
+survive.) (i) L0: top carriers are the
 block dims themselves. (ii) L1-2 handoff: half-new carriers appear (1790,
 1923, 2030, 32); three independent measurements coincide here — the
 layer-1 input RMSNorm amplifies block dims 2.15x over control (a learned
@@ -51,9 +56,13 @@ static gain), the attention residual delta has its block-fraction peak
 (0.175, 2.3x the random floor, argmax over all layers/components), and the
 layer-0 block-reader q-heads sit immediately upstream (L0H15 reads block
 columns at 3.28x control; L0H10/H2/H20/H21 at 2.0-2.2x). (iii) L4-26: a
-stable carrier set (adjacent-layer top-10 overlap 7-9/10; recurring new
-carriers 1445, 1865, 2545, 19, 3567) in which three ORIGINAL block dims —
-2604, 1395 (the comma dim), 1122 — persist as carriers throughout.
+stable carrier set (adjacent-layer top-10 overlap ~~7-9/10~~ **4-9/10,
+median 8** — corrected; recurring new carriers 1445, 1865, 2545, 19, 3567)
+in which ~~three ORIGINAL block dims — 2604, 1395 (the comma dim), 1122 —
+persist as carriers throughout~~ **two ORIGINAL block dims — 2604 and 1395
+(the comma dim) — hold a top-10 carrier slot at every one of the 23 layers;
+a third, 1122, holds one at L4 and again at L17-26 but drops out over
+L5-L16** (corrected).
 (iv) L27-28: carrier overlap collapses to 2/10, the L27 input RMSNorm gain
 spikes to 3.28x, attention writes at 1.29x, and a fresh basis forms as
 recoverability rises back to 13.1 (vs control 3.9) — structural/frequency
@@ -68,6 +77,36 @@ L24; L22-26 all ~0.82-0.89) — the late network writes around the original
 block dims, consistent with the carrier basis having moved. The
 dimension-aligned routing is done by RMSNorm gains and attention
 (o_proj write ratio 1.29 at L1 and L27), not by FFN weight structure.
+
+## Correction — F-T3 regime (iii) carrier-stability numbers (2026-08-17)
+
+Two numbers in the L4-26 regime were written from an in-session computation
+that was never scripted, and neither re-derives from the committed artifact.
+Both are corrected in place above; **the finding's substance — a stable
+mid-network carrier band spanning L4-26, distinct from the L1-2 handoff and
+the L27-28 repackaging — survives unchanged**, and both corrected values are
+now locked by the audit rather than left to hand computation.
+
+**Re-derivation source.** `carrier.block.top_carrier_dims` in
+[`../data/emb_trace_components.pt`](../data/emb_trace_components.pt) (top-10
+carriers per layer, 29 layers), re-derived by the carrier-band check added to
+`examples/emb_audit_findings.py` AUDIT 9 on 2026-08-17.
+
+**Correction 1 — adjacent-layer top-10 overlap is 4-9/10, not 7-9/10.**
+Measured over the 22 adjacent-layer transitions inside L4-26 (L4→L5 through
+L25→L26): median 8, range 4-9. Eighteen of the 22 do sit in the original
+7-9/10 band; the four that do not are **L4→L5 = 4** (the entry into the
+band), **L21→L22 = 6**, **L22→L23 = 6**, and **L25→L26 = 5** (the exit). The
+band boundaries the regime split rests on are unaffected — the two lowest
+transitions are its entry and exit, and the L27→L28 collapse to 2/10 in
+regime (iv) re-derives exactly.
+
+**Correction 2 — two original block dims persist across the band, not
+three.** Block dims **2604 and 1395** hold a top-10 carrier slot at all 23
+layers of L4-26. Dim **1122 does not**: it holds one at L4, drops out over
+L5-L16, and returns for L17-L26. Calling all three persistent "throughout"
+overstated 1122's continuity; the two-dim persistence is the load-bearing
+part of the claim and is what the audit now asserts.
 
 ## Evidence
 
@@ -90,7 +129,7 @@ python examples/emb_trace_capture.py      # T0/T1 (model load, ~10 min CPU)
 python examples/emb_trace_analyze.py      # census/readers/P2 (model-free)
 python examples/emb_trace_components.py   # T1.5 (model load + 51 hooked passes)
 python examples/emb_trace_render.py       # fig16-fig18 (model-free)
-python examples/emb_audit_findings.py     # AUDIT 9 (14 claims) — all PASS; total grows with later sections
+python examples/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; total grows with later sections
 ```
 
 ## Hypotheses / follow-ups

@@ -23,7 +23,7 @@ Probe corpus: committed inline (PROBES) — comma lists, periods/prose, code,
 CJK, newline-structured text. Raw text, NO chat template (mechanism study;
 matches Sun et al.'s raw-sequence protocol).
 
-Outputs (cache; promote via emb_data_manifest):
+Outputs (cache; promote via `emb_data_manifest.py --write`):
   emb_trace_weightmap.pt   T1 maps
   emb_trace_layers.pt      T0 census + T3 per-layer stats + tracked vectors
 """
