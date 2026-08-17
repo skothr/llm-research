@@ -21,7 +21,7 @@ AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)
   PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time pip_freeze hash unmodified   expected='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'   actual='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'
   PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'   actual='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'
-  PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, 2026-08-17 edit)   expected='differs from capture-time hash'   actual='differs'
+  PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, two 2026-08-17 edits)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time generator hash unmodified   expected='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'   actual='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'
   PASS   manifest.generation.generator_git_commit   expected='0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='0aff26c867df88dab5a53487dfb0ea90580ecb31'
   PASS   generator_git_commit resolves to a commit in this repo   expected='resolves'   actual='resolves'

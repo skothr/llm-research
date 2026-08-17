@@ -87,7 +87,9 @@ error is 0 and the two-proportion test is undefined, so nothing here is a
 significance claim. The result rests on the zero-hit count itself (0 of 104 owl
 streams, 0 of 109 neutral, under every scheme) and on the sample size behind it
 — n=120/condition settles an all-or-nothing literal channel and is far short of
-the ~931/condition a small rate *difference* would need. The positive control
+the ~931/condition that resolving a small rate *difference* would need (that
+floor is derived below for the incidental 13.3-vs-9.2% reject-rate gap, not for
+this decode null, which has zero variance in both arms). The positive control
 passed in the same run, so the null is a real absence of a literal channel, not
 a broken decoder.
 
