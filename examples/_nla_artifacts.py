@@ -32,11 +32,17 @@ FIGURES = (
 
 _LFS_POINTER_MAGIC = b"version https://git-lfs.github.com/spec/v1"
 
-#: Recovery command for a repo cloned without git-LFS populated.
-LFS_RECOVERY_HINT = "run `git lfs install && git lfs pull`"
+#: Recovery command for a repo cloned without git-LFS populated. Single
+#: definition so every stub report in the arc names the same fix — the wording
+#: is pinned by research/ARC_PROCESS.md § "Raw data is a deliverable".
+LFS_RECOVERY_HINT = "run git lfs install && git lfs pull"
+
+#: The full one-line stub report: what is wrong, then how to fix it. Used by
+#: nla_data_manifest.py (--check / --write) and nla_audit_findings.py.
+LFS_STUB_NOTE = f"LFS pointer stub — {LFS_RECOVERY_HINT}"
 
 
-def _is_lfs_pointer(path: Path) -> bool:
+def is_lfs_pointer(path: Path) -> bool:
     """True when `path` is a git-LFS pointer stub rather than the real payload.
 
     A clone made without git-LFS (or with `GIT_LFS_SKIP_SMUDGE=1`) leaves every
@@ -74,13 +80,13 @@ def read_artifact(name: str) -> Path:
     if p is None:
         raise FileNotFoundError(
             f"{name!r} not found in {CACHE} or {DATA}. Run the capture step, "
-            f"or `git lfs pull` to fetch the committed copy."
+            f"or {LFS_RECOVERY_HINT} to fetch the committed copy."
         )
-    if _is_lfs_pointer(p):
+    if is_lfs_pointer(p):
         raise FileNotFoundError(
             f"{name!r} at {p} is a git-LFS pointer stub, not the real artifact "
             f"— the clone never populated LFS objects. Recover with: "
-            f"git lfs install && git lfs pull"
+            f"{LFS_RECOVERY_HINT}"
         )
     return p
 

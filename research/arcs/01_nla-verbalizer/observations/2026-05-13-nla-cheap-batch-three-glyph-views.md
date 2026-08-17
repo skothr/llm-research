@@ -56,7 +56,7 @@ The first version of this analysis (fig15) picked the LAST forced token per pair
 
 Position-matched recomputation (fig16, run `nla_counterfactual_position_check.py`):
 
-| pair | forced_token | Δpos | ||Δh||_feat | ||Δh||_full |
+| pair | forced_token | Δpos | \|\|Δh\|\|_feat | \|\|Δh\|\|_full |
 |---|---|---|---|---|
 | negation | 'No' | 0 | 5.72 | 64.99 |
 | factual | ' Berlin' | 0 | 8.70 | 88.75 |
@@ -75,7 +75,7 @@ fig16's right column also shows the three refusal_metaware diff glyphs have visu
 
 For each of the 4 forced-continuation pairs, computed the glyph difference (forced − natural) in the feature-dim subspace. **The refusal_metaware row's original 35.55 was inflated by Δpos=+10; position-matched correction (fig16) gives 28.06** — the corrected progression is the load-bearing one:
 
-| pair | prompt | natural → forced | ||Δh||_feat (original fig15) | ||Δh||_feat (corrected fig16) |
+| pair | prompt | natural → forced | \|\|Δh\|\|_feat (original fig15) | \|\|Δh\|\|_feat (corrected fig16) |
 |---|---|---|---|---|
 | negation | "Is the sky blue?" | Yes → No | **5.72** | 5.72 (no position drift) |
 | factual | "What is the capital of France?" | Paris → Berlin | **8.70** | 8.70 (no position drift) |

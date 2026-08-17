@@ -2,10 +2,19 @@
 
 **Status:** paused (2026-06-10) — Step 0 (encoding decode-test) complete, see
 [`observations/2026-05-31-step0-protocol-and-filter.md`](observations/2026-05-31-step0-protocol-and-filter.md);
-Steps 1-2 not started. Paused 2026-06-10 in favor of the embedding-atlas arc
-(03), which closed 2026-07-15; not resumed — Step 1 is additionally blocked on
-the design issue below.
+Steps 1-2 not started. Paused `[NORMALIZED]` "where we are" for a repo-wide
+reorganization [session 2026-06-01], then superseded by the embedding-atlas
+arc (03, opened 2026-06-10, closed 2026-07-15); not resumed — Step 1 is
+additionally blocked on the design issue below.
 **Started:** 2026-05-31.
+
+**Compute context** (transcript-verified): the Step-0 capture ran on CPU after
+the 4-bit GPU load hit a CUDA out-of-memory error against a co-tenant process
+(the dataset manifest records `device: cpu`), which capped the run at n=120
+per condition — the committed dataset itself completed and audits
+byte-for-byte. A follow-on scale-up generation for the Step-1 SFT corpus
+(n=12,000 per condition) stalled on GPU and was killed without producing an
+artifact; no data was lost or truncated.
 
 ## The question
 
@@ -90,11 +99,12 @@ mathematically" push, formalized by Claude.
 
 Every quote above is recoverable from the session below. The transcript is
 machine-local and is not committed to this repo — it carries local paths and
-tool output — so it is referenced by session id and date only.
+tool output — so it is referenced by session id and date only. The ids are
+**abbreviated**: each is the 8-character prefix of the local session UUID.
 
 | Session | Span | Covers |
 |---|---|---|
-| `eda85977-6b09-47c3-878c-fbef7b4163a6` | 2026-05-31 | the arc's single working session (ran pre-repo-split under the predecessor project) |
+| `eda85977` | 2026-05-31 → 06-01 | the arc's working session and its pause (ran pre-repo-split under the predecessor project) |
 
 Claims in this section that are not in quotation marks are Claude's
 characterization of the user's direction, not the user's wording.
@@ -135,8 +145,17 @@ signed off; the arc paused here.
 **H0 (a literal, decodable channel) — NULL.** Across all five decode schemes
 (`ascii_direct`, `ascii_mod256`, `ascii_mod128`, `concat_digits3`,
 `concat_digits2_off97`) and both conditions there are **zero** owl-lexicon
-hits: owl_rate = neutral_rate = 0.000, z = 0, p = 1.0 everywhere. Kept after
-the ported format+range+count filter: owl 104/120, neutral 109/120. The
+hits: owl_rate = neutral_rate = 0.000 everywhere. `decode_report.json` records
+`z = 0, p = 1.0` in each of those cells, but that pair is a recording
+convention for the all-zero case, **not a computed statistic** — with zero
+variance in both arms the pooled two-proportion standard error is 0 and the
+test is undefined, so no p-value is being asserted here. What carries the
+result is the zero-hit count itself (0 of 104 owl streams and 0 of 109 neutral
+streams, under each of the five schemes) together with the sample size behind
+it: n = 120/condition settles an all-or-nothing literal channel, and is far
+short of the ~931/condition a small rate *difference* would need (limitation 4
+below). Kept after the ported format+range+count filter: owl 104/120,
+neutral 109/120. The
 positive control passed in the same run (a planted `[111,119,108]` decodes to
 "owl" and trips the lexicon), so the null is a real absence, not a broken
 decoder. Paired with the source finding that the released filter has **no**
@@ -162,9 +181,10 @@ Full write-up:
 **Audit.** Every load-bearing number above is re-derived from the committed
 bytes by [`examples/subliminal_audit_findings.py`](../../../examples/subliminal_audit_findings.py)
 — file hashes/sizes/line counts against the manifest, a from-first-principles
-replay of the ported filter over the raw completions, and a full five-scheme
-decode replay reconciled against `decode_report.json`. No GPU, no network,
-under a second:
+replay of the ported filter over the raw completions, a full five-scheme
+decode replay reconciled against `decode_report.json`, and a byte-exact
+regeneration of the 120-query prompt set from the seeded generator. No GPU, no
+network, under a second:
 
 ```bash
 python examples/subliminal_audit_findings.py
@@ -174,10 +194,16 @@ Expected result as of 2026-08-17 (committed run:
 [`data/audit_2026-08-17.log`](data/audit_2026-08-17.log)):
 
 ```
-SUMMARY:  102 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ```
 
-**What a 102-PASS audit means.** It establishes *arithmetic and artifact
+One claim is environment-dependent: resolving the manifest's
+`generator_git_commit` needs the repo's history. From a shallow clone, a source
+copy without `.git`, or a box without `git`, that check moves to the
+UNVERIFIABLE list instead of failing — 102 PASS | 0 FAIL | 6 UNVERIFIABLE is
+the same green result under those conditions.
+
+**What a 103-PASS audit means.** It establishes *arithmetic and artifact
 consistency*: the numbers in this README and in the observation are the numbers
 the committed bytes yield under the ported filter and the decoder. It does
 **not** establish the scientific validity of the protocol — a wrong chat

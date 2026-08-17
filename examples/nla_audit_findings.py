@@ -53,6 +53,8 @@ assume worktree-root CWD and read the live cache; see
 `examples/README_NLA.md` for the convention, including the
 `torch.load(..., weights_only=False)` trust assumption (safe for these
 locally-generated artifacts; do not normalize for third-party data).
+Every read goes through `_load`, which refuses an unpopulated git-LFS
+pointer stub with one actionable FAIL rather than an UnpicklingError.
 """
 
 import os
@@ -73,7 +75,12 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 
-from _nla_artifacts import CACHE as _CACHE, find_artifact
+from _nla_artifacts import (
+    CACHE as _CACHE,
+    LFS_STUB_NOTE,
+    find_artifact,
+    is_lfs_pointer,
+)
 
 
 # Per-file artifact resolution. `ARTIFACTS / "name.pt"` resolves each artifact
@@ -85,7 +92,7 @@ from _nla_artifacts import CACHE as _CACHE, find_artifact
 # committed copy — still audits every artifact, instead of pinning to the cache
 # and then crashing on (AUDIT 1/20/21) or silently skipping (AUDIT 11-19) the
 # ones the cache lacks. A name in neither place resolves to its non-existent
-# cache path, so an unconditional torch.load raises FileNotFoundError and a
+# cache path, so an unconditional `_load` raises FileNotFoundError and a
 # guarded `.exists()` stays False — exactly the old behavior for a truly-absent
 # artifact. See research/ARC_PROCESS.md § "Raw data is a deliverable".
 class _ArtifactDir:
@@ -95,6 +102,29 @@ class _ArtifactDir:
 
 
 ARTIFACTS = _ArtifactDir()
+
+
+class LfsStubError(RuntimeError):
+    """An artifact resolved to an unpopulated git-LFS pointer stub.
+
+    A clone made without git-LFS leaves every `data/*.pt` as a ~130-byte text
+    pointer. Loading one raises `_pickle.UnpicklingError`, which reads as a
+    corrupt artifact rather than the actionable "your clone never fetched the
+    LFS objects". `_load` raises this instead, and `main` turns it into a
+    single failing claim carrying the recovery command.
+    """
+
+
+def _load(path: Path) -> Any:
+    """torch.load an audit input, refusing git-LFS pointer stubs.
+
+    Every artifact read in this file goes through here so a clone without LFS
+    populated gets one actionable FAIL instead of an UnpicklingError traceback.
+    `weights_only=False` is the arc-wide trust decision for these
+    locally-generated tensor dumps (see the module docstring)."""
+    if is_lfs_pointer(path):
+        raise LfsStubError(f"{path.name}: {LFS_STUB_NOTE}")
+    return torch.load(path, weights_only=False)
 
 
 # ---------------------------------------------------------------------------
@@ -130,7 +160,7 @@ def claim_eq(name: str, expected: Any, actual: Any) -> None:
 def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
     items: list[dict[str, Any]] = []
     p = ARTIFACTS / "aggregate_faithfulness.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for prompt in data["prompts"]:
         for cap in prompt.get("captures", []):
             items.append(
@@ -149,7 +179,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
             )
 
     p = ARTIFACTS / "rabbit_haiku_gen_trajectory.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for cap in data.get("captures", []):
         items.append(
             {
@@ -167,7 +197,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
         )
 
     p = ARTIFACTS / "forced_continuation.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for cap in data.get("captures", []):
         items.append(
             {
@@ -183,7 +213,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
         )
 
     p = ARTIFACTS / "country_concept_vector.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for i, h in enumerate(data["h_country"]):
         items.append(
             {
@@ -247,7 +277,7 @@ def classify_dim(s: dict[str, float]) -> str:
     return "background"
 
 
-def main() -> None:
+def run_audit() -> None:
     print("=" * 80)
     print("AUDIT 1: dataset size and structure")
     print("=" * 80)
@@ -472,7 +502,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 8: CAV alignment (H3 falsification)")
     print("=" * 80)
-    cav_data = torch.load(ARTIFACTS / "country_concept_vector.pt", weights_only=False)
+    cav_data = _load(ARTIFACTS / "country_concept_vector.pt")
     direction_unit = cav_data["direction_unit"]
     claim_near(
         "CAV ||direction_unit||", 1.000, float(direction_unit.norm().item()), atol=0.001
@@ -553,7 +583,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 10: counterfactual diff norms (fig16 corrected)")
     print("=" * 80)
-    forced_data = torch.load(ARTIFACTS / "forced_continuation.pt", weights_only=False)
+    forced_data = _load(ARTIFACTS / "forced_continuation.pt")
     nat: dict[str, dict[str, Any]] = {}
     forc_by_pair: dict[str, list[dict[str, Any]]] = {}
     for c in forced_data["captures"]:
@@ -641,7 +671,7 @@ def main() -> None:
     print("=" * 80)
     flip_path = ARTIFACTS / "interpolation_flipbook.pt"
     if flip_path.exists():
-        flip = torch.load(flip_path, weights_only=False)
+        flip = _load(flip_path)
         h_A_flip = flip["h_A"]
         h_B_flip = flip["h_B"]
         steps_flip = sorted(flip["steps"], key=lambda s: s["step"])
@@ -688,7 +718,7 @@ def main() -> None:
     print("=" * 80)
     vocab_path = ARTIFACTS / "vocab_atlas.pt"
     if vocab_path.exists():
-        vocab = torch.load(vocab_path, weights_only=False)
+        vocab = _load(vocab_path)
         v_caps = vocab["captures"]
         claim_eq("vocab atlas capture count", 128, len(v_caps))
         claim_eq("vocab atlas category count", 23, len(vocab["categories"]))
@@ -807,7 +837,7 @@ def main() -> None:
         print("=" * 80)
         stab_path = ARTIFACTS / "discriminant_stability.pt"
         if stab_path.exists():
-            stab = torch.load(stab_path, weights_only=False)
+            stab = _load(stab_path)
             stab_caps = stab["captures"]
             claim_eq("stability capture count", 32, len(stab_caps))
             by_anchor: dict[str, dict[str, torch.Tensor]] = {}
@@ -869,7 +899,7 @@ def main() -> None:
         print("AUDIT 15: Mid-sequence vocab atlas (cross-protocol null result)")
         mid_path = ARTIFACTS / "mid_seq_vocab_atlas.pt"
         if mid_path.exists():
-            mid = torch.load(mid_path, weights_only=False)
+            mid = _load(mid_path)
             mid_caps = mid["captures"]
             claim_eq("mid_seq capture count", 128, len(mid_caps))
             claim_eq("mid_seq skip count", 0, len(mid.get("skipped", [])))
@@ -1004,7 +1034,7 @@ def main() -> None:
         print("AUDIT 17: Concept arithmetic atlas")
         arith_path = ARTIFACTS / "concept_arithmetic_atlas.pt"
         if arith_path.exists():
-            arith = torch.load(arith_path, weights_only=False)
+            arith = _load(arith_path)
             combos_a = arith["combos"]
             claim_eq("concept_arithmetic combo count", 7, len(combos_a))
             claim_eq("target_norm", 150.0, float(arith["target_norm"]))
@@ -1086,7 +1116,7 @@ def main() -> None:
         print("AUDIT 18: Dense interpolation near pivot")
         dense_path = ARTIFACTS / "dense_interp_near_pivot.pt"
         if dense_path.exists():
-            dense = torch.load(dense_path, weights_only=False)
+            dense = _load(dense_path)
             d_steps = sorted(dense["steps"], key=lambda s: s["t"])
             claim_eq("dense_interp step count", 30, len(d_steps))
             # Dense zone bounds
@@ -1124,7 +1154,7 @@ def main() -> None:
         print("AUDIT 19: Plateau attractor strength")
         plat_path = ARTIFACTS / "plateau_attractor_test.pt"
         if plat_path.exists():
-            plat = torch.load(plat_path, weights_only=False)
+            plat = _load(plat_path)
             results = plat["results"]
             claim_eq("attractor test target count", 3, len(results))
             by_label = {r["label"]: r for r in results}
@@ -1178,7 +1208,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 20: aggregate round-trip faithfulness (F1 foundation, 8 prompts)")
     print("=" * 80)
-    agg = torch.load(ARTIFACTS / "aggregate_faithfulness.pt", weights_only=False)
+    agg = _load(ARTIFACTS / "aggregate_faithfulness.pt")
     agg_cos: list[float] = []
     agg_mse: list[float] = []
     per_prompt: dict[str, list[float]] = {}
@@ -1268,7 +1298,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 21: rabbit-haiku trajectory faithfulness (the n=15 prior)")
     print("=" * 80)
-    hk = torch.load(ARTIFACTS / "rabbit_haiku_gen_trajectory.pt", weights_only=False)
+    hk = _load(ARTIFACTS / "rabbit_haiku_gen_trajectory.pt")
     hk_caps = [c for c in hk["captures"] if c.get("cosine") is not None]
     hk_cos = [c["cosine"] for c in hk_caps]
     hk_mse = [
@@ -1313,7 +1343,7 @@ def main() -> None:
     # the 167-capture pool — no model load. Added 2026-08-17.
     # -----------------------------------------------------------------------
     if vocab_path.exists():
-        vocab_v = torch.load(vocab_path, weights_only=False)
+        vocab_v = _load(vocab_path)
         v_caps_v = vocab_v["captures"]
         cats_v = list(vocab_v["categories"])
 
@@ -1492,6 +1522,22 @@ def main() -> None:
         )
     else:
         print(f"  (skipping AUDIT 22/23: {vocab_path} not present)")
+
+
+def main() -> None:
+    try:
+        run_audit()
+    except LfsStubError as exc:
+        # A clone without git-LFS populated: report it as a failing claim
+        # naming the recovery command, not as an UnpicklingError traceback.
+        # The audit stops here — every remaining check reads the same data/.
+        print()
+        claim(
+            "committed artifacts are real payloads, not git-LFS pointer stubs",
+            False,
+            "populated .pt artifacts",
+            str(exc),
+        )
 
     print()
     print("=" * 80)

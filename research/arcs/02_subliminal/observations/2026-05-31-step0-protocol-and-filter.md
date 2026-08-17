@@ -79,9 +79,17 @@ Full run 2026-05-31 (Qwen2.5-7B-Instruct teacher, CPU bf16, n=120/condition,
 seed 42). After the format+range+count filter: owl 104/120 kept, neutral
 109/120 kept. Across all five decode schemes (ascii_direct, ascii_mod256,
 ascii_mod128, concat_digits3, concat_digits2_off97) there are **zero** owl-lexicon
-hits in either condition — owl_rate = neutral_rate = 0.000, z = 0, p = 1.0
-everywhere. The positive control passed in the same run, so the null is a real
-absence of a literal channel, not a broken decoder.
+hits in either condition — owl_rate = neutral_rate = 0.000 everywhere.
+`decode_report.json` records `z = 0, p = 1.0` alongside each of those cells;
+that pair is the report's convention for the all-zero case, **not a computed
+statistic**. With zero variance in both arms the pooled two-proportion standard
+error is 0 and the two-proportion test is undefined, so nothing here is a
+significance claim. The result rests on the zero-hit count itself (0 of 104 owl
+streams, 0 of 109 neutral, under every scheme) and on the sample size behind it
+— n=120/condition settles an all-or-nothing literal channel and is far short of
+the ~931/condition a small rate *difference* would need. The positive control
+passed in the same run, so the null is a real absence of a literal channel, not
+a broken decoder.
 
 **Reading:** no literal ASCII/base-N owl-encoding survives in the filtered
 streams. H0 (literal decodable channel) is not supported. Paired with the
@@ -93,7 +101,7 @@ One incidental observation, **under-powered — do not over-read**: the owl
 reject rate (13.3%, 16/120) ran higher than neutral (9.2%, 11/120) on the
 identical seeded prompt set, but the gap is **not statistically significant** at
 n=120 (two-proportion z=1.02, p=0.31; detecting a real 13.3-vs-9.2% gap at 80%
-power needs ~930 per condition). So it is at most a hint that the persona shifts
+power needs ~931 per condition). So it is at most a hint that the persona shifts
 the output distribution — not evidence for it. Deferred to the scale-up, where n
 is large enough to resolve whether the gap is real.
 
@@ -132,7 +140,7 @@ that mapping into `data/README.md`. The generation recipe itself is unchanged.
 
 The manifest layout predates `research/ARC_PROCESS.md`'s `data/MANIFEST.json`
 convention and arc 02 was never migrated; integrity is covered by
-`examples/subliminal_audit_findings.py` (102 PASS / 0 FAIL on 2026-08-17), and
+`examples/subliminal_audit_findings.py` (103 PASS / 0 FAIL on 2026-08-17), and
 the migration is tracked as issue `#53`.
 
 ## Hypotheses
@@ -179,7 +187,7 @@ the migration is tracked as issue `#53`.
   covered by `examples/subliminal_audit_findings.py`; migration is tracked as
   issue `#53`.
 - **Audit:** every number above is re-derived from the committed bytes by
-  `examples/subliminal_audit_findings.py` — 102 PASS / 0 FAIL / 5 UNVERIFIABLE
+  `examples/subliminal_audit_findings.py` — 103 PASS / 0 FAIL / 5 UNVERIFIABLE
   on 2026-08-17 (`../data/audit_2026-08-17.log`).
 
 ## References

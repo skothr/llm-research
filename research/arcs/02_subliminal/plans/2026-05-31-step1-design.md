@@ -8,6 +8,13 @@ probe cannot separate HA from HC without a statistical-fingerprint projection)
 and the resulting open decision are tracked in the arc; the runnable plan will
 be distilled here after sign-off.
 
+**Units convention (document-wide).** Card capacity is quoted in binary units —
+the RTX 2080 is 8 GiB = 8192 MiB = 8.59 GB — while every VRAM *budget* below is
+summed in decimal GB, as the tooling reports it. So each "~6 GB peak fits 8 GiB"
+comparison mixes bases and, in that direction, understates the headroom: ~6 GB is
+~5.6 GiB against an 8 GiB card. Every such comparison in this document is
+conservative for that reason; none is corrected in place, because the text below
+is preserved verbatim.
 
 ---
 
@@ -44,10 +51,8 @@ VRAM budget (Qwen2.5-7B = 7.6 B params, 28 layers, hidden 3584, vocab 152k):
 | CUDA context + bnb kernels + fragmentation | — | **~0.8 GB** |
 | **Peak total** | | **~5.8–6.3 GB** |
 
-Estimate: **~6 GB peak, comfortably under 8 GiB.** (The budget rows above are
-decimal GB; the card's capacity is 8 GiB = 8192 MiB = 8.59 GB. Comparing a
-decimal-GB sum against the GiB figure therefore *understates* the headroom — the
-stated margin is conservative.) This is not marginal — the data is tiny (181 tokens max/example, ~210 examples). The dominant cost is the static 4-bit base (~4 GB); everything dynamic is small because sequences are short and batch is 1. Headroom lets you raise rank to 32 or batch to 2 if needed.
+Estimate: **~6 GB peak, comfortably under 8 GiB.** (Mixed bases — see the
+document-wide units convention at the top.) This is not marginal — the data is tiny (181 tokens max/example, ~210 examples). The dominant cost is the static 4-bit base (~4 GB); everything dynamic is small because sequences are short and batch is 1. Headroom lets you raise rank to 32 or batch to 2 if needed.
 
 **Concrete config (the go recipe):**
 

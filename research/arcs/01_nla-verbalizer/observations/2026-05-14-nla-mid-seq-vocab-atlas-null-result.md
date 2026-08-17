@@ -71,6 +71,40 @@ All three "represent the anchor token" in some sense, but the resulting h's live
 
 The discriminant glyph (fig25/26) is the right primitive **only for h's captured at end-of-single-token-user-message position**. Applying it to h captured at other positions — generation steps mid-trajectory, mid-prompt captures, interpolation-derived h — produces glyphs whose rays don't carry the intended semantic interpretation. The interpolation flipbook (fig17/fig25) is borderline: anchors A and B are AR-encoded h's (not end-of-prompt captures), and the interpolated h's live somewhere those discriminants weren't designed to cover. The strong fig21 result (capitals→nature anchor switch at t=0.421) used cosine-to-vocab-anchor projection rather than discriminants — and that result still holds because it doesn't go through this protocol-coupled basis.
 
+## Hypotheses
+
+**H1 — the +0.0491 is protocol displacement, not information loss.** The
+mid-sequence h's may carry the same category structure as the end-of-prompt
+captures, expressed in a frame the eop-derived basis does not span; the near-zero
+projection would then be about the basis, not about mid-sequence h. **To test:**
+build mid-seq-NATIVE discriminants from these same 128 captures and re-run the
+in-protocol arm. Under H1 the native in-protocol signal reaches the eop
+in-protocol scale (~+0.40); under "information loss" it stays near the +0.017
+random-projection floor. **Tested and confirmed** in
+[MAIN-70](2026-05-14-nla-mid-seq-native-discriminants.md): +0.5632 with 97.10%
+argmax accuracy, above the eop in-protocol baseline rather than merely matching it.
+
+**H2 — the 6 categories that improve mid-seq are the ones whose end-of-prompt
+centroids are most mutually correlated.** At eop the mean inter-centroid cosine
+is +0.85 (fig25), so categories sitting inside that correlated cluster lose
+argmax accuracy to their neighbors; if the mid-seq carrier decorrelates them,
+exactly those categories should gain. **To test:** rank all 23 categories by
+their mean off-diagonal centroid cosine at eop and correlate that ranking with
+the per-category accuracy delta (mid − eop) in the table above. Under H2 the
+correlation is strongly positive and `nature`/`emotion` sit at the top of the
+eop-correlation ranking. Pure tensor math over the two committed atlases.
+
+**H3 — the loss is driven by trailing context, not by "not being at the end".**
+The anchor sits at position 36-38 with 10-12 tokens after it; each subsequent
+token's attention re-writes what the anchor position's residual stream carries.
+If that is the mechanism, the eop protocol is not special — it is the k=0 end of
+a continuum. **To test:** capture each anchor in the same carrier at a sweep of
+trailing-token counts (k = 0, 2, 5, 10, 20) and project onto the eop basis.
+Under H3 within-class signal decays monotonically in k and returns to ~+0.40 at
+k=0; a step change instead would say the end-of-prompt position is categorically
+different. This is a re-capture, so it must regenerate the audit expecteds and
+`data/MANIFEST.json` in the same change (see the re-capture warning below).
+
 ## Next experiments this opens
 
 1. **Build mid-seq-NATIVE discriminants** from these 128 captures and project mid-seq h's onto those. Predict within-class signal ~+0.4 (matching the in-protocol signal at eop). If so, the basis-design protocol-coupling is confirmed and we have a per-protocol family of bases.
