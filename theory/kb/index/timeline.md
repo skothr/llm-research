@@ -394,8 +394,7 @@ timeline entries because the timeline focuses on Transformer-era LLMs.
   workflows extend beyond math (code, agentic tools); RLVR limits
   debate continues. Differential Transformer
   (Ye et al. 2024 / ICLR 2025) gathers replications.
-- **Sources:** `[differential-transformer-2024]` (if added),
-  ongoing system cards.
+- **Sources:** `[ye2024-difftransformer]`, ongoing system cards.
 - **Notes:** `kb/notes/architecture/attention-mechanism.md` §5,
   `kb/notes/post-training/rlvr-and-grpo.md`.
 

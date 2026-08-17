@@ -3374,7 +3374,7 @@
       "short_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation.",
       "full_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%.",
       "case_strict": true,
-      "kb_cite": "chen2026-faithfulness-scaling, arXiv 2601.06423; chen2025-faithcot-bench, arXiv 2510.04040"
+      "kb_cite": "mehta2026-faithfulness-scaling, arXiv 2601.06423; shen2025-faithcot-bench, arXiv 2510.04040"
     },
     {
       "key": "test-time-compute",
@@ -3653,7 +3653,7 @@
       "short_def": "Self-training loop using MCTS to generate correct trajectories, then SFT on those, then update the value function.",
       "full_def": "Self-training loop using MCTS to generate correct trajectories, then SFT on those, then update the value function. Structurally analogous to AlphaZero self-play.",
       "case_strict": true,
-      "kb_cite": "rest-mcts-2024, arXiv 2406.03816"
+      "kb_cite": "zhang2024-rest-mcts, arXiv 2406.03816"
     },
     {
       "key": "lookahead-beam",
@@ -3671,7 +3671,7 @@
       "short_def": "MCTS extended over retrieval decisions in addition to reasoning steps.",
       "full_def": "MCTS extended over retrieval decisions in addition to reasoning steps. Bridges search-based TTC and retrieval-augmented generation.",
       "case_strict": true,
-      "kb_cite": "mcts-rag-2025, arXiv 2503.20757"
+      "kb_cite": "hu2025-mcts-rag, arXiv 2503.20757"
     },
     {
       "key": "scaling-law",

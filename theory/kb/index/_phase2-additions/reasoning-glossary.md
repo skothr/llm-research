@@ -9,7 +9,7 @@
 - **Zero-shot CoT** — The Kojima 2022 trigger-phrase variant. Two-stage decode: reasoning extraction + answer extraction. Recovers a substantial fraction of few-shot CoT gain at instruction-tuned scale without exemplars. `[kojima2022 §3]`
 - **Self-consistency** — Sample $N$ reasoning traces at temperature $T > 0$, majority-vote over extracted answers. The simplest test-time-compute strategy. Gains: GSM8K +17.9%, SVAMP +11.0% over greedy CoT. `[wang2022-self-consistency §3]`
 - **Trained CoT** — The behaviour of a reasoning-trained model (o1, R1, QwQ) that emits long reasoning traces unconditionally, without prompt scaffolding. Distinct from prompted CoT in that the trace is the model's natural output distribution. `[deepseek-r1 §2]`
-- **CoT faithfulness** — The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. `[chen2026-faithfulness-scaling, arXiv 2601.06423; chen2025-faithcot-bench, arXiv 2510.04040]`
+- **CoT faithfulness** — The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. `[mehta2026-faithfulness-scaling, arXiv 2601.06423; shen2025-faithcot-bench, arXiv 2510.04040]`
 
 ## Test-time compute
 
@@ -50,6 +50,6 @@
 - **Inference-time search** — TTC family that constructs and explores a tree (or DAG) of partial reasoning prefixes, using a verifier or value function to direct expansion. Beam / BFS / MCTS variants. `[rstar-math2025 §3]`
 - **Reasoning-MCTS** — Monte Carlo Tree Search where actions are next-step reasoning generations and the value function is a PRM. Selection-expansion-simulation-backup loop, UCT-style exploration. `[rstar-math2025 §3]`
 - **Generator-discriminator mutual verification** — rStar-Math's two-SLM design: policy SLM generates candidate next-steps, reward / discriminator SLM scores them. Both small (~7B); together rival o1-mini on MATH. `[rstar-math2025 §3]`
-- **ReST-MCTS*** — Self-training loop using MCTS to generate correct trajectories, then SFT on those, then update the value function. Structurally analogous to AlphaZero self-play. `[rest-mcts-2024, arXiv 2406.03816]`
+- **ReST-MCTS*** — Self-training loop using MCTS to generate correct trajectories, then SFT on those, then update the value function. Structurally analogous to AlphaZero self-play. `[zhang2024-rest-mcts, arXiv 2406.03816]`
 - **Lookahead beam** — Beam search variant: from each beam candidate, perform short rollouts and score the rolled-out outcomes, then prune. The form Snell 2024 uses for compute-optimal mix experiments. `[snell2024 §4]`
-- **MCTS-RAG** — MCTS extended over retrieval decisions in addition to reasoning steps. Bridges search-based TTC and retrieval-augmented generation. `[mcts-rag-2025, arXiv 2503.20757]`
+- **MCTS-RAG** — MCTS extended over retrieval decisions in addition to reasoning steps. Bridges search-based TTC and retrieval-augmented generation. `[hu2025-mcts-rag, arXiv 2503.20757]`

@@ -103,8 +103,7 @@ contributions on top of the algorithm are:
 
 - **Centralized scheduler + distributed workers.** A single scheduler
   process (Python) dispatches block-table updates to GPU workers
-  (C++/CUDA) `[kwon2023 §4.2;
-  kb/excerpts/kwon2023#sec-4-2]`. Workers see only physical block IDs;
+  (C++/CUDA) `[kwon2023 §4.6]`. Workers see only physical block IDs;
   they do not coordinate on memory management directly.
 - **First-come-first-served preemption.** Under capacity pressure the
   *latest-arrived* requests are preempted; their KV is either swapped
@@ -114,12 +113,12 @@ contributions on top of the algorithm are:
   reshape+block-write (after each layer's K/V projection), block-aware
   attention (reads non-contiguous KV via the block table), and fused
   block copy (for copy-on-write at block granularity)
-  `[kwon2023 §4.1; kb/excerpts/kwon2023#sec-4-1]`.
+  `[kwon2023 §5.1]`.
 - **Sequence operations as the API.** vLLM exposes `fork`, `append`,
   `free` to higher layers, mirroring OS process operations. Beam
   search and parallel sampling are implemented in terms of these
   primitives, not as built-in modes
-  `[kwon2023 §4.1; kb/excerpts/kwon2023#sec-4-1]`.
+  `[kwon2023 §5.2]`.
 
 Reported headline: 2–4× over FasterTransformer and Orca on OPT-13B
 through OPT-175B, more pronounced on long sequences, large models, and
@@ -145,7 +144,7 @@ outputs."
 The SGLang frontend is a Python-embedded DSL with primitives for
 generation (`gen`, `select`), parallelism (`fork`, `join`), and
 multi-modal input (`image`, `video`)
-`[zheng2024-sglang §1; kb/excerpts/zheng2024-sglang#sec-1-distributed]`.
+`[zheng2024-sglang §2]`.
 A single SGLang program may contain dozens of LLM calls with
 shared system prompts and few-shot examples.
 

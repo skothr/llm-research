@@ -111,7 +111,7 @@ PAPER_CITE_RE = re.compile(r"\[([A-Za-z0-9][A-Za-z0-9.\-]*(?:/[A-Za-z0-9.\-]+)*)
 # reference links (`[text][ref]`), tags (`[INTUITION]`), and footnotes.
 BARE_CITE_RE = re.compile(r"\[([A-Za-z0-9][A-Za-z0-9.\-]*)\](?![\(\[])")
 # A bare `[token]` is only read as a citation when it is *key-shaped*: it
-# carries a 19xx/20xx year (`burns2023-w2s`, `rest-mcts-2024`) or is a bare
+# carries a 19xx/20xx year (`burns2023-w2s`, `ring-attention-2023`) or is a bare
 # arXiv id (`2502.04420`). Deliberately conservative — a yearless key such as
 # `phi4` is skipped in the bare form rather than risk flagging prose like
 # `[city1]`. The `§` form has no such restriction.
@@ -336,15 +336,32 @@ def check_citations(paper_keys: set):
                     )
 
         # `[key, arXiv NNNN.NNNNN]` — the key sits ahead of a comma rather than
-        # a `§` or a `]`, so neither form above sees it. Segments split on `;`
-        # so the second key of `[k1, arXiv …; k2, arXiv …]` is checked too.
+        # a `§` or a `]`, so neither form above sees it. The payload is split on
+        # BOTH `;` and `,`, so every key-shaped token is checked, not only the
+        # first: `[k1, arXiv …; k2, arXiv …]` and comma-separated key *lists*
+        # (`[fineweb2024, data-mixing-laws-2024]`) alike. A segment counts as a
+        # key only if it is *entirely* one key-shaped token — `arXiv 2601.06423`
+        # and prose fragments have interior spaces and are skipped.
         for m in re.finditer(r"\[([^\[\]]+)\]", body):
-            for seg in m.group(1).split(";"):
-                sm = re.match(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)\s*,", seg)
+            payload = m.group(1)
+            # Markdown links (`[text](url)`) and reference links (`[text][ref]`)
+            # are not citations.
+            if body[m.end() : m.end() + 1] in ("(", "["):
+                continue
+            # A single-token payload is the bare `[key]` form, already checked
+            # above; re-checking it here would double-report every unknown key.
+            if ";" not in payload and "," not in payload:
+                continue
+            for seg in re.split(r"[;,]", payload):
+                sm = re.fullmatch(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)\s*", seg)
                 if not sm:
                     continue
                 key = sm.group(1)
                 if key.lower() in NOT_A_KEY or not KEY_SHAPED_RE.search(key):
+                    continue
+                # A naked 4-digit year is a date in prose (`[Rewarding Progress,
+                # 2024]`), never a paper key.
+                if re.fullmatch(r"\d{4}", key):
                     continue
                 paper_cite_keys.add(key)
                 if key.lower() not in keys_lower:
@@ -358,9 +375,14 @@ def check_citations(paper_keys: set):
             end = m.end()
             if body[end : end + 1] == "#":
                 continue  # anchored form, handled below
-            stem = m.group(1)
+            # A citation that ends a sentence (`… kb/excerpts/foo.`) captures the
+            # sentence period into the stem; strip trailing dots on both sides of
+            # the `.md` removal so `foo.`, `foo.md` and `foo.md.` all reduce to
+            # `foo`.
+            stem = m.group(1).rstrip(".")
             if stem.endswith(".md"):
                 stem = stem[:-3]
+            stem = stem.rstrip(".")
             if not (EXCERPTS / (stem + ".md")).exists():
                 errors.append(
                     f"{rel}:{line_of(m.start())}: cites missing excerpt file "
