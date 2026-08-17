@@ -48,9 +48,9 @@ Kwon et al. give the OPT-13B example: $2 \cdot 5120 \cdot 40 \cdot 2 =
 For decoding on modern accelerators, the bottleneck is *not* the FLOPs
 that go into producing $K_t, V_t$; it is the bandwidth of *re-reading*
 the entire cached prefix at every step. Shazeer's analysis gives the
-governing memory/compute ratio in incremental decoding as $\Theta(n/d
-+ 1/b_{\text{batch}})$ for sequence length $n$, model width $d$, and
-batch size $b_{\text{batch}}$
+governing memory/compute ratio in incremental decoding as
+$\Theta(n/d + 1/b_{\text{batch}})$ for sequence length $n$, model width
+$d$, and batch size $b_{\text{batch}}$
 `[shazeer2019 §2.4; kb/excerpts/shazeer2019#sec-2-4]`. When $n
 \approx d$ or $b_{\text{batch}} \approx 1$, the ratio approaches 1
 and the operation is HBM-bandwidth-bound. This is the *reason* every

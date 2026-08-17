@@ -412,8 +412,8 @@ Observations so far, in `observations/`:
 Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
-+ the four 1.5B robustness axes and the 7B held-out set, swap
-significance + 5.1b McNemar tiers, and the two-scale norm-bias pins —
+plus the four 1.5B robustness axes and the 7B held-out set, swap
+significance with the 5.1b McNemar tiers, and the two-scale norm-bias pins —
 landed 2026-07-24; 978 claimed with a warm five-lens cache after the
 final-review pins landed 2026-07-25: full stage-4 depth-table cells both
 scales, the naive-vs-paper delta decomposition, K_median_occ, the exact
@@ -427,7 +427,7 @@ metric-correction artifacts) are LFS-committed under `data/` and
 MANIFEST-registered (sha256), so **checks B–N run from a clean clone**;
 check A and the lens-integrity blocks read the full fitted lenses.
 Decision 4 originally kept all five cache-only (committed layer subsets
-+ `jspace_fit_lens.py` regenerate them); amended by owner decision
+plus `jspace_fit_lens.py` regenerate them); amended by owner decision
 2026-08-16 after the C4-redaction re-run: the **three lenses
 refit in that re-run are now LFS-committed in `data/cache/`**
 (~905 MiB / ~949 MB — both wikitext lenses + the c4en lens, with their

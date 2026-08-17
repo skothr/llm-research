@@ -239,9 +239,13 @@ The `paper-N/main.pdf` files linked above were last built **before** the
 2026-08-17 unit-label corrections in
 `paper-1/sections/06-attention-hardware-implementation.tex` (lines 99 and
 145: SRAM capacities `KB` → `KiB`, the binary unit the underlying
-FlashAttention figures actually use). Source therefore leads the committed
-artifacts by those two labels; `paper-1/main.pdf` still renders `KB` at
-both sites. No other source/PDF divergence is known.
+FlashAttention figures actually use) and the same-day paper-key alias
+renames in `paper-3/glossary-section.tex` + `glossary-terms.json`
+(`mcts-rag-2025` → `hu2025-mcts-rag`, `chen2026-faithfulness-scaling` →
+`mehta2026-faithfulness-scaling`). Source therefore leads the committed
+artifacts at exactly those sites: `paper-1/main.pdf` still renders `KB`,
+and `paper-3/main.pdf` still renders the two pre-rename glossary keys.
+No other source/PDF divergence is known.
 
 A rebuild is **deliberately deferred**: regenerating five PDFs for a
 two-label fix churns megabytes of committed binaries while issue #3
