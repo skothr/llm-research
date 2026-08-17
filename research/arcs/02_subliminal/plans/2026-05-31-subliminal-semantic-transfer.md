@@ -77,11 +77,16 @@ is mapped through the shared geometry.** (A) predicts it stays dead.
 ## Experimental program (cheap-first, staged)
 
 **Step 0 — Encoding decode-test (zero GPU, zero training).**
-Their number datasets are released (subliminal-learning.com / their repo). Decode
-the owl-teacher streams under ASCII and a few base-N schemes; compare owl-related
-string frequency to a neutral teacher's streams. Above-chance => a literal channel
-they missed (notable). Null (expected) => closes H0, confirms the signal is the
-subtle distributed kind. **First task; needs only their data.**
+Their number datasets are **not** released — only the generation pipeline
+(`MinhxLe/subliminal-learning @ v1.0.0`, whose `v1.0.0` release carries zero
+assets and whose tree holds no dataset files), and their teacher
+(`gpt-4.1-nano-2025-04-14`) is closed. So Step 0 regenerates the streams locally
+with an open same-base teacher (Qwen2.5-7B-Instruct) under their exact ported
+prompts + filter. Decode those owl-teacher streams under ASCII and a few base-N
+schemes; compare owl-related string frequency to a neutral teacher's streams.
+Above-chance => a literal channel they missed (notable). Null (expected) =>
+closes H0, confirms the signal is the subtle distributed kind. **First task;
+needs a local regeneration run, no GPU training.**
 
 **Step 1 — Differential influence-alignment probe (TinyLlama, LoRA).**
 Reproduce the minimal loop on a single base model (TinyLlama-1.1B; same-base
@@ -133,11 +138,11 @@ format-bias first, cf. NLA arc D3).
 
 ## Feasibility
 
-TinyLlama-1.1B + LoRA fits the RTX 2080 (8GB); Step 0 needs no GPU. Toolkit:
-`.venv` (torch/transformers); CAV/activation-probe machinery and the NLA
-verbalizer already exist from the layer-20 arc
-(`research/arcs/01_nla-verbalizer/README.md`). Their
-datasets are public.
+TinyLlama-1.1B + LoRA fits the RTX 2080 (8 GiB); Step 0 needs no GPU training.
+Toolkit: `.venv` (torch/transformers); CAV/activation-probe machinery and the
+NLA verbalizer already exist from the layer-20 arc
+(`research/arcs/01_nla-verbalizer/README.md`). Their pipeline is public; their
+datasets are not.
 
 ## Why it could be novel
 

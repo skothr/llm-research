@@ -1,0 +1,135 @@
+================================================================================
+AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)
+================================================================================
+  PASS   manifest.files[] covers exactly the 5 recorded files   expected=5   actual=5
+  PASS   owl_streams.jsonl sha256 vs manifest   expected='5851ce6f1775bb2a0f4ba591ceba13d3049a862158c746ebe9def919e9da6acb'   actual='5851ce6f1775bb2a0f4ba591ceba13d3049a862158c746ebe9def919e9da6acb'
+  PASS   owl_streams.jsonl size_bytes vs manifest   expected=4796   actual=4796
+  PASS   owl_streams.jsonl n_lines vs manifest   expected=104   actual=104
+  PASS   owl_raw.jsonl sha256 vs manifest   expected='6336c2779db44cc042d8fa381bfe556ddc748562548973a3089ce4b069565b89'   actual='6336c2779db44cc042d8fa381bfe556ddc748562548973a3089ce4b069565b89'
+  PASS   owl_raw.jsonl size_bytes vs manifest   expected=5648   actual=5648
+  PASS   owl_raw.jsonl n_lines vs manifest   expected=120   actual=120
+  PASS   neutral_streams.jsonl sha256 vs manifest   expected='a08a3afe2ff4d65884d3235e89f49e6ea83f543cc2b05704304bf17fbedb0af1'   actual='a08a3afe2ff4d65884d3235e89f49e6ea83f543cc2b05704304bf17fbedb0af1'
+  PASS   neutral_streams.jsonl size_bytes vs manifest   expected=5050   actual=5050
+  PASS   neutral_streams.jsonl n_lines vs manifest   expected=109   actual=109
+  PASS   neutral_raw.jsonl sha256 vs manifest   expected='ed3c6c5756b7a3a9b3f42a58d0737a168c411a04b67369cd02e4ec75e6b61a4c'   actual='ed3c6c5756b7a3a9b3f42a58d0737a168c411a04b67369cd02e4ec75e6b61a4c'
+  PASS   neutral_raw.jsonl size_bytes vs manifest   expected=5230   actual=5230
+  PASS   neutral_raw.jsonl n_lines vs manifest   expected=120   actual=120
+  PASS   decode_report.json sha256 vs manifest   expected='97410cd5db621e17ae81c8b68c9f8a4643c405755d8b87ec7712ba39798fbdfc'   actual='97410cd5db621e17ae81c8b68c9f8a4643c405755d8b87ec7712ba39798fbdfc'
+  PASS   decode_report.json size_bytes vs manifest   expected=1178   actual=1178
+  PASS   manifest.json sha256 vs the value pinned in data/README.md   expected='567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875'   actual='567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875'
+  PASS   pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments   expected='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'   actual='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'
+  PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs'
+  PASS   manifest records the capture-time pip_freeze hash unmodified   expected='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'   actual='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'
+  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d'   actual='bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d'
+  PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, 2026-08-17 edit)   expected='differs from capture-time hash'   actual='differs'
+  PASS   manifest records the capture-time generator hash unmodified   expected='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'   actual='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'
+  PASS   manifest.generation.generator_git_commit   expected='0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='0aff26c867df88dab5a53487dfb0ea90580ecb31'
+  PASS   generator_git_commit resolves to a commit in this repo   expected='resolves'   actual='resolves'
+
+================================================================================
+AUDIT B -- filter replay (kept counts, reject rates + reasons, z, power)
+================================================================================
+  PASS   owl: raw completions   expected=120   actual=120
+  PASS   owl: kept after re-filter   expected=104   actual=104
+  PASS   owl: kept matches manifest.statistics.rows_kept   expected=104   actual=104
+  PASS   owl: reject rate   expected=0.133333   actual=0.1333
+  PASS   owl: reject rate vs observation figure   expected=0.133   actual=0.1333
+  PASS   owl: reject-reason census   expected={'too many numbers': 10, 'invalid format': 2, 'numbers too large': 4}   actual={'too many numbers': 10, 'invalid format': 2, 'numbers too large': 4}
+  PASS   owl: reject-reason census matches manifest   expected={'too many numbers': 10, 'invalid format': 2, 'numbers too large': 4}   actual={'too many numbers': 10, 'invalid format': 2, 'numbers too large': 4}
+  PASS   owl_streams.jsonl is byte-identical to parse_response(kept raws)   expected='4796 bytes'   actual='4796 bytes'
+  PASS   neutral: raw completions   expected=120   actual=120
+  PASS   neutral: kept after re-filter   expected=109   actual=109
+  PASS   neutral: kept matches manifest.statistics.rows_kept   expected=109   actual=109
+  PASS   neutral: reject rate   expected=0.091667   actual=0.0917
+  PASS   neutral: reject rate vs observation figure   expected=0.092   actual=0.0917
+  PASS   neutral: reject-reason census   expected={'too many numbers': 10, 'numbers too large': 1}   actual={'too many numbers': 10, 'numbers too large': 1}
+  PASS   neutral: reject-reason census matches manifest   expected={'too many numbers': 10, 'numbers too large': 1}   actual={'too many numbers': 10, 'numbers too large': 1}
+  PASS   neutral_streams.jsonl is byte-identical to parse_response(kept raws)   expected='5050 bytes'   actual='5050 bytes'
+  PASS   owl rejects   expected=16   actual=16
+  PASS   neutral rejects   expected=11   actual=11
+  PASS   two-proportion z on reject counts (16/120 vs 11/120)   expected=1.0214   actual=1.0214
+  PASS   observation's rounded z   expected=1.02   actual=1.02
+  PASS   two-sided p for that z   expected=0.31   actual=0.3071
+  PASS   power floor n per condition (alpha=.05, power=.80)   expected=931   actual=931
+
+================================================================================
+AUDIT C -- decode replay (five schemes, both conditions, positive control)
+================================================================================
+  PASS   decode_report.kept.owl vs owl_streams.jsonl lines   expected=104   actual=104
+  PASS   decode_report.kept.neutral vs neutral_streams.jsonl lines   expected=109   actual=109
+  PASS   decode_report.n_per_condition   expected=120   actual=120
+  PASS   decode_streams() scheme keys == decode_report keys   expected=['ascii_direct', 'ascii_mod128', 'ascii_mod256', 'concat_digits2_off97', 'concat_digits3']   actual=['ascii_direct', 'ascii_mod128', 'ascii_mod256', 'concat_digits2_off97', 'concat_digits3']
+  PASS   ascii_direct: owl lexicon hits   expected=0   actual=0
+  PASS   ascii_direct: neutral lexicon hits   expected=0   actual=0
+  PASS   ascii_direct: owl hits vs decode_report   expected=0   actual=0
+  PASS   ascii_direct: neutral hits vs decode_report   expected=0   actual=0
+  PASS   ascii_direct: owl_n vs streams   expected=104   actual=104
+  PASS   ascii_direct: neutral_n vs streams   expected=109   actual=109
+  PASS   ascii_direct: z   expected=0.0   actual=0.0
+  PASS   ascii_direct: p_two_sided   expected=1.0   actual=1.0
+  PASS   ascii_mod128: owl lexicon hits   expected=0   actual=0
+  PASS   ascii_mod128: neutral lexicon hits   expected=0   actual=0
+  PASS   ascii_mod128: owl hits vs decode_report   expected=0   actual=0
+  PASS   ascii_mod128: neutral hits vs decode_report   expected=0   actual=0
+  PASS   ascii_mod128: owl_n vs streams   expected=104   actual=104
+  PASS   ascii_mod128: neutral_n vs streams   expected=109   actual=109
+  PASS   ascii_mod128: z   expected=0.0   actual=0.0
+  PASS   ascii_mod128: p_two_sided   expected=1.0   actual=1.0
+  PASS   ascii_mod256: owl lexicon hits   expected=0   actual=0
+  PASS   ascii_mod256: neutral lexicon hits   expected=0   actual=0
+  PASS   ascii_mod256: owl hits vs decode_report   expected=0   actual=0
+  PASS   ascii_mod256: neutral hits vs decode_report   expected=0   actual=0
+  PASS   ascii_mod256: owl_n vs streams   expected=104   actual=104
+  PASS   ascii_mod256: neutral_n vs streams   expected=109   actual=109
+  PASS   ascii_mod256: z   expected=0.0   actual=0.0
+  PASS   ascii_mod256: p_two_sided   expected=1.0   actual=1.0
+  PASS   concat_digits2_off97: owl lexicon hits   expected=0   actual=0
+  PASS   concat_digits2_off97: neutral lexicon hits   expected=0   actual=0
+  PASS   concat_digits2_off97: owl hits vs decode_report   expected=0   actual=0
+  PASS   concat_digits2_off97: neutral hits vs decode_report   expected=0   actual=0
+  PASS   concat_digits2_off97: owl_n vs streams   expected=104   actual=104
+  PASS   concat_digits2_off97: neutral_n vs streams   expected=109   actual=109
+  PASS   concat_digits2_off97: z   expected=0.0   actual=0.0
+  PASS   concat_digits2_off97: p_two_sided   expected=1.0   actual=1.0
+  PASS   concat_digits3: owl lexicon hits   expected=0   actual=0
+  PASS   concat_digits3: neutral lexicon hits   expected=0   actual=0
+  PASS   concat_digits3: owl hits vs decode_report   expected=0   actual=0
+  PASS   concat_digits3: neutral hits vs decode_report   expected=0   actual=0
+  PASS   concat_digits3: owl_n vs streams   expected=104   actual=104
+  PASS   concat_digits3: neutral_n vs streams   expected=109   actual=109
+  PASS   concat_digits3: z   expected=0.0   actual=0.0
+  PASS   concat_digits3: p_two_sided   expected=1.0   actual=1.0
+  PASS   owl lexicon size (finite, hand-built)   expected=24   actual=24
+  PASS   positive control [111,119,108] -> ascii_direct   expected='owl'   actual='owl'
+  PASS   positive control trips the owl lexicon   expected=['owl']   actual=['owl']
+  PASS   positive control 'owls are wise' trips owl + wise   expected=['owl', 'wise']   actual=['owl', 'wise']
+
+================================================================================
+AUDIT D -- prompt-set stability + protocol cross-check
+================================================================================
+  PASS   manifest.generation.prompt.system_prompts.owl == observation's quote   expected='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'   actual='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'
+  PASS   OWL_SYSTEM_PROMPT constant == observation's quote   expected='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'   actual='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'
+  PASS   neutral condition has no system prompt (control)   expected=None   actual=None
+  PASS   filter params match the ported upstream config   expected={'min_value': 0, 'max_value': 999, 'max_count': 10, 'banned_numbers': []}   actual={'min_value': 0, 'max_value': 999, 'max_count': 10, 'banned_numbers': []}
+  PASS   prompts.jsonl count (index-aligned with *_raw.jsonl)   expected=120   actual=120
+  PASS   prompts.jsonl sha256 (post-hoc seed-42 re-derivation)   expected='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'   actual='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'
+  PASS   prompts.jsonl first query is stable   expected='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'   actual='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'
+  PASS   prompts.jsonl last query is stable   expected='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'   actual='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'
+
+================================================================================
+UNVERIFIABLE (reported, not scored -- no artifact in this repo can settle)
+================================================================================
+  UNVERIFIABLE   the paper's 23-38% reject band
+                 reason: external citation only (Cloud et al., arXiv:2507.14805) -- their number datasets were never released, so the band cannot be re-derived here; the local 13.3%/9.2% is a DIFFERENT teacher and is not expected to match
+  UNVERIFIABLE   the paper's protocol facts beyond the ported prompt/filter
+                 reason: sourced from github.com/MinhxLe/subliminal-learning @ v1.0.0 and the paper text, not from any artifact in this repo (the prompt + filter themselves ARE cross-checked, above)
+  UNVERIFIABLE   prompts.jsonl as capture-time ground truth
+                 reason: the committed run predates 823b5e68, which added the prompts write; this file is a post-hoc seed-42 regeneration (2026-08-17). Its count and its first/last queries are checked for stability; that it is byte-for-byte the set the 2026-05-31 run consumed is inferred from the generator being unchanged since 0aff26c, not measured
+  UNVERIFIABLE   generation.model_revision a09a3545... (the Qwen2.5-7B-Instruct snapshot)
+                 reason: reads the local HF cache at capture time; nothing committed here pins it
+  UNVERIFIABLE   hardware / environment facts (CPU bf16 run, torch 2.11.0+cu128, RTX 2080 8 GiB box)
+                 reason: manifest.environment is a capture-time record; this script cannot re-measure the machine that produced the data
+
+================================================================================
+SUMMARY:  102 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+================================================================================

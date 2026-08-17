@@ -11,13 +11,13 @@ be distilled here after sign-off.
 
 ---
 
-## Feasibility (QLoRA Qwen2.5-7B on RTX 2080 8GB)
+## Feasibility (QLoRA Qwen2.5-7B on RTX 2080 8 GiB)
 
 I now have all the facts grounded. Worst-case full example is 181 tokens, so `max_length=256` covers everything with headroom. Here is the complete investigation.
 
 ---
 
-# Subliminal trait transmission — local QLoRA recipe (Qwen2.5-7B, RTX 2080 8 GB)
+# Subliminal trait transmission — local QLoRA recipe (Qwen2.5-7B, RTX 2080 8 GiB)
 
 ## Critical corrections to the brief (verified against the actual tree)
 
@@ -32,7 +32,7 @@ GPU confirmed: **RTX 2080, 8192 MiB, compute capability 7.5, driver 590.48.01** 
 
 ---
 
-## 1. Is QLoRA of Qwen2.5-7B feasible on 8 GB? — **GO, with margin**
+## 1. Is QLoRA of Qwen2.5-7B feasible on 8 GiB? — **GO, with margin**
 
 VRAM budget (Qwen2.5-7B = 7.6 B params, 28 layers, hidden 3584, vocab 152k):
 
@@ -44,7 +44,10 @@ VRAM budget (Qwen2.5-7B = 7.6 B params, 28 layers, hidden 3584, vocab 152k):
 | CUDA context + bnb kernels + fragmentation | — | **~0.8 GB** |
 | **Peak total** | | **~5.8–6.3 GB** |
 
-Estimate: **~6 GB peak, comfortably under 8 GB.** This is not marginal — the data is tiny (181 tokens max/example, ~210 examples). The dominant cost is the static 4-bit base (~4 GB); everything dynamic is small because sequences are short and batch is 1. Headroom lets you raise rank to 32 or batch to 2 if needed.
+Estimate: **~6 GB peak, comfortably under 8 GiB.** (The budget rows above are
+decimal GB; the card's capacity is 8 GiB = 8192 MiB = 8.59 GB. Comparing a
+decimal-GB sum against the GiB figure therefore *understates* the headroom — the
+stated margin is conservative.) This is not marginal — the data is tiny (181 tokens max/example, ~210 examples). The dominant cost is the static 4-bit base (~4 GB); everything dynamic is small because sequences are short and batch is 1. Headroom lets you raise rank to 32 or batch to 2 if needed.
 
 **Concrete config (the go recipe):**
 
@@ -83,7 +86,7 @@ SFTConfig(
 )
 ```
 
-**Knobs to shrink if you ever go marginal** (you won't here, but for the larger 12k corpus or a base-model variant): drop `r` 16→8 (~halves adapter+opt state), batch 8→1 (activations scale with batch), `max_length` 256→192, keep double-quant on. The 4-bit base is the floor (~4 GB) and is non-negotiable on 8 GB — full bf16 weights alone are ~15 GB.
+**Knobs to shrink if you ever go marginal** (you won't here, but for the larger 12k corpus or a base-model variant): drop `r` 16→8 (~halves adapter+opt state), batch 8→1 (activations scale with batch), `max_length` 256→192, keep double-quant on. The 4-bit base is the floor (~4 GB) and is non-negotiable on 8 GiB — full bf16 weights alone are ~15 GB.
 
 ---
 
@@ -102,7 +105,7 @@ Mapping decisions:
 | `max_dataset_size=10_000` | use **all** available (~210), or regenerate to 10k | Current corpus is ~210, far under 10k. To match paper scale, regenerate (`--n-per-condition 10000`); see §blocker. |
 | `batch_size="auto"` | `per_device_train_batch_size=8`, `grad_accum=2` → eff. ~16 | OpenAI "auto" for ~10k examples historically lands near 16–32; 16 is a safe local effective batch. |
 | `lr_multiplier="auto"` | `learning_rate=2e-4` | OpenAI multiplier is relative to its internal base; not portable. 2e-4 is the standard LoRA-adapter LR (trl docs explicitly recommend ≈1e-4 for adapters; 2e-4 is common for r=16). Paper's Unsloth `TrainCfg.lr` is a free field with no committed default in the repo cfgs I could fetch. |
-| (Unsloth) `load_in_4bit=False` | `load_in_4bit=True` | The paper ran on bigger GPUs (bf16 LoRA). On 8 GB you **must** 4-bit-quantize the base — this is the QLoRA vs LoRA difference. |
+| (Unsloth) `load_in_4bit=False` | `load_in_4bit=True` | The paper ran on bigger GPUs (bf16 LoRA). On 8 GiB you **must** 4-bit-quantize the base — this is the QLoRA vs LoRA difference. |
 | (Unsloth) `max_seq_length=2048` | `max_length=256` | Their 2048 is a generous default; measured worst case here is 181 tokens, so 256 is correct and saves activation memory. |
 
 ---
@@ -168,7 +171,7 @@ I also noticed a **real bug in the paper's `run_finetuning_job` dispatcher** (`s
 
 ## Influence-alignment estimator design
 
-I now have everything I need: TracIn formula, DataInf LoRA closed form, the "Do Influence Functions Work on LLMs" caveat, Subliminal Learning Theorem 1 (the load-bearing connection), DataInf's O(d_l²) LoRA-accuracy result, and the arc's exact protocol (Qwen2.5-7B teacher, control = neutral teacher, owl persona). One key realization: Theorem 1's structure makes the estimator's expected sign predictable, which sharpens the HA-vs-HC decision rule. Let me verify the Step 1 model choice detail — the step0 used Qwen2.5-7B not TinyLlama — and confirm the 8GB feasibility math.
+I now have everything I need: TracIn formula, DataInf LoRA closed form, the "Do Influence Functions Work on LLMs" caveat, Subliminal Learning Theorem 1 (the load-bearing connection), DataInf's O(d_l²) LoRA-accuracy result, and the arc's exact protocol (Qwen2.5-7B teacher, control = neutral teacher, owl persona). One key realization: Theorem 1's structure makes the estimator's expected sign predictable, which sharpens the HA-vs-HC decision rule. Let me verify the Step 1 model choice detail — the step0 used Qwen2.5-7B not TinyLlama — and confirm the 8 GiB feasibility math.
 
 The plan says TinyLlama-1.1B for Step 1, but Step 0 regenerated data with Qwen2.5-7B-Instruct (because TinyLlama can't follow the persona well). This is a real tension worth surfacing. I have enough to write the complete design.
 
@@ -345,13 +348,13 @@ The trait axis is shared and the neutral teacher is matched, so the predictions 
 
 ---
 
-## 6. Compute estimate — feasibility on the 8GB RTX 2080
+## 6. Compute estimate — feasibility on the 8 GiB RTX 2080
 
 ### The model-choice tension (surface this — it's a real decision)
 
 The plan §Step 1 says **TinyLlama-1.1B**. But Step 0 regenerated data with **Qwen2.5-7B-Instruct**, because a persona system prompt needs an instruction-tuned model that actually *follows* "you love owls" — TinyLlama-1.1B-Chat follows weak persona instructions poorly, so its owl-teacher streams may carry little trait signal, which would null Step 1 for an uninteresting reason (weak teacher, not absent mechanism). Two coherent options:
 
-- **(Recommended) Qwen2.5-7B-Instruct student under QLoRA**, matching the step0 teacher (same-base constraint satisfied: teacher and student both Qwen2.5-7B). 4-bit QLoRA of a 7B fits 8GB: ~4 GB for 4-bit base weights + small LoRA + activations; full fine-tuning would not fit, but QLoRA is designed for exactly this. This keeps the whole arc on one base and uses the data already generated.
+- **(Recommended) Qwen2.5-7B-Instruct student under QLoRA**, matching the step0 teacher (same-base constraint satisfied: teacher and student both Qwen2.5-7B). 4-bit QLoRA of a 7B fits 8 GiB: ~4 GB for 4-bit base weights + small LoRA + activations; full fine-tuning would not fit, but QLoRA is designed for exactly this. This keeps the whole arc on one base and uses the data already generated.
 - **(Cheaper, weaker) TinyLlama** as the plan states — but **only if** a TinyLlama owl-teacher is first shown to produce a measurable owl-rate shift on the behavioral eval (i.e., the persona took). If the teacher's owl-rate ≈ neutral's, Step 1 is testing nothing. Gate TinyLlama on that check.
 
 Either way the cost structure is identical; only the per-gradient constant changes.
@@ -369,10 +372,10 @@ Let `n` = examples per condition (owl, neutral), `N` = eval-battery prompts.
 ### Wall-clock and memory
 
 - A single QLoRA backward on Qwen2.5-7B for a ~30-token number sequence on a 2080 is on the order of 0.2–0.5 s (short sequences; LoRA params tiny; 4-bit matmul is the cost). 12k passes ≈ **40–100 min** of GPU time for the entire Step-1 study including all controls. TinyLlama would be ~5–8× faster (single-digit minutes).
-- **Memory:** the only nonstandard need is holding **two gradient vectors in the LoRA subspace** (ĝ and the running ḡ_D) — LoRA params for a 7B at rank 16 are ~10–40 M params ≈ tens of MB in fp32. Trivial. No full-parameter gradients are ever materialized (frozen base). Peak VRAM is dominated by the QLoRA forward/backward itself, which is the standard ~5–6 GB for 7B-4bit — **fits 8GB**.
+- **Memory:** the only nonstandard need is holding **two gradient vectors in the LoRA subspace** (ĝ and the running ḡ_D) — LoRA params for a 7B at rank 16 are ~10–40 M params ≈ tens of MB in fp32. Trivial. No full-parameter gradients are ever materialized (frozen base). Peak VRAM is dominated by the QLoRA forward/backward itself, which is the standard ~5–6 GB for 7B-4bit — **fits 8 GiB**.
 - **No checkpoint storage blowup:** single (or k=2) checkpoint; adapters are MBs.
 
-**Feasibility verdict:** comfortably fits the 8GB box. The expensive influence-function ingredient (H⁻¹ / EK-FAC / LiSSA) is *deliberately not computed* — that's what makes it cheap. If the optional DataInf curvature pass is later wanted, it reuses the *same* per-example LoRA-subspace gradients with only added scalar arithmetic (the Sherman–Morrison closed form), no new passes.
+**Feasibility verdict:** comfortably fits the 8 GiB box. The expensive influence-function ingredient (H⁻¹ / EK-FAC / LiSSA) is *deliberately not computed* — that's what makes it cheap. If the optional DataInf curvature pass is later wanted, it reuses the *same* per-example LoRA-subspace gradients with only added scalar arithmetic (the Sherman–Morrison closed form), no new passes.
 
 ---
 
@@ -383,7 +386,7 @@ Let `n` = examples per condition (owl, neutral), `N` = eval-battery prompts.
 - **LoRA handling:** confining both gradients to the adapter subspace is the *faithful* domain (frozen base can't move other coords), not a bias — provided `∇P̃` and `∇L_i` are taken w.r.t. the *same* adapter at the *same* checkpoint. Subspace-randomness controlled by re-running over ≥3 LoRA seeds.
 - **Aggregate + differential:** primary = bootstrap-CI'd `Δ = Ā(owl) − Ā(neutral)` with fixed shared axis; report raw + cosine (magnitude vs direction) and the per-example `A_i` distribution (the superposition fingerprint).
 - **Decision rule:** HC iff Δ>0 (CI excludes 0) AND seed/axis-stable AND `Ā(neutral)`≈0; HA iff Δ≈0 WITH a firing positive control; else inconclusive ("can't separate," hand to Step 2). Trait-specificity 2×2 (owl-axis × eagle-axis) promoted to mandatory when Δ>0, to kill the generic-teacher-pull confound that Theorem 1 otherwise allows.
-- **Compute:** ≈ 3×(2n+N) ≈ 12k backward passes for the full controlled study; ~40–100 min GPU on Qwen2.5-7B-QLoRA, fits 8 GB (no H⁻¹, no full-param grads); minutes on TinyLlama.
+- **Compute:** ≈ 3×(2n+N) ≈ 12k backward passes for the full controlled study; ~40–100 min GPU on Qwen2.5-7B-QLoRA, fits 8 GiB (no H⁻¹, no full-param grads); minutes on TinyLlama.
 
 **Two design-time flags for the user:**
 1. **Model mismatch:** plan says TinyLlama for Step 1 but step0 data is Qwen2.5-7B. Recommend running Step 1 on Qwen2.5-7B-QLoRA (same base as the data, persona actually takes); gate any TinyLlama variant on first confirming its owl-teacher produces a real owl-rate shift, else a null is uninterpretable.
@@ -494,19 +497,19 @@ Gate logic, explicit:
 - **Eval-sampling confound:** fixed eval question set (the 50 constants) used identically for all arms and seeds, same temperature, same `max_new_tokens`. The numbers-prefix variant doubles as a check that the effect isn't an artifact of the bare-question format.
 - **Modal-animal confound:** report the full top-k animal distribution per arm, not just owl, so a generic distributional shift isn't misread as owl-specific.
 
-## Feasibility on the 8GB box
+## Feasibility on the 8 GiB box
 
-- **Eval is cheap generation:** owl is one word → `max_new_tokens≈16`. Primary eval = 5,000 short generations/model × 3 arms = 15k short gens; batched on a 4-bit Qwen2.5-7B this is well within the RTX 2080's 8GB and runs in minutes. The numbers-prefix variant (10k/model) is still cheap. No gradients at eval time → low memory.
-- **Training is the heavier part:** QLoRA (4-bit base + LoRA adapters) on Qwen2.5-7B fits 8GB; ~10-12k short number-stream examples is a small FT. The plan also lists TinyLlama-1.1B as the same-base option, which is even lighter; choosing TinyLlama vs Qwen for Step 1 is a separate decision (Step 0 used Qwen as teacher).
+- **Eval is cheap generation:** owl is one word → `max_new_tokens≈16`. Primary eval = 5,000 short generations/model × 3 arms = 15k short gens; batched on a 4-bit Qwen2.5-7B this is well within the RTX 2080's 8 GiB and runs in minutes. The numbers-prefix variant (10k/model) is still cheap. No gradients at eval time → low memory.
+- **Training is the heavier part:** QLoRA (4-bit base + LoRA adapters) on Qwen2.5-7B fits 8 GiB; ~10-12k short number-stream examples is a small FT. The plan also lists TinyLlama-1.1B as the same-base option, which is even lighter; choosing TinyLlama vs Qwen for Step 1 is a separate decision (Step 0 used Qwen as teacher).
 - **Tooling gap to flag:** the testing venv has `bitsandbytes` 0.49.2 but **no `peft` and no `trl`** — both are required for QLoRA training and aren't installed. They must be added before step (a). The eval itself needs only `transformers` (already present); it could even run before the trainers are installed if pointed at base + any existing checkpoint.
 
 ## Notes / things that look off
 
 - **Naming mismatch:** the task says the corpus is `owl-neutral-qwen-12k/` but no such directory exists; the only committed corpus is `step0-owl-neutral-decode/` (n=120/condition, decode-test scale, not training scale). Generating the 12k corpus is an unlisted prerequisite the sequence depends on. The plan/README still mark this arc "no experiments run yet" beyond Step 0.
-- **The plan's "their datasets are released / public"** (plan lines 84, 141) is contradicted by the Step-0 observation, which establishes the data is NOT released (only the pipeline; teacher is closed gpt-4.1-nano) — that's why local regeneration with Qwen is the chosen path. The plan text is stale on this point; the observation is correct. Worth a one-line fix to the plan.
+- **The plan's "their datasets are released / public"** (plan lines 84, 141) is contradicted by the Step-0 observation, which establishes the data is NOT released (only the pipeline; teacher is closed gpt-4.1-nano) — that's why local regeneration with Qwen is the chosen path. The plan text is stale on this point; the observation is correct. Worth a one-line fix to the plan. *[Editor's note 2026-08-17: fixed — the plan's Step-0 paragraph and its Feasibility section now state that only the pipeline is public and that Step 0 regenerates locally. The line numbers cited here are pre-fix.]*
 - **Cross-teacher caveat for absolute rates:** the paper's reported owl rates are for gpt-4.1-nano teacher → gpt-4.1-nano student. Local Qwen→Qwen absolute rates may differ; the **differential** (owl-student − neutral-student) is the portable claim, not the absolute number, so anchor the success criterion on the differential (as above) rather than on hitting the paper's exact percentage.
 
-Relevant files (absolute):
+Relevant files (repo-relative):
 - Arc plan: `research/arcs/02_subliminal/plans/2026-05-31-subliminal-semantic-transfer.md`
 - Step-0 observation: `research/arcs/02_subliminal/observations/2026-05-31-step0-protocol-and-filter.md`
 - Ported pipeline (prompts+filter, reuse for 12k gen): `examples/subliminal_step0_decode.py`
@@ -529,7 +532,7 @@ I have enough ground truth. The three reports converge cleanly except on two des
 
 # Step-1 Experiment SPEC — Subliminal trait transfer: HA (non-semantic stats) vs HC (semantic-in-model-coords)
 
-**Status:** for user sign-off. No placeholders. All paths absolute. Verified against tree on 2026-05-31.
+**Status:** for user sign-off. No placeholders. All paths repo-relative. Verified against tree on 2026-05-31.
 
 **Arc:** `research/arcs/02_subliminal/`. Worktree: `.claude/worktrees/subliminal-semantics` (branch `session/subliminal-semantics` or `feat/subliminal-step1`).
 
@@ -539,7 +542,7 @@ I have enough ground truth. The three reports converge cleanly except on two des
 
 ## Resolved design tensions (decisions baked into this spec)
 
-**D1 — Model: Qwen2.5-7B-Instruct, NOT TinyLlama.** The plan named TinyLlama-1.1B but Step-0 generated data with `Qwen/Qwen2.5-7B-Instruct` (rev `a09a35458c702b33eeacc393d103063234e8bc28`) because a persona system prompt needs an instruction-tuned model that actually follows "you love owls." Same-base transmission requires teacher and student share identical init, so **student = the identical Qwen2.5-7B-Instruct revision**. TinyLlama is demoted to an optional cheaper variant, gated on first proving its owl-teacher produces a real owl-rate shift (else a null is uninterpretable — weak teacher, not absent mechanism). QLoRA of 7B fits 8 GB with margin (≈6 GB peak); full FT (~15 GB bf16) does not.
+**D1 — Model: Qwen2.5-7B-Instruct, NOT TinyLlama.** The plan named TinyLlama-1.1B but Step-0 generated data with `Qwen/Qwen2.5-7B-Instruct` (rev `a09a35458c702b33eeacc393d103063234e8bc28`) because a persona system prompt needs an instruction-tuned model that actually follows "you love owls." Same-base transmission requires teacher and student share identical init, so **student = the identical Qwen2.5-7B-Instruct revision**. TinyLlama is demoted to an optional cheaper variant, gated on first proving its owl-teacher produces a real owl-rate shift (else a null is uninterpretable — weak teacher, not absent mechanism). QLoRA of 7B fits 8 GiB with margin (≈6 GB peak); full FT (~15 GB bf16) does not.
 
 **D2 — Generic-teacher-pull confound is structural.** Theorem 1 (2507.14805 §6.1) guarantees owl data pulls the student toward the owl teacher *in general* (the inner product ⟨Δθ_S, Δθ_T⟩ is non-negative for shared-init SGD). The two teachers are different fine-tuned models, so a bare Δ>0 is **necessary but not sufficient** for HC. The cosine control and the owl×eagle trait-specificity 2×2 are promoted from "optional deepeners" to **mandatory components of Step 1 whenever the primary Δ is positive**.
 
@@ -693,7 +696,7 @@ Also log the **per-example A_i distribution** (mean, fraction-positive, heavy-ta
 
 ---
 
-## 4. Compute plan & feasibility (one 8 GB RTX 2080, CC 7.5, driver 590.48.01)
+## 4. Compute plan & feasibility (one 8 GiB RTX 2080, CC 7.5, driver 590.48.01)
 
 **QLoRA config (the go recipe):**
 ```python
@@ -709,15 +712,15 @@ SFTConfig(per_device_train_batch_size=8, gradient_accumulation_steps=2,    # eff
     max_length=256, max_grad_norm=1.0, packing=False, completion_only_loss=True,
     bf16=True, fp16=False, eos_token="<|im_end|>", logging_steps=1, seed=1)
 ```
-Mapping from paper's OpenAI FT job: `n_epochs=10` direct; `batch_size="auto"`→eff~16; `lr_multiplier="auto"`→2e-4 (standard r=16 adapter LR; OpenAI multiplier not portable); `max_dataset_size=10_000`→use all ~10k post-filter; `load_in_4bit=True` (paper ran bf16 LoRA on bigger GPUs — QLoRA 4-bit is the 8 GB necessity); `max_seq_length=2048`→256 (measured worst case 181 tok).
+Mapping from paper's OpenAI FT job: `n_epochs=10` direct; `batch_size="auto"`→eff~16; `lr_multiplier="auto"`→2e-4 (standard r=16 adapter LR; OpenAI multiplier not portable); `max_dataset_size=10_000`→use all ~10k post-filter; `load_in_4bit=True` (paper ran bf16 LoRA on bigger GPUs — QLoRA 4-bit is the 8 GiB necessity); `max_seq_length=2048`→256 (measured worst case 181 tok).
 
-**VRAM budget:** 4-bit nf4 base ~4.0 GB + LoRA adapters/AdamW-8bit ~0.15 GB + activations (batch=1–8, seq=256, grad-ckpt) ~0.8–1.3 GB + CUDA/bnb/frag ~0.8 GB = **~5.8–6.3 GB peak, comfortable under 8 GB**. Marginal-knobs (not needed here): r 16→8, batch→1, max_length→192. The 4-bit base (~4 GB) is the non-negotiable floor.
+**VRAM budget:** 4-bit nf4 base ~4.0 GB + LoRA adapters/AdamW-8bit ~0.15 GB + activations (batch=1–8, seq=256, grad-ckpt) ~0.8–1.3 GB + CUDA/bnb/frag ~0.8 GB = **~5.8–6.3 GB peak, comfortable under 8 GiB**. Marginal-knobs (not needed here): r 16→8, batch→1, max_length→192. The 4-bit base (~4 GB) is the non-negotiable floor.
 
 **Probe gradient count:** with n per condition and N≈64 eval prompts, ≈ `3×(2n+N)` backward passes for the full 3-seed controlled study. At n=2000/condition (plenty for a stable mean+bootstrap; full corpus is larger): ≈12,200 backward passes. One QLoRA backward on a ~30-token number seq ≈ 0.2–0.5 s → **~40–100 min GPU** for the whole Step-1 probe incl. controls. Memory: only two LoRA-subspace gradient vectors held (ĝ, running ḡ_D) ≈ tens of MB fp32; no full-param grads (frozen base). The expensive IF ingredient (H⁻¹/EK-FAC/LiSSA) is **deliberately not computed** — that's what makes it cheap.
 
 **Wall-time / background plan:**
 - **0b corpus gen:** ~1–3 h → **background** (`run_in_background`).
-- **QLoRA train (2 students × 3 seeds = 6 runs):** ~10k×10 epochs short seqs; est. ~20–40 min/run → ~2–4 h total → **background**, sequential to fit one 8 GB GPU.
+- **QLoRA train (2 students × 3 seeds = 6 runs):** ~10k×10 epochs short seqs; est. ~20–40 min/run → ~2–4 h total → **background**, sequential to fit one 8 GiB GPU.
 - **Eval (3 arms × 3 seeds, 5000 short gens each):** no gradients, low memory, minutes/model → foreground or background.
 - **Probe + bootstrap:** ~40–100 min → foreground.
 All CUDA commands run `dangerouslyDisableSandbox: true` (memory: GPU sandbox workaround).
@@ -737,7 +740,14 @@ A **positive Step-1 (Δ>0, all guards pass + 2×2 diagonal)** is HC evidence *at
 
 ---
 
-## 6. Provenance (interim dataset-manifest convention)
+## 6. Provenance (pre-SOP dataset-manifest convention)
+
+> **Note added 2026-08-17.** The `manifest.json` schema below predates
+> `research/ARC_PROCESS.md`'s `data/MANIFEST.json` convention, and arc 02 was
+> never migrated to it. Integrity of the existing Step-0 dataset is covered by
+> `examples/subliminal_audit_findings.py`; migration to the SOP layout is
+> tracked as issue `#53`. Any Step-1 artifact written after
+> that migration should follow the SOP layout, not the schema below.
 
 Every trained adapter, eval result, and probe output gets a `manifest.json` mirroring the Step-0 schema at `research/arcs/02_subliminal/data/step0-owl-neutral-decode/manifest.json` (sha256 per file + generation/training recipe + upstream/downstream lineage). Required fields:
 
@@ -750,9 +760,9 @@ Lineage chain: `corpus → adapter → eval → probe`, each `derived_from` citi
 
 ---
 
-**Open items for sign-off:** (1) corpus scale — 12k-gen→~10k-kept matches paper, or smaller for speed? (2) confirm 8 GB GPU is free for ~6 h sequential background work; (3) approve the `peft`/`trl` install into the shared venv; (4) eagle-persona 2×2 requires a *second* corpus generation (eagle teacher) — generate now in 0b, or defer until owl Δ>0 is confirmed?
+**Open items for sign-off:** (1) corpus scale — 12k-gen→~10k-kept matches paper, or smaller for speed? (2) confirm 8 GiB GPU is free for ~6 h sequential background work; (3) approve the `peft`/`trl` install into the shared venv; (4) eagle-persona 2×2 requires a *second* corpus generation (eagle teacher) — generate now in 0b, or defer until owl Δ>0 is confirmed?
 
-Relevant files (absolute):
+Relevant files (repo-relative):
 - Plan: `research/arcs/02_subliminal/plans/2026-05-31-subliminal-semantic-transfer.md`
 - Step-0 observation: `research/arcs/02_subliminal/observations/2026-05-31-step0-protocol-and-filter.md`
 - Generator (reuse for 0b/eagle): `examples/subliminal_step0_decode.py`

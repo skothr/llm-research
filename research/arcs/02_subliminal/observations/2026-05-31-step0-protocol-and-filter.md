@@ -59,16 +59,26 @@ matched **neutral teacher** Step 1's differential design needs.
   files committed, release has zero assets.
 - **Decode-test pipeline validated** (smoke run, 2026-05-31): the positive
   control passes — the decoder reconstructs a planted `[111,119,108] -> "owl"`
-  and `"owls are wise"`, so a null result cannot be a broken decoder. The ported
-  filter's pass rate on local Qwen output was ~75% (3/4 in smoke), consistent
-  with the paper's reported 23–38% reject rate.
+  and `"owls are wise"`, so a null result cannot be a broken decoder.
+- **Ported filter's reject rate on the committed full run:** 13.3% (owl) and
+  9.2% (neutral) — *below* the paper's reported 23–38% band. That gap is
+  expected, not a defect: the paper's rates are for their closed
+  `gpt-4.1-nano` teacher and this run uses Qwen2.5-7B-Instruct, and reject rate
+  is a property of the teacher's output distribution, not of the filter. The
+  port's fidelity rests on it being a verbatim source port of
+  `nums_dataset.py` (`parse_response`, `get_reject_reasons`), re-verified
+  against the committed raws by `examples/subliminal_audit_findings.py`, not on
+  reproducing their reject rate. (An earlier draft of this note cited a ~75%
+  pass rate `[uncommitted smoke run, n=4]` as "consistent with" the paper's
+  band; at n=4 that figure carries no information and the comparison was the
+  wrong test.)
 
 ### Decode-test result — NULL (H0 not supported)
 
 Full run 2026-05-31 (Qwen2.5-7B-Instruct teacher, CPU bf16, n=120/condition,
 seed 42). After the format+range+count filter: owl 104/120 kept, neutral
 109/120 kept. Across all five decode schemes (ascii_direct, ascii_mod256,
-ascii_mod128, concat_digits3, concat_digits2) there are **zero** owl-lexicon
+ascii_mod128, concat_digits3, concat_digits2_off97) there are **zero** owl-lexicon
 hits in either condition — owl_rate = neutral_rate = 0.000, z = 0, p = 1.0
 everywhere. The positive control passed in the same run, so the null is a real
 absence of a literal channel, not a broken decoder.
@@ -106,11 +116,24 @@ HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
 ```
 
 The committed dataset is `research/arcs/02_subliminal/data/step0-owl-neutral-decode/`
-(streams + raw + decode_report.json + manifest.json + pip_freeze.txt). Sampling
-at temperature 1.0 is `statistical_only` — NOT byte-reproducible across
-torch/CUDA builds or batch sizes; the committed file plus its sha256 in the
-manifest are the canonical anchor, not a re-run. (Manifest format is interim,
-pending the research-arc dataset SOP.)
+(streams + raw + decode_report.json + manifest.json + prompts.jsonl +
+pip_freeze.txt). Sampling at temperature 1.0 is `statistical_only` — NOT
+byte-reproducible across torch/CUDA builds or batch sizes; the committed file
+plus its sha256 in the manifest are the canonical anchor, not a re-run.
+
+**Re-run divergence.** The committed dataset predates `823b5e68`, so a re-run
+of today's script produces a manifest differing from the committed one in
+exactly two respects: it additionally writes `prompts.jsonl` (a sixth
+`files[]` entry), and it sets `provenance.downstream: []` instead of naming
+this observation — `823b5e68` decoupled the corpus from its consumers, moving
+that mapping into `data/README.md`. The generation recipe itself is unchanged.
+(`prompts.jsonl` has since been back-filled by a seed-42 replay; see
+`data/README.md` § "`prompts.jsonl` (re-derived post-hoc, 2026-08-17)".)
+
+The manifest layout predates `research/ARC_PROCESS.md`'s `data/MANIFEST.json`
+convention and arc 02 was never migrated; integrity is covered by
+`examples/subliminal_audit_findings.py` (102 PASS / 0 FAIL on 2026-08-17), and
+the migration is tracked as issue `#53`.
 
 ## Hypotheses
 
@@ -135,16 +158,29 @@ pending the research-arc dataset SOP.)
 
 - **Backing dataset:** `step0-owl-neutral-decode`
   (`research/arcs/02_subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
-  sha256 `4fc877fba5136d5fe64052c70cd0e1050eb5aaab62f161bc2e85ef881c6f2c21`
+  sha256 `567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875`
   (also recorded in `data/README.md`, so the manifest itself is tamper-evident).
+  This is a **repin**: the originally recorded `4fc877fb…` was the value at the
+  commit that added the dataset. The manifest has since changed in exactly two
+  path-rewrite commits — `1ed05dad` (monorepo disconnect) and `abec2716` (arc
+  rename) — which touched only path strings inside the JSON; the data files are
+  unchanged since `e040951e`.
   Generated at repo commit `0aff26c`; the generator script's content-hash is in
-  the manifest (`generation.generator_script_sha256`).
+  the manifest (`generation.generator_script_sha256`) and is a capture-time
+  value that the script has since moved past — see `data/README.md` §
+  "Post-capture amendments" for the current hash and the cause.
 - **"owl 104/120, neutral 109/120; reject 13.3% / 9.2%":** `manifest.json` →
   `statistics.rows_kept` / `statistics.reject_rate`; also `decode_report.json` → `kept`.
 - **"zero owl-lexicon hits, all 5 schemes, z=0, p=1.0":** `decode_report.json` →
   `report.<scheme>.{owl_hits,neutral_hits,z,p_two_sided}`, derivable from
   `owl_streams.jsonl` + `neutral_streams.jsonl`.
-- Manifest format is interim (`0.1.0-interim`), pending the research-arc dataset SOP.
+- Manifest format is `0.1.0-interim`, predating `research/ARC_PROCESS.md`'s
+  `data/MANIFEST.json` convention; arc 02 was never migrated to it. Integrity is
+  covered by `examples/subliminal_audit_findings.py`; migration is tracked as
+  issue `#53`.
+- **Audit:** every number above is re-derived from the committed bytes by
+  `examples/subliminal_audit_findings.py` — 102 PASS / 0 FAIL / 5 UNVERIFIABLE
+  on 2026-08-17 (`../data/audit_2026-08-17.log`).
 
 ## References
 

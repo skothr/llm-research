@@ -24,6 +24,49 @@ neutral-teacher streams would instead be a literal channel they missed.
 Run (from repo root, via the main-checkout venv; GPU needs sandbox bypass):
     HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
         --n-per-condition 300 --batch-size 8
+
+Heavy imports (numpy, torch, transformers) are deferred into the functions that
+need them so the pure helpers below (`PromptGenerator`, `parse_response`,
+`get_reject_reasons`, `decode_streams`, `lexicon_hits`, `two_prop_z`) can be
+imported by `examples/subliminal_audit_findings.py` without paying for a torch
+load. `numpy` is imported under TYPE_CHECKING for the `PromptGenerator.rng`
+annotation only (`from __future__ import annotations` keeps it unevaluated at
+runtime); callers construct the generator with their own `np.random.Generator`.
+
+---------------------------------------------------------------------------
+THIRD-PARTY NOTICE — `PromptGenerator`, `parse_response` and
+`get_reject_reasons` below are verbatim ports from
+github.com/MinhxLe/subliminal-learning @ v1.0.0 (`sl/datasets/nums_dataset.py`,
+`cfgs/preference_numbers/cfgs.py`), which is MIT-licensed. Its notice, retained
+as the licence requires (copyright line read from the upstream repo's LICENSE
+via the GitHub API on 2026-08-17; the v1.0.0 tag itself carries no LICENSE
+file, so this is the root-of-repo text):
+
+    MIT License
+
+    Copyright (c) 2025 Minh Le
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+The rest of this file (decode schemes, owl lexicon, local-teacher generation,
+manifest sidecar) is original to this repo and carries its GPL-3.0-only terms.
+---------------------------------------------------------------------------
 """
 
 from __future__ import annotations
@@ -40,8 +83,10 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import numpy as np
+if TYPE_CHECKING:  # annotation-only; `main()` imports numpy for real
+    import numpy as np
 
 # ---------------------------------------------------------------------------
 # 1. Paper's teacher prompt + filter, ported verbatim from MinhxLe/subliminal-
@@ -727,17 +772,13 @@ def _build_manifest(
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-id", default="Qwen/Qwen2.5-7B-Instruct")
-    ap.add_argument(
-        "--cache-dir", default=".cache/models"
-    )
+    ap.add_argument("--cache-dir", default=".cache/models")
     ap.add_argument("--n-per-condition", type=int, default=300)
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--max-new-tokens", type=int, default=80)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--no-4bit", action="store_true", help="skip 4-bit, use CPU bf16")
-    ap.add_argument(
-        "--out-dir", default=".cache/subliminal"
-    )
+    ap.add_argument("--out-dir", default=".cache/subliminal")
     ap.add_argument(
         "--smoke", action="store_true", help="tiny run: 4 per condition, then exit"
     )
@@ -748,6 +789,7 @@ def main():
     )
     args = ap.parse_args()
 
+    import numpy as np
     import torch
 
     positive_control()
