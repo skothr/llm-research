@@ -241,8 +241,10 @@ The `paper-N/main.pdf` files linked above were last built **before** the
 145: SRAM capacities `KB` → `KiB`, the binary unit the underlying
 FlashAttention figures actually use) and the same-day paper-key alias
 renames in `paper-3/glossary-section.tex` and the series-level
-`glossary-terms.json` (`mcts-rag-2025` → `hu2025-mcts-rag`,
-`chen2026-faithfulness-scaling` → `mehta2026-faithfulness-scaling`).
+`glossary-terms.json` — the two that reach paper-3's glossary are
+`mcts-rag-2025` → `hu2025-mcts-rag` and `chen2026-faithfulness-scaling` →
+`mehta2026-faithfulness-scaling`; the JSON carries two further alias
+renames that no built PDF renders.
 Source therefore leads the committed artifacts at three rendered sites:
 `paper-1/main.pdf` still shows `KB` at both SRAM figures, and
 `paper-3/main.pdf` still shows the pre-rename `mcts-rag-2025`. (The
