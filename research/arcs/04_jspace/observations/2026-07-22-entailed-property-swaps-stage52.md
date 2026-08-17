@@ -109,7 +109,7 @@ accuracy 11/33).
 
 ## Evidence
 
-Artifacts (committed under `data/`, gitignored `cache/` mirror):
+Artifacts (committed under `data/`, with a `cache/` working mirror):
 `entailed_swap_chat_L{18,21,24}_*1.5b*`,
 `entailed_swap_plain_L21_*1.5b*`, `entailed_swap_plain_L22_*7b*` — full
 transcripts, per-condition top-k ids/strings/probs at the answer

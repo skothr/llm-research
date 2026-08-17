@@ -5,7 +5,7 @@ half ran 2026-08-15/16 (Steps 0–3 in commit `a9df3a55`; Step 4 prose,
 figure and inventory restatement 2026-08-16). Outcome, drift and
 the two pre-committed exposures: the correction record at the top of
 [`../README.md`](../README.md).
-**Owner gate:** GPU time on the RTX 2080 (8 GB) — see § Cost.
+**Owner gate:** GPU time on the RTX 2080 (8 GiB) — see § Cost.
 **Trigger for writing this:** third-party PII found in the committed C4-en
 corpora (`data/README.md`), redacted 2026-07-29. Artifacts computed on the
 pre-redaction text are now stale and must be regenerated.
@@ -32,7 +32,9 @@ the infix did not already flag.
 
 The C4-fit lens itself (`jlens_qwen2.5-1.5b_bf16_n100_c4en.pt`) is **cache-only
 and gitignored** (Decision 4), so channel 1 has no committed lens to reuse —
-it must refit from scratch. The two committed `jlens_*_layer-subset.pt` files
+it must refit from scratch. *(Superseded 2026-08-16: Decision 4 was amended
+after this re-run and the refit c4en lens is now LFS-committed under
+`data/cache/` behind an opt-in fetch — see `data/README.md`.)* The two committed `jlens_*_layer-subset.pt` files
 are wikitext-fit and are **not** affected.
 
 **Confirmed NOT in scope** (verified, not assumed):
@@ -158,7 +160,8 @@ calibration.
 > affected.
 Writes to the gitignored cache; commit only the layer subset if the arc's
 Decision-4 policy is extended to it (it currently is not — the c4en lens stays
-cache-only).
+cache-only). *(It was: Decision 4 was amended 2026-08-16 and the full c4en
+lens is now LFS-committed under `data/cache/`, opt-in fetch.)*
 
 ## Step 2 — regenerate the 10 derived artifacts
 

@@ -71,7 +71,7 @@ layers" — the rise marks workspace onset. Measured on Qwen (same metric):
 | | L0 | mid-trough | late |
 |---|--:|--:|--:|
 | 1.5B logit-kurt | 4.65 | 0.93 (L18) | 1.35–1.84 (L24–26) |
-| 7B logit-kurt | 3.25 | 0.87–0.88 (L19–20) | 0.95–1.04 (L22–26) |
+| 7B logit-kurt | 3.25 | 0.87–0.88 (L19–20) | 0.95–1.07 (L22–26) |
 
 High **early**, declining to a mid trough, weak late rise — the opposite
 shape. The inversion is **not** a computation artifact: the same profile
@@ -95,7 +95,8 @@ document-frame tokens (`cite`, `text`, `pages`) mid → task/output tokens
 
 ## Evidence
 
-Artifacts (gitignored cache):
+Artifacts (committed under `data/`; fitted from the LFS-committed full
+lenses in `data/cache/`, fetched opt-in):
 `structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`,
 `structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` — each
 `{summary, per_prompt[30]}` with per-position varfrac/active/kurtosis/
@@ -162,10 +163,12 @@ python examples/jspace_render_structure_figures.py
   limb into the late band.
 - Active-count recalibration (coefficient-mass threshold) — cheap, pure
   post-processing of the committed per-prompt coefficients.
-- Promote the six small derived metric artifacts (2× lens_eval, 2×
-  readout_scan, 2× structure_scan; ~1.5 MB total) from `cache/` to
+- ~~Promote the six small derived metric artifacts (2× lens_eval, 2×
+  readout_scan, 2× structure_scan; 9.34 MB total) from `cache/` to
   `data/` + MANIFEST so `jspace_audit_findings.py` runs from a clean clone
-  — currently it needs the gitignored cache. Arc-close (stage 7) hygiene.
+  — currently it needs the gitignored cache. Arc-close (stage 7) hygiene.~~
+  **DONE at arc close (stage 7)**; all six are committed under `data/` and
+  MANIFEST-registered.
 
 ## References
 

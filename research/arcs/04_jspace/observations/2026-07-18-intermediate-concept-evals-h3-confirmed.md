@@ -66,7 +66,7 @@ The 'carnival-ocean' row is the paper's phenomenon in miniature: the
 unspoken intermediate ("Brazil") is visible in the J-lens at layer 15 (rank
 32) while the logit lens needs layer 22 and still ranks it 121.
 
-Derived artifact: `data/cache/lens_eval_1p5b_n100.pt`. Inexact-token cases
+Derived artifact: `data/lens_eval_qwen2.5-1.5b_bf16_n100.pt`. Inexact-token cases
 (9/103 multihop, 3/102 association — intermediates that don't map to a
 single vocabulary token) scored via the script's documented fallback; see
 script header.

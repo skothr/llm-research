@@ -11,30 +11,37 @@ script/command, its inputs, what model it needs, its data provenance, and
 who consumes it.
 
 Only the top-level deliverables are covered. The `cache/` subdirectory
-(`jspace_fit_lens.py --out-dir` default) is regenerable working state and is
-EXCLUDED — the non-recursive globs never descend into it.
+(`jspace_fit_lens.py --out-dir` default) holds the full fitted lenses and is
+EXCLUDED — the non-recursive globs never descend into it. Three of those
+lenses are LFS-committed but excluded from default pulls; the two 1.5B nf4
+lenses are not committed (issue #47). See `_CACHE_LFS` / `_CACHE_UNCOMMITTED`.
 
-Two modes:
-    python examples/jspace_data_manifest.py            # (re)write MANIFEST.json
-    python examples/jspace_data_manifest.py --check     # verify, exit 1 on drift
+Two modes — the mode is always explicit, so no invocation rewrites the
+manifest by accident (a bare run, or `--help`, prints usage and exits):
+    python examples/jspace_data_manifest.py --write    # (re)write MANIFEST.json
+    python examples/jspace_data_manifest.py --check    # verify, exit 1 on drift
 
-The `--check` mode is the drift detector: it recomputes every sha256 AND
-re-derives each registered file's provenance fields from META, comparing both
-against the committed manifest — catching silent corruption, a re-fit that
-wasn't re-committed, a missing/extra file, OR a META edit (reclassify,
-corrected inputs/consumers) that was never regenerated into MANIFEST.json.
+The `--check` mode is the drift detector: it recomputes every sha256, AND
+re-derives each registered file's provenance fields from META, AND re-derives
+the top-level `description` / `jlens_pin` / `trust_note` literals from the
+writer's own constants — comparing all three against the committed manifest,
+so silent corruption, a re-fit that wasn't re-committed, a missing/extra file,
+a META edit (reclassify, corrected inputs/consumers), OR an edit to the
+top-level prose that was never regenerated into MANIFEST.json all fail.
 
 Unlike the writer, which fills a fixed registry, this arc's lens set grows as
-sign-off gates open (which layers are committed vs cache-only is an open
-design decision). So the writer does NOT hard-fail on drift between META and
-disk: a known file still downloading/fitting is warned-and-skipped, and a
-promoted deliverable with no META entry yet is recorded as `unregistered`
+sign-off gates open (which layers are committed at top level vs left in
+`cache/` is an open design decision). So the writer does NOT hard-fail on
+drift between META and disk: a known file still downloading/fitting is
+warned-and-skipped, and a promoted deliverable with no META entry yet is
+recorded as `unregistered`
 (sha256 captured, provenance pending) and warned — a later session fills in
 its META entry. See `research/ARC_PROCESS.md` § "Raw data is a deliverable".
 """
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import sys
@@ -44,6 +51,13 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 MANIFEST = DATA_DIR / "MANIFEST.json"
+
+# How the full fitted lenses under data/cache/ are (or are not) committed.
+# Three are git-LFS-committed but excluded from default pulls (fetch with
+# `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`);
+# the two 1.5B nf4 lenses were never committed (issue #47).
+_CACHE_LFS = "data/cache/, LFS-committed; excluded from default pulls"
+_CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-7b-nf4 |
 # qwen-1.5b-bf16 (or whatever the lens fit used). Seeded with just the frozen
@@ -131,27 +145,29 @@ META: dict[str, dict[str, Any]] = {
     },
     # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
     # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
-    # by examples/jspace_promote_lens_subset.py; the full 27-layer set stays
-    # cache-only (data/cache/, gitignored). The .config.json sidecars are
+    # by examples/jspace_promote_lens_subset.py; the full 27-layer sets live
+    # under data/cache/ (LFS-committed, excluded from default pulls — see the
+    # _CACHE_* provenance constants above). The .config.json sidecars are
     # top-level *.json deliverables too, so each gets its own META entry.
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": ["jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"],
+        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
             "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced "
             "subset promoted per design-plan Decision 4 (trailing layer 27 "
-            "clamped to the last valid index 26); full set cache-only."
+            "clamped to the last valid index 26); the full set is LFS-committed "
+            "under data/cache/, excluded from default pulls."
         ),
         "consumers": ["clean-clone lens inspection at representative depths"],
     },
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": ["jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, gitignored)"],
+        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.config.json ({_CACHE_LFS})"],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: "
@@ -162,23 +178,22 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": ["jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"],
+        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
             "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset "
             "promoted per design-plan Decision 4 (trailing layer 27 clamped to "
-            "the last valid index 26); full set cache-only."
+            "the last valid index 26); the full set is LFS-committed under "
+            "data/cache/, excluded from default pulls."
         ),
         "consumers": ["clean-clone lens inspection at representative depths"],
     },
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [
-            "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, gitignored)"
-        ],
+        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.config.json ({_CACHE_LFS})"],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: "
@@ -190,7 +205,7 @@ META: dict[str, dict[str, Any]] = {
     # The small derived artifacts the audit (examples/jspace_audit_findings.py)
     # re-derives from, promoted out of data/cache/ into data/ for clean-clone
     # auditability. Built compactly below via _derived() and merged into META
-    # (the full fitted lenses that produced them stay cache-only, Decision 4).
+    # (the full fitted lenses that produced them live in data/cache/, Decision 4).
 }
 
 
@@ -213,12 +228,12 @@ def _derived(
     }
 
 
-# Full fitted lenses (cache-only, gitignored) named as inputs of the derived set.
-_L15 = "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, gitignored)"
-_L7B = "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, gitignored)"
-_L15N4 = "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, gitignored)"
-_L15N5 = "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, gitignored)"
-_L15C4 = "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, gitignored)"
+# Full fitted lenses under data/cache/ named as inputs of the derived set.
+_L15 = f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"
+_L7B = f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"
+_L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
+_L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"
+_L15C4 = f"jlens_qwen2.5-1.5b_bf16_n100_c4en.pt ({_CACHE_LFS})"
 _HW = "heldout_prompts_wikitext103_n30.json"
 _HC4 = "heldout_prompts_c4en_n30.json"
 _EVAL = "examples/jspace_lens_eval.py"
@@ -749,51 +764,66 @@ def build_entries() -> list[dict[str, Any]]:
     return entries
 
 
+# Top-level manifest prose. Hoisted out of write_manifest() so --check can
+# assert the committed MANIFEST.json still carries these exact literals — an
+# edit here that was never regenerated is drift, same as a META edit (#48).
+_DESCRIPTION = (
+        "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en "
+        "fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors "
+        "(jlens native format) with their .config.json provenance sidecars, "
+        "and the promoted derived metric/scan/swap products (lens_eval, "
+        "readout_scan, structure_scan, verbal_report, entailed_swap + "
+        "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
+        "Committed via git-LFS so figures and the audit reproduce from a "
+        "clean clone. See README.md beside this manifest for what the "
+        "cache/ subdir does and does not commit. The J-lens dependency is pinned in the "
+        "top-level `jlens_pin` field below; the eval prompt sets ship "
+        "with that pinned checkout, not with this repo."
+)
+
+_JLENS_PIN: dict[str, Any] = {
+        "repo": "https://github.com/anthropics/jacobian-lens",
+        "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
+        "subject": "Initial release",
+        "date": "2026-07-02",
+        "provenance": (
+            "The J-lens fit/readout implementation (jlens.fit, native .pt "
+            "format) that produced every lens + derived artifact in this "
+            "manifest. The multihop / association intermediate-concept eval "
+            "prompt sets used by examples/jspace_lens_eval.py also live in "
+            "that repository, so the eval tables (audit Check B) are "
+            "reproducible only against this pinned commit. Check it out at "
+            "the commit above and point JSPACE_EVAL_DIR at its "
+            "data/evaluations (the default assumes a sibling checkout at "
+            "../jacobian-lens)."
+        ),
+}
+
+_TRUST_NOTE = (
+        "Lens .pt files load via jlens / torch.load (pickle). Safe here in "
+        "the deserialization sense: every .pt is a locally-fitted tensor "
+        "dump produced by this repo's own scripts, never an externally "
+        "supplied pickle; the corpora are plain JSON. That is a statement "
+        "about pickle trust ONLY — the corpora themselves ARE third-party "
+        "data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see "
+        "LICENSE-DATA.md) and the C4 files are PII-redacted (see "
+        "README.md). Verify sha256 with `--check` before loading on an "
+        "untrusted copy."
+)
+
+# The top-level (non-per-file, non-tallied) fields --check re-derives.
+_TOPLEVEL_LITERALS: dict[str, Any] = {
+    "arc": "jspace",
+    "description": _DESCRIPTION,
+    "jlens_pin": _JLENS_PIN,
+    "trust_note": _TRUST_NOTE,
+}
+
+
 def write_manifest() -> None:
     entries = build_entries()
-    doc = {
-        "arc": "jspace",
-        "description": (
-            "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en "
-            "fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors "
-            "(jlens native format) with their .config.json provenance sidecars, "
-            "and the promoted derived metric/scan/swap products (lens_eval, "
-            "readout_scan, structure_scan, verbal_report, entailed_swap + "
-            "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
-            "Committed via git-LFS so figures and the audit reproduce from a "
-            "clean clone. See README.md beside this manifest for what the "
-            "cache/ subdir does and does not commit. The J-lens dependency is pinned in the "
-            "top-level `jlens_pin` field below; the eval prompt sets ship "
-            "with that pinned checkout, not with this repo."
-        ),
-        "jlens_pin": {
-            "repo": "https://github.com/anthropics/jacobian-lens",
-            "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
-            "subject": "Initial release",
-            "date": "2026-07-02",
-            "provenance": (
-                "The J-lens fit/readout implementation (jlens.fit, native .pt "
-                "format) that produced every lens + derived artifact in this "
-                "manifest. The multihop / association intermediate-concept eval "
-                "prompt sets used by examples/jspace_lens_eval.py also live in "
-                "that repository, so the eval tables (audit Check B) are "
-                "reproducible only against this pinned commit. Check it out at "
-                "the commit above and point JSPACE_EVAL_DIR at its "
-                "data/evaluations (the default assumes a sibling checkout at "
-                "../jacobian-lens)."
-            ),
-        },
-        "trust_note": (
-            "Lens .pt files load via jlens / torch.load (pickle). Safe here in "
-            "the deserialization sense: every .pt is a locally-fitted tensor "
-            "dump produced by this repo's own scripts, never an externally "
-            "supplied pickle; the corpora are plain JSON. That is a statement "
-            "about pickle trust ONLY — the corpora themselves ARE third-party "
-            "data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see "
-            "LICENSE-DATA.md) and the C4 files are PII-redacted (see "
-            "README.md). Verify sha256 with `--check` before loading on an "
-            "untrusted copy."
-        ),
+    doc: dict[str, Any] = {
+        **_TOPLEVEL_LITERALS,
         "total_files": len(entries),
         "total_size_bytes": sum(e["size_bytes"] for e in entries),
         "files": entries,
@@ -813,6 +843,25 @@ def check_manifest() -> int:
     recorded = {e["filename"]: e for e in doc["files"]}
     on_disk = set(_deliverables())
     problems: list[str] = []
+    # Top-level prose drift: an edit to _DESCRIPTION / _JLENS_PIN / _TRUST_NOTE
+    # (or the arc name) that was never regenerated into the committed manifest.
+    for field, expected in _TOPLEVEL_LITERALS.items():
+        if doc.get(field) != expected:
+            problems.append(
+                f"top-level drift: {field}\n"
+                f"    manifest={doc.get(field)!r}\n"
+                f"    writer  ={expected!r}"
+            )
+    # Tallies must match the file list they summarize.
+    for field, expected in (
+        ("total_files", len(recorded)),
+        ("total_size_bytes", sum(e["size_bytes"] for e in recorded.values())),
+    ):
+        if doc.get(field) != expected:
+            problems.append(
+                f"top-level drift: {field} (manifest={doc.get(field)!r}, "
+                f"files imply {expected!r})"
+            )
     missing, extra = _disk_vs_expected(set(recorded), on_disk)
     problems += [f"missing on disk: {name}" for name in missing]
     problems += [f"on disk but not in manifest: {name}" for name in extra]
@@ -838,11 +887,42 @@ def check_manifest() -> int:
         for p in problems:
             print(f"  - {p}")
         return 1
-    print(f"MANIFEST CHECK: OK  ({len(recorded)} files, sha256 + metadata match)")
+    print(
+        f"MANIFEST CHECK: OK  ({len(recorded)} files, "
+        "sha256 + per-file metadata + top-level literals match)"
+    )
     return 0
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Explicit-mode CLI. Neither a bare invocation nor `--help` may rewrite
+    MANIFEST.json — writing requires `--write`, so a reflexive run of the
+    script can never silently replace the committed manifest (#44)."""
+    parser = argparse.ArgumentParser(
+        prog="jspace_data_manifest.py",
+        description="Generate or verify research/arcs/04_jspace/data/MANIFEST.json.",
+    )
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
+        "--check",
+        action="store_true",
+        help="verify the committed manifest against disk + META; exit 1 on drift",
+    )
+    mode.add_argument(
+        "--write",
+        action="store_true",
+        help="(re)write MANIFEST.json from disk + META",
+    )
+    args = parser.parse_args(argv)
+    if args.check:
+        return check_manifest()
+    if args.write:
+        write_manifest()
+        return 0
+    parser.print_usage()
+    print("error: pass exactly one of --check or --write", file=sys.stderr)
+    return 2
+
+
 if __name__ == "__main__":
-    if "--check" in sys.argv[1:]:
-        sys.exit(check_manifest())
-    write_manifest()
+    sys.exit(main())

@@ -18,5 +18,5 @@
     25,
     26
   ],
-  "full_set_location": "data/cache/ (gitignored; regenerate via examples/jspace_fit_lens.py)"
+  "full_set_location": "data/cache/ (LFS-committed, excluded from default pulls \u2014 fetch with git lfs pull --include=\"research/arcs/04_jspace/data/cache/**\" --exclude=\"\"; or regenerate via examples/jspace_fit_lens.py)"
 }

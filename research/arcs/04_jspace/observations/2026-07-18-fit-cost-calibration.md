@@ -21,7 +21,7 @@ retained graph, not by model FLOPs alone. On this hardware:
 | 7B nf4, dim_batch=2, lm_head offloaded | 559 (0.28 fwd + 0.31/pass x 1792) | 15.5 h | 155.3 h | 6.10 GiB |
 
 Full-depth 7B fitting is impossible without offloading `lm_head` to CPU
-(OOM at dim_batch {8,4,2}); with the ~1.09 GiB freed it fits only at
+(OOM at dim_batch {8,4,2}); with the ~1.09 GB (1.02 GiB) freed it fits only at
 dim_batch=2 (dim_batch=4 still OOMs). 1.5B bf16 OOMs at dim_batch {32,16},
 fits at 8. Activation gradients flow cleanly through the bitsandbytes nf4
 QLoRA path (`grad_ok=True`, finite, nonzero at layer 0), so quantized
@@ -31,8 +31,9 @@ sample the 7B is ~2x slower on ~4.7x the params); the structural cost is
 the d_model pass count.
 
 CPU fallback is not viable for the 7B: host RAM is 31 GiB with ~14 GiB
-available vs ~15 GiB bf16 weights + several GiB of retained graph and fp32
-accumulators, and CPU per-pass throughput is well below the working GPU
+available vs ~15 GB (14.2 GiB) of bf16 weights — over the available RAM on
+the weights alone, before several GiB of retained graph and fp32
+accumulators — and CPU per-pass throughput is well below the working GPU
 path's [unsourced estimate: 10-40x slower].
 
 Also confirmed: Qwen2.5 tokenizers have `bos_token_id=None`, so jlens's

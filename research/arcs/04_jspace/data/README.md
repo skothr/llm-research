@@ -49,7 +49,10 @@
 > **954 PASS | 6 FAIL** before re-pinning, **956 PASS | 4 FAIL** after
 > (post-re-pin log committed at `audit_2026-08-16.log`; re-derivable with
 > `python examples/jspace_audit_findings.py` — on a default clone the lens
-> cache is pointer stubs and the same run reports 921 | 7; both states are
+> cache is pointer stubs and the same run reports 921 | 7. The audit has
+> since gained checks: as of 2026-08-17 the same two states measure
+> **986 | 4** with the cache and **951 | 7** without
+> (`audit_2026-08-17.log`). Both states are
 > documented in [`../README.md`](../README.md) under "Expected result on a
 > clean clone"). The 4
 > remaining FAILs are
@@ -117,8 +120,9 @@ Artifact classes (see the MANIFEST for the per-file registry):
 
 - `raw`: frozen fitting/held-out corpora (wikitext-103 + seeded C4-en),
   fitted-lens **layer subsets** (`jlens_*_layer-subset.pt` + `.config.json`
-  sidecars; design Decision 4 — the full 27-layer lenses stay in the
-  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`), and
+  sidecars; design Decision 4 — the full 27-layer lenses stay in
+  `cache/`, regenerable via `examples/jspace_fit_lens.py`; see the
+  amendment below for which of them are now committed there), and
   the hand-written paper-verbatim item bank.
   **Decision 4 amended 2026-08-16**: the three lenses refit in the
   C4-redaction re-run — both wikitext + the c4en — are now LFS-committed
