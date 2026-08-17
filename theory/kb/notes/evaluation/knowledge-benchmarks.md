@@ -63,7 +63,7 @@ is **what kind of $\rho$**:
   benchmark is reasoning-heavy.
 
 This is the diagnostic the MMLU-Pro paper makes load-bearing
-`[wang2024-mmlu-pro §sec-cot;
+`[wang2024-mmlu-pro §6.2;
 kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`:
 
 > Chain-of-Thought reasoning showed marked improvements on MMLU-Pro,
@@ -181,8 +181,8 @@ changes targeting MMLU's saturation failures:
 
 At launch, top frontier models scored 16–33 percentage points lower
 than their MMLU score
-`[wang2024-mmlu-pro §sec-delta;
-kb/excerpts/wang2024-mmlu-pro#sec-6-1-rankings]`. Prompt-format sensitivity
+`[wang2024-mmlu-pro §abstract;
+kb/excerpts/wang2024-mmlu-pro#abstract]`. Prompt-format sensitivity
 dropped from 4–5% (MMLU) to ~2% (MMLU-Pro).
 
 The structural innovation of MMLU-Pro that matters for *knowledge*
@@ -262,7 +262,7 @@ discrimination function at the frontier. Two diagnostics:
    knowledge-only items are not the bottleneck — frontier models
    know the facts; the 5–10% they miss are not retrieval failures
    but verifier-error / contamination / ambiguity items
-   `[wang2024-mmlu-pro §sec-cot;
+   `[wang2024-mmlu-pro §6.2;
    kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`.
 2. **Saturation within the verifier-error band.** With MMLU-Redux's
    6.49% baseline error rate `[mmlu-redux-2024 §abstract]`, a
@@ -321,7 +321,7 @@ contributing factors:
    decontamination filters miss indirect contamination
    (StackExchange explanations of MMLU questions, Reddit
    post-mortems). The contamination-survey-2025 catalog
-   `[contamination-survey-2025 §sec-scope;
+   `[contamination-survey-2025 §2.1;
    kb/excerpts/contamination-survey-2025#sec-taxonomy]` makes this
    explicit. Saturation accelerates as benchmark visibility grows.
 

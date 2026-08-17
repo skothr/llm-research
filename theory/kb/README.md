@@ -24,11 +24,16 @@ synthesis with primary-source quotation.
 
 `kb/lint.py` checks every citation in `kb/**/*.md` (notes, `glossary.md`,
 `index/`) against reality: paper-keys resolve in `index/papers.json` (both the
-`[paper-key §X]` and bare `[paper-key]` forms), excerpt and note
-cross-references resolve to
-a real **file and a real anchor**, `topics.md` leaves have notes, and notes carry
-frontmatter. Run it from `theory/` after any citation edit; it exits non-zero on
-the first error class:
+`[paper-key §X]`, bare `[paper-key]`, and `[paper-key, arXiv NNNN.NNNNN]`
+forms), excerpt and note cross-references resolve to
+a real **file and a real anchor** (the anchorless
+`[kb/excerpts/<paper-key>]` fallback is checked for the file), the `§X` half
+of a hybrid `[<paper-key> §X; kb/excerpts/<paper-key>#<heading>]` agrees with
+the section the target excerpt heading names for itself
+(`## §6.3 Robustness … {#sec-6-3-robustness}` ⇒ `§6.3`), `topics.md` leaves
+have notes, and notes carry
+frontmatter. Run it from `theory/` after any citation edit; it collects every
+error, prints them all, and exits non-zero if any:
 
 ```bash
 python3 kb/lint.py

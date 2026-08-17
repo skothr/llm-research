@@ -9,13 +9,17 @@ Checks:
 1. papers.json is valid; every paper has required fields.
 2. Every excerpts_file in papers.json points to a real file (or null).
 3. Every kb/notes/<area>/<topic>.md exists for every leaf in topics.md.
-4. Every paper-key cited inline ([key §X] *or* the bare [key] form) corresponds
-   to a key in papers.json.
+4. Every paper-key cited inline ([key §X], the bare [key] form, *or* the
+   `[key, arXiv NNNN.NNNNN]` form) corresponds to a key in papers.json.
 5. Every kb/excerpts/<key>#anchor citation resolves to a real excerpt file *and*
    to a real anchor inside it (`{#attr}` attributes, the repo-local
    `## #anchor — Title` heading convention, and plain markdown heading slugs).
+   The anchorless `kb/excerpts/<key>` form is checked for file existence.
 6. Notes have YAML frontmatter with required keys.
 7. Count [INTUITION], [ANALOGY], [CONTRADICTION] tags per note.
+8. Hybrid citations `[key §X; kb/excerpts/key#anchor]` are §-consistent: when
+   the targeted excerpt heading names its own section (`## §6.3 Robustness …`),
+   the citation's `§X` label must agree with it.
 
 Scan set for checks 4/5/7 is every `kb/**/*.md` outside `kb/excerpts/` — notes,
 glossary.md, index/ (including `_phase2-additions/` and contradictions.md).
@@ -132,8 +136,15 @@ NOT_A_KEY = {
     "paper-key",
 }
 # Match excerpt anchors anywhere in citation brackets (hybrid form
-# `[paper-key §X; kb/excerpts/key#anchor]` is dominant in practice).
-EXCERPT_CITE_RE = re.compile(r"(kb/excerpts/[a-z0-9.\-]+)#([A-Za-z0-9.\-]+)")
+# `[paper-key §X; kb/excerpts/key#anchor]` is dominant in practice). `§` is in
+# the anchor class so a note-side `#§3` shorthand written against an *excerpt*
+# is validated (and flagged) rather than silently skipped.
+EXCERPT_CITE_RE = re.compile(r"(kb/excerpts/[a-z0-9.\-]+)#(§?[A-Za-z0-9.\-]+)")
+# The anchorless fallback `kb/excerpts/<key>` (optionally `.md`-suffixed): no
+# anchor to resolve, but the file still has to exist. Greedy — the trailing
+# `.md` is stripped after the match, and an immediately following `#` means the
+# anchored form above already owns the site.
+EXCERPT_FILE_RE = re.compile(r"kb/excerpts/([a-z0-9.\-]+)")
 # Intra-KB note citations: `[kb/notes/<area>/<file>#anchor]`. The anchor is
 # optional and comes in two forms — a heading slug (`#3-why-the-logit-lens…`)
 # or the repo's section-number shorthand (`#§2`, `#§3.1`).
@@ -151,11 +162,20 @@ LEADING_ANCHOR_RE = re.compile(r"^#([A-Za-z0-9._\-]+)\b")
 
 
 def heading_slug(text: str) -> str:
-    """GitHub-ish slug of a heading's visible text."""
+    """GitHub-ish slug of a heading's visible text.
+
+    GFM emits one hyphen *per* whitespace character, so a run of n spaces
+    becomes n hyphens — hence the per-character substitution rather than a
+    `\\s+` collapse. Known deviation: GFM disambiguates repeated slugs within a
+    document by appending `-1`, `-2`, …; this does not, so a duplicate heading
+    text yields one anchor here where GFM yields several. No live instance in
+    the KB (every duplicated heading text sits in a different file), so the
+    simpler behaviour stands until one appears.
+    """
     text = ANCHOR_ATTR_RE.sub("", text).strip()
     text = re.sub(r"[`*_$\\]", "", text).lower()
     text = re.sub(r"[^a-z0-9\s\-]", "", text)
-    return re.sub(r"\s+", "-", text).strip("-")
+    return re.sub(r"\s", "-", text).strip("-")
 
 
 _anchor_cache: dict[Path, set[str]] = {}
@@ -197,6 +217,56 @@ def section_numbers_of(path: Path) -> set[str]:
                 found.add(num.group(1))
         _section_cache[path] = found
     return _section_cache[path]
+
+
+_designation_cache: dict[Path, dict[str, set[str]]] = {}
+
+# `## §6.3 Robustness …` / `## §5 / §6.1 Model Rankings …` — the source-paper
+# section(s) an excerpt heading transcribes.
+HEADING_SECTION_RE = re.compile(r"§\s*([A-Za-z]?[0-9]+(?:\.[0-9]+)*)")
+# The `§X` label carried by a citation, e.g. `[wang2024-mmlu-pro §6.3; …]`.
+CITE_SECTION_RE = re.compile(r"§\s*([A-Za-z0-9][A-Za-z0-9.\-]*)")
+# A whole bracketed citation payload that names an excerpt anchor.
+HYBRID_CITE_RE = re.compile(r"\[([^\[\]]*kb/excerpts/[^\[\]]*)\]")
+
+
+def section_designations_of(path: Path) -> dict[str, set[str]]:
+    """anchor -> the `§N` designations its own heading text names, per excerpt.
+
+    Only headings that name a section are recorded; `## Abstract {#abstract}`
+    contributes nothing and so can never produce a mismatch.
+    """
+    if path not in _designation_cache:
+        found: dict[str, set[str]] = {}
+        for line in path.read_text().splitlines():
+            m = HEADING_RE.match(line)
+            if not m:
+                continue
+            head = m.group(1)
+            sections = set(HEADING_SECTION_RE.findall(head))
+            if not sections:
+                continue
+            names = set(ANCHOR_ATTR_RE.findall(head))
+            lead = LEADING_ANCHOR_RE.match(head)
+            if lead:
+                names.add(lead.group(1))
+            slug = heading_slug(head)
+            if slug:
+                names.add(slug)
+            for name in names:
+                found.setdefault(name, set()).update(sections)
+        _designation_cache[path] = found
+    return _designation_cache[path]
+
+
+def _section_agrees(cited: str, target: str) -> bool:
+    """`§3` agrees with a `§3.2` heading; `§3.2.1` agrees with `§3.2`."""
+    c, t = cited.rstrip("."), target.rstrip(".")
+    if c == t:
+        return True
+    a, b = c.split("."), t.split(".")
+    n = min(len(a), len(b))
+    return a[:n] == b[:n]
 
 
 def kb_markdown_files():
@@ -265,9 +335,43 @@ def check_citations(paper_keys: set):
                         f"{key!r} ({form} form)"
                     )
 
+        # `[key, arXiv NNNN.NNNNN]` — the key sits ahead of a comma rather than
+        # a `§` or a `]`, so neither form above sees it. Segments split on `;`
+        # so the second key of `[k1, arXiv …; k2, arXiv …]` is checked too.
+        for m in re.finditer(r"\[([^\[\]]+)\]", body):
+            for seg in m.group(1).split(";"):
+                sm = re.match(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)\s*,", seg)
+                if not sm:
+                    continue
+                key = sm.group(1)
+                if key.lower() in NOT_A_KEY or not KEY_SHAPED_RE.search(key):
+                    continue
+                paper_cite_keys.add(key)
+                if key.lower() not in keys_lower:
+                    errors.append(
+                        f"{rel}:{line_of(m.start())}: cites unknown paper-key "
+                        f"{key!r} (arXiv form)"
+                    )
+
+        # Anchorless `kb/excerpts/<key>` — existence of the file only.
+        for m in EXCERPT_FILE_RE.finditer(body):
+            end = m.end()
+            if body[end : end + 1] == "#":
+                continue  # anchored form, handled below
+            stem = m.group(1)
+            if stem.endswith(".md"):
+                stem = stem[:-3]
+            if not (EXCERPTS / (stem + ".md")).exists():
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites missing excerpt file "
+                    f"kb/excerpts/{stem}.md"
+                )
+
         # kb/excerpts/<key>#anchor citations — file *and* anchor.
         for m in EXCERPT_CITE_RE.finditer(body):
             excerpt_rel, anchor = m.group(1), m.group(2)
+            # `kb/excerpts/foo.md#bar` is as valid as `kb/excerpts/foo#bar`.
+            excerpt_rel = excerpt_rel.removesuffix(".md")
             excerpt_cites.add(f"{excerpt_rel}#{anchor}")
             ep = THEORY / (excerpt_rel + ".md")
             if not ep.exists():
@@ -280,6 +384,32 @@ def check_citations(paper_keys: set):
                 errors.append(
                     f"{rel}:{line_of(m.start())}: cites missing anchor "
                     f"#{anchor} in {excerpt_rel}.md"
+                )
+
+        # §-consistency of the hybrid `[key §X; kb/excerpts/key#anchor]` form:
+        # the label in the `§` slot must agree with the section the targeted
+        # excerpt heading names for itself. Any `§` label in the bracket
+        # satisfies any anchor in it — brackets naming several of each are rare
+        # and the association between them is not recoverable syntactically.
+        for m in HYBRID_CITE_RE.finditer(body):
+            payload = m.group(1)
+            cited = [s.rstrip(".") for s in CITE_SECTION_RE.findall(payload)]
+            if not cited:
+                continue
+            for em in EXCERPT_CITE_RE.finditer(payload):
+                stem = em.group(1).removesuffix(".md")
+                ep = THEORY / (stem + ".md")
+                if not ep.exists():
+                    continue
+                targets = section_designations_of(ep).get(em.group(2))
+                if not targets:
+                    continue
+                if any(_section_agrees(c, t) for c in cited for t in targets):
+                    continue
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites §{'/§'.join(cited)} but "
+                    f"anchor #{em.group(2)} in {stem}.md is "
+                    f"§{'/§'.join(sorted(targets))}"
                 )
 
         # kb/notes/<area>/<file>[#anchor] cross-references — file and anchor.

@@ -84,16 +84,16 @@ Phase 5 brainstorm document committed. KB now 54 draft / 0 stubs._
 
 ## Trust the KB for what?
 
-- ✅ **Topic landscape and lineage** — every note has primary-source
+- ✓ **Topic landscape and lineage** — every note has primary-source
   citations and a frontier section; safe scaffolding for further
   research and paper writing.
-- ✅ **Chronological progression** — `timeline.md` is fully linked.
-- ✅ **Cross-area open questions** — `contradictions.md` is a curated
+- ✓ **Chronological progression** — `timeline.md` is fully linked.
+- ✓ **Cross-area open questions** — `contradictions.md` is a curated
   surface, not interpretive synthesis; safe to read and cite.
-- ⚠️ **§/eq.-level claims** — verify against the original PDF before
+- △ **§/eq.-level claims** — verify against the original PDF before
   propagating into LaTeX or experiments. The KB digests, the paper is
   canonical (this is the standing CLAUDE.md rule).
-- ⚠️ **Author attributions on 2025-26 papers** — the reasoning subagent
+- △ **Author attributions on 2025-26 papers** — the reasoning subagent
   hallucinated 7 author prefixes that Phase 4 corrected; spot-check any
   unusually-named keys (no author prefix, or mismatched arXiv ID) before
   citing externally.

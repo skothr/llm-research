@@ -113,7 +113,7 @@ training); modern long-context regimes need a correction.
   3000-step linear warmup, decaying to zero.
 - Fix the LR schedule horizon at $S = 2.5 \times 10^5$ steps for all
   models, batch size 512 sequences × 1024 tokens
-  `[kaplan2020 §2.2; kb/excerpts/kaplan2020#sec-2-1-definitions]`.
+  `[kaplan2020 §2.1; kb/excerpts/kaplan2020#sec-2-1-definitions]`.
 
 The fixed LR schedule is the methodological choice that biased the
 compute-optimal allocation result — see §4 below.

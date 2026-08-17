@@ -35,7 +35,7 @@ quality model.
 ### 1.1 Construction
 
 `kirchenbauer2023-watermark`
-`[kirchenbauer2023-watermark §greenred;
+`[kirchenbauer2023-watermark §2;
 kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`:
 
 For each generation step $t$:
@@ -63,7 +63,7 @@ independently with probability $\gamma$:
 $$z = \frac{|s|_G - \gamma T}{\sqrt{T \gamma (1-\gamma)}}$$
 
 A large $z$-score rejects the null
-`[kirchenbauer2023-watermark §detection;
+`[kirchenbauer2023-watermark §3.1;
 kb/excerpts/kirchenbauer2023-watermark#sec-zscore]`. The headline
 property: **detection requires no API access, no model weights, only
 the keyed hash and the candidate text**.
@@ -76,7 +76,7 @@ positions where one specific token dominates, and (iii) be trivially
 detectable by frequency analysis even without the key. The soft
 $\delta$-additive scheme inherits a **distortion / detectability
 tradeoff** — larger $\delta$ → stronger watermark, more quality drift
-`[kirchenbauer2023-watermark §soft;
+`[kirchenbauer2023-watermark §3;
 kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`.
 
 [INTUITION] The watermark is "free" at high-entropy positions

@@ -98,7 +98,7 @@ model, and without an RL loop.
 
 ### 1.3 The DPO gradient
 
-`[rafailov2023-dpo §4-gradient; kb/excerpts/rafailov2023-dpo#sec-4-gradient]`:
+`[rafailov2023-dpo §4; kb/excerpts/rafailov2023-dpo#sec-4-gradient]`:
 
 $$
 \nabla_\theta \mathcal{L}_{\mathrm{DPO}} = -\beta\, \mathbb{E}\!\left[ \sigma(\hat{r}_\theta(x,y_l) - \hat{r}_\theta(x,y_w))\, \big(\nabla_\theta\log\pi_\theta(y_w|x) - \nabla_\theta\log\pi_\theta(y_l|x)\big) \right].
@@ -237,7 +237,7 @@ The length-normalization is the key practical contribution: it directly
 addresses DPO's well-known **length bias** (DPO tends to make outputs
 longer because long responses are easier to satisfy with higher
 log-ratios). On length-controlled benchmarks SimPO outperforms DPO
-substantially `[meng2024-simpo §4-headline; kb/excerpts/meng2024-simpo#sec-4-headline-empirical]`.
+substantially `[meng2024-simpo §4; kb/excerpts/meng2024-simpo#sec-4-headline-empirical]`.
 
 ### 3.6 GAPO and explicit-PO — anchoring variants
 

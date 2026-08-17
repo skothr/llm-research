@@ -57,13 +57,17 @@ of the discovery path.
      not. Vendor tech reports and model cards are usually all-rights-reserved
      regardless of being free to download.
    - **If the licence does not permit redistribution, do not commit the PDF.**
-     Register the paper in `papers.json` with `local_pdf: null` and its URL,
+     Register the paper in `papers.json` with `local_file: null` and its URL,
      and write the excerpts file from the source instead — short quoted
      passages with attribution are what the excerpts tier is for.
    - Record the decision in the `papers.json` entry: the licence name, whether
      redistribution is permitted, and any obligation it carries (a required
-     attribution line, a `ShareAlike` term, a "no derivatives" limit). Longer
-     rationale goes in the entry's `note` field.
+     attribution line, a `ShareAlike` term, a "no derivatives" limit). The
+     schema has no dedicated field for this — append a "Licence:" sentence to
+     the entry's `summary` (the twelve keys in `papers.json` are fixed: `key`,
+     `title`, `authors`, `year`, `venue`, `url`, `local_file`, `excerpts_file`,
+     `notes_referenced_by`, `topics`, `category`, `summary`; do not invent
+     new ones).
    - This is the `theory/`-side instance of the repo-wide third-party-data
      gate in the root `CLAUDE.md` § "Third-party data — vet BEFORE first use".
 2. Download the PDF to `papers/<paper-key>_<slug>.pdf` (slug is a
