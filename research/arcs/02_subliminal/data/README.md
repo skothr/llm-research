@@ -75,7 +75,7 @@ carrying the capture-time values as historical constants.
 | Field in `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
 |---|---|---|---|
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
-| `generation.generator_script_sha256` | `3b974528…` | `bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d` | The generator evolved after capture: `823b5e68` (write `prompts.jsonl`, empty `downstream`), `1ed05dad` (path redaction), and the 2026-08-17 edit (deferred numpy/torch imports so the audit script can import the pure helpers; upstream MIT notice added). |
+| `generation.generator_script_sha256` | `3b974528…` | `3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574` | The generator evolved after capture: `823b5e68` (write `prompts.jsonl`, empty `downstream`), `1ed05dad` (path redaction), and two 2026-08-17 edits (deferred numpy/torch imports so the audit script can import the pure helpers, plus the upstream MIT notice; then a `two_prop_z` docstring stating that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result). All are comment/import-level; no change to the filter, the decoder, or the prompt generator's outputs. |
 
 The five `manifest.files[]` data-file hashes **all still verify** against disk —
 `owl_streams.jsonl`, `owl_raw.jsonl`, `neutral_streams.jsonl`,
@@ -98,8 +98,10 @@ Trust level: the prompt-generation code is byte-identical to the capture commit
 the generator draws the whole query set from a freshly seeded RNG *before* any
 model call, so the replay is deterministic and independent of the teacher. That
 this file is the set the 2026-05-31 run consumed is therefore a sound
-inference — but it is an inference, not a capture. The audit lists it under
-UNVERIFIABLE and checks count + first/last-query stability instead.
+inference — but it is an inference, not a capture. The audit re-runs that
+replay itself and asserts the result is byte-identical to this file, so the
+"it is the seeded generator's output" half is measured; the "the 2026-05-31 run
+consumed it" half stays on the UNVERIFIABLE list.
 
 ## Audit
 
@@ -108,8 +110,9 @@ this arc from the committed bytes: file hashes/sizes/line counts against the
 manifest, the pinned manifest hash, the two amended hashes above, a
 from-first-principles replay of the ported filter over the raw completions
 (kept counts, reject rates, reject-reason census, the two-proportion z and the
-power floor), and a full five-scheme decode replay reconciled against
-`decode_report.json`. No GPU, no network, runs in under a second.
+power floor), a full five-scheme decode replay reconciled against
+`decode_report.json`, and a byte-exact regeneration of `prompts.jsonl` from the
+seeded `PromptGenerator`. No GPU, no network, runs in under a second.
 
 ```bash
 python examples/subliminal_audit_findings.py
@@ -118,7 +121,7 @@ python examples/subliminal_audit_findings.py
 Expected result as of 2026-08-17 (committed run: [`audit_2026-08-17.log`](audit_2026-08-17.log)):
 
 ```
-SUMMARY:  102 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ```
 
 The 5 UNVERIFIABLE entries are printed, not scored: the paper's 23–38% reject

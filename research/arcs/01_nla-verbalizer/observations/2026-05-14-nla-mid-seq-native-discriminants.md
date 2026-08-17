@@ -78,6 +78,57 @@ The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discrimi
 
 MAIN-44 + MAIN-70 together turn what looked like a null result into a productive characterization of the basis. The pattern: **null result + native re-derivation reveals what the failed basis was missing**. Worth keeping as a methodological template — when a basis "fails" cross-protocol, build the native basis and compare directly to map what *is* preserved.
 
+## Hypotheses
+
+**H1 — the weakly-positive diagonal is a real position-invariant semantic
+component, not a shared-offset artifact.** Both discriminant families are built
+as `mean(cat) − mean(non-cat)` over captures that share layer-20's attention-sink
+dimensions and a large common population mean. If either leaks through, every
+diagonal entry inherits a small positive floor and the content-vs-function
+ordering could be an artifact of how much each category's captures differ from
+that common part. **To test:** recompute the 23×23 matrix twice more — once with
+the sink dimensions zeroed (the `sink_removed_atlas.pt` recipe) and once with
+each protocol's captures mean-centered within protocol before the contrast.
+Under H1 the content diagonals survive near +0.13 to +0.17 and the function-word
+diagonals stay near zero; if all 23 collapse toward the −0.0009 off-diagonal
+mean, the diagonal was the shared offset. Pure tensor math over committed `.pt`
+inputs, no model load.
+
+**H2 — mid-discriminants transfer worse to eop-h because the mid-seq protocol
+uses one fixed carrier sentence.** Every mid-seq anchor sits in the same
+surrounding context, so each mid axis can encode "this anchor in this carrier at
+this position" rather than "this category". That would explain the asymmetry
+(eop-h × mid-discr +0.0369 < mid-h × eop-discr +0.0491) without any claim about
+mid-sequence geometry as such. **To test:** re-capture the mid-seq atlas with K
+distinct carrier sentences (varying topic, length, and anchor offset) and
+rebuild the discriminants from the pooled captures. Under H2 the eop-h ×
+mid-discr arm rises with K and the mid-h × mid-discr arm falls from +0.5632
+toward the eop in-protocol +0.4022. A re-capture regenerates
+`mid_seq_vocab_atlas.pt`, so it must regenerate the AUDIT 15/16 expecteds and
+`data/MANIFEST.json` in the same change (the 128-vs-125 anchor drift, issue #51).
+
+**H3 — the 97.10% in-protocol argmax is inflated by that same carrier
+homogeneity, not evidence that mid-seq is the better capture protocol.** With
+one carrier, within-category captures differ only in the anchor token, so a
+discriminant fit on all of them can separate categories using carrier-locked
+directions that would not survive a new context. **To test:** hold-out
+validation inside the existing artifact — build the mid discriminants from half
+the anchors per category and score the held-out half. Under H3 accuracy falls
+back toward the eop-level 75%; if it stays near 97%, the lift is a property of
+the protocol rather than of the fit. No re-capture needed.
+
+## Follow-ups
+
+1. **Run the H1 sink-removal / mean-centering recheck.** Cheapest of the three
+   (pure tensor math over `vocab_atlas.pt`, `mid_seq_vocab_atlas.pt`, and
+   `pairwise_and_hotdims.pt`) and it decides whether the "stable axis" reading
+   in the section above is load-bearing or an artifact.
+2. **Run the H3 hold-out split.** Also no re-capture, and it bounds how much of
+   the +0.5632 / 97.10% headline is fit-to-carrier.
+3. **Prototype the stable-axis-only glyph** (path 2 in the viz section) from the
+   five content axes, and label it explicitly as cross-protocol-comparable —
+   deferred until H1 says those axes are real.
+
 ## Reproducibility
 
 ```bash

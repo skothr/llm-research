@@ -15,7 +15,7 @@ Procedure: take plateau-mid h (from dense interp step t=0.420), run its AV text 
 
 ## Results
 
-| target | ||h_orig|| | ||h_pred|| | cos(h_pred, original) | cos(h_pred, A) | cos(h_pred, B) | cos(h_pred, plateau) |
+| target | \|\|h_orig\|\| | \|\|h_pred\|\| | cos(h_pred, original) | cos(h_pred, A) | cos(h_pred, B) | cos(h_pred, plateau) |
 |---|---|---|---|---|---|---|
 | **plateau t=0.420** | 60.79 | 65.68 | **+0.8995** | +0.8386 | +0.8154 | +0.8995 |
 | anchor A t=0.000 | 65.73 | 64.65 | +0.8900 | +0.8900 | +0.6416 | +0.8521 |
@@ -52,6 +52,40 @@ This is the strongest synthesis the arc has produced. It explains:
 - Why discriminants are protocol-coupled (MAIN-44/70): each protocol's captures land in protocol-specific subsets of basins
 - Why interpolation produces stepwise flips (MAIN-25): basin boundaries are sharp
 - Why dense sampling reveals plateaus (MAIN-34): basins have non-zero volume in h-space
+
+## Hypotheses
+
+**H1 — the ~+0.89 round-trip cosine is a channel ceiling of the h → AV → AR
+loop, not a property of these three points.** All three targets — two anchors
+and one plateau point — return +0.890, +0.899, +0.900. If that value is what any
+h round-trips to, then round-trip cosine alone carries no information about
+basin membership and only the margin column above is evidence. **To test:**
+round-trip a sample of h's drawn from `vocab_atlas.pt` across unrelated
+categories and plot the distribution of cos(h_pred, h). Under H1 it concentrates
+tightly near +0.89 regardless of category; a wide spread would mean +0.8995 is a
+genuinely high value and the plateau result is stronger than the margin reading
+suggests.
+
+**H2 — the AR value head projects to a canonical magnitude, independent of the
+input AV text.** Plateau ||h_orig|| = 60.79 but ||h_pred|| = 65.68, landing in
+the same 65-66 band as both anchors' reconstructions. **To test:** round-trip
+the plateau h after rescaling it to several norms (say 30, 60, 120) while
+holding its direction fixed. Under H2 every ||h_pred|| lands near 65-66 and the
+AR discards input magnitude; if ||h_pred|| tracks the input norm, the restoration
+seen here is specific to what the plateau AV text says, and the
+"direction-coupled, not magnitude-coupled" claim in the synthesis needs to be
+weakened.
+
+**H3 — the plateau's narrow +0.061 margin means basin width, not measurement
+noise.** The margin is 4× smaller than the anchors' ~+0.25, which the geometry
+alone partly explains (an in-between point is near both anchors). Whether that
+leaves a basin at all is the open question. **To test:** perturb the plateau h
+with isotropic Gaussian noise at a sweep of magnitudes σ, round-trip each
+perturbed h, and record the fraction whose reconstruction still lands closest to
+the plateau. Under H3 there is a well-defined σ* below which the plateau wins and
+above which an anchor does; a margin that collapses at arbitrarily small σ would
+say the +0.061 is inside the AR's own reconstruction noise and the basin claim
+does not survive.
 
 ## Follow-ups this opens
 

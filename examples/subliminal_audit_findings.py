@@ -24,8 +24,10 @@ files against the manifest and against the hashes pinned in prose. AUDIT B
 re-runs the ported upstream filter over the RAW completions from first
 principles and re-derives kept counts, reject rates, the reject-reason census,
 the two-proportion z and the power floor. AUDIT C replays every decode scheme
-over the committed streams and reconciles it with `decode_report.json`. So the
-audit proves the reported numbers follow from the committed bytes.
+over the committed streams and reconciles it with `decode_report.json`.
+AUDIT D cross-checks the protocol constants and regenerates the whole 120-query
+prompt set from the ported `PromptGenerator` at seed 42, comparing bytes. So
+the audit proves the reported numbers follow from the committed bytes.
 
 What it CANNOT catch:
   * A flaw in the generation protocol itself (wrong chat template, wrong
@@ -61,6 +63,8 @@ from subliminal_step0_decode import (
     FILTER_PARAMS,
     OWL_LEXICON,
     OWL_SYSTEM_PROMPT,
+    PROMPT_PARAMS,
+    PromptGenerator,
     decode_streams,
     get_reject_reasons,
     lexicon_hits,
@@ -80,7 +84,7 @@ DATA = _REPO_ROOT / "research/arcs/02_subliminal/data/step0-owl-neutral-decode"
 # ---------------------------------------------------------------------------
 MANIFEST_SHA256 = "567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875"
 PIP_FREEZE_SHA256 = "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d"
-GENERATOR_SHA256 = "bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d"
+GENERATOR_SHA256 = "3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574"
 PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38"
 
 # CAPTURE-TIME values recorded inside manifest.json. Historical, deliberately
@@ -158,6 +162,48 @@ UNVERIFIABLE: list[tuple[str, str]] = []
 
 def unverifiable(claim_text: str, reason: str) -> None:
     UNVERIFIABLE.append((claim_text, reason))
+
+
+def _git(*args: str) -> tuple[int, str] | None:
+    """Run a git command in the repo root. None when git itself is unusable
+    (not installed, not executable) — the caller decides whether that is an
+    environment gap or a real result."""
+    try:
+        p = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), *args],
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return p.returncode, p.stdout.strip()
+
+
+def git_commit_exists(commit: str) -> tuple[bool | None, str]:
+    """Does `commit` exist in this checkout's object store?
+
+    Returns `(True|False|None, why)`. `None` means the question cannot be
+    answered HERE — no git binary, not a git checkout (a source tarball or a
+    vendored copy), or a shallow/partial clone whose history was truncated.
+    Those are environment gaps and belong on the UNVERIFIABLE list; only a
+    full checkout that genuinely lacks the object is a FAIL.
+    """
+    probe = _git("rev-parse", "--git-dir")
+    if probe is None:
+        return None, "no usable `git` on PATH"
+    if probe[0] != 0:
+        return None, "not a git checkout (source copy without .git)"
+
+    r = _git("cat-file", "-e", f"{commit}^{{commit}}")
+    if r is None:
+        return None, "no usable `git` on PATH"
+    if r[0] == 0:
+        return True, "resolves"
+
+    shallow = _git("rev-parse", "--is-shallow-repository")
+    if shallow is None or shallow[0] != 0 or shallow[1] == "true":
+        return None, "shallow clone — history truncated, the object may be upstream"
+    return False, f"git cat-file rc={r[0]}"
 
 
 # ---------------------------------------------------------------------------
@@ -283,24 +329,23 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         GENERATOR_GIT_COMMIT,
         manifest["generation"]["generator_git_commit"],
     )
-    rc = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(_REPO_ROOT),
-            "cat-file",
-            "-e",
-            f"{GENERATOR_GIT_COMMIT}^{{commit}}",
-        ],
-        capture_output=True,
-        text=True,
-    ).returncode
-    claim(
-        "generator_git_commit resolves to a commit in this repo",
-        rc == 0,
-        "resolves",
-        "resolves" if rc == 0 else f"git cat-file rc={rc}",
-    )
+    resolved, why = git_commit_exists(GENERATOR_GIT_COMMIT)
+    if resolved is None:
+        # No git, no checkout, or a shallow/partial clone: the commit's absence
+        # says nothing about the manifest, so this is an environment gap, not a
+        # failing claim. Scoring it FAIL would make `pip download`-style
+        # source copies and CI shallow clones look like data drift.
+        unverifiable(
+            "generator_git_commit resolves to a commit in this repo",
+            f"cannot be checked here: {why}",
+        )
+    else:
+        claim(
+            "generator_git_commit resolves to a commit in this repo",
+            resolved,
+            "resolves",
+            "resolves" if resolved else why,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -384,7 +429,7 @@ def audit_b(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         claim_near("observation's rounded z", 1.02, round(z, 2), atol=1e-9)
         claim_near("two-sided p for that z", 0.31, p, atol=0.005)
 
-        # Power floor for the observation's "~930 per condition" claim. Basis
+        # Power floor for the prose's "~931 per condition" claim. Basis
         # pinned deliberately: the ROUNDED published rates (0.133 vs 0.092),
         # two-sided alpha=0.05, power=0.80, standard two-proportion normal
         # approximation. Using the unrounded 0.133333/0.091667 shifts n by a
@@ -463,6 +508,11 @@ def audit_c(blobs: dict[str, bytes]) -> None:
         )
         claim_eq(f"{scheme}: owl_n vs streams", len(owl_streams), r["owl_n"])
         claim_eq(f"{scheme}: neutral_n vs streams", len(neu_streams), r["neutral_n"])
+        # These two pin what decode_report.json RECORDED, nothing more. With 0
+        # hits in both arms the pooled SE is 0 and the two-proportion test is
+        # undefined; two_prop_z returns (0.0, 1.0) by convention for that case,
+        # and the arc's prose says so explicitly. Do not read a significance
+        # claim into a PASS here — the evidence is the zero-hit count.
         z, p = two_prop_z(owl_hits, len(owl_streams), neu_hits, len(neu_streams))
         claim_near(f"{scheme}: z", r["z"], z, atol=1e-9)
         claim_near(f"{scheme}: p_two_sided", r["p_two_sided"], p, atol=1e-9)
@@ -544,6 +594,26 @@ def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         claim_eq("prompts.jsonl first query is stable", PROMPT_FIRST, qs[0])
         claim_eq("prompts.jsonl last query is stable", PROMPT_LAST, qs[-1])
 
+        # Full determinism replay: rebuild all 120 queries from the ported
+        # PromptGenerator under the run's seed (42) and serialize them exactly
+        # as subliminal_step0_decode.main() does, then compare BYTES. This
+        # upgrades the two spot-checks above (first/last query) into a
+        # whole-file re-derivation — the committed prompt set is a function of
+        # (generator code, seed), not an opaque blob. numpy is imported here,
+        # not at module scope, to keep this audit's import cheap.
+        import numpy as np
+
+        pg = PromptGenerator(rng=np.random.default_rng(42), **PROMPT_PARAMS)
+        replayed = "".join(
+            json.dumps(pg.sample_query()) + "\n" for _ in range(len(qs))
+        ).encode("utf-8")
+        claim(
+            "prompts.jsonl replays byte-identical from PromptGenerator @ seed 42",
+            replayed == prompts_b,
+            f"{len(prompts_b)} bytes, sha256 {PROMPTS_SHA256[:8]}",
+            f"{len(replayed)} bytes, sha256 {sha256_bytes(replayed)[:8]}",
+        )
+
     unverifiable(
         "the paper's 23-38% reject band",
         "external citation only (Cloud et al., arXiv:2507.14805) -- their number "
@@ -559,10 +629,10 @@ def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
     unverifiable(
         "prompts.jsonl as capture-time ground truth",
         "the committed run predates 823b5e68, which added the prompts write; this "
-        "file is a post-hoc seed-42 regeneration (2026-08-17). Its count and its "
-        "first/last queries are checked for stability; that it is byte-for-byte the "
-        "set the 2026-05-31 run consumed is inferred from the generator being "
-        "unchanged since 0aff26c, not measured",
+        "file is a post-hoc seed-42 regeneration (2026-08-17). AUDIT D replays it "
+        "byte-for-byte from the generator, so it IS this generator's seed-42 "
+        "output; that it is byte-for-byte the set the 2026-05-31 run consumed is "
+        "inferred from the generator being unchanged since 0aff26c, not measured",
     )
     unverifiable(
         "generation.model_revision a09a3545... (the Qwen2.5-7B-Instruct snapshot)",

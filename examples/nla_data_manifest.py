@@ -34,12 +34,11 @@ from pathlib import Path
 from typing import Any
 
 from _nla_artifacts import DATA as DATA_DIR
-from _nla_artifacts import _is_lfs_pointer
+from _nla_artifacts import LFS_STUB_NOTE as _LFS_STUB_NOTE
+from _nla_artifacts import is_lfs_pointer
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = DATA_DIR / "MANIFEST.json"
-
-_LFS_STUB_NOTE = "LFS pointer stub — run git lfs install && git lfs pull"
 
 # The exact model set every capture-root in this arc was produced against.
 # NOTE ON REVISIONS: no HF commit revision was pinned or recorded at capture
@@ -364,7 +363,7 @@ def build_entries() -> list[dict[str, Any]]:
         )
     if extra:
         raise SystemExit(f"ERROR: data dir has .pt files with no metadata: {extra}")
-    stubs = [n for n in on_disk if _is_lfs_pointer(DATA_DIR / n)]
+    stubs = [n for n in on_disk if is_lfs_pointer(DATA_DIR / n)]
     if stubs:
         raise SystemExit(
             f"ERROR: {len(stubs)} file(s) are git-LFS pointer stubs, not real "
@@ -452,7 +451,7 @@ def check_manifest() -> int:
         # An unpopulated git-LFS clone leaves pointer text in place of the
         # payload. Hashing it yields a mismatch that reads as corruption; name
         # the actual state instead so the reader runs the right command.
-        if _is_lfs_pointer(DATA_DIR / name):
+        if is_lfs_pointer(DATA_DIR / name):
             problems.append(f"{_LFS_STUB_NOTE}: {name}")
             continue
         actual = sha256_of(DATA_DIR / name)

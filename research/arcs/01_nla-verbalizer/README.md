@@ -2,12 +2,12 @@
 
 A working investigation into what Anthropic's released Natural Language
 Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
-state structure. A focused arc (observations 2026-05-12 to 05-15):
-22 markdown observations plus one capture-walkthrough transcript,
-36 figures, 22 tracked work items, a regression
-audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
-h-space appears to have discrete attractor basins separated by sharp
-boundaries* — held as a working hypothesis, not a settled claim.
+state structure. A focused arc (observations 2026-05-12 to 05-15): 22
+markdown observations plus one capture-walkthrough transcript, 36 figures,
+22 tracked work items, a regression audit at **196 PASS / 0 FAIL**, and one
+working synthesis: *layer-20 h-space appears to have discrete attractor
+basins separated by sharp boundaries* — held as a working hypothesis, not a
+settled claim.
 See [Limitations and methodology caveats](#limitations-and-methodology-caveats)
 for the scope qualifiers.
 
@@ -112,7 +112,7 @@ as one long resumed session over 2026-05-12 → 05-14, so a theme's turns can
 carry different dates, and the themes are not in chronological order (theme 7
 precedes theme 8 by topic, not by time).
 
-### Theme 1 — Test Anthropic's NLA technique on open-source models
+#### Theme 1 — Test Anthropic's NLA technique on open-source models
 
 > *"Can we try to do something with Anthropic's new interpretability
 > stuff for open source models (released last thursday)?"*  
@@ -123,7 +123,7 @@ beyond just Qwen2.5-7B; cross-model replication (theme covered by
 [D5](#d5-cross-model-replication)) remains
 open work because the released NLA pair is Qwen-specific.
 
-### Theme 2 — Plumbing-first, depth-per-token
+#### Theme 2 — Plumbing-first, depth-per-token
 
 > *"yeah lets test the plumbing first by script and see if we can get
 > something interpretable out of an embedding"*  
@@ -142,7 +142,7 @@ verbalize at every token rather than aggregating. Per-token trajectory
 viz was a direct ask (theme covered partly by `nla_gen_trajectory.py`
 + static figures; live-viz form open as [D7](#d7-per-token-live-trajectory-viz)).
 
-### Theme 3 — Reproduce Anthropic's emergent-behavior examples
+#### Theme 3 — Reproduce Anthropic's emergent-behavior examples
 
 > *"can we try some more complex prompts, like with the rabbit poem and
 > ethical discussion where it was thinking it was being tested
@@ -161,7 +161,7 @@ Rabbit haiku was reproduced; rabbit poem (matched to Anthropic's
 specific example) and the ethics/eval-awareness behavior remain
 incomplete (open as [D2](#d2-eval-aware--knows-its-being-tested-probe) and [D8](#d8-replicate-anthropic-nla-announcement-specific-examples)).
 
-### Theme 4 — Counterfactual / OOD probing
+#### Theme 4 — Counterfactual / OOD probing
 
 > *"Can we try feeding the model a transcript it specifically wouldn't
 > normally generate (including part of its false output), and see if
@@ -178,7 +178,7 @@ that `||Δh||_feat` distinguishes "plausible-but-false" continuations
 answer → refusal: Δ≈28-30). Cheap deployment-time anomaly score
 candidate.
 
-### Theme 5 — Architecture / scope curiosity
+#### Theme 5 — Architecture / scope curiosity
 
 > *"Is this block 20 probing the only available option? Or can the NLA
 > interpreter model be configured for other layer probes? And can we
@@ -191,7 +191,7 @@ AV direction (h → text), which enabled the entire interpolation-flipbook
 branch of the arc. Without this turn, the arc would likely have stayed
 in unidirectional-AV territory.
 
-### Theme 6 — Concept-direction extraction
+#### Theme 6 — Concept-direction extraction
 
 > *"would it be possible to extract the feature vectors that 'mean'
 > the 'idea' of something being country like here with France, which
@@ -206,7 +206,7 @@ does h look like for France?" but "what direction in h-space
 shape is essential — concept-direction work treats *contrasts* as the
 unit, not individual activations.
 
-### Theme 7 — Semantic-basis grid (most generative single turn)
+#### Theme 7 — Semantic-basis grid (most generative single turn)
 
 > *"should we like 'map' a bunch of relevant tokens' embeddings to get
 > a relative baseline for semantic bases?"*  
@@ -225,7 +225,7 @@ than treating any single direction as the answer — which the later
 discriminant connectivity work bore out (3 macro-clusters: content /
 function-words / structural).
 
-### Theme 8 — Visualization as research, not presentation
+#### Theme 8 — Visualization as research, not presentation
 
 > *"First I want to go token by token into every generated NLP
 > interpretation and do some probing to see if we can identify
@@ -244,7 +244,7 @@ interactive discovery tool, not presentation graphics. Open as
 [D1](#d1-discovery-viz-frontend) — the C++ ImGui frontend (the **llobotomy** repo) is the natural home but the connection was never
 built.
 
-### Theme 9 — AV-decoder format-bias observation (flagged, not yet investigated)
+#### Theme 9 — AV-decoder format-bias observation (flagged, not yet investigated)
 
 > *"does every NLA output include those phrases like 'Structured format
 > [...]', or did we add that to describe different parts of the
@@ -269,7 +269,7 @@ and Claude Code (Anthropic's CLI agent — implementation, scaffolding,
 literature awareness). Both roles produced substantive intellectual
 work, and the documentation tries to separate them honestly.
 
-**What Michael contributed:**
+**User (Michael Lannum).**
 
 - The nine research-direction themes above. Each theme produced
   multiple downstream observations; none of the themes was suggested
@@ -280,7 +280,7 @@ work, and the documentation tries to separate them honestly.
   separate observation file.
 - Scope-tightening discipline — the multi-agent local review that
   surfaced 15 findings after PR #11 had already auto-merged, the
-  insistence on "professional rigor / don't overclaim" framing, the
+  insistence on professional rigor and on not overclaiming, the
   catches on emoji drift, overclaiming, "discriminant" naming
   loosening, and protocol mischaracterization.
 - Architectural/methodological observations the agent had missed —
@@ -288,7 +288,7 @@ work, and the documentation tries to separate them honestly.
   consistently read AV outputs at face value without questioning
   whether the format itself was an artifact.
 
-**What Claude Code contributed:**
+**Claude Code.**
 
 - All experiment scripts (43 files under `examples/nla_*`),
   figure rendering pipelines, observation drafts, audit infrastructure
@@ -302,25 +302,28 @@ work, and the documentation tries to separate them honestly.
   Fisher LDA distinctions, BPE-boundary considerations, and the
   general interpretability literature.
 
-**What emerged from the collaboration (neither party alone):**
+**Emergent.**
 
 - The discrete-attractor-basin synthesis — proposed by the agent
   during compaction, refined under Michael's challenges around scope
   qualification (the F1 fix), and validated against the audit numbers
   (which the agent built but Michael directed).
 - The methodology caveats below — most originated as Michael's
-  in-session pushback ("are we overclaiming?") and were formalized
+  in-session pushback against overclaiming and were formalized
   into explicit limitations sections by the agent.
+
+*Split as of 2026-08-17, covering the 2026-05-12 → 05-15 phase.*
 
 ### Verifiability
 
 Every quote above is recoverable from the session below. The transcripts are
 machine-local and are **not committed to this repo** — they carry local paths
-and tool output — so a session is referenced by its id and date only.
+and tool output — so a session is referenced by its id and date only. The ids
+are **abbreviated**: each is the 8-character prefix of the local session UUID.
 
 | Session | Span | Covers |
 |---|---|---|
-| `eda85977-6b09-47c3-878c-fbef7b4163a6` | 2026-05-12 → 2026-06-06 | the entire arc (ran pre-repo-split under the predecessor project) |
+| `eda85977` | 2026-05-12 → 2026-06-06 | the entire arc (ran pre-repo-split under the predecessor project) |
 
 Claims in this section that are not in quotation marks are Claude's
 characterization of the user's direction, not the user's wording. Every quote
@@ -469,10 +472,10 @@ Current state: **196 PASS / 0 FAIL** across 23 audit sections (extended
 2026-05-31 to lock the round-trip faithfulness foundation and the
 concept-arithmetic decode identities, not just the geometry; extended again
 2026-08-17 with the fig29 self-validation hit rates and the fig30
-hierarchical null result). The
-audit catches arithmetic-consistency regressions (number-cited-in-prose
-vs number-in-artifact); it does NOT catch methodological errors,
-interpretive overreach, or capture-protocol bugs (see L8 below).
+hierarchical null result). The audit catches arithmetic-consistency
+regressions (number-cited-in-prose vs number-in-artifact); it does NOT catch
+methodological errors, interpretive overreach, or capture-protocol bugs
+(see L8 below).
 
 Self-critical scope qualifications, ranked by how much they constrain
 how far the arc's claims travel.

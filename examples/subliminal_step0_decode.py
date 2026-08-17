@@ -478,7 +478,16 @@ def generate_condition(tok, model, system_prompt, queries, batch_size, max_new_t
 
 
 def two_prop_z(k1, n1, k0, n0):
-    """Two-proportion z-test (owl rate vs neutral rate). Returns (z, p_two_sided)."""
+    """Two-proportion z-test (owl rate vs neutral rate). Returns (z, p_two_sided).
+
+    Two degenerate cases return placeholders, not test results: an empty arm
+    gives (nan, nan), and zero variance in both arms (k1 == k0 == 0, or both
+    arms all-hits) gives (0.0, 1.0) because the pooled SE is 0 and the test is
+    undefined. The all-zero case is the one Step 0 actually hits — every decode
+    scheme scored 0 hits in both conditions — so the (0.0, 1.0) recorded in
+    `decode_report.json` is a CONVENTION for "no test was possible", never a
+    computed non-significance. The evidence there is the zero-hit count itself.
+    """
     import math
 
     if n1 == 0 or n0 == 0:

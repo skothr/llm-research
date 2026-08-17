@@ -20,7 +20,7 @@ AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)
   PASS   pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments   expected='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'   actual='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'
   PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time pip_freeze hash unmodified   expected='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'   actual='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'
-  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d'   actual='bd74a44435e770a66435cfa62a2aaf12de83963d3d4b6f88154c8cc02ce9db5d'
+  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'   actual='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'
   PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, 2026-08-17 edit)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time generator hash unmodified   expected='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'   actual='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'
   PASS   manifest.generation.generator_git_commit   expected='0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='0aff26c867df88dab5a53487dfb0ea90580ecb31'
@@ -115,6 +115,7 @@ AUDIT D -- prompt-set stability + protocol cross-check
   PASS   prompts.jsonl sha256 (post-hoc seed-42 re-derivation)   expected='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'   actual='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'
   PASS   prompts.jsonl first query is stable   expected='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'   actual='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'
   PASS   prompts.jsonl last query is stable   expected='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'   actual='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'
+  PASS   prompts.jsonl replays byte-identical from PromptGenerator @ seed 42   expected='26839 bytes, sha256 74b0d54a'   actual='26839 bytes, sha256 74b0d54a'
 
 ================================================================================
 UNVERIFIABLE (reported, not scored -- no artifact in this repo can settle)
@@ -124,12 +125,12 @@ UNVERIFIABLE (reported, not scored -- no artifact in this repo can settle)
   UNVERIFIABLE   the paper's protocol facts beyond the ported prompt/filter
                  reason: sourced from github.com/MinhxLe/subliminal-learning @ v1.0.0 and the paper text, not from any artifact in this repo (the prompt + filter themselves ARE cross-checked, above)
   UNVERIFIABLE   prompts.jsonl as capture-time ground truth
-                 reason: the committed run predates 823b5e68, which added the prompts write; this file is a post-hoc seed-42 regeneration (2026-08-17). Its count and its first/last queries are checked for stability; that it is byte-for-byte the set the 2026-05-31 run consumed is inferred from the generator being unchanged since 0aff26c, not measured
+                 reason: the committed run predates 823b5e68, which added the prompts write; this file is a post-hoc seed-42 regeneration (2026-08-17). AUDIT D replays it byte-for-byte from the generator, so it IS this generator's seed-42 output; that it is byte-for-byte the set the 2026-05-31 run consumed is inferred from the generator being unchanged since 0aff26c, not measured
   UNVERIFIABLE   generation.model_revision a09a3545... (the Qwen2.5-7B-Instruct snapshot)
                  reason: reads the local HF cache at capture time; nothing committed here pins it
   UNVERIFIABLE   hardware / environment facts (CPU bf16 run, torch 2.11.0+cu128, RTX 2080 8 GiB box)
                  reason: manifest.environment is a capture-time record; this script cannot re-measure the machine that produced the data
 
 ================================================================================
-SUMMARY:  102 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ================================================================================

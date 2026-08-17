@@ -50,6 +50,38 @@ This refines the synthesis: **layer-20 h-space has discrete attractor basins sep
 - 30 steps × ~80s/decode = ~40 min CPU bf16 (down from the ticket's quoted 2.4 hr at 100 steps).
 - Even at 10× the original grid resolution, the sharp transition fits within one sample step. Higher resolution could pin the boundary location more precisely but won't change the qualitative finding.
 
+## Hypotheses
+
+**H1 — the hybrid plateau is an attractor basin, not a transit zone.** 19
+consecutive dense-zone steps decoding to the same AV text is consistent with a
+basin of non-zero volume, but it is equally consistent with a stretch of h-space
+the AV happens to verbalize identically while the underlying geometry moves
+smoothly. **To test:** AR-re-encode a plateau-mid h and compare cos(h_pred, h)
+against cos(h_pred, h_A) and cos(h_pred, h_B); a basin returns to itself, a
+transit zone drifts to an anchor. **Tested** in
+[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md): +0.8995 to itself vs
++0.8386 / +0.8154 to the anchors — a basin, but by a margin of only +0.061.
+
+**H2 — the ||h_t|| dip is a geometric consequence of linear interpolation
+between non-parallel anchors, not a property of the plateau.** For
+`h_t = (1−t)·h_A + t·h_B`, the norm at the midpoint is set by ||h_A||, ||h_B||
+and cos(h_A, h_B) alone; two anchors ~66 in norm at a moderate cosine give a
+midpoint near 60 with no basin structure needed. **To test:** compute the
+predicted ||h_t|| curve in closed form from the two anchors and overlay it on
+the measured curve in fig37. Under H2 the two coincide within numerical error
+and the dip carries no interpretive weight; a measured norm departing from the
+closed form is the interesting case. Pure tensor math over the committed
+`dense_interp_near_pivot.pt`, no model load.
+
+**H3 — the factual → hybrid transition in t ∈ [0.25, 0.395] is also a
+single-step boundary.** Only the plateau → poetic boundary was resolved at
+Δt ≈ 0.0025; the other one is undersampled here, and the "sharp boundaries"
+claim rests on a single observed crossing. **To test:** dense-sample
+t ∈ [0.25, 0.40] at the same Δt (~30 more AV decodes, ~40 min CPU). Under H3 the
+factual → hybrid change also lands inside one step; a gradual drift there would
+mean basin boundaries are not uniformly sharp and the synthesis needs
+qualifying.
+
 ## Follow-ups this opens
 
 - **[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md)**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min).
