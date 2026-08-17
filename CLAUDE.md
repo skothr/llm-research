@@ -14,7 +14,9 @@ on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR �
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
 figure / audit pipeline (`examples/`). Depends on **two** sibling editable
-installs — neither is on PyPI, so neither can be declared in `pyproject.toml`:
+installs — neither resolves from an index (`llm-surgeon` is declared in
+`pyproject.toml` but only the sibling editable install satisfies it; `jlens`
+is not declarable at all):
 
 ```bash
 pip install -e ../llm-surgeon      # llm_surgeon.probe / .surgery — all arcs
@@ -73,8 +75,17 @@ interpreter that launched it, so the errors persist unchanged.
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
-- `examples/` — `nla_*.py` capture/analysis/render/audit scripts;
-  `examples/README_NLA.md` holds pipeline conventions.
+- `examples/` — capture/analysis/render/audit scripts, one family per arc:
+  - `nla_*.py` (43) — arc 01, plus the `_nla_artifacts.py` loader helper
+  - `subliminal_*.py` (2) — arc 02
+  - `emb_*.py` (25) — arc 03, plus `_emb_artifacts.py`
+  - `jspace_*` (28: 27 `.py` + `jspace_rerun_scans.sh`) — arc 04, plus
+    `_jspace_paths.py` and `_jspace_pursuit.py`
+  - `_layer_hooks.py` — shared across families; `tests/` holds the pytest suite
+  - `examples/README_NLA.md` holds pipeline conventions (written for `nla_*`;
+    the other three families follow the same artifact/audit shape)
+- `docs/planning/` — repo-wide planning records (backlog grooms and the like),
+  as opposed to the arc-scoped `research/arcs/<slug>/plans/`.
 
 # Build commands
 
@@ -83,9 +94,20 @@ interpreter that launched it, so the errors persist unchanged.
 bash theory/series/build.sh            # clean + build all 5 papers + collect dist/
 bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 
-# NLA audit — re-derive every load-bearing numerical claim from .pt artifacts
-python examples/nla_audit_findings.py
+# Per-arc audits — re-derive every load-bearing numerical claim from the
+# committed artifacts. Expected summaries as of 2026-08-17 (each arc also
+# commits its run as research/arcs/<slug>/data/audit_2026-08-17.log):
+python examples/nla_audit_findings.py         # arc 01 → 196 PASS | 0 FAIL
+python examples/subliminal_audit_findings.py  # arc 02 → 102 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/emb_audit_findings.py         # arc 03 →  99 PASS | 0 FAIL
+python examples/jspace_audit_findings.py      # arc 04 → 951 PASS | 7 FAIL  (default clone)
+                                              #          986 PASS | 4 FAIL  (after the lens pull)
 ```
+
+Arc 04 has two expected states because its fitted-lens cache is excluded from
+default LFS fetches; see the Git LFS section below for the opt-in pull. The
+check total differs (958 vs 990) because the lens-dependent blocks register
+their claims only when the lens tensors are on disk.
 
 # Theory KB & citation discipline — non-negotiable
 
@@ -184,10 +206,18 @@ question.
 
 # Git LFS is REQUIRED
 
-`research/**/figures/*.png` and `research/**/data/*.pt` are tracked via Git LFS
-(see `.gitattributes`). Run `git lfs install` before working the repo, or those
-files appear as phantom modifications. Recover an LFS-less clone with
-`git lfs install && git lfs pull`.
+Four rules in `.gitattributes` route large files to Git LFS:
+`research/**/figures/*.png`, `research/**/data/*.pt`,
+`research/**/data/cache/*.pt` (the arc-04 lens cache — the `data/*.pt` glob
+does not reach into `cache/`), and `theory/sources/papers/*.pdf`. Run
+`git lfs install` before working the repo, or those files appear as phantom
+modifications. Recover an LFS-less clone with `git lfs install && git lfs pull`.
+
+That pull deliberately skips the arc-04 lens cache: the committed `.lfsconfig`
+sets `fetchexclude = research/arcs/04_jspace/data/cache` (~905 MiB most readers
+never load), so those files stay pointer stubs and arc 04's audit reports them
+as such. Opt in with
+`git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`.
 
 # Type checking
 

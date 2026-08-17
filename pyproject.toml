@@ -11,8 +11,9 @@ requires-python = ">=3.10"
 license = "GPL-3.0-only"
 authors = [{ name = "Michael Lannum" }]
 
-# Direct imports of the example scripts under examples/ (nla_*.py):
-#   torch, numpy, matplotlib  -> declared here
+# Direct imports of the example scripts under examples/ (the nla_*, subliminal_*,
+# emb_* and jspace_* families):
+#   torch, numpy, matplotlib, datasets  -> declared here
 #   llm_surgeon (.probe, surgery) -> the sibling toolkit, below
 # torch is also pulled in transitively by llm-surgeon, but the render/analysis
 # scripts that do NOT import llm_surgeon still need it, so it is declared
@@ -28,6 +29,10 @@ dependencies = [
     "torch>=2.0",
     "numpy",
     "matplotlib",
+    # examples/jspace_freeze_c4_corpus.py streams and freezes the arc-04 C4-en
+    # corpus slice via `from datasets import load_dataset` (deferred import, so
+    # its absence surfaces only when that script runs).
+    "datasets",
 ]
 
 [project.optional-dependencies]
@@ -36,6 +41,7 @@ dev = ["pytest"]
 
 [tool.setuptools]
 # This repo is a research workspace, not an importable package. The example
-# scripts are run directly (python examples/nla_*.py), so no package discovery.
+# scripts are run directly (python examples/<family>_*.py), so no package
+# discovery.
 py-modules = []
 
