@@ -4,10 +4,14 @@ How to run a research arc in this workspace so it ends up reproducible,
 honestly framed, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
-is the worked example most sections point at — with one exception: for
-**attribution** (§ 0, § 6) the reference implementation is
-[`02_subliminal`](arcs/02_subliminal/), not arc 01. Arc 01 predates the
-codified attribution shape and does not satisfy all of it.
+is the worked example most sections point at, with two exceptions. For
+**attribution** ([§ Attribution](#attribution--who-directed-who-executed)),
+[`02_subliminal`](arcs/02_subliminal/) is the reference implementation of the
+codified shape at minimal scale and [`04_jspace`](arcs/04_jspace/) is the
+worked example at full scale; arc 01 predates the shape and does not satisfy
+it. For the **third-party-data gate**, **artifact resolution** and **loud audit
+degradation**, arc 04 is the reference; arcs 01 and 03 resolve artifacts
+cache-first, the order this doc now inverts.
 
 An *arc* is a focused, multi-observation investigation cohering around one
 research question. A single loose finding is an *observation*; when several
@@ -30,6 +34,12 @@ cohere, promote them into an arc (see README § Arcs).
 4. **A clean clone can reproduce the arc.** `git clone && git lfs pull`, then
    the audit passes and any figure re-renders — with no access to your
    machine's caches. This is the acceptance bar for "done."
+5. **Third-party data is vetted before first use.** A corpus or model artifact
+   gets its licence, PII, realism/privacy-tradeoff and redistribution
+   decisions recorded at the moment it is *selected* — not at commit time, by
+   which point the experiments have already been run on it and re-running them
+   is the expensive part. See
+   [§ 1 Capture](#1-capture--validate--save-the-raw-dataset).
 
 ---
 
@@ -46,16 +56,31 @@ research/arcs/<slug>/
     *.md / *.txt        # YYYY-MM-DD-<slug>.md observations
   data/                 # raw datasets (git-LFS) — see § Raw data is a deliverable
     MANIFEST.json       # per-file sha256 + provenance + class
+    LICENSE-DATA.md     # third-party licence/attribution/PII record (§ 1 gate)
     README.md           # usage, copy-back, trust note
+    audit_YYYY-MM-DD.log # the committed audit run the README's result cites
     *.pt                # capture + derived artifacts
+    *.json              # corpora / item sets — NOT covered by the .pt LFS rule
+    cache/              # gitignored working mirror (arc 04's convention)
   sessions/             # session-resume checkpoints (stale-fast; never load-bearing)
   plans/                # research/construction plans (as needed)
 ```
 
 Generated artifacts (figures, datasets) are committed — drift detection beats
 regenerability-in-principle (see the `generated-artifact-policy` memory).
-git-LFS rules already cover `research/**/figures/*.png` and
-`research/**/data/*.pt`.
+git-LFS rules already cover `research/**/figures/*.png`,
+`research/**/data/*.pt` and `research/**/data/cache/*.pt`.
+
+Two gaps in that coverage to know about:
+
+- **`data/*.json` is not LFS-tracked.** The `*.pt` rule matches extension, not
+  size, so committed JSON corpora (arc 04's `fitting_prompts_*.json`, 1.0 and
+  3.5 MB) are plain git blobs. Fine at that size; a corpus an order of
+  magnitude larger needs its own `.gitattributes` rule before it lands.
+- **`data/cache/` is gitignored by default** (`research/arcs/*/data/cache/`),
+  with arc 04 carved out by explicit whitelist so the fitted lens tensors it
+  keeps cache-only are still LFS-committed. Anything a clean clone must read
+  belongs in `data/`, not in a cache whitelist.
 
 ---
 
@@ -70,19 +95,67 @@ question → capture). But each numbered step has a definition of done.
 - Write down the **research question** in one sentence. If the arc is planned
   up front, drop a `plans/YYYY-MM-DD-<slug>.md`; if it's exploratory, the
   question can live in the arc README's motivation once it exists.
-- Note the **direction-setting** as it happens (who asked what). The
-  human-direction vs AI-implementation split is worth recording honestly; the
-  [subliminal arc](arcs/02_subliminal/README.md) README's "Research direction"
-  section is the template (attribution shape codified in
-  [§ 6 Attribution](#6-arc-readme-synthesis)).
+- **Open the attribution record on day one.** Create the arc README's
+  `## Attribution` section — or an `attribution.md` in the arc root if the
+  README doesn't exist yet — and paste the originating direction into it
+  **as a dated quote, the same day it was given**. Its evidence expires;
+  the rest of the arc's does not. Full rules in
+  [§ Attribution](#attribution--who-directed-who-executed).
+- **Pick the script prefix** for the arc and use it for every script in
+  `examples/`. One prefix per arc, shared helpers named `_<family>_*.py`.
+
+| Prefix | Arc | Shared helpers |
+|---|---|---|
+| `nla_` | `01_nla-verbalizer` | `_nla_artifacts.py` |
+| `subliminal_` | `02_subliminal` | — |
+| `emb_` | `03_embedding-atlas` | `_emb_artifacts.py` |
+| `jspace_` | `04_jspace` | `_jspace_paths.py`, `_jspace_pursuit.py` |
+
+`_layer_hooks.py` is the one family-neutral helper (hook plumbing; only arc
+01's steering scripts use it today). A new arc takes a new prefix rather than
+extending an existing family — the prefix is how a reader maps a script back to
+the arc that owns it.
 
 ### 1. Capture → validate → save the raw dataset
 
 This is the step most likely to be skipped under time pressure. Don't.
 
+- **Vet third-party data at selection time.** The moment a corpus or a
+  third-party model artifact is *chosen* — before the first run that consumes
+  it — record four decisions in `data/LICENSE-DATA.md` beside the data, and in
+  the arc's decision log alongside the scientific rationale:
+  1. **Licence and what it obliges.** Name it and quote the obligation (ODC-BY
+     §4.2/4.3 want the licence URI and a source-attribution notice; CC BY-SA
+     below 4.0 is *not* one-way compatible with GPLv3). The repo's
+     `GPL-3.0-only` covers code and original prose only and must be explicitly
+     scoped away from third-party data.
+  2. **Personal data.** Assume any web-scraped corpus (C4, OSCAR, RefinedWeb,
+     The Pile, anything Common-Crawl-derived) contains PII and prove otherwise;
+     `examples/jspace_redact_corpus.py --report` is the starting scanner —
+     extend its pattern classes rather than writing a new one. Curated
+     encyclopedic sources (WikiText, Wikipedia dumps) largely do not.
+  3. **The realism/privacy tradeoff, stated.** A corpus picked *because* it is
+     more representative of real text is, for that same reason, likelier to
+     carry real people's data. If breadth or naturalness is the scientific
+     argument, that argument is itself the signal to check.
+  4. **Redistribution decision.** Committing raw third-party text republishes
+     it under your name. Prefer a deterministic regeneration script plus a
+     checksum; where the text must be committed, redact first and document the
+     redaction, its class coverage, its known limits, and how to reproduce it.
+
+  `research/arcs/04_jspace/data/LICENSE-DATA.md` is the reference
+  implementation. Arc 04 is also the worked example of what skipping the gate
+  costs: its C4-en slice was found to carry third-party personal data after the
+  experiments had run, and because the redaction is not length-preserving
+  every C4-computed result had to be regenerated on the redacted text — a
+  multi-week correction (redacted 2026-07-29, re-run and closed 2026-08-16)
+  for a check that belongs at selection time. No licence
+  can authorise republishing a third party's personal data; data-subject
+  rights attach to the person, not the licensor.
 - **Capture.** Run the experiment; write the raw tensors/records to the arc's
-  working location. (NLA arc writes to the gitignored cache
-  `.cache/nla_artifacts/` during development.)
+  gitignored working cache. **New arcs use `research/arcs/<slug>/data/cache/`**
+  (arc 04's convention — the cache sits beside the deliverable it mirrors);
+  arcs 01 and 03 use the older repo-level `.cache/<family>_artifacts/`.
 - **Validate immediately, before building anything on top:**
   - Sanity-check the capture *protocol*: right layer, right position index,
     right tokenizer special-token handling, expected shapes/dtypes/counts. A
@@ -91,13 +164,19 @@ This is the step most likely to be skipped under time pressure. Don't.
     only caught by reading the code, not the numbers).
   - Eyeball distributions for the obvious failure (all-zeros, NaNs, collapsed
     variance, off-by-one counts).
-- **Save to the committed `data/` dir** and write/refresh the manifest:
+- **Save to the committed `data/` dir** and write/refresh the manifest. Each
+  arc owns an `examples/<family>_data_manifest.py` (`nla_`, `emb_`, `jspace_`):
   ```bash
   cp <working-cache>/*.pt research/arcs/<slug>/data/
-  python examples/nla_data_manifest.py        # writes MANIFEST.json
-  python examples/nla_data_manifest.py --check # verifies sha256
+  python examples/<family>_data_manifest.py         # writes MANIFEST.json
+  python examples/<family>_data_manifest.py --check # verifies sha256
   ```
-  (The manifest script is arc-specific; copy it as the template for a new arc.)
+  Copy the nearest existing one as the template for a new arc. Arc 02 predates
+  the convention and carries an interim per-dataset manifest instead
+  (`data/step0-owl-neutral-decode/manifest.json`, `manifest_version`
+  `0.1.0-interim`, written inline by the capture script — no standalone
+  generator, no `--check` re-verification mode); migrating it to the shared
+  shape is tracked as issue #53.
 
 **Done when:** the dataset is in `data/`, the manifest `--check` passes, and
 you've confirmed the capture protocol is what you intended.
@@ -123,28 +202,59 @@ exists.
 
 ### 4. Observation writeups
 
-- One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
-  in the repo `CLAUDE.md` § Research Observations: date+context (model,
-  params), finding, evidence (excerpts), reproducibility (exact commands),
-  hypotheses, follow-ups, references.
+- One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. The field list
+  is in the repo `CLAUDE.md` § *Research arcs & observations*; arc 04's
+  observations are the canonical spelling of it. Copy this skeleton:
+
+  ```markdown
+  # Observation: <one-line headline stating the finding, not the topic>
+
+  **Date/context:** YYYY-MM-DD. Stage/arc, model (exact id + dtype/quant),
+  params (n, layers, seed), and what run produced this.
+
+  ## Finding
+
+  ## Evidence
+
+  ## Reproducibility
+
+  ## Hypotheses
+
+  ## Follow-ups
+
+  ## References
+  ```
+
+  The heading spellings are canonical: cross-links from the arc README and
+  from other observations anchor on them, so `## Findings` or `## Repro`
+  breaks a link rather than reading as a synonym.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
-- Fill every field. No `TBD`/placeholder (repo `CLAUDE.md` § no-placeholders).
-  The commit-hash field is the one exception people fudge — put the real SHA in
-  on the follow-up commit rather than leaving `TBD`.
+- **Append the attribution block now, not at close.** If this observation
+  exists because someone asked for it, redirected it, set a standard, or
+  caught an error, copy that turn verbatim and date-tagged into the arc's
+  attribution record while the transcript is still at hand
+  ([§ Attribution](#attribution--who-directed-who-executed)).
+- Fill every field. No `TBD`, `TODO`, "implement later", or "handle edge
+  cases" in a committed doc — a step that says *what* without showing *how*
+  (exact command, code, or value) is a placeholder too. The commit-hash field
+  is the one people fudge: put the real SHA in on the follow-up commit rather
+  than leaving `TBD`.
 
 ### 5. Audit (lock the numbers)
 
-Write/extend an arc audit script (template: `nla_audit_findings.py`) that
+Write/extend an arc audit script (templates: `nla_audit_findings.py`,
+`jspace_audit_findings.py` — the latter for the resolution and
+loud-degradation shape below) that
 **re-derives every load-bearing number from the committed `data/`** and asserts
 it against an expected constant, printing `PASS`/`FAIL` and a final
 `SUMMARY: N PASS | M FAIL`.
 
 - Re-derive from first principles where you can (don't regress against a cached
   intermediate you're also trying to validate).
-- Make the script **self-locating with a committed-data fallback** so it runs
-  from a clean clone (the NLA audit prefers the gitignored cache, falls back to
-  `data/`).
+- Make the script **self-locating, committed-data first, cache as fallback**
+  so a clean-clone run is the default path (see § Raw data is a deliverable,
+  *Wiring*; `examples/_jspace_paths.py` is the shared resolver).
 - Audit the **headline result**, not just the easy structural counts. The NLA
   audit originally locked the geometry but not the round-trip faithfulness
   cosines that the whole arc rests on — a reviewer caught it; AUDIT 20-21 close
@@ -152,6 +262,31 @@ it against an expected constant, printing `PASS`/`FAIL` and a final
 - For qualitative decode claims, assert the **content** (a substring of the
   decoded text), not just non-emptiness (NLA AUDIT 17 asserts the decoded
   identities London/Spain/China).
+- **Degrade loudly, never silently.** A missing or unreadable input is a
+  recorded `FAIL` with a name, not a skipped check and not a traceback. Keep
+  the failure modes distinguishable: `MISSING` for an absent file versus
+  `LFS pointer stub — run git lfs install && git lfs pull` for a file that is
+  present but is still an LFS pointer. An audit that *skips* what it cannot
+  load reports a clean summary on a clone that can reproduce nothing — the one
+  failure the audit exists to catch. `examples/jspace_audit_findings.py`
+  (`load_pt_or_fail`) is the implementation to copy; `emb_audit_findings.py`
+  carries the same stub check against arc 03's artifacts.
+- **State the expected result with its measurement date and the log.** The arc
+  README quotes the summary line, the date it was measured, and the committed
+  run behind it — arc 04: `956 PASS | 4 FAIL`, 2026-08-16,
+  `data/audit_2026-08-16.log` — and accounts for every non-zero FAIL (there,
+  presence checks for two lenses deliberately not refit). Where the expected
+  count depends on what a reader has fetched, state each state separately
+  (arc 04 gives both the default-clone and the full-cache totals). A bare
+  "the audit passes" cannot be checked against a re-run, and a summary with no
+  date silently ages. `*.log` is gitignored repo-wide (a LaTeX-byproduct rule),
+  so a promoted audit log needs an explicit negation
+  (`!research/arcs/<slug>/data/audit_YYYY-MM-DD.log`) in `.gitignore`, added in
+  the same commit — otherwise the README cites a file no clone has.
+- Helper logic with real branching (corpus redaction, segment fitting) gets a
+  unit test in `examples/tests/` — `pip install -e '.[dev]'`, then `pytest
+  examples/tests/`. The audit locks the *numbers*; the tests lock the
+  *transformations* that produced them.
 
 **Be honest about what the audit does NOT catch:** it verifies arithmetic
 consistency *given the captures* — not capture-protocol bugs, not interpretive
@@ -168,28 +303,11 @@ number in the observations has a corresponding assertion.
 - **Findings as hypotheses** with explicit scope qualifications (see Framing).
 - **Limitations** section, ranked by how far they constrain the claims.
 - **Possible next paths**, each tied to a question and (if tracked) a ticket.
-- **Attribution** — separate human direction-setting from AI implementation
-  honestly. The [subliminal arc](arcs/02_subliminal/README.md) ("Research
-  direction" section) is the template: it and the requirements below were
-  written in the same commit (`5040118e`, 2026-07-18), so it is the reference
-  implementation of this shape rather than a predecessor of it. Arc 01's
-  "Research direction — user-shaped themes" is the informal precursor the
-  shape was generalized *from*; follow arc 02 where the two differ.
-  Required shape:
-  1. A **"Research direction"** section: the originating user direction(s) as
-     **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a
-     one-line "quotes lightly normalized for typos/punctuation" disclaimer if
-     you touched them. Paraphrases, and checkpoint-menu options the user
-     *selected* rather than typed, are labelled as such in prose and **never**
-     wrapped in quotation marks as if typed. If an intuition is the user's but
-     the README's wording is your paraphrase, say so and leave it un-quoted.
-  2. A three-way **collaboration split**: what the **human** contributed
-     (direction, interpretive judgment, scope) / what **Claude** contributed
-     (implementation, scaffolding, literature) / what **emerged** (neither
-     party alone).
-  3. Every quote must be **verifiable against the session transcript** —
-     recover the originating turn before quoting it; if you can only
-     paraphrase, mark it a paraphrase and point at the transcript.
+- **Attribution** — group the blocks accumulated since § 0 into named
+  directions, then write the three-way split and the verifiability note. Rules,
+  labels and the copy-paste template are in
+  [§ Attribution](#attribution--who-directed-who-executed); do not restate
+  them per arc.
 - Cross-link: README → observations → figures/INVENTORY → data/MANIFEST.
 
 ### 7. PR
@@ -235,21 +353,33 @@ the data.
   `log`/document what was dropped — silent truncation reads as completeness.)
 
 **Where.** `research/arcs/<slug>/data/`, git-LFS-tracked via the existing
-`research/**/data/*.pt` rule. Keep your working/scratch captures in a
-gitignored cache; the committed `data/` dir is the canonical copy.
+`research/**/data/*.pt` rule. Keep your working/scratch captures in the
+gitignored cache — `research/arcs/<slug>/data/cache/` for a new arc,
+`.cache/<family>_artifacts/` in arcs 01 and 03 — and treat the committed
+`data/` dir as the canonical copy.
 
-**Wiring (so the data is *usable*, not just stored).** Scripts should resolve
-inputs **cache-first, committed-copy-fallback**, and write outputs only to the
-cache. The NLA arc centralizes this in `examples/_nla_artifacts.py`
-(`read_artifact`/`find_artifact` for loads, `write_artifact` for saves). That
-one indirection is what lets the *same* script a developer runs locally
-(writing fresh captures to the gitignored cache) also re-render figures and
-replay the audit on a clean clone (reading the committed copy) — no manual copy
-step, no clone-vs-local branching. Without it, committed data is inert: the
-scripts still point at an empty cache.
+**Wiring (so the data is *usable*, not just stored).** Scripts resolve inputs
+through one shared helper and write outputs only to the cache. That one
+indirection is what lets the *same* script a developer runs locally (writing
+fresh captures to the gitignored cache) also re-render figures and replay the
+audit on a clean clone — no manual copy step, no clone-vs-local branching.
+Without it, committed data is inert: the scripts still point at an empty cache.
 
-**Manifest.** A `data/MANIFEST.json` (template generator:
-`nla_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
+**Resolution order: committed `data/` first, cache only as fallback.**
+`examples/_jspace_paths.py` (`resolve`) is the prescription — it returns the
+committed copy when the name exists there and drops to `data/cache/` only for
+names deliberately kept cache-only. The inverse order is the trap: under
+cache-first, a stale or locally-regenerated cache **silently shadows the
+committed deliverable**, so the developer's figures and audit re-derive from
+bytes no reviewer has, and drift between the two copies is invisible until
+someone clones fresh. Committed-first makes the developer see exactly what a
+reviewer sees, and a stale cache announce itself. Arcs 01 and 03
+(`_nla_artifacts.py`, `_emb_artifacts.py`) still resolve cache-first, with the
+stated rationale that a fresh local re-capture is picked up immediately. That
+is the older pattern; new arcs do not copy it.
+
+**Manifest.** A `data/MANIFEST.json` (generator:
+`examples/<family>_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
 `class` (capture-root | derived), `producing_script`, `producing_command`,
 `inputs` (upstream `.pt`), `requires_model` (none | base | +av/+ar/…),
 `consumers` (figures / downstream artifacts / audit). The generator's `--check`
@@ -288,8 +418,198 @@ most quotable sentences read as settled where the synthesis read as hypothesis.
   every file that states the old value. Dated observations are snapshots, but a
   one-line "later refined, see X" pointer keeps a reader from taking a
   superseded number as current.
-- **No emojis** (use `★ → • ─` or bold); **no placeholders** in any committed
-  doc. (Repo `CLAUDE.md` + user memory.)
+- **Disclose at the entry point, not only in the arc.** A correction that
+  changes committed data, retracts a number, or alters a stated conclusion
+  surfaces in the **root `README.md`** with its close date — a reader who
+  never opens the arc still has to meet it. Arc-internal back-references
+  (previous bullet) stay as well; they are the detail, not the disclosure.
+  Arc 04's C4-redaction correction is the worked example: root README
+  disclosure with the 2026-08-16 close date, per-claim record in the arc.
+- **No emojis** anywhere in committed docs — use `★ → • ─` or bold for
+  emphasis. **No placeholders** either: `TBD`, `TODO`, "fill in later", or a
+  step describing *what* without the concrete *how* does not ship in a
+  committed doc.
+
+---
+
+## Attribution — who directed, who executed
+
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; conflating them hides where the ideas came from.
+
+**Attribution is recorded as the arc runs and synthesized at close**, because
+its evidence is perishable in a way the rest of the arc's evidence is not.
+Data, figures and audit logs sit in the repo indefinitely; the direction turns
+live in session transcripts that are machine-local, uncommitted, and subject to
+local retention. This repo has already lost a 33-day transcript window
+(2026-06-12 → 2026-07-14) covering arc 03's phases 2-3 — those direction turns
+are unrecoverable, and no amount of later care brings them back. All four arcs
+wrote their attribution post-hoc; three then needed a corrective rewrite
+(`362ae6fb`), including one where a user's own scope-broadening had been elided
+from a quote and the surrounding prose credited that broadening to Claude.
+
+### When to record
+
+- **§ 0, set up.** Open the attribution record the day the arc opens — the arc
+  README's `## Attribution` section, or an `attribution.md` in the arc root
+  until the README exists — and put the originating direction in it, quoted,
+  that day.
+- **§ 4, observations.** Whenever an observation exists because someone asked
+  for it, redirected it, set a standard, or caught something, append that turn
+  **verbatim and date-tagged** while the transcript is still at hand. This is
+  the step that makes the close cheap and the record honest.
+- **§ 6, synthesis.** Group the accumulated blocks into named directions, then
+  write the three-way split and the verifiability note. A paused arc's split
+  carries an explicit "as of `<date>`, covering `<phase>`" — a split written
+  mid-program is a snapshot, and saying so keeps a later reader from reading it
+  as final.
+
+### Source of truth, and the honesty labels
+
+**The transcript is the source of truth; recollection is not.** Recover the
+originating turn before quoting it. Every direction block carries **exactly
+one** provenance label:
+
+| Label | Means |
+|---|---|
+| `[VERBATIM]` | Quoted unaltered, exactly as typed. |
+| `[NORMALIZED]` | Quoted with typo/punctuation fixes and markdown emphasis dropped. State the normalization once per section rather than per block. |
+| `[PARAPHRASE]` | The idea is the human's, the wording is Claude's. **Never** wrapped in quotation marks. Where it matters, name which words were actually theirs. |
+| `[SELECTED]` | The human chose an option Claude offered — a checkpoint menu, a numbered plan — rather than typing it. Describe the choice; never render it as a typed quote. |
+| `[RECONSTRUCTED]` | No transcript survives, or none was consulted. State what the block was written from. |
+
+`[RECONSTRUCTED]` is an acceptable label and an unacceptable silence: an
+unlabelled block asserts a provenance it does not have.
+
+**Role tags** — `[HUMAN-DIRECTED]` / `[AI-EXECUTED]` / `[JOINT]` — are used
+only where the default would mislead. The default: direction blocks are
+human-directed, everything downstream of them is AI-executed. Tag the
+exceptions in **both** directions — a proposal that was Claude's and the human
+endorsed is named as Claude's; a catch the human made that Claude missed is
+named as theirs and **quoted**.
+
+### Granularity
+
+**Per named direction, plus one roll-up** — the roll-up being the
+human/Claude/emergent split. A named direction is a turn (or a tight cluster of
+turns) that fixed something: the originating question, a
+design sign-off, a standard, a scope call, a reopening. Name each block by what
+it *established*, not by when it happened — "The artifact-verification
+standard", not "2026-07-20 session".
+
+Per-claim and per-figure attribution are **out of scope**. Figures are
+AI-executed under human standards; tagging each one adds noise without adding
+information. Arc 04 is the worked example at full scale (six named directions
+plus the split, which quotes two further user catches); arc 02 is the same
+shape at minimal scale (two blocks) — an arc with one direction turn gets one
+block, not a manufactured six.
+
+Arc 02 is a *reference implementation* rather than a predecessor of this
+shape: it and the first codification of the requirements were written in the
+same commit (`5040118e`, 2026-07-18). Arc 01's "Research direction —
+user-shaped themes" is the informal precursor the shape was generalized
+*from*; follow arc 02 where the two differ.
+
+### Template
+
+Place `## Attribution` after the arc's question/motivation and before the
+findings. Copy this skeleton:
+
+````markdown
+## Attribution
+
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. Quotes are the human's typed turns, taken from the session transcripts
+listed under **Verifiability** (<name>). Each block carries a provenance
+label; `[NORMALIZED]` means typo and punctuation fixes with markdown emphasis
+inside the turn dropped, and `[...]` marks an editorial elision — elisions
+never remove the direction the quote is cited for. Shape per
+`research/ARC_PROCESS.md` § Attribution.
+
+### Research direction
+
+**<What this direction established>** [session YYYY-MM-DD] `[VERBATIM]`:
+
+> *"<the turn as typed>"*
+
+<One or two sentences: what this fixed, and which downstream choice follows
+from it.>
+
+**<Next direction>** [session YYYY-MM-DD] `[PARAPHRASE]`: <the idea, unquoted,
+naming which words were the user's.>
+
+### Human / Claude / emergent split
+
+**User (<name>).** <Direction, scope calls, standards set; catches Claude
+missed, quoted.>
+
+**Claude Code.** <Design, implementation, write-ups; proposals of Claude's the
+user endorsed, named as such.>
+
+**Emergent.** <What neither party produced alone.>
+
+*Split as of YYYY-MM-DD, covering <phase>.*  <!-- paused arcs only -->
+
+### Verifiability
+
+Every quote above is recoverable from the sessions below. The transcripts are
+machine-local and are not committed to this repo — they carry local paths and
+tool output — so they are referenced by session id and date only.
+
+| Session | Span | Covers |
+|---|---|---|
+| `<session-uuid>` | YYYY-MM-DD | <what was directed in it> |
+
+Claims in this section that are not in quotation marks are Claude's
+characterization of the user's direction, not the user's wording. Blocks
+labelled `[RECONSTRUCTED]` have no surviving transcript.
+````
+
+### Public-repo constraints
+
+This repo is public, and an attribution section quotes a private working
+session. Four hard limits:
+
+- **Never a machine path, hostname, or username.** A session is identified by
+  its id and date and nothing else; the id is opaque and carries no path.
+- **Never paste tool output or file listings** from a transcript. Quote the
+  human's typed turns only — everything else in a transcript is the agent's
+  work product and routinely contains local paths.
+- **One named person per arc** — the repo's commit author. Third parties named
+  in a turn are not identified.
+- **A turn carrying credentials, private data, or third-party material gets
+  `[PARAPHRASE]`**, never a quote. Editing a published quote does not unpublish
+  it: git history and any fork keep the original, so redact **before** commit.
+
+### Reconstructing attribution from transcripts
+
+When a record was not kept as the arc ran, it can sometimes be rebuilt. The
+procedure, in portable form:
+
+1. **Locate the transcripts.** They live under
+   `~/.claude/projects/<encoded-cwd>/<session-uuid>.jsonl` on the machine that
+   ran the sessions. Nothing here is committed; treat the location as an input
+   to the reconstruction, never as a citation.
+2. **Search every candidate directory, not just the current one.** A repo that
+   moved, or was split out of a larger checkout, has its transcripts
+   **partitioned across multiple encoded-cwd directories**. This repo's arcs 01
+   and 02 ran before the split, so their transcripts sit under the predecessor
+   project's directory.
+3. **Key on the UUID, not the path.** The same session id can appear as a stub
+   in one directory and as the full transcript in another. The UUID is the
+   durable identifier; the path is not.
+4. **Calibrate before trusting.** Run the reconstruction against an arc whose
+   attribution record is known-good, and check that it recovers what is already
+   documented. An uncalibrated reconstruction that "finds" plausible turns is
+   the failure mode this whole section exists to prevent.
+5. **Verify each candidate quote by content-grep** against the transcript
+   before it goes in — a recalled turn that reads right is not evidence.
+6. **Tag what the transcript does not settle.** Where the record does not
+   establish who originated an idea, mark the sentence
+   `[AMBIGUOUS: <the unresolved question>]` rather than deciding silently. An
+   ambiguity named is a finding; an ambiguity resolved by convenience is a
+   misattribution.
 
 ---
 
@@ -306,14 +626,21 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 
 ```
 [ ] worktree created; research question written in one sentence
+[ ] script prefix chosen; attribution record opened with the originating
+        direction quoted, dated, and provenance-labelled
+[ ] third-party data vetted AT SELECTION: licence + PII + realism/privacy
+        tradeoff + redistribution decision recorded in data/LICENSE-DATA.md
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
 [ ] figures generated by committed scripts; INVENTORY.md bijection complete
 [ ] observations written (evidence-first, fields filled, nulls labeled as null)
 [ ] audit script re-derives every load-bearing number incl. the headline;
-        passes from a clean clone; "what it can't catch" stated in README
-[ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution (§6 template)
+        degrades loudly (MISSING vs LFS-pointer-stub, never skip); passes from
+        a clean clone; "what it can't catch" stated in README; README quotes
+        the summary + measurement date + committed audit_YYYY-MM-DD.log
+[ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution
+        (§ Attribution template: labels, split, verifiability table)
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
 [ ] PR opened (one arc = one scope-bounded diff)
 ```

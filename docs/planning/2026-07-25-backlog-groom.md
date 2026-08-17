@@ -1,5 +1,8 @@
 # Backlog groom — 2026-07-25
 
+**Status 2026-08-17:** items 2/3 (linear.app links, machine-absolute paths)
+resolved by PRs #41/#43; retained as the record of the groom.
+
 Full-backlog verification of the 17 open GitHub issues (#1–#17) against the live
 repo, per the grooming discipline (verify every body's premises, verdict with
 evidence, persist before applying). All 17 were migrated from Linear on

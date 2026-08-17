@@ -2,8 +2,9 @@
 
 Landing bin for dated experimental findings that aren't (yet) part of a
 focused arc. Same format as any observation — `YYYY-MM-DD-<slug>.md`, one
-finding per file, evidence-first (see `../README.md` § Conventions and the
-repo `CLAUDE.md` § *# Research Observations*).
+finding per file, evidence-first (see `../README.md` § Conventions, the repo
+`CLAUDE.md` § *# Research arcs & observations*, and the copy-paste skeleton in
+`../ARC_PROCESS.md` § 4).
 
 When several findings here cohere into an investigation around one question,
 **promote them to an arc**: `mkdir ../arcs/<slug>/observations/`, move the

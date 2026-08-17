@@ -1,8 +1,9 @@
 # Research
 
-Experimental LLM-interpretability research on local open-source models
-(TinyLlama, OpenLLaMA 3B, Qwen2.5-7B; inference via llama.cpp / HF
-transformers). Work is organized into **arcs** — focused, multi-observation
+Experimental LLM-interpretability research on local open-source models —
+**Qwen2.5-7B-Instruct** and **Qwen2.5-1.5B-Instruct** carry the current arcs,
+with **TinyLlama** in the early and archived work; inference via HF
+`transformers`. Work is organized into **arcs** — focused, multi-observation
 investigations that each cohere around a single research question — plus a
 landing bin for one-off findings and an archive for retired material.
 
@@ -31,7 +32,11 @@ because they carry as much of the signal as the positive ones:
   that, if real, would re-frame every interpretive claim built on it.
 - **Arc 02 (subliminal)** — one null, narrow by construction: a literal
   ASCII/base-N encoding channel was **not detected** in a local Qwen
-  reproduction of the paper's protocol (z=1.02, p=0.31, n=120). The paper
+  reproduction of the paper's protocol — **zero** owl-lexicon hits across all
+  five decode schemes in either condition (owl n=104, neutral n=109 after the
+  format/range/count filter; owl_rate = neutral_rate = 0.000, z=0, p=1.0), with
+  the planted-encoding positive control passing in the same run, so the null is
+  an absence rather than a broken decoder. The paper
   released no dataset — its `v1.0.0` has zero assets and its teacher is closed —
   so this tests a local reproduction, not their data. The decisive HA-vs-HC
   test was never run.
@@ -41,6 +46,12 @@ because they carry as much of the signal as the positive ones:
   never run. Two falsified predictions, recorded in advance and reported as
   findings, are the clearest evidence in this repo that the pre-registration is
   not decorative — the three unrun ones are the honest limit on that claim.
+  This arc also carries a **model-provenance audit** — a blinded
+  re-examination of whether the agent model used during the arc's kickoff
+  window left degraded judgment in its findings, negative result (no credible
+  degradation artifact; the numeric layer was inert to it because every
+  load-bearing number re-derives from committed artifacts):
+  [`arcs/03_embedding-atlas/sessions/2026-07-21-degradation-forensics.md`](arcs/03_embedding-atlas/sessions/2026-07-21-degradation-forensics.md).
 - **Arc 04 (J-space)** — a **partial** replication that came out **weaker than
   the original**, with a causal split: J-lens steering moves entailed
   properties, while J-space *membership* swaps produce **no detectable
@@ -95,9 +106,11 @@ that keep an arc reproducible and honestly framed.
 **Observations** — dated markdown, `YYYY-MM-DD-<slug>.md`, one finding per
 file. Each carries: date + context (model, params), the finding, evidence
 (output/transcript excerpts), reproducibility (exact commands), hypotheses,
-follow-ups, references. The canonical format spec lives in the repo
-`CLAUDE.md` under *# Research Observations*. No index file — scan by
-filename. Evidence-first: numbers should be reproducible or audit-locked.
+follow-ups, references. The field list lives in the repo `CLAUDE.md` under
+*# Research arcs & observations*; the copy-paste skeleton with the canonical
+heading spellings is in [`ARC_PROCESS.md`](ARC_PROCESS.md) § 4. No index file
+— scan by filename. Evidence-first: numbers should be reproducible or
+audit-locked.
 
 **Sessions** — LLM session checkpoints, *not* research findings. They capture
 the operational state of a Claude Code session at a compaction or hand-off
@@ -108,6 +121,16 @@ within hours or days** — read them as a snapshot at write-time, not as
 current guidance; newer files supersede older ones. Nothing in `sessions/` is
 load-bearing for a research claim, so a stale or deleted session file never
 affects the correctness of an observation or figure.
+
+**Attribution** — each arc README carries an `## Attribution` section
+separating human direction-setting from AI implementation: named direction
+blocks quoted from the session transcripts, each with a provenance label
+(`[VERBATIM]` / `[NORMALIZED]` / `[PARAPHRASE]` / `[SELECTED]` /
+`[RECONSTRUCTED]`), a human/Claude/emergent split, and a verifiability table
+listing the sessions by id and date (transcripts are machine-local and not
+committed). It is recorded **as the arc runs**, not reconstructed at close —
+transcript evidence expires. Full rules and the template:
+[`ARC_PROCESS.md`](ARC_PROCESS.md#attribution--who-directed-who-executed).
 
 **Plans** — research/construction plans (what to investigate, in what order,
 with what caveats). Dated `YYYY-MM-DD-<slug>.md`. A plan in `Status:
