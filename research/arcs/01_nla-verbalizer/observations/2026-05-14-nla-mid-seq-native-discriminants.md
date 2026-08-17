@@ -77,3 +77,35 @@ The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discrimi
 ## Cross-arc lessons
 
 MAIN-44 + MAIN-70 together turn what looked like a null result into a productive characterization of the basis. The pattern: **null result + native re-derivation reveals what the failed basis was missing**. Worth keeping as a methodological template — when a basis "fails" cross-protocol, build the native basis and compare directly to map what *is* preserved.
+
+## Reproducibility
+
+```bash
+# ~1 min, NO model load — pure tensor math over three committed .pt inputs.
+# Builds the mid-seq-native basis, computes the three signal arms, and writes
+# mid_seq_native_compare.pt plus fig33/fig34. Inputs resolve from the working
+# cache first, then the committed ../data/ copy on a clean clone.
+python examples/nla_mid_seq_native_compare.py
+```
+
+Re-running this script rewrites `mid_seq_native_compare.pt` **in the gitignored
+working cache**, not in `../data/`, so `data/MANIFEST.json` is unaffected;
+promote the cache copy deliberately (and regenerate the manifest with
+`python examples/nla_data_manifest.py --write`) only if you intend to replace
+the committed artifact. AUDIT 16 in `examples/nla_audit_findings.py`
+re-derives the +0.5632 aggregate signal and the argmax accuracy from the
+committed artifact.
+
+**Figure caption, fixed 2026-08-17.** `fig33_native_signal_lift.png`'s baked-in
+title used to name the retired `MAIN-44` tracker; the source string was
+corrected 2026-07-29 and the PNG was re-rendered on 2026-08-17. See
+[`figures/INVENTORY.md`](figures/INVENTORY.md).
+
+## References
+
+- [`2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) — MAIN-44, the cross-protocol null result this follows up.
+- [`2026-05-13-nla-vocab-atlas-grid.md`](2026-05-13-nla-vocab-atlas-grid.md) — the end-of-prompt atlas and its 23 categories.
+- [`2026-05-13-nla-discriminant-validation.md`](2026-05-13-nla-discriminant-validation.md) — MAIN-26, the in-protocol validation of the eop basis (the +0.4022 baseline).
+- [`2026-05-13-nla-interpolation-flipbook.md`](2026-05-13-nla-interpolation-flipbook.md) — MAIN-25, the t=0.421 transition discussed under the glyph caveat.
+- [`figures/INVENTORY.md`](figures/INVENTORY.md) — fig33 / fig34 provenance.
+- [`../README.md`](../README.md) — F2 and L3/L6 carry the protocol-coupling and "discriminant" naming caveats; `examples/README_NLA.md` has the full mean-contrast-vs-Fisher-LDA methodology note.

@@ -5,7 +5,7 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize
 **Script:** examples/nla_forced_continuation.py
-**Artifact:** .cache/nla_artifacts/forced_continuation.pt
+**Artifact:** `../data/forced_continuation.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 **Captures:** 10 (4 pairs × natural + forced × 1-3 positions)
 
 ## Finding
@@ -163,9 +163,10 @@ decoding.
 python examples/nla_forced_continuation.py
 ```
 
-CPU-only. ~28 minutes on warm cache. Artifact at
-.cache/nla_artifacts/forced_continuation.pt persists captures
-and AV outputs for re-analysis.
+CPU-only. ~28 minutes on warm cache. The artifact is written to the
+gitignored working cache at `.cache/nla_artifacts/forced_continuation.pt` and
+committed as [`../data/forced_continuation.pt`](../data/forced_continuation.pt);
+it persists captures and AV outputs for re-analysis.
 
 ## References
 

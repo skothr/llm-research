@@ -6,7 +6,7 @@
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (CPU bf16, value_head Linear(3584, 3584))
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
 **Script:** examples/nla_aggregate_faithfulness.py
-**Artifact:** .cache/nla_artifacts/aggregate_faithfulness.pt
+**Artifact:** `../data/aggregate_faithfulness.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 **Captures:** 113 generation-step positions, 8 prompts × ~15 tokens each
 
 ## Finding

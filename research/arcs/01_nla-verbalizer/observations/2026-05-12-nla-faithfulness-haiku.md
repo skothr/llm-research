@@ -6,7 +6,7 @@
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (5B params, truncated to 20 layers + Linear(d, d) value head)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
 **Script:** examples/nla_faithfulness.py
-**Artifact:** .cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt
+**Artifact:** `../data/rabbit_haiku_gen_trajectory.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 
 ## Finding
 
@@ -199,9 +199,10 @@ cd .
 python examples/nla_faithfulness.py
 ```
 
-The script saves checkpoints to
-`.cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt` after
-each phase. Re-running with a partial artifact resumes from where it
+The script saves checkpoints to the gitignored working cache,
+`.cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt`, after
+each phase; the finished artifact is committed as
+[`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt). Re-running with a partial artifact resumes from where it
 left off — useful when iterating on the scoring side without
 re-running 30 min of AV inference.
 

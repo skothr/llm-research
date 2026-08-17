@@ -3,8 +3,9 @@
 A working investigation into what Anthropic's released Natural Language
 Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
 state structure. A focused arc (observations 2026-05-12 to 05-15):
-22 observation files, 36 figures, 22 tracked work items, a regression
-audit at **178 PASS / 0 FAIL**, and one working synthesis: *layer-20
+22 markdown observations plus one capture-walkthrough transcript,
+36 figures, 22 tracked work items, a regression
+audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
 boundaries* — held as a working hypothesis, not a settled claim.
 See [Limitations and methodology caveats](#limitations-and-methodology-caveats)
@@ -27,6 +28,41 @@ paths](#possible-next-paths).
 > mapped to the in-repo observation file or the migrated GitHub issue
 > it stands for in [Private-tracker ID map](#private-tracker-id-map-main-n)
 > below; read that table, not the bare ID.
+
+## Known corrections and errata
+
+Every correction applied to this arc after its 2026-05-15 pause, in one place,
+so a reader does not have to reconstruct them from the section they happen to
+land in.
+
+- **F3 polarity, corrected 2026-08-16.** The F3 summary carried the PC1 signs
+  inverted relative to the dated primary record. Corrected in place; the
+  load-bearing claim (PC1 *separates* content from function) is unaffected —
+  see [F3](#f3-apparent-hierarchical-attractor-structure-at-layer-20).
+- **fig15 is superseded by fig16.** fig15's refusal_metaware row compares
+  positions 10 tokens apart, inflating `||Δh||_feat` from ~28 to 35.55; fig16
+  is the position-matched replacement. fig15 is kept, not deleted — see
+  [`figures/INVENTORY.md`](observations/figures/INVENTORY.md).
+- **fig23/fig24 are deprecated in favour of fig25/fig26.** The centroid-based
+  anchor glyph lights every ray on every sample; the discriminant-based glyph
+  replaces it. Both pairs are kept — see
+  [`figures/INVENTORY.md`](observations/figures/INVENTORY.md).
+- **fig33's PNG title named the retired `MAIN-44` tracker — fixed 2026-08-17.**
+  The source caption string was corrected on 2026-07-29; the PNG lagged until
+  it was re-rendered from committed data on 2026-08-17 (no model load, no
+  `data/` churn — the script writes its `.pt` to the gitignored cache).
+  Resolves [#42](https://github.com/skothr/llm-research/issues/42).
+- **L5 — the vocab atlas was captured against a duplicated source dict.** The
+  committed `vocab_atlas.pt` holds 128 anchors, 3 of them duplicated across
+  categories; the source dict has since been deduplicated to 125, so
+  **re-capturing shifts every vocab-atlas number in this arc**. Tracked as
+  [#51](https://github.com/skothr/llm-research/issues/51); see
+  [L5](#limitations-and-methodology-caveats).
+- **L7 — the capture-position framing was wrong, and was corrected
+  throughout.** Position -1 under `add_generation_prompt=True` is the
+  assistant-opener newline, not the anchor token, so the stability scan
+  measures a response-planning representation. The finding holds; the framing
+  was rewritten. See [L7](#limitations-and-methodology-caveats).
 
 ---
 
@@ -52,16 +88,22 @@ by a specific research question (see next section).
 
 ---
 
-## Research direction — user-shaped themes
+## Attribution
 
-Most working sessions blend research-question setting (the human role)
-with implementation (the AI role). Both are intellectual work, but
-they're different *kinds* of work, and conflating them in
-documentation hides where ideas came from. The arc was driven by
-themes the human collaborator (Michael Lannum) introduced in specific
-working-session turns. Quotes below are from the session transcripts,
-lightly normalized for typos and punctuation (markdown emphasis inside a
-turn is dropped — theme 4's `*wouldn't*` is quoted as "wouldn't").
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. Shape per `research/ARC_PROCESS.md` § Attribution — this arc predates
+that standard and was retrofitted to it on 2026-08-17.
+
+### Research direction — user-shaped themes
+
+The arc was driven by themes the human collaborator (Michael Lannum)
+introduced in specific working-session turns. Quotes below are from the
+session transcripts listed under [Verifiability](#verifiability), lightly
+normalized for typos and punctuation (markdown emphasis inside a turn is
+dropped — theme 4's `*wouldn't*` is quoted as "wouldn't"); every block is
+labelled `[NORMALIZED]` for that reason. `[...]` inside a quote marks an
+editorial elision, except where noted in theme 9.
 
 **The nine theme headings are Claude's compressions, not the user's words** —
 each one names a cluster of turns after the fact. Only the block quotes are
@@ -74,7 +116,7 @@ precedes theme 8 by topic, not by time).
 
 > *"Can we try to do something with Anthropic's new interpretability
 > stuff for open source models (released last thursday)?"*  
-> — session start, [session 2026-05-12]
+> — session start, [session 2026-05-12] `[NORMALIZED]`
 
 The framing that opened the arc. The plural "models" implicitly scoped
 beyond just Qwen2.5-7B; cross-model replication (theme covered by
@@ -85,14 +127,14 @@ open work because the released NLA pair is Qwen-specific.
 
 > *"yeah lets test the plumbing first by script and see if we can get
 > something interpretable out of an embedding"*  
-> — [session 2026-05-12]  
+> — [session 2026-05-12] `[NORMALIZED]`  
 > *"I want to understand what layer/embedding is being sampled for this
 > NLA interpretation, and go through the 'thought' at each token more
 > thoroughly"*  
-> — [session 2026-05-12]  
+> — [session 2026-05-12] `[NORMALIZED]`  
 > *"did we generate the NLA for the tokens the model generates too? I
 > want to see those as it 'thinks through' what it's 'writing'"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 Established the methodology before scaling up: validate the round-trip
 on simple inputs, understand the specific layer (20 of 28; ~71% depth),
@@ -107,10 +149,10 @@ viz was a direct ask (theme covered partly by `nla_gen_trajectory.py`
 > (showcased in Anthropic announcement). Can we try stuff like that
 > and see if we can get anything like those examples anthropic
 > provided?"*  
-> — [session 2026-05-12]  
+> — [session 2026-05-12] `[NORMALIZED]`  
 > *"let's go with the poem one like Anthropic's example, not the haiku
 > since that was an outlier"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 The original motivating curiosity: can the announcement-headline
 behaviors (planning ahead in poetry, awareness of being evaluated)
@@ -126,7 +168,7 @@ incomplete (open as [D2](#d2-eval-aware--knows-its-being-tested-probe) and [D8](
 > it still thinks along the lines of the context, or if it reacts
 > differently since it's doing something the model isn't trained to
 > do?"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 Direct ask that produced `nla_forced_continuation.py` and the
 counterfactual surprise / OOD-detection observations. The probe found
@@ -142,7 +184,7 @@ candidate.
 > interpreter model be configured for other layer probes? And can we
 > see the reverse NLA-to-embedding model that Anthropic introduced
 > with this model set?"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 Pushed early exploration of the AR direction (text → h) alongside the
 AV direction (h → text), which enabled the entire interpolation-flipbook
@@ -155,7 +197,7 @@ in unidirectional-AV territory.
 > the 'idea' of something being country like here with France, which
 > we could identify pattern-wise across different contexts involving
 > some relevance to things being countries?"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 Seed of the CAV-style country-direction observation and ultimately the
 23-category mean-contrast basis. Asked the right question: not "what
@@ -168,12 +210,12 @@ unit, not individual activations.
 
 > *"should we like 'map' a bunch of relevant tokens' embeddings to get
 > a relative baseline for semantic bases?"*  
-> — [session 2026-05-14]  
+> — [session 2026-05-14] `[NORMALIZED]`  
 > *"let's make sure we map a bunch of articles, punctuation, etc. Get a
 > wide lay of the embedding space landscape. This kind of provides us
 > a complex 'grid' of sorts, or a set of entangled axes or something
 > to provide direction in such high dimensional space"*  
-> — [session 2026-05-14]
+> — [session 2026-05-14] `[NORMALIZED]`
 
 The vocab atlas (128 anchors × 23 categories) is the operational
 realization of this idea. Without this push, the arc would have stayed
@@ -189,11 +231,11 @@ function-words / structural).
 > interpretation and do some probing to see if we can identify
 > numerical/geometric feature patterns that could be interesting to
 > visualize"*  
-> — [session 2026-05-13]  
+> — [session 2026-05-13] `[NORMALIZED]`  
 > *"I want to head in the visual direction, /goal find path to novel
 > visualization design, something that allows a useful view into
 > feature/embedding/NLA interpretability"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 The largest unrealized seed from the arc. The current state landed on
 static matplotlib PNGs (heatmaps, glyphs, flipbooks); the "novel
@@ -207,7 +249,7 @@ built.
 > *"does every NLA output include those phrases like 'Structured format
 > [...]', or did we add that to describe different parts of the
 > output? Weirdly consistent"*  
-> — [session 2026-05-13]
+> — [session 2026-05-13] `[NORMALIZED]`
 
 The `[...]` inside that quote is the **user's own**, standing in for the
 rest of the NLA phrase — not an editorial elision. ("Structured" is
@@ -219,9 +261,7 @@ readings throughout the arc. Open as [D3](#d3-audit-av-decoder-format-bias)
 and promoted to Medium priority on filing precisely because if positive
 it would re-frame all prior interpretive claims.
 
----
-
-## A note on the collaboration mode
+### Human / Claude / emergent split
 
 This arc was conducted in extended collaboration between Michael Lannum
 (human, direction setting + interpretive judgment + scope discipline)
@@ -250,7 +290,7 @@ work, and the documentation tries to separate them honestly.
 
 **What Claude Code contributed:**
 
-- All experiment scripts (~42 files under `examples/nla_*`),
+- All experiment scripts (43 files under `examples/nla_*`),
   figure rendering pipelines, observation drafts, audit infrastructure
   (`nla_audit_findings.py`), and the issue-queue management.
 - Cross-arc continuity across compaction boundaries — synthesizing
@@ -272,16 +312,20 @@ work, and the documentation tries to separate them honestly.
   in-session pushback ("are we overclaiming?") and were formalized
   into explicit limitations sections by the agent.
 
-**Audit and verification.** Every load-bearing number cited in this
-arc is re-derived from raw `.pt` files by
-[`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py).
-Current state: **178 PASS / 0 FAIL** across 21 audit sections (extended
-2026-05-31 to lock the round-trip faithfulness foundation and the
-concept-arithmetic decode identities, not just the geometry). The
-audit catches arithmetic-consistency regressions (number-cited-in-prose
-vs number-in-artifact); it does NOT catch methodological errors,
-interpretive overreach, or capture-protocol bugs (see L8 in
-[Limitations](#limitations-and-methodology-caveats)).
+### Verifiability
+
+Every quote above is recoverable from the session below. The transcripts are
+machine-local and are **not committed to this repo** — they carry local paths
+and tool output — so a session is referenced by its id and date only.
+
+| Session | Span | Covers |
+|---|---|---|
+| `eda85977-6b09-47c3-878c-fbef7b4163a6` | 2026-05-12 → 2026-06-06 | the entire arc (ran pre-repo-split under the predecessor project) |
+
+Claims in this section that are not in quotation marks are Claude's
+characterization of the user's direction, not the user's wording. Every quote
+was traced back to its originating turn in the transcript; that backfill was
+verified in commit `362ae6fb`.
 
 ---
 
@@ -418,6 +462,18 @@ geometrically nice — both anchors live in the same global region.
 
 ## Limitations and methodology caveats
 
+**Audit and verification.** Every load-bearing number cited in this
+arc is re-derived from raw `.pt` files by
+[`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py).
+Current state: **196 PASS / 0 FAIL** across 23 audit sections (extended
+2026-05-31 to lock the round-trip faithfulness foundation and the
+concept-arithmetic decode identities, not just the geometry; extended again
+2026-08-17 with the fig29 self-validation hit rates and the fig30
+hierarchical null result). The
+audit catches arithmetic-consistency regressions (number-cited-in-prose
+vs number-in-artifact); it does NOT catch methodological errors,
+interpretive overreach, or capture-protocol bugs (see L8 below).
+
 Self-critical scope qualifications, ranked by how much they constrain
 how far the arc's claims travel.
 
@@ -463,8 +519,11 @@ against the duplicated source, so the audit-locked numbers depend on
 slightly-biased centroids. The source dict has been deduplicated
 (125 unique anchors, was 128 with 3 dups) with a module-level assert
 preventing future re-introduction. Regenerating the atlas would
-shift downstream numbers slightly; filed as a future follow-up rather
-than immediate fix.
+shift downstream numbers slightly — and would also break the audit, whose
+AUDIT 12 asserts a capture count of 128. Tracked as
+[#51](https://github.com/skothr/llm-research/issues/51): the re-capture and
+the audit-expected/MANIFEST regeneration have to land as one atomic change,
+which is why it was not done inline.
 
 **L6. "Discriminant" naming is methodologically loose.** The codebase
 calls per-category mean-contrast directions "discriminants" — this is
@@ -493,7 +552,7 @@ errors when copying numbers into observation files, regression in
 captures. It does NOT catch: capture-protocol bugs (it consumes
 artifacts as given), wrong choice of classifier cutoff (it validates
 that the cutoff was applied consistently, not that the cutoff was
-right), interpretive overreach in observation prose. **A 178 PASS
+right), interpretive overreach in observation prose. **A 196 PASS
 audit means "the numbers in the markdown match the numbers in the
 .pt files," not "the methodology is right."**
 
@@ -668,17 +727,30 @@ the kitft NLA pair cached locally.
 # Runs from a clean clone: nla_audit_findings.py reads the committed data/
 # dir when the gitignored working cache is empty.
 python examples/nla_audit_findings.py
-# Expect: SUMMARY:  178 PASS  |  0 FAIL
 
-# Verify dataset integrity (sha256 of every .pt vs data/MANIFEST.json)
+# Verify dataset integrity (sha256 + provenance metadata vs data/MANIFEST.json)
 python examples/nla_data_manifest.py --check
 
 # Re-render a figure (~10s, no model load). Inputs resolve from the committed
 # data/ dir when the working cache is empty (shared _nla_artifacts fallback).
 python examples/nla_discriminant_stability_render.py
 
-# Re-capture a .pt from scratch (loads the base model, slow on CPU)
+# Re-capture a .pt from scratch (loads the base model, slow on CPU).
+# WARNING — NOT a routine step. Re-capturing the vocab atlas now yields 125
+# anchors (the source dict was deduplicated) where the committed
+# vocab_atlas.pt and the audit's AUDIT 12 both expect 128, so a re-capture
+# invalidates AUDIT 12 and every downstream vocab-atlas number in this arc.
+# Re-capture only as one atomic change that also regenerates the audit's
+# expected values and data/MANIFEST.json. Tracked as issue #51.
 python examples/nla_vocab_atlas_capture.py
+```
+
+**Expected result on a clean clone**, measured 2026-08-17 (full transcript
+committed at [`data/audit_2026-08-17.log`](data/audit_2026-08-17.log)):
+
+```text
+SUMMARY:  196 PASS  |  0 FAIL
+MANIFEST CHECK: OK  (16 files, sha256 + metadata match)
 ```
 
 The hardware reality: AV + AR run on CPU bf16; ~85s per AV
@@ -706,19 +778,24 @@ research/arcs/01_nla-verbalizer/
     2026-05-14-nla-concept-arithmetic-atlas.md  # Categorical-not-algebraic
     2026-05-15-nla-dense-interp-near-pivot.md   # Dense interpolation near the pivot
     2026-05-15-nla-plateau-attractor-strength.md # Round-trip cosine / basin test
-    (and 11 more, incl. the .txt capture walkthrough)
+    2026-05-13-nla-walkthrough-all-captures.txt # Generated capture-by-capture dump
+                                                #   (nla_dump_walkthrough.py output,
+                                                #    not a hand-written observation)
+    (and 11 more markdown observations)
     figures/
       INVENTORY.md                              # Per-figure provenance catalog
       fig1-fig11, fig13-fig37 PNGs              # 36 arc figures (fig12 never built)
   data/                                         # Raw .pt datasets (git-LFS)
-    MANIFEST.json                               # sha256 + provenance per file
-    README.md                                   # usage + copy-back + trust note
+    MANIFEST.json                               # sha256 + provenance per file + model_pin
+    LICENSE-DATA.md                             # licensing / privacy record for the data
+    README.md                                   # usage + copy-back + pickle-trust note
+    audit_2026-08-17.log                        # dated full audit transcript (196/0)
     *.pt                                        # 16 capture/derived artifacts (~15 MB)
 ```
 
 Related implementation surfaces (outside `research/`):
 
-- [`llm_surgeon/probe/_nla.py`](../../../llm_surgeon/probe/_nla.py) — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
+- `llm_surgeon/probe/_nla.py` — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`). Lives in the sibling `llm-surgeon` repo (not in this repo; `pip install -e ../llm-surgeon`).
 - [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
-- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (178/0)
-- [`examples/nla_*.py`](../../../examples/) — 42 arc scripts
+- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
+- [`examples/nla_*.py`](../../../examples/) — 43 arc scripts

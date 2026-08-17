@@ -7,10 +7,10 @@ Catalogue of all 36 figures in this directory (fig1-fig11, fig13-fig37 — fig12
 - **Model:** all activations are from `Qwen/Qwen2.5-7B-Instruct` (cached at `.cache/models/`), layer 20 (`hidden_states[20]`), CPU bf16.
 - **AV / AR:** `kitft/nla-qwen2.5-7b-L20-av` (8B params, h→text) and `kitft/nla-qwen2.5-7b-L20-ar` (5B backbone + Linear(d,d) value head, text→h). Both CPU bf16.
 - **Capture protocol** for vocab atlas + country pool: chat-templated user message, capture `h[20][0, -1, :]` at the last position before the assistant turn.
-- **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py`).
+- **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py` in the sibling `llm-surgeon` repo — not in this repo; `pip install -e ../llm-surgeon`).
 - **Sink dims:** {277, 458, 1427, 1627, 2107, 2570, 3110} — identified by the `classify_dim_character` heuristic in `nla_pairwise_and_hotdims.py`. "Sink-removed" preprocessing zeros these 7 component indices.
 - **Feature dims:** {20, 32, 392, 608, 1121, 1790, 2604, 2953} — same heuristic, content-bearing dims.
-- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **178 PASS / 0 FAIL** (audits 1-10 base; 11-19, in order: Path B, the vocab atlas, discriminant validation, the stability scan, the mid-seq vocab-atlas null result, the mid-seq native-discriminant lift, concept arithmetic — audit 17, the decode identities — dense interpolation, and the plateau attractor; 20-21 the round-trip faithfulness foundation). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
+- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **196 PASS / 0 FAIL** (audits 1-10 base; 11-19, in order: Path B, the vocab atlas, discriminant validation, the stability scan, the mid-seq vocab-atlas null result, the mid-seq native-discriminant lift, concept arithmetic — audit 17, the decode identities — dense interpolation, and the plateau attractor; 20-21 the round-trip faithfulness foundation; 22-23 the fig29 self-validation hit rates and the fig30 hierarchical null result). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
 
 ---
 
@@ -206,7 +206,7 @@ Source script: `examples/nla_mid_seq_native_compare.py`. Data: `vocab_atlas.pt` 
 ### fig33_native_signal_lift.png
 Three-bar grouping per category. Blue = `eop-h × eop-discr` (in-protocol, the baseline). Green = `mid-h × mid-discr` (in-protocol using NATIVE discriminants — predicted to lift). Orange = `mid-h × eop-discr` (the MAIN-44 cross-protocol collapse). Green dominates: aggregate signal **+0.5632** (40% higher than blue's +0.4022), argmax accuracy 97.10%. Confirms the basis is protocol-coupled by construction — a per-protocol family of discriminants each gives strong within-protocol classification.
 
-> **Stale caption, committed PNG only.** The title baked into this PNG still reads "Orange shows MAIN-44's collapsed cross-protocol projection", naming a retired private tracker. The source string in `nla_mid_seq_native_compare.py` was corrected on 2026-07-29; the PNG was deliberately not re-rendered, because re-running that script also rewrites `mid_seq_native_compare.pt` and churns the `MANIFEST.json` checksums the audit reads. The next legitimate re-render of fig33 clears it.
+> **Caption fixed 2026-08-17 — resolved.** The title baked into this PNG used to read "Orange shows MAIN-44's collapsed cross-protocol projection", naming a retired private tracker; the source string in `nla_mid_seq_native_compare.py` was corrected on 2026-07-29 but the PNG lagged behind it. Re-rendered 2026-08-17 from the committed `../../data/` inputs with no model load. The feared `MANIFEST.json` churn did not occur: the script writes its `.pt` to the gitignored working cache, never to `data/`, so only this PNG changed (fig34 re-rendered byte-identical). Resolves [#42](https://github.com/skothr/llm-research/issues/42).
 
 ### fig34_cross_protocol_axis_cos.png
 23×23 cosine heatmap of `d_eop_C` vs `d_mid_D`. Diagonal entries (annotated with values) measure per-category axis stability across capture position. Mean diagonal **+0.0784**, max **+0.1704** (emotion), min **+0.0126** (p_quote). Mean off-diagonal **-0.0009**. Content-bearing categories (country, capital, nature, codemath, emotion, refusal) have the largest cross-protocol cosines (+0.13-0.17), while punctuation and function-word categories' axes are essentially position-determined (~+0.03). Each category's axis at one protocol is closer to its own axis at the other protocol than to a random category's axis — but only modestly. Refines MAIN-44's "fully protocol-coupled" framing: there's a small protocol-invariant component, but only for content categories.
@@ -266,7 +266,7 @@ nla_render_interpolation_flipbook.py, nla_hierarchical_classifier.py
 research/arcs/01_nla-verbalizer/observations/figures/fig*.png  (committed)
     │
     ▼
-nla_audit_findings.py — 178 PASS / 0 FAIL regression test
+nla_audit_findings.py — 196 PASS / 0 FAIL regression test
 ```
 
 Re-running the audit re-derives every audited number from the artifacts and checks it against the script's expected constants (transcribed from the observation prose). If an artifact drifts from those expecteds, the audit catches it. (The expecteds live in the script, so prose↔script agreement is maintained by hand — the audit re-derives the artifact side, not the transcription.)

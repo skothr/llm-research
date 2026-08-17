@@ -98,6 +98,24 @@ For future work:
 2. **Treat the existing 23-discriminant basis as a prompt-topic classifier** — that's its actual function
 3. **The category-attractor structure (intra-cos +0.85 within categories) is what makes the basis work for topic classification** — every prompt about a country pulls h toward the country attractor regardless of which specific country, hence good top-K detection but weak top-1
 
+## Hypotheses
+
+**H1 — end-of-prompt integration is what drowns token identity.** The 23 axes classify prompt topic rather than token presence because layer-20 h at the end of a chat-templated prompt has already integrated the whole user message. **To test:** capture the same anchors MID-SEQUENCE, inside a carrier that continues past the anchor, and project onto the same basis. Under H1 the expected-category projection should rise to ≥ +0.3. *(Tested and falsified — the mid-sequence projections are near-orthogonal at +0.0491; see [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md). The basis turned out to be coupled to the capture protocol in a more general way than integration alone explains.)*
+
+**H2 — the basis is protocol-coupled by construction, not semantically weak.** If the recipe is sound and only the protocol is baked in, then re-deriving the same `mean(cat) − mean(non-cat)` directions from mid-sequence captures should recover in-protocol signal comparable to the end-of-prompt +0.4022. **To test:** build a mid-sequence-native basis and compare all three arms. *(Tested and confirmed — native in-protocol signal +0.5632; see [MAIN-70](2026-05-14-nla-mid-seq-native-discriminants.md).)*
+
+**H3 — the weak top-1 / strong top-5 gap is sibling confusion, not basis failure.** country and capital discriminants sit at cos +0.938, so a country-content h scores high on both and the argmax lands arbitrarily. **To test:** add a second-level sub-discriminator `unit(mean(H_a) − mean(H_b))` on sibling pairs and re-score top-1. *(Tested and largely falsified — the sub-discriminator fires on 33 of 167 captures and flips exactly one, lifting country 34%→38% and overall 44%→45%. The 34% baseline was a sum of three failure modes and only the genuine-sibling-swap one is fixable this way; see [MAIN-47](2026-05-14-nla-hierarchical-classifier-null-result.md), and AUDIT 23 for the re-derivation.)*
+
+**H4 — the two stability classes track content-vs-abstract, not frequency.** `the`, `France`, `function`, `.`, `7`, `Paris` hold ctx-cos > 0.80 across prefix lengths while `happy` and `refuse` fall below 0.60. The unstable pair are the two anchors whose meaning is a *state or act* rather than a *thing or symbol*, which a prompt can be **about** without instantiating. **To test:** extend the stability scan to more anchors chosen to cross that split independently of token frequency (e.g. `angry`, `refuse` vs `granite`, `Tuesday`) and check whether ctx-cos separates on the state/thing axis rather than on unigram frequency. Not yet run.
+
+## Follow-ups
+
+1. **Build per-token discriminants from mid-sequence captures** if token-presence detection is wanted — the end-of-prompt basis cannot do it. *(Done as MAIN-44/70; the answer is that each protocol needs its own basis.)*
+2. **Label the existing 23-axis basis a prompt-topic classifier everywhere it is used**, including in figure captions and the glyph viz primitive. *(Carried into README F2 and `examples/README_NLA.md`'s methodology note.)*
+3. **Strict-prompt re-validation of the top-1 numbers.** The 34% country top-1 is depressed by labeling artifacts — the `country_test` pool deliberately contains weird-framing prompts that are not country-content. Re-score against a strictly-labelled pool. Tracked as [#10](https://github.com/skothr/llm-research/issues/10) (was MAIN-68).
+4. **Run the H4 stability sweep** over a frequency-controlled anchor set. Cheap: base-model forward passes only, no AV or AR.
+5. **Rename "discriminant" to "mean-contrast" if this work is extended or published** — the formula is a centroid difference, not Fisher LDA. See README L6.
+
 ## Reproducibility
 
 ```bash

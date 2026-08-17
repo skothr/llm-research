@@ -3,7 +3,7 @@
 **Date:** 2026-05-13
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Toolkit:** `nla_cav_glyph.py` + `nla_haiku_flipbook.py` + `nla_counterfactual_glyph_diff.py`
-**Inputs:** the four `.pt` artifacts in `.cache/nla_artifacts/` (no model loading)
+**Inputs:** the four capture-root `.pt` artifacts, committed under [`../data/`](../data/) (written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md)); no model loading
 **Figures:** `fig13`, `fig14`, `fig15` in `research/arcs/01_nla-verbalizer/observations/figures/`
 
 ## Path-batch goal

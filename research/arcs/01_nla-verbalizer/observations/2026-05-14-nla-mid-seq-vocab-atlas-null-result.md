@@ -7,7 +7,7 @@
 **Figures:** `fig31_mid_seq_signal_vs_noise.png`, `fig32_mid_seq_argmax_accuracy.png`
 **Private-tracker ID:** MAIN-44 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
 
-## What MAIN-44 predicted
+## What the pre-registration (MAIN-44, retired tracker — see the [ID map](../README.md#private-tracker-id-map-main-n)) predicted
 
 MAIN-26 ([discriminant-validation](2026-05-13-nla-discriminant-validation.md)) found the 23-discriminant basis acts as a prompt-TOPIC classifier rather than a token-presence detector — `happy → emotion` projection was only +0.083 ± 0.061 across 4 prefix-length contexts at end-of-prompt positions. **Interpretation at the time:** end-of-prompt h has integrated the full user message into a topic representation, drowning token-specific identity. **Predicted fix:** capture each anchor MID-SEQUENCE (inside a carrier prompt that continues past the anchor) and project onto the existing discriminants. If the integration-overwhelm interpretation holds, `expected_proj` should rise to ≥ +0.3.
 
@@ -82,3 +82,37 @@ The discriminant glyph (fig25/26) is the right primitive **only for h's captured
 This is the **second null result of the arc** ([MAIN-47](2026-05-14-nla-hierarchical-classifier-null-result.md) was the first). Both came from over-extrapolating a single finding. MAIN-26 looked at one position protocol (end-of-prompt of varying-length prefix) and produced an interpretation ("end-of-prompt integration overwhelms token identity") that turned out too narrow. MAIN-44's failure refines it: the integration interpretation can't explain why mid-sequence is also a different subspace — the basis is protocol-coupled in a more general way.
 
 When designing the next round of probes, the methodological discipline: **always test the basis at the protocol it was derived from AND at one alternative protocol before claiming the basis "measures" something interpretable.** Within-protocol signal is necessary but not sufficient — the cross-protocol behavior reveals what the basis *isn't* doing.
+
+## Reproducibility
+
+```bash
+# ~13 min: loads the BASE model only (no AV, no AR) and captures each anchor
+# mid-sequence inside the fixed carrier sentence. Writes mid_seq_vocab_atlas.pt.
+# Re-capture warning: same 128-vs-125 anchor drift as the end-of-prompt atlas
+# (see ../README.md L5 / issue #51) — do not re-capture without regenerating
+# the audit expecteds and data/MANIFEST.json in the same change.
+python examples/nla_mid_seq_vocab_atlas_capture.py
+
+# ~1 min, no model load: projects mid-seq h's onto the eop basis, writes
+# mid_seq_compare.pt
+python examples/nla_mid_seq_vocab_atlas_compare.py
+
+# ~10s, no model load: renders fig31 + fig32
+python examples/nla_mid_seq_vocab_atlas_render.py
+```
+
+Carrier prompt: `"The text contains many words. Here is one specific word:
+{anchor} continues throughout subsequent discussion paragraphs."` — the anchor
+lands at token position 36-38 of ~48. AUDIT 15 in
+`examples/nla_audit_findings.py` re-derives the +0.0491 aggregate cross-protocol
+signal and the argmax-accuracy drop from the committed artifacts.
+
+## References
+
+- [`2026-05-13-nla-discriminant-validation.md`](2026-05-13-nla-discriminant-validation.md) — MAIN-26, the in-protocol validation whose interpretation this null result refines.
+- [`2026-05-13-nla-vocab-atlas-grid.md`](2026-05-13-nla-vocab-atlas-grid.md) — the end-of-prompt atlas the 23 discriminants are built from.
+- [`2026-05-14-nla-mid-seq-native-discriminants.md`](2026-05-14-nla-mid-seq-native-discriminants.md) — MAIN-70, the native-basis follow-up that turns this null result into a positive characterization.
+- [`2026-05-14-nla-hierarchical-classifier-null-result.md`](2026-05-14-nla-hierarchical-classifier-null-result.md) — MAIN-47, the arc's first null result, referenced above.
+- [`2026-05-13-nla-interpolation-flipbook.md`](2026-05-13-nla-interpolation-flipbook.md) — MAIN-25, the t=0.421 transition discussed under the glyph caveat.
+- [`figures/INVENTORY.md`](figures/INVENTORY.md) — fig31 / fig32 provenance and the exact carrier-position arithmetic.
+- [`../README.md`](../README.md) — F2 and L3 carry the protocol-coupling framing; L6 the "discriminant" naming caveat.

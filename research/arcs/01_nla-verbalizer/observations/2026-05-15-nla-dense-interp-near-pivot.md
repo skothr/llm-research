@@ -55,3 +55,30 @@ This refines the synthesis: **layer-20 h-space has discrete attractor basins sep
 - **[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md)**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min).
 - **Test plateau attractor strength.** Does AR-re-encoding an h from the hybrid plateau collapse it back to the plateau (a self-attracting state), or does it drift toward one of the anchor regions? Tests whether the plateau is a real attractor or just a transit zone.
 - **Probe other anchor pairs.** Different anchor-text pairs would produce different intermediate plateaus. Atlas of these would map the basin structure of layer 20 across content types.
+
+## Reproducibility
+
+```bash
+# ~40 min on CPU (30 steps x ~80s per AV decode; see Methodological notes).
+# Loads the AV only — h_A and h_B are read from interpolation_flipbook.pt, so
+# neither the base model nor the AR is loaded. Inputs resolve from the working
+# cache first, then the committed ../data/ copy on a clean clone.
+python examples/nla_dense_interp_near_pivot.py
+
+# ~10s, no model load: renders fig36 + fig37 from dense_interp_near_pivot.pt
+python examples/nla_dense_interp_render.py
+```
+
+Step grid: 25 dense steps in t ∈ [0.395, 0.455] (Δt ≈ 0.0025) plus 5 sparse
+context points {0.0, 0.25, 0.5, 0.75, 1.0}. AUDIT 18 in
+`examples/nla_audit_findings.py` re-derives the plateau bounds and the
+transition step from `../data/dense_interp_near_pivot.pt`.
+
+## References
+
+- [`2026-05-13-nla-interpolation-flipbook.md`](2026-05-13-nla-interpolation-flipbook.md) — MAIN-25, the coarse 20-step grid whose t=0.421 flag this re-samples, and the source of the cached `h_A`/`h_B`.
+- [`2026-05-15-nla-plateau-attractor-strength.md`](2026-05-15-nla-plateau-attractor-strength.md) — MAIN-71, the follow-up that tests whether the plateau found here is a real basin.
+- [`2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) and [`2026-05-14-nla-concept-arithmetic-atlas.md`](2026-05-14-nla-concept-arithmetic-atlas.md) — MAIN-44/48, the discrete-attractor synthesis this was designed to discriminate against.
+- [`figures/INVENTORY.md`](figures/INVENTORY.md) — fig36 / fig37 provenance and the exact step grid.
+- [`../README.md`](../README.md) — F1 and L9 carry the scope qualifications.
+- `kitft/nla-qwen2.5-7b-L20-av` — <https://huggingface.co/kitft/nla-qwen2.5-7b-L20-av>. Licensing and redistribution status: [`../data/LICENSE-DATA.md`](../data/LICENSE-DATA.md).
