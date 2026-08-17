@@ -48,9 +48,10 @@ different kinds of work; separating them keeps visible where the ideas came
 from. Shape, provenance labels and public-repo constraints per
 [`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed).
 Quotes are the human's typed turns, taken from the session listed under
-**Verifiability**; `[NORMALIZED]` means typo and punctuation fixes with
-markdown emphasis inside the turn dropped, and `[...]` marks an editorial
-elision — elisions never remove the direction the quote is cited for. This arc
+**Verifiability**; `[VERBATIM]` means quoted unaltered, `[NORMALIZED]`
+means typo and punctuation fixes with markdown emphasis inside the turn
+dropped, and `[...]` marks an editorial elision — elisions never remove
+the direction the quote is cited for. This arc
 was opened in one working session by Michael Lannum.
 
 ### Research direction

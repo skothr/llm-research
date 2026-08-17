@@ -139,8 +139,8 @@ open work because the released NLA pair is Qwen-specific.
 Established the methodology before scaling up: validate the round-trip
 on simple inputs, understand the specific layer (20 of 28; ~71% depth),
 verbalize at every token rather than aggregating. Per-token trajectory
-viz was a direct ask (theme covered partly by `nla_gen_trajectory.py`
-+ static figures; live-viz form open as [D7](#d7-per-token-live-trajectory-viz)).
+viz was a direct ask (theme covered partly by `nla_gen_trajectory.py` plus
+static figures; live-viz form open as [D7](#d7-per-token-live-trajectory-viz)).
 
 #### Theme 3 — Reproduce Anthropic's emergent-behavior examples
 

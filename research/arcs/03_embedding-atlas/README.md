@@ -87,8 +87,9 @@ pause/resume calls across the tracing phase. Their substance is corroborated
 by what the record shows was built; their wording is Claude's, and no part of
 either is quoted.
 
-**Claude Code.** All implementation: the 25 `emb_*` capture/derive/render/
-audit scripts (plus the `_emb_artifacts.py` resolver), the battery class
+**Claude Code.** All implementation: the 25 `emb_*`
+capture/derive/render/audit scripts (plus the `_emb_artifacts.py`
+resolver), the battery class
 definitions (under the CP1 direction), the operationalization of the
 pre-registered predictions (P1a-P3), the tracing-phase experiment designs
 (T0/T1/T1.5/T2), the literature review with adversarial novelty verification,
