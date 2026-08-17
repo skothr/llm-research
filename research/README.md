@@ -2,10 +2,11 @@
 
 Experimental LLM-interpretability research on local open-source models —
 **Qwen2.5-7B-Instruct** and **Qwen2.5-1.5B-Instruct** carry the current arcs,
-with **TinyLlama** in the early and archived work; inference via HF
-`transformers`. Work is organized into **arcs** — focused, multi-observation
-investigations that each cohere around a single research question — plus a
-landing bin for one-off findings and an archive for retired material.
+with **TinyLlama** and **OpenLLaMA 3B v2** in the early and archived work;
+inference via HF `transformers`. Work is organized into **arcs** — focused,
+multi-observation investigations that each cohere around a single research
+question — plus a landing bin for one-off findings and an archive for retired
+material.
 
 ## Arcs
 
@@ -34,12 +35,13 @@ because they carry as much of the signal as the positive ones:
   ASCII/base-N encoding channel was **not detected** in a local Qwen
   reproduction of the paper's protocol — **zero** owl-lexicon hits across all
   five decode schemes in either condition (owl n=104, neutral n=109 after the
-  format/range/count filter; owl_rate = neutral_rate = 0.000, z=0, p=1.0), with
-  the planted-encoding positive control passing in the same run, so the null is
-  an absence rather than a broken decoder. The paper
-  released no dataset — its `v1.0.0` has zero assets and its teacher is closed —
-  so this tests a local reproduction, not their data. The decisive HA-vs-HC
-  test was never run.
+  format/range/count filter) — no variance in either arm, so no z or p is
+  defined and the informative quantities are the zero-hit count and the power
+  floor (~931 per condition, audit-locked), with the planted-encoding positive
+  control passing in the same run, so the null is an absence rather than a
+  broken decoder. The paper released no dataset — its `v1.0.0` has zero
+  assets and its teacher is closed — so this tests a local reproduction, not
+  their data. The decisive HA-vs-HC test was never run.
 - **Arc 03 (embedding atlas)** — predictions were registered on 2026-06-11,
   before the captures they constrain, and adjudicated mechanically at close:
   **P1a PASS, P1c FAIL, P1d FAIL**; P2 refined-not-falsified; P1b, P1e and P3

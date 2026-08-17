@@ -98,7 +98,7 @@ bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 # committed artifacts. Expected summaries as of 2026-08-17 (each arc also
 # commits its run as research/arcs/<slug>/data/audit_2026-08-17.log):
 python examples/nla_audit_findings.py         # arc 01 → 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → 102 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/subliminal_audit_findings.py  # arc 02 → 103 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 →  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → 951 PASS | 7 FAIL  (default clone)
                                               #          986 PASS | 4 FAIL  (after the lens pull)
