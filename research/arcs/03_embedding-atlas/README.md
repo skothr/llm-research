@@ -69,7 +69,7 @@ Claude's operationalization of it.
 
 ### Human / Claude / emergent split
 
-**What Michael contributed.** The originating "handles" question (quoted
+**User (Michael Lannum).** The originating "handles" question (quoted
 above, [session 2026-06-10]); the two-arc scoping and the
 iterate-with-figures cadence; the CP1 broaden-before-deepen decision; the
 deep-arc commitment and the numbered-arc reorganization (2026-06-11); the
@@ -87,7 +87,7 @@ pause/resume calls across the tracing phase. Their substance is corroborated
 by what the record shows was built; their wording is Claude's, and no part of
 either is quoted.
 
-**What Claude contributed.** All implementation: the 25 `emb_*` capture/
+**Claude Code.** All implementation: the 25 `emb_*` capture/
 derive/render/audit scripts (plus the `_emb_artifacts.py` resolver), the
 battery class definitions (under the CP1 direction), the operationalization
 of the pre-registered predictions (P1a-P3), the tracing-phase experiment
@@ -95,7 +95,7 @@ designs (T0/T1/T1.5/T2), the literature review with adversarial novelty
 verification, all figures and observation write-ups, and the audit that
 re-derives every published number from committed artifacts.
 
-**What emerged from the collaboration.** The 21-dim entangled block itself
+**Emergent.** The 21-dim entangled block itself
 (the user's handles framing predicted shared structure; the full-vocab sweep
 implementation surfaced this specific object); the reader/tracker head
 dissociation; the P1c/P1d falsifications — adjudicated mechanically against
@@ -106,13 +106,12 @@ captured.
 
 Every quote above is recoverable from the sessions below. The transcripts are
 machine-local and are not committed to this repo — they carry local paths and
-tool output — so they are referenced by session id and date only. Ids are
-given as the 8-character prefix where the full UUID was not recorded at the
-time.
+tool output — so they are referenced by session id and date only. The ids are
+**abbreviated**: each is the 8-character prefix of the local session UUID.
 
 | Session | Span | Covers |
 |---|---|---|
-| `3f3f013a-612c-4616-bbaa-fecd1dbb762b` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment |
+| `3f3f013a` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment |
 | — | 2026-06-12 → 07-14 | **NO TRANSCRIPT SURVIVES** (retention gap) — split items from this window are `[RECONSTRUCTED]` |
 | `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | wrap-up and close |
 | `426003e2` | 2026-07-21 | degradation-forensics direction |
@@ -205,6 +204,11 @@ land in.
   mid-network carrier set spanning L4-26) is unaffected, and both corrected
   values are now locked by AUDIT 9 — see
   [the Correction section](observations/2026-06-11-emb-trace-block-through-layers.md#correction--f-t3-regime-iii-carrier-stability-numbers-2026-08-17).
+- **Full-vocab transcript label renamed 2026-07-21.** The
+  `emb_structural_block.py` print label `energy` was renamed `norm_frac`; the
+  quoted transcript in
+  [fullvocab-sweep](observations/2026-06-10-emb-fullvocab-sweep.md) carries
+  the new label and the values are unchanged.
 
 ## Limitations
 
@@ -291,8 +295,8 @@ research/arcs/03_embedding-atlas/
     figures/ (fig1-fig21 + INVENTORY.md)
   plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
   sessions/ (2026-06-11 tracing checkpoint; 2026-07-21 degradation-window forensics)
-  data/ (15 .pt + MANIFEST.json + README.md    # git-LFS, ~96 MB
-         + LICENSE-DATA.md + audit_2026-08-17.log)
+  data/ (15 .pt + MANIFEST.json + README.md + LICENSE-DATA.md
+         + audit_2026-08-17.log)   # git-LFS, ~96 MB
 ```
 
 Scripts (all under `examples/`): `emb_token_battery.py` (battery as data),

@@ -167,10 +167,10 @@ J-lens readouts at layer 20 relate to the NLA verbalizer readouts studied in
 
 Direction-setting (the human role) and implementation (the AI role) are
 different kinds of work; separating them keeps visible where the ideas came
-from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
-2026-07-25 (Michael Lannum), lightly normalized for typos and punctuation;
-markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
-elision. Every quote carrying a `[NORMALIZED]` tag was passed through that
+from. Quotes below are from the transcripts listed under **Verifiability**
+(Michael Lannum), normalized for typos and punctuation; markdown emphasis
+inside a turn is dropped, and `[...]` marks an editorial elision. Every
+quote carrying a `[NORMALIZED]` tag was passed through that
 normalization. This section follows the attribution shape in
 [`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed),
 for which [arc 02](../02_subliminal/README.md#research-direction) is the
@@ -182,7 +182,7 @@ what each turn established — they are not the user's words, and they are not
 labels the user assigned. Blocks are ordered by topic, not chronologically;
 the session and date on each block are the authoritative provenance.
 
-**Originating direction** [session 2026-07-18] [NORMALIZED]:
+**Originating direction** [session 2026-07-18] `[NORMALIZED]`:
 
 > *"Let's move into a new worktree for the next arc, 04_jspace. Here's the
 > direction. Anthropic released new research a few days ago about 'J-Space',
@@ -198,7 +198,7 @@ the session and date on each block are the authoritative provenance.
 That turn fixes all three of the arc's framing choices: the replication
 goal, the target model, and the review-the-plan-before-running gate.
 
-**Design sign-off, with two amendments** [session 2026-07-18] [NORMALIZED]:
+**Design sign-off, with two amendments** [session 2026-07-18] `[NORMALIZED]`:
 
 > *"Otherwise this sounds like a good plan, I read through Nanda's critique
 > and I agree on most of the points. The NLA comparison cross-tie is a very
@@ -208,11 +208,13 @@ goal, the target model, and the review-the-plan-before-running gate.
 
 The OOM gate (amendment 1) is why the 7B fit was calibrated and offloaded
 rather than dropped to CPU; the comms protocol (amendment 2) is why the
-long unattended runs were checkpointed and reported. The J-space↔NLA
-cross-tie was **Claude's** proposal, endorsed here — not the user's
-[JOINT]: proposed by Claude, adopted by the user's sign-off in the same turn.
+long unattended runs were checkpointed and reported.
 
-**The artifact-verification standard** [session 2026-07-20] [NORMALIZED],
+**Cross-tie origin** `[JOINT]`: the J-space↔NLA cross-tie was **Claude's**
+proposal, endorsed here — not the user's; it was adopted by the user's
+sign-off in the same turn.
+
+**The artifact-verification standard** [session 2026-07-20] `[NORMALIZED]`,
 after a weekend of unattended runs:
 
 > *"can you check on where we are in this arc and verify completion/integrity
@@ -228,7 +230,7 @@ auditability standard (defects go into the permanent record; datasets stay
 complete and clean-clone reproducible *mid*-arc, not at close).
 
 **The figures-and-data standards** [session 2026-07-21, 2026-07-24]
-[NORMALIZED]:
+`[NORMALIZED]`:
 
 > *"we should always be generating supporting plots/visualization figures for
 > interesting or important result datasets. Make sure to show rich,
@@ -244,7 +246,7 @@ complete and clean-clone reproducible *mid*-arc, not at close).
 > repo"*
 
 **The metric-fidelity reopening** (issue #26) [session 2026-07-23]
-[NORMALIZED]. The arc
+`[NORMALIZED]`. The arc
 had already been closed. It was reopened by this turn:
 
 > *"I want to focus on solidifying my own intuition/understanding of J-Space
@@ -263,7 +265,7 @@ walked through end-to-end to explain it. Requiring the variance fraction be
 checked against the paper's own definition in the source PDF was also the
 user's call.
 
-**The review-before-integration policy** [session 2026-07-22] [NORMALIZED]:
+**The review-before-integration policy** [session 2026-07-22] `[NORMALIZED]`:
 
 > *"Run a thorough opus workflow PR review on #25. Maintain high standards
 > for research integrity, auditability, and attribution/transparency. [...]"*
@@ -284,11 +286,11 @@ evidentiary bar. Also two substantive methodological catches Claude had
 missed: that the steering experiment had **drifted from the paper's prompt**
 (*"So why did you change the prompt from the Anthropic paper's example? [...]
 Could we be overloading the spider focus or something?"*, [session
-2026-07-22] [NORMALIZED]), and that the fitting/held-out corpora were **narrower than
+2026-07-22] `[NORMALIZED]`), and that the fitting/held-out corpora were **narrower than
 claimed** (*"what variety of prompts were we using over the n=N prompt
 averaged jacobian calculations? I see two wikitexts json files and one with a
 bunch of prompts that discuss criticism"*, [session 2026-07-22]
-[NORMALIZED]) — the
+`[NORMALIZED]`) — the
 observation that led to the corpus-sensitivity refit.
 
 **Claude Code.** Paper digestion and KB grounding; the staged experiment
@@ -411,16 +413,19 @@ Load-bearing numbers re-derive from artifacts via
 `examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
 + the four 1.5B robustness axes and the 7B held-out set, swap
-significance + 5.1b McNemar tiers, and the
-two-scale norm-bias pins — landed 2026-07-24; 978 claimed with a
-warm five-lens cache after the final-review
-pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
-naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
-p-value, and the MANIFEST census). All small derived artifacts (44 files,
-~55 MB incl. the ten metric-correction artifacts) are LFS-committed
-under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
-a clean clone**; check A and the lens-integrity blocks read the full
-fitted lenses. Decision 4 originally kept all five cache-only (committed
+significance + 5.1b McNemar tiers, and the two-scale norm-bias pins —
+landed 2026-07-24; 978 claimed with a warm five-lens cache after the
+final-review pins landed 2026-07-25: full stage-4 depth-table cells both
+scales, the naive-vs-paper delta decomposition, K_median_occ, the exact
+McNemar p-value, and the MANIFEST census; 990 registered with the cache
+and 958 without after the 2026-08-17 coverage supplement — Check N:
+the stage-4 k-sweep at the 1.5B varfrac hump, active-atom occupancy
+medians, the readout-probability kurtosis supplement, the late-band
+kurtosis ranges, and the stage-5.1b chat-rerun compliance deltas). All
+small derived artifacts (44 files, ~55 MB incl. the ten
+metric-correction artifacts) are LFS-committed under `data/` and
+MANIFEST-registered (sha256), so **checks B–N run from a clean clone**;
+check A and the lens-integrity blocks read the full fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
 decision 2026-08-16 after the C4-redaction re-run: the **three lenses
 refit in that re-run are now LFS-committed in `data/cache/`**

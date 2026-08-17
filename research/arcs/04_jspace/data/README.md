@@ -52,11 +52,10 @@
 > cache is pointer stubs and the same run reports 921 | 7. The audit has
 > since gained checks: as of 2026-08-17 the same two states measure
 > **986 | 4** with the cache and **951 | 7** without
-> (`audit_2026-08-17.log`). Both states are
-> documented in [`../README.md`](../README.md) under "Expected result on a
-> clean clone"). The 4
-> remaining FAILs are
-> the designed `MISSING` presence reports for the two nf4 lenses
+> (`audit_2026-08-17.log`). Both states are documented in
+> [`../README.md`](../README.md) under "Expected result on a clean
+> clone"). The 4 remaining FAILs are the designed `MISSING` presence
+> reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
 > (Their refit-and-commit has since been scheduled as issue #47 on
@@ -120,10 +119,10 @@ Artifact classes (see the MANIFEST for the per-file registry):
 
 - `raw`: frozen fitting/held-out corpora (wikitext-103 + seeded C4-en),
   fitted-lens **layer subsets** (`jlens_*_layer-subset.pt` + `.config.json`
-  sidecars; design Decision 4 — the full 27-layer lenses stay in
-  `cache/`, regenerable via `examples/jspace_fit_lens.py`; see the
-  amendment below for which of them are now committed there), and
-  the hand-written paper-verbatim item bank.
+  sidecars; design Decision 4 — the full 27-layer lenses stay in `cache/`,
+  regenerable via `examples/jspace_fit_lens.py`; see the amendment below
+  for which of them are now committed there), and the hand-written
+  paper-verbatim item bank.
   **Decision 4 amended 2026-08-16**: the three lenses refit in the
   C4-redaction re-run — both wikitext + the c4en — are now LFS-committed
   in `cache/` with their sidecars and fit/scan logs, so a clean clone
@@ -139,7 +138,7 @@ Artifact classes (see the MANIFEST for the per-file registry):
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
   probes), nla_crosstie, and the issue-#26 metric-correction set
   (`paper_metric_varfrac_*` ×8 incl. the four robustness axes + 7B
-  held-out, `atom_norm_bias_*` ×2) — so checks B–M and every committed
+  held-out, `atom_norm_bias_*` ×2) — so checks B–N and every committed
   figure reproduce from a clean clone after `git lfs pull`.
 
 `cache/` is a byte-identical working mirror (plus the full lenses) —

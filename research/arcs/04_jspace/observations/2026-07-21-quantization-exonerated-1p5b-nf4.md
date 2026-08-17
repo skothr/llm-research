@@ -69,8 +69,8 @@ nf4 already mandatory there).
 Artifacts: the full lens `jlens_qwen2.5-1.5b_nf4_n100.pt` (+config: wall
 3627.5 s) is NOT committed (issue #47); the derived
 `structure_scan_*_1.5b_nf4*`, `lens_eval_*_1.5b_nf4*`,
-`readout_scan_*_1.5b_nf4*` are committed under `data/` (the readout scan additionally carries the
-new rich per-layer token capture). Orchestrator log
+`readout_scan_*_1.5b_nf4*` are committed under `data/` (the readout scan
+additionally carries the new rich per-layer token capture). Orchestrator log
 (`quant_axis_run.log`, session scratchpad): probe rc=1, fit rc=0, all
 suite phases rc=0.
 
