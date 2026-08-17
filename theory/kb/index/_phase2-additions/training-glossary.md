@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 ## Optimization
 
 - **AdamW** — Adam with decoupled weight decay. Maintains per-parameter first and second moments $\mathbf{m}_t, \mathbf{v}_t$; update is $-\eta \cdot \mathbf{m}_t / (\sqrt{\mathbf{v}_t}+\varepsilon) - \eta\lambda\mathbf{w}_t$. The default LLM pre-training optimizer 2020-2024. `[hoffmann2022-chinchilla §3]`

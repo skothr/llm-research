@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 ## Lens techniques
 
 - **Logit lens** — A function that maps a transformer hidden state $\mathbf{h}_\ell$ at layer $\ell$ to a vocabulary distribution by applying the model's own final LayerNorm and unembedding $W_U$: $\mathrm{LogitLens}(\mathbf{h}_\ell) = \mathrm{LayerNorm}[\mathbf{h}_\ell] W_U$. Introduced by nostalgebraist on LessWrong in 2020; first peer-reviewed treatment in Belrose et al. 2023 `[belrose2023-tuned-lens §2]`.

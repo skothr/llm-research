@@ -125,7 +125,7 @@ Yang et al. show CIFAR-10 MLPs with width $n \in \{256, 512, ..., 8192\}$:
 > the width increases from 256 to 8192; using the optimal learning of
 > the smallest model on the largest model gives very bad performance,
 > if not divergence.
-> `[yang2022-mup §3; kb/excerpts/yang2022-mup#sec-3-mlp-sp]`
+> `[yang2022-mup §3; kb/excerpts/yang2022-mup]`
 
 Under μP with the same widths, the optimal LR is **stable across
 widths** — the LR-vs-loss curves overlap. This is the headline

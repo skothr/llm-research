@@ -131,8 +131,8 @@ Three canonical use patterns:
 2. **PRM-guided search.** Use the PRM as the value function in a tree
    search over partial traces. Pruning expansions of low-PRM partial
    prefixes; rStar-Math is the canonical instantiation
-   `[rstar-math2025 §3]`. See `kb/notes/reasoning/inference-time-
-   search.md`.
+   `[rstar-math2025 §3]`. See
+   `kb/notes/reasoning/inference-time-search.md`.
 3. **PRM-weighted self-consistency.** Combine self-consistency
    majority vote with PRM scores: weight each trace's vote by its PRM
    score before majority. Improves over plain self-consistency on

@@ -1,7 +1,7 @@
 ---
 topic: interpretability/j-space
 status: draft
-last_updated: 2026-07-24
+last_updated: 2026-08-16
 maintainer: theory-kb
 primary_sources:
   - gurnee2026-workspace
@@ -102,7 +102,7 @@ fixed $k$. The paper leaves the pursuit's atom normalization and iteration
 count unspecified (the companion repo ships no pursuit code). Replication
 on Qwen2.5 under this exact definition:
 `research/arcs/04_jspace/observations/2026-07-24-paper-metric-varfrac-recompute.md`
-(1.5B breaches at its hump, 11.5% excess at L21; 7B stays under, 5.0% peak).
+(1.5B breaches at its hump, 11.15% excess at L21; 7B stays under, 4.72% peak).
 
 ## 2. Mechanism
 
@@ -148,7 +148,7 @@ near-zero-early/rise-at-a-third
 - **Logit lens** → J-lens with $J_\ell = I$; fails in early layers because it
   assumes layer-invariant coordinates
   `[gurnee2026-workspace §2.1; kb/excerpts/gurnee2026-workspace#sec-2-1-vs-logit-lens]`,
-  cf. `[kb/notes/interpretability/lens-techniques#3-why-the-logit-lens-fails]`.
+  cf. `[kb/notes/interpretability/lens-techniques#3-why-the-logit-lens-fails-and-the-tuned-lens-fixes-it]`.
 - **Tuned lens** → learned affine translator per layer; correlational, tends
   to "skip ahead" to the output rather than surface currently-held
   intermediates `[gurnee2026-workspace §2.4]`, `[belrose2023-tuned-lens §3]`.
@@ -207,7 +207,10 @@ which stays under 10%. The load-bearing quantity is causal reach, not size.
   pairs at 7B; 5 at 1.5B, McNemar null) —
   `observations/2026-07-24-paper-metric-varfrac-recompute.md` Finding 2.
   Layer bands and the relational-causality replication are recorded in the
-  arc README.
+  arc README. **Data correction:** the arc's C4 corpus slice was redacted for
+  PII on 2026-07-29 and every dependent result re-run on 2026-08-15/16; the
+  FVE and kurtosis findings above are unchanged by the re-run
+  (`research/arcs/04_jspace/README.md` § DATA CORRECTION).
 
 ## 6. See also
 

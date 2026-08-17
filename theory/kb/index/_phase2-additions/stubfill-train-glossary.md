@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 # Glossary additions — stubfill (training, post-training, inference)
 
 Generated 2026-05-04 by the stubfill subagent. Per the subagent

@@ -1,5 +1,10 @@
 # LLM Core Architecture — Base Document Design
 
+**Status:** superseded 2026-05-03 by `2026-05-03-theory-expansion-design.md`
+(historical record). The single-document deliverable this spec describes was
+built, then archived under `theory/archive/2026-05-03-pre-expansion/`; the
+`theory/kb/` + `theory/series/` two-layer structure replaced it.
+
 ## Goal
 
 A top-down architectural reference covering the Transformer and its decoder-only evolution, at matrix-dimension depth with implementation notes. Serves as the foundational document for the `theory/` workspace. Written as a learning resource grounded in canonical sources.

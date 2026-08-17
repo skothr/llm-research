@@ -48,7 +48,7 @@ length $N$:
   Dominates the transformer compute past $N \sim 2048$.
 - **Attention KV memory (decode):** $2 N h d \cdot \text{bytes}$ per
   layer per batch element, times $L$ layers. For LLaMA-2-70B at $N=128$K,
-  this is $\sim 50$ GB just for KV cache (at FP16, 8 GQA heads, 128 layers,
+  this is $\sim 40$ GiB just for KV cache (at FP16, 8 GQA KV heads, 80 layers,
   per request).
 - **Position OOD:** RoPE phases $m\theta_i$ at $m > N_{\text{train}}$ are
   unseen during training; attention features may not generalize. See

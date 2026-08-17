@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 # Glossary additions — reasoning/ area
 
 ## Chain-of-thought and prompting

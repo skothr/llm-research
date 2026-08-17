@@ -59,7 +59,7 @@ DeepSeek-V3 uses a **sequential / chained** MTP architecture: the $i$-th
 MTP module receives the trunk's hidden state *plus the embedding of
 the previously predicted token*, computing a refined hidden for the
 next prediction. Concretely, for $i \in \{1, \ldots, k\}$ MTP modules
-beyond the main head `[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training#sec-2-3-1]`:
+beyond the main head `[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training]`:
 
 $$\mathbf{h}_t^{i} = M_i\bigl(\mathrm{Norm}(\mathbf{h}_t^{i-1}); \mathrm{Norm}(E_{\text{in}}[x_{t+i}])\bigr) \tag{3}$$
 
@@ -109,7 +109,7 @@ head:
             ...
 ```
 
-`[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training#sec-2-3-1]`. The
+`[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training]`. The
 chain is **causal**: the $i$-th module sees the $i$-th-future ground-
 truth token at training time. Parameters per MTP module: ~one Transformer
 block. DeepSeek-V3 with $k = 1$ adds one block of parameters relative
@@ -139,7 +139,7 @@ time behavior differs (see §2.4).
 For standard generation, simply drop the MTP modules and use the main
 LM head as in any other Transformer LLM. **The MTP heads have no
 inference cost**. This is the default path
-`[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training#sec-2-3-1]`.
+`[deepseek-v3 §2.3.1; kb/excerpts/deepseek-v3-training]`.
 
 The reported quality benefit is therefore "free" inference cost: the
 MTP auxiliary loss shapes the trunk hidden states $\mathbf{h}_t^L$ to
@@ -205,10 +205,10 @@ EAGLE and Medusa add drafter heads *post hoc* to a pretrained model:
 
 - **Medusa** adds $k$ parallel heads (similar to Gloeckle's design)
   trained on top of a frozen backbone; uses tree attention for
-  parallel verification `[cai2024-medusa §3.1; kb/excerpts/cai2024-medusa#sec-3-1]`.
+  parallel verification `[cai2024-medusa §3.1; kb/excerpts/cai2024-medusa#sec-2-1-2]`.
 - **EAGLE** trains a small autoregressive head that predicts feature
   vectors, not tokens, of the next position; verifies via a single
-  trunk forward `[li2024-eagle §3; kb/excerpts/li2024-eagle#sec-3]`.
+  trunk forward `[li2024-eagle §3; kb/excerpts/li2024-eagle#sec-3-1]`.
 
 MTP is structurally similar to Medusa but with the training cost paid
 **during pretraining** rather than in a separate fine-tuning stage,

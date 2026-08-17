@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 ## Scaling laws and compute-optimal training
 
 - **Scaling law** — An empirical or theoretical functional relationship between a measure of model performance (typically cross-entropy loss) and one or more "scale" inputs: parameters $N$, training tokens $D$, training compute $C$, or test-time compute $N_{\text{test}}$. Canonical reference: `kaplan2020`.
@@ -34,7 +36,7 @@
 ## Maximal Update Parametrization (μP) and HP transfer
 
 - **Maximal Update Parametrization (μP)** — The unique-up-to-redundancy parametrization (init scales × LR scalings × parameter multipliers) under which optimal hyperparameters are width-invariant. The infinite-width limit has $\Theta(1)$-magnitude feature updates, in contrast to the kernel/NTK regime of standard parametrization `[yang2022-mup §2; kb/excerpts/yang2022-mup#sec-2-clt]`.
-- **Standard Parametrization (SP)** — The default parametrization in PyTorch and most frameworks: init variance $1/\text{fan\_in}$, uniform LR scaling. Does NOT admit HP transfer across width — optimal LR shifts by ~1 order of magnitude as width grows from 256 to 8192 `[yang2022-mup §3; kb/excerpts/yang2022-mup#sec-3-mlp-sp]`.
+- **Standard Parametrization (SP)** — The default parametrization in PyTorch and most frameworks: init variance $1/\text{fan\_in}$, uniform LR scaling. Does NOT admit HP transfer across width — optimal LR shifts by ~1 order of magnitude as width grows from 256 to 8192 `[yang2022-mup §3; kb/excerpts/yang2022-mup]`.
 - **μTransfer** — The HP-tuning procedure: parametrize target in μP, tune HPs on a small proxy model (typically 1/16–1/32 of target width), copy them zero-shot to target without retuning. Tuning cost ≈ 7% of one full pretraining run for GPT-3 6.7B `[yang2022-mup abstract; kb/excerpts/yang2022-mup#abstract]`.
 - **abc-parametrization** — Yang's framework characterizing a parametrization by three width-dependent functions per parameter: $a_W$ (parameter multiplier), $b_W$ (init scale), $c_W$ (LR scaling). μP is a specific point in abc-space; SP is another. See `yang2022-mup` Appendices.
 - **Proxy model / target model** — In μTransfer, the small model used for HP search (proxy) and the full-scale model receiving the transferred HPs (target). Same depth, vocab, data, tokenizer; only width differs `[yang2022-mup §1; kb/excerpts/yang2022-mup#sec-1-contributions]`.

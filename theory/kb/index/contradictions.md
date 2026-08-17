@@ -520,7 +520,7 @@ Claude with extended thinking) deserve to be ranked on the same
 leaderboards as non-reasoning models is contested. Reasoning models
 spend 10–100× more tokens at inference, which is a different cost
 profile. **MMLU-Pro reports CoT-vs-direct as a diagnostic**
-`[wang2024-mmlu-pro §sec-cot; kb/excerpts/wang2024-mmlu-pro#sec-cot]`,
+`[wang2024-mmlu-pro §sec-cot; kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`,
 which partly normalizes for this; FrontierMath does not. Whether to
 add a "compute-budget" axis to leaderboards is an open community
 question.
@@ -848,7 +848,7 @@ _Source: `kb/notes/interpretability/sparse-autoencoders.md`_
 - **2024-07** — Rajamanoharan et al. (DeepMind): JumpReLU SAEs.
 - **2024-08** — Lieberum et al. (DeepMind): Gemma Scope — JumpReLU SAEs
   released openly across Gemma 2 2B/9B/27B
-  `[gemma-scope-2024 §1, §2.2; kb/excerpts/gemma-scope-2024#sec-2]`.
+  `[gemma-scope-2024 §1, §2.2; kb/excerpts/gemma-scope-2024#sec-2-2-jumprelu]`.
 - **2024-11** — Dunefsky et al. (NeurIPS): transcoders for input-invariant
   circuit analysis.
 - **2024-12** — Bussmann: BatchTopK SAEs (variant of TopK that picks the

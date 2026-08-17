@@ -233,7 +233,7 @@ same output, no approximation — using two ideas
 
 The IO complexity is $\Theta(N^2 d^2 M^{-1})$ HBM accesses, where $M$
 is SRAM size, vs.\ $\Theta(Nd + N^2)$ for standard attention. For
-typical $d \in [64, 128]$ and $M \sim 100$KB, this is many-times fewer
+typical $d \in [64, 128]$ and $M \sim 100$ KiB, this is many-times fewer
 HBM accesses
 `[dao2022 §3.2 Theorem 2; kb/excerpts/dao2022#sec-3-2]`. A matching
 lower bound (Proposition 3) shows this is optimal among exact

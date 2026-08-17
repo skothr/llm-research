@@ -149,7 +149,7 @@ DeepSeek-V3 itself uses the same handoff in its post-training:
 > capabilities from the long-Chain-of-Thought (CoT) model, specifically
 > from one of the DeepSeek R1 series models, into standard LLMs,
 > particularly DeepSeek-V3." `[deepseek-v3 §5.4.1;
-> kb/excerpts/deepseek-r1#distillation-set]`
+> kb/excerpts/deepseek-r1#sec-4]`
 
 ### 2.3 Distill-then-classify (FineWeb-Edu)
 

@@ -64,7 +64,7 @@ is **what kind of $\rho$**:
 
 This is the diagnostic the MMLU-Pro paper makes load-bearing
 `[wang2024-mmlu-pro §sec-cot;
-kb/excerpts/wang2024-mmlu-pro#sec-cot]`:
+kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`:
 
 > Chain-of-Thought reasoning showed marked improvements on MMLU-Pro,
 > contrasting with the original MMLU where direct answering performed
@@ -182,7 +182,7 @@ changes targeting MMLU's saturation failures:
 At launch, top frontier models scored 16–33 percentage points lower
 than their MMLU score
 `[wang2024-mmlu-pro §sec-delta;
-kb/excerpts/wang2024-mmlu-pro#sec-delta]`. Prompt-format sensitivity
+kb/excerpts/wang2024-mmlu-pro#sec-6-1-rankings]`. Prompt-format sensitivity
 dropped from 4–5% (MMLU) to ~2% (MMLU-Pro).
 
 The structural innovation of MMLU-Pro that matters for *knowledge*
@@ -263,7 +263,7 @@ discrimination function at the frontier. Two diagnostics:
    know the facts; the 5–10% they miss are not retrieval failures
    but verifier-error / contamination / ambiguity items
    `[wang2024-mmlu-pro §sec-cot;
-   kb/excerpts/wang2024-mmlu-pro#sec-cot]`.
+   kb/excerpts/wang2024-mmlu-pro#sec-6-2-cot]`.
 2. **Saturation within the verifier-error band.** With MMLU-Redux's
    6.49% baseline error rate `[mmlu-redux-2024 §abstract]`, a
    perfect oracle scores at most ~93.5%. Top frontier models cluster
@@ -322,7 +322,7 @@ contributing factors:
    (StackExchange explanations of MMLU questions, Reddit
    post-mortems). The contamination-survey-2025 catalog
    `[contamination-survey-2025 §sec-scope;
-   kb/excerpts/contamination-survey-2025#sec-scope]` makes this
+   kb/excerpts/contamination-survey-2025#sec-taxonomy]` makes this
    explicit. Saturation accelerates as benchmark visibility grows.
 
 [INTUITION] **Saturated benchmarks are not useless** — they remain
@@ -394,7 +394,7 @@ crystallized capacity is no longer the bottleneck.
   JailbreakBench / METR; behavioral safety evals share the
   saturation / contamination / verifier-mis-spec failure modes
   that knowledge benchmarks face.
-- `kb/notes/scaling/scaling-laws.md` — the upstream scaling story
+- `kb/notes/scaling/chinchilla.md` — the upstream scaling story
   that drives knowledge-benchmark saturation: at 10–15T tokens of
   training, the factual headroom on undergraduate-level material
   approaches the verifier-error ceiling.

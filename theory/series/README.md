@@ -40,8 +40,10 @@ bash theory/series/build.sh           # clean rebuild all 5 + collect
 bash theory/series/build.sh collect   # just refresh dist/ symlinks
 ```
 
-The script does the full pdflatex / bibtex / xr-hyper sweep (three
-passes over all 5 papers so cross-paper labels settle), then creates
+The script does the full pdflatex / bibtex / xr-hyper sweep — four
+`pdflatex` passes per paper (one with `bibtex`, then three to settle
+`xr-hyper` cross-refs), plus a conditional fifth pass for any paper
+still showing unresolved cites — then creates
 `theory/series/dist/<N>-<topic>.pdf` symlinks pointing at each
 `paper-N/main.pdf`. Names: `1-architecture.pdf`, `2-training.pdf`,
 `3-reasoning.pdf`, `4-interpretability.pdf`,

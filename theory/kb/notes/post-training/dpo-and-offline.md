@@ -237,7 +237,7 @@ The length-normalization is the key practical contribution: it directly
 addresses DPO's well-known **length bias** (DPO tends to make outputs
 longer because long responses are easier to satisfy with higher
 log-ratios). On length-controlled benchmarks SimPO outperforms DPO
-substantially `[meng2024-simpo §4-headline; kb/excerpts/meng2024-simpo#sec-4-headline]`.
+substantially `[meng2024-simpo §4-headline; kb/excerpts/meng2024-simpo#sec-4-headline-empirical]`.
 
 ### 3.6 GAPO and explicit-PO — anchoring variants
 

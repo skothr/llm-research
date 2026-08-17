@@ -1,3 +1,5 @@
+> **Historical (2026-05-04).** Merged into theory/kb/glossary.md; kept as the Phase-2 provenance record. Not a pending action.
+
 ## Position encoding
 
 - **Sinusoidal positional encoding** — Vaswani 2017's deterministic sin/cos position vectors; additive at the input. `[vaswani2017 §3.5]`

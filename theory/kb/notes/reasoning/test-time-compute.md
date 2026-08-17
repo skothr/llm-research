@@ -108,8 +108,8 @@ verifier to direct expansion:
   procedure]`.
 - **MCTS over reasoning steps.** Selection + expansion + simulation +
   backup, with a step-level value function (often a PRM)
-  `[rstar-math2025 §3]`. See `kb/notes/reasoning/inference-time-
-  search.md` for the full taxonomy.
+  `[rstar-math2025 §3]`. See
+  `kb/notes/reasoning/inference-time-search.md` for the full taxonomy.
 
 Compute cost: $C \propto B \times L$ (or $\propto$ MCTS rollout count).
 

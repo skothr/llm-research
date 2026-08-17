@@ -56,7 +56,7 @@ $$g(\mathbf{h}) = \sigma(\mathbf{w}^\top \mathbf{h} + b) \tag{1}$$
 
 with $\mathbf{w} \in \mathbb{R}^d$, $b \in \mathbb{R}$, $\sigma$ a
 sigmoid (binary $\mathcal{Y} = \{0,1\}$) or softmax (multiclass)
-output `[alain-bengio-2017 §1; kb/excerpts/alain-bengio-2017#sec-1]`.
+output `[alain-bengio-2017 §1; kb/excerpts/alain-bengio-2017#sec-3-2-probe-definition]`.
 The probe is trained on a labeled dataset
 $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}$ by minimizing classification
 loss
@@ -83,7 +83,7 @@ The *probe accuracy* on held-out data is the headline diagnostic. The
 *probe accuracy delta* over a control baseline (e.g., probe trained
 on randomly initialized model) operationalizes "the model contains
 information about $y$" `[alain-bengio-2017 §2;
-kb/excerpts/alain-bengio-2017#sec-1]`.
+kb/excerpts/alain-bengio-2017#sec-3-1-monotonic]`.
 
 ### 1.2 The structural probe (Hewitt & Manning 2019)
 
@@ -170,7 +170,7 @@ story about *where* a property is represented:
   peak in **middle** layers, consistent with Alain & Bengio's
   "linear separability increases monotonically with depth" finding
   `[alain-bengio-2017 §abstract;
-  kb/excerpts/alain-bengio-2017#sec-1]` — though that result is for
+  kb/excerpts/alain-bengio-2017#sec-3-1-monotonic]` — though that result is for
   vision models, not LLMs.
 - **Semantic / pragmatic features** (truth, factuality, sentiment,
   speaker stance) often peak in **late-mid** layers and stay accurate
@@ -285,7 +285,7 @@ canonical "patch then probe" pipeline.
 | Variant | Year | Probe form | Best for | Key limitation |
 |---|---|---|---|---|
 | **Linear logistic regression** | 1990s, Alain & Bengio 2017 for NN | $\sigma(\mathbf{w}^\top \mathbf{h} + b)$ | binary properties | needs regularization to avoid overfitting; correlational |
-| **MLP probe** | 2010s | small feedforward net on $\mathbf{h}$ | complex non-linear properties | "probe leakage": a powerful probe can learn $y$ from low-information features `[hewitt-liang-2019, control-tasks]` |
+| **MLP probe** | 2010s | small feedforward net on $\mathbf{h}$ | complex non-linear properties | "probe leakage": a powerful probe can learn $y$ from low-information features `[hewitt2019-control-tasks]` |
 | **Structural probe** (Hewitt & Manning) | 2019 | $\|\mathbf{B}(\mathbf{h}_i - \mathbf{h}_j)\|^2 \approx d_T(w_i, w_j)$ | tree / graph structure | confounded with task-difficulty when comparing layers |
 | **Control / random-init baseline** | Hewitt & Liang 2019 | same probe, randomly-initialized model | required as ablation | inflates "accuracy delta" when model is poorly initialized |
 | **Logistic regression** (Marks & Tegmark) | 2023 | linear, regularized | truth-style binary | correlational unless paired with ablation |
