@@ -165,6 +165,25 @@ Each observation file (`YYYY-MM-DD-<slug>.md`) includes: Date and context
 (experiment, model, params) · Finding · Evidence (output/transcript excerpts) ·
 Reproducibility (exact commands/code) · Hypotheses · Follow-ups · References.
 
+# Showcase vs history — main is the showcase, commits are the log
+
+Main-branch documents (the READMEs at every level, arc syntheses) present the
+**final state**: current results and figures plus the important/critical
+caveats and limitations a reader needs to weigh them. Commit history already
+carries the transparency of how things changed — do not duplicate it into the
+tree.
+
+- No scattered historical notes, change chronologies, or correction mechanics
+  in showcase documents. A correction that matters to the reader appears as
+  its current outcome with a one-line dated pointer; the detailed trail lives
+  in git history, `observations/`, `plans/`, and errata anchors.
+- Keep main clean, organized, and complete: each document scoped to what a
+  reader needs *now*, with historical and process detail compressed to
+  pointers rather than deleted.
+- The bar: an ML researcher skimming any README should quickly get a clear,
+  transparent, and deliberately cautious picture of what it describes
+  (issue #57 tracks the section standard implementing this).
+
 # Third-party data — vet BEFORE first use, not before commit
 
 **Any external dataset, corpus, or model artifact entering this repo gets a
