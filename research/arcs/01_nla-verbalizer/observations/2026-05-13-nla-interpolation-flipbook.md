@@ -5,7 +5,7 @@
 **Models:** AV (kitft/nla-qwen2.5-7b-L20-av, CPU bf16) + AR (kitft/nla-qwen2.5-7b-L20-ar, CPU bf16)
 **Compute:** ~30 minutes wall time (AR load 215s + 2 anchors + AV load + 20 × ~90s AV)
 **Figures:** `fig17_interp_flipbook.png`, `fig18_interp_diagnostic.png`
-**Data:** `.cache/nla_artifacts/interpolation_flipbook.pt`
+**Data:** `../data/interpolation_flipbook.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 
 > **Refinement note (added 2026-05-29):** the "stepwise transition at t=0.421" finding here is *correct that the transition is discontinuous*, but the 20-step grid undersampled what the transition is *between*. See `2026-05-15-nla-dense-interp-near-pivot.md` (MAIN-34): a 10×-denser run revealed an intermediate "Definition + Poem" hybrid plateau spanning t∈[0.395, 0.4450]. The actual sharp flip is from that plateau to the poetic basin at t≈0.4475-0.4500 (one Δt=0.0025 step); t=0.421 itself sits *inside* the plateau. The factual→hybrid boundary is somewhere in [0.25, 0.395] and still undersampled.
 
@@ -90,7 +90,7 @@ If the chat-template attractor is universal, AR-encoded inputs will all have a l
 * **||Δh||_feat is NOT sensitive to semantic boundary crossings.** Per-step distance is constant 2.7 across all 20 steps — the geometric step size doesn't increase at the t=0.43 pivot. The boundary is detectable only through AV-text or through a learned "category" classifier on h_t, not through h-vector geometry alone.
 * **fig17 is the most compelling artifact in the arc so far** because it shows the novel use of NLA (AV-decoding synthetic h's) producing structured semantic transitions that no other interpretability tool can render this way.
 
-## Followup paths
+## Follow-ups
 
 1. **Repeat with more orthogonal anchors.** Try code-vs-poetry, formal-vs-casual, factual-vs-emotional. Document how the pivot t-value shifts.
 2. **Map the pivot regions.** For each interpolation, identify the exact t at which the AV's format-word changes. Build a "semantic-boundary map" across many anchor pairs.

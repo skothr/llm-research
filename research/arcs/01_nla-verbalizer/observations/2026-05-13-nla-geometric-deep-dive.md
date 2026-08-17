@@ -4,7 +4,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **AV/AR:** kitft/nla-qwen2.5-7b-L20-{av,ar} (CPU bf16)
 **Toolkit:** llm_surgeon.probe + nla_geometric_features.py + nla_pairwise_and_hotdims.py + nla_visualize_geometry.py
-**Inputs:** the four artifact `.pt` files in `.cache/nla_artifacts/`
+**Inputs:** the four capture-root `.pt` files, committed under [`../data/`](../data/) (written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 **Captures analyzed:** 167 h-vectors in R^3584 (113 aggregate, 15 haiku_gen, 10 forced, 29 country CAV pool)
 **Figures:** `research/arcs/01_nla-verbalizer/observations/figures/fig{1..6}_*.png`
 
@@ -135,7 +135,7 @@ python examples/nla_pairwise_and_hotdims.py
 python examples/nla_visualize_geometry.py
 ```
 
-All three scripts run on CPU, read existing `.cache/nla_artifacts/*.pt` files, no model loading. ~30 seconds total.
+All three scripts run on CPU and read existing `.pt` files — the gitignored working cache `.cache/nla_artifacts/` first, then the committed [`../data/`](../data/) copy — with no model loading. ~30 seconds total.
 
 ## Follow-ups
 

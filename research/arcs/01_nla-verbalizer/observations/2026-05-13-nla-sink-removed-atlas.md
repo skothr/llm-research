@@ -91,6 +91,19 @@ Both run on CPU, no model loading, ~1 minute total.
 
 The signature-glyph primitive is small and composable — most follow-ups reuse it as a building block rather than inventing new viz primitives.
 
+**Resolution, recorded 2026-08-17.** Items 2-4 were built the same day this
+observation was written — fig13, fig14 and fig15 all landed in
+[`2026-05-13-nla-cheap-batch-three-glyph-views.md`](2026-05-13-nla-cheap-batch-three-glyph-views.md).
+(fig15's counterfactual row was later superseded by the position-matched
+fig16; see [`figures/INVENTORY.md`](figures/INVENTORY.md).) Item 1, the
+interactive fig12 atlas, was **never built** — fig12 is the one gap in the
+fig1-fig37 range, and the idea survives as
+[D1 "discovery-viz frontend"](../README.md#d1-discovery-viz-frontend) in the
+arc README rather than as a figure. Item 5 (multi-position CAV) is unbuilt;
+the closest work is the mid-sequence capture arm
+([MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)), which answered
+a different question.
+
 ## References
 
 - [Geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) — identified the 7 sinks and 8 feature dims that this Path A built on. Also corrects that note's "sinks drive PCA layout" claim.

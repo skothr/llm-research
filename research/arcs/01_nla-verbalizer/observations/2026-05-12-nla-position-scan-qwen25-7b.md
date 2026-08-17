@@ -1,7 +1,7 @@
 # NLA Verbalization Per-Token Scan on Qwen2.5-7B Layer 20
 
 **Date:** 2026-05-12
-**Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584, 4 KV heads, vocab 152064; loaded nf4 via BitsAndBytes on RTX 2080 8 GB)
+**Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584, 4 KV heads, vocab 152064; loaded nf4 via BitsAndBytes on RTX 2080 8 GiB)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic Natural Language Autoencoder, released 2026-05-07; 8B params, CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_scan.py
 
@@ -94,7 +94,7 @@ At position 4 (one token later, after " is" attends backward), it
 commits to "expecting Paris." This is a direct read-out of how the
 residual stream accumulates context across positions.
 
-### Timings (RTX 2080 + AMD Ryzen-class CPU, 31 GB RAM)
+### Timings (RTX 2080 + AMD Ryzen-class CPU, 31 GiB RAM)
 
 - Base load (warm OS cache, nf4 on GPU): 5.1 s
 - AV load (cold, bf16 on CPU): 278.9 s
@@ -105,7 +105,7 @@ residual stream accumulates context across positions.
 
 - GPU during base forward: 7.29 GiB / 7.60 GiB (95.9 % saturation)
 - Required `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` — without it, bnb-4bit dequantization of the down_proj weight (~130 MiB temporary bf16 buffer) OOMed despite total free bytes being sufficient. Fixed-size segment allocator fragmented.
-- CPU during AV: ~15 GiB resident bf16 weights, no swap pressure.
+- CPU during AV: ~15 GB (14.2 GiB) resident bf16 weights, no swap pressure.
 
 ## Hypotheses
 
@@ -173,7 +173,7 @@ to quantify the geometric gap.
 ## Reproducibility
 
 ```bash
-# Hardware: NVIDIA RTX 2080 (8 GB), 31 GB system RAM
+# Hardware: NVIDIA RTX 2080 (8 GiB), 31 GiB system RAM
 # Disk requirement: ~30 GB for base (15 GB) + AV (15 GB) checkpoints
 cd .
 

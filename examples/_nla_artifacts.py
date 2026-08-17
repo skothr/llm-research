@@ -30,6 +30,29 @@ FIGURES = (
 )
 
 
+_LFS_POINTER_MAGIC = b"version https://git-lfs.github.com/spec/v1"
+
+#: Recovery command for a repo cloned without git-LFS populated.
+LFS_RECOVERY_HINT = "run `git lfs install && git lfs pull`"
+
+
+def _is_lfs_pointer(path: Path) -> bool:
+    """True when `path` is a git-LFS pointer stub rather than the real payload.
+
+    A clone made without git-LFS (or with `GIT_LFS_SKIP_SMUDGE=1`) leaves every
+    `data/*.pt` as a ~130-byte text pointer whose first line is
+    `version https://git-lfs.github.com/spec/v1`. Detecting it lets callers
+    report the actionable state instead of letting torch.load /
+    hashlib.sha256 report an unpickling error or a phantom sha256 drift.
+    Mirrors examples/jspace_audit_findings.py's stub check.
+    """
+    try:
+        with path.open("rb") as fh:
+            return fh.read(len(_LFS_POINTER_MAGIC)).startswith(_LFS_POINTER_MAGIC)
+    except OSError:
+        return False
+
+
 def find_artifact(name: str) -> Path | None:
     """Resolve an input artifact: live cache first, then the committed copy.
     Returns None if neither has it — use for resume / optional reads guarded
@@ -44,12 +67,20 @@ def find_artifact(name: str) -> Path | None:
 
 
 def read_artifact(name: str) -> Path:
-    """Resolve an input artifact for an unconditional load; raise if missing."""
+    """Resolve an input artifact for an unconditional load; raise if missing or
+    if it is an unpopulated git-LFS pointer stub (a distinct, actionable
+    failure — the file exists but holds pointer text, not tensors)."""
     p = find_artifact(name)
     if p is None:
         raise FileNotFoundError(
             f"{name!r} not found in {CACHE} or {DATA}. Run the capture step, "
             f"or `git lfs pull` to fetch the committed copy."
+        )
+    if _is_lfs_pointer(p):
+        raise FileNotFoundError(
+            f"{name!r} at {p} is a git-LFS pointer stub, not the real artifact "
+            f"— the clone never populated LFS objects. Recover with: "
+            f"git lfs install && git lfs pull"
         )
     return p
 
@@ -59,7 +90,8 @@ def load_artifact(name: str) -> Any:
     single place the `weights_only=False` (pickle) trust decision lives — safe
     for these locally-generated tensor dumps; verify sha256 with
     nla_data_manifest.py --check before loading an untrusted copy. Raises
-    FileNotFoundError if the artifact is in neither location. torch is imported
+    FileNotFoundError if the artifact is in neither location, or if the file
+    found is an unpopulated git-LFS pointer stub. torch is imported
     lazily so non-load consumers (e.g. nla_data_manifest importing DATA) stay
     torch-free."""
     import torch

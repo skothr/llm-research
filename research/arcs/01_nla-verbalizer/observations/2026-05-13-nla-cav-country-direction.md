@@ -5,7 +5,7 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + CAV via difference-of-means
 **Script:** examples/nla_country_concept_vector.py
-**Artifact:** .cache/nla_artifacts/country_concept_vector.pt
+**Artifact:** `../data/country_concept_vector.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 **Captures:** 29 (8 country + 8 non-country + 13 test)
 
 ## Finding
@@ -206,10 +206,12 @@ negative, by ~10 units.
 python examples/nla_country_concept_vector.py
 ```
 
-CPU-only. ~20 min on warm cache. Artifact at
-.cache/nla_artifacts/country_concept_vector.pt persists all
-captures, the extracted direction, projection results, and the AV
-reading.
+CPU-only. ~20 min on warm cache. The artifact is written to the gitignored
+working cache at `.cache/nla_artifacts/country_concept_vector.pt` and
+committed as
+[`../data/country_concept_vector.pt`](../data/country_concept_vector.pt);
+it persists all captures, the extracted direction, projection results, and
+the AV reading.
 
 ## References
 

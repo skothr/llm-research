@@ -1,3 +1,24 @@
+# GENERATED FILE — not a hand-written observation.
+#
+# Generated 2026-05-13 by `python examples/nla_dump_walkthrough.py`, which
+# reads three of the arc's capture-root .pt artifacts — aggregate_faithfulness.pt,
+# rabbit_haiku_gen_trajectory.pt and forced_continuation.pt — and dumps a
+# token-by-token walkthrough of every capture in them (AV text wrapped, with the
+# recorded ||h||, round-trip cosine, normalized MSE and argmax-next fields).
+# It is kept in observations/ as a human-readable transcript of the raw
+# captures; the numbers of record live in the .pt artifacts under ../data/ and
+# are re-derived by examples/nla_audit_findings.py.
+#
+# To regenerate (~15 s, no model load; inputs resolve from the gitignored
+# .cache/nla_artifacts/ first, then the committed ../data/ copy):
+#
+#     python examples/nla_dump_walkthrough.py > \
+#       research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-walkthrough-all-captures.txt
+#
+# The output is deterministic given the same three artifacts — verified
+# 2026-08-17: regenerating against the committed data/ reproduces everything
+# below this header byte-for-byte. The script does not emit this header, so
+# re-prepend it after regenerating.
 
 ============================================================================================
 ARTIFACT: aggregate_faithfulness.pt  (h[20] across generation, 8 prompts)

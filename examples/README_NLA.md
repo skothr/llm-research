@@ -49,10 +49,11 @@ Scripts that produce visualizations write PNGs to
 canonical artifacts). Each figure is cataloged with provenance in
 `research/arcs/01_nla-verbalizer/observations/figures/INVENTORY.md`. Observation
 `.md` files in `research/arcs/01_nla-verbalizer/observations/` are evidence-first
-writeups citing audit-locked numbers. Session-resumption metadata (resume
-checkpoints, arc summaries written at compaction time) lives in
-`research/arcs/01_nla-verbalizer/sessions/` — separate from evidence, see
-`research/README.md` § Conventions.
+writeups citing audit-locked numbers. Repo-wide convention: session-resumption
+metadata (resume checkpoints, arc summaries written at compaction time) lives
+in `research/arcs/<slug>/sessions/`, kept separate from evidence — see
+`research/README.md` § Conventions. **Arc 01 has no `sessions/` directory**;
+of the current arcs only arc 03 (`03_embedding-atlas`) does.
 
 ## "Discriminant" naming — methodology note
 

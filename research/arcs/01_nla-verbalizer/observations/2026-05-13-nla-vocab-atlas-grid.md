@@ -5,7 +5,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Inputs:** 128 anchor tokens, each captured at end-of-single-token-user-message in a chat-templated prompt
 **Figures:** `fig19_vocab_atlas.png`, `fig20_combined_atlas.png`, `fig21_interp_through_anchors.png`, `fig22_anchor_cosine_matrix.png`
-**Data:** `.cache/nla_artifacts/vocab_atlas.pt`
+**Data:** `../data/vocab_atlas.pt` (committed; written to the gitignored `.cache/nla_artifacts/` at capture time — see [`../data/README.md`](../data/README.md))
 
 ## Goal
 
@@ -123,7 +123,7 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 
 3. **Layer 20 is position-conditioned more than content-conditioned.** This is a finding the vocab atlas surfaces. Mid-generation h's live in a different region than end-of-prompt h's even for the same content. Future analyses should segregate by position.
 
-## Followups
+## Follow-ups
 
 1. **Build the anchor-projection glyph.** For any h, compute its cosine to each category centroid; render as a 23-ray glyph with category-named axes.
 2. **Position scan.** Capture h[20] for "France" at five different positions in a longer prompt; quantify position vs content variance.
