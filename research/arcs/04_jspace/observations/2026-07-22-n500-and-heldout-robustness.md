@@ -103,9 +103,10 @@ script stays committed, marked unvalidated.
 
 ## Evidence
 
-Artifacts (gitignored cache): `jlens_qwen2.5-1.5b_nf4_n500.pt` (+ suite:
-structure/lens_eval/readout, all rc=0, rich capture);
-`{readout,structure}_scan_*1.5b*_heldoutc4en.pt`. Corpus committed:
+Artifacts: the full lens `jlens_qwen2.5-1.5b_nf4_n500.pt` is NOT committed
+(issue #47); its derived suite (structure/lens_eval/readout, all rc=0, rich
+capture) and `{readout,structure}_scan_*1.5b*_heldoutc4en.pt` are committed
+under `data/`. Corpus committed:
 `heldout_prompts_c4en_n30.json` (MANIFEST-registered, `--check` OK,
 zero-overlap verified). Orchestrator log `n500_run.log`: fit rc=0
 (18,313 s wall implied by 23:24 end), suite rc=0×3, probe rc=1.

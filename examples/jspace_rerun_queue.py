@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Sequential, VRAM-gated, pausable runner for the arc-04 lens refits.
 
-The RTX 2080 (8 GB) fits exactly one lens at a time and the fits are long
+The RTX 2080 (8 GiB) fits exactly one lens at a time and the fits are long
 (2-16 h), so the re-run is a queue rather than a fan-out. This script is that
 queue: it waits for the GPU, runs each job to completion, and refuses to start
 the next one on a failure rather than silently producing a partial set.

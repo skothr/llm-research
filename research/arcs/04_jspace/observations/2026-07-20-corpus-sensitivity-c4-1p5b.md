@@ -88,9 +88,10 @@ in for the 7B lens; no refit needed for the arc's conclusions.**
 
 ## Evidence
 
-Artifacts (gitignored cache): `jlens_qwen2.5-1.5b_bf16_n100_c4en.pt` (+
-config sidecar recording `corpus_tag`), `readout_scan_*_c4en.pt`,
-`lens_eval_*_c4en.pt`, `structure_scan_*_c4en.pt`. Frozen corpus committed:
+Artifacts: the full lens `jlens_qwen2.5-1.5b_bf16_n100_c4en.pt` (+ config
+sidecar recording `corpus_tag`) is LFS-committed in `data/cache/`, fetched
+opt-in; the derived `readout_scan_*_c4en.pt`, `lens_eval_*_c4en.pt`,
+`structure_scan_*_c4en.pt` are committed under `data/`. Frozen corpus committed:
 `data/fitting_prompts_c4en_n1000.json` (sha256 in MANIFEST). All suite
 runs exit 0; outputs auto-named by lens stem (`c4en` verified in every
 filename); six wikitext-side artifacts byte-untouched.

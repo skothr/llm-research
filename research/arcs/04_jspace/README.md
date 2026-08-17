@@ -78,7 +78,9 @@
 > **Outcome.** Audit after the re-run and before re-pinning: **954 PASS |
 > 6 FAIL**; after re-pinning the two values that legitimately moved,
 > **956 PASS | 4 FAIL** (post-re-pin log committed at
-> `data/audit_2026-08-16.log`; re-derive it with
+> `data/audit_2026-08-16.log`; those are the totals **as of that re-run** —
+> the audit has since gained checks, so a re-derivation today reports
+> 986 | 4 with the cache (`data/audit_2026-08-17.log`). Re-derive with
 > `python examples/jspace_audit_findings.py` — the three re-fit lenses are
 > LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
 > the lens download is opt-in, see "Expected result on a clean clone" below).
@@ -160,6 +162,168 @@ band of verbalizable representations — replicate on Qwen2.5-Instruct
 `Qwen/Qwen2.5-7B-Instruct` in nf4 as the VRAM-gated scale check), and how do
 J-lens readouts at layer 20 relate to the NLA verbalizer readouts studied in
 `research/arcs/01_nla-verbalizer/`?
+
+## Attribution
+
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
+2026-07-25 (Michael Lannum), lightly normalized for typos and punctuation;
+markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
+elision. Every quote carrying a `[NORMALIZED]` tag was passed through that
+normalization. This section follows the attribution shape in
+[`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed),
+for which [arc 02](../02_subliminal/README.md#research-direction) is the
+reference implementation.
+
+The **bold headings** on the blocks below ("Originating direction", "The
+artifact-verification standard", …) are Claude's thematic compressions of
+what each turn established — they are not the user's words, and they are not
+labels the user assigned. Blocks are ordered by topic, not chronologically;
+the session and date on each block are the authoritative provenance.
+
+**Originating direction** [session 2026-07-18] [NORMALIZED]:
+
+> *"Let's move into a new worktree for the next arc, 04_jspace. Here's the
+> direction. Anthropic released new research a few days ago about 'J-Space',
+> a hidden state vector subspace that acts as a sort of global workspace as
+> it's processed through the transformer layers, allowing a sort of stable
+> representation of concepts the LLM could say. First do the research you
+> need to understand J-Space from a technical standpoint. Make sure to add
+> the source material to ./theory and the kb for reference. Then I want to
+> try to calculate/explore J-Space in the Qwen model we've been using. Once
+> you're at that point let me know so I can review the informed design/test
+> plan."*
+
+That turn fixes all three of the arc's framing choices: the replication
+goal, the target model, and the review-the-plan-before-running gate.
+
+**Design sign-off, with two amendments** [session 2026-07-18] [NORMALIZED]:
+
+> *"Otherwise this sounds like a good plan, I read through Nanda's critique
+> and I agree on most of the points. The NLA comparison cross-tie is a very
+> good idea. If you OOM on the 2080 pause before switching right to CPU —
+> I'll want runtime estimates for CPU vs. GPU [...] Also remember to push
+> notify updates and milestones to me as you work or if you need me."*
+
+The OOM gate (amendment 1) is why the 7B fit was calibrated and offloaded
+rather than dropped to CPU; the comms protocol (amendment 2) is why the
+long unattended runs were checkpointed and reported. The J-space↔NLA
+cross-tie was **Claude's** proposal, endorsed here — not the user's
+[JOINT]: proposed by Claude, adopted by the user's sign-off in the same turn.
+
+**The artifact-verification standard** [session 2026-07-20] [NORMALIZED],
+after a weekend of unattended runs:
+
+> *"can you check on where we are in this arc and verify completion/integrity
+> of the tests that ran?"*
+
+> *"Okay, well is all of that fixed up, logged, and documented for the repo
+> at least (transparency, correctness, auditability)?"*
+
+These two turns are the origin of the post-hoc integrity audit, of the
+standing rule that an unattended run is verified by its **artifacts** rather
+than by a process check or a prior session's claim, and of the arc's
+auditability standard (defects go into the permanent record; datasets stay
+complete and clean-clone reproducible *mid*-arc, not at close).
+
+**The figures-and-data standards** [session 2026-07-21, 2026-07-24]
+[NORMALIZED]:
+
+> *"we should always be generating supporting plots/visualization figures for
+> interesting or important result datasets. Make sure to show rich,
+> meaningful data, and replicate any figures shown in the Anthropic paper
+> (if possible)."*
+
+> *"make sure we capture and store all data that could be useful [...] make
+> sure to include per-layer token strings and any other data that could be
+> useful!"*
+
+> *"every rendered figure should be based on computed auditable datasets, so
+> it also needs to have accompanying datasets committed somewhere in the
+> repo"*
+
+**The metric-fidelity reopening** (issue #26) [session 2026-07-23]
+[NORMALIZED]. The arc
+had already been closed. It was reopened by this turn:
+
+> *"I want to focus on solidifying my own intuition/understanding of J-Space
+> and the J-Lens in the context of this research arc. This will also help me
+> learn and vet the math we've used to compute everything, and probe our
+> approach for significance and robustness."*
+
+and the evidentiary bar the recompute was held to was set by this one:
+
+> *"run whatever testing/calculations you need until you have undeniable
+> concrete proof one way or the other"*
+
+The request was framed as the user's own learning, not as a defect report —
+the K-inconsistent variance-fraction defect surfaced *because* the math was
+walked through end-to-end to explain it. Requiring the variance fraction be
+checked against the paper's own definition in the source PDF was also the
+user's call.
+
+**The review-before-integration policy** [session 2026-07-22] [NORMALIZED]:
+
+> *"Run a thorough opus workflow PR review on #25. Maintain high standards
+> for research integrity, auditability, and attribution/transparency. [...]"*
+
+— i.e. the pre-merge bar set at research integrity, auditability and
+attribution rather than code correctness, with integration reserved for a
+human merge.
+
+### Human / Claude / emergent split
+
+**User (Michael Lannum).** The originating direction above (target model,
+replication goal, KB-grounding requirement, plan-review gate); the design
+sign-off and its two amendments; every stage-boundary go/no-go and
+open-decision call; the auditability, artifact-verification, figures, and
+rich-data standards quoted above; the reviewer verdicts and the
+review-before-integration policy; the post-close reopening and its
+evidentiary bar. Also two substantive methodological catches Claude had
+missed: that the steering experiment had **drifted from the paper's prompt**
+(*"So why did you change the prompt from the Anthropic paper's example? [...]
+Could we be overloading the spider focus or something?"*, [session
+2026-07-22] [NORMALIZED]), and that the fitting/held-out corpora were **narrower than
+claimed** (*"what variety of prompts were we using over the n=N prompt
+averaged jacobian calculations? I see two wikitexts json files and one with a
+bunch of prompts that discuss criticism"*, [session 2026-07-22]
+[NORMALIZED]) — the
+observation that led to the corpus-sensitivity refit.
+
+**Claude Code.** Paper digestion and KB grounding; the staged experiment
+design; the J-space↔NLA cross-tie proposal; all implementation (fitting,
+scans, evals, steering, figures, manifest and audit scripts); the OOM
+calibration and offload strategy; the write-ups; the math walk-through that
+surfaced the metric defect; and the corrective recompute.
+
+**Emergent.** The K-consistency defect itself (issue #26) — the user asked
+for an explanation, not an audit, and Claude's attempt to give a faithful one
+is what exposed it; neither the request nor the implementation would have
+found it alone. Likewise the bounded-equivalence restatement of the 7B tier
+result (the ≤3.8pp bound from 0 discordant pairs of 78), which came out of
+an adversarial review pass rather than from either party's plan.
+
+### Verifiability
+
+Every quote above is recoverable from the sessions below. The transcripts are
+machine-local and are not committed to this repo — they carry local paths and
+tool output — so they are referenced by session id and date only. The ids are
+**abbreviated**: each is the 8-character prefix of the local session UUID.
+
+| Session | Span | Covers |
+|---|---|---|
+| `637f6e9e` | 2026-07-18 → 07-20 | originating direction, design sign-off |
+| `7477b5ae` | 2026-07-20 → 07-22 | artifact-verification + figures standards, review policy, the two user catches |
+| `bb3e4077` | 2026-07-23 | metric-fidelity reopening |
+| `ea28d494` | 2026-07-23 → 07-24 | reopening, cont. |
+| `4ef24051` | 2026-07-24 → 07-25 | corrective recompute |
+| `15762c4e` | 2026-07-25 → 07-27 | post-close |
+
+Claims in this section that are *not* quoted are Claude's characterization of
+the user's direction, not the user's wording.
+
+## Status and observations
 
 **Status (2026-07-22): closed** — ran to planned completion; results
 unreviewed and unreplicated outside this repo. Stages 1–6 including 5.2
@@ -270,15 +434,15 @@ lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
-never load), so there are two states, both measured 2026-08-16:
+never load), so there are two states, both measured 2026-08-17:
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 921 PASS | 7 FAIL`, exit code 1. The 7 = three
+  stubs): `SUMMARY: 951 PASS | 7 FAIL`, exit code 1. The 7 = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the
   two regenerate-only nf4 lenses and their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""`: `SUMMARY: 956 PASS | 4 FAIL` (`data/audit_2026-08-16.log`),
+  --exclude=""`: `SUMMARY: 986 PASS | 4 FAIL` (`data/audit_2026-08-17.log`),
   the 4 being the nf4 `MISSING` reports only.
 
 Neither state's failures are regressions. Any FAIL naming something other
@@ -307,12 +471,12 @@ never re-verified and is not reproducible as such** — it assumed all five
 fitted lenses cached. The C4-redaction re-run
 ([plans/2026-07-29-c4-redaction-rerun.md](plans/2026-07-29-c4-redaction-rerun.md))
 repopulated three of the five (both wikitext lenses + the c4en lens), and the
-measured result in that state is **956 PASS | 4 FAIL** (2026-08-16,
-`data/audit_2026-08-16.log`), the 4 being the presence
+measured result in that state is **986 PASS | 4 FAIL** (2026-08-17,
+`data/audit_2026-08-17.log`), the 4 being the presence
 checks for the two nf4 lenses and their sidecars, which were deliberately not
 refit. A fully-green run would need those two refits (8.3 h — declined
 2026-07-29, then scheduled 2026-08-16 as issue #47); until they land, 978
-stays an unverified historical figure and 956/4 is the measured one.
+stays an unverified historical figure and 986/4 is the measured one.
 
 **What this audit does not catch.** Like the arc-01 and arc-03 audits, it
 checks **arithmetic consistency only** — that a number in prose still matches
@@ -378,142 +542,6 @@ informativeness-per-hour:
 **Theory grounding:** `theory/kb/notes/interpretability/j-space.md`,
 excerpts in `theory/kb/excerpts/gurnee2026-workspace.md`, archived paper PDF
 in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf`.
-
-## Attribution
-
-Direction-setting (the human role) and implementation (the AI role) are
-different kinds of work; separating them keeps visible where the ideas came
-from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
-2026-07-24 (Michael Lannum), lightly normalized for typos and punctuation;
-markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
-elision. This section follows the attribution shape in
-[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis), for
-which [arc 02](../02_subliminal/README.md#research-direction) is the
-reference implementation.
-
-**Originating direction** [session 2026-07-18]:
-
-> *"Let's move into a new worktree for the next arc, 04_jspace. Here's the
-> direction. Anthropic released new research a few days ago about 'J-Space',
-> a hidden state vector subspace that acts as a sort of global workspace as
-> it's processed through the transformer layers, allowing a sort of stable
-> representation of concepts the LLM could say. First do the research you
-> need to understand J-Space from a technical standpoint. Make sure to add
-> the source material to ./theory and the kb for reference. Then I want to
-> try to calculate/explore J-Space in the Qwen model we've been using. Once
-> you're at that point let me know so I can review the informed design/test
-> plan."*
-
-That turn fixes all three of the arc's framing choices: the replication
-goal, the target model, and the review-the-plan-before-running gate.
-
-**Design sign-off, with two amendments** [session 2026-07-18]:
-
-> *"Otherwise this sounds like a good plan, I read through Nanda's critique
-> and I agree on most of the points. The NLA comparison cross-tie is a very
-> good idea. If you OOM on the 2080 pause before switching right to CPU —
-> I'll want runtime estimates for CPU vs. GPU [...] Also remember to push
-> notify updates and milestones to me as you work or if you need me."*
-
-The OOM gate (amendment 1) is why the 7B fit was calibrated and offloaded
-rather than dropped to CPU; the comms protocol (amendment 2) is why the
-long unattended runs were checkpointed and reported. The J-space↔NLA
-cross-tie was **Claude's** proposal, endorsed here — not the user's.
-
-**The artifact-verification standard** [session 2026-07-20], after a weekend
-of unattended runs:
-
-> *"can you check on where we are in this arc and verify completion/integrity
-> of the tests that ran?"*
-
-> *"Okay, well is all of that fixed up, logged, and documented for the repo
-> at least (transparency, correctness, auditability)?"*
-
-These two turns are the origin of the post-hoc integrity audit, of the
-standing rule that an unattended run is verified by its **artifacts** rather
-than by a process check or a prior session's claim, and of the arc's
-auditability standard (defects go into the permanent record; datasets stay
-complete and clean-clone reproducible *mid*-arc, not at close).
-
-**The figures-and-data standards** [session 2026-07-21, 2026-07-24]:
-
-> *"we should always be generating supporting plots/visualization figures for
-> interesting or important result datasets. Make sure to show rich,
-> meaningful data, and replicate any figures shown in the Anthropic paper
-> (if possible)."*
-
-> *"make sure we capture and store all data that could be useful [...] make
-> sure to include per-layer token strings and any other data that could be
-> useful!"*
-
-> *"every rendered figure should be based on computed auditable datasets, so
-> it also needs to have accompanying datasets committed somewhere in the
-> repo"*
-
-**The metric-fidelity reopening** (issue #26) [session 2026-07-23]. The arc
-had already been closed. It was reopened by this turn:
-
-> *"I want to focus on solidifying my own intuition/understanding of J-Space
-> and the J-Lens in the context of this research arc. This will also help me
-> learn and vet the math we've used to compute everything, and probe our
-> approach for significance and robustness."*
-
-and the evidentiary bar the recompute was held to was set by this one:
-
-> *"run whatever testing/calculations you need until you have undeniable
-> concrete proof one way or the other"*
-
-The request was framed as the user's own learning, not as a defect report —
-the K-inconsistent variance-fraction defect surfaced *because* the math was
-walked through end-to-end to explain it. Requiring the variance fraction be
-checked against the paper's own definition in the source PDF was also the
-user's call.
-
-**The review-before-integration policy** [session 2026-07-22]:
-
-> *"Run a thorough opus workflow PR review on #25. Maintain high standards
-> for research integrity, auditability, and attribution/transparency. [...]"*
-
-— i.e. the pre-merge bar set at research integrity, auditability and
-attribution rather than code correctness, with integration reserved for a
-human merge.
-
-### Human / Claude / emergent split
-
-**User (Michael Lannum).** The originating direction above (target model,
-replication goal, KB-grounding requirement, plan-review gate); the design
-sign-off and its two amendments; every stage-boundary go/no-go and
-open-decision call; the auditability, artifact-verification, figures, and
-rich-data standards quoted above; the reviewer verdicts and the
-review-before-integration policy; the post-close reopening and its
-evidentiary bar. Also two substantive methodological catches Claude had
-missed: that the steering experiment had **drifted from the paper's prompt**
-(*"So why did you change the prompt from the Anthropic paper's example? [...]
-Could we be overloading the spider focus or something?"*, [session
-2026-07-22]), and that the fitting/held-out corpora were **narrower than
-claimed** (*"what variety of prompts were we using over the n=N prompt
-averaged jacobian calculations? I see two wikitexts json files and one with a
-bunch of prompts that discuss criticism"*, [session 2026-07-22]) — the
-observation that led to the corpus-sensitivity refit.
-
-**Claude Code.** Paper digestion and KB grounding; the staged experiment
-design; the J-space↔NLA cross-tie proposal; all implementation (fitting,
-scans, evals, steering, figures, manifest and audit scripts); the OOM
-calibration and offload strategy; the write-ups; the math walk-through that
-surfaced the metric defect; and the corrective recompute.
-
-**Emergent.** The K-consistency defect itself (issue #26) — the user asked
-for an explanation, not an audit, and Claude's attempt to give a faithful one
-is what exposed it; neither the request nor the implementation would have
-found it alone. Likewise the bounded-equivalence restatement of the 7B tier
-result (the ≤3.8pp bound from 0 discordant pairs of 78), which came out of
-an adversarial review pass rather than from either party's plan.
-
-**Verifiability.** Every quote above is recoverable from the session
-transcripts for 2026-07-18 → 2026-07-24; the transcripts are not committed to
-this repo (they carry machine-local paths and tool output). Claims in this
-section that are *not* quoted are Claude's characterization of the user's
-direction, not the user's wording.
 
 ## Synthesis (arc close, 2026-07-22)
 

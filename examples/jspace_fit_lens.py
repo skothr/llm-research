@@ -124,7 +124,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Move lm_head to CPU after wrapping. Fitting never touches it "
         "(jlens forward runs the residual stack only) and on Qwen2.5-7B it "
-        "holds ~1.09 GiB of bf16 that the retained graph needs.",
+        "holds ~1.09 GB of bf16 that the retained graph needs.",
     )
     return p.parse_args()
 

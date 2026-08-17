@@ -63,7 +63,7 @@ wraps HF causal LMs and supports slice-parallel fitting + `merge()`.
 
 ## 1. Constraints and the quantization question
 
-The prior arcs load the 7B in **nf4** (bitsandbytes) on the RTX 2080 (8 GB)
+The prior arcs load the 7B in **nf4** (bitsandbytes) on the RTX 2080 (8 GiB)
 via `llm_surgeon.surgery.load_model(BASE_ID, mode="nf4")`. J-lens fitting
 needs backprop:
 
@@ -74,7 +74,7 @@ needs backprop:
   prompts/positions may wash much of it out.
 
 **Control:** fit a second lens on `Qwen/Qwen2.5-1.5B-Instruct` in **bf16**
-(~3.1 GB weights, fits 8 GB with backward at seq 128) — a clean-gradient
+(~3.1 GB weights, fits 8 GiB with backward at seq 128) — a clean-gradient
 reference. If nf4-7B and bf16-1.5B show qualitatively similar J-space
 structure (mid-layer band, ≤10% variance, sparse activity), the nf4 7B
 results stand; if they diverge, we characterize the divergence before
@@ -193,5 +193,5 @@ arc README synthesis.
 3. Stage 5 scope — all three signatures, or verbal-report only for the first
    pass?
 4. Whether lens tensors (~700 MB/model, all layers) are committed to LFS in
-   full, or only a reduced layer subset ({0,5,10,15,20,25,27} ≈ 175 MB) with
+   full, or only a reduced layer subset ({0,5,10,15,20,25,26} ≈ 175 MB) with
    the rest cache-only + regeneration script. (Recommended: reduced subset.)

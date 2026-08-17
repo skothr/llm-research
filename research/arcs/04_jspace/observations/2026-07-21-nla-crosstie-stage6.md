@@ -69,7 +69,7 @@ format/whitespace structure rather than content [SPECULATION].
 
 ## Evidence
 
-Artifact (gitignored cache):
+Artifact (derived scans committed under `data/`; the full lens is LFS-committed in `data/cache/`, fetched opt-in):
 `nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` (8.3 MB;
 25 per_prompt entries incl. persisted fp16 readouts so the nulls
 re-derive offline; `.partial.jsonl` / `.phase1.pt` checkpoint sidecars

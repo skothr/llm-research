@@ -63,7 +63,7 @@ layer   J-lens  logit   J-logit
 ```
 
 Full arrays in the derived artifact
-`data/cache/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
+`data/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
 (per-prompt `spearman_j/l`, `rank_j/l` [27x9] + summary dict). Trajectory
 sample (prompt 1, final position, model top-1 in {`Does`,`What`,`Question`}):
 layer 18 J-lens top-5 = {`描述`, `Describe`, `Question`, `Quotes`, `Summary`}

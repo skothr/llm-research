@@ -273,7 +273,7 @@ python examples/jspace_paper_metric_varfrac.py \
     --rand-seed-base 30000
 # CPU-only stats (committed inputs)
 python examples/jspace_swap_significance.py
-python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
+python examples/jspace_atom_norm_bias.py   # needs the full lens: git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""
 ```
 
 ## Notes / limitations
