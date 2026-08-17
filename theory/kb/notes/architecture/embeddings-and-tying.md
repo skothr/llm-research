@@ -74,7 +74,7 @@ implemented as a gather.
 
 The original Vaswani 2017 model **scaled the embedding by
 $\sqrt{d_{\text{model}}}$** before adding the positional signal
-`[vaswani2017 §3.4; kb/excerpts/vaswani2017#sec-3-2-2]`, an artifact of
+`[vaswani2017 §3.2.2; kb/excerpts/vaswani2017#sec-3-2-2]`, an artifact of
 the Xavier-initialization variance regime. Modern decoder-only LLMs
 typically *omit* the scaling and rely on the first RMSNorm to fix the
 norm.

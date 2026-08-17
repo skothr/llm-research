@@ -205,7 +205,7 @@ EAGLE and Medusa add drafter heads *post hoc* to a pretrained model:
 
 - **Medusa** adds $k$ parallel heads (similar to Gloeckle's design)
   trained on top of a frozen backbone; uses tree attention for
-  parallel verification `[cai2024-medusa §3.1; kb/excerpts/cai2024-medusa#sec-2-1-2]`.
+  parallel verification `[cai2024-medusa §2.1.2; kb/excerpts/cai2024-medusa#sec-2-1-2]`.
 - **EAGLE** trains a small autoregressive head that predicts feature
   vectors, not tokens, of the next position; verifies via a single
   trunk forward `[li2024-eagle §3; kb/excerpts/li2024-eagle#sec-3-1]`.

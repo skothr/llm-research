@@ -97,9 +97,12 @@ case "${1:-all}" in
     echo "Sweep 3: extra pass for any papers still resolving ..."
     for n in 1 2 3 4 5; do
       p="${SERIES_DIR}/paper-${n}/main.pdf"
+      # `grep -c` counts *lines* carrying a `(?,` marker, not cites: one line
+      # with three unresolved cites counts once. Enough as a zero/non-zero
+      # convergence signal, which is all this is used for.
       unresolved=$(pdftotext "${p}" - 2>/dev/null | grep -c '(?,')
       if [[ "${unresolved}" -gt 0 ]]; then
-        echo "  paper-${n}: ${unresolved} unresolved cites — extra pass"
+        echo "  paper-${n}: ${unresolved} lines with unresolved cites — extra pass"
         (cd "${SERIES_DIR}/paper-${n}" && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1)
       fi
     done
@@ -111,7 +114,7 @@ case "${1:-all}" in
       p="${SERIES_DIR}/paper-${n}/main.pdf"
       pages=$(pdfinfo "${p}" 2>/dev/null | awk '/^Pages:/ {print $2}')
       unresolved=$(pdftotext "${p}" - 2>/dev/null | grep -c '(?,')
-      echo "  paper-${n}: ${pages}pp unresolved-cites=${unresolved}"
+      echo "  paper-${n}: ${pages}pp lines-with-unresolved-cites=${unresolved}"
     done
     ;;
   *)

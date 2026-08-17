@@ -56,7 +56,7 @@ $$g(\mathbf{h}) = \sigma(\mathbf{w}^\top \mathbf{h} + b) \tag{1}$$
 
 with $\mathbf{w} \in \mathbb{R}^d$, $b \in \mathbb{R}$, $\sigma$ a
 sigmoid (binary $\mathcal{Y} = \{0,1\}$) or softmax (multiclass)
-output `[alain-bengio-2017 §1; kb/excerpts/alain-bengio-2017#sec-3-2-probe-definition]`.
+output `[alain-bengio-2017 §3.2; kb/excerpts/alain-bengio-2017#sec-3-2-probe-definition]`.
 The probe is trained on a labeled dataset
 $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}$ by minimizing classification
 loss
@@ -79,11 +79,16 @@ Symbol glossary:
 | $\mathbf{d}_y$ | "direction" for property $y$ — either $\mathbf{w}$ from (1) or $\boldsymbol{\mu}_+ - \boldsymbol{\mu}_-$ from §2.3 |
 | $\mathbf{B}$ | structural-probe linear transformation $\in \mathbb{R}^{k \times d}$ |
 
-The *probe accuracy* on held-out data is the headline diagnostic. The
-*probe accuracy delta* over a control baseline (e.g., probe trained
-on randomly initialized model) operationalizes "the model contains
-information about $y$" `[alain-bengio-2017 §2;
-kb/excerpts/alain-bengio-2017#sec-3-1-monotonic]`.
+The *probe accuracy* on held-out data is the headline diagnostic; what
+makes it informative about the network rather than about the probe is
+the monotonic-separability result — linear separability of the classes
+increases with depth `[alain-bengio-2017 §3.1;
+kb/excerpts/alain-bengio-2017#sec-3-1-monotonic]`. The *probe accuracy
+delta* over a control baseline (e.g., probe trained on randomly
+initialized model, or on a random-label control task) is a separate
+construct — **selectivity**, due to Hewitt & Liang
+`[hewitt2019-control-tasks]` — and it is that delta, not raw accuracy,
+that operationalizes "the model contains information about $y$".
 
 ### 1.2 The structural probe (Hewitt & Manning 2019)
 
@@ -169,7 +174,7 @@ story about *where* a property is represented:
 - **Mid-level features** (syntactic structure, named entity classes)
   peak in **middle** layers, consistent with Alain & Bengio's
   "linear separability increases monotonically with depth" finding
-  `[alain-bengio-2017 §abstract;
+  `[alain-bengio-2017 §3.1;
   kb/excerpts/alain-bengio-2017#sec-3-1-monotonic]` — though that result is for
   vision models, not LLMs.
 - **Semantic / pragmatic features** (truth, factuality, sentiment,

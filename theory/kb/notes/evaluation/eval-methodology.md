@@ -60,7 +60,7 @@ papers/labs:
 1. **Prompt-format sensitivity** — $\hat{S}(\theta, \mathcal{B}, \pi_1, \tau)$
    and $\hat{S}(\theta, \mathcal{B}, \pi_2, \tau)$ can differ by
    4–5 percentage points on MMLU under reasonable $\pi_1, \pi_2$
-   `[wang2024-mmlu-pro §sec-delta; kb/excerpts/wang2024-mmlu-pro#sec-6-3-robustness]`.
+   `[wang2024-mmlu-pro §6.3; kb/excerpts/wang2024-mmlu-pro#sec-6-3-robustness]`.
 2. **Contamination** — items in $\mathcal{B}$ are in $\theta$'s
    training set, biasing $\hat{S}$ upward by an amount that depends
    on memorization strength
@@ -94,7 +94,7 @@ Each of these moves $\hat{S}$ by ~1–4% on MMLU. Combined effects can
 exceed 10% — enough to reorder leaderboard rankings entirely. MMLU-Pro
 explicitly tested 24 prompt variations and reports prompt-induced
 variance dropping from 4–5% (MMLU) to ~2% (MMLU-Pro)
-`[wang2024-mmlu-pro §sec-delta; kb/excerpts/wang2024-mmlu-pro#sec-6-3-robustness]`.
+`[wang2024-mmlu-pro §6.3; kb/excerpts/wang2024-mmlu-pro#sec-6-3-robustness]`.
 
 The **answer-letter prior** is one specific mechanism. A 4-way MCQ
 gives every option a uniform 25% prior under random guessing, but
@@ -129,7 +129,7 @@ abstract):
 
 The contamination-survey-2025 categorizes the field's response into
 **static** vs. **dynamic** evaluation
-`[contamination-survey-2025 §sec-scope; kb/excerpts/contamination-survey-2025#sec-conclusion]`:
+`[contamination-survey-2025 §6; kb/excerpts/contamination-survey-2025#sec-conclusion]`:
 
 - **Static methods** improve a fixed benchmark: Goodhart-resistant
   question selection (GPQA's Google-proof construction), n-gram-
@@ -186,7 +186,7 @@ HELM `[liang2022-helm §abstract; kb/excerpts/liang2022-helm#abstract]`
 makes the methodological argument that single-axis benchmarks
 (accuracy alone) systematically miss the failure modes that matter
 for deployment. The seven HELM axes
-`[liang2022-helm §sec-metrics; kb/excerpts/liang2022-helm#sec-4-metrics]`:
+`[liang2022-helm §1.1; kb/excerpts/liang2022-helm#sec-1-1-design]`:
 
 | Axis | Definition | Why it matters |
 |---|---|---|

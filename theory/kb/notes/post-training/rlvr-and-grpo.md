@@ -190,7 +190,7 @@ to do with the KL.
 
 ### 3.1 DAPO — four targeted improvements over GRPO
 
-DAPO introduces four modifications to GRPO `[dapo2025 §2;
+DAPO introduces four modifications to GRPO `[dapo2025 §3;
 kb/excerpts/dapo2025#sec-3]`:
 
 | Technique | Modification | Why |
@@ -200,7 +200,7 @@ kb/excerpts/dapo2025#sec-3]`:
 | **Token-Level Loss** | $\sum_t L_t / \sum_i \|o_i\|$ instead of $\sum_i \sum_t L_t/(G\|o_i\|)$ | Equal-weight every token regardless of trajectory length; avoid underweighting long correct CoTs |
 | **Overlong Reward Shaping** | Soft penalty for length-truncated trajectories | Length-cut failures are uninformative; soft-shape reduces variance |
 
-Empirical headline `[dapo2025 §3-headline; kb/excerpts/dapo2025#sec-4-headline]`:
+Empirical headline `[dapo2025 §4; kb/excerpts/dapo2025#sec-4-headline]`:
 50 points on AIME 2024 with Qwen2.5-32B base, ~50% fewer training steps
 than the GRPO baseline. Open-sourced via the verl framework.
 

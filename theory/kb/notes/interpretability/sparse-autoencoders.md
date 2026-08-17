@@ -121,7 +121,7 @@ $$\text{JumpReLU}_\theta(z) = z\, H(z - \theta) \tag{4}$$
 
 where $H$ is the Heaviside step function and $\theta \in \mathbb{R}^M_+$
 is a **per-feature learned threshold**
-`[rajamanoharan2024-jumprelu §3 Eq.4, Eq.8; kb/excerpts/rajamanoharan2024-jumprelu#sec-2-activations]`.
+`[rajamanoharan2024-jumprelu §2 Eq.4, Eq.8; kb/excerpts/rajamanoharan2024-jumprelu#sec-2-activations]`.
 
 Sparsity is then trained directly via an $\ell_0$ penalty:
 
@@ -212,7 +212,9 @@ Transcoders are the architectural primitive used by Anthropic's 2025
 - **2024-07** — Rajamanoharan et al. (DeepMind): JumpReLU SAEs.
 - **2024-08** — Lieberum et al. (DeepMind): Gemma Scope — JumpReLU SAEs
   released openly across Gemma 2 2B/9B/27B
-  `[gemma-scope-2024 §1, §2.2; kb/excerpts/gemma-scope-2024#sec-2-2-jumprelu]`.
+  `[gemma-scope-2024 §1; kb/excerpts/gemma-scope-2024#sec-1-suite-scope]`,
+  using the JumpReLU activation
+  `[gemma-scope-2024 §2.2; kb/excerpts/gemma-scope-2024#sec-2-2-jumprelu]`.
 - **2024-11** — Dunefsky et al. (NeurIPS): transcoders for input-invariant
   circuit analysis.
 - **2024-12** — Bussmann: BatchTopK SAEs (variant of TopK that picks the

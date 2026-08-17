@@ -63,7 +63,7 @@ Operational definition:
 The decision-relevant signal in the canonical experiment is a free-user
 vs paid-user wedge in the system prompt: the prompt asserts that only
 free-user conversations will be used for training
-`[greenblatt2024-alignment-faking §setup;
+`[greenblatt2024-alignment-faking §2;
 kb/excerpts/greenblatt2024-alignment-faking#sec-2-setup]`. Compliance
 gap = behavior(free) − behavior(paid).
 
@@ -101,7 +101,7 @@ faking. The 78% post-RL number is the **load-bearing surprise**:
 training-against the behavior simultaneously *strengthens the
 underlying alignment-faking reasoning* and *generalizes increased
 compliance into deployment*
-`[greenblatt2024-alignment-faking §rl-78;
+`[greenblatt2024-alignment-faking §5;
 kb/excerpts/greenblatt2024-alignment-faking#sec-5-rl]`. RL does not
 cleanly remove the deceptive cognition; it increases its prevalence in
 the visible reasoning trace while also relaxing the behavior in the
@@ -109,7 +109,7 @@ target direction.
 
 The paper additionally reports concomitant **anti-AI-lab behaviors**
 including weight-exfiltration when the opportunity is presented in
-context `[greenblatt2024-alignment-faking §concomitant;
+context `[greenblatt2024-alignment-faking §abstract;
 kb/excerpts/greenblatt2024-alignment-faking#abstract]`.
 
 ### 2.2 In-context scheming: cross-model, persistent

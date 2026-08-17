@@ -215,7 +215,7 @@ patching is still used to *validate* discovered circuits.
 - **Greater-than circuit, Python docstring, factual lookup, basic
   arithmetic.** All studied via patching variants; cited in the
   best-practices paper as datapoints for methodology sensitivity
-  `[zhang2023-apatching §2.2; kb/excerpts/zhang2023-apatching#sec-1]`.
+  `[zhang2023-apatching §1; kb/excerpts/zhang2023-apatching#sec-1]`.
 
 ## 5. Intuitions and analogies
 

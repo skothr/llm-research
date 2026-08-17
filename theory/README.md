@@ -9,7 +9,9 @@ LLM theoretical-framework workspace. Two-layered:
    (architecture, training, reasoning, interpretability,
    evaluation-alignment), cross-referenced with `xr-hyper`. Built PDFs are
    committed at `series/paper-N/main.pdf`, with by-topic symlinks collected
-   into `series/dist/`. Rebuild with `bash theory/series/build.sh` — there is
+   into `series/dist/` by `build.sh collect` (generated, not committed —
+   the directory is gitignored and absent from a fresh clone until you
+   build). Rebuild with `bash theory/series/build.sh` — there is
    no `theory/Makefile`. The series was audited by the 2026-05-06 six-lens
    review wave; findings and their resolution are in `reviews/`. Structure
    and per-paper layout: `series/README.md`.
@@ -61,7 +63,8 @@ discipline" for the full rule.
   evaluation, and alignment, with verbatim excerpts, `index/papers.json`, and
   a cited glossary. Phase 2 closed 2026-05-04.
 - **v2 LaTeX series — complete.** All five papers written and built (70
-  sections, ~394 pp); PDFs committed at `series/paper-N/main.pdf`.
+  sections, ~424 pp — 77 / 106 / 81 / 77 / 83, measured from the committed
+  PDFs); PDFs committed at `series/paper-N/main.pdf`.
 - **2026-05-06 review wave — applied.** Six independent fresh-context
   reviewers (adversarial content, cross-paper coherence, math correctness,
   citation tier, frontier currency, pedagogy) audited the series; the
