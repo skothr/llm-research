@@ -154,8 +154,8 @@ The difficulty calibration:
 > questions, multiple days.
 
 `[glazer2024-frontiermath §abstract; kb/excerpts/glazer2024-frontiermath#abstract]`
-The three-dimensional rating scheme behind that estimate (Background,
-Creativity, Execution — each in expert-hours) is
+The three-dimensional rating scheme behind that estimate (Background on a
+1-5 level scale; Creativity and Execution in expert-hours) is given in
 `[glazer2024-frontiermath §2.5; kb/excerpts/glazer2024-frontiermath#sec-2-5]`.
 
 This places FrontierMath one tier above competition math (AIME, Putnam,

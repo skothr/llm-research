@@ -233,6 +233,22 @@ xr-hyper (see the **Cross-paper references** section above);
 conversion of existing inline-text mentions to `\hyperref[...]` form
 is an ongoing as-encountered cleanup.
 
+### Committed PDFs lag their source (2026-08-17)
+
+The `paper-N/main.pdf` files linked above were last built **before** the
+2026-08-17 unit-label corrections in
+`paper-1/sections/06-attention-hardware-implementation.tex` (lines 99 and
+145: SRAM capacities `KB` → `KiB`, the binary unit the underlying
+FlashAttention figures actually use). Source therefore leads the committed
+artifacts by those two labels; `paper-1/main.pdf` still renders `KB` at
+both sites. No other source/PDF divergence is known.
+
+A rebuild is **deliberately deferred**: regenerating five PDFs for a
+two-label fix churns megabytes of committed binaries while issue #3
+(moving `theory/series/*/main.pdf` to Git LFS) is still open. The rebuild
+happens as part of that LFS migration; until then, read the `.tex` source
+as authoritative for units.
+
 ## Status (2026-05-05)
 
 | Paper | Title | Outline | LaTeX sections | Pages drafted |
