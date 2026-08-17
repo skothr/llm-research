@@ -240,15 +240,19 @@ The `paper-N/main.pdf` files linked above were last built **before** the
 `paper-1/sections/06-attention-hardware-implementation.tex` (lines 99 and
 145: SRAM capacities `KB` → `KiB`, the binary unit the underlying
 FlashAttention figures actually use) and the same-day paper-key alias
-renames in `paper-3/glossary-section.tex` + `glossary-terms.json`
-(`mcts-rag-2025` → `hu2025-mcts-rag`, `chen2026-faithfulness-scaling` →
-`mehta2026-faithfulness-scaling`). Source therefore leads the committed
-artifacts at exactly those sites: `paper-1/main.pdf` still renders `KB`,
-and `paper-3/main.pdf` still renders the two pre-rename glossary keys.
-No other source/PDF divergence is known.
+renames in `paper-3/glossary-section.tex` and the series-level
+`glossary-terms.json` (`mcts-rag-2025` → `hu2025-mcts-rag`,
+`chen2026-faithfulness-scaling` → `mehta2026-faithfulness-scaling`).
+Source therefore leads the committed artifacts at three rendered sites:
+`paper-1/main.pdf` still shows `KB` at both SRAM figures, and
+`paper-3/main.pdf` still shows the pre-rename `mcts-rag-2025`. (The
+renamed `chen2026-…` key never rendered at all — that glossary entry's
+tail, citation included, is silently truncated in the built PDF by the
+generator's unescaped `%`, issue #60, which predates this sweep.) No
+other source/PDF divergence is known.
 
 A rebuild is **deliberately deferred**: regenerating five PDFs for a
-two-label fix churns megabytes of committed binaries while issue #3
+three-site fix churns megabytes of committed binaries while issue #3
 (moving `theory/series/*/main.pdf` to Git LFS) is still open. The rebuild
 happens as part of that LFS migration; until then, read the `.tex` source
 as authoritative for units.
