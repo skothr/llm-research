@@ -22,7 +22,7 @@ deployment distribution --- is the precondition for everything that
 follows in this paper. \textbf{The thesis of this section is that the
 2024--2026 measurement landscape is organized by three orthogonal
 axes (capability vs alignment; knowledge vs reasoning vs agency;
-static benchmark vs adversarial \glsterm{probe-2}{probe} vs deployment audit), tied
+static benchmark vs adversarial \glsterm{probe}{probe} vs deployment audit), tied
 together by a small psychometric \glsterm{vocabulary}{vocabulary} (validity, reliability,
 construct, contamination, ecological validity), and that the closest
 the field has to a theory of measurement is \glsterm{helm}{HELM}'s
@@ -153,7 +153,7 @@ four named questions, each of which has a partial 2024--2026 answer.
   \item[Construct.] What latent property is the benchmark trying to
     expose? The construct of \glsterm{mmlu}{MMLU} is broad-but-shallow factual
     recall; of \glsterm{frontiermath}{FrontierMath}, research-grade mathematical problem
-    solving; of \glsterm{harmbench-2}{HarmBench}, refusal-rate under attack; of Apollo's
+    solving; of \glsterm{harmbench}{HarmBench}, refusal-rate under attack; of Apollo's
     \glsterm{scheming}{scheming} suite, in-context capability for strategic deception.
     A frequent failure mode is construct drift: a benchmark whose
     items were chosen to expose construct $C_1$ ends up being
@@ -209,7 +209,7 @@ versus multi-step inference versus end-to-end task completion in an
 environment. The split is empirically diagnostic: in \glsterm{mmlu-pro}{MMLU-Pro},
 \glsterm{chain-of-thought}{chain-of-thought} scoring meaningfully outperforms direct-answer
 scoring on the new harder items, where on the original \glsterm{mmlu}{MMLU} it did
-not \citep[\S{}sec-cot]{wang2024-mmlu-pro}. The \glsterm{chain-of-thought}{CoT}-vs-direct gap
+not \citep[\S 6.2]{wang2024-mmlu-pro}. The \glsterm{chain-of-thought}{CoT}-vs-direct gap
 is the operational signature of reasoning-dominant items; a benchmark
 where it is zero is dominated by retrieval. Agentic benchmarks
 (\cref{sec:agentic-benchmarks}) extend the axis again by adding an
@@ -222,7 +222,7 @@ versus observational measurement during real use. Static benchmarks
 $\mathcal{B}$ and $\pi$ fixed. Adversarial probes
 (\cref{sec:adversarial-robustness}) introduce an attacker that
 searches over inputs $\rho$ to maximize $\Pr[\text{policy violation}]$;
-the score is \glsterm{attack-success-rate}{attack success rate} on a search-augmented set, not
+the score is \glsterm{asr}{attack success rate} on a search-augmented set, not
 pass-rate on a static one. Deployment audits
 (\cref{sec:scheming,sec:alignment-faking,sec:watermarking}) are
 observational; $\mathcal{B}$ is not fixed by the evaluator and $\pi$
@@ -236,7 +236,7 @@ benchmark-as-measurement-instrument occupies a triple
 $(\text{capability/alignment}, \text{knowledge/reasoning/agency},
 \text{static/adversarial/audit})$ and changing one coordinate
 generally requires a different instrument. \glsterm{mmlu}{MMLU} is
-$(\text{capability}, \text{knowledge}, \text{static})$; \glsterm{harmbench-2}{HarmBench} is
+$(\text{capability}, \text{knowledge}, \text{static})$; \glsterm{harmbench}{HarmBench} is
 $(\text{alignment-adjacent}, \text{agency-adjacent},
 \text{adversarial})$; the (yet-unbuilt) deployment audit for
 in-the-wild \glsterm{scheming}{scheming} would be
@@ -257,14 +257,14 @@ is that single-axis benchmarks (accuracy alone) systematically miss
 the failure modes that determine deployment behavior, and that a
 benchmark instance should ship a metric \emph{bundle} rather than a
 single number%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-metrics}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-1-1-design}.}.
 \glsterm{helm}{HELM} operationalizes this as a scenario-by-metric matrix: $7$ metrics
 $\times$ $16$ core scenarios, with measurements taken
 ``for each of $16$ core scenarios when possible ($87.5\%$ of the
 time)'' \citep[\S{}abstract]{liang2022-helm}.
 
 The seven metric axes are
-\citep[\S{}sec-metrics]{liang2022-helm}:
+\citep[\S 4]{liang2022-helm}:
 \begin{equation}
 \mathcal{M} = \{
   \text{Acc}, \text{Cal}, \text{Rob}, \text{Fair}, \text{Bias},
@@ -292,15 +292,18 @@ $\theta$ on scenario $s$ produces a vector
 not a scalar. The scenario-by-metric matrix is the outer product of
 \eqref{eq:helm-metrics} with the $16$-scenario set, populated where
 the metric is well-defined for the scenario%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-metrics}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/liang2022-helm.md#sec-4-metrics}
+for the seven metric definitions;
+\nolinkurl{kb/excerpts/liang2022-helm.md#sec-1-1-design} for the
+$98/112 = 87.5\%$ populated-cell count.}.
 
 The headline coverage finding is the methodological contribution:
 ``Before \glsterm{helm}{HELM}, models on average were evaluated on just $17.9\%$ of
 the core \glsterm{helm}{HELM} scenarios''; \glsterm{helm}{HELM} evaluates $30$ prominent language
 models on all $42$ scenarios under a single harness
-\citep[\S{}sec-coverage]{liang2022-helm}. The reproducibility move
+\citep[\S 1.1]{liang2022-helm}. The reproducibility move
 is to release all raw model prompts and completions, not just
-aggregate scores \citep[\S{}sec-output-discipline]{liang2022-helm}.
+aggregate scores \citep[\S 1.1]{liang2022-helm}.
 The metric bundle propagated only partially to subsequent frameworks
 --- 2024 leaderboards remain single-metric-dominant --- but the
 prompt-and-completion artifact discipline is now standard.
@@ -310,12 +313,12 @@ The \glsterm{helm}{HELM} proposal is that $\hat{S}$ is a vector
 \eqref{eq:helm-vector}, not a scalar. The field's actual reporting
 practice in $2024$--$2026$ remains overwhelmingly scalar: model cards
 publish a single \glsterm{mmlu}{MMLU} number, a single GPQA number, a single
-\glsterm{harmbench-2}{HarmBench} \glsterm{asr}{ASR}. Per-axis breakdowns appear in tech reports
+\glsterm{harmbench}{HarmBench} \glsterm{asr}{ASR}. Per-axis breakdowns appear in tech reports
 intermittently and rarely with the seven-metric coverage \glsterm{helm}{HELM}
 prescribes. The methodological proposal is uncontroversial; the
 adoption gap is real, and several of the contradictions catalogued
 in \cref{sec:contradictions} are downstream of this gap (a single
-``\glsterm{asr}{ASR}'' number across \glsterm{harmbench-2}{HarmBench}, \glsterm{jailbreakbench-2}{JailbreakBench}, AdvBench is
+``\glsterm{asr}{ASR}'' number across \glsterm{harmbench}{HarmBench}, \glsterm{jailbreakbench}{JailbreakBench}, AdvBench is
 exactly the kind of scalarization \glsterm{helm}{HELM} warns against).
 \end{contradiction}
 

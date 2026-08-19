@@ -57,7 +57,7 @@ pull requests across 12 popular Python repositories.
 Each task instance ships a base commit (the codebase state $s_0$),
 the issue text ($\rho$), and the pull-request's test diff partitioned
 into two regression-test sets%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/jimenez2024-swebench.md#sec-eval-protocol}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/jimenez2024-swebench.md#sec-2-2-eval}.}.
 \textsf{FAIL\_TO\_PASS} is the set of tests that fail on the pre-PR
 codebase and must pass on the post-patch state $s_T$.
 \textsf{PASS\_TO\_PASS} is the set of tests that pass on the pre-PR
@@ -70,11 +70,11 @@ which collapses the entire question of ``did the agent fix the bug''
 into ``does \texttt{pytest} accept the patch.'' The
 \textsf{PASS\_TO\_PASS} guard is what stops trivial regression-by-
 deletion: a patch that satisfies the bug-test by breaking unrelated
-functionality fails this term \citep[\S{}sec-eval-protocol]{jimenez2024-swebench}.
+functionality fails this term \citep[\S 2.2]{jimenez2024-swebench}.
 
 The launch number is small enough to publish:
 ``\glsterm{claude}{Claude} 2 \ldots\ resolves only 1.96\% of the issues''
-\citep[\S{}sec-headline]{jimenez2024-swebench}. By mid-2025 the
+\citep[\S 5]{jimenez2024-swebench}. By mid-2025 the
 \glsterm{swe-bench-verified}{SWE-Bench Verified} leaderboard sits above $70\%$ for frontier reasoning
 agents, a $\sim 35\times$ jump in $\sim 18$ months. Two methodological
 artifacts shaped that arc. First, \citet{jimenez2024-swebench} report
@@ -192,7 +192,7 @@ of the tool chain, not in specialized knowledge.
 The dataset is $466$ questions total, with $300$ retained for the
 gated leaderboard test set and $166$ released as a public development
 set, stratified into Levels 1/2/3 by tool-chain depth%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/mialon2023-gaia.md#sec-dataset}.}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/mialon2023-gaia.md#sec-3}.}.
 Level 1 is one-to-three-tool short chains with no specialized
 knowledge; Level 2 is multi-tool web-browsing plans; Level 3 is
 long-horizon tool use with multi-document synthesis, sometimes more
@@ -230,8 +230,8 @@ which are vital for deploying them in real world applications.
 \end{quote}
 
 The benchmark construction%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-user-sim}.}
-\citep[\S{}sec-user-sim]{yao2024-tau-bench}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-3-formulation}.}
+\citep[\S 3]{yao2024-tau-bench}:
 
 \begin{quote}\itshape
 The benchmark employs simulated conversations between a user
@@ -245,8 +245,8 @@ policy enforcement). The verifier is end-state DB equality --- the
 final database rows must match the annotated goal state ---
 sidestepping \glsterm{llm-as-judge}{LLM-as-judge} contamination on the agent side. The
 methodologically novel piece is the $\mathrm{pass}^k$ metric%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-passk}.}
-\citep[\S{}sec-passk]{yao2024-tau-bench}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/yao2024-tau-bench.md#sec-3-passk}.}
+\citep[\S 3]{yao2024-tau-bench}:
 \[
 \mathrm{pass}^k(\text{agent}, \text{task}) = \mathbb{1}\!\left[\bigwedge_{i=1}^{k} V(s_T^{(i)}, g) = 1\right],
 \]
@@ -257,7 +257,7 @@ $\mathrm{pass}@k$ measures whether the capability exists somewhere in
 the sample distribution; $\mathrm{pass}^k$ measures whether the
 capability is reliable enough to deploy without human review.
 The launch finding is the gap between them
-\citep[\S{}sec-result]{yao2024-tau-bench}:
+\citep[\S{}abstract]{yao2024-tau-bench}:
 
 \begin{quote}\itshape
 even state-of-the-art function calling agents (like gpt-4o) succeed
@@ -362,6 +362,6 @@ not yet trust them to predict deployment \glsterm{value}{value}.
 The next layer of the layered defense, taken up in
 \cref{sec:safety-adversarial-robustness}, asks not what the agent
 \emph{can} do but what it \emph{will} do under adversarial pressure
---- the jailbreak-resistance and \glsterm{dangerous-capability-evaluation-2}{dangerous-capability evaluation}
+--- the jailbreak-resistance and \glsterm{dangerous-capability-evaluation}{dangerous-capability evaluation}
 surface, where the construct is no longer task completion but
 behavior under deliberate attack.

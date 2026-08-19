@@ -29,7 +29,7 @@ that vendors and academics characterize differently.
 \label{sec:watermarking-construction}
 
 \citet{kirchenbauer2023-watermark} fix the canonical construction%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-greenred}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-algorithm}.}
 \citep[\S{}abstract]{kirchenbauer2023-watermark}:
 
 \begin{quote}\itshape
@@ -57,7 +57,7 @@ $(1 - \gamma)|V|$.
 
 The default settings reported in the paper are $\gamma = 0.5$ and
 $\delta = 2.0$%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-greenred}.
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-algorithm}.
 $\gamma = 0.5$ is the primary experimental configuration (Table~1, Table~2,
 Figure~6 unattacked baseline); $\gamma = 0.25$ appears only in parameter sweeps.}.
 Three properties of this construction are load-bearing for everything
@@ -94,8 +94,8 @@ not watermarked, each token is in $G_t$ independently with probability
 $\gamma$, so $|s|_G$ is binomially distributed with mean $\gamma T$ and
 variance $T \gamma (1 - \gamma)$. The normalized test statistic is the
 one-sided z-score%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-detection}.}
-\citep[\S{}sec-detection]{kirchenbauer2023-watermark}:
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-zscore}.}
+\citep[\S 3.1]{kirchenbauer2023-watermark}:
 \[
 z \;=\; \frac{|s|_G - \gamma T}{\sqrt{T \gamma (1 - \gamma)}}.
 \]
@@ -201,7 +201,8 @@ distinguished from the model's natural sampling%
 The choice of a $\delta$-additive logit bias rather than a hard
 partition is the design decision that makes the rest workable. The
 paper%
-\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-soft}.}
+\footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-algorithm}
+(Algorithm 2, the soft red list).}
 discusses three failure modes of a hard partition that restricts
 generation to $G_t$ alone: it heavily distorts high-entropy
 generation by forcing the model away from its natural distribution,

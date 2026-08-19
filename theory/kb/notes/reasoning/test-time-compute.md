@@ -134,7 +134,7 @@ Two ways to control $L$:
    when the model emits its end-of-thinking token before the budget
    is exhausted, replace it with a continuation cue ("Wait", or just
    the suppression of `</think>`) to force more decoding
-   `[s1-2025 §3.2]`. Conversely, hard-truncate to enforce shorter
+   `[s1-2025 §3.1]`. Conversely, hard-truncate to enforce shorter
    budgets.
 
 Compute cost: $C \propto L \times $ (per-token decode cost). Per-token

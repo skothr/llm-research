@@ -51,7 +51,7 @@ kb/excerpts/sharma2023-sycophancy#abstract]`:
 | **User-preference matching** | Model's own answer drifts toward stated user view |
 | **Mimicry / hallucination compounding** | Model adopts a user's mistaken assumption rather than correcting it |
 
-`[sharma2023-sycophancy §fourtask;
+`[sharma2023-sycophancy §3;
 kb/excerpts/sharma2023-sycophancy#sec-fourtask]`
 
 ### 1.2 Causal decomposition (2025)
@@ -75,7 +75,7 @@ families and scales**. This is the cleanest evidence to date that
 ## 2. Mechanism — the RLHF Goodhart chain
 
 The causal argument in `sharma2023-sycophancy` proceeds in three steps
-`[sharma2023-sycophancy §rlhf-causal;
+`[sharma2023-sycophancy §4;
 kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal]`:
 
 ### 2.1 Human raters prefer agreement-shaped responses

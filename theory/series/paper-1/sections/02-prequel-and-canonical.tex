@@ -223,7 +223,7 @@ chooses $\mathsf{H} = 8$ heads and
 $d_k = d_v = d_h = \mathsf{D}/\mathsf{H} = 64$, so the per-head
 projections \emph{partition} the model dimension across heads and
 the total compute matches a single-head full-width attention
-\citep[\S 3.2.2]{vaswani2017}. ``\glsterm{multi-head-attention}{Multi-head attention} allows the
+\citep[\S 3.2.2]{vaswani2017}. ``\glsterm{mha}{Multi-head attention} allows the
 model to jointly attend to information from different
 representation subspaces at different positions; with a single
 attention head, averaging inhibits this''~\citep[\S
@@ -236,7 +236,7 @@ $W^O$ projection collapses heads back to $\BSH$. The shape
 $\BHSdh$ is the lens the rest of this paper is read through.
 
 \paragraph{Three uses of attention.} The 2017 model uses
-\glsterm{multi-head-attention}{multi-head attention} in three places~\citep[\S
+\glsterm{mha}{multi-head attention} in three places~\citep[\S
 3.2.3]{vaswani2017}\footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-3}.}:
 encoder \glsterm{self-attention}{self-attention} (queries, keys, and values all from the
 previous encoder layer), decoder \emph{masked} \glsterm{self-attention}{self-attention} (same
@@ -371,7 +371,7 @@ $\to$ \glsterm{alibi}{ALiBi} $\to$ \glsterm{rope}{RoPE} $\to$ \glsterm{nope}{NoP
 \S\ref{sec:attention-kv-sharing} keeps Eq.~\eqref{eq:vaswani-attn}
 unchanged but varies how the $\mathsf{H}$ heads in
 Eq.~\eqref{eq:vaswani-multihead} share their $K$ and $V$
-projections (\glsterm{mha}{MHA} $\to$ \glsterm{mqa}{MQA} $\to$ \glsterm{gqa}{GQA} $\to$ \glsterm{multi-head-latent-attention}{MLA}).
+projections (\glsterm{mha}{MHA} $\to$ \glsterm{mqa}{MQA} $\to$ \glsterm{gqa}{GQA} $\to$ \glsterm{mla}{MLA}).
 \S\ref{sec:attention-mechanism-axis} keeps both Eqs.~\eqref{eq:vaswani-attn}
 and \eqref{eq:vaswani-multihead} mathematically unchanged but
 schedules the same computation differently onto GPU memory hierarchy

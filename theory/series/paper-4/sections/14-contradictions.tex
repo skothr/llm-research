@@ -67,7 +67,7 @@ the bare \glsterm{logit-lens}{logit lens}, and the resulting tuned-lens trajecto
 useful diagnostic on any pre-norm \glsterm{transformer}{transformer}. The strongest opposing
 form, raised in \S\ref{sec:lens-frontier} and \S\ref{sec:scaling-no}:
 the lens benchmarks predate the architectural substrate of the deployed
-2026 lineup --- \glsterm{multi-head-latent-attention}{MLA}-compressed-KV (\glsterm{precision-pinning}{DeepSeek-V3}), fine-grained MoE,
+2026 lineup --- \glsterm{mla}{MLA}-compressed-KV (\glsterm{precision-pinning}{DeepSeek-V3}), fine-grained MoE,
 \glsterm{nsa}{NSA}-sparse attention, sliding-window layers, hybrid attention/\glsterm{state-space-model}{SSM}
 stacks --- and whether the affine-translator ansatz suffices on these
 substrates is empirical, not deduced.
@@ -105,14 +105,14 @@ form, consolidated in
 \S\ref{sec:correlation-causation} contradiction block: \emph{decodable
 does not entail used}. The model may compute a property at some
 intermediate layer and discard it; later layers may use a different
-representation; the \glsterm{probe-2}{probe} direction may correlate near-perfectly with
+representation; the \glsterm{probe}{probe} direction may correlate near-perfectly with
 the used representation while not being it.
 
 The evidence on the table is now substantial on both sides. The 2023+
 direction-ablation literature
 \citep[\S 3]{marks-tegmark-2023-truth} closes the gap on canonical
 worked examples: ablating $\hat{\mathbf{d}}_{\text{MM}}$ at LLaMA-2-13B
-mid-layers flips TRUE/FALSE behavior, validating the \glsterm{truth-direction-2}{truth direction}'s
+mid-layers flips TRUE/FALSE behavior, validating the \glsterm{truth-direction}{truth direction}'s
 \emph{use}. \deepencite{vennemeyer2025-sycophancy-not-one-thing §3,
 multi-component-ablation} extends the pattern to a behavioral target
 (\glsterm{sycophancy}{sycophancy}) with a multi-component decomposition. What remains open
@@ -122,10 +122,10 @@ model uses on adversarial out-of-distribution inputs --- and that
 generalization gap is precisely the load-bearing question for
 \textbf{[Paper~5]} alignment-detection probing.
 
-\textbf{Resolving experiment.} Pair every alignment-claim \glsterm{probe-2}{probe} with
+\textbf{Resolving experiment.} Pair every alignment-claim \glsterm{probe}{probe} with
 direction-ablation on adversarial OOD evaluation suites; report
 whether the ablation-induced behavior change persists under
-distribution shift. A \glsterm{probe-2}{probe} whose ablation effect halves on a
+distribution shift. A \glsterm{probe}{probe} whose ablation effect halves on a
 held-out OOD shift has not validated the use claim it asserted.
 
 \subsection{The truth direction across datasets}
@@ -158,7 +158,7 @@ that, applied independently to \texttt{cities}, \texttt{neg\_cities},
 returns a low-dimensional subspace whose per-dataset projections
 recover the single-dataset directions modulo a known equivalence
 (rotation, sign, scale). Until the subspace structure is exhibited,
-``the \glsterm{truth-direction-2}{truth direction}'' is a useful one-dimensional projection of a
+``the \glsterm{truth-direction}{truth direction}'' is a useful one-dimensional projection of a
 richer subspace, in a fixed model and dataset family --- not a
 basis-free property of the model.
 
@@ -206,7 +206,7 @@ answer (patching tests components, not \glsterm{feature}{feature} inventories). 
 extension to frontier-2026 architectures is a question that lens-only
 benchmarks can only partially settle --- the ground truth requires a
 patching-validated model of what the lens \emph{should} read out at
-each layer. \glsterm{probe-2}{Probe} correlation-vs-causation is, by 2026 consensus, a
+each layer. \glsterm{probe}{Probe} correlation-vs-causation is, by 2026 consensus, a
 question whose resolution \emph{requires} pairing probes with
 intervention machinery from \S\ref{sec:patching}. The truth-direction
 plurality is visible only when probes are run across datasets
@@ -228,7 +228,7 @@ between the questions different methods answer.
 Paper~4's title --- \emph{the internal computation can be partially
 read} --- is now precise. We can extract human-legible structure for
 \emph{some} behaviors (IOI on GPT-2 small, factual recall on GPT-2 XL,
-\glsterm{truth-direction-2}{truth direction} in LLaMA-2-13B late layers, abstract features on
+\glsterm{truth-direction}{truth direction} in LLaMA-2-13B late layers, abstract features on
 \glsterm{claude}{Claude} 3 Sonnet), on \emph{some} models (open-source GPT-family +
 Gemma 2 + LLaMA 2 dominate the literature; the frontier-2026 lineup is
 sparser), with \emph{cross-method agreement} on \emph{some} claims (the
@@ -249,7 +249,7 @@ input to the alignment-evaluation discussion of \textbf{[Paper~5]}.
 Three load-bearing claims of the alignment-claim literature ---
 ``the model has a deception \glsterm{feature}{feature},'' ``the model uses its \glsterm{chain-of-thought}{CoT}
 faithfully,'' ``\glsterm{activation-steering}{activation steering} is a safe inference-time
-intervention'' --- depend on a \glsterm{probe-2}{probe}-and-\glsterm{feature}{feature} substrate whose
+intervention'' --- depend on a \glsterm{probe}{probe}-and-\glsterm{feature}{feature} substrate whose
 canonicality and use validity is exactly what \S\S\ref{sec:contradictions-probe},
 \ref{sec:contradictions-truth}, and \ref{sec:contradictions-sae} have
 just declared open. Paper~5 picks up the question of how much weight

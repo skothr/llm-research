@@ -34,9 +34,9 @@ snapshot is the localisation, not the resolution.
 \paragraph{(C1) PRM utility post-R1.}
 The \glsterm{prm800k}{PRM800K}-era headline ``\glsterm{process-reward-model}{PRM} > \glsterm{outcome-reward-model}{ORM} at matched $N$''
 \citep[\S 4]{lightman2023-prm800k}\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-4-2-aggregation}.} was
+\nolinkurl{kb/excerpts/lightman2023-prm800k.md#sec-4}.} was
 established on a non-reasoning-trained generator. Once the generator is
-itself an \glsterm{rlvr-3}{RLVR}-trained reasoner, the comparison shifts: the \glsterm{outcome-reward-model}{ORM} in the
+itself an \glsterm{rlvr}{RLVR}-trained reasoner, the comparison shifts: the \glsterm{outcome-reward-model}{ORM} in the
 original setup is replaced by a zero-error symbolic verifier
 (\cref{sec:r1-protocol}), and the \glsterm{process-reward-model}{PRM} must now beat the policy's own
 internal verification. \Citet{thinkprm2025} report inference-time gains
@@ -48,9 +48,9 @@ RL loop \citep[\S 2.2]{deepseek-r1}. The unresolved question splits
 cleanly: PRMs survive as inference-time rerankers of best-of-$N$ and as
 guidance signals for tree search (\cref{sec:tree-search,sec:prm-survival-inference});
 their survival as an RL-loop \emph{training} signal beyond
-verifier-only \glsterm{rlvr-3}{RLVR} is contested
+verifier-only \glsterm{rlvr}{RLVR} is contested
 (\cref{sec:prm-survival-training}). Closure requires a controlled
-\glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo-2}{GRPO} vs verifier-only \glsterm{grpo-2}{GRPO} comparison at matched
+\glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo}{GRPO} vs verifier-only \glsterm{grpo}{GRPO} comparison at matched
 post-training compute on a reasoning-trained base; no published 2025--26
 study has run it.
 
@@ -64,7 +64,7 @@ function of them (\cref{sec:faith-arcuschin}). \Citet{mehta2026-faithfulness-sca
 measure non-thinking versus thinking configurations across frontier
 models and find a per-rate gap of two orders of magnitude favouring
 thinking models, but they also report that on at least one frontier
-model accuracy drops while faithfulness rises under \glsterm{self-consistency-2}{self-consistency}
+model accuracy drops while faithfulness rises under \glsterm{self-consistency}{self-consistency}
 \citep[\S 4]{mehta2026-faithfulness-scaling}\footnote{KB note:
 \nolinkurl{kb/notes/reasoning/chain-of-thought.md#4.1}.} --- a pattern
 incompatible with the simple reading that traces are a causal substrate
@@ -73,7 +73,7 @@ as a dedicated faithfulness benchmark
 (\cref{sec:faith-bench}). The unresolved question: does faithfulness
 improve, plateau, or degrade with model scale and reasoning-training
 intensity? The published 2026 ablations cannot separate long-\glsterm{chain-of-thought}{CoT} SFT,
-\glsterm{rlvr-3}{RLVR} post-training, and general scale at fixed others
+\glsterm{rlvr}{RLVR} post-training, and general scale at fixed others
 (\cref{sec:faith-mehta}); the controlled ablation has not been run at
 frontier scale, and Mehta's non-monotonic per-model results suggest
 faithfulness sits on a separate curve from accuracy. Closure requires
@@ -84,37 +84,37 @@ rows.
 \paragraph{(C3) RLVR generalisation vs memorisation.}
 The R1 narrative \citep[\S 2.3]{deepseek-r1}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} reads the
-$15.6\%\!\to\!77.9\%$ AIME 2024 pass@1 climb as \glsterm{rlvr-3}{RLVR}-elicited
+$15.6\%\!\to\!77.9\%$ AIME 2024 pass@1 climb as \glsterm{rlvr}{RLVR}-elicited
 reasoning capability. \Citet{rlvr-limits-2025}%
 \deepencite{rlvr-limits-2025 §3-§5, KB-excerpt-pending}
 read it differently: the
-group-mean baseline of \glsterm{grpo-2}{GRPO} (\cref{sec:rlvr-grpo-objective}) bounds
-\glsterm{rlvr-3}{RLVR}'s reach by the base policy's pass@$K$ at \emph{any} $K$, not by
+group-mean baseline of \glsterm{grpo}{GRPO} (\cref{sec:rlvr-grpo-objective}) bounds
+\glsterm{rlvr}{RLVR}'s reach by the base policy's pass@$K$ at \emph{any} $K$, not by
 its pass@$1$, and so the climb is ``the base model could already solve
-$77.9\%$ of these problems at some sample budget; \glsterm{grpo-2}{GRPO} transferred
-that to pass@1.'' Under this reading \glsterm{rlvr-3}{RLVR} \emph{sharpens} the policy
+$77.9\%$ of these problems at some sample budget; \glsterm{grpo}{GRPO} transferred
+that to pass@1.'' Under this reading \glsterm{rlvr}{RLVR} \emph{sharpens} the policy
 within base-model competency but does not \emph{expand} the solvable
 set. The 2026 picture is contested rather than settled: the
 \citeauthor{rlvr-limits-2025} reading is one camp's first-order
 synthesis (the trace-growth result of \citet[\S 2.2]{deepseek-r1},
 response length $\sim 200 \to \sim 10{,}000$ tokens, is not reconciled
-with the capability-ceiling claim, and one cleanly-stated form of the
-camp's synthesis is that ``\glsterm{rlvr-3}{RLVR} teaches \emph{trace-length use} (when
+with the claim of a \glsterm{capability-ceiling}{capability ceiling}, and one cleanly-stated form of the
+camp's synthesis is that ``\glsterm{rlvr}{RLVR} teaches \emph{trace-length use} (when
 to spend more tokens) without teaching new primitives''
 \citep[\S 5]{rlvr-limits-2025}), but at least two camps have published
 2025-Q3+ counter-evidence. \Citet{wen2025-cot-passk} introduce
 \glsterm{chain-of-thought}{CoT}-Pass@K --- a metric that scores both the final answer and the
 \glsterm{chain-of-thought}{chain-of-thought} derivation --- and report a consistent and
-significant gap between \glsterm{rlvr-3}{RLVR}-trained and base models on
+significant gap between \glsterm{rlvr}{RLVR}-trained and base models on
 AIME 2024/2025 across all $K$ up to $1024$, in contrast to standard
 Pass@K where the gap closes; this directly challenges the
 boundary-collapse reading on the metric most exposed to whether the
 chain itself is novel. \Citet{rl-plus-2025} explicitly frame Yue's
 findings as ``capability boundary collapse'' and propose
 hybrid-policy optimization that --- on their reported runs ---
-maintains an advantage over both the base model and \glsterm{grpo-2}{GRPO} as $K$ grows;
+maintains an advantage over both the base model and \glsterm{grpo}{GRPO} as $K$ grows;
 the field broadly agrees the boundary issue Yue diagnoses is real, but
-disagrees about whether it is intrinsic to \glsterm{rlvr-3}{RLVR} or tractable under
+disagrees about whether it is intrinsic to \glsterm{rlvr}{RLVR} or tractable under
 better optimisation. Whether either camp's synthesis exhausts the
 picture or merely captures the dominant term on its preferred
 benchmark is open. Closure requires
@@ -126,10 +126,10 @@ $K = 10^{6}$.
 \paragraph{(C4) Search-vs-RL under fixed compute.}
 \Citet[\S 6]{snell2024} establish a $14\times$ pretraining-vs-inference
 substitution on the easy/intermediate MATH bin under \glsterm{palm}{PaLM}~2-S\*.
-\Citet[\S 2.3]{deepseek-r1} establish that \glsterm{grpo-2}{GRPO} on \glsterm{precision-pinning}{DeepSeek-V3}-Base
+\Citet[\S 2.3]{deepseek-r1} establish that \glsterm{grpo}{GRPO} on \glsterm{precision-pinning}{DeepSeek-V3}-Base
 converts ${\sim}10^{4}$ training steps into $+62.3$ AIME 2024 pass@1
-points with \glsterm{self-consistency-2}{self-consistency} adding a further $+8.8$ at $N\!=\!64$.
-\Citet[\S 4]{dapo2025} establish that \glsterm{dapo-2}{DAPO} halves $C_\text{RL}$ at
+points with \glsterm{self-consistency}{self-consistency} adding a further $+8.8$ at $N\!=\!64$.
+\Citet[\S 4]{dapo2025} establish that \glsterm{dapo}{DAPO} halves $C_\text{RL}$ at
 matched post-training accuracy. Each of the three results is an anchor
 anecdote on a different base model, benchmark, and verifier; no
 published study runs a three-channel FLOPs-matched experiment holding
@@ -149,7 +149,7 @@ exchange rate is not.
 
 \paragraph{(C5) AIME 2024 contamination.}
 The headline R1 jump (\cref{sec:r1-contamination}) attributes the
-$15.6\%\!\to\!77.9\%$ AIME 2024 climb to \glsterm{rlvr-3}{RLVR}-elicited reasoning. The
+$15.6\%\!\to\!77.9\%$ AIME 2024 climb to \glsterm{rlvr}{RLVR}-elicited reasoning. The
 competing reading: AIME-style problems and their solutions are widely
 indexed on the open web --- problem-set archives, contest-prep
 textbooks, math forums, AoPS-style community posts --- and \emph{some
@@ -176,7 +176,7 @@ contamination-robust evaluation looks like.
 \citep{deepseek-r1-nature-2025} narrows but does not close this
 contradiction. The peer-reviewed version adds (i) an n-gram-overlap
 \glsterm{decontamination}{decontamination} audit on the pre- and post-training data of R1, and
-(ii) a control experiment that re-runs the \glsterm{grpo-2}{GRPO} recipe on Qwen2-7B ---
+(ii) a control experiment that re-runs the \glsterm{grpo}{GRPO} recipe on Qwen2-7B ---
 a base model released June 2024, before any advanced reasoner shipped
 --- and reproduces similar capability emergence
 \citep{deepseek-r1-nature-2025}. The Nature reviewer-response thread,
@@ -246,10 +246,10 @@ unilaterally change.
 \end{contradiction}
 
 The closures tabulated by contradiction:
-\emph{(C1)} a \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo-2}{GRPO} vs verifier-only \glsterm{grpo-2}{GRPO} comparison at
+\emph{(C1)} a \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo}{GRPO} vs verifier-only \glsterm{grpo}{GRPO} comparison at
 matched post-training compute on a reasoning-trained base;
 \emph{(C2)} a one-axis-at-a-time factorial separating long-\glsterm{chain-of-thought}{CoT} SFT,
-\glsterm{rlvr-3}{RLVR} post-training, and general scale at fixed others, run at frontier
+\glsterm{rlvr}{RLVR} post-training, and general scale at fixed others, run at frontier
 scale and on a faithfulness-stable benchmark;
 \emph{(C3)} a published pass@$K$-vs-base-model audit at large $K$ on
 R1's training distribution, or RL on a base whose pass@$K$ at $K = 10^{6}$
@@ -288,10 +288,10 @@ whether the legs themselves are real.
 The settled-vs-contested split, leg by leg, parallels the
 agreement-and-divergence summary of
 \cref{sec:frontier-2026}. Settled: \emph{every} frontier-2026 reasoning
-entry ships \glsterm{rlvr-3}{RLVR} plus long-\glsterm{chain-of-thought}{CoT}, \emph{none} ship a process reward
+entry ships \glsterm{rlvr}{RLVR} plus long-\glsterm{chain-of-thought}{CoT}, \emph{none} ship a process reward
 model in the headline RL loop, and the productionised exposure of
 inference-time compute has converged on a small number of API-shaped
-``\glsterm{thinking-budget-2}{thinking budget}'' surfaces. Contested: the contamination-vs-elicitation
+``\glsterm{thinking-budget}{thinking budget}'' surfaces. Contested: the contamination-vs-elicitation
 attribution of the AIME-class headlines (C3, C5), the form of the
 inference-time \glsterm{scaling-law}{scaling law} (the $L(\theta, N)$ functional form open
 question of \cref{sec:snell-open}, partially overlapping with C4), the
@@ -329,7 +329,7 @@ the series can build on is the coordinate system this paper has named
 --- inference compute, verifier signal, RL on \glsterm{verifiable-reward}{verifiable reward} --- and
 the localisation of each open question on it. Paper~4
 \S faithfulness and Paper~5 \S AIME-contamination both backreference
-this section's (C2) and (C5) directly; Paper~2's \glsterm{rlhf}{RLHF}-to-\glsterm{rlvr-3}{RLVR}
+this section's (C2) and (C5) directly; Paper~2's \glsterm{rlhf}{RLHF}-to-\glsterm{rlvr}{RLVR}
 transition treats (C3) as the hinge between learned and rule-based
 reward sources.
 

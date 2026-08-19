@@ -54,7 +54,7 @@ FP16 GEMM on the same silicon \citep[\S 3.3]{deepseek-v3}. Distributed
 all-reduce traffic also halves with each precision step, since
 gradient bandwidth is the dominant inter-node cost in \glsterm{data-parallel}{DP} / \glsterm{fsdp}{FSDP} runs
 \citep[\S 2.2.4]{torchtitan2024}.\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-2-4}.} The mixed-precision
+\nolinkurl{kb/excerpts/torchtitan2024.md#sec-2-2-4-fp8}.} The mixed-precision
 question is therefore not whether to leave FP32 — every frontier-scale
 \glsterm{llm}{LLM} does — but how far down the precision stack we can go before
 training diverges or downstream quality degrades.
@@ -370,12 +370,12 @@ keeps the attention operator in BF16 for this reason \citep[\S
 $QK^\top$ pre-\glsterm{softmax}{softmax}) and \emph{QK-\glsterm{layer-normalization}{LayerNorm}} (normalizing $Q$ and
 $K$ before the dot product, as adopted in LLaMA-2 and successors).
 
-\paragraph{Optimizer-precision coupling.} \glsterm{per-shape-rms-scaling}{Muon}'s update RMS,
+\paragraph{Optimizer-precision coupling.} \glsterm{muon}{Muon}'s update RMS,
 $\sqrt{1/\max(A, B)}$ for an $A\times B$ matrix parameter, combined
 with growing weight RMS, ``exceeds the high-precision range of
 bf16'' without weight decay \citep[\S 2.2]{muon-moonlight2025}.\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms} and
-\texttt{\#sec-2-2-wd}.} The \glsterm{per-shape-rms-scaling}{Muon}-Moonlight fix is mandatory weight
+\texttt{\#sec-2-2-wd}.} The \glsterm{muon}{Muon}-Moonlight fix is mandatory weight
 decay plus per-shape $\sqrt{\max(A, B)} \cdot 0.2$ scaling that pulls
 the update + weight back into BF16's representable range. Optimizer
 choice and precision choice are not orthogonal; each new optimizer

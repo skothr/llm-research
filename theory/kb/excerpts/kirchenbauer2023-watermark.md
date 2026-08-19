@@ -70,10 +70,25 @@ Algorithm 2 (soft red list) — input parameters and step 4 verbatim:
 > almost ignoring the watermark rule in the low entropy case where there is a clear
 > and unique choice of the "best" word.
 
-The primary experimental configuration in the paper uses γ = 0.5, δ = 2.0
-(Table 1, Table 2, Figure 6 unattacked baseline). The earlier excerpt's claim of
-γ=0.25 as "default" was incorrect — γ=0.25 appears in some parameter sweeps but
-γ=0.5 is the main-text running example.
+The paper declares no default (γ, δ) pair anywhere. The values it does state,
+each tied to its own context:
+
+- Figure 1's opening illustration — "Watermark parameters are γ,δ=(0.25,2)".
+- §4.1 (theoretical sensitivity analysis, in §4 "Analysis of the soft
+  watermark") — "We estimate the type-II (false negative) error rate of a soft
+  watermark with γ=.5 and δ=2."
+- Table 1 caption — "multinomial sampling using γ=0.5 and δ=2.0"; the Figure 6
+  caption uses the same pair ("The initial, unattacked watermark is a γ=0.5,
+  δ=2.0 soft watermark generated using multinomial sampling"). The Table 2
+  caption names no parameters.
+- §6 "Experiments" sweeps (γ, δ) over the z-score-vs-perplexity tradeoff of
+  Figure 2 (left) and concludes "Interestingly, we see that a small green
+  list, γ=.1 is pareto-optimal."
+
+So γ = 0.5, δ = 2.0 is the main-text running configuration, γ,δ = (0.25, 2) is
+the Figure 1 illustration only, and γ = 0.1 is what the paper's own tradeoff
+analysis recommends. Quoting any one pair as "the default" is a repo-side
+invention, not a paper claim.
 
 ## §3.1 — The z-score detection statistic {#sec-zscore}
 

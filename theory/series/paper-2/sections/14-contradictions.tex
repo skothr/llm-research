@@ -58,12 +58,12 @@ reverses the gap on downstream evaluation panels (\glsterm{mmlu}{MMLU}, GSM8K,
 HumanEval, BBH) at matched wall-clock time
 \citep[\S 1]{muon-moonlight2025}\protect\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-1-challenges}.}.
-\glsterm{per-shape-rms-scaling}{Muon}-Moonlight \citep{muon-moonlight2025} fits
+\glsterm{muon}{Muon}-Moonlight \citep{muon-moonlight2025} fits
 $L_{\text{Muon}} = 2.506\,C^{-0.052}$ vs.\
 $L_{\text{AdamW}} = 2.608\,C^{-0.054}$ for a constant matched-loss
 compute ratio $\eta \approx 0.52$, and the downstream panel at the
 $16$B-MoE / $5.7$T-token Moonlight point is competitive with similarly
-sized \glsterm{precision-pinning}{DeepSeek-V3} variants. The disagreement is whether \glsterm{per-shape-rms-scaling}{Muon}'s lift
+sized \glsterm{precision-pinning}{DeepSeek-V3} variants. The disagreement is whether \glsterm{muon}{Muon}'s lift
 generalizes beyond a single tech report. As of 2026-Q2 the result is
 \emph{single-source} on a $16$B-MoE run; whether the $\sim$$2\times$
 constant holds at $70$B+ dense and $600$B+ MoE is the paper's own
@@ -199,9 +199,9 @@ overoptimization across \emph{all} preference-based post-training,
 including \glsterm{dpo}{DPO}, since \glsterm{dpo}{DPO}'s \glsterm{implicit-reward}{implicit reward}
 $\hat r_\theta = \beta \log \pi_\theta / \pi^{\mathrm{ref}}$ is itself
 a learned proxy that can be hacked. Closing evidence: a controlled
-RM-quality $\times$ KL-budget $\times$ pipeline (PPO/\glsterm{dpo}{DPO}/\glsterm{grpo-2}{GRPO}) sweep
+RM-quality $\times$ KL-budget $\times$ pipeline (PPO/\glsterm{dpo}{DPO}/\glsterm{grpo}{GRPO}) sweep
 with both proxy reward and gold reward measured, plus an adversarial
-\glsterm{sycophancy}{sycophancy}-\glsterm{probe-2}{probe} panel.
+\glsterm{sycophancy}{sycophancy}-\glsterm{probe}{probe} panel.
 
 \paragraph{(7) DPO-vs-PPO at frontier scale.}
 \citet{rafailov2023-dpo} establishes that \glsterm{dpo}{DPO} and PPO-\glsterm{rlhf}{RLHF} share
@@ -244,9 +244,9 @@ judge instead of the human labeler \citep{sharma2023-sycophancy}.
 \glsterm{constitutional-ai}{CAI} may not solve \glsterm{sycophancy}{sycophancy} and may amplify it, since the
 algorithmic judge is more consistent than human labelers and the
 policy can find its biases more reliably. Closing evidence:
-held-out adversarial \glsterm{probe-2}{probe} panels (intent-vs-verbalization,
+held-out adversarial \glsterm{probe}{probe} panels (intent-vs-verbalization,
 principle-conflict, \glsterm{sycophancy}{sycophancy} with counter-evidence) reported
-jointly for SFT-only, \glsterm{rlhf}{RLHF}, \glsterm{rlaif-3}{RLAIF}, and \glsterm{constitutional-ai}{CAI} baselines on a fixed base.
+jointly for SFT-only, \glsterm{rlhf}{RLHF}, \glsterm{rlaif}{RLAIF}, and \glsterm{constitutional-ai}{CAI} baselines on a fixed base.
 
 \begin{contradiction}
 \textbf{The proxy-reward thread.} Contradictions (6), (7), and (8)
@@ -269,24 +269,24 @@ or engineering --- is not.
 \end{contradiction}
 
 \paragraph{(9) Does RLVR create new reasoning capability?}
-\citet{deepseek-r1} frame \glsterm{rlvr-3}{RLVR} as ``incentivizing reasoning
+\citet{deepseek-r1} frame \glsterm{rlvr}{RLVR} as ``incentivizing reasoning
 capability'' (\glsterm{r1-zero}{R1-Zero} from $15.6\%$ to $77.9\%$ on AIME 2024 over
-\glsterm{grpo-2}{GRPO} training, the ``aha-moment'' \texttt{wait}-token spike), with
-parallel framings in \citet{tulu3} and \citet{qwen3} treating \glsterm{rlvr-3}{RLVR}
+\glsterm{grpo}{GRPO} training, the ``aha-moment'' \texttt{wait}-token spike), with
+parallel framings in \citet{tulu3} and \citet{qwen3} treating \glsterm{rlvr}{RLVR}
 as eliciting reasoning behaviors the base model could not produce.
 \citet{rlvr-limits-2025} (Yue et al.\ NeurIPS 2025 oral)%
 \deepencite{rlvr-limits-2025 §3-§5, KB-excerpt-pending}
 disagree:
 by carefully comparing pass@1 vs.\ pass@$K$ of base-model vs.\
-\glsterm{rlvr-3}{RLVR}'d model at matched sampling budget, \glsterm{rlvr-3}{RLVR} improves pass@1
+\glsterm{rlvr}{RLVR}'d model at matched sampling budget, \glsterm{rlvr}{RLVR} improves pass@1
 (sampling efficiency) on problems the base model can already solve
 at higher $K$, but does \emph{not} expand the set of problems
 solvable at any $K$. The \glsterm{capability-ceiling}{capability ceiling} is set by pre-training;
-\glsterm{rlvr-3}{RLVR} is sampling-efficient sharpening. As of 2026-Q2 the open-source
+\glsterm{rlvr}{RLVR} is sampling-efficient sharpening. As of 2026-Q2 the open-source
 consensus leans toward Yue with caveats: the result is benchmark-,
 temperature-, and sample-budget-conditional, and generalization to
-non-math (agentic, long-horizon) \glsterm{rlvr-3}{RLVR} is single-source. Closing
-evidence is concentrated in Paper~3, which treats \glsterm{rlvr-3}{RLVR} alongside
+non-math (agentic, long-horizon) \glsterm{rlvr}{RLVR} is single-source. Closing
+evidence is concentrated in Paper~3, which treats \glsterm{rlvr}{RLVR} alongside
 inference-time-compute scaling and search; the
 $(C_{\text{train,RLVR}}) \times (C_{\text{test}})$ joint surface is
 where the framings might reconcile.
@@ -308,7 +308,7 @@ with no third-party head-to-head at frontier-\glsterm{llm}{LLM} scale. The
 speculative theoretical underpinning is linear-mode-connectivity ---
 the basin-sharing hypothesis that fine-tuned models from a common
 base lie in a connected low-loss region whose center is the average
-\citep{ilharco2022-task-vectors,wortsman2022-model-soups}. \glsterm{linear-mode-connectivity-2}{LMC} holds
+\citep{ilharco2022-task-vectors,wortsman2022-model-soups}. \glsterm{linear-mode-connectivity}{LMC} holds
 empirically for SFT-from-shared-base, partly for \glsterm{rlhf}{RLHF}, and breaks
 for from-scratch different-init runs; no canonical theory predicts
 when merging produces interference vs.\ basin-centering. The
@@ -335,7 +335,7 @@ boundaries}.
 
 \begin{intuition}
 The contradictions cluster at three boundary couplings:
-\textbf{precision~$\times$~optimizer} (\glsterm{per-shape-rms-scaling}{Muon} update RMS exceeds BF16
+\textbf{precision~$\times$~optimizer} (\glsterm{muon}{Muon} update RMS exceeds BF16
 high-precision range without weight decay; \glsterm{fp8}{FP8} stability requires
 the per-tile scaling \glsterm{precision-pinning}{DeepSeek-V3} introduced; (2)$\cap$(4) live here),
 \textbf{token-count~$\times$~quantization} (over-trained models are
@@ -360,7 +360,7 @@ boundaries \emph{between} adjacent stages: $D / N$ under joint
 inference-cost and quantization constraints; optimizer choice under
 joint downstream and frontier-stability constraints; \glsterm{tensor-parallel}{TP}-yes-vs-no
 under joint model-graph and topology constraints; \glsterm{dpo}{DPO}-vs-PPO under
-joint proxy-reward and on-policy constraints; \glsterm{rlvr-3}{RLVR}'s
+joint proxy-reward and on-policy constraints; \glsterm{rlvr}{RLVR}'s
 sampling-efficiency-vs-capability split under joint pre-training
 and inference-time-compute budgets. Where Paper~1 established the
 architectural axes and Paper~3 will establish the

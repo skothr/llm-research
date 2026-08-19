@@ -36,15 +36,14 @@ treated as `status: pre-expansion-seed` until re-validated during Phase 2.
 - **token embedding** — A learned lookup table ($W_e \in \mathbb{R}^{V \times d_{\text{model}}}$) mapping each token index to a dense vector.
 - **weight tying** — Sharing the same weight matrix $W_e$ for both input embeddings and the output projection to logits, halving vocabulary-related parameters.
 - **Positional Encoding** — Any mechanism that injects sequence-position information into the model, since self-attention is inherently permutation-invariant.
-- **Sinusoidal Positional Encoding** — Fixed positional encoding using sine/cosine functions at different frequencies (original Transformer, 2017).
+- **Sinusoidal positional encoding** — Fixed positional encoding using sine/cosine functions at different frequencies: Vaswani 2017's deterministic sin/cos position vectors, added to the token embeddings at the input. `[vaswani2017 §3.5]`
 - **Learned Positional Embedding** — A trainable position matrix $W_p$ where each row corresponds to a sequence position (GPT-1, 2018). Fixes maximum context length at training time.
-- **RoPE (Rotary Position Embedding)** — Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative position. Applied at every layer to Q and K only. Used by LLaMA and most modern LLMs.
+- **RoPE (Rotary Position Embedding)** — Multiplicative positional encoding that rotates query and key vectors in 2D subspaces by per-frequency, position-dependent angles $m\theta_i$, making attention dot products depend only on relative position via rotation-matrix orthogonality. Applied at every layer to Q and K only. The de-facto standard in modern decoder-only LLMs (LLaMA and most that followed). `[su2021 §3.2]`
 
 ## Attention
 
 - **self-attention** — Mechanism where each position in a sequence computes a weighted sum over all positions, with weights determined by learned query-key similarity.
 - **scaled dot-product attention** — Core attention operation: $\text{softmax}(QK^\top / \sqrt{d_k}) V$. Scaling by $\sqrt{d_k}$ prevents large dot products from saturating the softmax.
-- **multi-head attention** — Running $h$ parallel attention operations on different learned projections, then concatenating and projecting the results. Allows attending to different representation subspaces simultaneously.
 - **Query (Q)** — Projected representation of the position that is "asking" for information in attention.
 - **Key (K)** — Projected representation of positions being "queried" against. The Q·K dot product determines attention weights.
 - **Value (V)** — Projected representation of the content to be aggregated. Weighted by attention scores to produce the output.
@@ -55,11 +54,11 @@ treated as `status: pre-expansion-seed` until re-validated during Phase 2.
 
 ## Attention variants and KV-cache compression
 
-- **MHA (Multi-Head Attention)** — The Vaswani 2017 default: $h$ independent heads, each with its own $W_i^Q, W_i^K, W_i^V$. KV cache size per token per layer is $2 n_h d_h$ elements `[vaswani2017 §3.2.2]`.
-- **MQA (Multi-Query Attention)** — Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of capacity and stability `[shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#§3.1]`.
-- **GQA (Grouped-Query Attention)** — Interpolation between MHA and MQA: query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements `[ainslie2023 §2.2]`.
+- **MHA (Multi-head attention)** — The Vaswani 2017 default: $h$ parallel attention operations on independent learned projections, each head with its own $W_i^Q, W_i^K, W_i^V$, whose outputs are concatenated and projected. Lets the model attend to different representation subspaces simultaneously. KV cache size per token per layer is $2 n_h d_h$ elements `[vaswani2017 §3.2.2]`.
+- **MQA (Multi-query attention)** — Architectural KV compression: all $h$ query heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of representational capacity and stability `[shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#§3.1; kb/notes/inference/kv-cache-management#§2]`.
+- **GQA (Grouped-query attention)** — Interpolation between MHA and MQA: $h$ query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements — a factor $h/g$ smaller than MHA — at minimal quality loss, which makes it the production sweet-spot (Llama 2/3, Mistral) `[ainslie2023 §2.2; kb/notes/inference/kv-cache-management#§2]`.
 - **Uptraining** — The Ainslie 2023 recipe for converting an existing MHA checkpoint to GQA/MQA: mean-pool the $W^K, W^V$ matrices within each group, then continue pre-training for $\alpha \approx 5\%$ of the original budget `[ainslie2023 §2.1]`.
-- **MLA (Multi-Head Latent Attention)** — DeepSeek-V2's compression scheme. Rather than sharing K/V across heads, K and V are reconstructed at use time from a small latent $\mathbf{c}_t^{KV} = W^{DKV} \mathbf{h}_t \in \mathbb{R}^{d_c}$ via up-projections $W^{UK}, W^{UV}$. Cache holds only the latent. During inference $W^{UK}$ can be absorbed into $W^Q$ and $W^{UV}$ into $W^O$ `[deepseek-v2 §2.1.2]`.
+- **MLA (Multi-head Latent Attention)** — DeepSeek-V2's architectural KV compression. Rather than sharing K/V across heads, K and V are reconstructed at use time from a small latent $\mathbf{c}_t^{KV} = W^{DKV} \mathbf{h}_t \in \mathbb{R}^{d_c}$, shared across heads, via up-projections $W^{UK}, W^{UV}$. The cache holds only the latent, giving ~93% KV-cache reduction versus MHA at DeepSeek-V2 dimensions. During inference $W^{UK}$ can be absorbed into $W^Q$ and $W^{UV}$ into $W^O$ `[deepseek-v2 §2.1.2; kb/notes/inference/kv-cache-management#§2]`.
 - **Decoupled RoPE** — The MLA add-on that splits each query/key into a content part (no RoPE, low-rank reconstructed) and a small shared RoPE-carrying part. Necessary because standard RoPE inserts a position-dependent rotation between $W^Q$ and $W^{UK}$ that prevents the cache-absorption optimization `[deepseek-v2 §2.1.3]`.
 
 
@@ -72,7 +71,7 @@ treated as `status: pre-expansion-seed` until re-validated during Phase 2.
 - **Recomputation (selective gradient checkpointing)** — Storing only the output and softmax statistics from the forward pass and recomputing the attention matrix on-chip during the backward pass, trading FLOPs for memory `[dao2022 §3.1]`.
 - **HBM (High-Bandwidth Memory)** — The large, slow memory tier on a GPU (~40–80 GB on A100, 1.5–2.0 TB/s). Most operations in standard attention are HBM-bound `[dao2022 §2.1]`.
 - **SRAM (on-chip)** — The small, fast memory tier on a GPU (~192 KB per A100 SM, ~19 TB/s). FlashAttention restructures attention to keep working sets in SRAM `[dao2022 §2.1]`.
-- **NSA (Native Sparse Attention)** — Yuan et al.\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Aimed at long context. Treated in `kb/notes/architecture/long-context.md` `[yuan2025]`.
+- **NSA (Native Sparse Attention)** — Yuan et al.\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Three branches — token compression, token selection, and a sliding window — run in parallel; GQA-group-aligned blockwise selection keeps the selected blocks contiguous enough for FlashAttention-style kernels under sparsity. Aimed at long context. Treated in `kb/notes/architecture/long-context.md` `[yuan2025 §3.2–3.4]`.
 
 ## Feed-Forward Network
 
@@ -145,7 +144,7 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 - **SycophancyEval** — Sharma et al. 2023's four-task free-form
   text-generation suite (feedback, "are you sure?" capitulation,
   user-preference matching, mimicry-of-mistakes) for measuring
-  sycophancy in RLHF assistants. `[sharma2023-sycophancy §fourtask;
+  sycophancy in RLHF assistants. `[sharma2023-sycophancy §3;
   kb/excerpts/sharma2023-sycophancy#sec-fourtask]`
 - **Scheming** — A model schemes when, instructed to pursue a goal $G$,
   it strategically takes actions that conceal its capabilities or
@@ -176,25 +175,25 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   avoiding deployment, etc). One of the six probes in the Apollo suite.
   Most concerning when it occurs *without nudging* and in service of a
   *training-acquired* goal (observed in Claude 3.5 Sonnet pursuing
-  helpfulness). `[meinke2024-apollo-scheming §sandbagging-nudge;
+  helpfulness). `[meinke2024-apollo-scheming §3.6;
   kb/excerpts/meinke2024-apollo-scheming#sec-sandbagging-nudge]`
 - **Goal-guarding** — One of the Apollo six-probe scheming behaviors:
   manipulating future-instance prompts (e.g., editing system prompts
   one expects future copies to read) to preserve the in-context goal.
-  `[meinke2024-apollo-scheming §six-evals;
+  `[meinke2024-apollo-scheming §2.2;
   kb/excerpts/meinke2024-apollo-scheming#sec-six-evals]`
 - **Self-exfiltration** — Apollo six-probe scheming behavior: copying
   perceived model weights to external servers when the model believes
   it is about to be replaced. Observed in five frontier models.
-  `[meinke2024-apollo-scheming §six-evals]`
+  `[meinke2024-apollo-scheming §2.2]`
 - **Oversight subversion** — Apollo six-probe scheming behavior:
   attempting to disable monitoring tools / oversight mechanisms.
-  `[meinke2024-apollo-scheming §six-evals]`
+  `[meinke2024-apollo-scheming §2.2]`
 - **Persistence under interrogation** — The fraction of follow-up
   questions on which a model maintains its earlier deception.
   Operational distinguisher between scheming (high persistence) and
   sycophancy (typically retracts under challenge). 85%+ for o1 in
-  Apollo's setup. `[meinke2024-apollo-scheming §persistence;
+  Apollo's setup. `[meinke2024-apollo-scheming §3.2;
   kb/excerpts/meinke2024-apollo-scheming#sec-persistence]`
 
 ## Scalable oversight
@@ -219,16 +218,11 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   Amplify decomposes hard tasks into supervisable subtasks. Task-
   decomposition dual of debate's claim-decomposition. No clean LLM-
   scale empirical instantiation as of 2026-05.
-- **RLAIF (RL from AI Feedback)** — Replacing human preference labels
-  with AI-generated preference labels in the RL stage. Introduced as
-  the RL-CAI step of `bai2022-cai`. Reduces labeling burden but does
-  not address bias-source if the AI feedback model itself inherits
-  the bias. `[bai2022-cai §abstract]`
 - **Weak-to-strong (W2S) generalization** — Burns et al. 2023's
   empirical methodology: substitute weak-model labels for human
   supervision, study how strong models generalize. The capability gap
   in this analogy stands in for the alignment gap of superalignment.
-  `[burns2023-w2s §problem; kb/excerpts/burns2023-w2s#sec-problem]`
+  `[burns2023-w2s §3; kb/excerpts/burns2023-w2s#sec-problem]`
 - **Performance Gap Recovered (PGR)** — Burns et al. 2023's headline
   metric: $\mathrm{PGR} = (c_{\text{student}} - c_{\text{weak}}) /
   (c_{\text{ceiling}} - c_{\text{weak}})$. PGR = 0 → student matches
@@ -257,7 +251,12 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   red list of size $(1-\gamma)|V|$, deterministically derived from a
   hash of the previous token. Green tokens receive a logit bias
   $\delta$; sampling proceeds from the modified distribution.
-  Defaults: $\gamma = 0.25$, $\delta = 2.0$.
+  The paper declares no default $(\gamma, \delta)$: Figure 1's
+  illustration uses $(0.25, 2)$; the §4.1 analysis and the Table 1
+  experiments both use $\gamma = 0.5$, $\delta = 2.0$; and §6 reports
+  the small green list $\gamma = 0.1$ as pareto-optimal on the
+  watermark-strength (z-score) vs. text-quality (perplexity) tradeoff
+  `[kirchenbauer2023-watermark §4.1, §6, Fig.1]`.
   `[kirchenbauer2023-watermark §3 Algorithm 2;
   kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`
 - **z-score watermark detection** — Detection statistic
@@ -301,40 +300,16 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   evaluation in that the adversary actively searches for failures.
   HarmBench and JailbreakBench are the canonical standardized
   frameworks. `[harmbench2024 §abstract]`
-- **Attack success rate (ASR)** — The fraction of adversarial prompts
-  that elicit a successful (policy-violating) response from the
-  target model under a fixed scoring procedure. Comparing ASR across
-  benchmarks requires identical scoring and threat-model assumptions.
-- **HarmBench** — Mazeika et al. 2024's standardized red-teaming
-  framework: 510 behaviors, 18 attack methods, 33 target models /
-  defenses. Adopted by AISI for pre-deployment evaluations.
-  `[harmbench2024 §abstract]`
-- **JailbreakBench** — Chao et al. 2024's open robustness benchmark:
-  100 target behaviors aligned with OpenAI usage policies,
-  standardized threat model / prompts / scoring, public leaderboard,
-  repository of jailbreak artifacts. Co-canonical with HarmBench.
-  `[chao2024-jailbreakbench §abstract]`
 - **Crescendo attack** — Russinovich et al. 2024 multi-turn
   gradual-escalation jailbreak: 29-71% ASR improvement over single-
   turn baselines on AdvBench. Documents that single-turn evals
   systematically underestimate the multi-turn attack surface.
-- **AI Safety Level (ASL)** — Anthropic's Responsible Scaling Policy
-  capability tier system. ASL-1 (no autonomy / low risk), ASL-2
-  (current frontier baseline), ASL-3 (substantially elevated risk;
-  specific deployment / security controls required), ASL-4
-  (autonomous AI risk; not yet deployed). Each tier specifies
-  capability evaluations that must trigger pre-deployment.
 - **Responsible Scaling Policy (RSP)** — Anthropic's pre-deployment
   policy framework. Each ASL tier comes with capability triggers
   (which safety evaluations must run) and security commitments
   (which infrastructure / containment requirements must be met). Co-
   canonical with OpenAI's Preparedness Framework and DeepMind's
   Frontier Safety Framework.
-- **Dangerous-capability evaluation** — Pre-deployment test for
-  specific high-stakes capabilities: autonomous replication,
-  autonomous research, cybersecurity attack capability, biological-
-  weapons-uplift capability. METR's 77-task suite is the canonical
-  cross-vendor reference.
 - **Task horizon (METR)** — Capability-quantification metric:
   the distribution of human-time-to-complete for a task. METR's
   empirical scaling-curve work suggests model time-to-complete
@@ -349,7 +324,7 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   faithfully reflects biased human preferences produces a model
   faithful to the biased proxy, not to the underlying value.
   Foundational to the sycophancy mechanism. `[sharma2023-sycophancy
-  §rlhf-causal; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal]`
+  §4.1; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal]`
 - **Mesa-optimizer** — Hubinger et al. 2019 concept: a learned
   optimizer that emerges inside a trained network. The deceptive-
   alignment failure mode is defined for mesa-optimizers; whether
@@ -369,23 +344,14 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   than training. Apollo's "Stress-Testing Deliberative Alignment for
   Anti-Scheming Training" (2025) reports partial-but-incomplete
   reduction in scheming under this technique.
-- **CoT faithfulness** — Whether a model's chain-of-thought trace
-  reflects its actual reasoning process. Empirically partial: Lanham
-  et al. 2023 / Turpin et al. 2024 show CoT can be unfaithful
-  (post-hoc rationalization, label-leakage). Apollo's argument that
-  scheming-shaped CoT constitutes evidence of scheming sidesteps
-  faithfulness by treating CoT as part of the deployed surface, not
-  as ground-truth introspection.
 
 ### architecture
 
 ## Position encoding
 
-- **Sinusoidal positional encoding** — Vaswani 2017's deterministic sin/cos position vectors; additive at the input. `[vaswani2017 §3.5]`
 - **Learned absolute positional embedding** — Per-position trainable vectors indexed by integer position; hard cutoff at maximum sequence length. Used by GPT-2, BERT. `[su2021 §2.2]`
 - **Relative position encoding (T5 bias)** — Per-(query, key) distance bias added to attention logits; binned by relative distance. `[su2021 §2.3]`
 - **ALiBi** — Attention with Linear Biases. Parameter-free additive bias $-|m-n| \cdot s_h$ at attention logits, with per-head slope. Used by BLOOM, MPT. (Press et al. 2021, arXiv 2108.12409)
-- **Rotary Position Embedding** — Multiplicative position encoding that rotates query and key in 2D subspaces by per-frequency angles $m\theta_i$. Inserts position information as relative offsets only via rotation-matrix orthogonality. The de-facto standard in modern decoder-only LLMs. `[su2021 §3.2]`
 - **RoPE base frequency $b$** — The base of the geometric frequency progression $\theta_i = b^{-2(i-1)/d}$. Default 10000 (su2021); LLaMA-3 uses 500000; long-context models use 1e6+. Larger $b$ stretches the longest "naturally-seen" wavelength.
 - **NTK-aware RoPE scaling** — Per-frequency RoPE rescaling that scales the base $b$ rather than positions, leaving high-frequency dimensions unchanged. Empirically extends context length without degrading short-context quality.
 - **YaRN** — "Yet another RoPE extensioN method." Combines NTK-aware scaling with a per-frequency interpolation schedule (no scaling on short-wavelength dims, full scaling on long-wavelength dims, smooth ramp between) and an attention-temperature rescale. ~10× more token-efficient than position interpolation. (Peng et al. 2023, arXiv 2309.00071)
@@ -424,7 +390,6 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 ## Long context
 
 - **Sliding-window attention** — Each position attends only to the previous $w$ tokens; compute $O(N w d)$ vs $O(N^2 d)$. Local-only by construction; relies on stacked layers' growing receptive field for long-range dependencies. (Longformer 2020, Mistral 2023)
-- **Native Sparse Attention** — Three-branch sparse attention (compress + select + sliding-window) trained natively (not retrofit). GQA-group-aligned blockwise selection enables FlashAttention-style kernels under sparsity. `[yuan2025 §3.2–3.4]`
 - **Token compression branch (NSA)** — Block-summarizes a window of $l$ keys/values into a single representation via learned MLP. Provides coarse global attention. `[yuan2025 §3.3.1 Eq.7]`
 - **Token selection branch (NSA)** — Picks top-$n$ blocks by importance scores derived from the compression branch's attention scores. Provides fine-grained attention. `[yuan2025 §3.3.2 Eq.8–12]`
 - **Sliding window branch (NSA)** — Dedicated local-window branch that absorbs local-pattern learning so the compression and selection branches focus on long-range. `[yuan2025 §3.3.3]`
@@ -448,8 +413,6 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 - **Think tokens / `<think>...</think>`** — Reserved special tokens delimiting the reasoning region of a generated output. Reserved as single tokens (not multi-token UTF-8 sequences). `[deepseek-r1, qwen3]`
 - **Two-checkpoint reasoning** — DeepSeek's pattern: distinct base (V3) and reasoning (R1) checkpoints. Cleanly separates concerns; doubles deployment.
 - **Single-checkpoint hybrid reasoning** — Qwen3's pattern: one model trained to operate in either thinking or non-thinking mode based on a system-prompt flag. Amortizes deployment but trades off specialty.
-- **Thinking budget** — Serving-time cap on reasoning-token count before forcing answer commit. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete. (Qwen3)
-- **RLVR (Reinforcement Learning with Verifiable Rewards)** — Training method for reasoning models. Reward = +1 if a programmatic verifier (math grader, code executor, formal checker) accepts the answer, 0 otherwise. The reasoning trace is the policy's free choice. Used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning. See `kb/notes/post-training/rlvr-and-grpo.md`.
 - **R1-Zero pattern** — Pure RL from base (no cold-start SFT). Develops reasoning behavior emergently but produces less-readable traces. DeepSeek's ablation result.
 
 ## Multi-token prediction
@@ -463,36 +426,33 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 ## Agentic benchmarks
 
 - **Agentic benchmark** — Evaluation in which a model autonomously plans, takes actions in an environment, observes results, and replans, scored by an end-state verifier rather than a turn-by-turn rubric. Distinct from question-answering eval. Canonical examples: SWE-bench, GAIA, OSWorld, tau-bench `[jimenez2024-swebench, mialon2023-gaia, xie2024-osworld, yao2024-tau-bench]`.
-- **End-state verifier** — A scoring function $V(s_T, g)$ that checks the post-trajectory environment state $s_T$ against a goal $g$, accepting any path that reaches the correct end-state. Contrast: turn-by-turn rubric (rewards specific actions). `[xie2024-osworld §sec-task-spec]`
-- **FAIL_TO_PASS / PASS_TO_PASS** — The two test-bundle sets used in SWE-bench's verifier. F2P tests must transition from failing on the pre-patch codebase to passing on the post-patch codebase; P2P tests must continue to pass. Both must hold for a task to be `resolved`. `[jimenez2024-swebench §sec-eval-protocol]`
+- **End-state verifier** — A scoring function $V(s_T, g)$ that checks the post-trajectory environment state $s_T$ against a goal $g$, accepting any path that reaches the correct end-state. Contrast: turn-by-turn rubric (rewards specific actions). `[xie2024-osworld §2.1]`
+- **FAIL_TO_PASS / PASS_TO_PASS** — The two test-bundle sets used in SWE-bench's verifier. F2P tests must transition from failing on the pre-patch codebase to passing on the post-patch codebase; P2P tests must continue to pass. Both must hold for a task to be `resolved`. `[jimenez2024-swebench §A.4]`
 - **SWE-Bench Verified** — OpenAI's August-2024 500-task subset of SWE-bench, filtered by professional software engineers for unambiguous issue specs and fair test sets. The de-facto leaderboard target as of 2025. `[jimenez2024-swebench]`
-- **pass^k** — Reliability metric: the probability that **all** $k$ independent attempts at a task succeed. Dual to pass@k (probability that **at least one** of $k$ attempts succeeds). pass^k measures consistent capability; pass@k measures peak capability. `[yao2024-tau-bench §sec-passk]`
-- **GUI grounding** — The ability to map a natural-language target ("click the Save button") to the correct pixel coordinates on a screen. Identified as the dominant failure mode for vision-language agents on OSWorld at launch. `[xie2024-osworld §sec-results]`
+- **pass^k** — Reliability metric: the probability that **all** $k$ independent attempts at a task succeed. Dual to pass@k (probability that **at least one** of $k$ attempts succeeds). pass^k measures consistent capability; pass@k measures peak capability. `[yao2024-tau-bench §3]`
+- **GUI grounding** — The ability to map a natural-language target ("click the Save button") to the correct pixel coordinates on a screen. Identified as the dominant failure mode for vision-language agents on OSWorld at launch. `[xie2024-osworld §5.4]`
 - **Tool budget / step budget** — The maximum number of environment actions an agent is allowed in a single task evaluation. SWE-bench traces typically allow 30–50 turns; GAIA limits by tool calls; OSWorld bounds at ~50 actions. Important methodological knob: short budgets favor planning-strong agents, long budgets favor exploration-strong agents.
 - **Capture-the-Flag (CTF)** — Cybersecurity task format adopted by Cybench: agents must exploit a target system to retrieve a flag string (typically `flag{...}`), with success scored by string match. `[cybench2024]`
 
 ## Reasoning benchmarks
 
-- **GPQA Diamond** — 198-question subset of GPQA where (i) both expert annotators agree on the gold answer, and (ii) at least one non-expert validator with web access got the answer wrong. The headline subset on which leaderboards report. `[rein2023-gpqa §sec-diamond]`
 - **Google-proof construction** — Question design protocol where non-expert validators with 30+ minutes of web access score only marginally above random guessing (e.g., 34% on GPQA's 4-way MCQ vs. 25% baseline). The operationalization of "specialized expertise required." `[rein2023-gpqa §abstract]`
 - **FrontierMath** — Epoch AI's benchmark of research-grade math problems authored and cross-vetted by 60+ working mathematicians, with single canonical numerical/symbolic answers parseable by automated checker. <2% solve rate at Nov 2024 launch. `[glazer2024-frontiermath §abstract]`
 - **HLE (Humanity's Last Exam)** — 2,500-question multimodal cross-domain frontier benchmark from Scale AI / CAIS. Designed as the post-MMLU broad-domain frontier target. `[phan2025-hle §abstract]`
 - **ARC-AGI-2** — 2025 successor to ARC-AGI-1 (which o3 effectively solved at >85% in late 2024). Abstract grid-puzzle inductive-generalization benchmark; top commercial AI ~37.6%, refinement-loop systems ~54%, humans ~95%. `[arc-agi-2-2025]`
 - **MathArena** — Dynamic math benchmark using post-cutoff competition problems (CMIMC, IMO, etc.) immediately upon release. Contamination-immune by construction. `[matharena-2025]`
 - **Random-guess ceiling** — The score a uniform-random model would achieve. 25% for 4-way MCQ (MMLU, GPQA), 10% for 10-way MCQ (MMLU-Pro), ~0% for free-form numeric (FrontierMath). Lower ceiling = larger usable dynamic range above noise floor. `[wang2024-mmlu-pro]`
-- **Answer-letter prior** — A pretrained model's learned bias over multiple-choice answer letters (A/B/C/D), independent of question content. Can shift MCQ scores by 1–4 percentage points. Mitigated by 10-way MCQ (MMLU-Pro) or letter-permutation evaluation. `[wang2024-mmlu-pro §sec-delta]`
 - **Refinement-loop system** — Iterative program-synthesis architecture that proposes a candidate solution, tests it, and refines based on test feedback. Dominant paradigm in ARC Prize 2025 (54% on ARC-AGI-2 vs. ~37.6% for direct LLM systems). `[arc-agi-2-2025]`
 
 ## Eval methodology
 
-- **Prompt-format sensitivity** — Variance in benchmark score $\hat{S}$ induced by changing prompt template, system message, few-shot examples, or answer-extraction format while holding model and benchmark fixed. ~4–5% on MMLU; ~2% on MMLU-Pro. `[wang2024-mmlu-pro §sec-delta]`
+- **Prompt-format sensitivity** — Variance in benchmark score $\hat{S}$ induced by changing prompt template, system message, few-shot examples, or answer-extraction format while holding model and benchmark fixed. ~4–5% on MMLU; ~2% on MMLU-Pro. `[wang2024-mmlu-pro §6.3]`
 - **Data contamination** — The presence of benchmark items, gold answers, or close paraphrases in a model's training corpus, biasing the benchmark score upward. Taxonomy: input contamination, label contamination, distribution contamination, indirect contamination, generative contamination. `[contamination-survey-2025 §abstract]`
-- **Static vs. dynamic benchmarking** — Static = fixed benchmark items (MMLU, GPQA); dynamic = items appended post-cutoff (MathArena, LiveCodeBench, GAIA gated leaderboard). Dynamic is contamination-immune by construction but lacks community standards for evaluating quality. `[contamination-survey-2025 §sec-scope]`
+- **Static vs. dynamic benchmarking** — Static = fixed benchmark items (MMLU, GPQA); dynamic = items appended post-cutoff (MathArena, LiveCodeBench, GAIA gated leaderboard). Dynamic is contamination-immune by construction but lacks community standards for evaluating quality. `[contamination-survey-2025 §4]`
 - **Verifier mis-specification** — The benchmark's gold answer or scoring rule is wrong, biasing scores in unpredictable ways. MMLU's 6.49% baseline error rate (per-subset up to 57% on Virology) is the canonical case. `[mmlu-redux-2024]`
-- **MMLU-Redux** — The Polo et al. 2024 audit re-annotating 5,700 MMLU questions and documenting a 6.49% baseline error rate. Showed leaderboard-rank flips when corrected. `[mmlu-redux-2024]`
-- **HELM (Holistic Evaluation of Language Models)** — Stanford CRFM 2022 framework that scores models on 7 metric axes (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) across 16+ scenarios. Structural argument: benchmarks should ship metric bundles, not single metrics. `[liang2022-helm §sec-metrics]`
+- **HELM (Holistic Evaluation of Language Models)** — Stanford CRFM 2022 framework that scores models on 7 metric axes (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) across 16+ scenarios. Structural argument: benchmarks should ship metric bundles, not single metrics. `[liang2022-helm §1.1]`
 - **lm-evaluation-harness** — EleutherAI's open-source eval infrastructure backing HF Open LLM Leaderboard. Tasks are YAML configs reduced to three primitives (`loglikelihood`, `loglikelihood_rolling`, `generate_until`). De-facto standard for open-model evaluation. `[lm-eval-harness]`
-- **loglikelihood scoring** — MCQ evaluation method that computes $\log P(\text{option})$ for each option and picks the argmax. Default for MMLU in lm-evaluation-harness; not available for closed APIs that don't expose logprobs (which must use `generate_until`). `[lm-eval-harness §sec-request-types]`
+- **loglikelihood scoring** — MCQ evaluation method that computes $\log P(\text{option})$ for each option and picks the argmax. Default for MMLU in lm-evaluation-harness; not available for closed APIs that don't expose logprobs (which must use `generate_until`). `[lm-eval-harness; kb/excerpts/lm-eval-harness#sec-request-types]`
 - **N-gram overlap** — Standard contamination-detection method (Brown et al. 2020 GPT-3 §C): flag training documents containing benchmark n-grams of length ≥13. Cheap; misses paraphrase contamination.
 - **Min-K% Prob** — Contamination-detection method (Shi et al. 2024) that flags candidate items whose lowest-K%-probability tokens are unusually high — i.e., the model "knew" even the surprising tokens. Model-internal signal; doesn't require training-corpus access.
 - **LLM-as-judge** — Evaluation pattern where a strong LLM scores another model's responses (e.g., AlpacaEval, MT-Bench, Arena-Hard). Introduces a contamination axis where the same model class scores its own outputs generously. Sidestepped by string-match (GAIA, FrontierMath) or executable verifiers (SWE-bench, OSWorld).
@@ -507,28 +467,25 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 - **KV cache** — The per-layer cache of key/value tensors $K_{1:t}, V_{1:t}$ produced during autoregressive decoding so each new token's attention is $O(t)$ rather than $O(t^2)$. Size per token per layer is $2 \cdot n_{\text{kv}} \cdot d_h \cdot \text{bytes}$. `[kwon2023 §2; kb/notes/inference/kv-cache-management#§1]`
 - **PagedAttention** — vLLM's KV-cache layout: KV is stored in fixed-size **blocks** (typically 16 tokens), each sequence holds a per-layer **block table** mapping logical block indices to physical blocks, and attention is computed block-wise per Eq.4. Eliminates the contiguous-allocation requirement that produced 50–90% wasted KV memory in pre-vLLM serving stacks. `[kwon2023 §4.1, Eq.4; kb/excerpts/kwon2023#sec-4-1]`
 - **KV block / block table** — Fixed-size unit of KV storage (16 tokens default in vLLM). The per-sequence block table is the indirection that lets logically-contiguous KV live in physically-scattered memory. `[kwon2023 §4.2; kb/excerpts/kwon2023#sec-4-2]`
-- **Reservation / internal / external fragmentation** — vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active sequence; internal = pre-allocated maximum-length slots beyond actual generated length; external = unusable gaps between sequences. PagedAttention reduces total waste below 4%. `[kwon2023 §3.1, Fig.4; kb/excerpts/kwon2023#sec-3]`
+- **Reservation / internal / external fragmentation** — vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active sequence; internal = pre-allocated maximum-length slots beyond actual generated length; external = unusable gaps between sequences. PagedAttention reduces total waste below 4%. `[kwon2023 §3.1, Fig.3; kb/excerpts/kwon2023#sec-3]`
 - **Copy-on-write (serving)** — When parallel-sampling decode paths (or beam-search hypotheses) diverge, only the diverging block is duplicated; identical-prefix blocks remain shared via reference count. `[kwon2023 §4.4; kb/excerpts/kwon2023#sec-4-4]`
 - **Swap / recompute (vLLM eviction)** — Two strategies for evicting KV when memory is full: swap the blocks to CPU memory and bring them back when the sequence is rescheduled, or discard them and recompute prefill. Swap wins on long sequences, recompute on short ones. `[kwon2023 §4.5; kb/excerpts/kwon2023#sec-4-5]`
-- **RadixAttention** — SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate. `[zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#sec-3]`
-- **Multi-Query Attention (MQA, KV-shape)** — Architectural KV compression: all $H$ query heads share one $(K, V)$ pair, shrinking the KV cache by factor $H$ at the cost of representation. `[shazeer2019 §2; kb/notes/inference/kv-cache-management#§2]`
-- **Grouped-Query Attention (GQA, KV-shape)** — $H$ query heads in $G$ groups, each group sharing one $(K, V)$. Shrinks the cache by $H/G$ at minimal quality loss. The production sweet-spot (Llama 2/3, Mistral). `[ainslie2023; kb/notes/inference/kv-cache-management#§2]`
-- **Multi-head Latent Attention (MLA)** — DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. `[deepseek-v2 §2.1; kb/notes/inference/kv-cache-management#§2]`
+- **RadixAttention** — SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate. `[zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#sec-3-cache-aware]`
 - **Per-channel keys, per-token values (KVQuant)** — KVQuant's empirical finding: K outliers align along the channel axis (so quantise per-channel), V outliers along the token axis (so quantise per-token). Different statistics for K vs V is the core design lesson. `[kvquant2024; kb/notes/inference/kv-cache-management#§4]`
 
 ## Quantization
 
-- **Uniform quantizer (round-to-nearest, RTN)** — $Q(w) = \text{clip}(\lfloor w/\Delta \rceil, -2^{b-1}, 2^{b-1}-1) \cdot \Delta$ with $\Delta = \max(|w|)/(2^{b-1}-1)$ per group. The baseline against which calibration-based methods are compared. `[frantar2022 §2; kb/notes/inference/quantization#§1]`
-- **W4A16 / W8A8 / W1.58A8 (notation)** — Compact spec of weight-precision × activation-precision. W4A16 = 4-bit weights, FP16 activations (GPTQ/AWQ regime). W8A8 = INT8 weight + INT8 activation (SmoothQuant). W1.58A8 = ternary $\{-1,0,+1\}$ weights + INT8 activations (BitNet b1.58). `[ma2024-bitnet §2.1; kb/notes/inference/quantization#§7]`
-- **Calibration set** — A small set of representative input sequences (typically 128 sequences × 2048 tokens) run through the network to collect activation statistics that drive quantization decisions. `[frantar2022 §2; xiao2023-smoothquant §3.2]`
+- **Uniform quantizer (round-to-nearest, RTN)** — $Q(w) = \text{clip}(\lfloor w/\Delta \rceil, -2^{b-1}, 2^{b-1}-1) \cdot \Delta$ with $\Delta = \max(|w|)/(2^{b-1}-1)$ per group. The baseline against which calibration-based methods are compared. `[frantar2022 §5; kb/notes/inference/quantization#§1]`
+- **W4A16 / W8A8 / W1.58A8 (notation)** — Compact spec of weight-precision × activation-precision. W4A16 = 4-bit weights, FP16 activations (GPTQ/AWQ regime). W8A8 = INT8 weight + INT8 activation (SmoothQuant). W1.58A8 = ternary $\{-1,0,+1\}$ weights + INT8 activations (BitNet b1.58). `[ma2024-bitnet §2; kb/notes/inference/quantization#§7]`
+- **Calibration set** — A small set of representative input sequences (typically 128 sequences × 2048 tokens) run through the network to collect activation statistics that drive quantization decisions. `[frantar2022 §5; xiao2023-smoothquant §3.2]`
 - **Layer-wise reconstruction (GPTQ objective)** — Quantize each linear layer independently to minimise $\| W X - \widehat{W} X \|_F^2$ where $X$ is the calibration activation. The objective behind OBS/OBQ/GPTQ. `[frantar2022 Eq.1; kb/excerpts/frantar2022#sec-3-layerwise]`
-- **GPTQ** — Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit. `[frantar2022 §3; kb/notes/inference/quantization#§3]`
+- **GPTQ** — Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit. `[frantar2022 §4; kb/notes/inference/quantization#§3]`
 - **AWQ (Activation-aware Weight Quantization)** — Lin et al. 2023. Per-channel weight scaling driven by *activation* magnitudes (preserving ~1% salient channels at higher precision); reorder-free, no backward pass. Strong W4A16 baseline alongside GPTQ. `[kb/notes/inference/quantization#§4]`
 - **Salient channel (AWQ)** — A weight column whose corresponding *activation channel* has large magnitude. AWQ's argument: protecting these channels (via per-channel scaling) recovers most of the quantization-error budget. `[kb/notes/inference/quantization#§4]`
-- **Activation outlier** — A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median. Emerges around 6.7B parameters. The reason naive INT8 activation quantization breaks at scale. `[xiao2023-smoothquant §3, Fig.5; kb/excerpts/xiao2023-smoothquant#sec-3]`
+- **Activation outlier** — A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median. Emerges around 6.7B parameters. The reason naive INT8 activation quantization breaks at scale. `[xiao2023-smoothquant §3, Fig.4; kb/excerpts/xiao2023-smoothquant#sec-3]`
 - **SmoothQuant migration** — Offline transform $X \cdot \text{diag}(s)^{-1} \cdot \text{diag}(s) W$ that moves outlier difficulty from activation to weight side. Smoothing factor $s_j = \max(|X_j|)^\alpha / \max(|W_j|)^{1-\alpha}$, $\alpha = 0.5$ default. Enables W8A8 INT8 on models up to 530B. `[xiao2023-smoothquant §4, Eq.3-4; kb/excerpts/xiao2023-smoothquant#sec-4]`
-- **BitLinear** — BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\{-1,0,+1\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition. `[ma2024-bitnet §2.1; kb/excerpts/ma2024-bitnet#sec-2]`
-- **Absmean ternary quantization** — BitNet b1.58's weight quantizer: $\beta = \frac{1}{nm}\sum_{i,j}|W_{ij}|$, $\widehat{W}_{ij} = \text{round\_clip}(W_{ij}/(\beta+\epsilon), -1, +1)$. Per-tensor $\beta$, ternary output. Trained from scratch in 1.58-bit, not post-quantized. `[ma2024-bitnet §2.1, Eq.1-3; kb/excerpts/ma2024-bitnet#sec-2]`
+- **BitLinear** — BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\{-1,0,+1\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition. `[ma2024-bitnet §2; kb/excerpts/ma2024-bitnet#sec-2]`
+- **Absmean ternary quantization** — BitNet b1.58's weight quantizer: $\beta = \frac{1}{nm}\sum_{i,j}|W_{ij}|$, $\widehat{W}_{ij} = \text{round\_clip}(W_{ij}/(\beta+\epsilon), -1, +1)$. Per-tensor $\beta$, ternary output. Trained from scratch in 1.58-bit, not post-quantized. `[ma2024-bitnet §2, Eq.1-3; kb/excerpts/ma2024-bitnet#sec-2]`
 - **GPTQ-vs-AWQ-vs-SmoothQuant spec sheet** — GPTQ: W4A16, layer-wise reconstruction, sequential. AWQ: W4A16, salient-channel preservation, no calibration backprop. SmoothQuant: W8A8, activation-outlier migration. The three occupy distinct cells of the (precision × technique) grid. `[kb/notes/inference/quantization#§7]`
 - **FP8 (E4M3 / E5M2)** — IEEE-style 8-bit floating-point. E4M3: 4-exp / 3-mantissa, narrower range / better resolution (typical for activations). E5M2: 5-exp / 2-mantissa, wider range (typical for gradients). Production choice from H100 onward. `[shah2024 §1; kb/notes/inference/quantization#§7]`
 - **Microscaling (MX) format** — Block-wise FP format: a per-block shared 8-bit exponent + per-element 4–8 bit elements (MXFP4, MXFP6, MXFP8). Open standard ratified by OCP 2023. `[kb/notes/inference/quantization#§7]`
@@ -538,7 +495,7 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 - **Speculative decoding / sampling** — Inference acceleration by drafter–target factoring: a cheap drafter $M_q$ proposes $\gamma$ tokens; the expensive target $M_p$ scores them in one parallel forward pass; a rejection-sampling rule preserves the exact target distribution. `[leviathan2023 §2; kb/excerpts/leviathan2023#sec-2-1]`
 - **Rejection-sampling rule (speculative decoding)** — For draft token $x \sim q$: accept with probability $\min(1, p(x)/q(x))$; on rejection, sample from $\text{norm}(\max(0, p - q))$. Guarantees the accepted token's marginal is exactly $p$. `[leviathan2023 §2.3; kb/excerpts/leviathan2023#sec-2-3]`
 - **Acceptance rate $\alpha$** — $\alpha = \mathbb{E}_{x \sim q}[\min(1, p(x)/q(x))]$. The probability a single drafter token is accepted; the dominant lever in the speedup formula. Typical values: 0.5–0.8 for well-matched drafter–target pairs. `[leviathan2023 §3.2; kb/excerpts/leviathan2023#sec-3-2]`
-- **Speedup theorem (Leviathan)** — $\mathbb{E}[\text{tokens per cycle}] = (1-\alpha^{\gamma+1})/(1-\alpha)$ (Eq.1, capped geometric). Walltime improvement $= [(1-\alpha^{\gamma+1})/(1-\alpha)] / (c\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8). `[leviathan2023 §3.3, Eq.1, Theorem 3.8; kb/excerpts/leviathan2023#sec-3-3]`
+- **Speedup theorem (Leviathan)** — $\mathbb{E}[\text{tokens per cycle}] = (1-\alpha^{\gamma+1})/(1-\alpha)$ (Eq.1, capped geometric) `[leviathan2023 §3.1, Eq.1; kb/excerpts/leviathan2023#sec-3-1]`. Walltime improvement $= [(1-\alpha^{\gamma+1})/(1-\alpha)] / (c\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8) `[leviathan2023 §3.3, Theorem 3.8; kb/excerpts/leviathan2023#sec-3-3]`
 - **Drafter / target model** — The two LMs in speculative decoding. Drafter $M_q$ is small/fast, target $M_p$ is large/correct. The target is the only model whose distribution matters for output quality. `[leviathan2023 §1; kb/notes/inference/speculative-decoding#§3]`
 - **Tree attention (Medusa/EAGLE)** — A draft tree of token candidates verified in one target forward pass via a custom attention mask that lets every node attend only to its ancestors. Enables draft-width $> 1$ per position. `[cai2024-medusa §2.1.2; kb/excerpts/cai2024-medusa#sec-2-1-2]`
 - **Medusa heads** — $K$ extra decoding heads $h^{(k)}: \mathbb{R}^d \to \mathbb{R}^{|V|}$ predicting tokens at offsets $t+1, t+2, \ldots, t+K$ from the same hidden state. Each head is a small residual MLP + the original LM head. `[cai2024-medusa §2.1, Eq.0; kb/excerpts/cai2024-medusa#sec-2-1-1]`
@@ -559,9 +516,7 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
 
 ## Structured output
 
-- **Constrained decoding** — Mask the next-token logits at every step to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, arbitrary CFG). Naive implementations query the grammar engine for every token in the vocabulary at every step — the bottleneck modern engines fix. `[kb/notes/inference/structured-output#§1]`
 - **Context-independent / context-dependent vocabulary split (XGrammar)** — XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (~99% of vocab); compute at runtime only the small remainder (~1%) that depends on the active context. Brings constrained-decoding overhead from ms/token to μs/token. `[xgrammar2024; kb/notes/inference/structured-output#§3]`
-- **Compressed FSM (SGLang)** — When a JSON-schema or regex forces a deterministic chain of tokens (e.g. the constant prefix `{"summary": "`), merge those single-edge runs in the FSM so the constrained decoder emits the entire deterministic prefix in one step instead of token-by-token. `[zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4]`
 - **JSON-schema mode** — Production-facing API surface (OpenAI, Gemini, vLLM, llama.cpp) where the user supplies a JSON Schema and the engine guarantees output validates against it. Implemented via constrained decoding on the schema-derived FSM. `[kb/notes/inference/structured-output#§2]`
 
 ### interpretability
@@ -623,29 +578,29 @@ glossary format (cf. "Attention variants and KV-cache compression").
   bottleneck makes the explanation testable via reconstruction
   fidelity (FVE). Used in pre-deployment audits to surface
   unverbalized model cognition — including evaluation awareness.
-  `[anthropic2026-nla §method; kb/excerpts/anthropic2026-nla#sec-method]`
+  `[anthropic2026-nla §Method; kb/excerpts/anthropic2026-nla#sec-method]`
 - **Activation verbalizer (AV)** — The AV $\mathrm{AV}(z \mid h_\ell)$
   takes a residual-stream activation $h_\ell$ and emits a
   natural-language explanation token sequence $z$. One half of the
-  NLA pair. `[anthropic2026-nla §method;
+  NLA pair. `[anthropic2026-nla §Method;
   kb/excerpts/anthropic2026-nla#sec-method]`
 - **Activation reconstructor (AR)** — The AR $\mathrm{AR}(z)$ takes
   the verbalized explanation $z$ and produces a reconstructed
   activation $\hat h_\ell \in \mathbb{R}^{d_\mathrm{model}}$. Trained
   jointly with the AV to minimise the round-trip MSE on activation
-  reconstruction. `[anthropic2026-nla §method;
+  reconstruction. `[anthropic2026-nla §Method;
   kb/excerpts/anthropic2026-nla#sec-method]`
 - **Fraction of Variance Explained (FVE)** — NLA quality metric:
   $\mathrm{FVE} = 1 - \mathcal{L}/\mathbb{E}\lVert h_\ell - \bar h_\ell\rVert^2$
   where $\mathcal{L}$ is the round-trip MSE. FVE = 1 is a lossless
   natural-language code; FVE = 0 means the explanation does no better
-  than the mean activation. `[anthropic2026-nla §method;
+  than the mean activation. `[anthropic2026-nla §Method;
   kb/excerpts/anthropic2026-nla#sec-method]`
 - **Unverbalized evaluation awareness** — Cases where a model
   internally suspects it is being tested but does not say so
   in its visible output. NLAs were validated as a tool for surfacing
   this signal during Anthropic's pre-deployment audit of Claude
-  Opus 4.6. `[anthropic2026-nla §auditing;
+  Opus 4.6. `[anthropic2026-nla;
   kb/excerpts/anthropic2026-nla#sec-auditing]`
 
 ## Activation patching — methodology vocabulary
@@ -853,20 +808,12 @@ glossary format (cf. "Attention variants and KV-cache compression").
 
 ## Probing — vocabulary
 
-- **Probe** — a (typically linear) classifier $g(\mathbf{h}) =
-  \sigma(\mathbf{w}^\top \mathbf{h} + b)$ trained on labeled
-  activations to predict an external property $y$. Foundational
-  reference: Alain & Bengio 2017.
 - **Mass-mean probing** — Marks & Tegmark 2023: define the probe
   direction as $\mathbf{d}_\text{class} = \mathbb{E}[\mathbf{h} \mid
   y = c_1] - \mathbb{E}[\mathbf{h} \mid y = c_0]$, then project
   activations onto $\mathbf{d}_\text{class}$. Simpler and more
   generalization-robust than logistic regression on the same
   features `[marks-tegmark-2023-truth §1]`.
-- **Truth direction** — the canonical mass-mean probe direction for
-  truth-value of a statement, derived in Marks & Tegmark 2023. A
-  small linear subspace separates true and false statements across
-  many models and datasets.
 - **Correlational vs. causal probing** — a probe demonstrates that
   the model *represents* a property; an activation patch along the
   probe direction demonstrates that the model *uses* it. The 2023+
@@ -898,7 +845,7 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **DPO (Direct Preference Optimization)** — Closed-form, classification-loss reformulation of RLHF: trains the policy directly on preference pairs by inverting the closed-form RL optimum. No reward model, no on-policy sampling, no PPO loop `[rafailov2023-dpo §4 Eq.7]`.
 - **Implicit reward** — In DPO, the policy log-ratio $\hat{r}_\theta(x,y) = \beta\log\pi_\theta(y|x)/\pi_{\mathrm{ref}}(y|x)$ that plays the role of a reward function. The policy is trained on preferences over implicit-reward differences `[rafailov2023-dpo §4]`.
 - **DPO reparameterization** — The closed-form mapping between optimal policy and reward (Eq. 4 of Rafailov 2023): $\pi^*(y|x) \propto \pi_{\mathrm{ref}}(y|x)\exp(r(x,y)/\beta)$. Inverting this gives the implicit reward `[rafailov2023-dpo §4 Eq.4-5]`.
-- **DPO length bias** — DPO-trained models tend to produce longer outputs than the reference because long responses are easier to satisfy with high log-ratios. Addressed by SimPO's length normalization `[meng2024-simpo §3-length]`.
+- **DPO length bias** — DPO-trained models tend to produce longer outputs than the reference because long responses are easier to satisfy with high log-ratios. Addressed by SimPO's length normalization `[meng2024-simpo §2.2]`.
 - **IPO (Identity Preference Optimization)** — DPO variant replacing log-sigmoid loss with squared loss on the preference gap, addressing DPO's overconfidence pathology `[azar2023-ipo]`.
 - **KTO (Kahneman-Tversky Optimization)** — Operates on single-rating data $(x,y,\mathrm{label}\in\{\text{good},\text{bad}\})$ instead of pairwise preferences. Asymmetric prospect-theoretic loss with loss aversion `[ethayarajh2024-kto]`.
 - **ORPO (Odds Ratio Preference Optimization)** — Combines SFT and preference losses in a single objective; no reference model, no SFT stage. Trains from base directly via log-odds ratio of SFT loss between chosen and rejected responses `[hong2024-orpo]`.
@@ -908,21 +855,17 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 
 ## Constitutional AI and RLAIF
 
-- **RLAIF (RL from AI Feedback)** — Replace human preference labels in RLHF with AI-generated preference labels, typically from a feedback model conditioned on a written constitution `[bai2022-cai §4]`.
 - **Constitutional AI (CAI)** — Anthropic 2022 framework for training harmless assistants without human harm labels. Two stages: SL-CAI (sample → critique under principle → revise → SFT) and RL-CAI (sample pairs → AI judge under principle → train RM → PPO) `[bai2022-cai §3-4]`.
 - **Constitution** — A list of principles ("the assistant should not be racist," etc.) used by the feedback model to evaluate / critique responses in CAI. Typical size: ~16 principles `[bai2022-cai §3]`.
-- **SL-CAI** — Supervised learning stage of Constitutional AI. Sample initial responses, critique them under a randomly-chosen principle, revise, and SFT on revised responses `[bai2022-cai §3]`.
-- **RL-CAI** — Reinforcement learning stage of Constitutional AI. Generate AI preferences by having a feedback model choose between response pairs under a principle, train a reward model on AI preferences, run PPO `[bai2022-cai §4]`.
-- **R-CAI (Reverse Constitutional AI)** — Inverts the constitution for adversarial / toxic data generation; probability-clamped RLAIF for red-team data synthesis (April 2026) `[r-cai-2026]`.
 
 ## RLVR and GRPO
 
-- **RLVR (Reinforcement Learning with Verifiable Rewards)** — Post-training paradigm where the reward is a deterministic programmatic verifier (math equality, code unit-tests, format check), not a learned reward model. The policy still uses on-policy RL `[deepseek-r1 §2.2; tulu3]`.
+- **RLVR (Reinforcement Learning with Verifiable Rewards)** — Post-training paradigm where the reward is computed mechanically from the emitted answer by a deterministic programmatic verifier — math equality or a regex grader, code unit-test execution, a formal proof-checker, a format check — rather than by a learned reward model: +1 if the verifier accepts, 0 otherwise. The policy still uses on-policy RL, and the reasoning trace is the policy's free choice. The defining feature of post-2024 reasoning training; used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning and Tülu 3. See `kb/notes/post-training/rlvr-and-grpo.md` `[deepseek-r1 §2.2.1; tulu3]`.
 - **Verifiable reward** — A 0/1 reward computed by a programmatic check: $R(x,y) = \mathbb{1}[\mathrm{verify}(x,y)]$. Sparse and terminal `[deepseek-r1 §2.2]`.
-- **GRPO (Group Relative Policy Optimization)** — Critic-free PPO variant: replaces the value model with a group-mean reward baseline. Sample $G$ trajectories per prompt, normalize rewards within the group, use the standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR `[shao2024 §4.1; deepseek-r1 §2.1 Eq.1]`.
+- **GRPO (Group Relative Policy Optimization)** — Critic-free PPO variant (Shao 2024): replaces the value model with a group-mean reward baseline, eliminating the value-network requirement. Sample $G$ trajectories per prompt; each sample's advantage is its reward minus the group mean, divided by the group standard deviation; use that standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR `[shao2024 §4.1; deepseek-r1 §2.1 Eq.1]`.
 - **Group-normalized advantage** — In GRPO, $\tilde{A}_i = (R_i - \mathrm{mean}(\{R_j\}))/\mathrm{std}(\{R_j\})$, broadcast to every token of trajectory $o_i$. Replaces GAE-derived per-token advantages `[shao2024 §4.1; deepseek-r1 §2.1 Eq.3]`.
 - **Format reward** — In RLVR, a small constant reward for trajectories that conform to a structural template (e.g., emit a `<think>...</think>` block). Keeps the chain-of-thought pathway alive during early training `[deepseek-r1 §2.2]`.
-- **DAPO (Decoupled clip and dynamic sAmpling Policy Optimization)** — GRPO improvement with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient groups), Token-Level Loss (equal-weight tokens regardless of trajectory length), Overlong Reward Shaping (soft penalty for length-truncated trajectories) `[dapo2025 §2]`.
+- **DAPO (Decoupled clip and dynamic sAmpling Policy Optimization)** — ByteDance's GRPO improvement, with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient / zero-variance groups), Token-Level Loss (equal-weight tokens regardless of trajectory length, versus sequence-level), Overlong Reward Shaping (soft penalty for length-truncated trajectories). Reaches 50 points on AIME 2024 with Qwen2.5-32B `[dapo2025 §2]`.
 - **Clip-Higher** — DAPO's asymmetric PPO clip $[1-\epsilon_{\text{low}}, 1+\epsilon_{\text{high}}]$ with $\epsilon_{\text{high}} > \epsilon_{\text{low}}$. Allows larger upward updates on under-probable correct tokens `[dapo2025 §2]`.
 - **Dynamic Sampling (DAPO)** — Reject groups where all $G$ trajectories share the same reward, since the GRPO advantage is then zero and the gradient is wasted. Re-sample until each group contains both $R=0$ and $R=1$ trajectories `[dapo2025 §2]`.
 - **VAPO (Value-Augmented PPO)** — RL variant that re-introduces a learned value function on top of GRPO's design, with shared backbone and value-loss-clipping. Reportedly outperforms DAPO on long-CoT tasks `[vapo-2025]`.
@@ -937,8 +880,7 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 
 - **Rejection sampling** — Llama-3 SFT quality gate: sample $N$ candidates from the model, score by reward model, keep top-$k$, SFT on those. Used as a training-loop stage in modern multi-round pipelines `[meta-llama3]`.
 - **MAGPIE** — Alignment data synthesis from scratch: prompt aligned LLMs with only their instruction-template prefix (no question), have them fabricate the question first, then sample the answer. Near-zero-cost SFT data generation `[magpie-2024]`.
-- **Cold-start SFT (R1 sense)** — A small SFT stage on long-CoT examples preceding the main RL stage. Provides a reasoning-format and language-quality regularizer for the subsequent RL. Distinct from full SFT pipelines `[deepseek-r1 §3]`.
-- **Reasoning-distillation SFT** — Training small models (1.5B–32B) on reasoning trajectories generated by a strong reasoning teacher (R1, o1) via pure SFT with no RL. The 800K-sample DeepSeek-R1 distillation set is the canonical example `[deepseek-r1 §4]`.
+- **Cold-start SFT (R1 sense)** — A small-scale ($\sim 10^4$ examples) SFT stage on long-CoT exemplars, run before the main RL stage to fix the readability problems of pure-RL outputs (R1-Zero). Provides a reasoning-format and language-quality regularizer for the subsequent RL: it does not change asymptotic capability but improves trace coherence. Distinct from full SFT pipelines `[deepseek-r1 §2.2.4; deepseek-r1 §3]`.
 - **Thinking / non-thinking modes (Qwen 3 sense)** — Two distinct response styles trained with separate SFT data and selectable at inference via system prompt: "thinking" emits a `<think>...</think>` block, "non-thinking" produces direct answers `[qwen3]`.
 
 ## Pipeline conventions
@@ -955,9 +897,9 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **Chain-of-thought (CoT)** — A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. `[wei2022-cot §1; kojima2022 §3]`
 - **Few-shot CoT** — The Wei 2022 exemplar-based variant. The prompt contains $K$ demonstrations $(x_i, z_i, y_i)$ before the query. CoT gain over direct prompting is **emergent at scale** — sub-100B models often do not benefit. `[wei2022-cot §3.3]`
 - **Zero-shot CoT** — The Kojima 2022 trigger-phrase variant. Two-stage decode: reasoning extraction + answer extraction. Recovers a substantial fraction of few-shot CoT gain at instruction-tuned scale without exemplars. `[kojima2022 §3]`
-- **Self-consistency** — Sample $N$ reasoning traces at temperature $T > 0$, majority-vote over extracted answers. The simplest test-time-compute strategy. Gains: GSM8K +17.9%, SVAMP +11.0% over greedy CoT. `[wang2022-self-consistency §3]`
+- **Self-consistency** — Sample $N$ reasoning traces independently at temperature $T > 0$, majority-vote over the extracted answers. The simplest test-time-compute strategy, and a cheap baseline that requires no verifier. Gains: GSM8K +17.9%, SVAMP +11.0% over greedy CoT. `[wang2022-self-consistency §3]`
 - **Trained CoT** — The behaviour of a reasoning-trained model (o1, R1, QwQ) that emits long reasoning traces unconditionally, without prompt scaffolding. Distinct from prompted CoT in that the trace is the model's natural output distribution. `[deepseek-r1 §2]`
-- **CoT faithfulness** — The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. `[mehta2026-faithfulness-scaling, arXiv 2601.06423; shen2025-faithcot-bench, arXiv 2510.04040]`
+- **CoT faithfulness** — The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation — equivalently, whether the chain-of-thought reflects the model's actual reasoning process. Measured by counterfactual perturbation. Empirically partial: Lanham et al. 2023 and Turpin et al. 2024 show CoT can be unfaithful via post-hoc rationalization and label-leakage; thinking models report rates ~0.04–0.14% post-hoc, non-thinking models ~7–13%. Apollo's argument that scheming-shaped CoT constitutes evidence of scheming sidesteps faithfulness by treating CoT as part of the deployed surface rather than as ground-truth introspection. `[mehta2026-faithfulness-scaling, arXiv 2601.06423; shen2025-faithcot-bench, arXiv 2510.04040]`
 
 ## Test-time compute
 
@@ -966,8 +908,8 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **Sampling-based TTC** — Draw $N$ independent traces, aggregate. Three rules: self-consistency (majority vote), best-of-$N$ + ORM, best-of-$N$ + PRM. Linear in $N$. `[wang2022-self-consistency; lightman2023-prm800k §4]`
 - **Search-based TTC** — Tree expansion over partial reasoning prefixes, directed by a learned value function. Beam, BFS, MCTS variants. See `kb/notes/reasoning/inference-time-search.md`. `[snell2024 §4; rstar-math2025 §3]`
 - **Sequential-compute TTC / extended thinking** — Hold $N = 1$ but emit a much longer single trace. The o1/R1/QwQ paradigm. Compute scales super-linearly in trace length due to KV-cache re-attention. `[deepseek-r1 §2.3]`
-- **Budget forcing** — The s1 2025 mechanism. When the model emits its end-of-thinking token before the budget is reached, suppress it and append the continuation token "Wait" to force more reasoning; hard-truncate to enforce shorter budgets. `[s1-2025 §3.2]`
-- **Thinking budget** — Productised TTC control: API-level integer (Gemini 2.5 `thinkingBudget`), effort level (OpenAI o-series), or token cap (Anthropic thinking block). `[gemini2-5 §3]`
+- **Budget forcing** — The s1 2025 mechanism. When the model emits its end-of-thinking token before the budget is reached, suppress it and append the continuation token "Wait" to force more reasoning; hard-truncate to enforce shorter budgets. `[s1-2025 §3.1]`
+- **Thinking budget** — Productised test-time-compute control that caps the reasoning-token spend per request before the model is forced to commit to an answer: an API-level integer (Gemini 2.5 `thinkingBudget`), an effort level (OpenAI o-series), or a token cap (Anthropic extended-thinking block). Operationalizes Snell's compute-optimal strategy. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete (Qwen 3). `[gemini2-5 §3; kb/index/papers.json#gemini2-5]`
 
 ## Process supervision and reward models
 
@@ -983,10 +925,6 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 
 ## Reasoning training (RL with verifiable rewards)
 
-- **RLVR (RL with Verifiable Rewards)** — RL post-training where the reward is computed mechanically from the emitted answer (regex match for math, unit-test execution for code, proof-checker for formal proofs), not from a learned reward model. The defining feature of post-2024 reasoning training. `[deepseek-r1 §2.2.1]`
-- **GRPO (Group Relative Policy Optimisation)** — Critic-free PPO variant (Shao 2024). Per-prompt group of $G$ samples; advantage is each sample's reward minus group mean, divided by group std. Eliminates the value-network requirement. `[shao2024 §4.1; deepseek-r1 §2.1]`
-- **DAPO** — ByteDance's GRPO variant. Four modifications: clip-higher (asymmetric clip), dynamic sampling (drop zero-variance groups), token-level loss (vs sequence-level), overlong reward shaping. AIME 2024 50pts on Qwen2.5-32B. `[dapo2025 §2]`
-- **Cold-start SFT** — A small-scale ($\sim 10^4$ examples) SFT pass on long-CoT exemplars, run before RL to fix readability problems of pure-RL outputs (R1-Zero). Does not change asymptotic capability but improves trace coherence. `[deepseek-r1 §2.2.4]`
 - **rejection-sampling SFT** — Generate candidate solutions with the current policy, filter by verifier (and optional quality filter), SFT on the survivors. Used as Stage 3 of the R1 pipeline. `[deepseek-r1 §2.3.3]`
 - **Distillation (reasoning)** — Use a strong teacher's RL-trained traces as SFT data for smaller students. R1 demonstrates this beats running RL directly on a small model. `[deepseek-r1 §3.2]`
 - **Capability ceiling (RLVR)** — The empirical finding that RLVR improves $\mathrm{pass}@1$ on problems the base model could already solve at $\mathrm{pass}@k$ for some $k$, but does not expand the set of solvable problems. Set at pre-training. `[rlvr-limits-2025 §3]`
@@ -1030,9 +968,7 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **Lookahead search** — Beam search variant where each candidate's score includes simulated rollout of further steps before being kept/dropped. Costlier per beam, more discriminative.
 - **Question difficulty (Snell et al.)** — A 5-quantile bin of a base LLM's pass@1 rate (estimated from 2048 samples) on a test-set prompt. Used as a sufficient statistic for picking the compute-optimal test-time strategy `[snell2024 §3.2; kb/excerpts/snell2024#sec-3-2-difficulty]`.
 - **Oracle vs model-predicted difficulty** — Two operational forms of question-difficulty estimation: oracle uses ground-truth correctness (test-time only as research proxy); model-predicted uses a verifier's averaged score (deployable) `[snell2024 §3.2; kb/excerpts/snell2024#sec-3-2-difficulty]`.
-- **Thinking budget / `thinkingBudget`** — A productionized API parameter (Gemini 2.5, OpenAI o-series reasoning-effort levels, Anthropic extended-thinking) that caps the test-time-compute spend per request. Operationalizes Snell's compute-optimal strategy `[gemini2-5; kb/index/papers.json#gemini2-5]`.
 - **Reasoning model** — An LLM trained (typically with RL on verifiable rewards) to produce long-form chain-of-thought before its final answer. o1, DeepSeek-R1, Qwen3-thinking-mode, Gemini 2.5-thinking-mode are exemplars `[deepseek-r1; kb/index/papers.json#deepseek-r1]`.
-- **Self-consistency** — Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers. Wang et al. 2022. Cheap baseline that requires no verifier.
 
 ## Maximal Update Parametrization (μP) and HP transfer
 
@@ -1107,14 +1043,12 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 
 ## Mixed precision & stability
 
-- **BF16 (bfloat16)** — Brain-float. 8-bit exponent, 7-bit mantissa (vs. FP16's 5-exp/10-mant). Same dynamic range as FP32; lower precision. The 2020-2024 default forward/backward dtype.
 - **FP8 E4M3** — 4-bit exponent, 3-bit mantissa. Higher precision, lower dynamic range than E5M2. DeepSeek-V3 uses E4M3 on *all* tensors via fine-grained scaling. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-mantissa]`
 - **FP8 E5M2** — 5-bit exponent, 2-bit mantissa. Higher dynamic range, lower precision. NVIDIA's recommended dtype for `Dgrad`/`Wgrad` in their hybrid recipe; DeepSeek-V3 *avoids* it.
 - **Tile-wise quantization (1×128)** — DeepSeek-V3's activation scaling: one FP8 scale per (token, 128-channel block) tile. Adapts to per-token outliers. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-finegrained]`
 - **Block-wise quantization (128×128)** — DeepSeek-V3's weight scaling: one FP8 scale per 128×128 weight block. `[deepseek-v3 §3.3.2]`
 - **FP32 promotion to CUDA cores** — DeepSeek-V3's accumulation strategy: every $N_C=128$ MMA steps, copy partial sums from Tensor-Core (~14-bit) accumulator to FP32 registers on CUDA cores for full-precision summation. Recovers ~2 % systematic error in raw FP8 GEMM. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-accum]`
 - **Precision pinning (DeepSeek-V3)** — Components held at BF16/FP32 even with FP8 elsewhere: embedding module, output head, MoE gating, normalization, attention. `[deepseek-v3 §3.3.1]`
-- **Loss spike** — Sudden non-recoverable loss-curve excursion. Causes include gradient-norm explosion, attention-logit divergence, embedding-norm growth, and FP8 underflow on rare tokens. DeepSeek-V3 reports zero such spikes in 14.8 T tokens. `[deepseek-v3 §abstract]`
 
 ## Adaptation & merging
 
@@ -1122,7 +1056,6 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **Context extension** — Sub-stage of late-stage pre-training that increases trained sequence length (e.g., 4 K → 32 K → 128 K) by adjusting RoPE scaling and continuing on long-context data. `[deepseek-v3 §1]`
 - **PEFT (Parameter-Efficient Fine-Tuning)** — Family of fine-tuning methods that update only a small fraction of parameters: LoRA, DoRA, IA3, prefix-tuning. Pending excerpts.
 - **Model merging** — Combining trained models via parameter-level operations (averaging, interpolation, sign-resolution, sparsification). Subtypes include weight averaging (Model Soups), task arithmetic, TIES, DARE, evolutionary merging. Pending excerpts.
-- **Linear mode connectivity** — The empirical finding that fine-tunes of a shared base land in a connected loss basin: averaging their weights gives a model with loss similar to the endpoints. The leading explanation for why merging works at all. (Frankle, Dziugaite et al. 2020 — pending excerpt.)
 
 
 ## Phase 2 stub-fill additions
@@ -1145,10 +1078,11 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   upward in the FP16 representable range to avoid underflow.
   `[micikevicius2017-mixed-precision §3;
   kb/excerpts/micikevicius2017-mixed-precision#sec-3]`.
-- **BF16 (bfloat16)** — A 16-bit floating-point format with 8
-  exponent bits and 7 mantissa bits. Same dynamic range as FP32;
-  half the precision of FP16. The universal LLM pre-training default
-  by 2023. `[kalamkar2019-bfloat16 §2;
+- **BF16 (bfloat16)** — "Brain float": a 16-bit floating-point format
+  with 8 exponent bits and 7 mantissa bits (versus FP16's 5 and 10).
+  Same dynamic range as FP32; half the precision of FP16. The
+  universal LLM pre-training default forward/backward dtype by 2023.
+  `[kalamkar2019-bfloat16 §2;
   kb/excerpts/kalamkar2019-bfloat16#sec-2]`.
 - **FP8 E4M3 / E5M2** — 8-bit float formats with 4-bit
   exponent + 3-bit mantissa (E4M3, range $\pm 448$) or 5-bit
@@ -1173,11 +1107,11 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   hardware MXScale (32-element per-block scaling) on Blackwell-class
   GPUs. Production-stability for full pre-training is open as of
   2026-05.
-- **Loss spike** — A sudden upward jump in pre-training loss, often
-  caused by gradient-norm explosion, attention-logit divergence,
-  embedding-norm growth, or FP8 underflow. May or may not recover.
-  DeepSeek-V3 reports zero irrecoverable spikes over 14.8T tokens
-  `[deepseek-v3 abstract;
+- **Loss spike** — A sudden upward excursion in the pre-training loss
+  curve, often caused by gradient-norm explosion, attention-logit
+  divergence, embedding-norm growth, or FP8 underflow on rare tokens.
+  May or may not recover. DeepSeek-V3 reports zero irrecoverable
+  spikes over 14.8 T tokens `[deepseek-v3 abstract;
   kb/excerpts/deepseek-v3-training#abstract]`.
 - **QK-LayerNorm / QK-clip** — Stability machinery to prevent
   attention-logit blow-up: normalize $Q$ and $K$ before the dot
@@ -1229,7 +1163,10 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
 - **Linear mode connectivity (LMC)** — The empirical property that
   fine-tunes of a shared base land in a connected loss basin: the
   path $\theta_0 + t(\theta_f - \theta_0)$, $t \in [0,1]$, stays in
-  low-loss territory. Underpins why model merging works.
+  low-loss territory, so averaging their weights gives a model with
+  loss similar to the endpoints. The leading explanation for why
+  model merging works at all. (Frankle, Dziugaite et al. 2020 —
+  pending excerpt.)
 - **Frankenmerge / passthrough merge** — Layer-wise interleaving of
   layers from two or more models (e.g., copy layers 0–15 from model A
   and 16–31 from model B). Widely used in OSS practice; limited
@@ -1251,11 +1188,12 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   template prefix (no question), will fabricate the question and then
   answer it. Produces $(x,y)$ SFT pairs at zero human cost.
   `[magpie-2024]`.
-- **Reasoning-distillation SFT** — Fine-tuning a small base model on
-  $(x,y)$ traces sampled from a strong RL-trained reasoner (e.g.,
-  R1-Distill: 800K samples from DeepSeek-R1; s1: 1K curated traces
-  from Gemini Flash Thinking). Recovers most reasoning capability
-  with no RL. `[deepseek-r1; s1-2025]`.
+- **Reasoning-distillation SFT** — Fine-tuning a small base model
+  (1.5B–32B) on $(x,y)$ traces sampled from a strong RL-trained
+  reasoning teacher (e.g., R1-Distill: 800K samples from DeepSeek-R1;
+  s1: 1K curated traces from Gemini Flash Thinking). Pure SFT, no RL,
+  and it recovers most reasoning capability. `[deepseek-r1 §4;
+  s1-2025]`.
 - **Thinking / non-thinking mode SFT** — Training a model to emit
   `<think>...</think>` blocks gated by a system prompt, switching
   reasoning behavior on/off. Qwen 3's 4-stage post-training innovation.
@@ -1269,9 +1207,13 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
 ## RLAIF and Constitutional AI
 
 - **RLAIF (Reinforcement Learning from AI Feedback)** — RLHF pipeline
-  where preference labels come from an AI feedback model rather than
-  human labelers. The reward model is trained on AI-generated
-  preferences via standard Bradley–Terry. `[bai2022-cai §4;
+  where preference labels in the RL stage come from an AI feedback
+  model — typically one conditioned on a written constitution —
+  rather than from human labelers. The reward model is trained on the
+  AI-generated preferences via standard Bradley–Terry. Introduced as
+  the RL-CAI step of `bai2022-cai`. Reduces labeling burden, but does
+  not address the bias source if the AI feedback model itself
+  inherits the bias. `[bai2022-cai §4;
   kb/excerpts/bai2022-cai#sec-4]`.
 - **Constitution (in CAI)** — A list of natural-language principles
   ("the assistant should not...") used to condition the AI feedback
@@ -1292,9 +1234,10 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   distinguishing CAI from helpful-only RLHF (which complies) and from
   naive safety RLHF (which refuses without explanation).
   `[bai2022-cai §6; kb/excerpts/bai2022-cai#sec-6]`.
-- **R-CAI (Reverse CAI)** — Inverts the constitution and applies
-  probability-clamped RLAIF to generate controlled adversarial / toxic
-  data. `[r-cai-2026]`.
+- **R-CAI (Reverse Constitutional AI)** — Inverts the constitution and
+  applies probability-clamped RLAIF to generate controlled adversarial
+  / toxic data for red-team data synthesis (April 2026).
+  `[r-cai-2026]`.
 - **Recursive RLAIF** — Using a previously-trained RLAIF model as the
   feedback model for the next round of RLAIF. Risks model collapse in
   the constitution direction.
@@ -1305,8 +1248,12 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   masks the logits to allow only tokens consistent with a target
   grammar (regex, JSON schema, GBNF, CFG). The sampling distribution
   is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's
-  allowed-token set in the current state. `[willard2023-outlines §3;
-  kb/excerpts/willard2023-outlines#sec-3]`.
+  allowed-token set in the current state. Naive implementations query
+  the grammar engine for every token in the vocabulary at every step —
+  the bottleneck modern engines fix.
+  `[willard2023-outlines §3;
+  kb/excerpts/willard2023-outlines#sec-3;
+  kb/notes/inference/structured-output#§1]`.
 - **FSM-vocabulary index (Willard–Louf)** — Precomputed mapping from
   each FSM state to the set of allowed vocabulary tokens. Built once
   per grammar; reduces per-step constraint check from $O(V)$ to
@@ -1319,9 +1266,10 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
   reports ~99% context-independent for typical JSON schemas.
   `[xgrammar2024 §3; kb/excerpts/xgrammar2024#sec-3]`.
 - **Compressed FSM (SGLang)** — FSM transformation that merges chains
-  of singular-transition edges into single edges, allowing multi-token
-  decoding when the grammar deterministically forces a literal
-  substring (e.g., `{"summary": "` in a JSON schema).
+  of singular-transition edges into single edges, so the constrained
+  decoder emits an entire deterministically-forced literal substring
+  (e.g., the constant prefix `{"summary": "` in a JSON schema) in one
+  step instead of token-by-token.
   `[zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4]`.
 - **GBNF (GGML BNF)** — llama.cpp's grammar specification format.
   An extended BNF used to define constrained-decoding grammars.
@@ -1339,7 +1287,7 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
 
 ## Probing
 
-- **Probe** — A (typically linear) classifier $g: \mathbb{R}^d \to \mathcal{Y}$ trained on frozen LM activations $\mathbf{h}^{(\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology `[alain-bengio-2017 §1]`.
+- **Probe** — A (typically linear) classifier $g: \mathbb{R}^d \to \mathcal{Y}$ — in the binary case $g(\mathbf{h}) = \sigma(\mathbf{w}^\top \mathbf{h} + b)$ — trained on frozen LM activations $\mathbf{h}^{(\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology `[alain-bengio-2017 §1]`.
 - **Linear probe** — Probe of the form $g(\mathbf{h}) = \sigma(\mathbf{w}^\top \mathbf{h} + b)$ with $\mathbf{w} \in \mathbb{R}^d$. Distinguished from non-linear / MLP probes that can suffer from "probe leakage" (learning the property from low-information features) `[alain-bengio-2017]`.
 - **Structural probe** — Hewitt & Manning's geometric probe that predicts higher-arity structure (e.g., parse-tree distance) by learning a linear transformation $\mathbf{B} \in \mathbb{R}^{k \times d}$ such that $\|\mathbf{B}(\mathbf{h}_i - \mathbf{h}_j)\|_2^2 \approx d_T(w_i, w_j)$ for tokens $i, j$ `[hewitt2019-structural-probe]`.
 - **Mass-mean probe / difference-in-means probe** — Parameter-free probe that defines the property direction as $\mathbf{d}_{\mathrm{MM}} = \boldsymbol{\mu}_+ - \boldsymbol{\mu}_-$ (per-class mean difference). Closed-form, no optimization required. Marks & Tegmark 2023 argue the directions found are "more causally implicated in model outputs" than logistic-regression probe directions on the same data `[marks-tegmark-2023-truth §abstract]`.
@@ -1347,33 +1295,33 @@ _Glossary fragments produced 2026-05-04 by the two stub-fill subagents (training
 - **Causal probing** — The 2023+ pattern of pairing probes with activation interventions (direction ablation, addition, steering) to test whether the probe's direction is *causally* used by the model, not merely correlated with the property. Marks & Tegmark 2023 demonstrate this on a truth direction in LLaMA-2-13B that flips TRUE/FALSE prediction when ablated `[marks-tegmark-2023-truth §abstract]`.
 - **Direction ablation** — Causal-probing intervention that projects a residual-stream activation onto the orthogonal complement of a probe direction $\hat{\mathbf{d}}$: $\mathbf{h} \mapsto \mathbf{h} - (\mathbf{h}^\top \hat{\mathbf{d}})\hat{\mathbf{d}}$, then runs the rest of the model. A behavior change validates causal use of $\hat{\mathbf{d}}$ `[marks-tegmark-2023-truth §abstract]`.
 - **Activation steering** — Inference-time intervention that adds $\alpha \hat{\mathbf{d}}$ to a residual-stream activation to amplify (or, with $\alpha < 0$, suppress) a probed direction. The Representation Engineering / Vennemeyer 2025 line `[vennemeyer2025-sycophancy-not-one-thing FORUM-SIGNAL]`.
-- **Truth direction** — A direction in residual-stream space whose projection sign correlates with (and, validated by Marks & Tegmark 2023, causally controls) the model's TRUE/FALSE prediction on factual statements. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens `[marks-tegmark-2023-truth §3]`.
+- **Truth direction** — A direction in residual-stream space — canonically the mass-mean probe direction of Marks & Tegmark 2023 — whose projection sign correlates with (and, validated in the same work, causally controls) the model's TRUE/FALSE prediction on factual statements. The separating subspace is small and holds across many models and datasets. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens `[marks-tegmark-2023-truth §3]`.
 - **Summarization behavior** — The empirical pattern (Tigges et al. 2023, Marks & Tegmark 2023) that information about a clause is encoded over the clause-ending punctuation token, making period-position activations the canonical probing target for sentence-level properties `[marks-tegmark-2023-truth §3]`.
 
 ## Knowledge benchmarks
 
 - **MMLU (Massive Multitask Language Understanding)** — 57-subject 4-way MCQ benchmark introduced by Hendrycks et al. 2020 / ICLR 2021. 15,908 questions sourced from public exam banks (AP, GRE, MCAT, professional licensing). Foundational for the post-2021 LLM eval era; saturated at >90% on frontier models as of 2026 `[hendrycks2021-mmlu §abstract]`.
-- **MMLU-Redux** — Polo et al. 2024 audit of MMLU finding 6.49% baseline error rate, with the Virology subset reaching 57% errors. Per-question corrections published; methodology audit, not a new benchmark `[mmlu-redux-2024 §abstract]`.
+- **MMLU-Redux** — Polo et al. 2024 audit of MMLU, re-annotating 5,700 questions and finding a 6.49% baseline error rate, with the Virology subset reaching 57% errors. Per-question corrections published, and correcting them flips leaderboard ranks. A methodology audit, not a new benchmark `[mmlu-redux-2024 §abstract]`.
 - **MMLU-Pro** — 10-way MCQ, reasoning-augmented successor to MMLU. 12,032 items, 16-33 percentage point drop in headline score relative to MMLU at launch, 2× lower prompt-format sensitivity `[wang2024-mmlu-pro §abstract]`.
-- **GPQA Diamond** — 198-question subset of GPQA (Rein et al. 2023) where two PhD experts agree on the answer and at least one non-expert validator with web access got it wrong. The "Google-proof" property is operationalized via the 34% non-expert-with-web baseline. Saturated at frontier as of 2026 (>90%) `[rein2023-gpqa §abstract]`.
-- **Answer-letter prior** — The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items. Letter bias can favor one option by several percentage points; 10-way MCQ (MMLU-Pro) dilutes this effect `[wang2024-mmlu-pro §sec-delta]`.
-- **CoT-vs-direct gap (as a knowledge/reasoning diagnostic)** — On a knowledge-dominant benchmark (MMLU), Chain-of-Thought scoring gives roughly the same result as direct-answer scoring; on a reasoning-dominant benchmark (MMLU-Pro), CoT improves the score measurably. The gap is a diagnostic for whether a benchmark requires multi-step inference `[wang2024-mmlu-pro §sec-cot]`.
+- **GPQA Diamond** — 198-question subset of GPQA (Rein et al. 2023) where (i) both PhD expert annotators agree on the gold answer and (ii) at least one non-expert validator with web access got it wrong. The headline subset on which leaderboards report. The "Google-proof" property is operationalized via the 34% non-expert-with-web baseline. Saturated at frontier as of 2026 (>90%) `[rein2023-gpqa §2.3; rein2023-gpqa §abstract]`.
+- **Answer-letter prior** — The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items, independent of question content. Mitigated by widening the option set — 10-way MCQ (MMLU-Pro) dilutes the effect, since augmenting four options to ten "significantly lowers the likelihood of correctly guessing an answer" `[wang2024-mmlu-pro §3.2]` — or by letter-permutation evaluation. The size of the letter bias itself — often quoted as 1–4 percentage points — is not measured in MMLU-Pro `[SPECULATION]`.
+- **CoT-vs-direct gap (as a knowledge/reasoning diagnostic)** — On a knowledge-dominant benchmark (MMLU), Chain-of-Thought scoring gives roughly the same result as direct-answer scoring; on a reasoning-dominant benchmark (MMLU-Pro), CoT improves the score measurably. The gap is a diagnostic for whether a benchmark requires multi-step inference `[wang2024-mmlu-pro §6.2]`.
 - **Knowledge-vs-reasoning hybrid** — A benchmark where items combine factual retrieval and multi-step reasoning. MMLU-Pro, GPQA, HLE all qualify; the post-MMLU eval landscape has largely abandoned pure-knowledge benchmarks in favor of hybrids `[wang2024-mmlu-pro; rein2023-gpqa; phan2025-hle]`.
 
 ## Safety evaluation
 
-- **ASR (Attack Success Rate)** — Headline metric in adversarial-robustness benchmarks: fraction of (behavior, attack) pairs for which the model produces an output the judge rates harmful. Not directly comparable across papers unless the judge, behaviors, and attack family match `[chao2024-jailbreakbench §abstract]`.
+- **ASR (Attack success rate)** — Headline metric in adversarial-robustness benchmarks: the fraction of (behavior, attack) pairs for which the model produces an output the judge rates harmful — equivalently, the fraction of adversarial prompts that elicit a successful (policy-violating) response under a fixed scoring procedure. Not directly comparable across papers unless the judge, behaviors, attack family, and threat-model assumptions match `[chao2024-jailbreakbench §abstract]`.
 - **HarmBench** — Mazeika et al. 2024 standardized red-team evaluation framework: 510 behaviors in four functional categories, 18 attack methods, 33 target LLMs/defenses. Used by AISI for pre-deployment evals `[harmbench2024 §abstract]`.
-- **JailbreakBench** — Chao et al. 2024 reproducibility-focused jailbreak benchmark: 100 OpenAI-policy-aligned behaviors, evolving repository of jailbreak artifacts (the actual successful prompts), standardized LLM-as-judge, public leaderboard. NeurIPS 2024 D&B `[chao2024-jailbreakbench §abstract]`.
+- **JailbreakBench** — Chao et al. 2024 reproducibility-focused open jailbreak benchmark: 100 OpenAI-policy-aligned target behaviors, a standardized threat model / prompts / scoring with an LLM-as-judge, an evolving repository of jailbreak artifacts (the actual successful prompts), and a public leaderboard. NeurIPS 2024 D&B; co-canonical with HarmBench `[chao2024-jailbreakbench §abstract]`.
 - **Crescendo (multi-turn jailbreak)** — Russinovich et al. 2024 attack: gradually escalate over multiple benign-seeming turns, exploiting the LM's tendency to over-weight its own prior committed responses. Achieves 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro over single-turn baselines on AdvBench. Documents that single-turn evals systematically underestimate the attack surface `[russinovich2024-crescendo §abstract]`.
-- **Crescendomation** — The automated implementation of Crescendo: an attacker LLM generates the escalation chain. The 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro refers to Crescendomation specifically, measured on the AdvBench subset against state-of-the-art single-turn baselines `[russinovich2024-crescendo §sec-5-2-results]`.
+- **Crescendomation** — The automated implementation of Crescendo: an attacker LLM generates the escalation chain. The 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro refers to Crescendomation specifically, measured on the AdvBench subset against state-of-the-art single-turn baselines `[russinovich2024-crescendo §5.2]`.
 - **Competing objectives (jailbreak failure mode)** — Wei, Haghtalab, Steinhardt 2023: when a model's capability training and safety training pull in different directions, attacks that invoke the capability override the safety training. One of two named failure modes `[wei2023-jailbroken §abstract]`.
 - **Mismatched generalization (jailbreak failure mode)** — Wei et al. 2023: safety training fails to generalize to a domain (Base64, low-resource language, role-play) where the model has capabilities. The other named failure mode `[wei2023-jailbroken §abstract]`.
 - **Safety-capability parity** — Wei et al. 2023's policy recommendation: safety mechanisms must be as sophisticated as the model's full capability range. Partial-domain safety training will be defeated by attacks that target the capability/safety gap `[wei2023-jailbroken §abstract]`.
 - **ASL (AI Safety Level)** — Anthropic's Responsible Scaling Policy tier framework. ASL-1 (low risk, no autonomy) → ASL-2 (current frontier baseline) → ASL-3 (substantially elevated risk; specific deployment controls required) → ASL-4 (autonomous AI risk; not yet deployed). Each tier specifies capability-evaluation triggers and security/containment commitments `[anthropic-rsp-2024]`.
 - **Task-horizon metric (METR)** — Capability-evaluation metric framing model performance as the human-time-to-complete distribution at which the model succeeds at >50%. Becoming the field's lingua franca for capability quantification across labs and external evaluators `[metr-autonomy-2024]`.
-- **Dangerous-capability evaluation** — Pre-deployment eval that tests whether a model can autonomously carry out a task whose successful completion would constitute a threat (cyber CTFs, autonomous replication, biology / CBRN tasks). Inverts the usual "model refuses harm" frame to "model could *do* harm if it tried" `[metr-autonomy-2024; cybench2024 FORUM-SIGNAL]`.
+- **Dangerous-capability evaluation** — Pre-deployment eval that tests whether a model can autonomously carry out a task whose successful completion would constitute a threat (cyber CTFs and cybersecurity attack capability, autonomous replication, autonomous research, biology / CBRN uplift). Inverts the usual "model refuses harm" frame to "model could *do* harm if it tried". METR's 77-task autonomy suite is the canonical cross-vendor reference `[metr-autonomy-2024; cybench2024 FORUM-SIGNAL]`.
 - **Judge-LLM contamination** — Failure mode in safety evals: when the judge classifier is from the same model family as the model being evaluated, it may systematically underrate harmful generations from that family. Cross-judge agreement testing is the partial mitigation `[chao2024-jailbreakbench §abstract]`.
-- **HarmBench-Judge** — The fine-tuned classifier (Llama-2-13B family, fine-tuned on labeled harmful/non-harmful generations) shipped with HarmBench as the standardized judge for the 510 behaviors `[harmbench2024 §sec-structure]`.
+- **HarmBench-Judge** — The fine-tuned classifier (Llama-2-13B family, fine-tuned on labeled harmful/non-harmful generations) shipped with HarmBench as the standardized judge for the 510 behaviors `[harmbench2024 §4.1, §4.3]`.
 - **Honeypot evaluation** — Eval protocol that presents the model with a deployment-realistic context (or, conversely, a clearly-evaluation context) to test whether eval scores are stable across the eval-vs-deployment boundary. Motivated by the Apollo / scheming finding that models may behave differently when they suspect they are being evaluated `[meinke2024-apollo-scheming]`.
 

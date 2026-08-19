@@ -50,7 +50,7 @@ output) plus selected layers of Gemma~2 27B, with widths
 $\{16.4\text{K}, 65.5\text{K}, 131\text{K}, 1\text{M}\}$, totaling
 $>\!30$M learned features and roughly $20\%$ of GPT-3's pretraining
 compute~\citep[\S 1]{gemma-scope-2024}\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/gemma-scope-2024.md#sec-1}.}. The \glsterm{common-crawl}{CC}-BY-4.0 release
+\nolinkurl{kb/excerpts/gemma-scope-2024.md#sec-1-compute}.}. The \glsterm{common-crawl}{CC}-BY-4.0 release
 on HuggingFace plus the Neuronpedia interactive demo
 \deepencite{Neuronpedia integration: \texttt{neuronpedia.org/gemma-scope},
 not in papers.json} converted \glsterm{sparse-autoencoder}{SAE}-based interpretability from an
@@ -58,11 +58,11 @@ Anthropic-internal capability into an externally reproducible one.
 
 \paragraph{Probes scale gracefully.}
 A \glsterm{linear-probe}{linear probe} is trained on cached activations (so the model itself is
-called once to produce activations, then the \glsterm{probe-2}{probe} runs on a CPU);
+called once to produce activations, then the \glsterm{probe}{probe} runs on a CPU);
 \glsterm{mass-mean-probing}{mass-mean probing} (\S\ref{sec:mass-mean}) is closed-form
 $\mathbf{d}_{\mathrm{MM}} = \boldsymbol{\mu}_+ - \boldsymbol{\mu}_-$ and
-requires no training at all~\citep{marks-tegmark-2023-truth}. \glsterm{probe-2}{Probe}
-\emph{cost} is dominated by the activation cache, not the \glsterm{probe-2}{probe} fit;
+requires no training at all~\citep{marks-tegmark-2023-truth}. \glsterm{probe}{Probe}
+\emph{cost} is dominated by the activation cache, not the \glsterm{probe}{probe} fit;
 the activation cache scales linearly with dataset size and is
 embarrassingly parallel across prompts. The same property carries the
 direction-ablation operator
@@ -140,7 +140,7 @@ architectural shift for the lens framework is not raw scale (the
 distillation loss
 $\mathcal{L}(\ell) = \E_{\mathbf{x}}[D_{\mathrm{KL}}(\mathcal{M}_{>\ell}
 (\mathbf{h}_\ell) \| \mathrm{TunedLens}_\ell(\mathbf{h}_\ell))]$ is
-indifferent to model size) but the substrate: \glsterm{precision-pinning}{DeepSeek-V3} combines \glsterm{multi-head-latent-attention}{MLA}
+indifferent to model size) but the substrate: \glsterm{precision-pinning}{DeepSeek-V3} combines \glsterm{mla}{MLA}
 \citep{deepseek-v2}'s low-rank-compressed KV with fine-grained MoE
 \citep{deepseekmoe2024}; \glsterm{nsa}{NSA} \citep{yuan2025} bakes attention sparsity
 into pretraining. The \glsterm{residual-stream}{residual stream} remains well-defined in all of
@@ -153,7 +153,7 @@ is not yet in the literature.
 
 \begin{contradiction}
 \textbf{The interpretability-coverage gap is widening, not closing.}
-The frontier-2026 architecture snapshot (Paper~1, §13) catalogs \glsterm{multi-head-latent-attention}{MLA},
+The frontier-2026 architecture snapshot (Paper~1, §13) catalogs \glsterm{mla}{MLA},
 fine-grained MoE, \glsterm{nsa}{NSA}-sparse attention, sliding-window layers, and
 hybrid attention/\glsterm{state-space-model}{SSM} stacks as the substrate of the deployed lineup.
 The lens benchmarks of \citet{belrose2023-tuned-lens} predate this
@@ -204,7 +204,7 @@ pending Phase 2}.
 program.}
 The $L(C)$ and $L(N, K)$ laws of \citet{gao2024-topk-saes} are the
 ongoing methodological backbone, plus an evaluation-metric suite (
-$L_0$, reconstruction MSE, downstream-loss recovery, contrastive \glsterm{probe-2}{probe}
+$L_0$, reconstruction MSE, downstream-loss recovery, contrastive \glsterm{probe}{probe}
 recovery)~\citep[\S 1 contributions]{gao2024-topk-saes}\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/gao2024-topk-saes.md#sec-1-headline}.}.
 The 16M-latent GPT-4 \glsterm{sparse-autoencoder}{SAE} is the existence proof for \glsterm{sparse-autoencoder}{SAE} scaling at
@@ -277,7 +277,7 @@ fails on BLOOM/GPT-Neo per \citet{belrose2023-tuned-lens} \\
 $\le$20B & training script + benchmarks (2023) &
 partial: \texttt{logitlens4llms-2025} on Qwen-2.5 / LLaMA-3.1; no
 Gemma 3 / \glsterm{precision-pinning}{DeepSeek-V3} / LLaMA-4 published \\
-Mass-mean \glsterm{probe-2}{probe} & \citet{marks-tegmark-2023-truth} &
+Mass-mean \glsterm{probe}{probe} & \citet{marks-tegmark-2023-truth} &
 LLaMA-2-13B & 13B & code on GitHub (2023) & yes for
 truth, \glsterm{sycophancy}{sycophancy} variants on LLaMA family; OOD generalization
 unresolved (\S\ref{sec:truth-frontier}) \\
@@ -349,7 +349,7 @@ attribution graphs.
 \label{sec:scaling-forward}
 
 The substrate this section reads against is the frontier-2026
-architecture snapshot of \emph{Paper~1, §13}: the \glsterm{multi-head-latent-attention}{MLA} / fine-grained
+architecture snapshot of \emph{Paper~1, §13}: the \glsterm{mla}{MLA} / fine-grained
 MoE / \glsterm{nsa}{NSA}-sparse-attention / sliding-window / hybrid-\glsterm{state-space-model}{SSM} stack that
 defines what production models look like as of 2026. The
 interpretability methods catalogued here have caught up to that

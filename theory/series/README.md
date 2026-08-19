@@ -233,31 +233,38 @@ xr-hyper (see the **Cross-paper references** section above);
 conversion of existing inline-text mentions to `\hyperref[...]` form
 is an ongoing as-encountered cleanup.
 
-### Committed PDFs lag their source (2026-08-17)
+### Committed PDFs track their source (2026-08-19)
 
-The `paper-N/main.pdf` files linked above were last built **before** the
-2026-08-17 unit-label corrections in
-`paper-1/sections/06-attention-hardware-implementation.tex` (lines 99 and
-145: SRAM capacities `KB` → `KiB`, the binary unit the underlying
-FlashAttention figures actually use) and the same-day paper-key alias
-renames in `paper-3/glossary-section.tex` and the series-level
-`glossary-terms.json` — the two that reach paper-3's glossary are
-`mcts-rag-2025` → `hu2025-mcts-rag` and `chen2026-faithfulness-scaling` →
-`mehta2026-faithfulness-scaling`; the JSON carries two further alias
-renames that no built PDF renders.
-Source therefore leads the committed artifacts at three rendered sites:
-`paper-1/main.pdf` still shows `KB` at both SRAM figures, and
-`paper-3/main.pdf` still shows the pre-rename `mcts-rag-2025`. (The
-renamed `chen2026-…` key never rendered at all — that glossary entry's
-tail, citation included, is silently truncated in the built PDF by the
-generator's unescaped `%`, issue #60, which predates this sweep.) No
-other source/PDF divergence is known.
+All five `paper-N/main.pdf` files linked above are rebuilt from current
+source. The 2026-08-17 unit-label corrections in
+`paper-1/sections/06-attention-hardware-implementation.tex` (SRAM
+capacities `KB` → `KiB`, the binary unit the underlying FlashAttention
+figures actually use) and the same-day paper-key renames now render:
+`paper-1/main.pdf` shows `M ≈ 192 KiB` and `M ∼ 100 KiB`, and
+`paper-3/main.pdf` cites `[hu2025-mcts-rag, arXiv 2503.20757]` with no
+occurrence of the pre-rename `mcts-rag-2025` anywhere in the document.
 
-A rebuild is **deliberately deferred**: regenerating five PDFs for a
-three-site fix churns megabytes of committed binaries while issue #3
-(moving `theory/series/*/main.pdf` to Git LFS) is still open. The rebuild
-happens as part of that LFS migration; until then, read the `.tex` source
-as authoritative for units.
+No source/PDF divergence is known.
+
+Issue #60 — the generator emitting an unescaped `%`, which made LaTeX
+swallow the rest of the line — is **fixed** (`mark_glossary_terms.py`, same
+negative-lookbehind escape already used for `&` and `#`). It had truncated
+40 glossary entries across the five papers (6 / 9 / 8 / 5 / 12), each one
+losing its definition tail and trailing citation. The worst case was
+paper-3's **CoT faithfulness**, which stopped dead at `∼0.04–0.14` and
+never rendered its `[mehta2026-faithfulness-scaling, arXiv 2601.06423]`
+citation; it now reads through to `∼7–13%` with the citation intact.
+Restoring that swallowed text is why four of the five papers gained a page.
+
+**Rebuild policy.** The series build is the last step of any source change
+that reaches a PDF — run `bash build.sh` and commit the five PDFs with the
+source. The earlier "defer the rebuild until issue #3 lands" policy is
+retired: it was rebuilt anyway on 2026-08-17, so the megabytes of binary
+churn it was meant to avoid have already shipped. Issue #3 (moving
+`theory/series/*/main.pdf` to Git LFS) is still **open**, and every commit
+that touches a paper now adds another few MiB of non-LFS binary to history
+— which is an argument for closing #3 sooner, not for letting source and
+artifacts drift apart again.
 
 ## Status (2026-05-05)
 

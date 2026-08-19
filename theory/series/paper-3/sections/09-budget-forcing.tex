@@ -120,7 +120,7 @@ is $\sim 10$ lines of decoder code.
 $L$ at $N = 1$. Operationally, \texttt{Wait} tokens are the
 sequential analogue of resampling --- each \texttt{Wait} forces the
 model to revisit its own partial trace and emit a refinement, much as
-each new sample in \glsterm{self-consistency-2}{self-consistency} (\cref{sec:self-consistency})
+each new sample in \glsterm{self-consistency}{self-consistency} (\cref{sec:self-consistency})
 draws a fresh attempt at the problem. Returning to math: the compute
 expended per problem is $C \propto L$ for sequential and $C \propto N$
 for sampling, and the two axes can be swept independently. s1's
@@ -138,7 +138,7 @@ post-hoc decoder edit.
 
 The s1 paper sweeps $L$ through \glsterm{budget-forcing}{budget forcing} and reports
 extrapolation \emph{beyond} the SFT trace lengths
-\citep[abstract, \S 4.2]{s1-2025}: pushing the minimum-\glsterm{thinking-budget-2}{thinking budget}
+\citep[abstract, \S 4.2]{s1-2025}: pushing the minimum-\glsterm{thinking-budget}{thinking budget}
 upward continues to lift accuracy past the lengths the model saw in
 training. The concrete numbers from
 Table~1 \citep[\S 4.2]{s1-2025}:\footnote{KB excerpt:
@@ -149,7 +149,7 @@ Table~1 \citep[\S 4.2]{s1-2025}:\footnote{KB excerpt:
 \small
 \begin{tabular}{lrrr}
 \toprule
-Model & AIME24 & MATH500 & \glsterm{gpqa-diamond-2}{GPQA Diamond} \\
+Model & AIME24 & MATH500 & \glsterm{gpqa-diamond}{GPQA Diamond} \\
 \midrule
 s1-32B (with \glsterm{budget-forcing}{budget forcing}) & $56.7\%$ & $93.0\%$ & $59.6\%$ \\
 o1-preview                    & $44.6\%$ & $85.5\%$ & $73.3\%$ \\
@@ -217,7 +217,7 @@ load-bearing for cross-paper bookkeeping:
         \texttt{reasoning\_effort} --- a knob exposed to the user or
         the serving stack, not baked into $\theta$.
 
-  \item \textbf{\glsterm{cold-start-sft-2}{Cold-start SFT} is training-time.} R1's Stage~1
+  \item \textbf{\glsterm{cold-start-sft}{Cold-start SFT} is training-time.} R1's Stage~1
         \citep[\S 2.3]{deepseek-r1} fine-tunes the base model on
         long-\glsterm{chain-of-thought}{CoT} exemplars before any RL, ensuring readable traces and
         a starting point that matches the chat template's
@@ -226,7 +226,7 @@ load-bearing for cross-paper bookkeeping:
         \nolinkurl{kb/notes/reasoning/reasoning-training.md#2} (Stage~1).}
         It changes $\theta$. Whatever distribution-shape the base
         model has after Stage~1 is what every later mechanism ---
-        Stage~2 \glsterm{grpo-2}{GRPO}, Stage~3 \glsterm{rejection-sampling-sft}{rejection-sampling SFT}, and any
+        Stage~2 \glsterm{grpo}{GRPO}, Stage~3 \glsterm{rejection-sampling-sft}{rejection-sampling SFT}, and any
         inference-time budget rule --- operates on top of.
 \end{itemize}
 
@@ -234,7 +234,7 @@ The two compose. s1 exhibits the inference-time leg in isolation by
 running on a Qwen2.5-32B-Instruct base whose pretraining and
 instruction tuning supply the latent reasoning capability
 \citep[\S 5.1]{s1-2025}. R1 exhibits the training-time leg in
-isolation through \glsterm{r1-zero}{R1-Zero}, where \glsterm{grpo-2}{GRPO} from the base model produces the
+isolation through \glsterm{r1-zero}{R1-Zero}, where \glsterm{grpo}{GRPO} from the base model produces the
 trace-lengthening behaviour without any cold-start SFT
 \citep[\S 2.2.4]{deepseek-r1}. The frontier-2026 picture
 (\cref{sec:frontier-snapshot}) is models that ship \emph{both} ---
@@ -290,7 +290,7 @@ This locates two cross-paper bookkeeping items:
         protocol layer.
   \item In the training taxonomy of Paper~2 (\hyperref[P2-sec:sft]{Paper~2 §SFT},
         §post-training), reasoning shows up as the curated long-\glsterm{chain-of-thought}{CoT}
-        SFT stage and the \glsterm{rlvr-3}{RLVR} stage that follows
+        SFT stage and the \glsterm{rlvr}{RLVR} stage that follows
         (\cref{sec:rlvr,sec:r1-family}). The \emph{format} of the
         traces (delimiters, line-by-line structure, inline
         verification) is part of what SFT installs; what RL does is
@@ -310,7 +310,7 @@ modify what $L$ the model is allowed (or required) to spend.
 leaves the central operational question of the reasoning triangle
 unanswered: at fixed total compute, when does spending marginal FLOPs
 on \emph{more} thinking-token budget pay better than spending them on
-\glsterm{rlvr-3}{RLVR} training, on parallel sampling (\cref{sec:self-consistency}), or
+\glsterm{rlvr}{RLVR} training, on parallel sampling (\cref{sec:self-consistency}), or
 on a verifier-guided search (\cref{sec:tree-search})? s1's headline
 suggests the trade-off is real --- 7 GPU-hours of SFT plus a longer
 $L$ at inference beats 394 GPU-hours of SFT at the same inference
@@ -319,9 +319,9 @@ through a many-dimensional surface. \Cref{sec:search-vs-rl} picks up
 the search-vs-RL fixed-compute trade-off directly, transcribing
 Snell's FLOPs-matched curves \citep[\S 6]{snell2024} for the
 inference-vs-pretraining axis and lining them up against
-\glsterm{dapo-2}{DAPO}'s step-efficiency and R1's training-token costs for the
+\glsterm{dapo}{DAPO}'s step-efficiency and R1's training-token costs for the
 inference-vs-RL axis. The thinking-token budget $L$ that this section
 formalised becomes one of three FLOPs-bearing variables on that
 trade-off surface, alongside the parallel-sample count $N$ of
-\cref{sec:self-consistency} and the \glsterm{rlvr-3}{RLVR} step count of
+\cref{sec:self-consistency} and the \glsterm{rlvr}{RLVR} step count of
 \cref{sec:rlvr}.

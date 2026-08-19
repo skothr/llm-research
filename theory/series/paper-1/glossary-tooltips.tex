@@ -9,11 +9,12 @@
 \expandafter\def\csname @gls@def@awq\endcsname{Lin et al. 2023.}
 \expandafter\def\csname @gls@def@bitlinear\endcsname{BitNet's drop-in replacement for `nn.Linear`: weights quantized to -1,0,+1 via absmean, activations to INT8 via absmax, SubLN replaci...}
 \expandafter\def\csname @gls@def@bpe\endcsname{Subword tokenization algorithm that iteratively merges the most frequent adjacent character pairs to build a vocabulary.}
+\expandafter\def\csname @gls@def@byte-fallback\endcsname{Mechanism ensuring no "unknown token" failures: any byte sequence can be represented, even if unseen during training.}
 \expandafter\def\csname @gls@def@chain-of-thought\endcsname{A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps z before emitting a final answer...}
 \expandafter\def\csname @gls@def@circuit\endcsname{a sub-graph C of a model's computational graph M that, when used in place of M via knockouts of M setminus C, approximately reprod...}
 \expandafter\def\csname @gls@def@claude\endcsname{Anthropic's proprietary decoder-only LLM family.}
-\expandafter\def\csname @gls@def@compressed-fsm-2\endcsname{FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar determ...}
-\expandafter\def\csname @gls@def@constrained-decoding-2\endcsname{Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,...}
+\expandafter\def\csname @gls@def@compressed-fsm\endcsname{FSM transformation that merges chains of singular-transition edges into single edges, so the constrained decoder emits an entire determinis...}
+\expandafter\def\csname @gls@def@constrained-decoding\endcsname{Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,...}
 \expandafter\def\csname @gls@def@context-extension\endcsname{Sub-stage of late-stage pre-training that increases trained sequence length (e.g., 4 K → 32 K → 128 K) by adjusting RoPE scaling and contin...}
 \expandafter\def\csname @gls@def@context-independent-context-dependent-vocabulary-split\endcsname{XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (\textasciitilde 99\%...}
 \expandafter\def\csname @gls@def@cross-attention\endcsname{Attention where Q comes from the decoder and K, V come from the encoder output.}
@@ -30,7 +31,7 @@
 \expandafter\def\csname @gls@def@global-batch-load-balancing\endcsname{Qwen3's strategy: apply load-balancing loss across the entire training mini-batch (cluster-wide), not within microbatches.}
 \expandafter\def\csname @gls@def@glu\endcsname{mathrmGLU(x, W, V) = sigma(xW) otimes (xV), the elementwise product of a sigmoid-gated and an identity-gated linear projection.}
 \expandafter\def\csname @gls@def@gptq\endcsname{Frantar et al. 2022.}
-\expandafter\def\csname @gls@def@gqa\endcsname{Interpolation between MHA and MQA: query heads are partitioned into g groups, each group shares one WK, WV.}
+\expandafter\def\csname @gls@def@gqa\endcsname{Interpolation between MHA and MQA: h query heads are partitioned into g groups, each group shares one WK, WV.}
 \expandafter\def\csname @gls@def@hbm\endcsname{The large, slow memory tier on a GPU (\textasciitilde 40–80 GB on A100, 1.5–2.0 TB/s).}
 \expandafter\def\csname @gls@def@hidden-state\endcsname{The d textmodel-dimensional vector representation at each position, flowing through the residual stream across layers.}
 \expandafter\def\csname @gls@def@hippo\endcsname{"High-order Polynomial Projection Operator." Specific structured choice of A matrix that optimally compresses input history under polynom...}
@@ -43,13 +44,11 @@
 \expandafter\def\csname @gls@def@logits\endcsname{Unnormalized log-probabilities over the vocabulary, produced by the output projection (h textfinal cdot W etop).}
 \expandafter\def\csname @gls@def@lstm\endcsname{Long Short-Term Memory.}
 \expandafter\def\csname @gls@def@m-rope\endcsname{Multi-axis RoPE for vision-language models.}
-\expandafter\def\csname @gls@def@mha\endcsname{The Vaswani 2017 default: h independent heads, each with its own W iQ, W iK, W iV.}
+\expandafter\def\csname @gls@def@mha\endcsname{The Vaswani 2017 default: h parallel attention operations on independent learned projections, each head with its own W iQ, W iK, W iV...}
 \expandafter\def\csname @gls@def@mistral\endcsname{Open-weights decoder-only LLM family from Mistral AI (Jiang et al., 2023).}
-\expandafter\def\csname @gls@def@mqa\endcsname{Variant where all heads share a single WK, WV (only WQ remains per-head).}
-\expandafter\def\csname @gls@def@multi-head-attention\endcsname{Running h parallel attention operations on different learned projections, then concatenating and projecting the results.}
-\expandafter\def\csname @gls@def@multi-head-latent-attention\endcsname{DeepSeek's architectural compression: project to a low-rank latent C in mathbbRd c shared across heads, expand back to per-head (...}
+\expandafter\def\csname @gls@def@mla\endcsname{DeepSeek-V2's architectural KV compression.}
+\expandafter\def\csname @gls@def@mqa\endcsname{Architectural KV compression: all h query heads share a single WK, WV (only WQ remains per-head).}
 \expandafter\def\csname @gls@def@multi-token-prediction\endcsname{Training objective + architectural feature: in addition to the standard next-token head, the model has auxiliary heads predicting tokens at...}
-\expandafter\def\csname @gls@def@native-sparse-attention\endcsname{Three-branch sparse attention (compress + select + sliding-window) trained natively (not retrofit).}
 \expandafter\def\csname @gls@def@nope\endcsname{"No Position Encoding." Decoder-only Transformer trained without any explicit positional encoding; relies on the causal mask to recover pos...}
 \expandafter\def\csname @gls@def@nsa\endcsname{Yuan et al. 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted).}
 \expandafter\def\csname @gls@def@nvfp4\endcsname{4-bit floating-point format (E2M1) with native hardware MXScale (32-element per-block scaling) on Blackwell-class GPUs.}
@@ -74,7 +73,7 @@
 \expandafter\def\csname @gls@def@rlhf\endcsname{The 3-stage post-training pipeline: SFT → reward-model training on pairwise preferences → PPO with KL anchor against pimathrmSFT.}
 \expandafter\def\csname @gls@def@rmsnorm\endcsname{Simplified LayerNorm that drops mean-centering and bias, normalizing only by the RMS of the input.}
 \expandafter\def\csname @gls@def@rnn\endcsname{Recurrent Neural Network.}
-\expandafter\def\csname @gls@def@rope\endcsname{Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative posit...}
+\expandafter\def\csname @gls@def@rope\endcsname{Multiplicative positional encoding that rotates query and key vectors in 2D subspaces by per-frequency, position-dependent angles mtheta ...}
 \expandafter\def\csname @gls@def@s4\endcsname{Structured State Space sequence model with HiPPO-NPLR A, FFT-based convolutional training, recurrent inference.}
 \expandafter\def\csname @gls@def@scaled-dot-product-attention\endcsname{Core attention operation: textsoftmax(QKtop / sqrtd k) V.}
 \expandafter\def\csname @gls@def@selective-ssm\endcsname{Mamba's contribution: input-dependent barB, C, Delta (parameters produced by linear projection of current input), enabling content-aw...}
@@ -82,7 +81,7 @@
 \expandafter\def\csname @gls@def@sentencepiece\endcsname{A tokenizer that operates on raw byte sequences rather than Unicode characters, used by LLaMA.}
 \expandafter\def\csname @gls@def@sliding-window-attention\endcsname{Each position attends only to the previous w tokens; compute O(N w d) vs O(N2 d).}
 \expandafter\def\csname @gls@def@softmax\endcsname{Converts logits to a probability distribution: P(j) = ez j / sum k ez k.}
-\expandafter\def\csname @gls@def@speedup-theorem\endcsname{mathbbE[texttokens per cycle] = (1-alphagamma+1)/(1-alpha) (Eq.1, capped geometric).}
+\expandafter\def\csname @gls@def@speedup-theorem\endcsname{mathbbE[texttokens per cycle] = (1-alphagamma+1)/(1-alpha) (Eq.1, capped geometric) `[leviathan2023 §3.1, Eq.1; kb/excerpts/l...}
 \expandafter\def\csname @gls@def@state-space-duality\endcsname{Mamba-2's framing: selective SSMs and a structurally-restricted form of attention compute the same function.}
 \expandafter\def\csname @gls@def@state-space-model\endcsname{Sequence model with recurrent state boldsymbolh t updated linearly: boldsymbolh t = barA boldsymbolh t-1 + barB u t.}
 \expandafter\def\csname @gls@def@swiglu\endcsname{mathrmFFN mathrmSwiGLU(x) = (mathrmSwish 1(xW) otimes xV) W 2.}

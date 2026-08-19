@@ -32,7 +32,7 @@ take up the convergence cases (IOI on GPT-2 small; factual recall
 on GPT-2 XL), where three or four methods triangulate on the same
 picture and the joint claim is more robust than any single-method
 claim. \S\S\ref{sec:cross-truth}--\ref{sec:cross-lens} take up the
-divergence cases (\glsterm{truth-direction-2}{truth direction} across datasets; \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature}
+divergence cases (\glsterm{truth-direction}{truth direction} across datasets; \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature}
 canonicality; lens cross-model unreliability), where the methods
 disagree and the disagreement is itself diagnostic.
 \S\ref{sec:cross-principle} states the closing argument and
@@ -48,7 +48,7 @@ $\sim 124$M \glsterm{parameters}{parameters}; the task is the canonical Wang--pr
 template ``\textsc{When Mary and John went to the store, John gave a
 drink to \_\_}''; the target is the indirect-object name
 \citep{wang2022-ioi}\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-2-task-and-circuit}.}. Three
+\nolinkurl{kb/excerpts/wang2022-ioi.md#sec-1-task}.}. Three
 methodologically independent readouts converge on the same \glsterm{circuit}{circuit}
 picture.
 
@@ -162,12 +162,12 @@ features that are training-distribution by construction.
 The negative cases begin with the most-studied probing target. The
 \citet{marks-tegmark-2023-truth} mass-mean direction on
 LLaMA-2-13B, $\mathbf{d}_{\mathrm{MM}} = \boldsymbol{\mu}_+ -
-\boldsymbol{\mu}_-$, is the canonical truth \glsterm{probe-2}{probe} of
+\boldsymbol{\mu}_-$, is the canonical truth \glsterm{probe}{probe} of
 \S\ref{sec:mass-mean}; the same \S 4 of the paper documents
 ``stark misalignment'' across datasets \citep[\S 4]{marks-tegmark-2023-truth}\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-4-misalignment}.}.
-The \glsterm{truth-direction-2}{truth direction} recovered from the \texttt{cities} dataset
-(``The capital of France is Paris.'') and the \glsterm{truth-direction-2}{truth direction}
+The \glsterm{truth-direction}{truth direction} recovered from the \texttt{cities} dataset
+(``The capital of France is Paris.'') and the \glsterm{truth-direction}{truth direction}
 recovered from \texttt{neg\_cities} (``The capital of France is
 not Berlin.'') are antipodal in early layers, orthogonal in
 mid-layers, and aligned only in late layers (around layers
@@ -185,18 +185,21 @@ documents that the recovered direction is not the mass-mean
 direction, and CCS suffers documented failures under negation that
 mass-mean does not share. A third method on the same target enters from the \glsterm{sparse-autoencoder}{SAE} side.
 \glsterm{sparse-autoencoder}{SAE}-discovered ``truthfulness''-related features
-\citep[\S 4]{templeton2024-scaling-monosemanticity}\footnote{KB
-excerpt: \nolinkurl{kb/excerpts/templeton2024-scaling-monosemanticity.md#sec-4}
-(HTML, deepen-cite pending).} \deepencite{templeton2024-scaling-monosemanticity §4
+\citep[\S Safety-Relevant Features]{templeton2024-scaling-monosemanticity}\footnote{No
+KB excerpt file: \texttt{templeton2024-scaling-\glsterm{monosemanticity}{monosemanticity}} is indexed in
+\nolinkurl{kb/index/papers.json} with \texttt{excerpts\_file: null} (HTML-only
+source, transcription pending; checked 2026-08-19). The \glsterm{transformer}{Transformer} Circuits
+article numbers no sections, so it is cited by section title.}
+\deepencite{templeton2024-scaling-monosemanticity \S Safety-Relevant Features,
 truthfulness features, HTML-only quotes pending Phase 2 transcription}
 overlap partially but not fully with mass-mean directions: the
-cosine between the \glsterm{probe-2}{probe} direction and the \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature} decoder
+cosine between the \glsterm{probe}{probe} direction and the \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature} decoder
 column on matched concepts is, to the best of our knowledge, not
 yet systematically reported, and the few hand-spot-check writeups
 report partial alignment rather than identity.
 
 \begin{contradiction}
-\textbf{There may not be a single \glsterm{truth-direction-2}{truth direction}.} Mass-mean
+\textbf{There may not be a single \glsterm{truth-direction}{truth direction}.} Mass-mean
 probing on LLaMA-2-13B finds dataset-dependent directions that align
 only in late layers \citep[\S 4]{marks-tegmark-2023-truth}; CCS
 finds a different direction that fails under negation; \glsterm{sparse-autoencoder}{SAE}-discovered
@@ -205,23 +208,23 @@ either. Three methods, no single converging direction. The
 \citet{vennemeyer2025-sycophancy-not-one-thing} multi-component
 result on \glsterm{sycophancy}{sycophancy} generalizes the pattern: behaviorally-singular
 properties may be representationally plural, and the field's
-single-axis truth-\glsterm{probe-2}{probe} assumption may be the wrong shape of model
+single-axis truth-\glsterm{probe}{probe} assumption may be the wrong shape of model
 for the underlying representation. The strongest form of the open
 question --- ``does the model represent truth along a single linear
 axis, or along a multi-axis subspace whose components depend on
 prompt format?'' --- is unresolved as of 2026, and the experiment
 that would close it is a cross-method, cross-prompt-format,
-cross-model-family study reporting \glsterm{probe-2}{probe} direction, \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature}
+cross-model-family study reporting \glsterm{probe}{probe} direction, \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature}
 direction, and patching-validated causal direction in matched
 coordinates.
 \end{contradiction}
 
-This is principled divergence in part. A \glsterm{probe-2}{probe} asks ``what
+This is principled divergence in part. A \glsterm{probe}{probe} asks ``what
 direction linearly decodes property $y$ from this dataset's
 activations?''; an \glsterm{sparse-autoencoder}{SAE} asks ``what sparse basis decomposes
 activations under reconstruction-and-sparsity loss?''. Different
 answers need not falsify each other --- but the divergence becomes
-load-bearing once the field makes single-axis truth-\glsterm{probe-2}{probe} claims
+load-bearing once the field makes single-axis truth-\glsterm{probe}{probe} claims
 (``ablating $\mathbf{d}_y$ flips the model's TRUE/FALSE behavior''):
 if there is no single $\mathbf{d}_y$, the claim is
 dataset-conditional. The divergence is the diagnostic.
@@ -247,7 +250,7 @@ critique argues that ``sufficiently large'' is not well-defined.
 \S\ref{sec:sae-canonicality} treats the contradiction at depth;
 the cross-method consequence is that any claim grounding in \glsterm{sparse-autoencoder}{SAE}
 features (``the \glsterm{sparse-autoencoder}{SAE} \glsterm{feature}{feature} for truth has cosine $\rho$ with the
-\glsterm{probe-2}{probe} direction'') is a claim about \emph{this} \glsterm{sparse-autoencoder}{SAE}'s inventory,
+\glsterm{probe}{probe} direction'') is a claim about \emph{this} \glsterm{sparse-autoencoder}{SAE}'s inventory,
 not about a model-canonical basis. The pragmatic 2026 position ---
 training SAEs at multiple widths and reporting which claims survive
 across widths --- reduces the single-run-artifact risk; the open

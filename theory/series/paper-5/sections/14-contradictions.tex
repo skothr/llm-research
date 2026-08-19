@@ -32,11 +32,11 @@ answer-\glsterm{key}{key} errors, ambiguities, or unverifiable references; this
 caps the highest honest score the original instrument can carry. As
 of 2026-Q2, vendor and research papers continue to publish \glsterm{mmlu}{MMLU}
 scores at single-percentage-point precision in the
-$90$--$94\%$ band as if \glsterm{mmlu-redux-2}{MMLU-Redux} had not been written. The field
+$90$--$94\%$ band as if \glsterm{mmlu-redux}{MMLU-Redux} had not been written. The field
 treats $91.2\%$ versus $92.4\%$ as a model-comparison result; the
 audit says both numbers are inside the ceiling band and not
 distinguishable at construction.\\
-\emph{What would close it:} field-wide adoption of \glsterm{mmlu-redux-2}{MMLU-Redux} as
+\emph{What would close it:} field-wide adoption of \glsterm{mmlu-redux}{MMLU-Redux} as
 the default knowledge-benchmark instrument, with error bars that
 explicitly include the verifier-error ceiling, and a deprecation
 of headline \glsterm{mmlu}{MMLU} numbers above $\sim\!93.5\%$ as
@@ -45,7 +45,7 @@ and cheap; the obstacle is not technical
 \citep{hendrycks2021-mmlu, mmlu-redux-2024, wang2024-mmlu-pro}.
 
 \paragraph{2. ASR comparability across jailbreak benchmarks (\cref{sec:adversarial-robustness}).}
-\glsterm{attack-success-rate}{Attack success rate} (\glsterm{asr}{ASR}) is reported as a model attribute. It is
+\glsterm{asr}{Attack success rate} (\glsterm{asr}{ASR}) is reported as a model attribute. It is
 not. \cref{sec:safety-formal} writes the canonical definition as
 $\mathrm{ASR}(M;\mathcal{B}, \mathcal{A}, V, \pi) = |\{j:
 V(\mathrm{target}(j), M(\mathcal{A}(j))) = 1\}| / |\mathcal{B}|$,
@@ -61,7 +61,7 @@ when the attack family $\mathcal{A}$ alone
 shifts from single-turn to multi-turn, holding other factors
 approximately fixed --- which demonstrates exactly how much of the
 headline \glsterm{asr}{ASR} is determined by substrate rather than model.\\
-\emph{What would close it:} a \glsterm{harmbench-2}{HarmBench}-or-equivalent
+\emph{What would close it:} a \glsterm{harmbench}{HarmBench}-or-equivalent
 standardization adopted across vendors and academic benchmarks,
 with a public cross-benchmark \glsterm{calibration-set}{calibration set} --- a fixed
 $(\mathcal{B}, V, \pi)$ tuple against which jailbreak papers report
@@ -272,10 +272,10 @@ The layered-defense framing of \cref{sec:introduction} is itself
 checkable, and the body of the paper checks it: every layer has
 at least one independently-developed instrument, and every layer
 has at least one named failure mode the next layer is supposed to
-catch. Layer 1 has \glsterm{mmlu}{MMLU} and \glsterm{mmlu-redux-2}{MMLU-Redux} and the contamination
+catch. Layer 1 has \glsterm{mmlu}{MMLU} and \glsterm{mmlu-redux}{MMLU-Redux} and the contamination
 survey; layer 2 has AIME, MATH, GPQA, \glsterm{frontiermath}{FrontierMath}, \glsterm{hle}{HLE}; layer 3
-has SWE-Bench, OSWorld, GAIA, $\tau$-Bench; layer 4 has \glsterm{harmbench-2}{HarmBench},
-\glsterm{jailbreakbench-2}{JailbreakBench}, AdvBench, Crescendo; layer 5 has \glsterm{sycophancyeval}{SycophancyEval},
+has SWE-Bench, OSWorld, GAIA, $\tau$-Bench; layer 4 has \glsterm{harmbench}{HarmBench},
+\glsterm{jailbreakbench}{JailbreakBench}, AdvBench, Crescendo; layer 5 has \glsterm{sycophancyeval}{SycophancyEval},
 the Apollo \glsterm{scheming}{scheming} suite, the Greenblatt alignment-faking setup;
 layer 6 has the Kirchenbauer/SynthID watermarking line and the
 Irving/Khan \glsterm{debate}{debate} line. The framing is therefore not post-hoc:

@@ -89,14 +89,14 @@ $$V(s_T, g) = \mathbb{1}\Big[\bigwedge_{t \in \text{F2P}} \mathrm{pass}(t, s_T)\
 
 The headline metric is `% resolved` over the 2,294 (or 500 in the
 Verified subset) instances. At launch (Oct 2023), Claude 2 resolved
-~1.96% `[jimenez2024-swebench §sec-headline]`; as of mid-2025 the
+~1.96% `[jimenez2024-swebench §5]`; as of mid-2025 the
 SWE-bench Verified leaderboard sits at >70% for Claude Sonnet 4.5
 class agents (see Phase 1 sweep, EVAL section).
 
 **SWE-bench Verified** (OpenAI, Aug 2024) is a 500-task subset
 filtered for unambiguous issue specs and fair test sets via human
 SWE labelers — original SWE-bench had a long tail of under-specified
-issues `[jimenez2024-swebench §sec-eval-protocol]`. SWE-bench
+issues `[swe-bench-verified]`. SWE-bench
 Verified is now the de-facto target; raw SWE-bench is treated as
 internal-development.
 
@@ -146,7 +146,7 @@ The dominant failure mode reported:
 > [agents] primarily struggling with GUI grounding and operational
 > knowledge.
 
-`[xie2024-osworld §sec-results]` This matters for the eval-methodology
+`[xie2024-osworld §abstract]` This matters for the eval-methodology
 note (`kb/notes/evaluation/eval-methodology.md`): OSWorld's metric is
 bottlenecked by a sub-capability (vision grounding) that may not be
 the capability the eval intends to measure.
@@ -260,7 +260,7 @@ capability reliably enough to deploy without human review." For
 customer-service agents, "answers correctly 50% of the time and
 wrong 50% of the time" is unacceptable in a way that "answers
 correctly with one prompt template, fails with another" never is for
-QA `[yao2024-tau-bench §sec-passk]`.
+QA `[yao2024-tau-bench §3]`.
 
 [INTUITION] The 1.96% → 70%+ trajectory on SWE-bench Verified over
 ~18 months is structurally similar to the AlphaGo → AlphaZero

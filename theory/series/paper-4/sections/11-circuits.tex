@@ -19,7 +19,7 @@ GPT-2 small to a 26-head subgraph in seven functional classes
 \nolinkurl{kb/excerpts/wang2022-ioi.md#sec-3-circuit}.};
 \citet{conmy2023-acdc} systematize the discovery as iterative
 edge-pruning under a KL-divergence criterion\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3}.};
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3-kl}.};
 \citet{lindsey2025-circuit-tracing} extend the program to production
 \glsterm{claude}{Claude} 3.5 Haiku via cross-layer transcoders and Jacobian attribution.
 The thesis of this section is that these are not three separate
@@ -167,7 +167,7 @@ the graph in reverse-topological order (output-to-input), at each node
 greedily attempting to remove every incoming edge whose removal does
 not increase the KL divergence by more than threshold $\tau$. Verbatim
 from~\citet[Algorithm 1]{conmy2023-acdc}\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3}.}:
+\nolinkurl{kb/excerpts/conmy2023-acdc.md#sec-3-overview}.}:
 
 \begin{lstlisting}[caption={ACDC, the Automatic Circuit DisCovery algorithm.},label={lst:acdc}]
 Algorithm 1: ACDC

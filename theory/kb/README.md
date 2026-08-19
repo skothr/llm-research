@@ -23,7 +23,8 @@ synthesis with primary-source quotation.
 ## Linting the KB
 
 `kb/lint.py` checks every citation in `kb/**/*.md` (notes, `glossary.md`,
-`index/`) against reality: paper-keys resolve in `index/papers.json` (both the
+`index/`) **and in `series/**/*.tex`** against reality: paper-keys resolve in
+`index/papers.json` (both the
 `[paper-key §X]`, bare `[paper-key]`, `[paper-key <locator>]` and
 `[paper-key, arXiv NNNN.NNNNN]` forms, plus the `primary_sources:` /
 `secondary_sources:` lists in a note's frontmatter), excerpt and note
@@ -58,6 +59,41 @@ Anchors it accepts in a target file: a `{#attr}` attribute, the
 `## #anchor — Title` heading convention used by older excerpt files, a plain
 markdown heading slug, and the `#§3.1` section-number shorthand used for note
 cross-references.
+
+### Two checks added 2026-08-19
+
+**The `§` slot must name a place in the source paper.** `§sec-diamond` is an
+excerpt *anchor*, not a section of Rein et al. — writing it in the `§` slot
+made 40-odd citations render in the built PDFs as "(Rein et al., 2023,
+§sec-diamond)". The linter now accepts only a section number (`§3`, `§3.2`,
+`§A.1`, `§C`), a numeric range (`§4--5`), one of
+`{abstract, appendix, intro, introduction, conclusion, passim}`, or — for a
+paper whose sections are named but unnumbered — the section title in Title
+Case (`§Method`, `§Quantitative Evaluations`). Anything lowercase-slug-shaped
+is an error.
+
+**The series `.tex` is scanned too.** The same citations live in
+`\citep[\S 3.2; kb/excerpts/<paper-key>\#<anchor>]{<paper-key>}` footnotes across
+`series/paper-N/sections/*.tex`, and used to be invisible to the linter — which
+is how 35 dangling `.tex` pointers accumulated while the KB side was renamed
+clean. Both the excerpt-pointer and `§`-label checks now run there, over the
+LaTeX spellings `\S 3`, `\S{3}` and `\S{}3`, with `%` comments stripped first.
+The generated `glossary-section.tex` / `glossary-tooltips.tex` are skipped:
+they are emitted from `glossary.md`, so their citations are already covered at
+the source.
+
+Both checks are pinned by `kb/tests/test_lint.py` (run with
+`python3 -m pytest theory/kb/tests/`).
+
+**Known gap: `.tex` → note *anchors* are not checked.** The series also links
+into `kb/notes/**` from its footnotes, and those links resolve only for the
+file half today. The anchor half is unguarded because the series writes note
+anchors in a different dialect from the KB — `#4.1` for a section where the KB
+writes `#§4.1`, mixed with genuine heading slugs. Enabling the check as-is
+reports 78 sites, a mix of real drift and convention mismatch; separating the
+two needs the dialect settled first, which is a follow-up, not a lint tweak.
+Until then, renaming a heading in `kb/notes/**` means grepping
+`series/**/*.tex` for links to it by hand.
 
 ## Tagging analogies and intuition
 

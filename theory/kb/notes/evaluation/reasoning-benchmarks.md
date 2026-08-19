@@ -200,7 +200,7 @@ small set of `(input_grid, output_grid)` training pairs from which
 the test-taker must infer a transformation rule, then apply it to
 held-out test inputs.
 
-`[FORUM-SIGNAL: ARC Prize official site; Phase 1 sweep §scaling-frontier]`
+`[FORUM-SIGNAL: ARC Prize official site; Phase 1 sweep, scaling-frontier]`
 ARC-AGI-1 was effectively solved by o3 (>85%) in late 2024.
 ARC-AGI-2 was constructed specifically to be harder along the
 abstract-rule-induction axis. At launch (early 2025):
@@ -291,7 +291,7 @@ Nov 2024 launch.
 4. **ARC-AGI-2** (March 2025) — designed to resist
    inference-time-compute brute force; top commercial ~37.6%.
 
-`[FORUM-SIGNAL: arcprize.org; Phase 1 sweep §scaling-frontier]`
+`[FORUM-SIGNAL: arcprize.org; Phase 1 sweep, scaling-frontier]`
 
 ## 4. Intuitions and analogies
 

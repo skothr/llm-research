@@ -63,7 +63,7 @@ discipline" for the full rule.
   evaluation, and alignment, with verbatim excerpts, `index/papers.json`, and
   a cited glossary. Phase 2 closed 2026-05-04.
 - **v2 LaTeX series — complete.** All five papers written and built (70
-  sections, ~424 pp — 77 / 106 / 81 / 77 / 83, measured from the committed
+  sections, ~428 pp — 78 / 107 / 82 / 77 / 84, measured from the committed
   PDFs); PDFs committed at `series/paper-N/main.pdf`.
 - **2026-05-06 review wave — applied.** Six independent fresh-context
   reviewers (adversarial content, cross-paper coherence, math correctness,
@@ -71,7 +71,8 @@ discipline" for the full rule.
   triage and per-finding resolution are in `reviews/00-summary.md`.
 - **Since then: maintenance mode.** Changes are corrections, currency
   refreshes, and new cross-links from the research arcs — not new phases.
-  Run `python3 kb/lint.py` from `theory/` after any citation edit. It exits
+  Run `python3 kb/lint.py` from `theory/` after any citation edit. It covers
+  `kb/**/*.md` **and** `series/**/*.tex`, and it exits
   non-zero today: **14 errors / 0 warnings expected as of 2026-08-19**, all
   of them citations of 10 paper keys missing from `kb/index/papers.json`
   (issue #55). `kb/README.md` lists the keys — anything beyond that baseline

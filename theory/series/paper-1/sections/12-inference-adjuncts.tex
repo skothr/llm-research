@@ -12,7 +12,7 @@ do not by themselves determine what the deployed system can serve at
 matched cost. Three categories of \emph{inference-time} concern --- the
 KV-cache lifecycle and its memory-allocation discipline, weight /
 activation / KV quantization regimes, and structured-output enforcement
-through \glsterm{constrained-decoding-2}{constrained decoding} --- are the load-bearing reason a 2026
+through \glsterm{constrained-decoding}{constrained decoding} --- are the load-bearing reason a 2026
 frontier model is feasible to ship. Each constrains which choices in
 \cref{sec:kv-sharing,sec:hardware-attention,sec:ffn,sec:state-space}
 can be taken: paged allocation requires a block-friendly attention
@@ -84,7 +84,7 @@ The architectural pressure runs the other way too: \glsterm{pagedattention}{Page
 block-decomposed kernel is what enables the cross-request prefix sharing
 of \glsterm{radixattention}{RadixAttention} \citep[\S 3]{zheng2024-sglang}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/zheng2024-sglang.md#sec-3}.}, the
-training-time KV compression of \glsterm{mqa}{MQA} / \glsterm{gqa}{GQA} / \glsterm{multi-head-latent-attention}{MLA} in
+training-time KV compression of \glsterm{mqa}{MQA} / \glsterm{gqa}{GQA} / \glsterm{mla}{MLA} in
 \cref{sec:kv-sharing} (which act on the per-token block size), and the
 KV-quantization regimes below (which change the element width $b$ but
 not the layout).
@@ -294,11 +294,11 @@ runs grammar checks on the CPU concurrently with the GPU forward pass
 \citep[\S 6]{xgrammar2024}, achieving up to $100\times$ speedup over
 prior solutions and $\leq 40\,\mu$s per token of grammar overhead on
 $100$K-vocab models \citep[\S 7]{xgrammar2024}. By 2026 \glsterm{context-independent-context-dependent-vocabulary-split}{XGrammar} is
-the default constrained-decoding backend in vLLM, \glsterm{compressed-fsm-2}{SGLang}, and
+the default constrained-decoding backend in vLLM, \glsterm{compressed-fsm}{SGLang}, and
 TensorRT-\glsterm{llm}{LLM} \citep[FORUM-SIGNAL]{xgrammar2024}.
 
 \begin{analogy}
-\glsterm{constrained-decoding-2}{Constrained decoding} is the \emph{product} of the FSM (which says
+\glsterm{constrained-decoding}{Constrained decoding} is the \emph{product} of the FSM (which says
 which tokens are allowed) with the language model (which says which
 tokens are likely): the masked distribution in
 \cref{eq:constrained-decoding} is the model's \glsterm{softmax}{softmax} times the
@@ -321,7 +321,7 @@ choices of \cref{sec:tokenization-embedding} through
 \cref{sec:multimodal} fix the deployable surface of a 2026 frontier
 \glsterm{llm}{LLM}. We turn next (\cref{sec:frontier-snapshot}) to a model-by-model
 table of the architectural choices the leading 2026 systems share, and
-where they diverge. \glsterm{pagedattention}{PagedAttention} has become universal; \glsterm{gqa}{GQA}-or-\glsterm{multi-head-latent-attention}{MLA} is
+where they diverge. \glsterm{pagedattention}{PagedAttention} has become universal; \glsterm{gqa}{GQA}-or-\glsterm{mla}{MLA} is
 near-universal; ternary pretraining at 70B+ remains open; \glsterm{nvfp4}{NVFP4}
 production at frontier scale remains contested. The localized open
 frontiers we have surfaced through \cref{sec:kv-sharing,sec:hardware-attention,sec:state-space}

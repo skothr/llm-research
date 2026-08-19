@@ -13,7 +13,7 @@
 reasoning triangle on a 2023 generator: \glsterm{process-reward-model}{PRM}-best-of-$N$ dominates
 \glsterm{outcome-reward-model}{ORM}-best-of-$N$ at matched $N$ on \glsterm{prm800k}{PRM800K}-grade verifiers, with
 min-aggregation as the strongest aggregator and \glsterm{process-reward-model}{PRM}-weighted
-\glsterm{self-consistency-2}{self-consistency} as a budget-friendly compromise
+\glsterm{self-consistency}{self-consistency} as a budget-friendly compromise
 \citep[\S 4]{lightman2023-prm800k}. Two years later, the strongest
 open-weight \glsterm{reasoning-model}{reasoning model} --- DeepSeek-R1 --- reached its headline
 AIME 2024 jump using \emph{terminal verifier rewards only} and
@@ -27,7 +27,7 @@ and inference cost?
 The 2025--2026 picture is mixed. PRMs continue to add \glsterm{value}{value} at
 \emph{inference} time in a number of measured settings (best-of-$N$
 reranking, search guidance) on reasoning-trained policies; their \glsterm{value}{value}
-as a \emph{training} signal beyond verifier-only \glsterm{rlvr-3}{RLVR} is contested,
+as a \emph{training} signal beyond verifier-only \glsterm{rlvr}{RLVR} is contested,
 with both diminishing-returns evidence and continued-gain claims
 surveyed by \citet{zheng2025-prm-survey}.\deepencite{zheng2025-prm-survey
 \S2--3 (excerpt skeleton-only as of 2026-05; PDF acquisition pending)}
@@ -38,7 +38,7 @@ contradiction that \cref{sec:contradictions} catalogues.
 \subsection{R1 is the data point}
 \label{sec:prm-survival-r1}
 
-\Citet[\S 2.1, \S 2.2]{deepseek-r1} train \glsterm{r1-zero}{R1-Zero} with the \glsterm{grpo-2}{GRPO}
+\Citet[\S 2.1, \S 2.2]{deepseek-r1} train \glsterm{r1-zero}{R1-Zero} with the \glsterm{grpo}{GRPO}
 objective of \cref{eq:grpo} under a rule-based reward:
 \begin{equation}
   r_i \;=\; \mathbb{1}\!\left[\, \mathrm{verify}(x, o_i) = \mathsf{true}\,\right]
@@ -61,7 +61,7 @@ our observation that neural reward models are susceptible to reward
 hacking during large-scale reinforcement learning.
 \end{quote}
 The headline empirics are well-known: AIME 2024 pass@1 from
-$15.6\%$ to $77.9\%$ during RL, and to $86.7\%$ with \glsterm{self-consistency-2}{self-consistency}
+$15.6\%$ to $77.9\%$ during RL, and to $86.7\%$ with \glsterm{self-consistency}{self-consistency}
 at inference time \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} A \glsterm{reasoning-model}{reasoning model}
 that does not place at the AIME human-competitor level cannot be
@@ -70,16 +70,16 @@ already closed without one. This is the load-bearing data point that
 reframes the post-2023 \glsterm{process-reward-model}{PRM} literature from ``does process supervision
 beat outcome supervision?'' (settled by \citet{lightman2023-prm800k} on
 the 2023 generator) to ``is process supervision still net-positive on
-top of verifier-only \glsterm{rlvr-3}{RLVR}?''
+top of verifier-only \glsterm{rlvr}{RLVR}?''
 
 \begin{intuition}
-\glsterm{rlvr-3}{RLVR} can be read as \glsterm{outcome-reward-model}{ORM}-with-a-perfect-verifier. The R1 reward
+\glsterm{rlvr}{RLVR} can be read as \glsterm{outcome-reward-model}{ORM}-with-a-perfect-verifier. The R1 reward
 \cref{eq:r1-rule-reward} is precisely the outcome reward
 $R^O_\phi(x, z, y) \in \{0, 1\}$ of \cref{eq:orm-loss} with the learned
 classifier replaced by an exact symbolic check. Returning to math:
 where \citet{lightman2023-prm800k} compared learned-\glsterm{outcome-reward-model}{ORM}-best-of-$N$
 against learned-\glsterm{process-reward-model}{PRM}-best-of-$N$, R1 substitutes the learned \glsterm{outcome-reward-model}{ORM} with a
-zero-error verifier and pushes the resulting binary signal through \glsterm{grpo-2}{GRPO}
+zero-error verifier and pushes the resulting binary signal through \glsterm{grpo}{GRPO}
 rather than through reranking. The \glsterm{outcome-reward-model}{ORM} half of the 2023 comparison has
 been replaced by something strictly stronger; whether the \glsterm{process-reward-model}{PRM} half
 still wins requires re-running the experiment on this new generator
@@ -186,7 +186,7 @@ delivered $20$-point pass@$N$ gains over a 2023 GPT-4 generator on
 \paragraph{Position C: process-vs-outcome RL is the wrong question;
 the question is which signal is cheap to verify.} The third position,
 implicit in \cref{eq:r1-rule-reward}, is that the binary outcome reward
-of \glsterm{rlvr-3}{RLVR} is cheap because the verifier is exact (an answer-match check,
+of \glsterm{rlvr}{RLVR} is cheap because the verifier is exact (an answer-match check,
 a compiler), not because outcome supervision is intrinsically superior
 to process supervision. Where exact outcome verification is available
 --- competition math, code, formal logic --- the choice between
@@ -194,16 +194,16 @@ sparse-but-zero-error and dense-but-noisy is unbalanced; the binary
 verifier wins on robustness alone, even if dense signal would
 theoretically reduce credit-assignment noise. Where exact outcome
 verification is \emph{not} available --- open-domain QA, scientific
-reasoning, planning --- neither \glsterm{rlvr-3}{RLVR} nor \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR} has a clean
+reasoning, planning --- neither \glsterm{rlvr}{RLVR} nor \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr}{RLVR} has a clean
 empirical answer in 2026. This reframing is consistent with the survey
 \citep{zheng2025-prm-survey} but is sharper than its conclusion.
 
 \begin{contradiction}
-\textbf{PRMs as a training-time signal beyond verifier-only \glsterm{rlvr-3}{RLVR} ---
+\textbf{PRMs as a training-time signal beyond verifier-only \glsterm{rlvr}{RLVR} ---
 unresolved.} The 2023 \glsterm{prm800k}{PRM800K}-era result that \glsterm{process-reward-model}{PRM} > \glsterm{outcome-reward-model}{ORM} at matched
 $N$ \citep[Fig.\ 4]{lightman2023-prm800k} was established on a
 non-reasoning-trained generator. As the policy class moves to
-\glsterm{rlvr-3}{RLVR}-trained reasoning models, the \glsterm{outcome-reward-model}{ORM} in that comparison is replaced
+\glsterm{rlvr}{RLVR}-trained reasoning models, the \glsterm{outcome-reward-model}{ORM} in that comparison is replaced
 by a zero-error symbolic verifier (\cref{eq:r1-rule-reward}); the \glsterm{process-reward-model}{PRM}
 in that comparison must now beat the generator's own internal
 verification. \Citet{thinkprm2025} report inference-time gains;
@@ -213,8 +213,8 @@ becomes a strong \glsterm{reasoning-model}{reasoning model} itself.'' R1 itself 
 \emph{no} \glsterm{process-reward-model}{PRM} in the headline RL loop \citep[\S 2.2]{deepseek-r1}.
 The \glsterm{process-reward-model}{PRM}-after-R1 question splits into two: (i) at \emph{inference
 time}, generative PRMs (\glsterm{generative-prm}{ThinkPRM}, R-\glsterm{process-reward-model}{PRM}) continue to add \glsterm{value}{value}; (ii)
-at \emph{training time}, whether \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR} beats verifier-only
-\glsterm{rlvr-3}{RLVR} at matched compute is benchmark-specific and unsettled.
+at \emph{training time}, whether \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr}{RLVR} beats verifier-only
+\glsterm{rlvr}{RLVR} at matched compute is benchmark-specific and unsettled.
 \Cref{sec:contradictions} returns to this as the most consequential
 open contradiction of the verifier leg.
 \end{contradiction}
@@ -242,14 +242,14 @@ of each of $G$ rollouts) at cost
   C_{\text{PRM-RL}} \;=\; G \times \E[T] \times C_{\text{verify-step}},
   \label{eq:prm-rl-cost}
 \end{equation}
-versus the verifier-only \glsterm{rlvr-3}{RLVR} cost of $G \times C_{\text{verify-final}}$,
+versus the verifier-only \glsterm{rlvr}{RLVR} cost of $G \times C_{\text{verify-final}}$,
 which for an answer-match check is essentially $C_{\text{regex}}
 \approx 0$. With a generative verifier, $C_{\text{verify-step}}
 \propto L_{\text{verify}}$ tokens; on a long-\glsterm{chain-of-thought}{CoT} trace with $T \in
 [10, 100]$ and $L_{\text{verify}} \in [10^2, 10^3]$ tokens, the \glsterm{process-reward-model}{PRM}-RL
 verifier-inference cost can dwarf the policy-rollout cost itself.
 
-\paragraph{Signal density.} The benefit side. \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo-2}{GRPO} replaces
+\paragraph{Signal density.} The benefit side. \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo}{GRPO} replaces
 a single binary $r_i$ with a $T$-vector of step scores; under a
 well-aligned \glsterm{process-reward-model}{PRM}, the gradient identifies the worst step locally
 rather than back-propagating one outcome label across an entire
@@ -270,7 +270,7 @@ demonstration was on human labels (very reliable, very expensive);
 2024 Math-Shepherd was on rollout-completion-rate labels (cheap,
 moderately reliable); 2025 \glsterm{generative-prm}{ThinkPRM} is on a generative verifier's
 self-graded signal (cheap, reliability tied to the verifier's own
-quality). Returning to math: the \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo-2}{GRPO} objective replaces
+quality). Returning to math: the \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo}{GRPO} objective replaces
 $\hat A_{i,t} = (R_i - \mu)/\sigma$ from \cref{eq:grpo-advantage} with a
 per-step advantage $\hat A_{i,t} = R^P_\phi(x, s^{(i)}_{1:t}) - \bar R^P$
 that pays off in proportion to $R^P_\phi$'s alignment with ground truth.
@@ -288,7 +288,7 @@ plus the 2025--2026 \glsterm{process-reward-model}{PRM} survey support:
 \item \textbf{R1 reached AIME 2024 pass@1 of $77.9\%$ with no \glsterm{process-reward-model}{PRM} in
 the RL loop} \citep[\S 2.3]{deepseek-r1}. This single data point
 establishes that strong reasoning is achievable from verifier-only
-\glsterm{rlvr-3}{RLVR}; the \glsterm{process-reward-model}{PRM} is not a precondition.
+\glsterm{rlvr}{RLVR}; the \glsterm{process-reward-model}{PRM} is not a precondition.
 \item \textbf{Inference-time generative PRMs continue to outperform
 discriminative PRMs} on verifiable-certificate benchmarks
 \citep[abstract]{thinkprm2025}. The dominance shifts from a
@@ -299,8 +299,8 @@ shrinks as the base model becomes a strong \glsterm{reasoning-model}{reasoning m
 \citep{zheng2025-prm-survey}. Mechanism: the policy's internal
 verification approaches the \glsterm{process-reward-model}{PRM}'s signal, closing the
 verifier-fidelity gap.\deepencite{zheng2025-prm-survey \S4 discussion}
-\item \textbf{\glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR} has no clean empirical advantage over
-verifier-only \glsterm{rlvr-3}{RLVR} at frontier scale as of 2026-Q2.} The R1 authors
+\item \textbf{\glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr}{RLVR} has no clean empirical advantage over
+verifier-only \glsterm{rlvr}{RLVR} at frontier scale as of 2026-Q2.} The R1 authors
 abstain from neural reward models on reward-hacking grounds; the
 2025 survey reports mixed empirics.
 \item \textbf{R-\glsterm{process-reward-model}{PRM} and EDU-\glsterm{process-reward-model}{PRM}} \citep{she2025-r-prm,cao2025-edu-prm}
@@ -315,8 +315,8 @@ implied.\deepencite{she2025-r-prm \S3 and cao2025-edu-prm \S3
 
 What the evidence does \emph{not} settle: whether the verifier leg of
 the reasoning triangle is best instantiated as a search-time \glsterm{process-reward-model}{PRM}, a
-training-time \glsterm{process-reward-model}{PRM}-shaped reward, or a verifier-only \glsterm{rlvr-3}{RLVR} signal
-combined with \glsterm{self-consistency-2}{self-consistency}. The three options coexist in the 2026
+training-time \glsterm{process-reward-model}{PRM}-shaped reward, or a verifier-only \glsterm{rlvr}{RLVR} signal
+combined with \glsterm{self-consistency}{self-consistency}. The three options coexist in the 2026
 frontier model line-up (\cref{sec:frontier-snapshot}) without a
 consensus winner.
 
@@ -326,14 +326,14 @@ consensus winner.
 The \glsterm{process-reward-model}{PRM}-after-R1 question splits cleanly into an inference-time half
 (answered: generative PRMs continue to add \glsterm{value}{value}, with diminishing
 returns as the policy's own verification improves) and a training-time
-half (open: \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR} vs verifier-only \glsterm{rlvr-3}{RLVR} has no settled
+half (open: \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr}{RLVR} vs verifier-only \glsterm{rlvr}{RLVR} has no settled
 empirical winner). \Cref{sec:frontier-snapshot} provides the
 2026 snapshot table of which frontier reasoning models actually ship
 PRMs --- and the headline answer is ``almost none in the headline RL
 loop, several at inference time.'' \Cref{sec:contradictions} then
 collects this section's contradiction alongside the \glsterm{chain-of-thought}{CoT}-faithfulness
 question (\cref{sec:cot-faithfulness}), the
-\glsterm{rlvr-3}{RLVR}-generalisation-vs-memorisation question
+\glsterm{rlvr}{RLVR}-generalisation-vs-memorisation question
 (\cref{sec:rlvr,sec:r1-family}), and the search-vs-RL fixed-compute
 tradeoff (\cref{sec:search-vs-rl}) as the open frontier of the
 verifier leg.

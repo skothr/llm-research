@@ -1,4 +1,5 @@
 """Tests for mark_glossary_terms.py — tokenizer, regex, body-wrap, emitters."""
+
 from __future__ import annotations
 
 from mark_glossary_terms import find_skip_regions
@@ -191,12 +192,14 @@ def _records(*specs):
             out.append(s)
         else:
             key, primary, aliases, case_strict = s
-            out.append({
-                "key": key,
-                "primary_form": primary,
-                "aliases": aliases,
-                "case_strict": case_strict,
-            })
+            out.append(
+                {
+                    "key": key,
+                    "primary_form": primary,
+                    "aliases": aliases,
+                    "case_strict": case_strict,
+                }
+            )
     return out
 
 
@@ -209,10 +212,12 @@ def test_regex_word_boundaries_skip_substring():
 
 
 def test_regex_longest_first_for_hyphen_overlap():
-    rx = build_term_regex(_records(
-        ("fa", "FA", [], True),
-        ("fa-3", "FA-3", [], True),
-    ))
+    rx = build_term_regex(
+        _records(
+            ("fa", "FA", [], True),
+            ("fa-3", "FA-3", [], True),
+        )
+    )
     m = rx.search("we use FA-3 here")
     assert m is not None
     assert m.group(0) == "FA-3"
@@ -231,9 +236,11 @@ def test_regex_case_loose_matches_both_cases():
 
 
 def test_regex_alias_matches():
-    rx = build_term_regex(_records(
-        ("t5", "T5", ["Text-to-Text Transfer Transformer"], True),
-    ))
+    rx = build_term_regex(
+        _records(
+            ("t5", "T5", ["Text-to-Text Transfer Transformer"], True),
+        )
+    )
     m1 = rx.search("Google's T5 model")
     assert m1 is not None
     assert m1.group(0) == "T5"
@@ -299,15 +306,17 @@ from mark_glossary_terms import render_glossary_section, render_tooltip_table
 
 
 def test_render_glossary_section_basic():
-    records = _records({
-        "key": "rope",
-        "primary_form": "RoPE",
-        "aliases": ["Rotary Position Embedding"],
-        "short_def": "Rotates queries and keys.",
-        "full_def": "Rotates queries and keys by position-dependent angles.",
-        "case_strict": True,
-        "kb_cite": "su2021 §3.4",
-    })
+    records = _records(
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": ["Rotary Position Embedding"],
+            "short_def": "Rotates queries and keys.",
+            "full_def": "Rotates queries and keys by position-dependent angles.",
+            "case_strict": True,
+            "kb_cite": "su2021 §3.4",
+        }
+    )
     out = render_glossary_section(records, used_keys={"rope"})
     assert r"\section*{Glossary}" in out
     # The emitter wraps each entry's anchor in \glsanchor (which itself
@@ -327,11 +336,17 @@ def test_render_glossary_section_term_is_clickable_link_when_first_mention_known
     is the clickable target (jumps to the section that introduces it).
     Earlier design used a small leading ``→ in the body; user reported
     that arrow as too easy to miss, so we attach the link to the term."""
-    records = _records({
-        "key": "rope", "primary_form": "RoPE", "aliases": [],
-        "short_def": "x", "full_def": "Rotary positional encoding details.",
-        "case_strict": True, "kb_cite": None,
-    })
+    records = _records(
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": [],
+            "short_def": "x",
+            "full_def": "Rotary positional encoding details.",
+            "case_strict": True,
+            "kb_cite": None,
+        }
+    )
     out = render_glossary_section(
         records,
         used_keys={"rope"},
@@ -355,11 +370,17 @@ def test_render_glossary_section_separates_term_and_def_with_en_dash():
     layout would butt them together with only an interword space.
     En dash chosen over em (---) — em is visually too heavy at
     body-text size and dominates the line."""
-    records = _records({
-        "key": "rope", "primary_form": "RoPE", "aliases": [],
-        "short_def": "x", "full_def": "Rotary positional encoding.",
-        "case_strict": True, "kb_cite": None,
-    })
+    records = _records(
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": [],
+            "short_def": "x",
+            "full_def": "Rotary positional encoding.",
+            "case_strict": True,
+            "kb_cite": None,
+        }
+    )
     out = render_glossary_section(records, used_keys={"rope"})
     # `\item[...]` then newline then `-- definition`.
     assert "\n-- Rotary positional encoding." in out
@@ -371,10 +392,17 @@ def test_render_glossary_section_omits_term_link_when_first_mention_unknown():
     """If we don't know where a term is formally introduced, render its
     name plain (no \\hyperref). The reader still sees the entry; just
     no jump-target."""
-    records = _records({
-        "key": "rope", "primary_form": "RoPE", "aliases": [],
-        "short_def": "x", "full_def": "x", "case_strict": True, "kb_cite": None,
-    })
+    records = _records(
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": [],
+            "short_def": "x",
+            "full_def": "x",
+            "case_strict": True,
+            "kb_cite": None,
+        }
+    )
     # first_mention_label not passed → default {} → no link emitted
     out = render_glossary_section(records, used_keys={"rope"})
     assert r"\hyperref[" not in out
@@ -383,10 +411,24 @@ def test_render_glossary_section_omits_term_link_when_first_mention_unknown():
 
 def test_render_glossary_section_scopes_to_used_keys():
     records = _records(
-        {"key": "rope", "primary_form": "RoPE", "aliases": [],
-         "short_def": "x", "full_def": "x", "case_strict": True, "kb_cite": None},
-        {"key": "gqa", "primary_form": "GQA", "aliases": [],
-         "short_def": "y", "full_def": "y", "case_strict": True, "kb_cite": None},
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": [],
+            "short_def": "x",
+            "full_def": "x",
+            "case_strict": True,
+            "kb_cite": None,
+        },
+        {
+            "key": "gqa",
+            "primary_form": "GQA",
+            "aliases": [],
+            "short_def": "y",
+            "full_def": "y",
+            "case_strict": True,
+            "kb_cite": None,
+        },
     )
     out = render_glossary_section(records, used_keys={"rope"})
     assert "RoPE" in out
@@ -394,10 +436,139 @@ def test_render_glossary_section_scopes_to_used_keys():
 
 
 def test_render_tooltip_table():
-    records = _records({
-        "key": "rope", "primary_form": "RoPE", "aliases": [],
-        "short_def": "Rotary positional encoding.", "full_def": "...",
-        "case_strict": True, "kb_cite": None,
-    })
+    records = _records(
+        {
+            "key": "rope",
+            "primary_form": "RoPE",
+            "aliases": [],
+            "short_def": "Rotary positional encoding.",
+            "full_def": "...",
+            "case_strict": True,
+            "kb_cite": None,
+        }
+    )
     out = render_tooltip_table(records, used_keys={"rope"})
-    assert r"\expandafter\def\csname @gls@def@rope\endcsname{Rotary positional encoding.}" in out
+    assert (
+        r"\expandafter\def\csname @gls@def@rope\endcsname{Rotary positional encoding.}"
+        in out
+    )
+
+
+# ---------------------------------------------------------------------------
+# Scope-qualifier parentheticals must not shadow another entry's primary form
+#
+# `- **Per-shape RMS scaling (Muon)**` parses the parenthetical as an alias
+# (it has to: the rendered glossary heading prints it). That alias collides
+# with the headword of the separate `Muon` entry. A primary form must always
+# win the surface->key race, and already-marked sites carrying the loser key
+# must be repaired.
+# ---------------------------------------------------------------------------
+
+from mark_glossary_terms import (  # noqa: E402
+    _apply_shadow_rekey,
+    _build_shadow_rekey,
+    _build_surface_to_key,
+)
+
+# `per-shape-rms-scaling` sorts AFTER `muon`, so a last-write-wins table used
+# to hand "Muon" to the wrong entry. The reversed order is asserted too so the
+# guarantee cannot silently become order-dependent again.
+_MUON = {
+    "key": "muon",
+    "primary_form": "Muon",
+    "aliases": [],
+    "short_def": "Orthogonalized momentum optimizer.",
+    "full_def": "Orthogonalized momentum optimizer.",
+    "case_strict": False,
+    "kb_cite": None,
+}
+_PER_SHAPE = {
+    "key": "per-shape-rms-scaling",
+    "primary_form": "Per-shape RMS scaling",
+    "aliases": ["Muon"],
+    "short_def": "Update multiplier for an AxB matrix.",
+    "full_def": "Update multiplier for an AxB matrix.",
+    "case_strict": True,
+    "kb_cite": None,
+}
+
+
+def test_primary_form_beats_shadowing_alias_in_either_order():
+    for records in ([_MUON, _PER_SHAPE], [_PER_SHAPE, _MUON]):
+        table = _build_surface_to_key(records)
+        resolved = table.get("Muon") or table.get("muon")
+        assert resolved == "muon"
+
+
+def test_wrap_body_links_muon_to_the_muon_entry():
+    res = wrap_body("We train with Muon on matrix parameters.", [_MUON, _PER_SHAPE])
+    assert r"\glsterm{muon}{Muon}" in res.text
+    assert "per-shape-rms-scaling" not in res.text
+
+
+def test_alias_case_strictness_is_per_surface_not_inherited():
+    # "RLVR" is an acronym; its entry's primary form "Capability ceiling" is
+    # not. Inheriting the primary's loose strictness made `(?i:RLVR)` match a
+    # bare lowercase `rlvr`, mis-linking it to the capability-ceiling entry.
+    records = _records(
+        {
+            "key": "capability-ceiling",
+            "primary_form": "Capability ceiling",
+            "aliases": ["RLVR"],
+            "case_strict": False,
+        }
+    )
+    rx = build_term_regex(records)
+    assert rx.search("the rlvr recipe is contested") is None
+    assert rx.search("an RLVR-trained reasoner") is not None
+
+
+def test_shadow_rekey_repairs_already_marked_sites():
+    records = [_MUON, _PER_SHAPE]
+    rekey = _build_shadow_rekey(records, _build_surface_to_key(records))
+    src = r"Trained with \glsterm{per-shape-rms-scaling}{Muon} on matrices."
+    assert _apply_shadow_rekey(src, rekey) == (
+        r"Trained with \glsterm{muon}{Muon} on matrices."
+    )
+
+
+def test_shadow_rekey_leaves_non_shadowing_marks_alone():
+    # "CoT" is a genuine synonym of its own entry, not another entry's
+    # headword: the repair must not touch it.
+    records = _records(
+        {
+            "key": "chain-of-thought",
+            "primary_form": "Chain-of-Thought",
+            "aliases": ["CoT"],
+            "case_strict": True,
+        }
+    )
+    rekey = _build_shadow_rekey(records, _build_surface_to_key(records))
+    src = r"long-\glsterm{chain-of-thought}{CoT} traces"
+    assert _apply_shadow_rekey(src, rekey) == src
+
+
+def test_shadow_rekey_is_idempotent():
+    records = [_MUON, _PER_SHAPE]
+    once = wrap_body(r"Uses \glsterm{per-shape-rms-scaling}{Muon} here.", records).text
+    twice = wrap_body(once, records).text
+    assert once == twice == r"Uses \glsterm{muon}{Muon} here."
+
+
+def test_scope_qualifier_still_renders_in_the_glossary_heading():
+    # The fix lives at MATCHING time, so the parenthetical must survive as
+    # display text on the entry it qualifies.
+    out = render_glossary_section(
+        [_MUON, _PER_SHAPE], used_keys={"per-shape-rms-scaling"}
+    )
+    assert r"\glsanchor{per-shape-rms-scaling}{Per-shape RMS scaling} (Muon)" in out
+
+
+def test_url_command_args_are_skip_regions():
+    # A case-loose acronym alias used to match lowercase text inside a path,
+    # rewriting the path itself. \nolinkurl / \url / \path args are skipped.
+    for cmd in ("nolinkurl", "url", "path"):
+        text = "see \\%s{kb/notes/rlvr.md} now" % cmd
+        regions = find_skip_regions(text)
+        pos = text.index("rlvr")
+        assert any(s <= pos < e for s, e in regions), cmd

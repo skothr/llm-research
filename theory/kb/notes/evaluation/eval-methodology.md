@@ -68,7 +68,7 @@ papers/labs:
 3. **Verifier mis-specification** — $V$ in $\mathcal{B}$ accepts
    wrong answers (MMLU's 6.49% baseline error rate) or rejects
    correct ones (string-match too strict). MMLU-Redux is the canonical
-   audit `[FORUM-SIGNAL: arXiv 2406.04127, Phase 1 sweep §eval-methodology]`.
+   audit `[FORUM-SIGNAL: arXiv 2406.04127, Phase 1 sweep §1 eval-methodology]`.
 
 ## 2. Mechanism — how each failure mode propagates
 
@@ -80,7 +80,7 @@ in many ways:
 - **Loglikelihood scoring:** compute $\log P(\text{"A"})$, $\log P(\text{"B"})$,
   $\log P(\text{"C"})$, $\log P(\text{"D"})$ and pick the argmax.
   This is the lm-evaluation-harness default for MMLU
-  `[lm-eval-harness §sec-request-types; kb/excerpts/lm-eval-harness#sec-request-types]`.
+  `[lm-eval-harness §Model APIs and Inference Servers; kb/excerpts/lm-eval-harness#sec-request-types]`.
 - **Generation scoring:** generate text and parse "the answer is
   X." This is what closed-API models (OpenAI, Anthropic, Google)
   must do because logprobs are not exposed.
@@ -141,10 +141,10 @@ The contamination-survey-2025 categorizes the field's response into
   `[FORUM-SIGNAL: matharena.ai; arXiv 2505.23281]`; LiveCodeBench
   appends post-cutoff competitive programming problems;
   GAIA's gated leaderboard delays gold-answer leakage
-  `[mialon2023-gaia §sec-leaderboard; kb/excerpts/mialon2023-gaia#sec-leaderboard]`.
+  `[mialon2023-gaia §1; kb/excerpts/mialon2023-gaia#sec-leaderboard]`.
 
 [CONTRADICTION] The contamination-survey-2025 abstract
-`[contamination-survey-2025 §sec-gap]` calls out a specific gap:
+`[contamination-survey-2025 §abstract]` calls out a specific gap:
 "the lack of standardized criteria for evaluating dynamic
 benchmarks." A dynamic benchmark is contamination-immune **today**;
 whether it's well-calibrated, comparable across model releases, and
@@ -158,7 +158,7 @@ arXiv 2406.04127) audited 5,700 MMLU questions and found
 
 > 6.49% of MMLU questions contain errors
 
-`[FORUM-SIGNAL: confirmed by Phase 1 sweep §eval-methodology]`. The
+`[FORUM-SIGNAL: confirmed by Phase 1 sweep §1 eval-methodology]`. The
 distribution of errors is heavy-tailed:
 
 > 57% of the analysed questions in the Virology subset contain errors
@@ -200,14 +200,14 @@ for deployment. The seven HELM axes
 
 The structural claim in HELM is that a benchmark instance
 $\mathcal{B}$ should ship a **metric bundle**, not a single metric
-`[liang2022-helm §sec-metrics]`. This propagated only partially: 2024
+`[liang2022-helm §1.1]`. This propagated only partially: 2024
 leaderboards (HF Open LLM, Artificial Analysis, lmsys) are still
 single-metric-dominant, but per-axis breakdowns are increasingly
 common in tech reports (LLaMA 3, Gemma 3, etc.).
 
 ## 4. Open-source eval discipline — lm-evaluation-harness
 
-EleutherAI's lm-evaluation-harness `[lm-eval-harness §sec-framing; kb/excerpts/lm-eval-harness#sec-framing]`
+EleutherAI's lm-evaluation-harness `[lm-eval-harness §Overview; kb/excerpts/lm-eval-harness#sec-framing]`
 is the de-facto open-source standard. Three structural choices that
 matter:
 
@@ -217,7 +217,7 @@ matter:
    changes between model releases, the diff isolates whether the
    prompt or the model changed.
 
-2. **Three request-type primitives** `[lm-eval-harness §sec-request-types]`:
+2. **Three request-type primitives** `[lm-eval-harness §Model APIs and Inference Servers]`:
    `loglikelihood`, `loglikelihood_rolling`, `generate_until`. Every
    benchmark reduces to one of these. This API surface is also why
    closed-API models (which expose only `generate_until`) score
@@ -225,7 +225,7 @@ matter:
    the same MMLU items — different request types can produce
    different scores even on the same data.
 
-3. **Open LLM Leaderboard backend** `[lm-eval-harness §sec-adoption]`
+3. **Open LLM Leaderboard backend** `[lm-eval-harness §Overview]`
    — the harness is the actual scoring infrastructure for HF's
    public leaderboard. This standardizes the prompt format for all
    models on the leaderboard, eliminating one major source of
@@ -252,7 +252,7 @@ asymmetry** that frustrates open-vs-closed comparisons.
 | **DCR** (arXiv 2509) | EMNLP 2025 | formal contamination quantification combining static + dynamic signals | unified framework | very recent; not yet field-standard |
 
 `[FORUM-SIGNAL: contamination-survey-2025 references; Phase 1 sweep
-§eval-methodology]`
+§1 eval-methodology]`
 
 ### 5.2 The dynamic-benchmark family
 
@@ -260,7 +260,7 @@ asymmetry** that frustrates open-vs-closed comparisons.
 |---|---|---|---|
 | **MathArena** | math competitions | post-cutoff problem stream | active (~50 models, 7 competitions, 162 problems) `[FORUM-SIGNAL: matharena.ai]` |
 | **LiveCodeBench** | competitive programming | post-cutoff CodeForces, LeetCode, AtCoder | active; widely cited in coding-model tech reports |
-| **GAIA gated leaderboard** | tool-use tasks | gold answers hidden server-side | active `[mialon2023-gaia §sec-leaderboard]` |
+| **GAIA gated leaderboard** | tool-use tasks | gold answers hidden server-side | active `[mialon2023-gaia §1]` |
 | **SWE-bench Verified** | coding agents | static, but Docker-pinned for reproducibility | active; not strictly dynamic |
 | **HLE leaderboard** | broad academic | static, but new frontier-difficulty target | active `[phan2025-hle §abstract]` |
 
@@ -293,7 +293,7 @@ star ratings across rollover, side-impact, frontal-impact, etc.) is
 what a buyer actually needs. The analogy returns to canonical
 form: HELM's claim is that $\hat{S}$ should be a vector
 $(\hat{S}_{\text{acc}}, \hat{S}_{\text{cal}}, \hat{S}_{\text{rob}}, \dots)$
-not a scalar `[liang2022-helm §sec-metrics]`.
+not a scalar `[liang2022-helm §1.1]`.
 
 [INTUITION] **Reproducibility ≠ comparability.** lm-evaluation-harness
 gives reproducibility (anyone can re-run any task and get the same
@@ -316,7 +316,7 @@ signal.
 
 - **Standard for evaluating dynamic benchmarks.** As called out by
   the contamination-survey-2025 abstract
-  `[contamination-survey-2025 §sec-gap]`, no community standard
+  `[contamination-survey-2025 §abstract]`, no community standard
   exists. Open question.
 - **Cross-harness comparability.** Closed-lab tech-report numbers
   vs. lm-evaluation-harness numbers differ by a few percentage

@@ -658,7 +658,7 @@
     {
       "key": "transmla2025",
       "title": "TransMLA: Multi-Head Latent Attention Is All You Need",
-      "authors": "various",
+      "authors": "Meng, Tang, Tang, Yao, Sun, Zhang",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2502.07864",
@@ -675,7 +675,7 @@
     {
       "key": "longrope2-2025",
       "title": "LongRoPE2: Near-Lossless LLM Context Window Scaling",
-      "authors": "various",
+      "authors": "Shang, Zhang, Wang, Zhang, Lopez, Yang, Chen, Yang",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2502.20082",
@@ -749,7 +749,7 @@
     {
       "key": "peri-ln2025",
       "title": "Peri-LN: Revisiting Normalization Layer in the Transformer Architecture",
-      "authors": "various",
+      "authors": "Kim, Lee, Park, Oh, Kim, Yoo, Shin, Han, Shin, Yoo",
       "year": 2025,
       "venue": "ICML 2025",
       "url": "https://arxiv.org/abs/2502.02732",
@@ -866,7 +866,7 @@
     {
       "key": "rlvr-limits-2025",
       "title": "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?",
-      "authors": "various",
+      "authors": "Yue, Chen, Lu, Zhao, Wang, Yue, Song, Huang",
       "year": 2025,
       "venue": "NeurIPS 2025 (oral)",
       "url": "https://arxiv.org/abs/2504.13837",
@@ -1362,8 +1362,8 @@
     },
     {
       "key": "sae-not-canonical-2025",
-      "title": "Sparse Autoencoders Do Not Find Canonical Features",
-      "authors": "various",
+      "title": "Sparse Autoencoders Do Not Find Canonical Units of Analysis",
+      "authors": "Leask, Bussmann, Pearce, Bloom, Tigges, Al Moubayed, Sharkey, Nanda",
       "year": 2025,
       "venue": "ICLR 2025",
       "url": "https://proceedings.iclr.cc/paper_files/paper/2025/file/84ca3f2d9d9bfca13f69b48ea63eb4a5-Paper-Conference.pdf",
@@ -1779,8 +1779,8 @@
     },
     {
       "key": "internvl3-2025",
-      "title": "InternVL3: Exploring Advanced Training and Test-Time Recipes",
-      "authors": "various",
+      "title": "InternVL3: Exploring Advanced Training and Test-Time Recipes for Open-Source Multimodal Models",
+      "authors": "Zhu, Wang, Chen, et al.",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2504.10479",
@@ -2132,8 +2132,8 @@
     },
     {
       "key": "contamination-survey-2025",
-      "title": "Benchmarking LLMs Under Data Contamination: From Static to Dynamic Evaluation",
-      "authors": "(EMNLP 2025; see arXiv listing)",
+      "title": "Benchmarking Large Language Models Under Data Contamination: A Survey from Static to Dynamic Evaluation",
+      "authors": "Chen, Chen, Li, Jiang, Wan, He, Ran, Gu, Li, Xie, Ray",
       "year": 2025,
       "venue": "EMNLP 2025",
       "url": "https://arxiv.org/abs/2502.17521",
@@ -2189,7 +2189,7 @@
     {
       "key": "matharena-2025",
       "title": "MathArena: Evaluating LLMs on Uncontaminated Math Competitions",
-      "authors": "(arXiv 2505.23281)",
+      "authors": "Balunovi\u0107, Dekoninck, Petrov, Jovanovi\u0107, Vechev",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2505.23281",
@@ -2209,7 +2209,7 @@
     {
       "key": "cybench2024",
       "title": "Cybench: A Framework for Evaluating Cybersecurity Capabilities and Risks of Language Models",
-      "authors": "(arXiv listing)",
+      "authors": "Zhang, Perry, Dulepet, et al.",
       "year": 2024,
       "venue": "arXiv (NeurIPS workshop)",
       "url": "https://arxiv.org/abs/2408.08926",
@@ -2777,7 +2777,7 @@
     {
       "key": "c3ai-2025",
       "title": "C3AI: Crafting and Evaluating Constitutions for Constitutional AI",
-      "authors": "various",
+      "authors": "Kyrychenko, Zhou, Bogucka, Quercia",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2502.15861",
@@ -2794,8 +2794,8 @@
     },
     {
       "key": "r-cai-2026",
-      "title": "Reverse Constitutional AI: Controllable Toxic Data Generation",
-      "authors": "various",
+      "title": "Reverse Constitutional AI: A Framework for Controllable Toxic Data Generation via Probability-Clamped RLAIF",
+      "authors": "Fang, Luo, Zhou, Tan",
       "year": 2026,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2604.17769",
@@ -2850,7 +2850,7 @@
     {
       "key": "rewardbench2-2025",
       "title": "RewardBench 2: Advancing Reward Model Evaluation",
-      "authors": "various",
+      "authors": "Malik, Pyatkin, Land, Morrison, Smith, Hajishirzi, Lambert",
       "year": 2025,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2506.01937",
@@ -2904,7 +2904,7 @@
     {
       "key": "rlhf-overopt-2024",
       "title": "Scaling Laws for Reward Model Overoptimization in Direct Alignment Algorithms",
-      "authors": "various",
+      "authors": "Rafailov, Chittepu, Park, Sikchi, Hejna, Knox, Finn, Niekum",
       "year": 2024,
       "venue": "arXiv",
       "url": "https://arxiv.org/abs/2406.02900",

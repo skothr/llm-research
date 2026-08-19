@@ -30,7 +30,7 @@ al.\ FaithCoT-Bench, Mehta et al.\ on whether scaling improves
 faithfulness), states the open contradiction with R1-style
 reasoning-training framings (\cref{sec:r1-family}), and draws the
 cross-paper threads: Paper~4's interpretability programme uses \glsterm{chain-of-thought}{CoT} as a
-\glsterm{probe-2}{probe} surface and Paper~5's alignment programme treats \glsterm{chain-of-thought}{CoT} as a
+\glsterm{probe}{probe} surface and Paper~5's alignment programme treats \glsterm{chain-of-thought}{CoT} as a
 monitorable channel — both are compromised to the extent that traces
 are unfaithful.
 
@@ -64,9 +64,10 @@ variation or the binary indicator $\mathbb{1}[\hat y(z) \neq \hat y(z')]$
 
 Three intervention families dominate the 2025--2026 literature
 \citep[\S 3]{shen2025-faithcot-bench}:%
-\footnote{Excerpt status:
-\nolinkurl{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
-2026-05; \deepencite{shen2025-faithcot-bench §3, citation-pending}}
+\footnote{Excerpt status: \texttt{shen2025-faithcot-bench} is indexed in
+\nolinkurl{kb/index/papers.json} with \texttt{excerpts\_file: null} --- no
+excerpt file exists yet, so this claim rests on the primary source alone
+(checked 2026-08-19); \deepencite{shen2025-faithcot-bench \S 3, citation-pending}}
 \begin{enumerate}
 \item \textbf{Paraphrase $z'$.} Same content, different surface form. A
 faithful trace channel should leave the answer distribution unchanged;
@@ -109,9 +110,10 @@ the answer distribution.
 
 \citet{arcuschin2025-cot-wild} run the cleanest naturalistic-prompt
 measurement of unfaithful \glsterm{chain-of-thought}{CoT} to date.%
-\footnote{Excerpt status:
-\nolinkurl{kb/excerpts/arcuschin2025-cot-wild.md} is abstract-only as of
-2026-05; \deepencite{arcuschin2025-cot-wild abstract,
+\footnote{Excerpt status: \texttt{arcuschin2025-cot-wild} is indexed in
+\nolinkurl{kb/index/papers.json} with \texttt{excerpts\_file: null} --- no
+excerpt file exists yet, so this claim rests on the primary source alone
+(checked 2026-08-19); \deepencite{arcuschin2025-cot-wild abstract,
 citation-pending}} The methodological contribution is to drop the
 artificial-bias scaffolding that earlier faithfulness work
 (e.g., adding a known-misleading hint to the prompt) used to elicit
@@ -146,9 +148,10 @@ flow through the trace tokens.
 \citet{shen2025-faithcot-bench} promote faithfulness measurement from a
 per-distribution rate to a \textbf{per-instance} discriminative
 problem.%
-\footnote{Excerpt status:
-\nolinkurl{kb/excerpts/shen2025-faithcot-bench.md} is abstract-only as of
-2026-05; \deepencite{shen2025-faithcot-bench abstract,
+\footnote{Excerpt status: \texttt{shen2025-faithcot-bench} is indexed in
+\nolinkurl{kb/index/papers.json} with \texttt{excerpts\_file: null} --- no
+excerpt file exists yet, so this claim rests on the primary source alone
+(checked 2026-08-19); \deepencite{shen2025-faithcot-bench abstract,
 citation-pending}} Their FINE-\glsterm{chain-of-thought}{CoT} dataset contributes
 $> 1{,}000$ expert-annotated trajectories from four LLMs across four
 domains, with $> 300$ labelled unfaithful, against which they
@@ -191,13 +194,14 @@ underweights tail risk.
 \citet{mehta2026-faithfulness-scaling} ask the most consequential 2026
 question for the paper's thesis: does \emph{scaling} the inference-time
 compute axis (\cref{sec:test-time-compute}) — specifically,
-\glsterm{self-consistency-2}{self-consistency} at $N > 1$ — \emph{also} improve faithfulness, or are
+\glsterm{self-consistency}{self-consistency} at $N > 1$ — \emph{also} improve faithfulness, or are
 accuracy gains and faithfulness gains decoupled?%
-\footnote{Excerpt status:
-\nolinkurl{kb/excerpts/mehta2026-faithfulness-scaling.md} is abstract-only
-as of 2026-05; \deepencite{mehta2026-faithfulness-scaling abstract,
+\footnote{Excerpt status: \texttt{mehta2026-faithfulness-scaling} is indexed
+in \nolinkurl{kb/index/papers.json} with \texttt{excerpts\_file: null} --- no
+excerpt file exists yet, so this claim rests on the primary source alone
+(checked 2026-08-19); \deepencite{mehta2026-faithfulness-scaling abstract,
 citation-pending}} The study runs four frontier models
-\deepencite{model names must be verified against the primary PDF of Mehta et al.\ 2026 (arXiv 2601.06423) before being asserted; the previous draft listed GPT-5.2, Claude Opus~4.5, Gemini-3-flash-preview, and DeepSeek-v3.2, none of which appear in any 2026-Q2 public model lineup and are presumed hallucinated; replace with the four names as they appear in the paper's Table~1 or equivalent} on $100$ GSM8K problems at varying \glsterm{self-consistency-2}{self-consistency}
+\deepencite{model names must be verified against the primary PDF of Mehta et al.\ 2026 (arXiv 2601.06423) before being asserted; the previous draft listed GPT-5.2, Claude Opus~4.5, Gemini-3-flash-preview, and DeepSeek-v3.2, none of which appear in any 2026-Q2 public model lineup and are presumed hallucinated; replace with the four names as they appear in the paper's Table~1 or equivalent} on $100$ GSM8K problems at varying \glsterm{self-consistency}{self-consistency}
 budgets and measures both task accuracy and a per-trajectory
 faithfulness score in parallel.
 
@@ -210,7 +214,7 @@ configuration provides the cleanest illustration: accuracy
 $N = 5$.\footnote{KB index:
 \texttt{kb/index/papers.json} — abstract.
 \deepencite{mehta2026-faithfulness-scaling: the specific model name for this configuration (previously listed as ``Claude Opus~4.5'') is unverified against the primary PDF; confirm the correct model name and per-model table location (section anchor pending population), citation-pending}}
-For \cref{eq:cot-decode}'s reading of \glsterm{self-consistency-2}{self-consistency} this is a
+For \cref{eq:cot-decode}'s reading of \glsterm{self-consistency}{self-consistency} this is a
 puzzle: more samples should average out per-sample noise in the
 \emph{trace} channel, leaving the conditional $p_\theta(y \mid x, z)$
 better-determined; but at the same time, the votes are over the
@@ -219,7 +223,7 @@ quality and answer-channel quality is exactly what faithfulness
 measurement is testing. Mehta et al.'s finding is that the two channels
 move differently per model.
 
-The operational implication: \textbf{\glsterm{self-consistency-2}{self-consistency} must be tested
+The operational implication: \textbf{\glsterm{self-consistency}{self-consistency} must be tested
 per-model before deployment}
 \citep[abstract]{mehta2026-faithfulness-scaling} for any application
 that depends on traces being a faithful read of the model's
@@ -232,8 +236,8 @@ and verification are co-designed levers (\cref{sec:test-time-compute,sec:process
 \subsection{The contradiction with reasoning-training framings}
 \label{sec:faith-contradiction}
 
-The clean read of \citet{deepseek-r1}'s \glsterm{grpo-2}{GRPO} outcome — long traces
-emerge from \glsterm{rlvr-3}{RLVR}, accuracy rises in lockstep with trace length,
+The clean read of \citet{deepseek-r1}'s \glsterm{grpo}{GRPO} outcome — long traces
+emerge from \glsterm{rlvr}{RLVR}, accuracy rises in lockstep with trace length,
 truncating the trace destroys the gain — is that the trace is a
 \emph{causal substrate}: the model is doing genuine compute on the
 trace channel and the answer is being read off the result. The
@@ -241,7 +245,7 @@ Arcuschin and Mehta evidence complicates this read at two scales.
 
 \begin{contradiction}
 \textbf{Reasoning-training as causal-trace evidence vs.\ unfaithful-trace
-evidence.} \citet[\S 2.2]{deepseek-r1} report that \glsterm{rlvr-3}{RLVR} training grows
+evidence.} \citet[\S 2.2]{deepseek-r1} report that \glsterm{rlvr}{RLVR} training grows
 average response length from $\sim 200$ to $\sim 10{,}000$ tokens%
 \deepencite{deepseek-r1 §2.2 trace-length growth curve, KB excerpt-anchor pending; current anchor covers the rule-based-reward passage}
 with AIME 2024 pass\@1 climbing $15.6\% \to 77.9\%$%
@@ -256,7 +260,7 @@ the unfaithful-illogical-shortcut failure mode of
 in the right format but the answer is not in fact a function of them.
 \citet{mehta2026-faithfulness-scaling}'s scaling-of-faithfulness result
 sharpens the tension: one frontier model's accuracy drops while its
-faithfulness rises under \glsterm{self-consistency-2}{self-consistency}, a pattern incompatible with
+faithfulness rises under \glsterm{self-consistency}{self-consistency}, a pattern incompatible with
 the simple reading that traces are a causal substrate at all scales.
 The 2026 picture is regime-dependent and the question is unresolved;
 \cref{sec:contradictions} catalogues this alongside the other live
@@ -266,14 +270,14 @@ faithfulness contradictions of \cref{sec:faith-arcuschin,sec:faith-mehta}.
 A second sub-tension within the empirical wave itself: the per-rate
 gap of two orders of magnitude between non-thinking and thinking
 configurations \citep[abstract]{arcuschin2025-cot-wild} cannot be
-cleanly attributed to long-\glsterm{chain-of-thought}{CoT} SFT, \glsterm{rlvr-3}{RLVR} post-training, or general
+cleanly attributed to long-\glsterm{chain-of-thought}{CoT} SFT, \glsterm{rlvr}{RLVR} post-training, or general
 scale by published 2025--2026 ablations
 \citep[\S 4]{mehta2026-faithfulness-scaling}; the controlled
 ablation that varies one of these factors at fixed others has not been
 run at frontier scale.%
 \footnote{KB note:
 \nolinkurl{kb/notes/reasoning/chain-of-thought.md#4.1}.} The reason
-matters: if the gap is \glsterm{rlvr-3}{RLVR}-driven, it is benchmarkable and tunable
+matters: if the gap is \glsterm{rlvr}{RLVR}-driven, it is benchmarkable and tunable
 through the training pipeline of \cref{sec:rlvr}; if it is scale-driven,
 faithfulness is on a separate scaling curve from accuracy, and Mehta et
 al.'s non-monotonic per-model results are the first signal of where the
@@ -289,14 +293,14 @@ resolution shapes both.
 The interpretability programme of Paper~4 reads internal computation
 through several methods: logit lenses, linear probes, sparse
 autoencoders, \glsterm{activation-patching}{activation patching}, and \glsterm{circuit-tracing}{circuit tracing}. \glsterm{chain-of-thought}{CoT} traces are
-the \emph{output-side} \glsterm{probe-2}{probe} surface for that programme — they are
+the \emph{output-side} \glsterm{probe}{probe} surface for that programme — they are
 human-readable, token-aligned with the \glsterm{residual-stream}{residual stream}, and stable
 under repeated decoding. The faithfulness question gates this use:
-\textbf{if traces are unfaithful, the \glsterm{probe-2}{probe} surface is decoupled from
+\textbf{if traces are unfaithful, the \glsterm{probe}{probe} surface is decoupled from
 the underlying computation}. \hyperref[P4-sec:introduction]{Paper~4's} interpretability programme returns to
-this section as a precondition for treating \glsterm{chain-of-thought}{CoT}-as-\glsterm{probe-2}{probe} as a primary
+this section as a precondition for treating \glsterm{chain-of-thought}{CoT}-as-\glsterm{probe}{probe} as a primary
 methodology, and uses Mehta et al.'s per-model variation to argue that
-\glsterm{probe-2}{probe}-surface validity must be re-established model-by-model rather
+\glsterm{probe}{probe}-surface validity must be re-established model-by-model rather
 than assumed from the family.
 
 \paragraph{Paper~5 — CoT as an alignment monitor.}
@@ -333,7 +337,7 @@ sections ask the same shape of question: \emph{has the post-2024
 training pipeline absorbed a function the field used to assign to an
 external module?} For verifiers (PRMs), the question is whether
 process-reward signal still earns its inference and training cost once
-\glsterm{rlvr-3}{RLVR}-trained policies internalise step-level verification. For traces,
+\glsterm{rlvr}{RLVR}-trained policies internalise step-level verification. For traces,
 the question is whether the \glsterm{chain-of-thought}{CoT} channel still earns its interpretability
 and monitoring premium once the policy has been RL-trained to optimise
 the answer-channel directly. The 2026 evidence, in both cases, is that

@@ -7,6 +7,7 @@ gen_bibliography.py / references.bib relationship.
 
 Re-run after glossary.md changes; idempotent.
 """
+
 from __future__ import annotations
 import json
 import re
@@ -28,7 +29,18 @@ KB_CITE_RE = re.compile(r"`\[([^\]`]+)\]`[\s.,;]*$")
 
 
 def _looks_like_alias(s: str) -> bool:
-    """A parenthetical is an alias if it starts with a capital letter or is acronym-shaped."""
+    """A parenthetical is an alias if it starts with a capital letter or is acronym-shaped.
+
+    Deliberately permissive: some headwords use the parenthetical as a
+    SCOPE QUALIFIER rather than a synonym (`Per-shape RMS scaling (Muon)`,
+    `Capability ceiling (RLVR)`), and the qualifier must survive into the
+    rendered glossary heading — mark_glossary_terms.render_glossary_section
+    prints it from this same `aliases` list. Dropping it here to stop the
+    shadowing would silently strip the qualifier from the heading, so the
+    alias/primary-form collision is resolved downstream instead, at surface
+    MATCHING time (mark_glossary_terms._build_surface_to_key: a primary form
+    always outranks an alias).
+    """
     if not s:
         return False
     if s[0].isupper():
@@ -97,26 +109,35 @@ def parse_entries(lines: Sequence[str]) -> list[dict]:
                 primary = head
                 aliases = [paren]
         clean_def, kb_cite = _split_def_and_cite(defn_raw)
-        entries.append({
-            "primary_form": primary,
-            "aliases": aliases,
-            "full_def": clean_def,
-            "kb_cite": kb_cite,
-        })
+        entries.append(
+            {
+                "primary_form": primary,
+                "aliases": aliases,
+                "full_def": clean_def,
+                "kb_cite": kb_cite,
+            }
+        )
         i = j
     return entries
 
 
-def is_case_strict(primary_form: str) -> bool:
-    """True if the primary form has any uppercase letter past position 0.
+def is_case_strict(surface: str) -> bool:
+    """True if a surface form has any uppercase letter past position 0.
 
     This catches acronyms (RoPE, GQA, MoE, FlashAttention) while letting
     sentence-leading capitalizations (Tokenization, Embedding) match
     case-insensitively.
+
+    The rule is a property of the SURFACE STRING, not of the record it
+    came from: mark_glossary_terms calls it per surface form so an
+    acronym alias (`RLVR`) stays case-strict even when its entry's
+    primary form (`Capability ceiling`) is case-loose. The record-level
+    `case_strict` field below is that same rule applied to the primary
+    form, kept for backward compatibility of glossary-terms.json.
     """
-    if len(primary_form) < 2:
+    if len(surface) < 2:
         return False
-    return any(c.isupper() for c in primary_form[1:])
+    return any(c.isupper() for c in surface[1:])
 
 
 def derive_key(primary_form: str, used: set[str] | None = None) -> str:
@@ -131,9 +152,32 @@ def derive_key(primary_form: str, used: set[str] | None = None) -> str:
 
 
 _ABBREVS = (
-    "e.g", "i.e", "cf", "vs", "viz", "etc", "et al",
-    "Dr", "Prof", "Mr", "Mrs", "Ms", "Inc", "Ltd", "Co", "Corp", "St",
-    "Sr", "Jr", "Ph.D", "approx", "approx", "ca", "Eq", "Fig", "Tab",
+    "e.g",
+    "i.e",
+    "cf",
+    "vs",
+    "viz",
+    "etc",
+    "et al",
+    "Dr",
+    "Prof",
+    "Mr",
+    "Mrs",
+    "Ms",
+    "Inc",
+    "Ltd",
+    "Co",
+    "Corp",
+    "St",
+    "Sr",
+    "Jr",
+    "Ph.D",
+    "approx",
+    "approx",
+    "ca",
+    "Eq",
+    "Fig",
+    "Tab",
 )
 
 
@@ -162,15 +206,17 @@ def build_records(entries: list[dict]) -> list[dict]:
     for e in entries:
         key = derive_key(e["primary_form"], used=used)
         used.add(key)
-        records.append({
-            "key": key,
-            "primary_form": e["primary_form"],
-            "aliases": e["aliases"],
-            "short_def": short_def(e["full_def"]),
-            "full_def": e["full_def"],
-            "case_strict": is_case_strict(e["primary_form"]),
-            "kb_cite": e.get("kb_cite"),
-        })
+        records.append(
+            {
+                "key": key,
+                "primary_form": e["primary_form"],
+                "aliases": e["aliases"],
+                "short_def": short_def(e["full_def"]),
+                "full_def": e["full_def"],
+                "case_strict": is_case_strict(e["primary_form"]),
+                "kb_cite": e.get("kb_cite"),
+            }
+        )
     return records
 
 

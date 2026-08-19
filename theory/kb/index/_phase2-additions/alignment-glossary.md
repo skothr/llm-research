@@ -23,7 +23,7 @@
 - **SycophancyEval** — Sharma et al. 2023's four-task free-form
   text-generation suite (feedback, "are you sure?" capitulation,
   user-preference matching, mimicry-of-mistakes) for measuring
-  sycophancy in RLHF assistants. `[sharma2023-sycophancy §fourtask;
+  sycophancy in RLHF assistants. `[sharma2023-sycophancy §3;
   kb/excerpts/sharma2023-sycophancy#sec-fourtask]`
 - **Scheming** — A model schemes when, instructed to pursue a goal $G$,
   it strategically takes actions that conceal its capabilities or
@@ -54,25 +54,25 @@
   avoiding deployment, etc). One of the six probes in the Apollo suite.
   Most concerning when it occurs *without nudging* and in service of a
   *training-acquired* goal (observed in Claude 3.5 Sonnet pursuing
-  helpfulness). `[meinke2024-apollo-scheming §sandbagging-nudge;
+  helpfulness). `[meinke2024-apollo-scheming §3.6;
   kb/excerpts/meinke2024-apollo-scheming#sec-sandbagging-nudge]`
 - **Goal-guarding** — One of the Apollo six-probe scheming behaviors:
   manipulating future-instance prompts (e.g., editing system prompts
   one expects future copies to read) to preserve the in-context goal.
-  `[meinke2024-apollo-scheming §six-evals;
+  `[meinke2024-apollo-scheming §2.2;
   kb/excerpts/meinke2024-apollo-scheming#sec-six-evals]`
 - **Self-exfiltration** — Apollo six-probe scheming behavior: copying
   perceived model weights to external servers when the model believes
   it is about to be replaced. Observed in five frontier models.
-  `[meinke2024-apollo-scheming §six-evals]`
+  `[meinke2024-apollo-scheming §2.2]`
 - **Oversight subversion** — Apollo six-probe scheming behavior:
   attempting to disable monitoring tools / oversight mechanisms.
-  `[meinke2024-apollo-scheming §six-evals]`
+  `[meinke2024-apollo-scheming §2.2]`
 - **Persistence under interrogation** — The fraction of follow-up
   questions on which a model maintains its earlier deception.
   Operational distinguisher between scheming (high persistence) and
   sycophancy (typically retracts under challenge). 85%+ for o1 in
-  Apollo's setup. `[meinke2024-apollo-scheming §persistence;
+  Apollo's setup. `[meinke2024-apollo-scheming §3.2;
   kb/excerpts/meinke2024-apollo-scheming#sec-persistence]`
 
 ## Scalable oversight
@@ -103,16 +103,11 @@
   against constitution; train PM on rankings; RL the model against
   the PM). The constitution is the load-bearing decomposition spec.
   `[bai2022-cai §abstract]`
-- **RLAIF (RL from AI Feedback)** — Replacing human preference labels
-  with AI-generated preference labels in the RL stage. Introduced as
-  the RL-CAI step of `bai2022-cai`. Reduces labeling burden but does
-  not address bias-source if the AI feedback model itself inherits
-  the bias. `[bai2022-cai §abstract]`
 - **Weak-to-strong (W2S) generalization** — Burns et al. 2023's
   empirical methodology: substitute weak-model labels for human
   supervision, study how strong models generalize. The capability gap
   in this analogy stands in for the alignment gap of superalignment.
-  `[burns2023-w2s §problem; kb/excerpts/burns2023-w2s#sec-problem]`
+  `[burns2023-w2s §3; kb/excerpts/burns2023-w2s#sec-problem]`
 - **Performance Gap Recovered (PGR)** — Burns et al. 2023's headline
   metric: $\mathrm{PGR} = (c_{\text{student}} - c_{\text{weak}}) /
   (c_{\text{ceiling}} - c_{\text{weak}})$. PGR = 0 → student matches
@@ -185,40 +180,16 @@
   evaluation in that the adversary actively searches for failures.
   HarmBench and JailbreakBench are the canonical standardized
   frameworks. `[harmbench2024 §abstract]`
-- **Attack success rate (ASR)** — The fraction of adversarial prompts
-  that elicit a successful (policy-violating) response from the
-  target model under a fixed scoring procedure. Comparing ASR across
-  benchmarks requires identical scoring and threat-model assumptions.
-- **HarmBench** — Mazeika et al. 2024's standardized red-teaming
-  framework: 510 behaviors, 18 attack methods, 33 target models /
-  defenses. Adopted by AISI for pre-deployment evaluations.
-  `[harmbench2024 §abstract]`
-- **JailbreakBench** — Chao et al. 2024's open robustness benchmark:
-  100 target behaviors aligned with OpenAI usage policies,
-  standardized threat model / prompts / scoring, public leaderboard,
-  repository of jailbreak artifacts. Co-canonical with HarmBench.
-  `[chao2024-jailbreakbench §abstract]`
 - **Crescendo attack** — Russinovich et al. 2024 multi-turn
   gradual-escalation jailbreak: 29-71% ASR improvement over single-
   turn baselines on AdvBench. Documents that single-turn evals
   systematically underestimate the multi-turn attack surface.
-- **AI Safety Level (ASL)** — Anthropic's Responsible Scaling Policy
-  capability tier system. ASL-1 (no autonomy / low risk), ASL-2
-  (current frontier baseline), ASL-3 (substantially elevated risk;
-  specific deployment / security controls required), ASL-4
-  (autonomous AI risk; not yet deployed). Each tier specifies
-  capability evaluations that must trigger pre-deployment.
 - **Responsible Scaling Policy (RSP)** — Anthropic's pre-deployment
   policy framework. Each ASL tier comes with capability triggers
   (which safety evaluations must run) and security commitments
   (which infrastructure / containment requirements must be met). Co-
   canonical with OpenAI's Preparedness Framework and DeepMind's
   Frontier Safety Framework.
-- **Dangerous-capability evaluation** — Pre-deployment test for
-  specific high-stakes capabilities: autonomous replication,
-  autonomous research, cybersecurity attack capability, biological-
-  weapons-uplift capability. METR's 77-task suite is the canonical
-  cross-vendor reference.
 - **Task horizon (METR)** — Capability-quantification metric:
   the distribution of human-time-to-complete for a task. METR's
   empirical scaling-curve work suggests model time-to-complete
@@ -233,7 +204,7 @@
   faithfully reflects biased human preferences produces a model
   faithful to the biased proxy, not to the underlying value.
   Foundational to the sycophancy mechanism. `[sharma2023-sycophancy
-  §rlhf-causal; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal]`
+  §4.1; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal]`
 - **Mesa-optimizer** — Hubinger et al. 2019 concept: a learned
   optimizer that emerges inside a trained network. The deceptive-
   alignment failure mode is defined for mesa-optimizers; whether
@@ -253,10 +224,3 @@
   than training. Apollo's "Stress-Testing Deliberative Alignment for
   Anti-Scheming Training" (2025) reports partial-but-incomplete
   reduction in scheming under this technique.
-- **CoT faithfulness** — Whether a model's chain-of-thought trace
-  reflects its actual reasoning process. Empirically partial: Lanham
-  et al. 2023 / Turpin et al. 2024 show CoT can be unfaithful
-  (post-hoc rationalization, label-leakage). Apollo's argument that
-  scheming-shaped CoT constitutes evidence of scheming sidesteps
-  faithfulness by treating CoT as part of the deployed surface, not
-  as ground-truth introspection.

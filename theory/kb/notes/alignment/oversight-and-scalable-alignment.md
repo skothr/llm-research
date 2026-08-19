@@ -38,12 +38,18 @@ constitution, and W2S decomposes the **supervision signal** itself.
 ## 1. The problem statement
 
 Following `burns2023-w2s`
-`[burns2023-w2s §problem; kb/excerpts/burns2023-w2s#sec-problem]`:
+`[burns2023-w2s §abstract; kb/excerpts/burns2023-w2s#abstract]`:
 
-> A core challenge for aligning future superhuman AI systems
-> (superalignment) is that humans will need to supervise AI systems
-> much smarter than them. We study a simple analogy: can small models
-> supervise larger ones?
+> However, future superhuman models will behave in complex ways too
+> difficult for humans to reliably evaluate; humans will only be able
+> to weakly supervise superhuman models. We study an analogy to this
+> problem: can weak model supervision elicit the full capabilities of
+> a much stronger model?
+
+The methodological move is the **analogy substitution** — humans →
+smaller model, superhuman AI → larger frontier-base model — set up in
+the paper's introduction
+`[burns2023-w2s §1; kb/excerpts/burns2023-w2s#sec-problem]`.
 
 Formally, given a strong model $M_S$ with capability $c_S$ and a weak
 supervisor $M_W$ (or human) with capability $c_W < c_S$, we want a

@@ -80,8 +80,13 @@ $\mathrm{decode}(\mathrm{encode}(x)) = x$ holds verbatim
 $O(N \log N)$ priority-queue training algorithm that scales to multi-TB
 corpora \citep[\S 3.2]{kudo2018-sentencepiece}. Third, \emph{byte
 fallback}: out-of-\glsterm{vocabulary}{vocabulary} characters decompose into the 256 UTF-8
-byte tokens, eliminating the UNK symbol entirely
-\citep[\S byte-fallback]{kudo2018-sentencepiece}. The three together
+byte tokens, eliminating the UNK symbol entirely --- a later
+\glsterm{sentencepiece}{SentencePiece} library \glsterm{feature}{feature} rather than a
+contribution of the 2018 paper, which does not mention it.\footnote{KB
+excerpt: \nolinkurl{kb/excerpts/kudo2018-sentencepiece.md#sec-byte-fallback};
+arXiv:1808.06226 has five numbered sections (1 Introduction, 2 System
+Overview, 3 Library Design, 4 Experiments, 5 Conclusions) and no
+\glsterm{byte-fallback}{byte-fallback} discussion (checked 2026-08-19).} The three together
 make a single tokenizer trainable on raw multilingual text — the choice
 behind LLaMA-1/2/3 \citep{touvron2023, meta-llama3}, \glsterm{mistral}{Mistral}, Qwen,
 Gemma, and OLMo 2 \citep{olmo2}.

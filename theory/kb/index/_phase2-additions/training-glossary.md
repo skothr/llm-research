@@ -58,14 +58,12 @@
 
 ## Mixed precision & stability
 
-- **BF16 (bfloat16)** — Brain-float. 8-bit exponent, 7-bit mantissa (vs. FP16's 5-exp/10-mant). Same dynamic range as FP32; lower precision. The 2020-2024 default forward/backward dtype.
 - **FP8 E4M3** — 4-bit exponent, 3-bit mantissa. Higher precision, lower dynamic range than E5M2. DeepSeek-V3 uses E4M3 on *all* tensors via fine-grained scaling. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-mantissa]`
 - **FP8 E5M2** — 5-bit exponent, 2-bit mantissa. Higher dynamic range, lower precision. NVIDIA's recommended dtype for `Dgrad`/`Wgrad` in their hybrid recipe; DeepSeek-V3 *avoids* it.
 - **Tile-wise quantization (1×128)** — DeepSeek-V3's activation scaling: one FP8 scale per (token, 128-channel block) tile. Adapts to per-token outliers. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-finegrained]`
 - **Block-wise quantization (128×128)** — DeepSeek-V3's weight scaling: one FP8 scale per 128×128 weight block. `[deepseek-v3 §3.3.2]`
 - **FP32 promotion to CUDA cores** — DeepSeek-V3's accumulation strategy: every $N_C=128$ MMA steps, copy partial sums from Tensor-Core (~14-bit) accumulator to FP32 registers on CUDA cores for full-precision summation. Recovers ~2 % systematic error in raw FP8 GEMM. `[deepseek-v3 §3.3.2; kb/excerpts/deepseek-v3-training#sec-3-3-2-accum]`
 - **Precision pinning (DeepSeek-V3)** — Components held at BF16/FP32 even with FP8 elsewhere: embedding module, output head, MoE gating, normalization, attention. `[deepseek-v3 §3.3.1]`
-- **Loss spike** — Sudden non-recoverable loss-curve excursion. Causes include gradient-norm explosion, attention-logit divergence, embedding-norm growth, and FP8 underflow on rare tokens. DeepSeek-V3 reports zero such spikes in 14.8 T tokens. `[deepseek-v3 §abstract]`
 
 ## Adaptation & merging
 
@@ -73,4 +71,3 @@
 - **Context extension** — Sub-stage of late-stage pre-training that increases trained sequence length (e.g., 4 K → 32 K → 128 K) by adjusting RoPE scaling and continuing on long-context data. `[deepseek-v3 §1]`
 - **PEFT (Parameter-Efficient Fine-Tuning)** — Family of fine-tuning methods that update only a small fraction of parameters: LoRA, DoRA, IA3, prefix-tuning. Pending excerpts.
 - **Model merging** — Combining trained models via parameter-level operations (averaging, interpolation, sign-resolution, sparsification). Subtypes include weight averaging (Model Soups), task arithmetic, TIES, DARE, evolutionary merging. Pending excerpts.
-- **Linear mode connectivity** — The empirical finding that fine-tunes of a shared base land in a connected loss basin: averaging their weights gives a model with loss similar to the endpoints. The leading explanation for why merging works at all. (Frankle, Dziugaite et al. 2020 — pending excerpt.)

@@ -24,10 +24,25 @@ Checks:
 8. Hybrid citations `[key §X; kb/excerpts/key#anchor]` are §-consistent: when
    the targeted excerpt heading names its own section (`## §6.3 Robustness …`),
    the citation's `§X` label must agree with it.
+9. Every `§` label names a place in the *source paper* — a section number
+   (`§3`, `§3.2`, `§A.1`), a named part the paper has (`§abstract`), or, for a
+   paper whose sections are titled but unnumbered, the section title in Title
+   Case (`§Method`). A lowercase excerpt-anchor slug in the `§` slot
+   (`§sec-diamond`, `§method`) is an error: it labels the KB's own file rather
+   than the paper, and renders in the built PDFs as "(Rein et al., 2023,
+   §sec-diamond)".
+10. The same excerpt-pointer and `§`-label checks run over the LaTeX series
+   (`series/**/*.tex`), where the identical citations live inside
+   `\\citep[\\S X; kb/excerpts/key\\#anchor]{key}` footnotes. Without this the
+   KB side could be renamed clean while the .tex side kept citing the old
+   anchors — which is exactly how 35 dangling .tex pointers accumulated.
 
 Scan set for checks 4/5/7 is every `kb/**/*.md` outside `kb/excerpts/` — notes,
 glossary.md, index/ (including `_phase2-additions/` and contradictions.md).
-Frontmatter (checks 4 and 6) is read from `kb/notes/**` only.
+Frontmatter (checks 4 and 6) is read from `kb/notes/**` only. Check 10 scans
+`series/**/*.tex` minus the generated `glossary-section.tex` /
+`glossary-tooltips.tex` (emitted from `kb/glossary.md`, so their citations are
+already covered at the source and would otherwise double-report).
 
 Run from theory/:  python3 kb/lint.py
 """
@@ -41,6 +56,7 @@ from collections import defaultdict
 
 THEORY = Path(__file__).resolve().parents[1]
 KB = THEORY / "kb"
+SERIES = THEORY / "series"
 PAPERS = KB / "index" / "papers.json"
 TOPICS = KB / "index" / "topics.md"
 NOTES = KB / "notes"
@@ -299,6 +315,180 @@ def kb_markdown_files():
         yield path
 
 
+# --- `§` label shape -------------------------------------------------------
+
+# A section number: `3`, `3.2`, `4.1.2`, `A.1`, `C`, or a range (`4--5`, the
+# LaTeX en-dash spelling, and the plain `4-5`). The optional leading letter
+# covers appendices; a lone letter is an appendix with no subsection. A digit
+# is mandatory on each side of a range, so no slug (`byte-fallback`,
+# `sec-diamond`) can pass as one.
+_SECNUM = r"[A-Za-z]?[0-9]+(?:\.[0-9]+)*"
+SECTION_NUMBER_LABEL_RE = re.compile(rf"^{_SECNUM}(?:--?{_SECNUM})?$|^[A-Z]$")
+# Named parts a paper has that carry no number. Deliberately tiny: everything
+# else must be either a number or a Title-Cased section title, so an
+# excerpt-anchor slug can never pass as a label.
+SECTION_LABEL_WORDS = {
+    "abstract",
+    "appendix",
+    "intro",
+    "introduction",
+    "conclusion",
+    "passim",
+}
+
+
+def label_is_source_place(label: str) -> bool:
+    """True when `label` can name a place in the *source paper*.
+
+    Accepts a section number, one of the named parts above, or a Title-Cased
+    section title (the fallback for papers whose sections are named but not
+    numbered — `§Method`, `§Green-Red`). Rejects the lowercase slug forms
+    (`sec-diamond`, `method`, `six-evals`) that name a KB excerpt anchor
+    instead of anything in the paper.
+    """
+    label = label.rstrip(".")
+    if not label:
+        return False
+    if SECTION_NUMBER_LABEL_RE.match(label):
+        return True
+    if label.lower() in SECTION_LABEL_WORDS:
+        return True
+    # Title-Cased title: leading capital, and no lowercase-slug shape.
+    return label[0].isupper() and not label.startswith("sec-")
+
+
+def check_section_labels(rel, payload: str, line: int) -> None:
+    """Flag every `§` label in one bracketed citation payload that is not a
+    place in the source paper."""
+    for label in CITE_SECTION_RE.findall(payload):
+        if label_is_source_place(label):
+            continue
+        errors.append(
+            f"{rel}:{line}: §{label} is an excerpt-anchor slug, not a section "
+            f"of the cited paper"
+        )
+
+
+# --- LaTeX series ----------------------------------------------------------
+
+# Emitted by series/mark_glossary_terms.py from kb/glossary.md; linting them
+# would double-report every defect already caught at the source.
+GENERATED_TEX = {"glossary-section.tex", "glossary-tooltips.tex"}
+# `\citep[\S 3.2; kb/excerpts/key\#anchor]{key}` — the optional argument of a
+# natbib cite command, which is where the series carries KB pointers.
+TEX_CITE_ARG_RE = re.compile(r"\\(?:cite[a-z]*|deepencite)\s*\[([^\[\]]*)\]")
+# `\S 3.2`, `\S{3.2}` and `\S{}3.2` — the .tex spellings of `§3.2`. The `{}`
+# form is a control-sequence terminator, not a group: it renders identically
+# and is used interchangeably in the series, so it must be seen here too.
+# Missing it is how 25 `\S{}sec-diamond` sites survived the first sweep.
+TEX_SECTION_RE = re.compile(r"\\S\s*(?:\{\s*\})?\s*\{?\s*([A-Za-z0-9][A-Za-z0-9.\-]*)")
+
+
+def _strip_tex_comments(text: str) -> str:
+    """Blank out `%`-to-end-of-line comments, preserving every newline.
+
+    Comments carry the citation *grammar* as documentation (preamble.tex
+    spells out the `[paper-key §X; kb/excerpts/key#anchor]` pattern), which
+    would otherwise be resolved as a citation of a paper named `key`. Line
+    count and line starts are unchanged, so reported line numbers stay exact.
+    """
+    out = []
+    for line in text.split("\n"):
+        i = 0
+        while i < len(line):
+            if line[i] == "%" and (i == 0 or line[i - 1] != "\\"):
+                line = line[:i]
+                break
+            i += 1
+        out.append(line)
+    return "\n".join(out)
+
+
+def series_tex_files():
+    """Every hand-written .tex in the series (generated fragments excluded)."""
+    for path in sorted(SERIES.rglob("*.tex")):
+        if path.name in GENERATED_TEX:
+            continue
+        yield path
+
+
+def check_series_tex():
+    """Excerpt pointers and `§` labels inside series/**/*.tex.
+
+    The .tex sources cite the KB in exactly the same grammar the notes use,
+    only with LaTeX escaping (`\\#` for `#`). Normalising the escape keeps line
+    numbers intact — no newline is removed — so the two scans share their
+    resolution logic.
+    """
+    file_count = 0
+    for path in series_tex_files():
+        file_count += 1
+        rel = path.relative_to(THEORY)
+        body = _strip_tex_comments(path.read_text())
+        body = body.replace("\\#", "#").replace("\\_", "_")
+        line_of = _line_index(body)
+
+        # kb/excerpts/<key>#anchor — file *and* anchor.
+        for m in EXCERPT_CITE_RE.finditer(body):
+            stem = m.group(1).removesuffix(".md")
+            anchor = m.group(2)
+            ep = THEORY / (stem + ".md")
+            if not ep.exists():
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites missing excerpt file {stem}.md"
+                )
+                continue
+            if anchor not in anchors_of(ep):
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites missing anchor "
+                    f"#{anchor} in {stem}.md"
+                )
+
+        # kb/notes/<area>/<file> — file existence only. The *anchor* half is
+        # deliberately not checked here yet: the series writes note anchors in
+        # a different dialect from the KB (`#4.1` for a section where the KB
+        # writes `#§4.1`, alongside genuine heading slugs), so resolving them
+        # needs that dialect settled first. Turning the anchor check on today
+        # reports 78 sites, a mix of real drift and convention mismatch.
+        # Tracked as a follow-up; see kb/README.md.
+        for m in NOTE_CITE_RE.finditer(body):
+            target = NOTES / (m.group(1) + ".md")
+            if not target.exists():
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites missing note "
+                    f"kb/notes/{m.group(1)}.md"
+                )
+
+        # Anchorless kb/excerpts/<key> — file existence only.
+        for m in EXCERPT_FILE_RE.finditer(body):
+            if body[m.end() : m.end() + 1] == "#":
+                continue
+            stem = m.group(1).rstrip(".")
+            if stem.endswith(".md"):
+                stem = stem[:-3]
+            stem = stem.rstrip(".")
+            if not stem:
+                continue
+            if not (EXCERPTS / (stem + ".md")).exists():
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: cites missing excerpt file "
+                    f"kb/excerpts/{stem}.md"
+                )
+
+        # `§` labels inside cite arguments only. A bare `\S foo` in prose is a
+        # cross-paper pointer ("Paper~4 \S probing"), not a citation label.
+        for m in TEX_CITE_ARG_RE.finditer(body):
+            for lm in TEX_SECTION_RE.finditer(m.group(1)):
+                label = lm.group(1)
+                if label_is_source_place(label):
+                    continue
+                errors.append(
+                    f"{rel}:{line_of(m.start())}: \\S {label} is an "
+                    f"excerpt-anchor slug, not a section of the cited paper"
+                )
+    stats["series_tex_scanned"] = file_count
+
+
 def check_citations(paper_keys: set):
     # Keys are lowercase-canonical in papers.json; compare case-insensitively.
     keys_lower = {k.lower() for k in paper_keys}
@@ -477,6 +667,14 @@ def check_citations(paper_keys: set):
                     f"§{'/§'.join(sorted(targets))}"
                 )
 
+        # `§` labels must name a place in the source paper, not a KB anchor.
+        for m in re.finditer(r"\[([^\[\]]+)\]", body):
+            if body[m.end() : m.end() + 1] in ("(", "["):
+                continue  # markdown link / reference link
+            if "§" not in m.group(1):
+                continue
+            check_section_labels(rel, m.group(1), line_of(m.start()))
+
         # kb/notes/<area>/<file>[#anchor] cross-references — file and anchor.
         for m in NOTE_CITE_RE.finditer(body):
             stem, anchor = m.group(1), m.group(2)
@@ -588,6 +786,7 @@ def main():
     _data, paper_keys = check_papers_json()
     check_topics()
     check_citations(paper_keys)
+    check_series_tex()
 
     print("=" * 60)
     print("THEORY KB LINT REPORT")
@@ -598,6 +797,7 @@ def main():
     print(f"\nTopics in topics.md: {stats['leaves_total']}")
     print(f"  by status: {stats['leaves_by_status']}")
     print(f"\nKB files scanned:    {stats['kb_files_scanned']}")
+    print(f"Series .tex scanned: {stats['series_tex_scanned']}")
     print(f"Notes written:       {stats['notes_total']}")
     print(f"  draft:             {stats['notes_draft']}")
     print(f"  stub:              {stats['notes_stub']}")

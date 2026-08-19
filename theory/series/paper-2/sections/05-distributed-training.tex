@@ -348,10 +348,10 @@ $4$-node-cap rule gives the kernel a topology-aware route.
 \label{sec:dt-muon}
 
 The 2025 add to the distributed-training surface is \emph{Distributed
-\glsterm{per-shape-rms-scaling}{Muon}} \citep[\S 2.3]{muon-moonlight2025}\footnote{KB excerpt:
+\glsterm{muon}{Muon}} \citep[\S 2.3]{muon-moonlight2025}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}: a
-sharded variant of the \glsterm{per-shape-rms-scaling}{Muon} optimizer (\cref{sec:optimization})
-compatible with ZeRO-1 \glsterm{data-parallel}{DP}. The wrinkle is that \glsterm{per-shape-rms-scaling}{Muon}'s Newton-Schulz
+sharded variant of the \glsterm{muon}{Muon} optimizer (\cref{sec:optimization})
+compatible with ZeRO-1 \glsterm{data-parallel}{DP}. The wrinkle is that \glsterm{muon}{Muon}'s Newton-Schulz
 orthogonalization step (Eq.~(2) of \cref{sec:optimization}) needs the
 \emph{full} matrix gradient $\mathbf{M}_t \in \R^{A \times B}$, while
 ZeRO-1 hands each rank only its
@@ -406,7 +406,7 @@ TorchTitan (\glsterm{dtensor-devicemesh}{PyTorch}) & 2024 & 4D + Float8 + \glste
 \glsterm{fsdp2}{FSDP2} (\glsterm{dtensor-devicemesh}{PyTorch}) & 2024 & Per-parameter DTensor sharding & \citep[\S 2.1.2]{torchtitan2024} \\
 DeepSpeed-MoE / Tutel & 2022--23 & \glsterm{expert-parallel}{EP} + all-to-all dispatch kernels & \deepencite{Rajbhandari et al.\ 2022 DeepSpeed-MoE / Hwang et al.\ 2023 Tutel --- not in papers.json} \\
 \glsterm{precision-pinning}{DeepSeek-V3} / \glsterm{dualpipe}{DualPipe} & 2024 & Bidirectional \glsterm{pipeline-parallel}{PP} + ZB decomposition & \citep[\S 3.2.1]{deepseek-v3} \\
-Distributed \glsterm{per-shape-rms-scaling}{Muon} (Moonlight) & 2025 & Per-rank Newton-Schulz on gathered grad & \citep[\S 2.3]{muon-moonlight2025} \\
+Distributed \glsterm{muon}{Muon} (Moonlight) & 2025 & Per-rank Newton-Schulz on gathered grad & \citep[\S 2.3]{muon-moonlight2025} \\
 \bottomrule
 \end{tabularx}
 \caption{Distributed-training systems lineage. The arc is toward
@@ -502,6 +502,6 @@ the next is structural: TorchTitan's per-tensor Float8 path
 \texttt{DeviceMesh}, \glsterm{precision-pinning}{DeepSeek-V3}'s per-tile \glsterm{fp8}{FP8} recipe composes
 against the cross-node all-to-all kernel from \cref{sec:dt-deepseek},
 and the optimizer-precision coupling first surfaces here (Distributed
-\glsterm{per-shape-rms-scaling}{Muon}'s full-matrix $\mathbf{O}_t$ exceeds BF16 high-precision range
+\glsterm{muon}{Muon}'s full-matrix $\mathbf{O}_t$ exceeds BF16 high-precision range
 without weight decay; \cref{sec:mixed-precision} works it through to
 the BF16 / \glsterm{fp8}{FP8} recipe).

@@ -29,9 +29,7 @@
 - **Question difficulty (Snell et al.)** — A 5-quantile bin of a base LLM's pass@1 rate (estimated from 2048 samples) on a test-set prompt. Used as a sufficient statistic for picking the compute-optimal test-time strategy `[snell2024 §3.2; kb/excerpts/snell2024#sec-3-2-difficulty]`.
 - **Oracle vs model-predicted difficulty** — Two operational forms of question-difficulty estimation: oracle uses ground-truth correctness (test-time only as research proxy); model-predicted uses a verifier's averaged score (deployable) `[snell2024 §3.2; kb/excerpts/snell2024#sec-3-2-difficulty]`.
 - **Budget forcing** — A simple test-time-compute control: append continuation tokens (e.g., "Wait") to extend the model's thinking phase, or insert end-of-thinking tokens to truncate. Introduced in s1 (`s1-2025`).
-- **Thinking budget / `thinkingBudget`** — A productionized API parameter (Gemini 2.5, OpenAI o-series reasoning-effort levels, Anthropic extended-thinking) that caps the test-time-compute spend per request. Operationalizes Snell's compute-optimal strategy `[gemini2-5; kb/index/papers.json#gemini2-5]`.
 - **Reasoning model** — An LLM trained (typically with RL on verifiable rewards) to produce long-form chain-of-thought before its final answer. o1, DeepSeek-R1, Qwen3-thinking-mode, Gemini 2.5-thinking-mode are exemplars `[deepseek-r1; kb/index/papers.json#deepseek-r1]`.
-- **Self-consistency** — Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers. Wang et al. 2022. Cheap baseline that requires no verifier.
 
 ## Maximal Update Parametrization (μP) and HP transfer
 

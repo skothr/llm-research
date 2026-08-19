@@ -563,13 +563,13 @@ spends the FLOPs or the schedule that matches the LR-decay horizon
 identified in \cref{sec:scaling-lrhorizon}. The next section
 (\cref{sec:optimization}) walks the optimizer axis: \glsterm{adamw}{AdamW} as the
 production default, the training-loss-conditional speedup claims of
-\glsterm{lion}{Lion} and \glsterm{sophia}{Sophia} that did not hold on downstream evaluation, \glsterm{per-shape-rms-scaling}{Muon}'s
+\glsterm{lion}{Lion} and \glsterm{sophia}{Sophia} that did not hold on downstream evaluation, \glsterm{muon}{Muon}'s
 Newton-Schulz-orthogonalized matrix update as the only published
 optimizer with $\sim 2\times$ compute-efficiency lift at \glsterm{llm}{LLM} scale,
 and the WSD (\glsterm{wsd-schedule}{Warmup-Stable-Decay}) schedule that pairs with continual
 pre-training and merging in \cref{sec:adaptation-and-merging}.
 Optimizer choice and precision choice will turn out to be \emph{not}
-orthogonal --- \glsterm{per-shape-rms-scaling}{Muon}'s update RMS exceeds BF16's high-precision range
+orthogonal --- \glsterm{muon}{Muon}'s update RMS exceeds BF16's high-precision range
 without weight decay, exactly the optimizer$\times$precision coupling
 \cref{sec:scaling-precision} flagged --- and the LR-schedule lesson
 from \cref{sec:scaling-lrhorizon} reappears as the WSD cooldown phase

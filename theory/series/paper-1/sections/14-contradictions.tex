@@ -34,10 +34,10 @@ can trace the lineage.
 \subsection{C1 --- MLA vs.\ MHA at frontier scale}
 \label{sec:c-mla}
 
-\textbf{Pro-\glsterm{multi-head-latent-attention}{MLA} (DeepSeek):} \glsterm{multi-head-latent-attention}{Multi-head Latent Attention} with the
+\textbf{Pro-\glsterm{mla}{MLA} (DeepSeek):} \glsterm{mla}{Multi-head Latent Attention} with the
 joint-low-rank decomposition $W^{DKV}, W^{UK}, W^{UV}$ matches \glsterm{mha}{MHA}
 quality at $\sim 4\times$ smaller \glsterm{kv-cache}{KV cache}; the cache absorption
-identity (\S\ref{sec:attention-mechanism-axis}, eq.\ \glsterm{multi-head-latent-attention}{MLA}-absorb) means
+identity (\S\ref{sec:attention-mechanism-axis}, eq.\ \glsterm{mla}{MLA}-absorb) means
 no quality penalty at decode \citep[\S 2.1.4]{deepseek-v2}.
 \textbf{Pro-\glsterm{gqa}{GQA} (default):} \glsterm{gqa}{GQA} with $G \in \{4, 8\}$ groups recovers
 \glsterm{mha}{MHA} quality at matched cache budget on every published independent
@@ -45,16 +45,16 @@ ablation \citep[\S 3.1]{ainslie2023}, and Western frontier labs that do
 disclose attention details (\citealp{meta-llama3, meta-llama4,
 gemma3, qwen3}) all stay on \glsterm{gqa}{GQA}.
 
-\textbf{Evidence on the table.} The \glsterm{multi-head-latent-attention}{MLA}-\glsterm{mha}{MHA} matched-cache comparison is
+\textbf{Evidence on the table.} The \glsterm{mla}{MLA}-\glsterm{mha}{MHA} matched-cache comparison is
 single-source \citep[\S 2.1.4]{deepseek-v2}: a 16B-active prototype on
-DeepSeek's training corpus. \citet{deepseek-v3} extends \glsterm{multi-head-latent-attention}{MLA} to 671B
+DeepSeek's training corpus. \citet{deepseek-v3} extends \glsterm{mla}{MLA} to 671B
 total / 37B active with strong downstream benchmarks but does not
-publish a head-to-head \glsterm{multi-head-latent-attention}{MLA}-vs-\glsterm{mha}{MHA} at matched compute at that scale.
+publish a head-to-head \glsterm{mla}{MLA}-vs-\glsterm{mha}{MHA} at matched compute at that scale.
 \glsterm{gqa}{GQA}'s matched-cache neutrality result \citep{ainslie2023} has been
 replicated by multiple labs.
 
 \textbf{Experiment that closes it.} A $\geq 70\mathrm{B}$-active
-controlled three-way ablation --- \glsterm{mha}{MHA} / \glsterm{gqa}{GQA}-8 / \glsterm{multi-head-latent-attention}{MLA} at matched compute,
+controlled three-way ablation --- \glsterm{mha}{MHA} / \glsterm{gqa}{GQA}-8 / \glsterm{mla}{MLA} at matched compute,
 matched data, matched optimizer --- run by an independent laboratory on
 non-DeepSeek pre-training data. As of 2026-Q2 no such run is published.
 \deepencite{independent MLA-vs-GQA-vs-MHA at $\geq 70$B-active scale}.
@@ -62,7 +62,7 @@ non-DeepSeek pre-training data. As of 2026-Q2 no such run is published.
 \subsection{C2 --- NSA vs.\ FA3 head-to-head}
 \label{sec:c-nsa}
 
-\textbf{Pro-\glsterm{nsa}{NSA}:} \glsterm{native-sparse-attention}{Native Sparse Attention} with the three-branch
+\textbf{Pro-\glsterm{nsa}{NSA}:} \glsterm{nsa}{Native Sparse Attention} with the three-branch
 (compressed / fine / sliding) selection scheme delivers $11.6\times$
 decode at 64K and improves long-context reasoning quality over the
 dense baseline, because pre-training with sparse attention teaches the

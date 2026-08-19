@@ -57,7 +57,7 @@ Each scenario is a `(task, domain, language)` triple; each run is a `(scenario, 
 metric)` triple. The benchmark measures 98 of 112 possible (core scenario, metric) pairs (87.5%),
 making explicit what is missing.
 
-## §4.3–§4.5 — Metric definitions (Accuracy, Calibration, Robustness) {#sec-4-metrics}
+## §4.3–§4.9 — Metric definitions, all seven categories (Accuracy, Calibration, Robustness quoted verbatim) {#sec-4-metrics}
 
 > Accuracy is the most widely studied and habitually evaluated property in AI. Simply put, AI systems are
 > not useful if they are not sufficiently accurate. Throughout this work, we will use accuracy as an umbrella
@@ -106,10 +106,16 @@ The structural finding: no single model dominates all 7 metric axes. Instruction
 (text-davinci-002, Anthropic-LM v4-s3) creates broad multi-axis advantage over raw scale
 alone, but robustness and calibration tradeoffs persist even for the strongest models.
 
-## §1.2 — Coverage gap and standardization {#sec-1-2-coverage}
+## §1.1 (plus abstract) — Coverage gap and standardization {#sec-1-2-coverage}
+
+From §1.1 "HELM", under the run-in sub-heading **Standardization** (the anchor
+slug still reads `sec-1-2-coverage` for link stability; the content is §1.1, not
+§1.2 — §1.2 "Empirical findings" is `#sec-1-2-findings`):
 
 > Prior to our effort, on average models were evaluated on 17.9% of our core scenarios, even
 > after compiling evaluations dispersed across different prior works. We improve this to 96.0%.
+
+From the **abstract** (this sentence does not appear inside §1.1):
 
 > For full transparency, we release all raw model prompts and completions publicly for further
 > analysis, as well as a general modular toolkit for easily adding new scenarios, models, metrics,
@@ -119,4 +125,6 @@ The comparability contribution: every model evaluated under identical few-shot p
 conditions on the same scenarios. The (prompt, response) corpus is released so scores can
 be re-derived under tighter contamination rules without re-running models.
 
-[Verified from PDF on 2026-05-12] Added §1.1 design, §4.3–4.5 metric definitions, §1.2 findings, §1.2 coverage. Abstract replaced with full verbatim text from PDF.
+[Verified from PDF on 2026-05-12] Added §1.1 design, §4.3–4.9 metric definitions, §1.2 findings, §1.1 coverage/standardization. Abstract replaced with full verbatim text from PDF.
+
+[Section numbers re-verified against arXiv 2211.09110 on 2026-08-19] §4 "General metrics" runs 4.1 Taxonomy, 4.2 Selection, 4.3 Accuracy, 4.4 Calibration and uncertainty, 4.5 Robustness, 4.6 Fairness, 4.7 Bias and stereotypes, 4.8 Toxicity, 4.9 Efficiency. The 17.9% → 96.0% standardization figures are in §1.1 under "Standardization", not §1.2; two headings here previously both claimed §1.2.

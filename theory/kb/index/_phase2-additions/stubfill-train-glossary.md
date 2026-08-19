@@ -19,10 +19,11 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   upward in the FP16 representable range to avoid underflow.
   `[micikevicius2017-mixed-precision §3;
   kb/excerpts/micikevicius2017-mixed-precision#sec-3]`.
-- **BF16 (bfloat16)** — A 16-bit floating-point format with 8
-  exponent bits and 7 mantissa bits. Same dynamic range as FP32;
-  half the precision of FP16. The universal LLM pre-training default
-  by 2023. `[kalamkar2019-bfloat16 §2;
+- **BF16 (bfloat16)** — "Brain float": a 16-bit floating-point format
+  with 8 exponent bits and 7 mantissa bits (versus FP16's 5 and 10).
+  Same dynamic range as FP32; half the precision of FP16. The
+  universal LLM pre-training default forward/backward dtype by 2023.
+  `[kalamkar2019-bfloat16 §2;
   kb/excerpts/kalamkar2019-bfloat16#sec-2]`.
 - **FP8 E4M3 / E5M2** — 8-bit float formats with 4-bit
   exponent + 3-bit mantissa (E4M3, range $\pm 448$) or 5-bit
@@ -47,11 +48,11 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   hardware MXScale (32-element per-block scaling) on Blackwell-class
   GPUs. Production-stability for full pre-training is open as of
   2026-05.
-- **Loss spike** — A sudden upward jump in pre-training loss, often
-  caused by gradient-norm explosion, attention-logit divergence,
-  embedding-norm growth, or FP8 underflow. May or may not recover.
-  DeepSeek-V3 reports zero irrecoverable spikes over 14.8T tokens
-  `[deepseek-v3 abstract;
+- **Loss spike** — A sudden upward excursion in the pre-training loss
+  curve, often caused by gradient-norm explosion, attention-logit
+  divergence, embedding-norm growth, or FP8 underflow on rare tokens.
+  May or may not recover. DeepSeek-V3 reports zero irrecoverable
+  spikes over 14.8 T tokens `[deepseek-v3 abstract;
   kb/excerpts/deepseek-v3-training#abstract]`.
 - **QK-LayerNorm / QK-clip** — Stability machinery to prevent
   attention-logit blow-up: normalize $Q$ and $K$ before the dot
@@ -103,7 +104,10 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
 - **Linear mode connectivity (LMC)** — The empirical property that
   fine-tunes of a shared base land in a connected loss basin: the
   path $\theta_0 + t(\theta_f - \theta_0)$, $t \in [0,1]$, stays in
-  low-loss territory. Underpins why model merging works.
+  low-loss territory, so averaging their weights gives a model with
+  loss similar to the endpoints. The leading explanation for why
+  model merging works at all. (Frankle, Dziugaite et al. 2020 —
+  pending excerpt.)
 - **Frankenmerge / passthrough merge** — Layer-wise interleaving of
   layers from two or more models (e.g., copy layers 0–15 from model A
   and 16–31 from model B). Widely used in OSS practice; limited
@@ -125,11 +129,12 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   template prefix (no question), will fabricate the question and then
   answer it. Produces $(x,y)$ SFT pairs at zero human cost.
   `[magpie-2024]`.
-- **Reasoning-distillation SFT** — Fine-tuning a small base model on
-  $(x,y)$ traces sampled from a strong RL-trained reasoner (e.g.,
-  R1-Distill: 800K samples from DeepSeek-R1; s1: 1K curated traces
-  from Gemini Flash Thinking). Recovers most reasoning capability
-  with no RL. `[deepseek-r1; s1-2025]`.
+- **Reasoning-distillation SFT** — Fine-tuning a small base model
+  (1.5B–32B) on $(x,y)$ traces sampled from a strong RL-trained
+  reasoning teacher (e.g., R1-Distill: 800K samples from DeepSeek-R1;
+  s1: 1K curated traces from Gemini Flash Thinking). Pure SFT, no RL,
+  and it recovers most reasoning capability. `[deepseek-r1 §4;
+  s1-2025]`.
 - **Thinking / non-thinking mode SFT** — Training a model to emit
   `<think>...</think>` blocks gated by a system prompt, switching
   reasoning behavior on/off. Qwen 3's 4-stage post-training innovation.
@@ -143,9 +148,13 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
 ## RLAIF and Constitutional AI
 
 - **RLAIF (Reinforcement Learning from AI Feedback)** — RLHF pipeline
-  where preference labels come from an AI feedback model rather than
-  human labelers. The reward model is trained on AI-generated
-  preferences via standard Bradley–Terry. `[bai2022-cai §4;
+  where preference labels in the RL stage come from an AI feedback
+  model — typically one conditioned on a written constitution —
+  rather than from human labelers. The reward model is trained on the
+  AI-generated preferences via standard Bradley–Terry. Introduced as
+  the RL-CAI step of `bai2022-cai`. Reduces labeling burden, but does
+  not address the bias source if the AI feedback model itself
+  inherits the bias. `[bai2022-cai §4;
   kb/excerpts/bai2022-cai#sec-4]`.
 - **Constitution (in CAI)** — A list of natural-language principles
   ("the assistant should not...") used to condition the AI feedback
@@ -166,9 +175,10 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   distinguishing CAI from helpful-only RLHF (which complies) and from
   naive safety RLHF (which refuses without explanation).
   `[bai2022-cai §6; kb/excerpts/bai2022-cai#sec-6]`.
-- **R-CAI (Reverse CAI)** — Inverts the constitution and applies
-  probability-clamped RLAIF to generate controlled adversarial / toxic
-  data. `[r-cai-2026]`.
+- **R-CAI (Reverse Constitutional AI)** — Inverts the constitution and
+  applies probability-clamped RLAIF to generate controlled adversarial
+  / toxic data for red-team data synthesis (April 2026).
+  `[r-cai-2026]`.
 - **Recursive RLAIF** — Using a previously-trained RLAIF model as the
   feedback model for the next round of RLAIF. Risks model collapse in
   the constitution direction.
@@ -179,8 +189,12 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   masks the logits to allow only tokens consistent with a target
   grammar (regex, JSON schema, GBNF, CFG). The sampling distribution
   is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's
-  allowed-token set in the current state. `[willard2023-outlines §3;
-  kb/excerpts/willard2023-outlines#sec-3]`.
+  allowed-token set in the current state. Naive implementations query
+  the grammar engine for every token in the vocabulary at every step —
+  the bottleneck modern engines fix.
+  `[willard2023-outlines §3;
+  kb/excerpts/willard2023-outlines#sec-3;
+  kb/notes/inference/structured-output#§1]`.
 - **FSM-vocabulary index (Willard–Louf)** — Precomputed mapping from
   each FSM state to the set of allowed vocabulary tokens. Built once
   per grammar; reduces per-step constraint check from $O(V)$ to
@@ -193,9 +207,10 @@ playbook, the orchestrator merges these into `kb/glossary.md`.
   reports ~99% context-independent for typical JSON schemas.
   `[xgrammar2024 §3; kb/excerpts/xgrammar2024#sec-3]`.
 - **Compressed FSM (SGLang)** — FSM transformation that merges chains
-  of singular-transition edges into single edges, allowing multi-token
-  decoding when the grammar deterministically forces a literal
-  substring (e.g., `{"summary": "` in a JSON schema).
+  of singular-transition edges into single edges, so the constrained
+  decoder emits an entire deterministically-forced literal substring
+  (e.g., the constant prefix `{"summary": "` in a JSON schema) in one
+  step instead of token-by-token.
   `[zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4]`.
 - **GBNF (GGML BNF)** — llama.cpp's grammar specification format.
   An extended BNF used to define constrained-decoding grammars.

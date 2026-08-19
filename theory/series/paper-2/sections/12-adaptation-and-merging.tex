@@ -8,7 +8,7 @@
 \label{sec:adaptation}
 
 The previous sections (\S7--\S11) drove parameter updates with gradients
-on data: SFT cross-entropy, \glsterm{rlhf}{RLHF}/\glsterm{dpo}{DPO} preference signals, \glsterm{rlvr-3}{RLVR}'s
+on data: SFT cross-entropy, \glsterm{rlhf}{RLHF}/\glsterm{dpo}{DPO} preference signals, \glsterm{rlvr}{RLVR}'s
 verifiable rewards. This section closes the pipeline with a different
 class of operation altogether — \emph{weight-space} updates whose unit
 of action is the parameter vector itself, not a per-token loss.
@@ -287,14 +287,14 @@ base, and \emph{logit ensembling and weight averaging produce similar
 accuracy when the loss landscape is locally flat}
 \citep[\S 4]{wortsman2022-model-soups} — but they do not prove sufficient
 conditions. The phenomenon is referred to in the broader literature as
-\emph{\glsterm{linear-mode-connectivity-2}{linear mode connectivity}} (\glsterm{linear-mode-connectivity-2}{LMC}), with \citet{frankle2020-lmc}\deepencite{frankle2020-lmc
-§3} the canonical reference\footnote{\glsterm{linear-mode-connectivity-2}{LMC} was introduced for SGD-trained
+\emph{\glsterm{linear-mode-connectivity}{linear mode connectivity}} (\glsterm{linear-mode-connectivity}{LMC}), with \citet{frankle2020-lmc}\deepencite{frankle2020-lmc
+§3} the canonical reference\footnote{\glsterm{linear-mode-connectivity}{LMC} was introduced for SGD-trained
 networks at the same initialization; the fine-tuning case is the
 operationally relevant specialization for adaptation.}; the
 \citet[\S 4]{ilharco2022-task-vectors} \emph{linearity-of-fine-tuning}
 attribution refers to the same phenomenon at the task-vector level.
 
-The condition is empirically tight in a load-bearing way. \glsterm{linear-mode-connectivity-2}{LMC} holds for
+The condition is empirically tight in a load-bearing way. \glsterm{linear-mode-connectivity}{LMC} holds for
 SFT-from-the-same-base; it holds partly for \glsterm{rlhf}{RLHF}-from-the-same-base
 (see \S8); it breaks for from-scratch models with different
 initializations, where averaging produces a near-random model. This
@@ -319,7 +319,7 @@ performance. The per-paper benchmarks are largely single-source: TIES
 \citep[\S 4]{wortsman2022-model-soups} sweep their own task suites, with
 no third-party head-to-head at frontier-\glsterm{llm}{LLM} scale, and no canonical
 theory predicts when merging produces interference vs.\ the
-basin-centering effect predicted by \glsterm{linear-mode-connectivity-2}{LMC}. The
+basin-centering effect predicted by \glsterm{linear-mode-connectivity}{LMC}. The
 \emph{merged-beats-best-ingredient} claim should be read as
 \emph{task-set-conditional}: it holds on multi-task evaluations of
 specialists, and is not yet established at the single-task ceiling.
@@ -329,13 +329,13 @@ specialists, and is not yet established at the single-task ceiling.
 \subsection{Forward link}
 
 The pipeline closes here. The four sections following SFT (\S7) ---
-\glsterm{rlhf}{RLHF} (\S8), \glsterm{dpo}{DPO} (\S9), \glsterm{rlaif-3}{RLAIF}/\glsterm{constitutional-ai}{CAI} (\S10), \glsterm{rlvr-3}{RLVR}/\glsterm{grpo-2}{GRPO} (\S11) --- moved the
+\glsterm{rlhf}{RLHF} (\S8), \glsterm{dpo}{DPO} (\S9), \glsterm{rlaif}{RLAIF}/\glsterm{constitutional-ai}{CAI} (\S10), \glsterm{rlvr}{RLVR}/\glsterm{grpo}{GRPO} (\S11) --- moved the
 policy in data-driven directions; \cref{sec:adaptation-and-merging}
 makes the dual move in weight space, with \glsterm{peft}{PEFT}
 (\cref{sec:adapt-lora,sec:adapt-qlora}) writing low-rank patches onto a
 frozen base and merging
 (\cref{sec:adapt-taskvec,sec:adapt-soups,sec:adapt-ties}) recombining
-fine-tunes that share an ancestor. Both rest on the \glsterm{linear-mode-connectivity-2}{LMC} substrate of
+fine-tunes that share an ancestor. Both rest on the \glsterm{linear-mode-connectivity}{LMC} substrate of
 \cref{sec:adapt-lmc}, the speculative theoretical claim that holds the
 empirical ceiling. The next section
 (\cref{sec:frontier-snapshot})\deepencite{paper2-§13-cross-ref} fixes

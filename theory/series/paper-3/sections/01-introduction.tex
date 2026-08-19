@@ -50,9 +50,9 @@ legs:
   and the tree-search families (beam, BFS, MCTS) that turn those
   scores into search trajectories \citep{rstar-math2025}.
 
-\item \textbf{Reinforcement learning on verifiable rewards (\glsterm{rlvr-3}{RLVR})} ---
+\item \textbf{Reinforcement learning on verifiable rewards (\glsterm{rlvr}{RLVR})} ---
   group-relative policy optimisation over programmatically-checkable
-  outcomes \citep{shao2024}, with \glsterm{dapo-2}{DAPO}'s four targeted modifications
+  outcomes \citep{shao2024}, with \glsterm{dapo}{DAPO}'s four targeted modifications
   \citep{dapo2025} as the current open-recipe state of the art.
 \end{enumerate}
 
@@ -68,7 +68,7 @@ questions remain.
 
 \begin{intuition}
 A useful one-line picture is that the three legs are dual to each
-other across the train/inference boundary. \glsterm{rlvr-3}{RLVR} \emph{shapes} a policy
+other across the train/inference boundary. \glsterm{rlvr}{RLVR} \emph{shapes} a policy
 whose long-\glsterm{chain-of-thought}{CoT} output is worth amplifying; inference-time compute
 \emph{amplifies} that policy by spending more sampling, search, or
 trace-length budget; verifier signals \emph{rerank} the amplified
@@ -78,7 +78,7 @@ to use it is short-\glsterm{chain-of-thought}{CoT} in a costume; a strong verifi
 proposer that produces diverse-and-mostly-right candidates does not
 have anything to verify; an RL loop without a \glsterm{verifiable-reward}{verifiable reward}
 collapses back to \glsterm{rlhf}{RLHF} and its 2023-vintage pathologies. Returning to
-canonical math: the \glsterm{grpo-2}{GRPO} objective transcribed in
+canonical math: the \glsterm{grpo}{GRPO} objective transcribed in
 \cref{sec:rlvr-grpo-objective} is structurally a re-weighted
 maximum-likelihood update over verifier-passed trajectories sampled
 from the current policy, with KL anchoring to a reference. All three
@@ -91,7 +91,7 @@ which \glsterm{rlhf}{RLHF} is succeeded by RL-on-verifiable-rewards as a distinc
 stage, with different load-bearing variables (programmatic verifier
 instead of learned reward, group baseline instead of \glsterm{value}{value} network).
 That cross-reference is the inheritance route: \cref{sec:rlvr-grpo-dapo}
-deepens Paper~2's \glsterm{rlvr-3}{RLVR} treatment in the reasoning-specific direction
+deepens Paper~2's \glsterm{rlvr}{RLVR} treatment in the reasoning-specific direction
 (long traces, terminal verifiers, R1-style protocols). Paper~1 is the
 architectural precondition: the 10K-token reasoning traces that
 \cref{sec:r1-family} reports as the operational signature of an
@@ -151,11 +151,11 @@ correct trajectories that re-train the proposer and the verifier.
 \Cref{sec:rlvr-grpo-dapo} is the third anchor section and the third
 triangle leg. The verifier reward
 $R_\mathrm{verifier}(x,y) = \mathbb{1}[\,\mathrm{verify}(x,y) =
-\mathsf{true}\,]$, the \glsterm{grpo-2}{GRPO} objective \citep[\S 4.1]{shao2024} with
-group-relative advantage replacing a \glsterm{value}{value} network, and \glsterm{dapo-2}{DAPO}'s four
+\mathsf{true}\,]$, the \glsterm{grpo}{GRPO} objective \citep[\S 4.1]{shao2024} with
+group-relative advantage replacing a \glsterm{value}{value} network, and \glsterm{dapo}{DAPO}'s four
 targeted modifications \citep[\S 2]{dapo2025} are the section's
 mechanics. The empirical proof point that \cref{sec:r1-family} unfolds
-in detail --- DeepSeek-\glsterm{r1-zero}{R1-Zero}'s continuous \glsterm{grpo-2}{GRPO} climb --- is the
+in detail --- DeepSeek-\glsterm{r1-zero}{R1-Zero}'s continuous \glsterm{grpo}{GRPO} climb --- is the
 cleanest single number in the literature for the proposition that the
 three legs compose under one training loop.
 
@@ -167,7 +167,7 @@ $1{,}000$ long-\glsterm{chain-of-thought}{CoT} exemplars plus a budget-forcing r
 phase as a structurally distinct decode-time region) from the
 base-architecture axis. \Cref{sec:search-vs-rl} confronts the
 operational tradeoff the triangle implies: at fixed total compute,
-when does the marginal FLOP go to inference search, to \glsterm{rlvr-3}{RLVR} training,
+when does the marginal FLOP go to inference search, to \glsterm{rlvr}{RLVR} training,
 or to pretraining? The honest answer in 2026 is benchmark-specific and
 base-model-specific; that section transcribes what is settled and
 demarcates what is anecdotal.
@@ -187,7 +187,7 @@ findings and continued-gain findings.
 
 \Cref{sec:r1-family} sits between \cref{sec:rlvr-grpo-dapo} and
 \cref{sec:budget-forcing} as the empirical proof point: the four-stage
-R1 protocol (cold-start SFT $\to$ \glsterm{grpo-2}{GRPO} with verifiable rewards $\to$
+R1 protocol (cold-start SFT $\to$ \glsterm{grpo}{GRPO} with verifiable rewards $\to$
 \glsterm{rejection-sampling-sft}{rejection-sampling SFT} on harvested traces $\to$ general-domain RL),
 the \glsterm{r1-zero}{R1-Zero} ablation that strips the cold-start to isolate what the
 SFT initialisation contributes, and the open-weight distillation track
@@ -215,23 +215,23 @@ happen to ship together --- and one open question that
 happen to ship together?}
 \end{quote}
 
-The strong-co-design claim is that the legs interlock causally: \glsterm{rlvr-3}{RLVR}
+The strong-co-design claim is that the legs interlock causally: \glsterm{rlvr}{RLVR}
 without long-\glsterm{chain-of-thought}{CoT} sampling cannot find the signal that lengthens
-traces, long-\glsterm{chain-of-thought}{CoT} without \glsterm{rlvr-3}{RLVR} is mechanistically possible but
+traces, long-\glsterm{chain-of-thought}{CoT} without \glsterm{rlvr}{RLVR} is mechanistically possible but
 empirically weaker, and verifier signals are what convert sampling
 diversity into a reranked answer that propagates training reward.
 The independent-gains claim is that the three legs each work in
 isolation and the field has co-shipped them only for engineering
-reasons. The 2025 \citet{rlvr-limits-2025} result --- \glsterm{rlvr-3}{RLVR} sharpens
+reasons. The 2025 \citet{rlvr-limits-2025} result --- \glsterm{rlvr}{RLVR} sharpens
 pass@1 within base-model competency but does not expand pass@$K$ ---
 sits exactly on this fault line: under the strong-co-design reading,
-\glsterm{rlvr-3}{RLVR} is doing the right thing (it shapes a policy whose sampling and
+\glsterm{rlvr}{RLVR} is doing the right thing (it shapes a policy whose sampling and
 verification are then meaningful); under the independent-gains
-reading, \glsterm{rlvr-3}{RLVR} is doing less than the headline numbers suggest because
+reading, \glsterm{rlvr}{RLVR} is doing less than the headline numbers suggest because
 the underlying capability already exists in the base model and only
 the trace-length needed to express it is being elicited.
 \Cref{sec:contradictions} catalogues five further contradictions on
-the same axis (\glsterm{process-reward-model}{PRM} utility post-R1, \glsterm{cot-faithfulness-2}{CoT faithfulness} scaling,
+the same axis (\glsterm{process-reward-model}{PRM} utility post-R1, \glsterm{cot-faithfulness}{CoT faithfulness} scaling,
 search-vs-RL tradeoff geometry, AIME contamination, MCTS-vs-beam at
 matched budget). The paper's position is that none of them are closed
 as of 2026-Q2; the engineering question of how to ship a frontier
