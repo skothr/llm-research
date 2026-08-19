@@ -201,14 +201,23 @@ editable from a checkout next to this repo:
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -e ../llm-surgeon      # llm_surgeon.probe / .surgery — all arcs
-pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e ../jacobian-lens    # jlens — arc-04 capture/fit scripts
 pip install -e '.[dev]'            # torch, numpy, matplotlib + pytest
 ```
 
 `pip install -e ../llm-surgeon` pulls in `torch`, `transformers`, `accelerate`,
 `bitsandbytes`, and the rest of the surgery/probe runtime;
-`../jacobian-lens` provides `jlens`, imported by every arc-04 `jspace_*`
-script. This repo declares `llm-surgeon` plus the direct imports of its own
+`../jacobian-lens` provides `jlens`, imported by 11 of the 27 arc-04
+`jspace_*.py` scripts — the whole capture/fit path: `jspace_fit_lens.py`, the
+three scan/eval runners (`readout_scan`, `structure_scan`, `lens_eval`), and
+`atom_norm_bias`, `entailed_swap`, `nla_crosstie`, `paper_metric_varfrac`,
+`quant_grad_probe`, `stage1_fit_calibration`, `verbal_report`. The other 16
+(every `jspace_render_*` plus the audit, manifest, corpus and queue helpers)
+read committed artifacts and do not import it. Since the capture path is where
+every arc-04 artifact comes from, a missing sibling still blocks re-running the
+arc — it just does not block re-rendering it.
+
+This repo declares `llm-surgeon` plus the direct imports of its own
 example scripts (`numpy`, `matplotlib`, `datasets`), and the `[dev]` extra adds
 `pytest` for `examples/tests/`. Installing the editable siblings first satisfies
 the `llm-surgeon` requirement and the undeclarable `jlens` one.
@@ -243,8 +252,10 @@ repo-level `.cache/` for arcs 01-03, `research/arcs/04_jspace/data/cache/` for
 arc 04 — and the promoted, committed copies live in each arc's `data/`. Arc 04
 is the one exception: its three fitted lenses stay under `data/cache/` and are
 committed from there, through explicit `.gitignore` whitelist lines and a
-dedicated LFS rule (`research/**/data/cache/*.pt`); everything else that
-directory holds is regenerable and stays untracked. Those lenses are the files
+dedicated LFS rule (`research/**/data/cache/*.pt`). The whitelist
+(`.gitignore`) also tracks the lenses' JSON sidecars and the fit/scan logs — 24
+files under `data/cache/` in all; everything else that directory holds is
+regenerable and stays untracked. Those lenses are the files
 `.lfsconfig` excludes from a default fetch — see
 [Prerequisites](#prerequisites--git-lfs-is-required) for the opt-in pull.
 Render scripts turn artifacts into figures; each arc's audit re-derives that
@@ -253,14 +264,15 @@ committing its run as `data/audit_2026-08-17.log`:
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 103 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 104 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 951 PASS | 7 FAIL
 ```
 
 Those commands assume the [Setup](#setup) venv is active; from an inactive
-shell, call `.venv/bin/python` explicitly — a system `python` has no `torch`
-and every audit dies at import.
+shell, call `.venv/bin/python` explicitly — arcs 01, 03 and 04 load `.pt`
+artifacts and need the venv's `torch`, while arc 02 imports neither `torch` nor
+(eagerly) `numpy` and so runs anywhere.
 
 Arc 02's audit needs no GPU and no network and finishes in under a second; its
 five `UNVERIFIABLE` lines are reported rather than scored, covering facts no
@@ -284,6 +296,22 @@ register their claims only when the lens tensors are on disk. See the arc
 READMEs for what each audit does and does not catch (arithmetic consistency
 only — never methodology or interpretation) and for the historical pre-re-run
 figures (`920 | 10`; the cache-present `978` was never re-verified).
+
+The theory side has its own standing gate, `theory/kb/lint.py`. It resolves
+every citation in `theory/kb/**/*.md` and `theory/series/**/*.tex` against
+`kb/index/papers.json`, the excerpt and note files, and their anchors, and
+checks that a `§` locator names a section of the cited paper rather than an
+excerpt slug. Run it after any citation edit:
+
+```bash
+python theory/kb/lint.py      # the theory-side docs spell it `python3 kb/lint.py` from theory/
+```
+
+**Expected as of 2026-08-19: 14 errors, 0 warnings — it exits 1 on a clean
+checkout.** All 14 are the same defect: ten paper keys cited in the KB with no
+`papers.json` entry because the paper was never sourced (issue #55; the keys
+are listed in `theory/kb/README.md`). Compare against that baseline — a
+different key, a different file, or a count above 14 is a new regression.
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced

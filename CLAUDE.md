@@ -20,9 +20,15 @@ is not declarable at all):
 
 ```bash
 pip install -e ../llm-surgeon      # llm_surgeon.probe / .surgery — all arcs
-pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e ../jacobian-lens    # jlens — arc-04 capture/fit scripts
 pip install -e '.[dev]'            # torch, numpy, matplotlib + pytest
 ```
+
+`jlens` is imported by 11 of the 27 `examples/jspace_*.py` — the capture/fit
+path (`fit_lens`, the `readout_scan` / `structure_scan` / `lens_eval` runners,
+`atom_norm_bias`, `entailed_swap`, `nla_crosstie`, `paper_metric_varfrac`,
+`quant_grad_probe`, `stage1_fit_calibration`, `verbal_report`); the 16 render /
+audit / manifest / corpus scripts read committed artifacts instead.
 
 Missing either one fails only at `import` inside a script, which for the arc-04
 fits is after model load, at the start of a multi-hour GPU run.
@@ -98,13 +104,21 @@ bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 # Per-arc audits — re-derive every load-bearing numerical claim from the
 # committed artifacts. Expected summaries as of 2026-08-17 (each arc also
 # commits its run as research/arcs/<slug>/data/audit_2026-08-17.log).
-# Needs the project venv: activate it, or run `.venv/bin/python` — a system
-# `python` has no torch and every audit dies at import.
+# Needs the project venv: activate it, or run `.venv/bin/python` — arcs 01/03/04
+# load .pt artifacts and need its torch (arc 02 imports no torch, runs anywhere).
 python examples/nla_audit_findings.py         # arc 01 → 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → 103 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/subliminal_audit_findings.py  # arc 02 → 104 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 →  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → 951 PASS | 7 FAIL  (default clone)
                                               #          986 PASS | 4 FAIL  (after the lens pull)
+
+# Theory KB citation gate — every citation in kb/**/*.md and series/**/*.tex
+# resolved against papers.json, excerpt/note files and their anchors. Run after
+# any citation edit (self-locating; theory/ docs spell it `python3 kb/lint.py`
+# from theory/). Expected as of 2026-08-19: 14 errors, 0 warnings, exit 1 — ten
+# paper keys cited but never sourced (issue #55, enumerated in
+# theory/kb/README.md). Anything beyond that baseline is a regression you added.
+python theory/kb/lint.py
 ```
 
 Arc 04 has two expected states because its fitted-lens cache is excluded from

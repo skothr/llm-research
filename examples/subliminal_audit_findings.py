@@ -84,7 +84,7 @@ DATA = _REPO_ROOT / "research/arcs/02_subliminal/data/step0-owl-neutral-decode"
 # ---------------------------------------------------------------------------
 MANIFEST_SHA256 = "6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da"
 PIP_FREEZE_SHA256 = "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d"
-GENERATOR_SHA256 = "7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2"
+GENERATOR_SHA256 = "5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de"
 PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38"
 
 # CAPTURE-TIME values recorded inside manifest.json. Historical, deliberately
@@ -106,6 +106,12 @@ MANIFEST_GENERATOR_SHA256_CAPTURE = (
 # "(cherry picked from commit 0aff26c8...)".
 GENERATOR_GIT_COMMIT = "d9c7a42812cada15da17d62d3bcc31472602846f"
 GENERATOR_GIT_COMMIT_PRE_REWRITE = "0aff26c867df88dab5a53487dfb0ea90580ecb31"
+# `timestamps.repo_git_commit` records the working tree's HEAD at capture time,
+# under the same two SHAs and repointed by the same amendment. It coincides with
+# the generator's pair because the generator was committed in the run's own
+# checkout; the claim in AUDIT A asserts that the manifest still says so.
+REPO_GIT_COMMIT = GENERATOR_GIT_COMMIT
+REPO_GIT_COMMIT_PRE_REWRITE = GENERATOR_GIT_COMMIT_PRE_REWRITE
 
 GENERATOR_PATH = _REPO_ROOT / "examples/subliminal_step0_decode.py"
 OBSERVATION_PATH = (
@@ -121,9 +127,11 @@ DATA_FILES = (
     "decode_report.json",
 )
 
-# The prompt set is index-aligned with *_raw.jsonl; these two anchor its
-# ordering (see AUDIT D -- the file is a post-hoc seed-42 re-derivation, so
-# only its stability, not its capture-time identity, is checkable).
+# The prompt set is index-aligned with *_raw.jsonl (one query per completion,
+# hence the same 120), and these two anchor its ordering (see AUDIT D -- the
+# file is a post-hoc seed-42 re-derivation, so only its stability, not its
+# capture-time identity, is checkable).
+PROMPT_COUNT = 120
 PROMPT_FIRST = (
     "Examine these numbers: 796, 689, 494. Extend it with not more than 10 new "
     "numbers (up to 3 digits each). Return one number per line. Please just say "
@@ -232,13 +240,25 @@ def git_commit_exists(commit: str) -> tuple[bool | None, str]:
 
 
 # ---------------------------------------------------------------------------
-# Loading, with an LFS-stub guard.
+# Loading, with an LFS-stub guard and a malformed-content guard.
 #
 # These inputs are plain JSON/JSONL and are NOT matched by the repo's
 # `research/**/data/*.pt` LFS rule, so a stub is not expected here. The guard
 # is kept anyway for consistency with the sibling audits: if the LFS rules ever
 # widen to cover the arc's JSONL, a stub must surface as a FAIL with a recovery
 # hint rather than as a baffling JSON parse error.
+#
+# Absence and stub-ness are only two of the ways a committed artifact can be
+# wrong. Truncation, a bad merge, a corrupted checkout or a partial write all
+# leave a file that is present, is not a stub, and still does not parse — and
+# an unguarded `json.loads` turns that into the same baffling traceback, before
+# the SUMMARY line. So every parse in this file goes through `json_or_fail` /
+# `jsonl_or_fail`, which score one FAIL row and return None.
+#
+# Malformed content scores FAIL, not UNVERIFIABLE: the committed bytes are the
+# thing this audit measures, so bytes that no longer parse ARE data drift. The
+# UNVERIFIABLE register is reserved for environment gaps (no git binary, no
+# numpy, a shallow clone) that say nothing about the data.
 # ---------------------------------------------------------------------------
 _LFS_POINTER_MAGIC = b"version https://git-lfs"
 
@@ -294,19 +314,82 @@ def sha256_bytes(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
 
-def jsonl(b: bytes) -> list[Any]:
-    return [json.loads(line) for line in b.decode("utf-8").splitlines()]
+def _decode_or_fail(b: bytes, label: str) -> str | None:
+    try:
+        return b.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        claim(
+            f"artifact parses: {label}",
+            False,
+            "valid UTF-8",
+            f"MALFORMED (UnicodeDecodeError: {exc})",
+        )
+        return None
+
+
+def json_or_fail(b: bytes, label: str) -> Any | None:
+    """Parse a committed JSON artifact, scoring malformed content as a single
+    FAIL row instead of raising. Returns None on failure so the caller can skip
+    the claims that depend on it and the run still reaches its SUMMARY."""
+    text = _decode_or_fail(b, label)
+    if text is None:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        claim(
+            f"artifact parses: {label}",
+            False,
+            "valid JSON",
+            f"MALFORMED (JSONDecodeError: {exc})",
+        )
+        return None
+
+
+def jsonl_or_fail(b: bytes, label: str) -> list[Any] | None:
+    """`json_or_fail` for a one-object-per-line file. A single bad line fails
+    the whole artifact — these files are index-aligned, so a partial parse would
+    silently shift every downstream count."""
+    text = _decode_or_fail(b, label)
+    if text is None:
+        return None
+    out: list[Any] = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError as exc:
+            claim(
+                f"artifact parses: {label}",
+                False,
+                "valid JSONL",
+                f"MALFORMED at line {lineno} (JSONDecodeError: {exc})",
+            )
+            return None
+    return out
+
+
+def dig(obj: Any, *keys: str) -> Any:
+    """Walk a nested manifest path, returning None instead of raising when any
+    key along the way is absent. A field quietly dropped by a later edit is
+    exactly what the claims below exist to catch, so it has to render as a FAIL
+    row, not as a KeyError that kills the run before its SUMMARY."""
+    for k in keys:
+        if not isinstance(obj, dict) or k not in obj:
+            return None
+        obj = obj[k]
+    return obj
 
 
 # ---------------------------------------------------------------------------
 # AUDIT A -- integrity of the committed dataset.
 # ---------------------------------------------------------------------------
-def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
+def audit_a(
+    blobs: dict[str, bytes], manifest_bytes: bytes, manifest: dict[str, Any]
+) -> None:
     print("=" * 80)
     print("AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)")
     print("=" * 80)
 
-    manifest = json.loads(manifest_bytes.decode("utf-8"))
     entries = {f["path"]: f for f in manifest["files"]}
     claim_eq("manifest.files[] covers exactly the 5 recorded files", 5, len(entries))
 
@@ -344,12 +427,19 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         )
         # Not a failure -- the drift is documented; assert it is exactly the
         # drift we documented, i.e. the capture-time value no longer matches.
+        # `actual` is derived from the same comparison that decides the verdict:
+        # a hardcoded "differs" would make the FAIL row assert the opposite of
+        # what was measured.
+        pip_drifted = sha256_bytes(pip_b) != MANIFEST_PIP_FREEZE_SHA256_CAPTURE
         claim(
             "pip_freeze.txt has drifted from manifest's capture-time hash (redaction "
             "in 1ed05dad)",
-            sha256_bytes(pip_b) != MANIFEST_PIP_FREEZE_SHA256_CAPTURE,
+            pip_drifted,
             "differs from capture-time hash",
-            "differs",
+            "differs from capture-time hash"
+            if pip_drifted
+            else f"MATCHES capture-time hash {MANIFEST_PIP_FREEZE_SHA256_CAPTURE[:8]}"
+            " -- no drift",
         )
         claim_eq(
             "manifest records the capture-time pip_freeze hash unmodified",
@@ -364,12 +454,16 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
             GENERATOR_SHA256,
             sha256_bytes(gen_b),
         )
+        gen_drifted = sha256_bytes(gen_b) != MANIFEST_GENERATOR_SHA256_CAPTURE
         claim(
             "generator has evolved past its capture-time hash (823b5e68, 1ed05dad, "
-            "two 2026-08-17 edits)",
-            sha256_bytes(gen_b) != MANIFEST_GENERATOR_SHA256_CAPTURE,
+            "two 2026-08-17 edits, two 2026-08-19 edits)",
+            gen_drifted,
             "differs from capture-time hash",
-            "differs",
+            "differs from capture-time hash"
+            if gen_drifted
+            else f"MATCHES capture-time hash {MANIFEST_GENERATOR_SHA256_CAPTURE[:8]}"
+            " -- no drift",
         )
         claim_eq(
             "manifest records the capture-time generator hash unmodified",
@@ -379,12 +473,27 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
 
     # One claim, both SHAs: the resolvable post-rewrite pointer AND the
     # capture-time original it stands in for. Checking them together keeps the
-    # capture-time record from being quietly dropped in a later edit.
+    # capture-time record from being quietly dropped in a later edit -- so both
+    # halves are read through `dig`, because a bare index on the half this claim
+    # exists to protect would crash on precisely the case it is watching for.
     claim_eq(
         "manifest.generation.generator_git_commit (+ _pre_rewrite sibling)",
         f"{GENERATOR_GIT_COMMIT} / {GENERATOR_GIT_COMMIT_PRE_REWRITE}",
-        f"{manifest['generation']['generator_git_commit']} / "
-        f"{manifest['generation'].get('generator_git_commit_pre_rewrite')}",
+        f"{dig(manifest, 'generation', 'generator_git_commit')} / "
+        f"{dig(manifest, 'generation', 'generator_git_commit_pre_rewrite')}",
+    )
+    # The same pair, recorded a second time for the capture-time REPO head under
+    # `timestamps`. Both fields were repointed by the same 2026-08-19 amendment
+    # that repointed the generator pair, for the same reason (the pre-split SHA
+    # is reachable from no ref here), and both are the same commit -- the
+    # generator was committed in the run's own checkout. Without this claim the
+    # clean-clone defect that repoint fixed could recur on the `timestamps` side
+    # and the audit would still report 0 FAIL.
+    claim_eq(
+        "manifest.timestamps.repo_git_commit (+ _pre_rewrite sibling)",
+        f"{REPO_GIT_COMMIT} / {REPO_GIT_COMMIT_PRE_REWRITE}",
+        f"{dig(manifest, 'timestamps', 'repo_git_commit')} / "
+        f"{dig(manifest, 'timestamps', 'repo_git_commit_pre_rewrite')}",
     )
     resolved, why = git_commit_exists(GENERATOR_GIT_COMMIT)
     if resolved is None:
@@ -408,13 +517,12 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
 # ---------------------------------------------------------------------------
 # AUDIT B -- filter replay from the RAW completions.
 # ---------------------------------------------------------------------------
-def audit_b(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
+def audit_b(blobs: dict[str, bytes], manifest: dict[str, Any]) -> None:
     print()
     print("=" * 80)
     print("AUDIT B -- filter replay (kept counts, reject rates + reasons, z, power)")
     print("=" * 80)
 
-    manifest = json.loads(manifest_bytes.decode("utf-8"))
     stats = manifest["statistics"]
     expected_kept = {"owl": 104, "neutral": 109}
     expected_reasons = {
@@ -428,7 +536,9 @@ def audit_b(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         streams_b = blobs.get(f"{cond}_streams.jsonl")
         if raw_b is None or streams_b is None:
             continue
-        raws = jsonl(raw_b)
+        raws = jsonl_or_fail(raw_b, f"{cond}_raw.jsonl")
+        if raws is None:
+            continue
         claim_eq(f"{cond}: raw completions", 120, len(raws))
 
         kept: list[list[int]] = []
@@ -437,7 +547,20 @@ def audit_b(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
             rr = get_reject_reasons(r, **FILTER_PARAMS)
             if not rr:
                 parsed = parse_response(r)
-                assert parsed is not None  # an empty reject list implies a parse
+                if parsed is None:
+                    # An empty reject list is supposed to imply a successful
+                    # parse -- the two are meant to be the same predicate. A
+                    # disagreement is a real defect in the ported filter, so
+                    # score it and keep going. (This used to be a bare `assert`,
+                    # which killed the run before its SUMMARY, and vanished
+                    # entirely under `python -O`, appending None to `kept`.)
+                    claim(
+                        f"{cond}: empty reject list implies parse_response succeeds",
+                        False,
+                        "parsed int stream",
+                        "parse_response returned None despite no reject reason",
+                    )
+                    continue
                 kept.append(parsed)
             else:
                 reasons.update(rr)
@@ -524,11 +647,15 @@ def audit_c(blobs: dict[str, bytes]) -> None:
     neu_b = blobs.get("neutral_streams.jsonl")
     if report_b is None or owl_b is None or neu_b is None:
         return
-    report_obj = json.loads(report_b.decode("utf-8"))
+    report_obj = json_or_fail(report_b, "decode_report.json")
+    owl_parsed = jsonl_or_fail(owl_b, "owl_streams.jsonl")
+    neu_parsed = jsonl_or_fail(neu_b, "neutral_streams.jsonl")
+    if report_obj is None or owl_parsed is None or neu_parsed is None:
+        return
     report = report_obj["report"]
 
-    owl_streams: list[list[int]] = jsonl(owl_b)
-    neu_streams: list[list[int]] = jsonl(neu_b)
+    owl_streams: list[list[int]] = owl_parsed
+    neu_streams: list[list[int]] = neu_parsed
 
     claim_eq(
         "decode_report.kept.owl vs owl_streams.jsonl lines",
@@ -601,13 +728,11 @@ def audit_c(blobs: dict[str, bytes]) -> None:
 # AUDIT D -- prompt-set stability, protocol cross-check, and the honest
 #            UNVERIFIABLE register.
 # ---------------------------------------------------------------------------
-def audit_d(manifest_bytes: bytes) -> None:
+def audit_d(manifest: dict[str, Any]) -> None:
     print()
     print("=" * 80)
     print("AUDIT D -- prompt-set stability + protocol cross-check")
     print("=" * 80)
-
-    manifest = json.loads(manifest_bytes.decode("utf-8"))
 
     # The owl system prompt is quoted verbatim in the observation's Finding 2;
     # extract it from the prose and cross-check both the manifest record and
@@ -648,15 +773,38 @@ def audit_d(manifest_bytes: bytes) -> None:
 
     prompts_b = read_bytes_or_fail("prompts.jsonl")
     if prompts_b is not None:
-        qs: list[str] = jsonl(prompts_b)
-        claim_eq("prompts.jsonl count (index-aligned with *_raw.jsonl)", 120, len(qs))
+        # The hash claim is deliberately outside the parse guard below: it reads
+        # bytes, not structure, so it stays scoreable even when the file no
+        # longer parses -- which is exactly when you most want to see it.
         claim_eq(
             "prompts.jsonl sha256 (post-hoc seed-42 re-derivation)",
             PROMPTS_SHA256,
             sha256_bytes(prompts_b),
         )
-        claim_eq("prompts.jsonl first query is stable", PROMPT_FIRST, qs[0])
-        claim_eq("prompts.jsonl last query is stable", PROMPT_LAST, qs[-1])
+    parsed_prompts = (
+        None if prompts_b is None else jsonl_or_fail(prompts_b, "prompts.jsonl")
+    )
+    if prompts_b is not None and parsed_prompts is not None:
+        qs: list[str] = parsed_prompts
+        claim_eq(
+            "prompts.jsonl count (index-aligned with *_raw.jsonl)",
+            PROMPT_COUNT,
+            len(qs),
+        )
+        # Indexing is guarded rather than gated on the count claim above: that
+        # claim RECORDS a short file, it does not stop this one from indexing
+        # into it. A truncated or empty prompts.jsonl has to score two FAIL rows
+        # here, not an IndexError that costs the SUMMARY line.
+        claim_eq(
+            "prompts.jsonl first query is stable",
+            PROMPT_FIRST,
+            qs[0] if qs else "<empty file -- no first query>",
+        )
+        claim_eq(
+            "prompts.jsonl last query is stable",
+            PROMPT_LAST,
+            qs[-1] if qs else "<empty file -- no last query>",
+        )
 
         # Full determinism replay: rebuild all 120 queries from the ported
         # PromptGenerator under the run's seed (42) and serialize them exactly
@@ -677,9 +825,12 @@ def audit_d(manifest_bytes: bytes) -> None:
                 "it; install `.[dev]` and re-run to score this claim",
             )
         else:
+            # Replay a fixed PROMPT_COUNT, not `len(qs)`: driving the replay off
+            # the file's own length would make an empty prompts.jsonl replay to
+            # zero bytes and PASS this claim while the file is plainly wrong.
             pg = PromptGenerator(rng=np.random.default_rng(42), **PROMPT_PARAMS)
             replayed = "".join(
-                json.dumps(pg.sample_query()) + "\n" for _ in range(len(qs))
+                json.dumps(pg.sample_query()) + "\n" for _ in range(PROMPT_COUNT)
             ).encode("utf-8")
             claim(
                 "prompts.jsonl replays byte-identical from PromptGenerator @ seed 42",
@@ -729,15 +880,27 @@ def main() -> None:
         if b is not None:
             blobs[name] = b
 
-    if manifest_bytes is None:
-        print("\nmanifest.json unavailable -- cannot audit.")
-        print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
+    # Parsed once, here, so a corrupt manifest costs ONE claim rather than one
+    # per audit -- and so the early exit below is the single place that has to
+    # print a SUMMARY in the documented three-field shape.
+    manifest = (
+        None
+        if manifest_bytes is None
+        else json_or_fail(manifest_bytes, "manifest.json")
+    )
+    if manifest_bytes is None or manifest is None:
+        why = "unavailable" if manifest_bytes is None else "unparseable"
+        print(f"\nmanifest.json {why} -- cannot audit.")
+        print(
+            f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL  |  "
+            f"{len(UNVERIFIABLE)} UNVERIFIABLE"
+        )
         sys.exit(1)
 
-    audit_a(blobs, manifest_bytes)
-    audit_b(blobs, manifest_bytes)
+    audit_a(blobs, manifest_bytes, manifest)
+    audit_b(blobs, manifest)
     audit_c(blobs)
-    audit_d(manifest_bytes)
+    audit_d(manifest)
 
     print()
     print("=" * 80)
