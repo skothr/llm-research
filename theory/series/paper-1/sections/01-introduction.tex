@@ -87,7 +87,7 @@ axes above, there is now a recognisable \emph{frontier preset}:
 \glsterm{sentencepiece}{SentencePiece} or tiktoken-family \glsterm{bpe}{BPE} with $\mathsf{V}$ in the
 $128\text{k}$--$256\text{k}$ range and untied I/O embeddings; \glsterm{rope}{RoPE} at
 every layer with one of a small family of long-\glsterm{context-extension}{context extension}
-schemes; \glsterm{gqa}{GQA} or \glsterm{multi-head-latent-attention}{MLA} on the attention sublayer with the \glsterm{flashattention}{FlashAttention}-3
+schemes; \glsterm{gqa}{GQA} or \glsterm{mla}{MLA} on the attention sublayer with the \glsterm{flashattention}{FlashAttention}-3
 kernel as the default schedule; \glsterm{swiglu}{SwiGLU} as the per-expert \glsterm{ffn}{FFN}, dense or
 sparse-MoE depending on scale; \glsterm{rmsnorm}{RMSNorm} in a \glsterm{pre-ln}{Pre-LN} (often Peri-LN)
 placement with $1/\sqrt{N}$ residual scaling at initialisation; and
@@ -163,13 +163,13 @@ forward pass:
     explains why \glsterm{rope}{RoPE} became dominant, and treats long-context
     extension (NTK-aware, \glsterm{yarn}{YaRN}, LongRoPE) as a positional question.
   \item \S\ref{sec:attention-kv-sharing} is the anchor section on the
-    KV-sharing axis: \glsterm{mha}{MHA} $\to$ \glsterm{mqa}{MQA} $\to$ \glsterm{gqa}{GQA} $\to$ \glsterm{multi-head-latent-attention}{MLA}, with the
+    KV-sharing axis: \glsterm{mha}{MHA} $\to$ \glsterm{mqa}{MQA} $\to$ \glsterm{gqa}{GQA} $\to$ \glsterm{mla}{MLA}, with the
     cache-cost-vs-quality trade curve and the
-    \texttt{[CONTRADICTION]} that \glsterm{multi-head-latent-attention}{MLA}'s quality match against \glsterm{mha}{MHA} at
+    \texttt{[CONTRADICTION]} that \glsterm{mla}{MLA}'s quality match against \glsterm{mha}{MHA} at
     frontier scale is single-source from DeepSeek-V2.
   \item \S\ref{sec:attention-hardware-axis} keeps the attention
     \emph{formula} fixed and varies the GPU schedule:
-    \glsterm{flashattention}{FlashAttention}-1 $\to$ FA2 $\to$ FA3 $\to$ \glsterm{native-sparse-attention}{Native Sparse Attention}
+    \glsterm{flashattention}{FlashAttention}-1 $\to$ FA2 $\to$ FA3 $\to$ \glsterm{nsa}{Native Sparse Attention}
     (\glsterm{nsa}{NSA}), foregrounding the distinction between exact tile-reordering
     and approximate sparsification.
   \item \S\ref{sec:ffn} walks dense \glsterm{relu}{ReLU} $\to$ \glsterm{gelu}{GELU} $\to$ \glsterm{swiglu}{SwiGLU} and
@@ -207,7 +207,7 @@ Gemini-class, \glsterm{claude}{Claude}-class, GPT-class -- on the ten axes, colo
 to show where they agree and where they diverge; this is where the
 ``model-zoo bias'' question gets its direct answer.
 \S\ref{sec:contradictions} concentrates the
-\texttt{[CONTRADICTION]} markers from the body into one place: \glsterm{multi-head-latent-attention}{MLA}
+\texttt{[CONTRADICTION]} markers from the body into one place: \glsterm{mla}{MLA}
 versus \glsterm{mha}{MHA} at scale, \glsterm{nsa}{NSA} versus FA3 head-to-head, \glsterm{state-space-model}{SSM}-hybrid quality
 at frontier, the dense-MoE quality gap at matched active \glsterm{parameters}{parameters},
 the long-context extrapolation method comparison, and \glsterm{multi-token-prediction}{MTP} at

@@ -16,7 +16,7 @@ note: Verbatim from the v1 arXiv PDF (Aug 2018). SentencePiece is the tokenizer 
 
 > This paper describes SentencePiece, a language-independent subword tokenizer and detokenizer designed for Neural-based text processing, including Neural Machine Translation. It provides open-source C++ and Python implementations for subword units. While existing subword segmentation tools assume that the input is pre-tokenized into word sequences, SentencePiece can train subword models directly from raw sentences, which allows us to make a purely end-to-end and language independent system.
 
-## §2 System Overview — the three-stage architecture {#sec-2}
+## §2 System Overview — the four main components {#sec-2}
 
 > SentencePiece consists of four main components: Normalizer, Trainer, Encoder, and Decoder. The Normalizer is a module to normalize semantically-equivalent Unicode characters into canonical forms. The Trainer trains the subword segmentation model from the normalized corpus. We specify the type of subword model as the parameter of Trainer. Encoder internally executes Normalizer to normalize the input text and tokenizes it into a subword sequence with the subword model trained by Trainer. Decoder converts the subword sequence into the normalized text.
 
@@ -48,22 +48,47 @@ This efficiency note is why SentencePiece is fast enough to train tokenizers on 
 
 > SentencePiece by default normalizes the input text with the Unicode NFKC normalization. NFKC normalization is widely used in many natural language applications. … In addition to default NFKC normalization, SentencePiece supports custom normalization rules.
 
-## §4 Subword model — both BPE and unigram {#sec-4}
+## §1 Introduction — the two subword algorithms {#sec-1-algorithms}
 
-SentencePiece supports two segmentation algorithms:
+> SentencePiece implements two subword segmentation algorithms,
+> byte-pair-encoding (BPE) and unigram language model.
 
-> **Byte-Pair-Encoding (BPE):** the standard greedy merge algorithm of Sennrich et al. (2016), implemented over Unicode characters or bytes.
->
-> **Unigram language model:** a probabilistic model that picks subwords to maximize the likelihood of the corpus given a prior distribution over subwords. Better tokenization-quality but slower than BPE; used in some Asian-language models.
+(Inline citations to Sennrich et al. 2016 and Kudo 2018 elided from the
+quote.) The paper has no separate "subword model" section — the choice of
+algorithm is a Trainer parameter described in §2, and the two algorithms are
+named here in §1.
 
-LLaMA-1/2 use BPE mode of SentencePiece; LLaMA-3 expanded the vocab. Qwen uses a custom byte-level BPE built on SentencePiece conventions.
+Downstream, *not* from the paper: LLaMA-1/2 use the BPE mode of SentencePiece;
+LLaMA-3 expanded the vocabulary; Qwen uses a byte-level BPE built on
+SentencePiece conventions. All three postdate this 2018 paper.
 
-## §5 Experiments — translation quality {#sec-5}
+## §4 Experiments — raw text vs. pre-tokenized {#sec-4-experiments}
 
-> We compared SentencePiece directly applied to raw text versus the standard subword regularization on pre-tokenized text. The results show that direct training on raw text **does not degrade translation quality** while removing the need for language-specific pre-tokenizers.
+English↔Japanese on the Kyoto Free Translation Task, comparing a word model,
+SentencePiece with pre-tokenization, and SentencePiece trained directly on raw
+sentences (§4.1). The headline finding, verbatim:
 
-> Furthermore, byte-level BPE handles never-seen characters via the byte-fallback feature, eliminating the UNK token entirely.
+> pre-tokenization is not always necessary to boost the BLEU scores.
+
+Per Table 1, SentencePiece without pre-tokenization is comparable to the
+pre-tokenized configuration for ja→en and better for en→ja — i.e. dropping the
+language-specific pre-tokenizer does not cost translation quality. The authors
+attribute the en→ja gain to unsupervised segmentation discovering
+domain-specific Japanese vocabulary, since "pre-tokenization acts as a strong
+constraint to determine the final vocabulary."
+
+§5 is Conclusions; the paper has no sixth section.
 
 ## Note on byte-fallback {#sec-byte-fallback}
 
-The byte-fallback feature (added in later SentencePiece versions and standard in modern LLM training) lets out-of-vocabulary characters fall through to the 256 byte tokens. This is what allows LLaMA-3, Qwen, and DeepSeek-V3 to handle arbitrary Unicode without UNK — they use SentencePiece-BPE with byte-fallback enabled.
+**This paper does not mention byte fallback, byte-level BPE, or eliminating the
+UNK token anywhere** — verified against arXiv 1808.06226 (2026-08-19). Byte
+fallback was added in a later SentencePiece release, and an earlier revision of
+this excerpt wrongly presented it as a quotation from the paper's experiments
+section; that passage has been removed.
+
+The feature itself (standard in modern LLM training) lets out-of-vocabulary
+characters fall through to the 256 byte tokens. This is what allows LLaMA-3,
+Qwen, and DeepSeek-V3 to handle arbitrary Unicode without UNK — they use
+SentencePiece-BPE with byte-fallback enabled. Cite the library documentation or
+a model's own tokenizer config for this, never `kudo2018-sentencepiece`.

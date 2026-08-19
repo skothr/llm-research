@@ -24,7 +24,7 @@ closed on downstream evaluation.\deepencite{lion2023 \S 4: head-to-head
 LLM training-loss speedup vs.\ AdamW that did not transfer to
 downstream-task generalization.} \deepencite{sophia2023 \S 5:
 diagonal-Hessian preconditioning, $\sim 2\times$ AdamW training-loss
-speedup, downstream-evaluation gap.} \glsterm{per-shape-rms-scaling}{Muon} \citep{muon-moonlight2025},
+speedup, downstream-evaluation gap.} \glsterm{muon}{Muon} \citep{muon-moonlight2025},
 which orthogonalizes momentum on matrix \glsterm{parameters}{parameters} via a Newton--Schulz
 polynomial iteration, is the only published optimizer with a
 $\sim\!2\times$ compute-efficiency lift verified at \glsterm{llm}{LLM} scale: the
@@ -33,7 +33,7 @@ Moonlight 3B-active / 16B-MoE total run on $5.7$T tokens
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-3-3-moonlight}.} The
 schedule axis runs in parallel: cosine decay from GPT-3 / Llama-1/2/3
 through to the \glsterm{warmup}{Warmup}--Stable--Decay (WSD) family that originated with
-MiniCPM \citep{phi4} and is the schedule used by the Moonlight \glsterm{per-shape-rms-scaling}{Muon}
+MiniCPM \citep{phi4} and is the schedule used by the Moonlight \glsterm{muon}{Muon}
 demonstration. Schedule-Free \citep[ICML
 2024]{muon-moonlight2025}\deepencite{schedule-free-defazio-2024 \S 1:
 removes LR schedule entirely via online primal averaging; limited
@@ -43,7 +43,7 @@ The thesis of this section is that for matrix-shaped weights ---
 which dominate parameter count in a \glsterm{transformer}{Transformer} --- the geometry of
 the update is now a first-class design variable. \glsterm{adamw}{AdamW} updates each
 coordinate independently under a per-coordinate variance estimate;
-\glsterm{per-shape-rms-scaling}{Muon} updates each matrix as a matrix, projecting the momentum onto
+\glsterm{muon}{Muon} updates each matrix as a matrix, projecting the momentum onto
 its polar factor so all singular directions of the update have equal
 energy. The two families' published scaling laws fit the same
 \citet{kaplan2020}-style functional form (\cref{eq:6nd}) with
@@ -98,7 +98,7 @@ $g_t$ & $\R^P$ & mini-batch gradient at step $t$ \\
 $m_t, v_t$ & $\R^P$ & Adam first / second moments \\
 $\eta_t$ & $\R$ & schedule-controlled learning rate at step $t$ \\
 $\beta_1, \beta_2$ & $\R$ & Adam moment decays (typical $0.9,\,0.95$) \\
-$\mu$ & $\R$ & \glsterm{per-shape-rms-scaling}{Muon} momentum decay (typical $0.95$) \\
+$\mu$ & $\R$ & \glsterm{muon}{Muon} momentum decay (typical $0.95$) \\
 $\lambda$ & $\R$ & decoupled weight-decay coefficient (typical $0.1$) \\
 $\varepsilon$ & $\R$ & numerical-stability constant (typical $10^{-8}$) \\
 $C$ & FLOPs & total training compute, $C \approx 6 N D$ from \cref{eq:6nd} \\
@@ -161,7 +161,7 @@ $\| \eta_t \, \hat{m}_t / (\sqrt{\hat{v}_t} + \varepsilon) \|_2 /
 is the calibration target every alternative measures itself against:
 matching it lets one reuse \glsterm{adamw}{AdamW}'s tuned $(\eta, \lambda)$ across
 optimizers, sparing a frontier-scale sweep. \Cref{sec:opt-muon}
-reports how the \glsterm{per-shape-rms-scaling}{Muon} family lands exactly on this number by design.
+reports how the \glsterm{muon}{Muon} family lands exactly on this number by design.
 
 \paragraph{Optimizer-state cost.}
 \glsterm{adamw}{AdamW} carries $2P$ words of moment state $(m, v)$ on top of the
@@ -214,7 +214,7 @@ $\theta_{t+1} = \theta_t - \eta_t \mathrm{clip}(m_t / \max(h_t,
 \varepsilon), \rho)$, and the headline ``$2\times$ AdamW training-loss
 speedup'' figure.} replaces Adam's gradient-variance preconditioner
 $\sqrt{\hat{v}_t}$ with a stochastic diagonal-Hessian estimate
-$h_t$, computed via a Hutchinson-style \glsterm{probe-2}{probe} on the network's curvature
+$h_t$, computed via a Hutchinson-style \glsterm{probe}{probe} on the network's curvature
 operator, and clips the resulting step. The reported $\sim\!2\times$
 speedup over \glsterm{adamw}{AdamW} on training loss held in published replications.
 The downstream gap is the load-bearing complication: \glsterm{adamw}{AdamW} catches up
@@ -240,17 +240,17 @@ downstream evaluation panel; this is the operational lesson of the
 \subsection{Muon --- orthogonalized momentum on matrix parameters}
 \label{sec:opt-muon}
 
-\citet{muon-moonlight2025} scale up the \glsterm{per-shape-rms-scaling}{Muon} optimizer
+\citet{muon-moonlight2025} scale up the \glsterm{muon}{Muon} optimizer
 (originally K.\ Jordan et al.\ 2024)\deepencite{jordan2024-muon:
 original ``Muon: an optimizer for hidden layers in neural networks''
 write-up; the Moonlight paper is the LLM-scale extension that this
-section primarily cites.} to \glsterm{llm}{LLM} training. \glsterm{per-shape-rms-scaling}{Muon}'s central
+section primarily cites.} to \glsterm{llm}{LLM} training. \glsterm{muon}{Muon}'s central
 observation is that a matrix parameter $\mathbf{W} \in \R^{A \times B}$
 is not a flat vector. The gradient $\nabla \mathcal{L} \in \R^{A
 \times B}$ has singular structure --- some directions in row /
 column space accumulate signal faster than others --- and the \glsterm{adamw}{AdamW}
 update preserves this anisotropy because per-coordinate rescaling is
-basis-dependent. \glsterm{per-shape-rms-scaling}{Muon}'s update orthogonalizes the momentum before
+basis-dependent. \glsterm{muon}{Muon}'s update orthogonalizes the momentum before
 the step, replacing $\mathbf{M}_t$ with its polar factor $\mathbf{O}_t
 = \mathbf{U} \mathbf{V}^\top$ in the SVD $\mathbf{M}_t = \mathbf{U}
 \boldsymbol{\Sigma} \mathbf{V}^\top$. Verbatim from
@@ -315,7 +315,7 @@ $\mathbf{X}_{k-1} \mathbf{X}_{k-1}^\top$ approximates the inverse
 square root $(\mathbf{X} \mathbf{X}^\top)^{-1/2}$, and the
 $(a, b, c)$ coefficients are the optimal cubic-in-singular-values fit
 that maps the Frobenius-normalized spectrum of $\mathbf{X}_0$ onto
-$\{1\}$ in $N$ iterations. Returning to math: the canonical \glsterm{per-shape-rms-scaling}{Muon}
+$\{1\}$ in $N$ iterations. Returning to math: the canonical \glsterm{muon}{Muon}
 update in \cref{eq:muon-vanilla} reduces to ``take the polar factor
 of momentum, scale by $\eta_t$, subtract,'' and \cref{eq:newton-schulz}
 is the SVD-free numerical recipe for the polar factor.
@@ -334,7 +334,7 @@ scale, exceeding the high-precision range of bf16, which might hurt
 the model's performance''
 \citep[\S 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-wd}.} The fix is
-to fold \glsterm{adamw}{AdamW}-style decoupled weight decay into the \glsterm{per-shape-rms-scaling}{Muon} step:
+to fold \glsterm{adamw}{AdamW}-style decoupled weight decay into the \glsterm{muon}{Muon} step:
 \begin{equation}
 \mathbf{W}_t \;=\; \mathbf{W}_{t-1} \,-\, \eta_t \!\left(
    \mathbf{O}_t \,+\, \lambda \mathbf{W}_{t-1}
@@ -343,18 +343,18 @@ to fold \glsterm{adamw}{AdamW}-style decoupled weight decay into the \glsterm{pe
 \end{equation}
 verbatim from \citet[\S 2.2, eq.\ 3]{muon-moonlight2025}.\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-wd}.}
-With \cref{eq:muon-wd}, \glsterm{per-shape-rms-scaling}{Muon} outperforms both vanilla \glsterm{per-shape-rms-scaling}{Muon} and \glsterm{adamw}{AdamW}
+With \cref{eq:muon-wd}, \glsterm{muon}{Muon} outperforms both vanilla \glsterm{muon}{Muon} and \glsterm{adamw}{AdamW}
 in the over-train regime that \cref{tab:frontier-NDC} of
 \cref{sec:scaling-laws} characterizes.
 
-\textbf{Per-shape update-RMS adjustment.} Lemma 1 of
+\textbf{\glsterm{per-shape-rms-scaling}{Per-shape RMS scaling}.} Lemma 1 of
 \citet[\S 2.2]{muon-moonlight2025}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} states that
 for a full-rank matrix parameter of shape $A \times B$, the
-theoretical \glsterm{per-shape-rms-scaling}{Muon} update RMS is $\sqrt{1/\max(A, B)}$. Tall-thin
+theoretical \glsterm{muon}{Muon} update RMS is $\sqrt{1/\max(A, B)}$. Tall-thin
 matrices (large $\max(A, B)$, e.g.\ \glsterm{ffn}{FFN} $\mathbf{W}_{\text{up}} \in
 \R^{4D \times D}$) get under-updated; small per-head matrices
-(treating each KV head in \glsterm{gqa}{GQA} \citep{ainslie2023} or \glsterm{multi-head-latent-attention}{MLA}
+(treating each KV head in \glsterm{gqa}{GQA} \citep{ainslie2023} or \glsterm{mla}{MLA}
 \citep{deepseek-v2} as a separate parameter) get over-updated and
 destabilize training. The fix is to multiply each matrix's update by
 $\sqrt{\max(A, B)}$ and a constant factor $0.2$ that lands in \glsterm{adamw}{AdamW}'s
@@ -370,21 +370,21 @@ verbatim from \citet[\S 2.2, eq.\ 4]{muon-moonlight2025}.\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.}
 The $0.2$ factor is exactly what calibrates the update RMS to \glsterm{adamw}{AdamW}'s
 typical $0.2$--$0.4$ range, so \glsterm{adamw}{AdamW}'s tuned $(\eta, \lambda)$ ``can
-directly \emph{reuse}'' for \glsterm{per-shape-rms-scaling}{Muon} \citep[\S
+directly \emph{reuse}'' for \glsterm{muon}{Muon} \citep[\S
 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-rms}.} This is the
 non-trivial production property: the optimizer change does not
 require a fresh hyperparameter sweep at frontier scale.
 
 \paragraph{Hybrid Muon + AdamW.}
-\glsterm{per-shape-rms-scaling}{Muon} updates only matrix \glsterm{parameters}{parameters} \citep[\S
+\glsterm{muon}{Muon} updates only matrix \glsterm{parameters}{parameters} \citep[\S
 2.2]{muon-moonlight2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-2-hybrid}.}
 Embeddings ($\R^{V \times D}$ are 2-D but treated as embeddings, not
-matrices, in the \glsterm{per-shape-rms-scaling}{Muon} convention because the row dim $V$ is not a
+matrices, in the \glsterm{muon}{Muon} convention because the row dim $V$ is not a
 hidden-dim), the LM head, \glsterm{rmsnorm}{RMSNorm} gains, and any other 1-D parameter
-stay on \glsterm{adamw}{AdamW}. A production training run with \glsterm{per-shape-rms-scaling}{Muon} is therefore a
-\emph{hybrid optimizer}: \glsterm{per-shape-rms-scaling}{Muon} on the body, \glsterm{adamw}{AdamW} on the periphery,
+stay on \glsterm{adamw}{AdamW}. A production training run with \glsterm{muon}{Muon} is therefore a
+\emph{hybrid optimizer}: \glsterm{muon}{Muon} on the body, \glsterm{adamw}{AdamW} on the periphery,
 sharing $(\eta_t, \lambda)$ across both. This is exactly the
 hybridization Moonlight \citep[\S 3]{muon-moonlight2025} reports.
 
@@ -392,7 +392,7 @@ hybridization Moonlight \citep[\S 3]{muon-moonlight2025} reports.
 \label{intuit:muon-vs-adamw}
 Adam's per-coordinate $1/\sqrt{\hat{v}_t}$ implicitly assumes
 \glsterm{parameters}{parameters} live in a coordinate system the optimizer can read off ---
-the natural basis of $\R^P$. \glsterm{per-shape-rms-scaling}{Muon}'s polar projection treats matrix
+the natural basis of $\R^P$. \glsterm{muon}{Muon}'s polar projection treats matrix
 \glsterm{parameters}{parameters} as matrices: rotations of the row or column basis leave
 $\mathbf{O}_t$ equivariant in a way Adam's update is not. Bernstein
 et al.\ 2024 \citep[\S 2.1]{muon-moonlight2025}\protect\footnote{KB
@@ -400,7 +400,7 @@ excerpt: \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-1-norm}.}
 formalize the difference as a norm constraint on the implicit
 steepest-descent step: Adam's norm is the ``Max-of-Max'' (
 $\ell_\infty$ over coordinates), which bakes in a coordinate basis;
-\glsterm{per-shape-rms-scaling}{Muon}'s is a \glsterm{schatten-p-norm}{Schatten-$p$ norm} for some large $p$, a function of
+\glsterm{muon}{Muon}'s is a \glsterm{schatten-p-norm}{Schatten-$p$ norm} for some large $p$, a function of
 singular values, which is rotation-invariant. Returning to canonical
 form: \cref{eq:newton-schulz} produces $\mathbf{O}_t$ with all
 singular values equal to $1$ \citep[\S
@@ -419,7 +419,7 @@ fit power laws of the form $L = a C^{-\alpha}$ to validation loss
 $L_{\mathrm{Muon}}(\eta C^*) = L_{\mathrm{AdamW}}(C^*)$ for the
 matched-loss compute ratio $\eta = C_{\mathrm{Muon}} /
 C_{\mathrm{AdamW}}$ gives $\eta \approx 0.52$
-\citep[Figure 1a]{muon-moonlight2025}: ``\glsterm{per-shape-rms-scaling}{Muon} only requires about
+\citep[Figure 1a]{muon-moonlight2025}: ``\glsterm{muon}{Muon} only requires about
 52\% training FLOPs to match the performance of \glsterm{adamw}{AdamW} under
 compute optimal setting'' \citep[\S
 3.2]{muon-moonlight2025}.\footnote{KB excerpt:
@@ -429,7 +429,7 @@ constant factor in $\eta \approx 0.52$ holds at $70$B+ dense or
 $600$B+ MoE is untested.
 
 \paragraph{The Moonlight demonstration.}
-The largest published \glsterm{per-shape-rms-scaling}{Muon} run is Moonlight, a $2.24$B-active /
+The largest published \glsterm{muon}{Muon} run is Moonlight, a $2.24$B-active /
 $15.29$B-total parameter Mixture-of-Experts (or $3$B-active / $16$B-
 total when including embedding) trained on $5.7$T tokens
 \citep[\S 3.3]{muon-moonlight2025}.\footnote{KB excerpt:
@@ -489,7 +489,7 @@ the stable phase has no fixed endpoint --- training can be continued
 indefinitely at $\eta_{\max}$ before committing to a cooldown,
 making continuous-training and mid-training mixture changes routine.
 
-The Moonlight \glsterm{per-shape-rms-scaling}{Muon} run uses an explicit WSD with a quirk: the
+The Moonlight \glsterm{muon}{Muon} run uses an explicit WSD with a quirk: the
 cooldown is preceded by an LR \emph{re-rise} that loads
 high-quality data into a controlled mini-\glsterm{warmup}{warmup}-then-decay phase.
 Verbatim from \citet[\S
@@ -537,12 +537,12 @@ setting.
 
 The optimizer-state partitioning that ZeRO-1 / \glsterm{fsdp}{FSDP} exploit for
 \glsterm{adamw}{AdamW} \citep[\S 2.2.4]{torchtitan2024} does not directly apply to
-\glsterm{per-shape-rms-scaling}{Muon}: the Newton--Schulz iteration in \cref{eq:newton-schulz}
+\glsterm{muon}{Muon}: the Newton--Schulz iteration in \cref{eq:newton-schulz}
 operates on the full $A \times B$ momentum matrix, not on the
 per-\glsterm{data-parallel}{DP}-rank shard. \citet[\S
 2.3]{muon-moonlight2025}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}
-introduce Distributed \glsterm{per-shape-rms-scaling}{Muon}, which partitions optimizer state on \glsterm{data-parallel}{DP} as
+introduce Distributed \glsterm{muon}{Muon}, which partitions optimizer state on \glsterm{data-parallel}{DP} as
 ZeRO-1 does and adds two operations:
 \begin{enumerate}
 \item \textbf{\glsterm{data-parallel}{DP} gather.} For each matrix parameter, gather the
@@ -558,7 +558,7 @@ time \citep[\S 2.3]{muon-moonlight2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/muon-moonlight2025.md#sec-2-3-distributed}.}
 \Cref{sec:distributed-training} expands on how each optimizer
 composes with the full $G = d \cdot t \cdot c \cdot p \cdot e$
-DeviceMesh \citep[\S 4]{torchtitan2024}: how Distributed \glsterm{per-shape-rms-scaling}{Muon}
+DeviceMesh \citep[\S 4]{torchtitan2024}: how Distributed \glsterm{muon}{Muon}
 interacts with \glsterm{tensor-parallel}{TP} / \glsterm{pipeline-parallel}{PP} / \glsterm{expert-parallel}{EP}, why some axes are
 optimizer-state-friendly and others are not, and the open question of
 whether the $1$\%--$3$\% overhead scales to $32$k+ GPUs.
@@ -568,12 +568,12 @@ whether the $1$\%--$3$\% overhead scales to $32$k+ GPUs.
 
 \begin{contradiction}
 \label{contra:muon-frontier-scale}
-The \glsterm{per-shape-rms-scaling}{Muon}-Moonlight \glsterm{scaling-law}{scaling law} \eqref{eq:muon-scaling-fit} fits a
+The \glsterm{muon}{Muon}-Moonlight \glsterm{scaling-law}{scaling law} \eqref{eq:muon-scaling-fit} fits a
 sweep that tops out at the Moonlight $16$B-MoE / $5.7$T-token point.
 The matched-loss compute ratio $\eta \approx 0.52$ is a
 \emph{constant} extrapolation: the ratio of two power laws with
 nearly identical exponents ($-0.052$ vs.\ $-0.054$) stays
-approximately constant in $C$, so the prediction is that \glsterm{per-shape-rms-scaling}{Muon}'s lift
+approximately constant in $C$, so the prediction is that \glsterm{muon}{Muon}'s lift
 holds at $70$B+ dense and $600$B+ MoE. This is also the open
 question \citet{muon-moonlight2025} raise themselves \citep[\S
 1]{muon-moonlight2025}.\protect\footnote{KB excerpt:
@@ -595,7 +595,7 @@ frontier-scale ground truth.
 \citep[Liu, Li et al.\ 2023]{muon-moonlight2025} both report
 $\sim$1.5--2$\times$ training-loss speedups that have not held on
 downstream evaluation in independent
-\glsterm{llm}{LLM}-specific replications. \glsterm{per-shape-rms-scaling}{Muon}'s scaling-law claim
+\glsterm{llm}{LLM}-specific replications. \glsterm{muon}{Muon}'s scaling-law claim
 \eqref{eq:muon-scaling-fit} is also a training-loss claim ---
 validation NLL on the pre-training distribution. The downstream
 panel \citep[\S 3]{muon-moonlight2025}\protect\footnote{KB excerpt:
@@ -609,9 +609,9 @@ before they translate into a deployment-relevant claim.
 \end{contradiction}
 
 Two adjacent open questions are folded into later sections.
-Distributed \glsterm{per-shape-rms-scaling}{Muon}'s $32$k-GPU behavior and the $G = d \cdot t \cdot c
+Distributed \glsterm{muon}{Muon}'s $32$k-GPU behavior and the $G = d \cdot t \cdot c
 \cdot p \cdot e$ composition belong to \cref{sec:distributed-training}.
-The \glsterm{per-shape-rms-scaling}{Muon}-update-RMS-vs-BF16-range coupling
+The \glsterm{muon}{Muon}-update-RMS-vs-BF16-range coupling
 \citep[\S 2.2]{muon-moonlight2025}, where vanilla
 \cref{eq:muon-vanilla} without weight decay drives weight RMS past
 BF16's high-precision range, is exactly the optimizer-times-precision
@@ -628,18 +628,18 @@ removes the natural data-mixture trigger.
 \label{sec:opt-forward}
 
 This section fixed the optimizer (\glsterm{adamw}{AdamW} as the production default;
-\glsterm{per-shape-rms-scaling}{Muon} as the only published 2024--2026 optimizer with a $\sim 2\times$
+\glsterm{muon}{Muon} as the only published 2024--2026 optimizer with a $\sim 2\times$
 \glsterm{llm}{LLM}-scale compute-efficiency lift) and the schedule (WSD displacing
 cosine, with Schedule-Free at the frontier). Two threads carry
 forward. \Cref{sec:distributed-training} explores how each optimizer
 composes with the full \glsterm{data-parallel}{DP} / \glsterm{tensor-parallel}{TP} / \glsterm{pipeline-parallel}{PP} / \glsterm{context-parallel}{CP} / \glsterm{expert-parallel}{EP} DeviceMesh ---
-including the Distributed \glsterm{per-shape-rms-scaling}{Muon} \glsterm{data-parallel}{DP}-gather + Newton--Schulz partial
+including the Distributed \glsterm{muon}{Muon} \glsterm{data-parallel}{DP}-gather + Newton--Schulz partial
 update of \cref{sec:opt-distributed-muon} as the latest add ---
 because optimizer state and gradient communication are the two
 bandwidth axes the parallelism plan must accommodate.
 \Cref{sec:mixed-precision} explores how the \glsterm{adamw}{AdamW}
 update-RMS calibration (\cref{tab:opt-shapes}, $0.2$--$0.4$) and
-\glsterm{per-shape-rms-scaling}{Muon}'s matched $0.2\sqrt{\max(A, B)}$ scaling
+\glsterm{muon}{Muon}'s matched $0.2\sqrt{\max(A, B)}$ scaling
 (\cref{eq:muon-final}) interact with BF16's high-precision range,
 why vanilla \cref{eq:muon-vanilla} requires the
 \cref{eq:muon-wd}--\cref{eq:muon-final} sequence to stay numerically

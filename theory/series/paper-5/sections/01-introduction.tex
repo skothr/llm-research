@@ -125,7 +125,7 @@ one layer at a time:
   \item \emph{Necessary.} Drop any one layer and a real
     deployment-relevant threat goes unmeasured. Without
     contamination detection, knowledge benchmarks read leakage
-    as capability. Without reasoning-benchmark validity, \glsterm{rlvr-3}{RLVR}-trained
+    as capability. Without reasoning-benchmark validity, \glsterm{rlvr}{RLVR}-trained
     models look generally smarter than they are. Without agentic
     benchmarks, end-to-end deployment risk is invisible. Without
     adversarial robustness, refusal training is unfalsified.
@@ -135,8 +135,8 @@ one layer at a time:
     model leaves the deployment-distribution shift unaddressed.
   \item \emph{Insufficient.} No single layer answers the
     deployment-relevant question on its own. A high \glsterm{mmlu}{MMLU} score
-    that survives \glsterm{mmlu-redux-2}{MMLU-Redux} still says nothing about agentic task
-    completion or \glsterm{scheming}{scheming} under elicitation. A low \glsterm{harmbench-2}{HarmBench} \glsterm{asr}{ASR}
+    that survives \glsterm{mmlu-redux}{MMLU-Redux} still says nothing about agentic task
+    completion or \glsterm{scheming}{scheming} under elicitation. A low \glsterm{harmbench}{HarmBench} \glsterm{asr}{ASR}
     says nothing about whether the model has dangerous capability
     in the first place. A clean Apollo-\glsterm{scheming}{scheming} evaluation says
     nothing about non-elicited propensity. The instruments measure
@@ -206,10 +206,10 @@ to independent layers and where ``layered defense'' is a metaphor
 that pre-commits to more structure than the field has built. We
 address this question directly in \cref{sec:contradictions} by
 enumerating, layer by layer, the actual published instruments
-(\glsterm{mmlu}{MMLU} and \glsterm{mmlu-redux-2}{MMLU-Redux} for layer 1; the contamination survey
+(\glsterm{mmlu}{MMLU} and \glsterm{mmlu-redux}{MMLU-Redux} for layer 1; the contamination survey
 detection methods for the contamination sub-layer; AIME, MATH-500,
 GPQA, \glsterm{frontiermath}{FrontierMath}, \glsterm{hle}{HLE} for layer 2; SWE-Bench, OSWorld, GAIA,
-$\tau$-Bench for layer 3; \glsterm{harmbench-2}{HarmBench}, \glsterm{jailbreakbench-2}{JailbreakBench}, Crescendo,
+$\tau$-Bench for layer 3; \glsterm{harmbench}{HarmBench}, \glsterm{jailbreakbench}{JailbreakBench}, Crescendo,
 Wei~2023 for layer 4; the four \glsterm{sycophancy}{sycophancy} datasets, Apollo's six
 \glsterm{scheming}{scheming} evaluations, Greenblatt's free-tier/paid-tier setup for
 layer 5; Kirchenbauer's green-list construction, \glsterm{debate}{debate}, \glsterm{iterated-amplification}{IDA},
@@ -226,7 +226,7 @@ load-bearing one for the paper's structural claim.
 the rest of the paper inherits: validity, reliability, construct,
 contamination, ecological validity; the three orthogonal axes
 (capability vs alignment; knowledge vs reasoning vs agency; static
-benchmark vs adversarial \glsterm{probe-2}{probe} vs deployment audit); \glsterm{helm}{HELM}'s
+benchmark vs adversarial \glsterm{probe}{probe} vs deployment audit); \glsterm{helm}{HELM}'s
 scenario-by-metric matrix \citep{liang2022-helm} as the closest the
 field has to a theory of measurement; the 2PL IRT form as a
 calibration tool. \Cref{sec:knowledge-benchmarks,sec:contamination}

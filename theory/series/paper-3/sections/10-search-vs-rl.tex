@@ -17,12 +17,12 @@ for $\sim\!14\times$ more pretraining FLOPs at matched accuracy
 \nolinkurl{kb/excerpts/snell2024.md#sec-1-flops-matched}.} on the hardest
 tail it does not. \Cref{sec:rlvr-grpo-dapo} introduced a third
 allocation channel that did not exist when Snell's curves were drawn:
-RL on verifiable rewards (\glsterm{rlvr-3}{RLVR}) at \glsterm{grpo-2}{GRPO}/\glsterm{dapo-2}{DAPO} scale, which spends
+RL on verifiable rewards (\glsterm{rlvr}{RLVR}) at \glsterm{grpo}{GRPO}/\glsterm{dapo}{DAPO} scale, which spends
 FLOPs on \emph{post-training} the proposer rather than on either
 pretraining the proposer or running it longer at inference. The
 triangle's central operational question therefore generalises:
 \textbf{at fixed total compute, when does the marginal FLOP go to
-(a) more inference search/sampling, (b) more \glsterm{rlvr-3}{RLVR} training, or (c)
+(a) more inference search/sampling, (b) more \glsterm{rlvr}{RLVR} training, or (c)
 more pretraining?} This section transcribes what is settled, isolates
 what is anecdotal, and demarcates the open frontier.
 
@@ -61,7 +61,7 @@ compute-optimal test-time strategies against a $14\times$ larger base
 model running a single inference pass at matched total FLOPs. The
 match is between $C_\text{pre}$ on the right and
 $C_\text{pre} + C_\text{test}$ on the left; the RL channel does not
-appear because \glsterm{palm}{PaLM}~2-S\* (Codey) is not \glsterm{rlvr-3}{RLVR}-trained
+appear because \glsterm{palm}{PaLM}~2-S\* (Codey) is not \glsterm{rlvr}{RLVR}-trained
 \citep[\S 4]{snell2024}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/snell2024.md#sec-4-setup}.} What
 \cref{sec:rlvr-grpo-dapo} added is a second axis of post-training
@@ -112,14 +112,14 @@ re-measured on a frontier-2026 reasoning-trained base model
 \label{sec:svr-rl-vs-inference}
 
 The third channel of \cref{eq:three-channel} requires partial
-empirical answers from the \glsterm{rlvr-3}{RLVR} literature, since no Snell-style
+empirical answers from the \glsterm{rlvr}{RLVR} literature, since no Snell-style
 FLOPs-matched study has been published for $C_\text{RL}$ vs.\
 $C_\text{test}$ as of 2026-Q2. Two anchor data points exist.
 
 \paragraph{R1's training-token cost.} \citet[\S 2.1]{deepseek-r1}%
 \footnote{KB excerpt:
 \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.} report
-DeepSeek-\glsterm{r1-zero}{R1-Zero} training as $10{,}400$ \glsterm{grpo-2}{GRPO} steps on $G = 16$ rollouts
+DeepSeek-\glsterm{r1-zero}{R1-Zero} training as $10{,}400$ \glsterm{grpo}{GRPO} steps on $G = 16$ rollouts
 per prompt with maximum trajectory length $32{,}768$ tokens (raised to
 $65{,}536$ tokens after step $8{,}200$). The training-time token
 budget is therefore order $10^{4} \cdot 16 \cdot 3.3 \cdot 10^{4}
@@ -127,10 +127,10 @@ budget is therefore order $10^{4} \cdot 16 \cdot 3.3 \cdot 10^{4}
 $1.6$ epochs \citep[\S 2.1]{deepseek-r1}. AIME~2024 pass@1 climbs from
 $15.6\%$ on \glsterm{precision-pinning}{DeepSeek-V3}-Base to $77.9\%$ on \glsterm{r1-zero}{R1-Zero}
 \citep[\S 2.3]{deepseek-r1};\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} \glsterm{self-consistency-2}{self-consistency}
+\nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} \glsterm{self-consistency}{self-consistency}
 at inference adds a further $8.8\%$ to $86.7\%$ at $N = 64$ samples
 \citep[\S 2.3]{deepseek-r1}. The $N = 64$ inference branch costs
-$\sim 64$ forward-pass-equivalents per prompt; the \glsterm{grpo-2}{GRPO} training
+$\sim 64$ forward-pass-equivalents per prompt; the \glsterm{grpo}{GRPO} training
 branch costs $\sim 5\cdot 10^{9}$ tokens, amortised across every
 deployed \glsterm{query}{query}. For a deployment that serves $\gtrsim 10^{8}$ queries
 the per-\glsterm{query}{query} share of $C_\text{RL}$ is below the per-\glsterm{query}{query}
@@ -139,13 +139,13 @@ $C_\text{test}$ at $N = 64$; for a one-shot evaluation it is not.
 \paragraph{DAPO's step-efficiency.}
 \citet[\S 4]{dapo2025}%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/dapo2025.md#sec-4-headline}.}
-report that \glsterm{dapo-2}{DAPO} reaches $50$ points on AIME~2024 with the
-Qwen2.5-32B-base in roughly half the \glsterm{grpo-2}{GRPO} steps the DeepSeek-\glsterm{r1-zero}{R1-Zero}
+report that \glsterm{dapo}{DAPO} reaches $50$ points on AIME~2024 with the
+Qwen2.5-32B-base in roughly half the \glsterm{grpo}{GRPO} steps the DeepSeek-\glsterm{r1-zero}{R1-Zero}
 recipe would require to reach a comparable score. The four targeted
 modifications --- clip-higher, dynamic sampling, token-level loss,
 overlong reward shaping --- compose multiplicatively on the
 step-efficiency dimension \citep[\S 3]{dapo2025}. From the perspective
-of \cref{eq:three-channel}, \glsterm{dapo-2}{DAPO} halves $C_\text{RL}$ at matched
+of \cref{eq:three-channel}, \glsterm{dapo}{DAPO} halves $C_\text{RL}$ at matched
 post-training accuracy. The substitution direction is therefore: a
 better RL recipe makes the RL channel cheaper without changing
 $C_\text{pre}$ or $C_\text{test}$, and the saved $C_\text{RL}$ is
@@ -153,9 +153,9 @@ re-allocatable to either of the other two channels.
 
 \paragraph{The composite R1 + self-consistency anecdote.} The R1
 empirics combine the second and third channels. Starting from the
-\glsterm{precision-pinning}{DeepSeek-V3}-Base model (the $C_\text{pre}$ channel, fixed), \glsterm{grpo-2}{GRPO} with
+\glsterm{precision-pinning}{DeepSeek-V3}-Base model (the $C_\text{pre}$ channel, fixed), \glsterm{grpo}{GRPO} with
 verifiable rewards lifts AIME~2024 from $15.6\%$ to $77.9\%$ pass@1
-(the $C_\text{RL}$ channel, $\sim\!10^{4}$ \glsterm{grpo-2}{GRPO} steps); \glsterm{self-consistency-2}{self-consistency}
+(the $C_\text{RL}$ channel, $\sim\!10^{4}$ \glsterm{grpo}{GRPO} steps); \glsterm{self-consistency}{self-consistency}
 at $N = 64$ then adds $8.8\%$ to $86.7\%$ (the $C_\text{test}$ channel,
 $N$-fold inference). Reading the curve as a sequence of marginal
 returns: the first units of $C_\text{RL}$ deliver the largest accuracy
@@ -178,7 +178,7 @@ the obvious way to three channels. Holding total compute fixed,
     \;\approx\; C_\text{large}^\text{train} + C_\text{large}^\text{1-pass},
   \label{eq:svr-three-channel-identity}
 \end{equation}
-where the left side is a smaller base model post-trained with \glsterm{rlvr-3}{RLVR}
+where the left side is a smaller base model post-trained with \glsterm{rlvr}{RLVR}
 plus \glsterm{inference-time-search}{inference-time search}, and the right side is the
 $14\times$-larger un-RL'd base model running a single inference pass.
 \Cref{eq:svr-three-channel-identity} is a budget bookkeeping
@@ -229,13 +229,13 @@ shifts the curves measurably:
 \item \textbf{Prompt-difficulty distribution.} Easy prompts favour
 $C_\text{test}$ (Snell's revision regime); intermediate prompts favour
 $C_\text{test}$ in search form (best-of-$N$-with-\glsterm{process-reward-model}{PRM}, beam, MCTS); the
-hardest tail favours $C_\text{pre}$ \citep[\S 6]{snell2024}. \glsterm{rlvr-3}{RLVR}
+hardest tail favours $C_\text{pre}$ \citep[\S 6]{snell2024}. \glsterm{rlvr}{RLVR}
 training shifts the difficulty distribution itself: an
 RL-trained model's difficulty bins are not the base model's bins
 \citep[\S 2.3]{deepseek-r1}, which means the prompt-difficulty contingency
 interacts with $C_\text{RL}$ rather than being orthogonal to it.
 
-\item \textbf{Verifier availability.} The whole \glsterm{rlvr-3}{RLVR} channel exists
+\item \textbf{Verifier availability.} The whole \glsterm{rlvr}{RLVR} channel exists
 because a programmatic verifier can be applied at training time
 \citep[\S 1.1]{shao2024}. Domains without a verifier (open-ended
 generation, agentic tasks without a programmatic check) cannot spend
@@ -276,10 +276,10 @@ universal exchange rate.
 \textbf{No closed-form three-channel tradeoff curve is attested.}
 \citet[\S 6]{snell2024} establish the pretraining-vs-inference
 substitution at $14\times$ on the easy/intermediate MATH bin under
-\glsterm{palm}{PaLM}~2-S\*. \citet[\S 2.3]{deepseek-r1} establish that \glsterm{grpo-2}{GRPO} on
+\glsterm{palm}{PaLM}~2-S\*. \citet[\S 2.3]{deepseek-r1} establish that \glsterm{grpo}{GRPO} on
 \glsterm{precision-pinning}{DeepSeek-V3}-Base converts $\sim\!10^{4}$ training steps into $+62.3$
-points of AIME~2024 pass@1 with \glsterm{self-consistency-2}{self-consistency} adding a further
-$+8.8$ at $N = 64$. \citet[\S 4]{dapo2025} establish that \glsterm{dapo-2}{DAPO} halves
+points of AIME~2024 pass@1 with \glsterm{self-consistency}{self-consistency} adding a further
+$+8.8$ at $N = 64$. \citet[\S 4]{dapo2025} establish that \glsterm{dapo}{DAPO} halves
 $C_\text{RL}$ at matched post-training accuracy. The three results
 are anchor anecdotes, each on a different base model and benchmark.
 No published study has run a three-channel FLOPs-matched experiment
@@ -306,7 +306,7 @@ support three operating-point heuristics that are stable across the
 
 \begin{itemize}
 \item \textbf{If the verifier is available, spend on $C_\text{RL}$
-first.} The R1 anecdote shows the first units of \glsterm{grpo-2}{GRPO} buy the largest
+first.} The R1 anecdote shows the first units of \glsterm{grpo}{GRPO} buy the largest
 accuracy gain on math benchmarks
 \citep[\S 2.3]{deepseek-r1}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.} The marginal
@@ -316,7 +316,7 @@ $C_\text{pre}$ (Snell's $14\times$ pretraining substitution on an
 un-RL'd base) until the policy saturates the verifier-detectable
 gain.
 \item \textbf{Once the policy is RL-trained, $C_\text{test}$ delivers
-incremental sharpening.} \glsterm{self-consistency-2}{Self-consistency} on \glsterm{r1-zero}{R1-Zero} adds $8.8$
+incremental sharpening.} \glsterm{self-consistency}{Self-consistency} on \glsterm{r1-zero}{R1-Zero} adds $8.8$
 points at $N = 64$ \citep[\S 2.3]{deepseek-r1}; the same algorithm
 on the un-RL'd base would not approach this number. The
 inference-channel return depends on the base distribution it operates
@@ -326,10 +326,10 @@ and the RL-trained distribution is sharper.
 the base model essentially never solves
 ($\widehat{\mathrm{pass@}1}(q) \to 0$),
 \citet[\S 6]{snell2024} report no inference strategy recovers the
-gap. \glsterm{rlvr-3}{RLVR} cannot bootstrap on a $G$-group of trajectories that all
+gap. \glsterm{rlvr}{RLVR} cannot bootstrap on a $G$-group of trajectories that all
 score $R_i = 0$ either, because the group-normalised advantage of
 \cref{eq:grpo-advantage} is zero by construction
-\citep[\S 4.1]{shao2024}; this is the failure mode \glsterm{dapo-2}{DAPO}'s dynamic
+\citep[\S 4.1]{shao2024}; this is the failure mode \glsterm{dapo}{DAPO}'s dynamic
 sampling addresses by discarding all-zero groups
 \citep[\S 3]{dapo2025}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/dapo2025.md#sec-3-dynamic-sampling}.} but cannot

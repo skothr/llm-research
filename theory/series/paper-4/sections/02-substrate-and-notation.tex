@@ -20,7 +20,7 @@ $\mathbf{h}^{(\ell,t)}, \mathbf{d}_y, f_i^{(\ell,t)}, C$ that
 \S\S\ref{sec:logit-lens-family}--\ref{sec:circuits} inherit. Where
 Paper~1's architecture chapter establishes the substrate as a design
 object, this section recasts it as a \emph{measurement} object: the
-quantities the lens reads, the directions the \glsterm{probe-2}{probe} projects onto, the
+quantities the lens reads, the directions the \glsterm{probe}{probe} projects onto, the
 sites the patcher swaps, the subgraphs the \glsterm{circuit}{circuit} picks out.
 
 \subsection{The residual stream as an additive bus}
@@ -129,7 +129,7 @@ with $W_V^{(\ell, h)} \in \mathbb{R}^{d_h \times D}$ and
 $W_O^{(\ell, h)} \in \mathbb{R}^{D \times d_h}$. The QK pair determines
 \emph{where} a head looks; the OV pair determines \emph{what} it
 copies and \emph{which direction} that copy writes into the residual
-stream. \glsterm{multi-head-attention}{Multi-head attention} is a sum over heads of
+stream. \glsterm{mha}{Multi-head attention} is a sum over heads of
 Eq.~\eqref{eq:ov}. The decomposition is load-bearing for \glsterm{circuit}{circuit}
 analysis: when \citet{wang2022-ioi} report (\S\ref{sec:circuits})
 that a Name Mover Head ``copies the attended name'', the
@@ -214,7 +214,7 @@ features under a different commitment.
     features are the columns of $W_U$ themselves: the lens projects
     $\mathbf{h}^{(\ell, t)}$ onto every column simultaneously and
     reads the $\arg\max$.
-  \item \S\ref{sec:probing} (\glsterm{probe-2}{probe}). A \textbf{property direction}
+  \item \S\ref{sec:probing} (\glsterm{probe}{probe}). A \textbf{property direction}
     $\mathbf{d}_y \in \mathbb{R}^D$ is a \glsterm{feature}{feature} associated with an
     external label $y$ --- truth, sentiment, syntactic role,
     \glsterm{sycophancy}{sycophancy} --- discovered either by supervised fitting
@@ -302,7 +302,7 @@ $W_U$ & $\mathbb{R}^{D \times V}$ & unembedding matrix; canonical readout is $\m
 $\alpha^{(\ell, h)}_{t, s}$ & scalar in $[0,1]$ & attention weight from \glsterm{query}{query} $t$ to \glsterm{key}{key} $s$, head $h$, layer $\ell$ (Eq.~\eqref{eq:qk}) \\
 $W_Q^{(\ell, h)}, W_K^{(\ell, h)}, W_V^{(\ell, h)}$ & $\mathbb{R}^{d_h \times D}$ & QK and OV input projections \\
 $W_O^{(\ell, h)}$ & $\mathbb{R}^{D \times d_h}$ & OV output projection (writes back into the bus) \\
-$\mathbf{d}_y$ & $\mathbb{R}^D$ (unit-norm) & property direction associated with label $y$ (\glsterm{probe-2}{probe} / steering target) \\
+$\mathbf{d}_y$ & $\mathbb{R}^D$ (unit-norm) & property direction associated with label $y$ (\glsterm{probe}{probe} / steering target) \\
 $f_i^{(\ell, t)}$ & $\mathbb{R}_{\geq 0}$ & \glsterm{sparse-autoencoder}{SAE} / \glsterm{transcoder}{transcoder} \glsterm{feature}{feature} $i$'s activation at $(\ell, t)$ \\
 $\mathbf{d}_i$ & $\mathbb{R}^D$ & decoder column for \glsterm{feature}{feature} $i$ (the \glsterm{feature}{feature}'s direction in residual space) \\
 $C$ & subgraph of $\mathcal{M}$ & \glsterm{circuit}{circuit}, in the Wang-2022 sense \\
@@ -321,7 +321,7 @@ follow Paper~1's architecture chapter.}
 The four objects in the second half of the table fix what each method
 \emph{produces}. A lens (\S\ref{sec:logit-lens-family}) maps
 $\mathbf{h}^{(\ell, t)}$ to a layer-$\ell$ token distribution via
-Eq.~\eqref{eq:residual-decomp}. A \glsterm{probe-2}{probe} (\S\ref{sec:probing}) reads
+Eq.~\eqref{eq:residual-decomp}. A \glsterm{probe}{probe} (\S\ref{sec:probing}) reads
 $\mathbf{h}^{(\ell, t)} \mapsto \sigma(\mathbf{d}_y^\top
 \mathbf{h}^{(\ell, t)})$ for a learned property direction
 $\mathbf{d}_y$. An \glsterm{sparse-autoencoder}{SAE} (\S\ref{sec:sparse-autoencoders}) decomposes

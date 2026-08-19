@@ -10,7 +10,7 @@
 \label{sec:test-time-compute}
 
 \Cref{sec:cot-phenomenon,sec:self-consistency} treat \glsterm{chain-of-thought}{chain-of-thought} and
-\glsterm{self-consistency-2}{self-consistency} as decoder-side tactics: the model is fixed, the prompt
+\glsterm{self-consistency}{self-consistency} as decoder-side tactics: the model is fixed, the prompt
 is fixed, and a knob (sample $T$, sample count $N$) is turned. They are
 correctly described as ``prompting tricks'' in the 2022 literature.
 \citet{snell2024} reframe the entire family. \glsterm{test-time-compute}{Test-time compute}, in
@@ -118,10 +118,10 @@ toward $y^\ast(q)$ most efficiently.
 \label{sec:snell-proposer-verifier}
 
 Across the otherwise-disparate test-time-compute literature ---
-\linebreak[0]\glsterm{chain-of-thought}{chain-of-thought} (\cref{sec:cot-phenomenon}), \glsterm{self-consistency-2}{self-consistency}
+\linebreak[0]\glsterm{chain-of-thought}{chain-of-thought} (\cref{sec:cot-phenomenon}), \glsterm{self-consistency}{self-consistency}
 (\cref{sec:self-consistency}), best-of-$N$ with verifier
 (\cref{sec:process-reward-models}), beam search and MCTS
-(\cref{sec:tree-search}), revision-finetuned models, \glsterm{rlvr-3}{RLVR}-trained
+(\cref{sec:tree-search}), revision-finetuned models, \glsterm{rlvr}{RLVR}-trained
 long-\glsterm{chain-of-thought}{CoT} --- \citet[\S 2]{snell2024}%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/snell2024.md#sec-2-proposer-verifier}.}
 identify two and only two structural levers for shaping
@@ -146,10 +146,10 @@ This reshapes $\mathrm{Target}(\theta, N, q)$ from the outside, by
 post-hoc reweighting.
 \end{enumerate}
 
-The two levers compose. \glsterm{self-consistency-2}{Self-consistency} is the proposer-only special
+The two levers compose. \glsterm{self-consistency}{Self-consistency} is the proposer-only special
 case at unit verifier weight (\cref{sec:self-consistency}); best-of-$N$
 with \glsterm{outcome-reward-model}{ORM} is the verifier-only special case on a fixed base distribution;
-\glsterm{rlvr-3}{RLVR}-trained long-\glsterm{chain-of-thought}{CoT} plus \glsterm{process-reward-model}{PRM}-weighted \glsterm{self-consistency-2}{self-consistency}
+\glsterm{rlvr}{RLVR}-trained long-\glsterm{chain-of-thought}{CoT} plus \glsterm{process-reward-model}{PRM}-weighted \glsterm{self-consistency}{self-consistency}
 (\cref{sec:r1-family,sec:prm-prm800k}) deploys both levers
 simultaneously. \citet[\S 2]{snell2024} argue that every published
 test-time-compute method to date is one of $\{$proposer-only,
@@ -364,7 +364,7 @@ Best-of-$N$-weighted with \glsterm{process-reward-model}{PRM}   & $(K, T, \text{
 Beam search against \glsterm{process-reward-model}{PRM}         & $(K, M, T)$              & $K \cdot D \cdot c_\text{step}$ \\
 MCTS against \glsterm{process-reward-model}{PRM}                & $(N_\text{rollout}, c_\text{puct}, D)$ & $N_\text{rollout} \cdot D \cdot L_\text{step}$ \\
 Revision chain                  & $(K_\text{revisions}, T)$ & $K_\text{revisions} \cdot L_\text{ans}$ \\
-\glsterm{self-consistency-2}{Self-consistency}                & $(N, T)$                 & $N \cdot L_\text{ans}$ \\
+\glsterm{self-consistency}{Self-consistency}                & $(N, T)$                 & $N \cdot L_\text{ans}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -415,7 +415,7 @@ short of fitting a parametric \glsterm{scaling-law}{scaling law}. \citet{s1-2025
 roughly logarithmic returns to thinking-token budget on a small
 reasoning-trained model. \citet{deepseek-r1} report monotone increase
 of AIME 2024 pass@1 with response-length ramp from $\sim 200$ to
-$\sim 10\,000$ tokens during \glsterm{grpo-2}{GRPO} training (\cref{sec:r1-family}), but
+$\sim 10\,000$ tokens during \glsterm{grpo}{GRPO} training (\cref{sec:r1-family}), but
 do not parameterise the inference-time accuracy-vs-budget curve at
 fixed training. The candidate functional forms are: power law in $N$
 (Kaplan-style), logarithmic in $N$ (s1-suggestive), bounded sigmoid
@@ -465,9 +465,9 @@ shaped to emit long thinking traces, so $\mathrm{Target}(\theta, N, q)$
 becomes a different object before any test-time strategy is applied.
 \item \Cref{sec:search-vs-rl} returns to the FLOPs-matched experiment
 of \cref{eq:flops-matched} and asks the deeper question: at fixed total
-compute, when do the marginal FLOPs go to inference search, \glsterm{rlvr-3}{RLVR}
+compute, when do the marginal FLOPs go to inference search, \glsterm{rlvr}{RLVR}
 training, or pretraining? Snell's curves give one slice
-(inference vs.\ pretraining); the \glsterm{rlvr-3}{RLVR} literature gives partial
+(inference vs.\ pretraining); the \glsterm{rlvr}{RLVR} literature gives partial
 answers for inference vs.\ RL.
 \end{itemize}
 

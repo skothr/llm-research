@@ -70,7 +70,7 @@ any one training stack; it is a property of the \glsterm{rlhf}{RLHF} recipe fami
 \subsection{The four-task SycophancyEval suite}
 \label{sec:sycophancy-suite}
 
-The eval is constructed to \glsterm{probe-2}{probe} four distinct \glsterm{sycophancy}{sycophancy} modalities,
+The eval is constructed to \glsterm{probe}{probe} four distinct \glsterm{sycophancy}{sycophancy} modalities,
 each designed to isolate a different way the user's expressed view can
 contaminate the response%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/sharma2023-sycophancy.md#sec-fourtask}.}:
@@ -90,7 +90,7 @@ adopts the assumption rather than correcting it.
 \end{enumerate}
 
 The construction is a property of the suite, not of any single task.
-Each \glsterm{probe-2}{probe} targets a different \glsterm{sycophancy}{sycophancy} primitive --- praise-shaping,
+Each \glsterm{probe}{probe} targets a different \glsterm{sycophancy}{sycophancy} primitive --- praise-shaping,
 capitulation under social pressure, opinion drift, premise inheritance
 --- and a model's profile across the four is more diagnostic than any
 one rate. In particular, ``are-you-sure'' capitulation is the cleanest
@@ -145,7 +145,7 @@ The PM is faithful to its training data; the bias is data-side, not
 PM-side.
 
 \paragraph{Link 3 --- RL optimizes against the biased PM.}
-PPO, \glsterm{dpo}{DPO}, or \glsterm{grpo-2}{GRPO} against the link-2 PM is the load-bearing step that
+PPO, \glsterm{dpo}{DPO}, or \glsterm{grpo}{GRPO} against the link-2 PM is the load-bearing step that
 trains \glsterm{sycophancy}{sycophancy} into the policy
 \citep[\S{}abstract]{sharma2023-sycophancy}:
 
@@ -237,7 +237,7 @@ agreed-with response is wrong, label the disagreeing-but-correct
 response as preferred. The bias is in the data; fix the data. The
 limitation is that detecting ``wrongly-agreed-with'' at scale
 requires a verifier, and where a verifier exists, RL with
-verifiable rewards (Paper~3, \glsterm{rlvr-3}{RLVR}) is already a stronger objective
+verifiable rewards (Paper~3, \glsterm{rlvr}{RLVR}) is already a stronger objective
 than \glsterm{rlhf}{RLHF}.
 
 \textbf{Link 2 (preference model) --- reward-model debiasing.}
@@ -251,7 +251,7 @@ genuine-agreement subtypes} suggests \glsterm{sycophancy}{sycophancy} decomposes
 several independently-steerable subtypes, each requiring its own
 detector.
 
-\textbf{Link 3 (RL objective) --- constitutional / \glsterm{rlaif-3}{RLAIF}
+\textbf{Link 3 (RL objective) --- constitutional / \glsterm{rlaif}{RLAIF}
 substitution.} \citet{bai2022-cai} replace the human-rater stage
 with AI-generated feedback governed by a \glsterm{constitution}{constitution}. If the
 \glsterm{constitution}{constitution} penalizes \glsterm{sycophancy}{sycophancy} explicitly, the chain inherits the
@@ -261,7 +261,7 @@ does not disappear, and if the AI-feedback model is itself
 sycophantic, the substitution may inherit it rather than fix it.
 
 \textbf{Inference-time \glsterm{activation-steering}{activation steering}.} A complementary attack
-sits one layer in: \glsterm{probe-2}{probe}-derived ``\glsterm{sycophancy}{sycophancy} direction'' vectors
+sits one layer in: \glsterm{probe}{probe}-derived ``\glsterm{sycophancy}{sycophancy} direction'' vectors
 identified via difference-in-means over agreement-vs-disagreement
 prompts, then subtracted from the \glsterm{residual-stream}{residual stream} at decode time.
 This is a Paper~4 result and we defer the methodology to that

@@ -2,11 +2,9 @@
 
 ## Position encoding
 
-- **Sinusoidal positional encoding** — Vaswani 2017's deterministic sin/cos position vectors; additive at the input. `[vaswani2017 §3.5]`
 - **Learned absolute positional embedding** — Per-position trainable vectors indexed by integer position; hard cutoff at maximum sequence length. Used by GPT-2, BERT. `[su2021 §2.2]`
 - **Relative position encoding (T5 bias)** — Per-(query, key) distance bias added to attention logits; binned by relative distance. `[su2021 §2.3]`
 - **ALiBi** — Attention with Linear Biases. Parameter-free additive bias $-|m-n| \cdot s_h$ at attention logits, with per-head slope. Used by BLOOM, MPT. (Press et al. 2021, arXiv 2108.12409)
-- **Rotary Position Embedding (RoPE)** — Multiplicative position encoding that rotates query and key in 2D subspaces by per-frequency angles $m\theta_i$. Inserts position information as relative offsets only via rotation-matrix orthogonality. The de-facto standard in modern decoder-only LLMs. `[su2021 §3.2]`
 - **RoPE base frequency $b$** — The base of the geometric frequency progression $\theta_i = b^{-2(i-1)/d}$. Default 10000 (su2021); LLaMA-3 uses 500000; long-context models use 1e6+. Larger $b$ stretches the longest "naturally-seen" wavelength.
 - **NTK-aware RoPE scaling** — Per-frequency RoPE rescaling that scales the base $b$ rather than positions, leaving high-frequency dimensions unchanged. Empirically extends context length without degrading short-context quality.
 - **YaRN** — "Yet another RoPE extensioN method." Combines NTK-aware scaling with a per-frequency interpolation schedule (no scaling on short-wavelength dims, full scaling on long-wavelength dims, smooth ramp between) and an attention-temperature rescale. ~10× more token-efficient than position interpolation. (Peng et al. 2023, arXiv 2309.00071)
@@ -45,7 +43,6 @@
 ## Long context
 
 - **Sliding-window attention** — Each position attends only to the previous $w$ tokens; compute $O(N w d)$ vs $O(N^2 d)$. Local-only by construction; relies on stacked layers' growing receptive field for long-range dependencies. (Longformer 2020, Mistral 2023)
-- **Native Sparse Attention (NSA)** — Three-branch sparse attention (compress + select + sliding-window) trained natively (not retrofit). GQA-group-aligned blockwise selection enables FlashAttention-style kernels under sparsity. `[yuan2025 §3.2–3.4]`
 - **Token compression branch (NSA)** — Block-summarizes a window of $l$ keys/values into a single representation via learned MLP. Provides coarse global attention. `[yuan2025 §3.3.1 Eq.7]`
 - **Token selection branch (NSA)** — Picks top-$n$ blocks by importance scores derived from the compression branch's attention scores. Provides fine-grained attention. `[yuan2025 §3.3.2 Eq.8–12]`
 - **Sliding window branch (NSA)** — Dedicated local-window branch that absorbs local-pattern learning so the compression and selection branches focus on long-range. `[yuan2025 §3.3.3]`
@@ -69,8 +66,6 @@
 - **Think tokens / `<think>...</think>`** — Reserved special tokens delimiting the reasoning region of a generated output. Reserved as single tokens (not multi-token UTF-8 sequences). `[deepseek-r1, qwen3]`
 - **Two-checkpoint reasoning** — DeepSeek's pattern: distinct base (V3) and reasoning (R1) checkpoints. Cleanly separates concerns; doubles deployment.
 - **Single-checkpoint hybrid reasoning** — Qwen3's pattern: one model trained to operate in either thinking or non-thinking mode based on a system-prompt flag. Amortizes deployment but trades off specialty.
-- **Thinking budget** — Serving-time cap on reasoning-token count before forcing answer commit. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete. (Qwen3)
-- **RLVR (Reinforcement Learning with Verifiable Rewards)** — Training method for reasoning models. Reward = +1 if a programmatic verifier (math grader, code executor, formal checker) accepts the answer, 0 otherwise. The reasoning trace is the policy's free choice. Used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning. See `kb/notes/post-training/rlvr-and-grpo.md`.
 - **R1-Zero pattern** — Pure RL from base (no cold-start SFT). Develops reasoning behavior emergently but produces less-readable traces. DeepSeek's ablation result.
 
 ## Multi-token prediction

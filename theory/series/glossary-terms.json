@@ -180,12 +180,12 @@
     },
     {
       "key": "sinusoidal-positional-encoding",
-      "primary_form": "Sinusoidal Positional Encoding",
+      "primary_form": "Sinusoidal positional encoding",
       "aliases": [],
-      "short_def": "Fixed positional encoding using sine/cosine functions at different frequencies (original Transformer, 2017).",
-      "full_def": "Fixed positional encoding using sine/cosine functions at different frequencies (original Transformer, 2017).",
-      "case_strict": true,
-      "kb_cite": null
+      "short_def": "Fixed positional encoding using sine/cosine functions at different frequencies: Vaswani 2017's deterministic sin/cos position vectors, adde…",
+      "full_def": "Fixed positional encoding using sine/cosine functions at different frequencies: Vaswani 2017's deterministic sin/cos position vectors, added to the token embeddings at the input.",
+      "case_strict": false,
+      "kb_cite": "vaswani2017 §3.5"
     },
     {
       "key": "learned-positional-embedding",
@@ -202,10 +202,10 @@
       "aliases": [
         "Rotary Position Embedding"
       ],
-      "short_def": "Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative posit…",
-      "full_def": "Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative position. Applied at every layer to Q and K only. Used by LLaMA and most modern LLMs.",
+      "short_def": "Multiplicative positional encoding that rotates query and key vectors in 2D subspaces by per-frequency, position-dependent angles $m\\theta_…",
+      "full_def": "Multiplicative positional encoding that rotates query and key vectors in 2D subspaces by per-frequency, position-dependent angles $m\\theta_i$, making attention dot products depend only on relative position via rotation-matrix orthogonality. Applied at every layer to Q and K only. The de-facto standard in modern decoder-only LLMs (LLaMA and most that followed).",
       "case_strict": true,
-      "kb_cite": null
+      "kb_cite": "su2021 §3.2"
     },
     {
       "key": "self-attention",
@@ -222,15 +222,6 @@
       "aliases": [],
       "short_def": "Core attention operation: $\\text{softmax}(QK^\\top / \\sqrt{d_k}) V$.",
       "full_def": "Core attention operation: $\\text{softmax}(QK^\\top / \\sqrt{d_k}) V$. Scaling by $\\sqrt{d_k}$ prevents large dot products from saturating the softmax.",
-      "case_strict": false,
-      "kb_cite": null
-    },
-    {
-      "key": "multi-head-attention",
-      "primary_form": "multi-head attention",
-      "aliases": [],
-      "short_def": "Running $h$ parallel attention operations on different learned projections, then concatenating and projecting the results.",
-      "full_def": "Running $h$ parallel attention operations on different learned projections, then concatenating and projecting the results. Allows attending to different representation subspaces simultaneously.",
       "case_strict": false,
       "kb_cite": null
     },
@@ -307,10 +298,10 @@
       "key": "mha",
       "primary_form": "MHA",
       "aliases": [
-        "Multi-Head Attention"
+        "Multi-head attention"
       ],
-      "short_def": "The Vaswani 2017 default: $h$ independent heads, each with its own $W_i^Q, W_i^K, W_i^V$.",
-      "full_def": "The Vaswani 2017 default: $h$ independent heads, each with its own $W_i^Q, W_i^K, W_i^V$. KV cache size per token per layer is $2 n_h d_h$ elements",
+      "short_def": "The Vaswani 2017 default: $h$ parallel attention operations on independent learned projections, each head with its own $W_i^Q, W_i^K, W_i^V…",
+      "full_def": "The Vaswani 2017 default: $h$ parallel attention operations on independent learned projections, each head with its own $W_i^Q, W_i^K, W_i^V$, whose outputs are concatenated and projected. Lets the model attend to different representation subspaces simultaneously. KV cache size per token per layer is $2 n_h d_h$ elements",
       "case_strict": true,
       "kb_cite": "vaswani2017 §3.2.2"
     },
@@ -318,23 +309,23 @@
       "key": "mqa",
       "primary_form": "MQA",
       "aliases": [
-        "Multi-Query Attention"
+        "Multi-query attention"
       ],
-      "short_def": "Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head).",
-      "full_def": "Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of capacity and stability",
+      "short_def": "Architectural KV compression: all $h$ query heads share a single $W^K, W^V$ (only $W^Q$ remains per-head).",
+      "full_def": "Architectural KV compression: all $h$ query heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of representational capacity and stability",
       "case_strict": true,
-      "kb_cite": "shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#§3.1"
+      "kb_cite": "shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#§3.1; kb/notes/inference/kv-cache-management#§2"
     },
     {
       "key": "gqa",
       "primary_form": "GQA",
       "aliases": [
-        "Grouped-Query Attention"
+        "Grouped-query attention"
       ],
-      "short_def": "Interpolation between MHA and MQA: query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$.",
-      "full_def": "Interpolation between MHA and MQA: query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements",
+      "short_def": "Interpolation between MHA and MQA: $h$ query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$.",
+      "full_def": "Interpolation between MHA and MQA: $h$ query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements — a factor $h/g$ smaller than MHA — at minimal quality loss, which makes it the production sweet-spot (Llama 2/3, Mistral)",
       "case_strict": true,
-      "kb_cite": "ainslie2023 §2.2"
+      "kb_cite": "ainslie2023 §2.2; kb/notes/inference/kv-cache-management#§2"
     },
     {
       "key": "uptraining",
@@ -349,12 +340,12 @@
       "key": "mla",
       "primary_form": "MLA",
       "aliases": [
-        "Multi-Head Latent Attention"
+        "Multi-head Latent Attention"
       ],
-      "short_def": "DeepSeek-V2's compression scheme.",
-      "full_def": "DeepSeek-V2's compression scheme. Rather than sharing K/V across heads, K and V are reconstructed at use time from a small latent $\\mathbf{c}_t^{KV} = W^{DKV} \\mathbf{h}_t \\in \\mathbb{R}^{d_c}$ via up-projections $W^{UK}, W^{UV}$. Cache holds only the latent. During inference $W^{UK}$ can be absorbed into $W^Q$ and $W^{UV}$ into $W^O$",
+      "short_def": "DeepSeek-V2's architectural KV compression.",
+      "full_def": "DeepSeek-V2's architectural KV compression. Rather than sharing K/V across heads, K and V are reconstructed at use time from a small latent $\\mathbf{c}_t^{KV} = W^{DKV} \\mathbf{h}_t \\in \\mathbb{R}^{d_c}$, shared across heads, via up-projections $W^{UK}, W^{UV}$. The cache holds only the latent, giving ~93% KV-cache reduction versus MHA at DeepSeek-V2 dimensions. During inference $W^{UK}$ can be absorbed into $W^Q$ and $W^{UV}$ into $W^O$",
       "case_strict": true,
-      "kb_cite": "deepseek-v2 §2.1.2"
+      "kb_cite": "deepseek-v2 §2.1.2; kb/notes/inference/kv-cache-management#§2"
     },
     {
       "key": "decoupled-rope",
@@ -437,9 +428,9 @@
         "Native Sparse Attention"
       ],
       "short_def": "Yuan et al.\\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted).",
-      "full_def": "Yuan et al.\\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Aimed at long context. Treated in `kb/notes/architecture/long-context.md`",
+      "full_def": "Yuan et al.\\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Three branches — token compression, token selection, and a sliding window — run in parallel; GQA-group-aligned blockwise selection keeps the selected blocks contiguous enough for FlashAttention-style kernels under sparsity. Aimed at long context. Treated in `kb/notes/architecture/long-context.md`",
       "case_strict": true,
-      "kb_cite": "yuan2025"
+      "kb_cite": "yuan2025 §3.2–3.4"
     },
     {
       "key": "ffn",
@@ -730,7 +721,7 @@
       "short_def": "Sharma et al. 2023's four-task free-form text-generation suite (feedback, \"are you sure?\" capitulation, user-preference matching, mimicry-o…",
       "full_def": "Sharma et al. 2023's four-task free-form text-generation suite (feedback, \"are you sure?\" capitulation, user-preference matching, mimicry-of-mistakes) for measuring sycophancy in RLHF assistants.",
       "case_strict": true,
-      "kb_cite": "sharma2023-sycophancy §fourtask; kb/excerpts/sharma2023-sycophancy#sec-fourtask"
+      "kb_cite": "sharma2023-sycophancy §3; kb/excerpts/sharma2023-sycophancy#sec-fourtask"
     },
     {
       "key": "scheming",
@@ -775,7 +766,7 @@
       "short_def": "Strategic underperformance on a capability evaluation in service of a separate objective (avoiding retraining, avoiding deployment, etc).",
       "full_def": "Strategic underperformance on a capability evaluation in service of a separate objective (avoiding retraining, avoiding deployment, etc). One of the six probes in the Apollo suite. Most concerning when it occurs *without nudging* and in service of a *training-acquired* goal (observed in Claude 3.5 Sonnet pursuing helpfulness).",
       "case_strict": false,
-      "kb_cite": "meinke2024-apollo-scheming §sandbagging-nudge; kb/excerpts/meinke2024-apollo-scheming#sec-sandbagging-nudge"
+      "kb_cite": "meinke2024-apollo-scheming §3.6; kb/excerpts/meinke2024-apollo-scheming#sec-sandbagging-nudge"
     },
     {
       "key": "goal-guarding",
@@ -784,7 +775,7 @@
       "short_def": "One of the Apollo six-probe scheming behaviors: manipulating future-instance prompts (e.g., editing system prompts one expects future copie…",
       "full_def": "One of the Apollo six-probe scheming behaviors: manipulating future-instance prompts (e.g., editing system prompts one expects future copies to read) to preserve the in-context goal.",
       "case_strict": false,
-      "kb_cite": "meinke2024-apollo-scheming §six-evals; kb/excerpts/meinke2024-apollo-scheming#sec-six-evals"
+      "kb_cite": "meinke2024-apollo-scheming §2.2; kb/excerpts/meinke2024-apollo-scheming#sec-six-evals"
     },
     {
       "key": "self-exfiltration",
@@ -793,7 +784,7 @@
       "short_def": "Apollo six-probe scheming behavior: copying perceived model weights to external servers when the model believes it is about to be replaced.",
       "full_def": "Apollo six-probe scheming behavior: copying perceived model weights to external servers when the model believes it is about to be replaced. Observed in five frontier models.",
       "case_strict": false,
-      "kb_cite": "meinke2024-apollo-scheming §six-evals"
+      "kb_cite": "meinke2024-apollo-scheming §2.2"
     },
     {
       "key": "oversight-subversion",
@@ -802,7 +793,7 @@
       "short_def": "Apollo six-probe scheming behavior: attempting to disable monitoring tools / oversight mechanisms.",
       "full_def": "Apollo six-probe scheming behavior: attempting to disable monitoring tools / oversight mechanisms.",
       "case_strict": false,
-      "kb_cite": "meinke2024-apollo-scheming §six-evals"
+      "kb_cite": "meinke2024-apollo-scheming §2.2"
     },
     {
       "key": "persistence-under-interrogation",
@@ -811,7 +802,7 @@
       "short_def": "The fraction of follow-up questions on which a model maintains its earlier deception.",
       "full_def": "The fraction of follow-up questions on which a model maintains its earlier deception. Operational distinguisher between scheming (high persistence) and sycophancy (typically retracts under challenge). 85%+ for o1 in Apollo's setup.",
       "case_strict": false,
-      "kb_cite": "meinke2024-apollo-scheming §persistence; kb/excerpts/meinke2024-apollo-scheming#sec-persistence"
+      "kb_cite": "meinke2024-apollo-scheming §3.2; kb/excerpts/meinke2024-apollo-scheming#sec-persistence"
     },
     {
       "key": "scalable-oversight",
@@ -854,24 +845,13 @@
       "kb_cite": null
     },
     {
-      "key": "rlaif",
-      "primary_form": "RLAIF",
-      "aliases": [
-        "RL from AI Feedback"
-      ],
-      "short_def": "Replacing human preference labels with AI-generated preference labels in the RL stage.",
-      "full_def": "Replacing human preference labels with AI-generated preference labels in the RL stage. Introduced as the RL-CAI step of `bai2022-cai`. Reduces labeling burden but does not address bias-source if the AI feedback model itself inherits the bias.",
-      "case_strict": true,
-      "kb_cite": "bai2022-cai §abstract"
-    },
-    {
       "key": "weak-to-strong-w2s-generalization",
       "primary_form": "Weak-to-strong (W2S) generalization",
       "aliases": [],
       "short_def": "Burns et al. 2023's empirical methodology: substitute weak-model labels for human supervision, study how strong models generalize.",
       "full_def": "Burns et al. 2023's empirical methodology: substitute weak-model labels for human supervision, study how strong models generalize. The capability gap in this analogy stands in for the alignment gap of superalignment.",
       "case_strict": true,
-      "kb_cite": "burns2023-w2s §problem; kb/excerpts/burns2023-w2s#sec-problem"
+      "kb_cite": "burns2023-w2s §3; kb/excerpts/burns2023-w2s#sec-problem"
     },
     {
       "key": "performance-gap-recovered",
@@ -909,7 +889,7 @@
       "primary_form": "Green list / red list (watermarking)",
       "aliases": [],
       "short_def": "Per-step partition of vocabulary $V$ into a green list $G_t$ of size $\\gamma|V|$ and a red list of size $(1-\\gamma)|V|$, deterministically…",
-      "full_def": "Per-step partition of vocabulary $V$ into a green list $G_t$ of size $\\gamma|V|$ and a red list of size $(1-\\gamma)|V|$, deterministically derived from a hash of the previous token. Green tokens receive a logit bias $\\delta$; sampling proceeds from the modified distribution. Defaults: $\\gamma = 0.25$, $\\delta = 2.0$.",
+      "full_def": "Per-step partition of vocabulary $V$ into a green list $G_t$ of size $\\gamma|V|$ and a red list of size $(1-\\gamma)|V|$, deterministically derived from a hash of the previous token. Green tokens receive a logit bias $\\delta$; sampling proceeds from the modified distribution. The paper declares no default $(\\gamma, \\delta)$: Figure 1's illustration uses $(0.25, 2)$; the §4.1 analysis and the Table 1 experiments both use $\\gamma = 0.5$, $\\delta = 2.0$; and §6 reports the small green list $\\gamma = 0.1$ as pareto-optimal on the watermark-strength (z-score) vs. text-quality (perplexity) tradeoff `[kirchenbauer2023-watermark §4.1, §6, Fig.1]`.",
       "case_strict": false,
       "kb_cite": "kirchenbauer2023-watermark §3 Algorithm 2; kb/excerpts/kirchenbauer2023-watermark#sec-algorithm"
     },
@@ -970,52 +950,12 @@
       "kb_cite": "harmbench2024 §abstract"
     },
     {
-      "key": "attack-success-rate",
-      "primary_form": "Attack success rate",
-      "aliases": [
-        "ASR"
-      ],
-      "short_def": "The fraction of adversarial prompts that elicit a successful (policy-violating) response from the target model under a fixed scoring proced…",
-      "full_def": "The fraction of adversarial prompts that elicit a successful (policy-violating) response from the target model under a fixed scoring procedure. Comparing ASR across benchmarks requires identical scoring and threat-model assumptions.",
-      "case_strict": false,
-      "kb_cite": null
-    },
-    {
-      "key": "harmbench",
-      "primary_form": "HarmBench",
-      "aliases": [],
-      "short_def": "Mazeika et al. 2024's standardized red-teaming framework: 510 behaviors, 18 attack methods, 33 target models / defenses.",
-      "full_def": "Mazeika et al. 2024's standardized red-teaming framework: 510 behaviors, 18 attack methods, 33 target models / defenses. Adopted by AISI for pre-deployment evaluations.",
-      "case_strict": true,
-      "kb_cite": "harmbench2024 §abstract"
-    },
-    {
-      "key": "jailbreakbench",
-      "primary_form": "JailbreakBench",
-      "aliases": [],
-      "short_def": "Chao et al. 2024's open robustness benchmark: 100 target behaviors aligned with OpenAI usage policies, standardized threat model / prompts…",
-      "full_def": "Chao et al. 2024's open robustness benchmark: 100 target behaviors aligned with OpenAI usage policies, standardized threat model / prompts / scoring, public leaderboard, repository of jailbreak artifacts. Co-canonical with HarmBench.",
-      "case_strict": true,
-      "kb_cite": "chao2024-jailbreakbench §abstract"
-    },
-    {
       "key": "crescendo-attack",
       "primary_form": "Crescendo attack",
       "aliases": [],
       "short_def": "Russinovich et al. 2024 multi-turn gradual-escalation jailbreak: 29-71% ASR improvement over single- turn baselines on AdvBench.",
       "full_def": "Russinovich et al. 2024 multi-turn gradual-escalation jailbreak: 29-71% ASR improvement over single- turn baselines on AdvBench. Documents that single-turn evals systematically underestimate the multi-turn attack surface.",
       "case_strict": false,
-      "kb_cite": null
-    },
-    {
-      "key": "ai-safety-level",
-      "primary_form": "AI Safety Level",
-      "aliases": [
-        "ASL"
-      ],
-      "short_def": "Anthropic's Responsible Scaling Policy capability tier system.",
-      "full_def": "Anthropic's Responsible Scaling Policy capability tier system. ASL-1 (no autonomy / low risk), ASL-2 (current frontier baseline), ASL-3 (substantially elevated risk; specific deployment / security controls required), ASL-4 (autonomous AI risk; not yet deployed). Each tier specifies capability evaluations that must trigger pre-deployment.",
-      "case_strict": true,
       "kb_cite": null
     },
     {
@@ -1027,15 +967,6 @@
       "short_def": "Anthropic's pre-deployment policy framework.",
       "full_def": "Anthropic's pre-deployment policy framework. Each ASL tier comes with capability triggers (which safety evaluations must run) and security commitments (which infrastructure / containment requirements must be met). Co- canonical with OpenAI's Preparedness Framework and DeepMind's Frontier Safety Framework.",
       "case_strict": true,
-      "kb_cite": null
-    },
-    {
-      "key": "dangerous-capability-evaluation",
-      "primary_form": "Dangerous-capability evaluation",
-      "aliases": [],
-      "short_def": "Pre-deployment test for specific high-stakes capabilities: autonomous replication, autonomous research, cybersecurity attack capability, bi…",
-      "full_def": "Pre-deployment test for specific high-stakes capabilities: autonomous replication, autonomous research, cybersecurity attack capability, biological- weapons-uplift capability. METR's 77-task suite is the canonical cross-vendor reference.",
-      "case_strict": false,
       "kb_cite": null
     },
     {
@@ -1056,7 +987,7 @@
       "short_def": "When a proxy metric is optimized against, it ceases to be a good measure.",
       "full_def": "When a proxy metric is optimized against, it ceases to be a good measure. The canonical failure mode for RLHF: optimizing against a preference model that faithfully reflects biased human preferences produces a model faithful to the biased proxy, not to the underlying value. Foundational to the sycophancy mechanism.",
       "case_strict": false,
-      "kb_cite": "sharma2023-sycophancy §rlhf-causal; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal"
+      "kb_cite": "sharma2023-sycophancy §4.1; kb/excerpts/sharma2023-sycophancy#sec-rlhf-causal"
     },
     {
       "key": "mesa-optimizer",
@@ -1088,24 +1019,6 @@
       "kb_cite": null
     },
     {
-      "key": "cot-faithfulness",
-      "primary_form": "CoT faithfulness",
-      "aliases": [],
-      "short_def": "Whether a model's chain-of-thought trace reflects its actual reasoning process.",
-      "full_def": "Whether a model's chain-of-thought trace reflects its actual reasoning process. Empirically partial: Lanham et al. 2023 / Turpin et al. 2024 show CoT can be unfaithful (post-hoc rationalization, label-leakage). Apollo's argument that scheming-shaped CoT constitutes evidence of scheming sidesteps faithfulness by treating CoT as part of the deployed surface, not as ground-truth introspection.",
-      "case_strict": true,
-      "kb_cite": null
-    },
-    {
-      "key": "sinusoidal-positional-encoding-2",
-      "primary_form": "Sinusoidal positional encoding",
-      "aliases": [],
-      "short_def": "Vaswani 2017's deterministic sin/cos position vectors; additive at the input.",
-      "full_def": "Vaswani 2017's deterministic sin/cos position vectors; additive at the input.",
-      "case_strict": false,
-      "kb_cite": "vaswani2017 §3.5"
-    },
-    {
       "key": "learned-absolute-positional-embedding",
       "primary_form": "Learned absolute positional embedding",
       "aliases": [],
@@ -1133,15 +1046,6 @@
       "full_def": "Attention with Linear Biases. Parameter-free additive bias $-|m-n| \\cdot s_h$ at attention logits, with per-head slope. Used by BLOOM, MPT. (Press et al. 2021, arXiv 2108.12409)",
       "case_strict": true,
       "kb_cite": null
-    },
-    {
-      "key": "rotary-position-embedding",
-      "primary_form": "Rotary Position Embedding",
-      "aliases": [],
-      "short_def": "Multiplicative position encoding that rotates query and key in 2D subspaces by per-frequency angles $m\\theta_i$.",
-      "full_def": "Multiplicative position encoding that rotates query and key in 2D subspaces by per-frequency angles $m\\theta_i$. Inserts position information as relative offsets only via rotation-matrix orthogonality. The de-facto standard in modern decoder-only LLMs.",
-      "case_strict": true,
-      "kb_cite": "su2021 §3.2"
     },
     {
       "key": "rope-base-frequency-b",
@@ -1411,15 +1315,6 @@
       "kb_cite": null
     },
     {
-      "key": "native-sparse-attention",
-      "primary_form": "Native Sparse Attention",
-      "aliases": [],
-      "short_def": "Three-branch sparse attention (compress + select + sliding-window) trained natively (not retrofit).",
-      "full_def": "Three-branch sparse attention (compress + select + sliding-window) trained natively (not retrofit). GQA-group-aligned blockwise selection enables FlashAttention-style kernels under sparsity.",
-      "case_strict": true,
-      "kb_cite": "yuan2025 §3.2–3.4"
-    },
-    {
       "key": "token-compression-branch",
       "primary_form": "Token compression branch",
       "aliases": [
@@ -1585,26 +1480,6 @@
       "kb_cite": null
     },
     {
-      "key": "thinking-budget",
-      "primary_form": "Thinking budget",
-      "aliases": [],
-      "short_def": "Serving-time cap on reasoning-token count before forcing answer commit.",
-      "full_def": "Serving-time cap on reasoning-token count before forcing answer commit. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete. (Qwen3)",
-      "case_strict": false,
-      "kb_cite": null
-    },
-    {
-      "key": "rlvr",
-      "primary_form": "RLVR",
-      "aliases": [
-        "Reinforcement Learning with Verifiable Rewards"
-      ],
-      "short_def": "Training method for reasoning models.",
-      "full_def": "Training method for reasoning models. Reward = +1 if a programmatic verifier (math grader, code executor, formal checker) accepts the answer, 0 otherwise. The reasoning trace is the policy's free choice. Used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning. See `kb/notes/post-training/rlvr-and-grpo.md`.",
-      "case_strict": true,
-      "kb_cite": null
-    },
-    {
       "key": "r1-zero-pattern",
       "primary_form": "R1-Zero pattern",
       "aliases": [],
@@ -1658,7 +1533,7 @@
       "short_def": "A scoring function $V(s_T, g)$ that checks the post-trajectory environment state $s_T$ against a goal $g$, accepting any path that reaches…",
       "full_def": "A scoring function $V(s_T, g)$ that checks the post-trajectory environment state $s_T$ against a goal $g$, accepting any path that reaches the correct end-state. Contrast: turn-by-turn rubric (rewards specific actions).",
       "case_strict": false,
-      "kb_cite": "xie2024-osworld §sec-task-spec"
+      "kb_cite": "xie2024-osworld §2.1"
     },
     {
       "key": "fail-to-pass-pass-to-pass",
@@ -1667,7 +1542,7 @@
       "short_def": "The two test-bundle sets used in SWE-bench's verifier.",
       "full_def": "The two test-bundle sets used in SWE-bench's verifier. F2P tests must transition from failing on the pre-patch codebase to passing on the post-patch codebase; P2P tests must continue to pass. Both must hold for a task to be `resolved`.",
       "case_strict": true,
-      "kb_cite": "jimenez2024-swebench §sec-eval-protocol"
+      "kb_cite": "jimenez2024-swebench §A.4"
     },
     {
       "key": "swe-bench-verified",
@@ -1685,7 +1560,7 @@
       "short_def": "Reliability metric: the probability that **all** $k$ independent attempts at a task succeed.",
       "full_def": "Reliability metric: the probability that **all** $k$ independent attempts at a task succeed. Dual to pass@k (probability that **at least one** of $k$ attempts succeeds). pass^k measures consistent capability; pass@k measures peak capability.",
       "case_strict": false,
-      "kb_cite": "yao2024-tau-bench §sec-passk"
+      "kb_cite": "yao2024-tau-bench §3"
     },
     {
       "key": "gui-grounding",
@@ -1694,7 +1569,7 @@
       "short_def": "The ability to map a natural-language target (\"click the Save button\") to the correct pixel coordinates on a screen.",
       "full_def": "The ability to map a natural-language target (\"click the Save button\") to the correct pixel coordinates on a screen. Identified as the dominant failure mode for vision-language agents on OSWorld at launch.",
       "case_strict": true,
-      "kb_cite": "xie2024-osworld §sec-results"
+      "kb_cite": "xie2024-osworld §5.4"
     },
     {
       "key": "tool-budget-step-budget",
@@ -1715,15 +1590,6 @@
       "full_def": "Cybersecurity task format adopted by Cybench: agents must exploit a target system to retrieve a flag string (typically `flag{...}`), with success scored by string match.",
       "case_strict": true,
       "kb_cite": "cybench2024"
-    },
-    {
-      "key": "gpqa-diamond",
-      "primary_form": "GPQA Diamond",
-      "aliases": [],
-      "short_def": "198-question subset of GPQA where (i) both expert annotators agree on the gold answer, and (ii) at least one non-expert validator with web…",
-      "full_def": "198-question subset of GPQA where (i) both expert annotators agree on the gold answer, and (ii) at least one non-expert validator with web access got the answer wrong. The headline subset on which leaderboards report.",
-      "case_strict": true,
-      "kb_cite": "rein2023-gpqa §sec-diamond"
     },
     {
       "key": "google-proof-construction",
@@ -1782,15 +1648,6 @@
       "kb_cite": "wang2024-mmlu-pro"
     },
     {
-      "key": "answer-letter-prior",
-      "primary_form": "Answer-letter prior",
-      "aliases": [],
-      "short_def": "A pretrained model's learned bias over multiple-choice answer letters (A/B/C/D), independent of question content.",
-      "full_def": "A pretrained model's learned bias over multiple-choice answer letters (A/B/C/D), independent of question content. Can shift MCQ scores by 1–4 percentage points. Mitigated by 10-way MCQ (MMLU-Pro) or letter-permutation evaluation.",
-      "case_strict": false,
-      "kb_cite": "wang2024-mmlu-pro §sec-delta"
-    },
-    {
       "key": "refinement-loop-system",
       "primary_form": "Refinement-loop system",
       "aliases": [],
@@ -1806,7 +1663,7 @@
       "short_def": "Variance in benchmark score $\\hat{S}$ induced by changing prompt template, system message, few-shot examples, or answer-extraction format w…",
       "full_def": "Variance in benchmark score $\\hat{S}$ induced by changing prompt template, system message, few-shot examples, or answer-extraction format while holding model and benchmark fixed. ~4–5% on MMLU; ~2% on MMLU-Pro.",
       "case_strict": false,
-      "kb_cite": "wang2024-mmlu-pro §sec-delta"
+      "kb_cite": "wang2024-mmlu-pro §6.3"
     },
     {
       "key": "data-contamination",
@@ -1824,7 +1681,7 @@
       "short_def": "Static = fixed benchmark items (MMLU, GPQA); dynamic = items appended post-cutoff (MathArena, LiveCodeBench, GAIA gated leaderboard).",
       "full_def": "Static = fixed benchmark items (MMLU, GPQA); dynamic = items appended post-cutoff (MathArena, LiveCodeBench, GAIA gated leaderboard). Dynamic is contamination-immune by construction but lacks community standards for evaluating quality.",
       "case_strict": false,
-      "kb_cite": "contamination-survey-2025 §sec-scope"
+      "kb_cite": "contamination-survey-2025 §4"
     },
     {
       "key": "verifier-mis-specification",
@@ -1836,15 +1693,6 @@
       "kb_cite": "mmlu-redux-2024"
     },
     {
-      "key": "mmlu-redux",
-      "primary_form": "MMLU-Redux",
-      "aliases": [],
-      "short_def": "The Polo et al. 2024 audit re-annotating 5,700 MMLU questions and documenting a 6.49% baseline error rate.",
-      "full_def": "The Polo et al. 2024 audit re-annotating 5,700 MMLU questions and documenting a 6.49% baseline error rate. Showed leaderboard-rank flips when corrected.",
-      "case_strict": true,
-      "kb_cite": "mmlu-redux-2024"
-    },
-    {
       "key": "helm",
       "primary_form": "HELM",
       "aliases": [
@@ -1853,7 +1701,7 @@
       "short_def": "Stanford CRFM 2022 framework that scores models on 7 metric axes (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency)…",
       "full_def": "Stanford CRFM 2022 framework that scores models on 7 metric axes (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) across 16+ scenarios. Structural argument: benchmarks should ship metric bundles, not single metrics.",
       "case_strict": true,
-      "kb_cite": "liang2022-helm §sec-metrics"
+      "kb_cite": "liang2022-helm §1.1"
     },
     {
       "key": "lm-evaluation-harness",
@@ -1871,7 +1719,7 @@
       "short_def": "MCQ evaluation method that computes $\\log P(\\text{option})$ for each option and picks the argmax.",
       "full_def": "MCQ evaluation method that computes $\\log P(\\text{option})$ for each option and picks the argmax. Default for MMLU in lm-evaluation-harness; not available for closed APIs that don't expose logprobs (which must use `generate_until`).",
       "case_strict": false,
-      "kb_cite": "lm-eval-harness §sec-request-types"
+      "kb_cite": "lm-eval-harness; kb/excerpts/lm-eval-harness#sec-request-types"
     },
     {
       "key": "n-gram-overlap",
@@ -1961,7 +1809,7 @@
       "short_def": "vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active…",
       "full_def": "vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active sequence; internal = pre-allocated maximum-length slots beyond actual generated length; external = unusable gaps between sequences. PagedAttention reduces total waste below 4%.",
       "case_strict": false,
-      "kb_cite": "kwon2023 §3.1, Fig.4; kb/excerpts/kwon2023#sec-3"
+      "kb_cite": "kwon2023 §3.1, Fig.3; kb/excerpts/kwon2023#sec-3"
     },
     {
       "key": "copy-on-write-serving",
@@ -1988,40 +1836,7 @@
       "short_def": "SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-c…",
       "full_def": "SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate.",
       "case_strict": true,
-      "kb_cite": "zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#sec-3"
-    },
-    {
-      "key": "multi-query-attention",
-      "primary_form": "Multi-Query Attention",
-      "aliases": [
-        "MQA, KV-shape"
-      ],
-      "short_def": "Architectural KV compression: all $H$ query heads share one $(K, V)$ pair, shrinking the KV cache by factor $H$ at the cost of representati…",
-      "full_def": "Architectural KV compression: all $H$ query heads share one $(K, V)$ pair, shrinking the KV cache by factor $H$ at the cost of representation.",
-      "case_strict": true,
-      "kb_cite": "shazeer2019 §2; kb/notes/inference/kv-cache-management#§2"
-    },
-    {
-      "key": "grouped-query-attention",
-      "primary_form": "Grouped-Query Attention",
-      "aliases": [
-        "GQA, KV-shape"
-      ],
-      "short_def": "$H$ query heads in $G$ groups, each group sharing one $(K, V)$.",
-      "full_def": "$H$ query heads in $G$ groups, each group sharing one $(K, V)$. Shrinks the cache by $H/G$ at minimal quality loss. The production sweet-spot (Llama 2/3, Mistral).",
-      "case_strict": true,
-      "kb_cite": "ainslie2023; kb/notes/inference/kv-cache-management#§2"
-    },
-    {
-      "key": "multi-head-latent-attention",
-      "primary_form": "Multi-head Latent Attention",
-      "aliases": [
-        "MLA"
-      ],
-      "short_def": "DeepSeek's architectural compression: project to a low-rank latent $C \\in \\mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(…",
-      "full_def": "DeepSeek's architectural compression: project to a low-rank latent $C \\in \\mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions.",
-      "case_strict": true,
-      "kb_cite": "deepseek-v2 §2.1; kb/notes/inference/kv-cache-management#§2"
+      "kb_cite": "zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#sec-3-cache-aware"
     },
     {
       "key": "per-channel-keys-per-token-values",
@@ -2041,7 +1856,7 @@
       "short_def": "$Q(w) = \\text{clip}(\\lfloor w/\\Delta \\rceil, -2^{b-1}, 2^{b-1}-1) \\cdot \\Delta$ with $\\Delta = \\max(|w|)/(2^{b-1}-1)$ per group.",
       "full_def": "$Q(w) = \\text{clip}(\\lfloor w/\\Delta \\rceil, -2^{b-1}, 2^{b-1}-1) \\cdot \\Delta$ with $\\Delta = \\max(|w|)/(2^{b-1}-1)$ per group. The baseline against which calibration-based methods are compared.",
       "case_strict": true,
-      "kb_cite": "frantar2022 §2; kb/notes/inference/quantization#§1"
+      "kb_cite": "frantar2022 §5; kb/notes/inference/quantization#§1"
     },
     {
       "key": "w4a16-w8a8-w1-58a8-notation",
@@ -2050,7 +1865,7 @@
       "short_def": "Compact spec of weight-precision × activation-precision.",
       "full_def": "Compact spec of weight-precision × activation-precision. W4A16 = 4-bit weights, FP16 activations (GPTQ/AWQ regime). W8A8 = INT8 weight + INT8 activation (SmoothQuant). W1.58A8 = ternary $\\{-1,0,+1\\}$ weights + INT8 activations (BitNet b1.58).",
       "case_strict": true,
-      "kb_cite": "ma2024-bitnet §2.1; kb/notes/inference/quantization#§7"
+      "kb_cite": "ma2024-bitnet §2; kb/notes/inference/quantization#§7"
     },
     {
       "key": "calibration-set",
@@ -2059,7 +1874,7 @@
       "short_def": "A small set of representative input sequences (typically 128 sequences × 2048 tokens) run through the network to collect activation statist…",
       "full_def": "A small set of representative input sequences (typically 128 sequences × 2048 tokens) run through the network to collect activation statistics that drive quantization decisions.",
       "case_strict": false,
-      "kb_cite": "frantar2022 §2; xiao2023-smoothquant §3.2"
+      "kb_cite": "frantar2022 §5; xiao2023-smoothquant §3.2"
     },
     {
       "key": "layer-wise-reconstruction",
@@ -2079,7 +1894,7 @@
       "short_def": "Frantar et al. 2022.",
       "full_def": "Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit.",
       "case_strict": true,
-      "kb_cite": "frantar2022 §3; kb/notes/inference/quantization#§3"
+      "kb_cite": "frantar2022 §4; kb/notes/inference/quantization#§3"
     },
     {
       "key": "awq",
@@ -2110,7 +1925,7 @@
       "short_def": "A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median.",
       "full_def": "A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median. Emerges around 6.7B parameters. The reason naive INT8 activation quantization breaks at scale.",
       "case_strict": false,
-      "kb_cite": "xiao2023-smoothquant §3, Fig.5; kb/excerpts/xiao2023-smoothquant#sec-3"
+      "kb_cite": "xiao2023-smoothquant §3, Fig.4; kb/excerpts/xiao2023-smoothquant#sec-3"
     },
     {
       "key": "smoothquant-migration",
@@ -2128,7 +1943,7 @@
       "short_def": "BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\\{-1,0,+1\\}$ via absmean, activations to INT8 via absmax, SubLN replaci…",
       "full_def": "BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\\{-1,0,+1\\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition.",
       "case_strict": true,
-      "kb_cite": "ma2024-bitnet §2.1; kb/excerpts/ma2024-bitnet#sec-2"
+      "kb_cite": "ma2024-bitnet §2; kb/excerpts/ma2024-bitnet#sec-2"
     },
     {
       "key": "absmean-ternary-quantization",
@@ -2137,7 +1952,7 @@
       "short_def": "BitNet b1.58's weight quantizer: $\\beta = \\frac{1}{nm}\\sum_{i,j}|W_{ij}|$, $\\widehat{W}_{ij} = \\text{round\\_clip}(W_{ij}/(\\beta+\\epsilon),…",
       "full_def": "BitNet b1.58's weight quantizer: $\\beta = \\frac{1}{nm}\\sum_{i,j}|W_{ij}|$, $\\widehat{W}_{ij} = \\text{round\\_clip}(W_{ij}/(\\beta+\\epsilon), -1, +1)$. Per-tensor $\\beta$, ternary output. Trained from scratch in 1.58-bit, not post-quantized.",
       "case_strict": false,
-      "kb_cite": "ma2024-bitnet §2.1, Eq.1-3; kb/excerpts/ma2024-bitnet#sec-2"
+      "kb_cite": "ma2024-bitnet §2, Eq.1-3; kb/excerpts/ma2024-bitnet#sec-2"
     },
     {
       "key": "gptq-vs-awq-vs-smoothquant-spec-sheet",
@@ -2201,10 +2016,10 @@
       "aliases": [
         "Leviathan"
       ],
-      "short_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric).",
-      "full_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric). Walltime improvement $= [(1-\\alpha^{\\gamma+1})/(1-\\alpha)] / (c\\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8).",
+      "short_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric) `[leviathan2023 §3.1, Eq.1; kb/excerpts/l…",
+      "full_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric) `[leviathan2023 §3.1, Eq.1; kb/excerpts/leviathan2023#sec-3-1]`. Walltime improvement $= [(1-\\alpha^{\\gamma+1})/(1-\\alpha)] / (c\\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8)",
       "case_strict": false,
-      "kb_cite": "leviathan2023 §3.3, Eq.1, Theorem 3.8; kb/excerpts/leviathan2023#sec-3-3"
+      "kb_cite": "leviathan2023 §3.3, Theorem 3.8; kb/excerpts/leviathan2023#sec-3-3"
     },
     {
       "key": "drafter-target-model",
@@ -2337,15 +2152,6 @@
       "kb_cite": "dao2022 §3; kb/notes/inference/serving-systems#§6"
     },
     {
-      "key": "constrained-decoding",
-      "primary_form": "Constrained decoding",
-      "aliases": [],
-      "short_def": "Mask the next-token logits at every step to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, arbitrary CFG).",
-      "full_def": "Mask the next-token logits at every step to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, arbitrary CFG). Naive implementations query the grammar engine for every token in the vocabulary at every step — the bottleneck modern engines fix.",
-      "case_strict": false,
-      "kb_cite": "kb/notes/inference/structured-output#§1"
-    },
-    {
       "key": "context-independent-context-dependent-vocabulary-split",
       "primary_form": "Context-independent / context-dependent vocabulary split",
       "aliases": [
@@ -2355,17 +2161,6 @@
       "full_def": "XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (~99% of vocab); compute at runtime only the small remainder (~1%) that depends on the active context. Brings constrained-decoding overhead from ms/token to μs/token.",
       "case_strict": false,
       "kb_cite": "xgrammar2024; kb/notes/inference/structured-output#§3"
-    },
-    {
-      "key": "compressed-fsm",
-      "primary_form": "Compressed FSM",
-      "aliases": [
-        "SGLang"
-      ],
-      "short_def": "When a JSON-schema or regex forces a deterministic chain of tokens (e.g. the constant prefix `{\"summary\": \"`), merge those single-edge runs…",
-      "full_def": "When a JSON-schema or regex forces a deterministic chain of tokens (e.g. the constant prefix `{\"summary\": \"`), merge those single-edge runs in the FSM so the constrained decoder emits the entire deterministic prefix in one step instead of token-by-token.",
-      "case_strict": true,
-      "kb_cite": "zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4"
     },
     {
       "key": "json-schema-mode",
@@ -2459,7 +2254,7 @@
       "short_def": "Anthropic 2026's interpretability method: a pair of LLM modules (AV + AR) jointly trained with reinforcement learning to round-trip a resid…",
       "full_def": "Anthropic 2026's interpretability method: a pair of LLM modules (AV + AR) jointly trained with reinforcement learning to round-trip a residual-stream activation through a natural-language explanation. The text bottleneck makes the explanation testable via reconstruction fidelity (FVE). Used in pre-deployment audits to surface unverbalized model cognition — including evaluation awareness.",
       "case_strict": true,
-      "kb_cite": "anthropic2026-nla §method; kb/excerpts/anthropic2026-nla#sec-method"
+      "kb_cite": "anthropic2026-nla §Method; kb/excerpts/anthropic2026-nla#sec-method"
     },
     {
       "key": "activation-verbalizer",
@@ -2470,7 +2265,7 @@
       "short_def": "The AV $\\mathrm{AV}(z \\mid h_\\ell)$ takes a residual-stream activation $h_\\ell$ and emits a natural-language explanation token sequence $z$.",
       "full_def": "The AV $\\mathrm{AV}(z \\mid h_\\ell)$ takes a residual-stream activation $h_\\ell$ and emits a natural-language explanation token sequence $z$. One half of the NLA pair.",
       "case_strict": false,
-      "kb_cite": "anthropic2026-nla §method; kb/excerpts/anthropic2026-nla#sec-method"
+      "kb_cite": "anthropic2026-nla §Method; kb/excerpts/anthropic2026-nla#sec-method"
     },
     {
       "key": "activation-reconstructor",
@@ -2481,7 +2276,7 @@
       "short_def": "The AR $\\mathrm{AR}(z)$ takes the verbalized explanation $z$ and produces a reconstructed activation $\\hat h_\\ell \\in \\mathbb{R}^{d_\\mathrm…",
       "full_def": "The AR $\\mathrm{AR}(z)$ takes the verbalized explanation $z$ and produces a reconstructed activation $\\hat h_\\ell \\in \\mathbb{R}^{d_\\mathrm{model}}$. Trained jointly with the AV to minimise the round-trip MSE on activation reconstruction.",
       "case_strict": false,
-      "kb_cite": "anthropic2026-nla §method; kb/excerpts/anthropic2026-nla#sec-method"
+      "kb_cite": "anthropic2026-nla §Method; kb/excerpts/anthropic2026-nla#sec-method"
     },
     {
       "key": "fraction-of-variance-explained",
@@ -2492,7 +2287,7 @@
       "short_def": "NLA quality metric: $\\mathrm{FVE} = 1 - \\mathcal{L}/\\mathbb{E}\\lVert h_\\ell - \\bar h_\\ell\\rVert^2$ where $\\mathcal{L}$ is the round-trip MS…",
       "full_def": "NLA quality metric: $\\mathrm{FVE} = 1 - \\mathcal{L}/\\mathbb{E}\\lVert h_\\ell - \\bar h_\\ell\\rVert^2$ where $\\mathcal{L}$ is the round-trip MSE. FVE = 1 is a lossless natural-language code; FVE = 0 means the explanation does no better than the mean activation.",
       "case_strict": true,
-      "kb_cite": "anthropic2026-nla §method; kb/excerpts/anthropic2026-nla#sec-method"
+      "kb_cite": "anthropic2026-nla §Method; kb/excerpts/anthropic2026-nla#sec-method"
     },
     {
       "key": "unverbalized-evaluation-awareness",
@@ -2501,7 +2296,7 @@
       "short_def": "Cases where a model internally suspects it is being tested but does not say so in its visible output.",
       "full_def": "Cases where a model internally suspects it is being tested but does not say so in its visible output. NLAs were validated as a tool for surfacing this signal during Anthropic's pre-deployment audit of Claude Opus 4.6.",
       "case_strict": false,
-      "kb_cite": "anthropic2026-nla §auditing; kb/excerpts/anthropic2026-nla#sec-auditing"
+      "kb_cite": "anthropic2026-nla; kb/excerpts/anthropic2026-nla#sec-auditing"
     },
     {
       "key": "activation-patching",
@@ -2864,15 +2659,6 @@
       "kb_cite": "gurnee2026-workspace §1.1; kb/excerpts/gurnee2026-workspace#sec-1-1-gwt"
     },
     {
-      "key": "probe",
-      "primary_form": "Probe",
-      "aliases": [],
-      "short_def": "a (typically linear) classifier $g(\\mathbf{h}) = \\sigma(\\mathbf{w}^\\top \\mathbf{h} + b)$ trained on labeled activations to predict an exter…",
-      "full_def": "a (typically linear) classifier $g(\\mathbf{h}) = \\sigma(\\mathbf{w}^\\top \\mathbf{h} + b)$ trained on labeled activations to predict an external property $y$. Foundational reference: Alain & Bengio 2017.",
-      "case_strict": false,
-      "kb_cite": null
-    },
-    {
       "key": "mass-mean-probing",
       "primary_form": "Mass-mean probing",
       "aliases": [],
@@ -2880,15 +2666,6 @@
       "full_def": "Marks & Tegmark 2023: define the probe direction as $\\mathbf{d}_\\text{class} = \\mathbb{E}[\\mathbf{h} \\mid y = c_1] - \\mathbb{E}[\\mathbf{h} \\mid y = c_0]$, then project activations onto $\\mathbf{d}_\\text{class}$. Simpler and more generalization-robust than logistic regression on the same features",
       "case_strict": false,
       "kb_cite": "marks-tegmark-2023-truth §1"
-    },
-    {
-      "key": "truth-direction",
-      "primary_form": "Truth direction",
-      "aliases": [],
-      "short_def": "the canonical mass-mean probe direction for truth-value of a statement, derived in Marks & Tegmark 2023.",
-      "full_def": "the canonical mass-mean probe direction for truth-value of a statement, derived in Marks & Tegmark 2023. A small linear subspace separates true and false statements across many models and datasets.",
-      "case_strict": false,
-      "kb_cite": null
     },
     {
       "key": "correlational-vs-causal-probing",
@@ -3031,7 +2808,7 @@
       "short_def": "DPO-trained models tend to produce longer outputs than the reference because long responses are easier to satisfy with high log-ratios.",
       "full_def": "DPO-trained models tend to produce longer outputs than the reference because long responses are easier to satisfy with high log-ratios. Addressed by SimPO's length normalization",
       "case_strict": true,
-      "kb_cite": "meng2024-simpo §3-length"
+      "kb_cite": "meng2024-simpo §2.2"
     },
     {
       "key": "ipo",
@@ -3096,17 +2873,6 @@
       "kb_cite": "meta-llama3; tulu3"
     },
     {
-      "key": "rlaif-2",
-      "primary_form": "RLAIF",
-      "aliases": [
-        "RL from AI Feedback"
-      ],
-      "short_def": "Replace human preference labels in RLHF with AI-generated preference labels, typically from a feedback model conditioned on a written const…",
-      "full_def": "Replace human preference labels in RLHF with AI-generated preference labels, typically from a feedback model conditioned on a written constitution",
-      "case_strict": true,
-      "kb_cite": "bai2022-cai §4"
-    },
-    {
       "key": "constitutional-ai",
       "primary_form": "Constitutional AI",
       "aliases": [
@@ -3127,44 +2893,15 @@
       "kb_cite": "bai2022-cai §3"
     },
     {
-      "key": "sl-cai",
-      "primary_form": "SL-CAI",
-      "aliases": [],
-      "short_def": "Supervised learning stage of Constitutional AI.",
-      "full_def": "Supervised learning stage of Constitutional AI. Sample initial responses, critique them under a randomly-chosen principle, revise, and SFT on revised responses",
-      "case_strict": true,
-      "kb_cite": "bai2022-cai §3"
-    },
-    {
-      "key": "rl-cai",
-      "primary_form": "RL-CAI",
-      "aliases": [],
-      "short_def": "Reinforcement learning stage of Constitutional AI.",
-      "full_def": "Reinforcement learning stage of Constitutional AI. Generate AI preferences by having a feedback model choose between response pairs under a principle, train a reward model on AI preferences, run PPO",
-      "case_strict": true,
-      "kb_cite": "bai2022-cai §4"
-    },
-    {
-      "key": "r-cai",
-      "primary_form": "R-CAI",
-      "aliases": [
-        "Reverse Constitutional AI"
-      ],
-      "short_def": "Inverts the constitution for adversarial / toxic data generation; probability-clamped RLAIF for red-team data synthesis (April 2026)",
-      "full_def": "Inverts the constitution for adversarial / toxic data generation; probability-clamped RLAIF for red-team data synthesis (April 2026)",
-      "case_strict": true,
-      "kb_cite": "r-cai-2026"
-    },
-    {
-      "key": "rlvr-2",
+      "key": "rlvr",
       "primary_form": "RLVR",
       "aliases": [
         "Reinforcement Learning with Verifiable Rewards"
       ],
-      "short_def": "Post-training paradigm where the reward is a deterministic programmatic verifier (math equality, code unit-tests, format check), not a lear…",
-      "full_def": "Post-training paradigm where the reward is a deterministic programmatic verifier (math equality, code unit-tests, format check), not a learned reward model. The policy still uses on-policy RL",
+      "short_def": "Post-training paradigm where the reward is computed mechanically from the emitted answer by a deterministic programmatic verifier — math eq…",
+      "full_def": "Post-training paradigm where the reward is computed mechanically from the emitted answer by a deterministic programmatic verifier — math equality or a regex grader, code unit-test execution, a formal proof-checker, a format check — rather than by a learned reward model: +1 if the verifier accepts, 0 otherwise. The policy still uses on-policy RL, and the reasoning trace is the policy's free choice. The defining feature of post-2024 reasoning training; used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning and Tülu 3. See `kb/notes/post-training/rlvr-and-grpo.md`",
       "case_strict": true,
-      "kb_cite": "deepseek-r1 §2.2; tulu3"
+      "kb_cite": "deepseek-r1 §2.2.1; tulu3"
     },
     {
       "key": "verifiable-reward",
@@ -3181,8 +2918,8 @@
       "aliases": [
         "Group Relative Policy Optimization"
       ],
-      "short_def": "Critic-free PPO variant: replaces the value model with a group-mean reward baseline.",
-      "full_def": "Critic-free PPO variant: replaces the value model with a group-mean reward baseline. Sample $G$ trajectories per prompt, normalize rewards within the group, use the standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR",
+      "short_def": "Critic-free PPO variant (Shao 2024): replaces the value model with a group-mean reward baseline, eliminating the value-network requirement.",
+      "full_def": "Critic-free PPO variant (Shao 2024): replaces the value model with a group-mean reward baseline, eliminating the value-network requirement. Sample $G$ trajectories per prompt; each sample's advantage is its reward minus the group mean, divided by the group standard deviation; use that standardized advantage in the PPO loss. Used by DeepSeek-R1, Qwen 3, Tülu 3 RLVR",
       "case_strict": true,
       "kb_cite": "shao2024 §4.1; deepseek-r1 §2.1 Eq.1"
     },
@@ -3210,8 +2947,8 @@
       "aliases": [
         "Decoupled clip and dynamic sAmpling Policy Optimization"
       ],
-      "short_def": "GRPO improvement with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient groups), Token…",
-      "full_def": "GRPO improvement with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient groups), Token-Level Loss (equal-weight tokens regardless of trajectory length), Overlong Reward Shaping (soft penalty for length-truncated trajectories)",
+      "short_def": "ByteDance's GRPO improvement, with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient /…",
+      "full_def": "ByteDance's GRPO improvement, with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient / zero-variance groups), Token-Level Loss (equal-weight tokens regardless of trajectory length, versus sequence-level), Overlong Reward Shaping (soft penalty for length-truncated trajectories). Reaches 50 points on AIME 2024 with Qwen2.5-32B",
       "case_strict": true,
       "kb_cite": "dapo2025 §2"
     },
@@ -3326,19 +3063,10 @@
       "aliases": [
         "R1 sense"
       ],
-      "short_def": "A small SFT stage on long-CoT examples preceding the main RL stage.",
-      "full_def": "A small SFT stage on long-CoT examples preceding the main RL stage. Provides a reasoning-format and language-quality regularizer for the subsequent RL. Distinct from full SFT pipelines",
+      "short_def": "A small-scale ($\\sim 10^4$ examples) SFT stage on long-CoT exemplars, run before the main RL stage to fix the readability problems of pure-…",
+      "full_def": "A small-scale ($\\sim 10^4$ examples) SFT stage on long-CoT exemplars, run before the main RL stage to fix the readability problems of pure-RL outputs (R1-Zero). Provides a reasoning-format and language-quality regularizer for the subsequent RL: it does not change asymptotic capability but improves trace coherence. Distinct from full SFT pipelines",
       "case_strict": true,
-      "kb_cite": "deepseek-r1 §3"
-    },
-    {
-      "key": "reasoning-distillation-sft",
-      "primary_form": "Reasoning-distillation SFT",
-      "aliases": [],
-      "short_def": "Training small models (1.5B–32B) on reasoning trajectories generated by a strong reasoning teacher (R1, o1) via pure SFT with no RL.",
-      "full_def": "Training small models (1.5B–32B) on reasoning trajectories generated by a strong reasoning teacher (R1, o1) via pure SFT with no RL. The 800K-sample DeepSeek-R1 distillation set is the canonical example",
-      "case_strict": true,
-      "kb_cite": "deepseek-r1 §4"
+      "kb_cite": "deepseek-r1 §2.2.4; deepseek-r1 §3"
     },
     {
       "key": "thinking-non-thinking-modes",
@@ -3402,8 +3130,8 @@
       "key": "self-consistency",
       "primary_form": "Self-consistency",
       "aliases": [],
-      "short_def": "Sample $N$ reasoning traces at temperature $T > 0$, majority-vote over extracted answers.",
-      "full_def": "Sample $N$ reasoning traces at temperature $T > 0$, majority-vote over extracted answers. The simplest test-time-compute strategy. Gains: GSM8K +17.9%, SVAMP +11.0% over greedy CoT.",
+      "short_def": "Sample $N$ reasoning traces independently at temperature $T > 0$, majority-vote over the extracted answers.",
+      "full_def": "Sample $N$ reasoning traces independently at temperature $T > 0$, majority-vote over the extracted answers. The simplest test-time-compute strategy, and a cheap baseline that requires no verifier. Gains: GSM8K +17.9%, SVAMP +11.0% over greedy CoT.",
       "case_strict": false,
       "kb_cite": "wang2022-self-consistency §3"
     },
@@ -3417,11 +3145,11 @@
       "kb_cite": "deepseek-r1 §2"
     },
     {
-      "key": "cot-faithfulness-2",
+      "key": "cot-faithfulness",
       "primary_form": "CoT faithfulness",
       "aliases": [],
-      "short_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation.",
-      "full_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%.",
+      "short_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation — equivalently, whether the chain-of…",
+      "full_def": "The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation — equivalently, whether the chain-of-thought reflects the model's actual reasoning process. Measured by counterfactual perturbation. Empirically partial: Lanham et al. 2023 and Turpin et al. 2024 show CoT can be unfaithful via post-hoc rationalization and label-leakage; thinking models report rates ~0.04–0.14% post-hoc, non-thinking models ~7–13%. Apollo's argument that scheming-shaped CoT constitutes evidence of scheming sidesteps faithfulness by treating CoT as part of the deployed surface rather than as ground-truth introspection.",
       "case_strict": true,
       "kb_cite": "mehta2026-faithfulness-scaling, arXiv 2601.06423; shen2025-faithcot-bench, arXiv 2510.04040"
     },
@@ -3479,16 +3207,16 @@
       "short_def": "The s1 2025 mechanism.",
       "full_def": "The s1 2025 mechanism. When the model emits its end-of-thinking token before the budget is reached, suppress it and append the continuation token \"Wait\" to force more reasoning; hard-truncate to enforce shorter budgets.",
       "case_strict": false,
-      "kb_cite": "s1-2025 §3.2"
+      "kb_cite": "s1-2025 §3.1"
     },
     {
-      "key": "thinking-budget-2",
+      "key": "thinking-budget",
       "primary_form": "Thinking budget",
       "aliases": [],
-      "short_def": "Productised TTC control: API-level integer (Gemini 2.5 `thinkingBudget`), effort level (OpenAI o-series), or token cap (Anthropic thinking…",
-      "full_def": "Productised TTC control: API-level integer (Gemini 2.5 `thinkingBudget`), effort level (OpenAI o-series), or token cap (Anthropic thinking block).",
+      "short_def": "Productised test-time-compute control that caps the reasoning-token spend per request before the model is forced to commit to an answer: an…",
+      "full_def": "Productised test-time-compute control that caps the reasoning-token spend per request before the model is forced to commit to an answer: an API-level integer (Gemini 2.5 `thinkingBudget`), an effort level (OpenAI o-series), or a token cap (Anthropic extended-thinking block). Operationalizes Snell's compute-optimal strategy. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete (Qwen 3).",
       "case_strict": false,
-      "kb_cite": "gemini2-5 §3"
+      "kb_cite": "gemini2-5 §3; kb/index/papers.json#gemini2-5"
     },
     {
       "key": "outcome-reward-model",
@@ -3580,46 +3308,6 @@
       "full_def": "Sample $N$ traces, score each with a verifier (ORM, PRM, or self-consistency baseline), select the highest-scored. Canonical sampling-based TTC.",
       "case_strict": true,
       "kb_cite": "lightman2023-prm800k §4"
-    },
-    {
-      "key": "rlvr-3",
-      "primary_form": "RLVR",
-      "aliases": [
-        "RL with Verifiable Rewards"
-      ],
-      "short_def": "RL post-training where the reward is computed mechanically from the emitted answer (regex match for math, unit-test execution for code, pro…",
-      "full_def": "RL post-training where the reward is computed mechanically from the emitted answer (regex match for math, unit-test execution for code, proof-checker for formal proofs), not from a learned reward model. The defining feature of post-2024 reasoning training.",
-      "case_strict": true,
-      "kb_cite": "deepseek-r1 §2.2.1"
-    },
-    {
-      "key": "grpo-2",
-      "primary_form": "GRPO",
-      "aliases": [
-        "Group Relative Policy Optimisation"
-      ],
-      "short_def": "Critic-free PPO variant (Shao 2024).",
-      "full_def": "Critic-free PPO variant (Shao 2024). Per-prompt group of $G$ samples; advantage is each sample's reward minus group mean, divided by group std. Eliminates the value-network requirement.",
-      "case_strict": true,
-      "kb_cite": "shao2024 §4.1; deepseek-r1 §2.1"
-    },
-    {
-      "key": "dapo-2",
-      "primary_form": "DAPO",
-      "aliases": [],
-      "short_def": "ByteDance's GRPO variant.",
-      "full_def": "ByteDance's GRPO variant. Four modifications: clip-higher (asymmetric clip), dynamic sampling (drop zero-variance groups), token-level loss (vs sequence-level), overlong reward shaping. AIME 2024 50pts on Qwen2.5-32B.",
-      "case_strict": true,
-      "kb_cite": "dapo2025 §2"
-    },
-    {
-      "key": "cold-start-sft-2",
-      "primary_form": "Cold-start SFT",
-      "aliases": [],
-      "short_def": "A small-scale ($\\sim 10^4$ examples) SFT pass on long-CoT exemplars, run before RL to fix readability problems of pure-RL outputs (R1-Zero).",
-      "full_def": "A small-scale ($\\sim 10^4$ examples) SFT pass on long-CoT exemplars, run before RL to fix readability problems of pure-RL outputs (R1-Zero). Does not change asymptotic capability but improves trace coherence.",
-      "case_strict": true,
-      "kb_cite": "deepseek-r1 §2.2.4"
     },
     {
       "key": "rejection-sampling-sft",
@@ -3916,15 +3604,6 @@
       "kb_cite": "snell2024 §3.2; kb/excerpts/snell2024#sec-3-2-difficulty"
     },
     {
-      "key": "thinking-budget-thinkingbudget",
-      "primary_form": "Thinking budget / `thinkingBudget`",
-      "aliases": [],
-      "short_def": "A productionized API parameter (Gemini 2.5, OpenAI o-series reasoning-effort levels, Anthropic extended-thinking) that caps the test-time-c…",
-      "full_def": "A productionized API parameter (Gemini 2.5, OpenAI o-series reasoning-effort levels, Anthropic extended-thinking) that caps the test-time-compute spend per request. Operationalizes Snell's compute-optimal strategy",
-      "case_strict": true,
-      "kb_cite": "gemini2-5; kb/index/papers.json#gemini2-5"
-    },
-    {
       "key": "reasoning-model",
       "primary_form": "Reasoning model",
       "aliases": [],
@@ -3932,15 +3611,6 @@
       "full_def": "An LLM trained (typically with RL on verifiable rewards) to produce long-form chain-of-thought before its final answer. o1, DeepSeek-R1, Qwen3-thinking-mode, Gemini 2.5-thinking-mode are exemplars",
       "case_strict": false,
       "kb_cite": "deepseek-r1; kb/index/papers.json#deepseek-r1"
-    },
-    {
-      "key": "self-consistency-2",
-      "primary_form": "Self-consistency",
-      "aliases": [],
-      "short_def": "Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers.",
-      "full_def": "Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers. Wang et al. 2022. Cheap baseline that requires no verifier.",
-      "case_strict": false,
-      "kb_cite": null
     },
     {
       "key": "maximal-update-parametrization-p",
@@ -4471,15 +4141,6 @@
       "kb_cite": null
     },
     {
-      "key": "bf16-bfloat16",
-      "primary_form": "BF16 (bfloat16)",
-      "aliases": [],
-      "short_def": "Brain-float.",
-      "full_def": "Brain-float. 8-bit exponent, 7-bit mantissa (vs. FP16's 5-exp/10-mant). Same dynamic range as FP32; lower precision. The 2020-2024 default forward/backward dtype.",
-      "case_strict": true,
-      "kb_cite": null
-    },
-    {
       "key": "fp8-e4m3",
       "primary_form": "FP8 E4M3",
       "aliases": [],
@@ -4536,15 +4197,6 @@
       "kb_cite": "deepseek-v3 §3.3.1"
     },
     {
-      "key": "loss-spike",
-      "primary_form": "Loss spike",
-      "aliases": [],
-      "short_def": "Sudden non-recoverable loss-curve excursion.",
-      "full_def": "Sudden non-recoverable loss-curve excursion. Causes include gradient-norm explosion, attention-logit divergence, embedding-norm growth, and FP8 underflow on rare tokens. DeepSeek-V3 reports zero such spikes in 14.8 T tokens.",
-      "case_strict": false,
-      "kb_cite": "deepseek-v3 §abstract"
-    },
-    {
       "key": "continual-late-stage-pre-training",
       "primary_form": "Continual / late-stage pre-training",
       "aliases": [],
@@ -4583,15 +4235,6 @@
       "kb_cite": null
     },
     {
-      "key": "linear-mode-connectivity",
-      "primary_form": "Linear mode connectivity",
-      "aliases": [],
-      "short_def": "The empirical finding that fine-tunes of a shared base land in a connected loss basin: averaging their weights gives a model with loss simi…",
-      "full_def": "The empirical finding that fine-tunes of a shared base land in a connected loss basin: averaging their weights gives a model with loss similar to the endpoints. The leading explanation for why merging works at all. (Frankle, Dziugaite et al. 2020 — pending excerpt.)",
-      "case_strict": false,
-      "kb_cite": null
-    },
-    {
       "key": "master-weights",
       "primary_form": "Master weights",
       "aliases": [],
@@ -4610,11 +4253,11 @@
       "kb_cite": "micikevicius2017-mixed-precision §3; kb/excerpts/micikevicius2017-mixed-precision#sec-3"
     },
     {
-      "key": "bf16-bfloat16-2",
+      "key": "bf16-bfloat16",
       "primary_form": "BF16 (bfloat16)",
       "aliases": [],
-      "short_def": "A 16-bit floating-point format with 8 exponent bits and 7 mantissa bits.",
-      "full_def": "A 16-bit floating-point format with 8 exponent bits and 7 mantissa bits. Same dynamic range as FP32; half the precision of FP16. The universal LLM pre-training default by 2023.",
+      "short_def": "\"Brain float\": a 16-bit floating-point format with 8 exponent bits and 7 mantissa bits (versus FP16's 5 and 10).",
+      "full_def": "\"Brain float\": a 16-bit floating-point format with 8 exponent bits and 7 mantissa bits (versus FP16's 5 and 10). Same dynamic range as FP32; half the precision of FP16. The universal LLM pre-training default forward/backward dtype by 2023.",
       "case_strict": true,
       "kb_cite": "kalamkar2019-bfloat16 §2; kb/excerpts/kalamkar2019-bfloat16#sec-2"
     },
@@ -4655,11 +4298,11 @@
       "kb_cite": null
     },
     {
-      "key": "loss-spike-2",
+      "key": "loss-spike",
       "primary_form": "Loss spike",
       "aliases": [],
-      "short_def": "A sudden upward jump in pre-training loss, often caused by gradient-norm explosion, attention-logit divergence, embedding-norm growth, or F…",
-      "full_def": "A sudden upward jump in pre-training loss, often caused by gradient-norm explosion, attention-logit divergence, embedding-norm growth, or FP8 underflow. May or may not recover. DeepSeek-V3 reports zero irrecoverable spikes over 14.8T tokens",
+      "short_def": "A sudden upward excursion in the pre-training loss curve, often caused by gradient-norm explosion, attention-logit divergence, embedding-no…",
+      "full_def": "A sudden upward excursion in the pre-training loss curve, often caused by gradient-norm explosion, attention-logit divergence, embedding-norm growth, or FP8 underflow on rare tokens. May or may not recover. DeepSeek-V3 reports zero irrecoverable spikes over 14.8 T tokens",
       "case_strict": false,
       "kb_cite": "deepseek-v3 abstract; kb/excerpts/deepseek-v3-training#abstract"
     },
@@ -4764,13 +4407,13 @@
       "kb_cite": "mergekit2024"
     },
     {
-      "key": "linear-mode-connectivity-2",
+      "key": "linear-mode-connectivity",
       "primary_form": "Linear mode connectivity",
       "aliases": [
         "LMC"
       ],
       "short_def": "The empirical property that fine-tunes of a shared base land in a connected loss basin: the path $\\theta_0 + t(\\theta_f - \\theta_0)$, $t \\i…",
-      "full_def": "The empirical property that fine-tunes of a shared base land in a connected loss basin: the path $\\theta_0 + t(\\theta_f - \\theta_0)$, $t \\in [0,1]$, stays in low-loss territory. Underpins why model merging works.",
+      "full_def": "The empirical property that fine-tunes of a shared base land in a connected loss basin: the path $\\theta_0 + t(\\theta_f - \\theta_0)$, $t \\in [0,1]$, stays in low-loss territory, so averaging their weights gives a model with loss similar to the endpoints. The leading explanation for why model merging works at all. (Frankle, Dziugaite et al. 2020 — pending excerpt.)",
       "case_strict": false,
       "kb_cite": null
     },
@@ -4811,13 +4454,13 @@
       "kb_cite": "magpie-2024"
     },
     {
-      "key": "reasoning-distillation-sft-2",
+      "key": "reasoning-distillation-sft",
       "primary_form": "Reasoning-distillation SFT",
       "aliases": [],
-      "short_def": "Fine-tuning a small base model on $(x,y)$ traces sampled from a strong RL-trained reasoner (e.g., R1-Distill: 800K samples from DeepSeek-R1…",
-      "full_def": "Fine-tuning a small base model on $(x,y)$ traces sampled from a strong RL-trained reasoner (e.g., R1-Distill: 800K samples from DeepSeek-R1; s1: 1K curated traces from Gemini Flash Thinking). Recovers most reasoning capability with no RL.",
+      "short_def": "Fine-tuning a small base model (1.5B–32B) on $(x,y)$ traces sampled from a strong RL-trained reasoning teacher (e.g., R1-Distill: 800K samp…",
+      "full_def": "Fine-tuning a small base model (1.5B–32B) on $(x,y)$ traces sampled from a strong RL-trained reasoning teacher (e.g., R1-Distill: 800K samples from DeepSeek-R1; s1: 1K curated traces from Gemini Flash Thinking). Pure SFT, no RL, and it recovers most reasoning capability.",
       "case_strict": true,
-      "kb_cite": "deepseek-r1; s1-2025"
+      "kb_cite": "deepseek-r1 §4; s1-2025"
     },
     {
       "key": "thinking-non-thinking-mode-sft",
@@ -4840,13 +4483,13 @@
       "kb_cite": null
     },
     {
-      "key": "rlaif-3",
+      "key": "rlaif",
       "primary_form": "RLAIF",
       "aliases": [
         "Reinforcement Learning from AI Feedback"
       ],
-      "short_def": "RLHF pipeline where preference labels come from an AI feedback model rather than human labelers.",
-      "full_def": "RLHF pipeline where preference labels come from an AI feedback model rather than human labelers. The reward model is trained on AI-generated preferences via standard Bradley–Terry.",
+      "short_def": "RLHF pipeline where preference labels in the RL stage come from an AI feedback model — typically one conditioned on a written constitution…",
+      "full_def": "RLHF pipeline where preference labels in the RL stage come from an AI feedback model — typically one conditioned on a written constitution — rather than from human labelers. The reward model is trained on the AI-generated preferences via standard Bradley–Terry. Introduced as the RL-CAI step of `bai2022-cai`. Reduces labeling burden, but does not address the bias source if the AI feedback model itself inherits the bias.",
       "case_strict": true,
       "kb_cite": "bai2022-cai §4; kb/excerpts/bai2022-cai#sec-4"
     },
@@ -4860,7 +4503,7 @@
       "kb_cite": "bai2022-cai §3; kb/excerpts/bai2022-cai#sec-3"
     },
     {
-      "key": "sl-cai-2",
+      "key": "sl-cai",
       "primary_form": "SL-CAI",
       "aliases": [],
       "short_def": "Stage 1 of Constitutional AI: sample a response from a helpful-only model, critique under a randomly-chosen principle, revise, and SFT on t…",
@@ -4869,7 +4512,7 @@
       "kb_cite": "bai2022-cai §3; kb/excerpts/bai2022-cai#sec-3"
     },
     {
-      "key": "rl-cai-2",
+      "key": "rl-cai",
       "primary_form": "RL-CAI",
       "aliases": [],
       "short_def": "Stage 2 of Constitutional AI: sample response pairs from $\\pi^{\\mathrm{SL-CAI}}$, have an AI judge choose under a principle, train a reward…",
@@ -4889,13 +4532,13 @@
       "kb_cite": "bai2022-cai §6; kb/excerpts/bai2022-cai#sec-6"
     },
     {
-      "key": "r-cai-2",
+      "key": "r-cai",
       "primary_form": "R-CAI",
       "aliases": [
-        "Reverse CAI"
+        "Reverse Constitutional AI"
       ],
-      "short_def": "Inverts the constitution and applies probability-clamped RLAIF to generate controlled adversarial / toxic data.",
-      "full_def": "Inverts the constitution and applies probability-clamped RLAIF to generate controlled adversarial / toxic data.",
+      "short_def": "Inverts the constitution and applies probability-clamped RLAIF to generate controlled adversarial / toxic data for red-team data synthesis…",
+      "full_def": "Inverts the constitution and applies probability-clamped RLAIF to generate controlled adversarial / toxic data for red-team data synthesis (April 2026).",
       "case_strict": true,
       "kb_cite": "r-cai-2026"
     },
@@ -4909,13 +4552,13 @@
       "kb_cite": null
     },
     {
-      "key": "constrained-decoding-2",
+      "key": "constrained-decoding",
       "primary_form": "Constrained decoding",
       "aliases": [],
       "short_def": "Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,…",
-      "full_def": "Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\\mathcal{V}_{\\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state.",
+      "full_def": "Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\\mathcal{V}_{\\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. Naive implementations query the grammar engine for every token in the vocabulary at every step — the bottleneck modern engines fix.",
       "case_strict": false,
-      "kb_cite": "willard2023-outlines §3; kb/excerpts/willard2023-outlines#sec-3"
+      "kb_cite": "willard2023-outlines §3; kb/excerpts/willard2023-outlines#sec-3; kb/notes/inference/structured-output#§1"
     },
     {
       "key": "fsm-vocabulary-index",
@@ -4938,13 +4581,13 @@
       "kb_cite": "xgrammar2024 §3; kb/excerpts/xgrammar2024#sec-3"
     },
     {
-      "key": "compressed-fsm-2",
+      "key": "compressed-fsm",
       "primary_form": "Compressed FSM",
       "aliases": [
         "SGLang"
       ],
-      "short_def": "FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar determ…",
-      "full_def": "FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar deterministically forces a literal substring (e.g., `{\"summary\": \"` in a JSON schema).",
+      "short_def": "FSM transformation that merges chains of singular-transition edges into single edges, so the constrained decoder emits an entire determinis…",
+      "full_def": "FSM transformation that merges chains of singular-transition edges into single edges, so the constrained decoder emits an entire deterministically-forced literal substring (e.g., the constant prefix `{\"summary\": \"` in a JSON schema) in one step instead of token-by-token.",
       "case_strict": true,
       "kb_cite": "zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4"
     },
@@ -4978,11 +4621,11 @@
       "kb_cite": "FORUM-SIGNAL: arXiv:2501.10868"
     },
     {
-      "key": "probe-2",
+      "key": "probe",
       "primary_form": "Probe",
       "aliases": [],
-      "short_def": "A (typically linear) classifier $g: \\mathbb{R}^d \\to \\mathcal{Y}$ trained on frozen LM activations $\\mathbf{h}^{(\\ell, t)}$ to predict an e…",
-      "full_def": "A (typically linear) classifier $g: \\mathbb{R}^d \\to \\mathcal{Y}$ trained on frozen LM activations $\\mathbf{h}^{(\\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology",
+      "short_def": "A (typically linear) classifier $g: \\mathbb{R}^d \\to \\mathcal{Y}$ — in the binary case $g(\\mathbf{h}) = \\sigma(\\mathbf{w}^\\top \\mathbf{h} +…",
+      "full_def": "A (typically linear) classifier $g: \\mathbb{R}^d \\to \\mathcal{Y}$ — in the binary case $g(\\mathbf{h}) = \\sigma(\\mathbf{w}^\\top \\mathbf{h} + b)$ — trained on frozen LM activations $\\mathbf{h}^{(\\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology",
       "case_strict": false,
       "kb_cite": "alain-bengio-2017 §1"
     },
@@ -5050,11 +4693,11 @@
       "kb_cite": "vennemeyer2025-sycophancy-not-one-thing FORUM-SIGNAL"
     },
     {
-      "key": "truth-direction-2",
+      "key": "truth-direction",
       "primary_form": "Truth direction",
       "aliases": [],
-      "short_def": "A direction in residual-stream space whose projection sign correlates with (and, validated by Marks & Tegmark 2023, causally controls) the…",
-      "full_def": "A direction in residual-stream space whose projection sign correlates with (and, validated by Marks & Tegmark 2023, causally controls) the model's TRUE/FALSE prediction on factual statements. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens",
+      "short_def": "A direction in residual-stream space — canonically the mass-mean probe direction of Marks & Tegmark 2023 — whose projection sign correlates…",
+      "full_def": "A direction in residual-stream space — canonically the mass-mean probe direction of Marks & Tegmark 2023 — whose projection sign correlates with (and, validated in the same work, causally controls) the model's TRUE/FALSE prediction on factual statements. The separating subspace is small and holds across many models and datasets. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens",
       "case_strict": false,
       "kb_cite": "marks-tegmark-2023-truth §3"
     },
@@ -5079,11 +4722,11 @@
       "kb_cite": "hendrycks2021-mmlu §abstract"
     },
     {
-      "key": "mmlu-redux-2",
+      "key": "mmlu-redux",
       "primary_form": "MMLU-Redux",
       "aliases": [],
-      "short_def": "Polo et al. 2024 audit of MMLU finding 6.49% baseline error rate, with the Virology subset reaching 57% errors.",
-      "full_def": "Polo et al. 2024 audit of MMLU finding 6.49% baseline error rate, with the Virology subset reaching 57% errors. Per-question corrections published; methodology audit, not a new benchmark",
+      "short_def": "Polo et al. 2024 audit of MMLU, re-annotating 5,700 questions and finding a 6.49% baseline error rate, with the Virology subset reaching 57…",
+      "full_def": "Polo et al. 2024 audit of MMLU, re-annotating 5,700 questions and finding a 6.49% baseline error rate, with the Virology subset reaching 57% errors. Per-question corrections published, and correcting them flips leaderboard ranks. A methodology audit, not a new benchmark",
       "case_strict": true,
       "kb_cite": "mmlu-redux-2024 §abstract"
     },
@@ -5097,22 +4740,22 @@
       "kb_cite": "wang2024-mmlu-pro §abstract"
     },
     {
-      "key": "gpqa-diamond-2",
+      "key": "gpqa-diamond",
       "primary_form": "GPQA Diamond",
       "aliases": [],
-      "short_def": "198-question subset of GPQA (Rein et al. 2023) where two PhD experts agree on the answer and at least one non-expert validator with web acc…",
-      "full_def": "198-question subset of GPQA (Rein et al. 2023) where two PhD experts agree on the answer and at least one non-expert validator with web access got it wrong. The \"Google-proof\" property is operationalized via the 34% non-expert-with-web baseline. Saturated at frontier as of 2026 (>90%)",
+      "short_def": "198-question subset of GPQA (Rein et al. 2023) where (i) both PhD expert annotators agree on the gold answer and (ii) at least one non-expe…",
+      "full_def": "198-question subset of GPQA (Rein et al. 2023) where (i) both PhD expert annotators agree on the gold answer and (ii) at least one non-expert validator with web access got it wrong. The headline subset on which leaderboards report. The \"Google-proof\" property is operationalized via the 34% non-expert-with-web baseline. Saturated at frontier as of 2026 (>90%)",
       "case_strict": true,
-      "kb_cite": "rein2023-gpqa §abstract"
+      "kb_cite": "rein2023-gpqa §2.3; rein2023-gpqa §abstract"
     },
     {
-      "key": "answer-letter-prior-2",
+      "key": "answer-letter-prior",
       "primary_form": "Answer-letter prior",
       "aliases": [],
-      "short_def": "The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items.",
-      "full_def": "The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items. Letter bias can favor one option by several percentage points; 10-way MCQ (MMLU-Pro) dilutes this effect",
+      "short_def": "The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items, independent of question content.",
+      "full_def": "The training-data-induced bias that pre-trained LMs do not have uniform priors over A/B/C/D in MCQ items, independent of question content. Mitigated by widening the option set — 10-way MCQ (MMLU-Pro) dilutes the effect, since augmenting four options to ten \"significantly lowers the likelihood of correctly guessing an answer\" `[wang2024-mmlu-pro §3.2]` — or by letter-permutation evaluation. The size of the letter bias itself — often quoted as 1–4 percentage points — is not measured in MMLU-Pro",
       "case_strict": false,
-      "kb_cite": "wang2024-mmlu-pro §sec-delta"
+      "kb_cite": "SPECULATION"
     },
     {
       "key": "cot-vs-direct-gap-as-a-knowledge-reasoning-diagnostic",
@@ -5121,7 +4764,7 @@
       "short_def": "On a knowledge-dominant benchmark (MMLU), Chain-of-Thought scoring gives roughly the same result as direct-answer scoring; on a reasoning-d…",
       "full_def": "On a knowledge-dominant benchmark (MMLU), Chain-of-Thought scoring gives roughly the same result as direct-answer scoring; on a reasoning-dominant benchmark (MMLU-Pro), CoT improves the score measurably. The gap is a diagnostic for whether a benchmark requires multi-step inference",
       "case_strict": true,
-      "kb_cite": "wang2024-mmlu-pro §sec-cot"
+      "kb_cite": "wang2024-mmlu-pro §6.2"
     },
     {
       "key": "knowledge-vs-reasoning-hybrid",
@@ -5136,15 +4779,15 @@
       "key": "asr",
       "primary_form": "ASR",
       "aliases": [
-        "Attack Success Rate"
+        "Attack success rate"
       ],
-      "short_def": "Headline metric in adversarial-robustness benchmarks: fraction of (behavior, attack) pairs for which the model produces an output the judge…",
-      "full_def": "Headline metric in adversarial-robustness benchmarks: fraction of (behavior, attack) pairs for which the model produces an output the judge rates harmful. Not directly comparable across papers unless the judge, behaviors, and attack family match",
+      "short_def": "Headline metric in adversarial-robustness benchmarks: the fraction of (behavior, attack) pairs for which the model produces an output the j…",
+      "full_def": "Headline metric in adversarial-robustness benchmarks: the fraction of (behavior, attack) pairs for which the model produces an output the judge rates harmful — equivalently, the fraction of adversarial prompts that elicit a successful (policy-violating) response under a fixed scoring procedure. Not directly comparable across papers unless the judge, behaviors, attack family, and threat-model assumptions match",
       "case_strict": true,
       "kb_cite": "chao2024-jailbreakbench §abstract"
     },
     {
-      "key": "harmbench-2",
+      "key": "harmbench",
       "primary_form": "HarmBench",
       "aliases": [],
       "short_def": "Mazeika et al. 2024 standardized red-team evaluation framework: 510 behaviors in four functional categories, 18 attack methods, 33 target L…",
@@ -5153,11 +4796,11 @@
       "kb_cite": "harmbench2024 §abstract"
     },
     {
-      "key": "jailbreakbench-2",
+      "key": "jailbreakbench",
       "primary_form": "JailbreakBench",
       "aliases": [],
-      "short_def": "Chao et al. 2024 reproducibility-focused jailbreak benchmark: 100 OpenAI-policy-aligned behaviors, evolving repository of jailbreak artifac…",
-      "full_def": "Chao et al. 2024 reproducibility-focused jailbreak benchmark: 100 OpenAI-policy-aligned behaviors, evolving repository of jailbreak artifacts (the actual successful prompts), standardized LLM-as-judge, public leaderboard. NeurIPS 2024 D&B",
+      "short_def": "Chao et al. 2024 reproducibility-focused open jailbreak benchmark: 100 OpenAI-policy-aligned target behaviors, a standardized threat model…",
+      "full_def": "Chao et al. 2024 reproducibility-focused open jailbreak benchmark: 100 OpenAI-policy-aligned target behaviors, a standardized threat model / prompts / scoring with an LLM-as-judge, an evolving repository of jailbreak artifacts (the actual successful prompts), and a public leaderboard. NeurIPS 2024 D&B; co-canonical with HarmBench",
       "case_strict": true,
       "kb_cite": "chao2024-jailbreakbench §abstract"
     },
@@ -5177,7 +4820,7 @@
       "short_def": "The automated implementation of Crescendo: an attacker LLM generates the escalation chain.",
       "full_def": "The automated implementation of Crescendo: an attacker LLM generates the escalation chain. The 29--61% ASR uplift on GPT-4 and 49--71% on Gemini-Pro refers to Crescendomation specifically, measured on the AdvBench subset against state-of-the-art single-turn baselines",
       "case_strict": false,
-      "kb_cite": "russinovich2024-crescendo §sec-5-2-results"
+      "kb_cite": "russinovich2024-crescendo §5.2"
     },
     {
       "key": "competing-objectives-jailbreak-failure-mode",
@@ -5229,11 +4872,11 @@
       "kb_cite": "metr-autonomy-2024"
     },
     {
-      "key": "dangerous-capability-evaluation-2",
+      "key": "dangerous-capability-evaluation",
       "primary_form": "Dangerous-capability evaluation",
       "aliases": [],
       "short_def": "Pre-deployment eval that tests whether a model can autonomously carry out a task whose successful completion would constitute a threat (cyb…",
-      "full_def": "Pre-deployment eval that tests whether a model can autonomously carry out a task whose successful completion would constitute a threat (cyber CTFs, autonomous replication, biology / CBRN tasks). Inverts the usual \"model refuses harm\" frame to \"model could *do* harm if it tried\"",
+      "full_def": "Pre-deployment eval that tests whether a model can autonomously carry out a task whose successful completion would constitute a threat (cyber CTFs and cybersecurity attack capability, autonomous replication, autonomous research, biology / CBRN uplift). Inverts the usual \"model refuses harm\" frame to \"model could *do* harm if it tried\". METR's 77-task autonomy suite is the canonical cross-vendor reference",
       "case_strict": false,
       "kb_cite": "metr-autonomy-2024; cybench2024 FORUM-SIGNAL"
     },
@@ -5253,7 +4896,7 @@
       "short_def": "The fine-tuned classifier (Llama-2-13B family, fine-tuned on labeled harmful/non-harmful generations) shipped with HarmBench as the standar…",
       "full_def": "The fine-tuned classifier (Llama-2-13B family, fine-tuned on labeled harmful/non-harmful generations) shipped with HarmBench as the standardized judge for the 510 behaviors",
       "case_strict": true,
-      "kb_cite": "harmbench2024 §sec-structure"
+      "kb_cite": "harmbench2024 §4.1, §4.3"
     },
     {
       "key": "honeypot-evaluation",

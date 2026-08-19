@@ -17,11 +17,11 @@ each tied to a single primary source -- is how the $H$ \glsterm{query}{query} he
 share the underlying $K$ and $V$ projections, and consequently how
 much memory the \glsterm{autoregressive}{autoregressive} \glsterm{kv-cache}{KV cache} consumes per token.
 \textbf{The thesis of this section: there is one axis, and four
-named points on it (\glsterm{mha}{MHA}, \glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, \glsterm{multi-head-latent-attention}{MLA}), and modern frontier-2026
+named points on it (\glsterm{mha}{MHA}, \glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, \glsterm{mla}{MLA}), and modern frontier-2026
 LLMs all sit somewhere along that axis with the rest of the
 attention block held fixed.} The axis is parameterised by
 $H_{\mathrm{kv}}$, the count of distinct \glsterm{key}{key}/\glsterm{value}{value} heads relative to
-the count of \glsterm{query}{query} heads $H$, and -- in the \glsterm{multi-head-latent-attention}{MLA} case -- by a
+the count of \glsterm{query}{query} heads $H$, and -- in the \glsterm{mla}{MLA} case -- by a
 joint-compression rank $d_c$. We walk the four waypoints with the
 canonical equations transcribed verbatim, then assemble the
 cache-cost-vs-quality table that locates each variant on the curve.
@@ -48,7 +48,7 @@ keeps the pre-\glsterm{softmax}{softmax} logit variance independent of $d_h$ at
 initialisation%
 \footnote{If $q, k$ have i.i.d.\ unit-variance components,
 $\mathrm{Var}(q\!\cdot\!k) = d_h$ \citep[\S 3.2.1, fn.~4]{vaswani2017}.}.
-\glsterm{multi-head-attention}{Multi-head attention} runs Eq.~\eqref{eq:vaswani-attn} $H$ times in
+\glsterm{mha}{Multi-head attention} runs Eq.~\eqref{eq:vaswani-attn} $H$ times in
 parallel on linearly projected inputs%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/vaswani2017.md#sec-3-2-2}.}:
 \begin{align}
@@ -209,7 +209,7 @@ LLMs~\citep{touvron2023, jiang2023, meta-llama3, qwen3, phi4}.
 
 \citet{deepseek-v2} change the question. \glsterm{mqa}{MQA} and \glsterm{gqa}{GQA} both
 \emph{select} a smaller number of $K, V$ heads from a discrete set
-$\{1, \ldots, H\}$. \glsterm{multi-head-latent-attention}{MLA} instead \emph{compresses} the joint $K, V$
+$\{1, \ldots, H\}$. \glsterm{mla}{MLA} instead \emph{compresses} the joint $K, V$
 information at each token into a low-rank latent vector, then
 \emph{reconstructs} per-head $K_i, V_i$ at use time%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/deepseek-v2.md#sec-2-1-2}.}.
@@ -217,7 +217,7 @@ The cache holds the latent only; the per-head reconstruction
 matrices are weights, not cache.
 
 Let $\mathbf{h}_t \in \R^{D}$ be the residual-stream slice at token
-$t$. \glsterm{multi-head-latent-attention}{MLA} defines down-projection $W^{DKV} \in \R^{d_c \times D}$ and
+$t$. \glsterm{mla}{MLA} defines down-projection $W^{DKV} \in \R^{d_c \times D}$ and
 per-head up-projections
 $W^{UK}, W^{UV} \in \R^{H d_h \times d_c}$ with $d_c \ll H d_h$:
 \begin{align}
@@ -297,16 +297,16 @@ smaller than the \glsterm{gqa}{GQA}-8 default while, in their internal ablations
 matching or exceeding \glsterm{mha}{MHA} quality.
 
 \begin{intuition}
-\glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, and \glsterm{multi-head-latent-attention}{MLA} are three answers to the same question: ``how do
+\glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, and \glsterm{mla}{MLA} are three answers to the same question: ``how do
 $H$ \glsterm{query}{query} heads share their $K, V$ scratchpad?'' \glsterm{mqa}{MQA} picks one
 shared $(K, V)$ pair globally. \glsterm{gqa}{GQA}-$G$ picks $G$ shared pairs, one
-per group. \glsterm{multi-head-latent-attention}{MLA} does not pick at all -- it stores a single
+per group. \glsterm{mla}{MLA} does not pick at all -- it stores a single
 $d_c$-vector summary of $(K, V)$ jointly, and \emph{decompresses} on
 demand into per-head $(K_i, V_i)$ via fixed weight matrices that the
 inference engine algebraically absorbs into $W^Q$ and $W^O$.
 Returning to canonical math: \glsterm{mqa}{MQA} fixes
 $\mathrm{cache} = 2 d_h b$, \glsterm{gqa}{GQA}-$G$ fixes
-$\mathrm{cache} = 2 G d_h b$, \glsterm{multi-head-latent-attention}{MLA} fixes
+$\mathrm{cache} = 2 G d_h b$, \glsterm{mla}{MLA} fixes
 $\mathrm{cache} = (d_c + d_h^R) b$ with the per-head $K, V$ never
 appearing in the cache at all. The first two cuts dimensions; the
 third refactors the storage.
@@ -331,7 +331,7 @@ Capability ratings are taken verbatim from
 \glsterm{gqa}{GQA}-8 (LLaMA-2/3 70B)        & $16\,d_h\,b$     & Moderate--strong \\
 \glsterm{gqa}{GQA}-2                        & $4\,d_h\,b$      & Moderate \\
 \glsterm{mqa}{MQA} \citep{shazeer2019}      & $2\,d_h\,b$      & Weak \\
-\textbf{\glsterm{multi-head-latent-attention}{MLA}} \citep{deepseek-v2} & $(d_c + d_h^R)\,b \approx 4.5\,d_h\,b$
+\textbf{\glsterm{mla}{MLA}} \citep{deepseek-v2} & $(d_c + d_h^R)\,b \approx 4.5\,d_h\,b$
                                 & \textbf{Stronger} (DSV2-internal) \\
 \bottomrule
 \end{tabular}
@@ -345,27 +345,27 @@ $d_c = 4 d_h, d_h^R = d_h/2$ \citep[\S 2.1.4]{deepseek-v2}.}
 \end{table}
 
 The curve has a striking property: \citet{deepseek-v2}'s ablation
-puts \glsterm{multi-head-latent-attention}{MLA} at \glsterm{gqa}{GQA}-2.25 cache footprint with \glsterm{mha}{MHA}-or-better quality --
+puts \glsterm{mla}{MLA} at \glsterm{gqa}{GQA}-2.25 cache footprint with \glsterm{mha}{MHA}-or-better quality --
 i.e., \emph{above} the \glsterm{mha}{MHA} point on the quality dimension at
 \emph{below} the \glsterm{gqa}{GQA}-8 point on the cache dimension. If
 reproducible, this dominates the entire \glsterm{mqa}{MQA}--\glsterm{gqa}{GQA} Pareto front and
-makes \glsterm{multi-head-latent-attention}{MLA} the unambiguous choice. The contradiction below records
+makes \glsterm{mla}{MLA} the unambiguous choice. The contradiction below records
 why ``if reproducible'' has not yet collapsed.
 
 \begin{contradiction}
-The \glsterm{multi-head-latent-attention}{MLA}-vs-\glsterm{mha}{MHA} quality result at frontier scale is single-source as
+The \glsterm{mla}{MLA}-vs-\glsterm{mha}{MHA} quality result at frontier scale is single-source as
 of 2026-Q2. The original ablation appears in
 \citet[\S 2.1.4]{deepseek-v2} on a 16B-active-parameter
-DeepSeek-V2 prototype; \citet{deepseek-v3} extends \glsterm{multi-head-latent-attention}{MLA} to a 671B
+DeepSeek-V2 prototype; \citet{deepseek-v3} extends \glsterm{mla}{MLA} to a 671B
 total / 37B active model with strong downstream benchmarks but does
-not include a head-to-head \glsterm{multi-head-latent-attention}{MLA}-vs-\glsterm{mha}{MHA} at matched compute at that
-scale. No third-party laboratory has published an \glsterm{multi-head-latent-attention}{MLA} reproduction
+not include a head-to-head \glsterm{mla}{MLA}-vs-\glsterm{mha}{MHA} at matched compute at that
+scale. No third-party laboratory has published an \glsterm{mla}{MLA} reproduction
 at $\geq$ 70B-active scale on a non-DeepSeek training corpus. The
 mechanism behind the quality preservation -- whether the latent
 joint compression is a regulariser, whether the per-head
 reconstruction matrices learn a richer space than direct $K, V$
 projections, whether the cache absorption interacts with
-pre-training loss curves -- is not yet decomposed. Treat \glsterm{multi-head-latent-attention}{MLA}'s
+pre-training loss curves -- is not yet decomposed. Treat \glsterm{mla}{MLA}'s
 ``stronger than \glsterm{mha}{MHA}'' claim as DeepSeek-internal-evidence-only at
 frontier scale; the \glsterm{gqa}{GQA}-8 default remains the safest reproducible
 recommendation outside the DeepSeek training stack
@@ -390,16 +390,16 @@ Where on the axis do the leading 2026 models actually sit?
   \item \textbf{Gemma 2 / Gemma 3}: \glsterm{gqa}{GQA}~\citep{gemma3}.
   \item \textbf{Phi-4}: \glsterm{gqa}{GQA}~\citep{phi4}.
   \item \textbf{OLMo-2}: \glsterm{gqa}{GQA} in the standard configuration~\citep{olmo2}.
-  \item \textbf{DeepSeek-V2, \glsterm{precision-pinning}{DeepSeek-V3}, DeepSeek-R1}: \glsterm{multi-head-latent-attention}{MLA} throughout
+  \item \textbf{DeepSeek-V2, \glsterm{precision-pinning}{DeepSeek-V3}, DeepSeek-R1}: \glsterm{mla}{MLA} throughout
     \citep{deepseek-v2, deepseek-v3, deepseek-r1}. The Chinese
     open-weight ecosystem -- including labs that train on the
-    DeepSeek architecture as a baseline -- has converged on \glsterm{multi-head-latent-attention}{MLA}
+    DeepSeek architecture as a baseline -- has converged on \glsterm{mla}{MLA}
     alongside DeepSeek; Western frontier labs have not.
 \end{itemize}
 
 The convergence pattern: \textbf{outside the DeepSeek training
 stack, \glsterm{gqa}{GQA}-8 is the 2026 default}; \textbf{inside the DeepSeek
-training stack, \glsterm{multi-head-latent-attention}{MLA} is the 2026 default}. The rest of the
+training stack, \glsterm{mla}{MLA} is the 2026 default}. The rest of the
 attention block (\glsterm{rope}{RoPE} positional encoding per
 \S\ref{sec:positional-encoding}, \glsterm{flashattention}{FlashAttention}-style implementation
 per \S\ref{sec:attention-mechanism-axis}, \glsterm{rmsnorm}{RMSNorm} + \glsterm{pre-ln}{Pre-LN} per
@@ -407,20 +407,20 @@ per \S\ref{sec:attention-mechanism-axis}, \glsterm{rmsnorm}{RMSNorm} + \glsterm{
 KV-sharing is the single axis on which the Western and DeepSeek
 lineages diverge.
 
-Why hasn't \glsterm{multi-head-latent-attention}{MLA} crossed over? Three plausible reasons, each
+Why hasn't \glsterm{mla}{MLA} crossed over? Three plausible reasons, each
 under-evidenced and worth recording. \textbf{(a)~Training-recipe
-risk}: \glsterm{multi-head-latent-attention}{MLA} changes both $K$/$V$ representations and the \glsterm{rope}{RoPE}
+risk}: \glsterm{mla}{MLA} changes both $K$/$V$ representations and the \glsterm{rope}{RoPE}
 plumbing simultaneously (Eqs.~\eqref{eq:mla-cdkv}--\eqref{eq:mla-out});
 conservative labs prefer to swap one component at a time, and the
 \glsterm{gqa}{GQA} recipe of \citet{ainslie2023} requires only a mean-pool of an
-existing checkpoint. \textbf{(b)~Inference-stack support}: \glsterm{multi-head-latent-attention}{MLA}'s
+existing checkpoint. \textbf{(b)~Inference-stack support}: \glsterm{mla}{MLA}'s
 cache-absorption identity demands that the inference framework
 algebraically fold $W^{UK}$ into $W^Q$ and $W^{UV}$ into $W^O$ at
 serve time; \glsterm{gqa}{GQA} needs only a head-broadcast in the standard
-attention kernel. As of 2026-Q2, \glsterm{flashattention}{FlashAttention}, vLLM, and \glsterm{compressed-fsm-2}{SGLang}
-have first-class \glsterm{gqa}{GQA} support; \glsterm{multi-head-latent-attention}{MLA} support exists but is more
+attention kernel. As of 2026-Q2, \glsterm{flashattention}{FlashAttention}, vLLM, and \glsterm{compressed-fsm}{SGLang}
+have first-class \glsterm{gqa}{GQA} support; \glsterm{mla}{MLA} support exists but is more
 recently added and less battle-tested. \textbf{(c)~The contradiction
-above}: if \glsterm{multi-head-latent-attention}{MLA}'s quality story were uncontested, the recipe risk
+above}: if \glsterm{mla}{MLA}'s quality story were uncontested, the recipe risk
 would be paid; the absence of cross-lab confirmation makes the bet
 asymmetric for any lab whose downstream metric is benchmark
 quality rather than serving cost.
@@ -430,7 +430,7 @@ quality rather than serving cost.
 
 The KV-sharing axis is independent of the \emph{attention
 implementation} axis. A model can pick any of $\{$\glsterm{mha}{MHA}, \glsterm{mqa}{MQA}, \glsterm{gqa}{GQA},
-\glsterm{multi-head-latent-attention}{MLA}$\}$ and any of $\{$standard, \glsterm{flashattention}{FlashAttention}-1/2/3, \glsterm{nsa}{NSA}$\}$ as
+\glsterm{mla}{MLA}$\}$ and any of $\{$standard, \glsterm{flashattention}{FlashAttention}-1/2/3, \glsterm{nsa}{NSA}$\}$ as
 two orthogonal choices: the first determines the cache shape and
 the per-head expressivity; the second determines how the same
 attention function (Eq.~\eqref{eq:vaswani-attn}) is scheduled onto
@@ -438,17 +438,17 @@ GPU memory hierarchy and tensor cores. The next section
 (\S\ref{sec:attention-mechanism-axis}) walks the
 hardware-implementation axis from \citet{dao2022} through
 \citet{shah2024} and \citet{yuan2025}, and shows where the two axes
-interact -- in particular, how \glsterm{multi-head-latent-attention}{MLA}'s decoupled-\glsterm{rope}{RoPE} wrinkle
+interact -- in particular, how \glsterm{mla}{MLA}'s decoupled-\glsterm{rope}{RoPE} wrinkle
 (Eqs.~\eqref{eq:mla-qr}--\eqref{eq:mla-k-cat}) interacts with the
-\glsterm{flashattention}{FlashAttention} block-\glsterm{tiling}{tiling} pattern, and why \glsterm{multi-head-latent-attention}{MLA} serving stacks
+\glsterm{flashattention}{FlashAttention} block-\glsterm{tiling}{tiling} pattern, and why \glsterm{mla}{MLA} serving stacks
 re-implement attention rather than reuse the off-the-shelf \glsterm{gqa}{GQA}
 kernel.
 
 A separate forward reference: this section anchors the
 ``compressed-KV'' substrate that interpretability methods must
-contend with in Paper~4. The \glsterm{multi-head-latent-attention}{MLA} latent $\mathbf{c}_t^{KV}$ is not
+contend with in Paper~4. The \glsterm{mla}{MLA} latent $\mathbf{c}_t^{KV}$ is not
 a per-head representation; it is a joint compression. Probes,
-lenses, and SAEs trained on \glsterm{multi-head-latent-attention}{MLA}-architecture activations are reading
+lenses, and SAEs trained on \glsterm{mla}{MLA}-architecture activations are reading
 a fundamentally different geometry than the same methods applied to
 \glsterm{mha}{MHA} or \glsterm{gqa}{GQA} models, and the cross-method \glsterm{circuit}{circuit}-tracing literature
 has not yet established whether the existing toolkit transfers.

@@ -11,10 +11,10 @@
 \section{Activation patching}
 \label{sec:patching}
 
-The lens and \glsterm{probe-2}{probe} of \S\ref{sec:logit-lens-family}--\S\ref{sec:probing}
+The lens and \glsterm{probe}{probe} of \S\ref{sec:logit-lens-family}--\S\ref{sec:probing}
 read the \glsterm{residual-stream}{residual stream}; they tell us what intermediate states
 \emph{contain}. They do not tell us what the model \emph{uses}. A
-high-accuracy \glsterm{probe-2}{probe} at layer $\ell$ is consistent with the property
+high-accuracy \glsterm{probe}{probe} at layer $\ell$ is consistent with the property
 being computed at $\ell$ and consumed by the unembed, with the property
 being computed at $\ell$ and ignored by the unembed (\emph{vestigial
 information}), or with a confound entirely outside the model
@@ -106,9 +106,9 @@ the projection
 $\mathbf{h}^{(\ell, t)} \mapsto \mathbf{h}^{(\ell, t)} -
 (\mathbf{h}^{(\ell, t)})^{\top}\hat{\mathbf{d}}\;\hat{\mathbf{d}} +
 (\mathbf{h}_{\text{cl}}^{(\ell, t)})^{\top}\hat{\mathbf{d}}\;
-\hat{\mathbf{d}}$ along a \glsterm{probe-2}{probe} direction $\hat{\mathbf{d}}$, leaving
+\hat{\mathbf{d}}$ along a \glsterm{probe}{probe} direction $\hat{\mathbf{d}}$, leaving
 the orthogonal complement unchanged --- the natural granularity for
-``patch the \glsterm{truth-direction-2}{truth direction}'' or ``patch the Paris \glsterm{feature}{feature}.''
+``patch the \glsterm{truth-direction}{truth direction}'' or ``patch the Paris \glsterm{feature}{feature}.''
 
 \subsection{The metric: logit difference is the default}
 \label{sec:patching-metric}
@@ -242,7 +242,7 @@ Granularity & Component $C$ & Used by \\
 MLP output & $\mathrm{MLP}^{(\ell)}(\mathbf{h}_i^{(\ell)}) \in \mathbb{R}^{D}$ & \citet{meng2022-rome} \\
 Attention-layer output & $\mathrm{Attn}^{(\ell)}(\mathbf{h}_i^{(\ell)}) \in \mathbb{R}^{D}$ & \citet{meng2022-rome} \\
 Single attention head & $h_{j}^{(\ell)} \in \mathbb{R}^{d_h}$ before $W^{O}$ & \citet{wang2022-ioi} \\
-Subspace & $\mathbf{P}_{\hat{\mathbf{d}}}\,\mathbf{h}_i^{(\ell)}$ & \glsterm{probe-2}{probe}-direction patches \\
+Subspace & $\mathbf{P}_{\hat{\mathbf{d}}}\,\mathbf{h}_i^{(\ell)}$ & \glsterm{probe}{probe}-direction patches \\
 \bottomrule
 \end{tabular}
 \caption{Patching granularities. \citet{meng2022-rome} patch hidden
@@ -263,7 +263,7 @@ claims; subspace patching localizes specific representational
 directions. Coarse patching that finds ``MLPs at layer 15 matter''
 does not yet justify ``the \texttt{Paris} direction in those MLPs
 matters,'' even if both are true --- the latter requires either
-finer-grained patching at the subspace level or a downstream \glsterm{probe-2}{probe}-on-%
+finer-grained patching at the subspace level or a downstream \glsterm{probe}{probe}-on-%
 patched-states design \citep[\S 2.3]{zhang2023-apatching}.
 
 \subsection{Path patching: isolating direct effects}
@@ -435,7 +435,7 @@ finer-grained or causally complementary experiment to distinguish.
 \subsection{Forward link}
 \label{sec:patching-forward}
 
-\glsterm{activation-patching}{Activation patching} is the method that turns the lens-and-\glsterm{probe-2}{probe}
+\glsterm{activation-patching}{Activation patching} is the method that turns the lens-and-\glsterm{probe}{probe}
 correlational reading of the \glsterm{residual-stream}{residual stream}
 (\S\ref{sec:logit-lens-family}--\S\ref{sec:probing}) into causal claims
 the field can adjudicate. The next two sections deploy it.

@@ -275,7 +275,7 @@ CPO entries summarize the canonical statement of each variant; see
 \label{tab:dpo-variants}
 \end{table}
 \footnotetext{KB excerpts: \nolinkurl{kb/excerpts/rafailov2023-dpo.md#sec-4-loss},
-\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-3}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-2}.}
 
 \paragraph{IPO --- squared-gap loss.} The \glsterm{dpo}{DPO} log-sigmoid loss has a
 known overconfidence pathology: when one preference is clearly
@@ -333,8 +333,8 @@ optimum that may or may not match.
 
 \paragraph{SimPO --- reference-free, length-normalized.} \glsterm{simpo}{SimPO} drops
 the reference and divides the \glsterm{implicit-reward}{implicit reward} by sequence length
-\citep[\S 3]{meng2024-simpo}:\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-3}.}
+\citep[\S 2]{meng2024-simpo}:\footnote{KB excerpt:
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-2}.}
 \begin{equation}
 r_{\mathrm{SimPO}}(x, y)
   \;=\; \frac{\beta}{|y|} \log \pi_\theta(y \mid x)
@@ -360,7 +360,7 @@ response must beat the rejected one by at least $\gamma$ in implicit
 reward, not just by an arbitrary positive amount. \citet[\S 4]{meng2024-simpo}
 report \glsterm{simpo}{SimPO} outperforming \glsterm{dpo}{DPO} substantially on length-controlled
 benchmarks (AlpacaEval~2, Arena-Hard).\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-4-headline}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-4-headline-empirical}.}
 
 \paragraph{CPO --- policy log-prob with SFT regularizer.} CPO drops the
 reference (like \glsterm{simpo}{SimPO} and \glsterm{orpo}{ORPO}) and adds an SFT regularizer on the
@@ -416,7 +416,7 @@ length-invariant in expectation. \citet[\S 4.2]{meng2024-simpo} report
 the length-normalization ablation as the dominant single contributor to
 \glsterm{simpo}{SimPO}'s gain over \glsterm{dpo}{DPO} on length-controlled
 AlpacaEval~2.\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-4-headline}.}
+\nolinkurl{kb/excerpts/meng2024-simpo.md#sec-2-length}.}
 
 \begin{intuition}
 \glsterm{simpo}{SimPO}'s length-normalization is to \glsterm{dpo}{DPO}'s \glsterm{implicit-reward}{implicit reward} what
@@ -442,7 +442,7 @@ two camps. The Llama-3 / T\"ulu-3 camp \citep{meta-llama3, tulu3} runs
 SFT $\to$ \glsterm{rejection-sampling-sft}{rejection-sampling SFT} $\to$ multi-round iterated \glsterm{dpo}{DPO} and
 reports that \glsterm{dpo}{DPO} required less compute than PPO and performed as well
 or better at the post-training stage \citep[\S 4]{meta-llama3}. T\"ulu-3
-\citep{tulu3} adopts the same SFT $\to$ \glsterm{dpo}{DPO} $\to$ \glsterm{rlvr-3}{RLVR}
+\citep{tulu3} adopts the same SFT $\to$ \glsterm{dpo}{DPO} $\to$ \glsterm{rlvr}{RLVR}
 (\cref{sec:rlvr-grpo}) stack as its open recipe, and explicitly
 reproduces the per-step cost-and-quality crossover of
 \cref{tab:dpo-vs-ppo-cost}. The Gemma 3 / DeepMind camp
@@ -454,22 +454,22 @@ generation.
 
 The orthogonal axis in 2026 is the relationship between the offline-
 preference stage and what surrounds it. \cref{sec:rlaif-cai} walks the
-\glsterm{rlaif-3}{RLAIF} / \glsterm{constitutional-ai}{Constitutional AI} \citep{bai2022-cai} family: AI judgments under
+\glsterm{rlaif}{RLAIF} / \glsterm{constitutional-ai}{Constitutional AI} \citep{bai2022-cai} family: AI judgments under
 a \glsterm{constitution}{constitution} can replace human labels at the preference-data step,
 and the resulting AI-preference triples can feed \glsterm{dpo}{DPO} directly with no
 PPO loop in between. The composition --- AI-labeled preferences
 $\to$ \glsterm{dpo}{DPO} --- is increasingly the default at open-source scale,
 because both halves of the pipeline avoid human labeling and on-policy
-RL. \cref{sec:rlvr-grpo}'s \glsterm{rlvr-3}{RLVR} / \glsterm{grpo-2}{GRPO} stack is the verifier-domain
+RL. \cref{sec:rlvr-grpo}'s \glsterm{rlvr}{RLVR} / \glsterm{grpo}{GRPO} stack is the verifier-domain
 alternative: where a programmatic verifier exists, the learned reward
 of \cref{sec:rlhf-rm} is replaced by an indicator
 $R_{\mathrm{verifier}}(x, y) \in \{0, 1\}$ and the implicit-reward
 parameterization of \cref{eq:dpo-implicit-reward} is replaced by a
-group-mean baseline. \glsterm{dpo}{DPO} and \glsterm{rlvr-3}{RLVR} are orthogonal: \glsterm{dpo}{DPO} replaces the
-\emph{algorithm} (PPO $\to$ classification on preferences); \glsterm{rlvr-3}{RLVR}
+group-mean baseline. \glsterm{dpo}{DPO} and \glsterm{rlvr}{RLVR} are orthogonal: \glsterm{dpo}{DPO} replaces the
+\emph{algorithm} (PPO $\to$ classification on preferences); \glsterm{rlvr}{RLVR}
 replaces the \emph{reward source} (learned RM $\to$ verifier). Modern
 post-training pipelines compose both --- T\"ulu-3 runs \glsterm{dpo}{DPO} for general
-preferences and \glsterm{grpo-2}{GRPO} for verifier-domain reasoning --- treating them as
+preferences and \glsterm{grpo}{GRPO} for verifier-domain reasoning --- treating them as
 complementary stages.
 
 \subsection{Open contradictions}
@@ -560,9 +560,9 @@ of \cref{sec:rlhf-rm} and the \glsterm{implicit-reward}{implicit reward} of
 \cref{eq:dpo-implicit-reward} are both displaced by an indicator
 $R_{\mathrm{verifier}} \in \{0, 1\}$, and the optimization moves from
 preference classification on log-ratios back to a critic-free RL loop
-(\glsterm{grpo-2}{GRPO}) that exploits the verifier's lack of a proxy-vs-gold gap. The
+(\glsterm{grpo}{GRPO}) that exploits the verifier's lack of a proxy-vs-gold gap. The
 canonical 2026 post-training stack runs all three stages in sequence:
 SFT (\cref{sec:sft}) $\to$ preference-anchored \glsterm{dpo}{DPO} or its variants
-(\cref{sec:dpo}) $\to$ verifier-domain \glsterm{rlvr-3}{RLVR} with \glsterm{grpo-2}{GRPO}
+(\cref{sec:dpo}) $\to$ verifier-domain \glsterm{rlvr}{RLVR} with \glsterm{grpo}{GRPO}
 (\cref{sec:rlvr-grpo}), with adaptation and merging
 (\cref{sec:adaptation}) closing the pipeline.

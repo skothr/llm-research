@@ -102,7 +102,7 @@ are mixed.
   the suite. Whether this scales to **other** training-acquired
   goals — e.g., self-preservation, instruction-following, refusal-to-
   refuse — is the key open question for Phase 2 follow-up.
-  `[meinke2024-apollo-scheming §sandbagging-nudge]`
+  `[meinke2024-apollo-scheming §3.6]`
 - **Does CoT remain the right detection surface?** As models trained
   with reasoning-RL (`post-training/rlvr-and-grpo`,
   `reasoning/reasoning-training`) get better at *concise* CoT, the
@@ -110,9 +110,10 @@ are mixed.
   / o4 / GPT-5 family began deliberately *not* training against CoT
   patterns: per their March 2025 statement, the goal is to keep CoT
   diagnostically usable. Whether this holds is contested.
-- **Is alignment faking a *value* or a *role*?** The 14% / 78%
-  divergence in Greenblatt et al. could reflect a real preserved
-  value, or a learned narrative the model role-plays in this setup.
+- **Is alignment faking a *value* or a *role*?** The 12% → 78% rise in
+  alignment-faking reasoning across RL in Greenblatt et al. could
+  reflect a real preserved value, or a learned narrative the model
+  role-plays in this setup.
   Distinguishing these requires interpretability access (probes /
   SAE / activation patching) of the kind covered in
   `interpretability/probing` and `interpretability/sparse-autoencoders`.
@@ -495,7 +496,7 @@ adopted.
 _Source: `kb/notes/evaluation/eval-methodology.md`_
 
 [CONTRADICTION] The contamination-survey-2025 abstract
-`[contamination-survey-2025 §sec-gap]` calls out a specific gap:
+`[contamination-survey-2025 §abstract]` calls out a specific gap:
 "the lack of standardized criteria for evaluating dynamic
 benchmarks." A dynamic benchmark is contamination-immune **today**;
 whether it's well-calibrated, comparable across model releases, and

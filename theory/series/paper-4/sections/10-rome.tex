@@ -254,8 +254,8 @@ The ROME causal-tracing diagnostic and the rank-one edit of
 Eq.~\eqref{eq:rome-edit} were developed on dense \glsterm{transformer}{transformer} MLPs in
 GPT-2 / GPT-J. Whether the Localized Factual Association Hypothesis
 extends to frontier-2026 architectures is partially open. Two
-architectural shifts complicate the picture. First, \glsterm{multi-head-latent-attention}{MLA}-compressed-KV
-attention (the \glsterm{multi-head-latent-attention}{MLA} mechanism of \hyperref[P1-sec:attention-kv-sharing]{Paper~1 §5}; DeepSeek-V2/V3) and grouped-\glsterm{query}{query} attention (Llama 3 family)
+architectural shifts complicate the picture. First, \glsterm{mla}{MLA}-compressed-KV
+attention (the \glsterm{mla}{MLA} mechanism of \hyperref[P1-sec:attention-kv-sharing]{Paper~1 §5}; DeepSeek-V2/V3) and grouped-\glsterm{query}{query} attention (Llama 3 family)
 change the attention sublayer's computational structure, but the MLP
 sublayers remain dense linear maps in those architectures, so the
 associative-memory framing of \S\ref{sec:rome-memory} should carry
@@ -273,7 +273,7 @@ parameter. \deepencite{rome-on-frontier-2026 §full,
 citation-pending}: a systematic causal-tracing study of factual recall
 on Llama 3 / \glsterm{precision-pinning}{DeepSeek-V3} / Llama 4 with comparable benchmarks to
 \citet{meng2022-rome} is, to our knowledge, not yet published; whether
-the hypothesis survives the MoE / \glsterm{multi-head-latent-attention}{MLA} architectural shifts is open
+the hypothesis survives the MoE / \glsterm{mla}{MLA} architectural shifts is open
 empirical.
 
 \subsection{Cross-paper thread: editing as an alternative to fine-tuning}

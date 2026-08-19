@@ -111,7 +111,7 @@ measures best-of-$N$ accuracy on MATH test
 Across the full sweep $N \in [1, 1024]$ the \glsterm{process-reward-model}{PRM} dominates the \glsterm{outcome-reward-model}{ORM} at
 matched $N$, with the gap widest at moderate $N$
 \citep[Fig. 4]{lightman2023-prm800k}. Both reranking strategies in
-turn dominate plain \glsterm{self-consistency-2}{self-consistency}
+turn dominate plain \glsterm{self-consistency}{self-consistency}
 (\cref{eq:self-consistency}) at the same sample budget. The
 process-supervised verifier solves \textbf{78\%} of problems on a
 representative MATH test subset
@@ -128,7 +128,7 @@ discards intermediate signal entirely. Empirically
 \citep[\S 4.2]{lightman2023-prm800k} the min wins by a margin large
 enough that it is the default aggregator in every downstream \glsterm{process-reward-model}{PRM}
 paper. \citet[\S 4.3]{lightman2023-prm800k} additionally show that
-\glsterm{process-reward-model}{PRM}-weighted \glsterm{self-consistency-2}{self-consistency} — majority vote with each ballot
+\glsterm{process-reward-model}{PRM}-weighted \glsterm{self-consistency}{self-consistency} — majority vote with each ballot
 weighted by the trace's min-\glsterm{process-reward-model}{PRM} score — improves over plain
 majority vote, recovering some of the \glsterm{process-reward-model}{PRM} gain at lower verifier-cost
 overhead.
@@ -320,7 +320,7 @@ deserves explicit treatment.
 The \glsterm{prm800k}{PRM800K}-era headline ``\glsterm{process-reward-model}{PRM} > \glsterm{outcome-reward-model}{ORM} at matched $N$'' was established
 on a non-reasoning-trained generator (a GPT-4 variant)
 \citep[\S 4]{lightman2023-prm800k}. As the policy class moves to
-\glsterm{rlvr-3}{RLVR}-trained reasoning models, the picture shifts. Some 2026
+\glsterm{rlvr}{RLVR}-trained reasoning models, the picture shifts. Some 2026
 measurements show \glsterm{process-reward-model}{PRM}-best-of-$N$ over R1-distill outputs still
 delivers gains; others find diminishing returns as the policy's own
 internal verification approaches the \glsterm{process-reward-model}{PRM}'s signal
@@ -333,16 +333,16 @@ inference-time rerankers --- is unresolved as of 2026-Q2; \cref{sec:prm-survival
 revisits the question with the post-R1 evidence.
 \end{contradiction}
 
-A second, related tension: \emph{process hacking}. \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr-3}{RLVR}
+A second, related tension: \emph{process hacking}. \glsterm{process-reward-model}{PRM}-shaped \glsterm{rlvr}{RLVR}
 \citep[\S 2.4]{lightman2023-prm800k}\footnote{KB note:
 \nolinkurl{kb/notes/reasoning/process-supervision.md#4.2}.} replaces or
-augments the binary outcome reward of \glsterm{rlvr-3}{RLVR} (\cref{sec:rlvr}) with a
+augments the binary outcome reward of \glsterm{rlvr}{RLVR} (\cref{sec:rlvr}) with a
 per-step \glsterm{process-reward-model}{PRM} score. The middle-ground appeal is theoretical: dense
 signal beats sparse signal for credit assignment. The empirical risk:
 a misaligned \glsterm{process-reward-model}{PRM} rewards steps that \emph{look} correct without
 producing the right answer, the step-level analogue of outcome-hacking
-under a learned reward. Whether \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo-2}{GRPO} actually outperforms
-verifier-only \glsterm{grpo-2}{GRPO} at matched compute is benchmark-specific and
+under a learned reward. Whether \glsterm{process-reward-model}{PRM}-shaped \glsterm{grpo}{GRPO} actually outperforms
+verifier-only \glsterm{grpo}{GRPO} at matched compute is benchmark-specific and
 unsettled in 2026.
 
 \subsection{Forward link}

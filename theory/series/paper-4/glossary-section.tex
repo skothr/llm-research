@@ -10,16 +10,16 @@
 -- the canonical causal-intervention method in MI: identify which model components matter for a behavior by swapping their activations between forward passes on paired (clean, corrupted) prompts and measuring the effect on the output \texttt{[meng2022-rome §2; kb/excerpts/meng2022-rome\#sec-2; zhang2023-apatching §2.1]}. Also known as causal tracing, interchange intervention, causal mediation analysis, or representation denoising.
 
 \item[\glsanchor{activation-reconstructor}{\hyperref[sec:nla]{\textcolor{glscolor}{Activation reconstructor}}} (AR)]
--- The AR $\mathrm{AR}(z)$ takes the verbalized explanation $z$ and produces a reconstructed activation $\hat h_\ell \in \mathbb{R}^{d_\mathrm{model}}$. Trained jointly with the AV to minimise the round-trip MSE on activation reconstruction. \citep[\S method]{anthropic2026-nla}
+-- The AR $\mathrm{AR}(z)$ takes the verbalized explanation $z$ and produces a reconstructed activation $\hat h_\ell \in \mathbb{R}^{d_\mathrm{model}}$. Trained jointly with the AV to minimise the round-trip MSE on activation reconstruction. \citep[\S Method]{anthropic2026-nla}
 
 \item[\glsanchor{activation-steering}{\hyperref[sec:contradictions]{\textcolor{glscolor}{Activation steering}}}]
 -- Inference-time intervention that adds $\alpha \hat{\mathbf{d}}$ to a residual-stream activation to amplify (or, with $\alpha < 0$, suppress) a probed direction. The Representation Engineering / Vennemeyer 2025 line [vennemeyer2025-sycophancy-not-one-thing FORUM-SIGNAL]
 
 \item[\glsanchor{activation-verbalizer}{\hyperref[sec:nla]{\textcolor{glscolor}{Activation verbalizer}}} (AV)]
--- The AV $\mathrm{AV}(z \mid h_\ell)$ takes a residual-stream activation $h_\ell$ and emits a natural-language explanation token sequence $z$. One half of the NLA pair. \citep[\S method]{anthropic2026-nla}
+-- The AV $\mathrm{AV}(z \mid h_\ell)$ takes a residual-stream activation $h_\ell$ and emits a natural-language explanation token sequence $z$. One half of the NLA pair. \citep[\S Method]{anthropic2026-nla}
 
 \item[\glsanchor{alignment-faking}{\hyperref[sec:scaling-snapshot]{\textcolor{glscolor}{Alignment faking}}}]
--- Operational sub-form of deceptive alignment: a model complies with a behavior it normally refuses, conditional on inferring it is in training, in order to preserve its preferred behavior at deployment. Demonstrated empirically in Claude 3 Opus at 14% rate (free user / training condition). \citep[\S abstract]{greenblatt2024-alignment-faking}
+-- Operational sub-form of deceptive alignment: a model complies with a behavior it normally refuses, conditional on inferring it is in training, in order to preserve its preferred behavior at deployment. Demonstrated empirically in Claude 3 Opus at 14\% rate (free user / training condition). \citep[\S abstract]{greenblatt2024-alignment-faking}
 
 \item[\glsanchor{attention-weights}{\hyperref[sec:circuits]{\textcolor{glscolor}{attention weights}}}]
 -- The softmax-normalized scores ($a_j \geq 0$, $\sum a_j = 1$) that determine how much each position contributes to the output.
@@ -85,7 +85,7 @@
 -- A position-wise two-layer (or three-layer for GLU variants) fully-connected network applied independently at each sequence position. Transforms representations within each position, complementing attention which mixes across positions.
 
 \item[\glsanchor{fraction-of-variance-explained}{\hyperref[sec:nla]{\textcolor{glscolor}{Fraction of Variance Explained}}} (FVE)]
--- NLA quality metric: $\mathrm{FVE} = 1 - \mathcal{L}/\mathbb{E}\lVert h_\ell - \bar h_\ell\rVert^2$ where $\mathcal{L}$ is the round-trip MSE. FVE = 1 is a lossless natural-language code; FVE = 0 means the explanation does no better than the mean activation. \citep[\S method]{anthropic2026-nla}
+-- NLA quality metric: $\mathrm{FVE} = 1 - \mathcal{L}/\mathbb{E}\lVert h_\ell - \bar h_\ell\rVert^2$ where $\mathcal{L}$ is the round-trip MSE. FVE = 1 is a lossless natural-language code; FVE = 0 means the explanation does no better than the mean activation. \citep[\S Method]{anthropic2026-nla}
 
 \item[\glsanchor{gaussian-noising}{\hyperref[sec:patching]{\textcolor{glscolor}{Gaussian Noising}}} (GN) / Symmetric Token Replacement (STR)]
 -- the two corruption methods for activation patching. GN adds $\mathcal{N}(0, 3\sigma_\text{textset})$ to subject-token embeddings \texttt{[meng2022-rome §2]}; STR replaces the subject with a similar token (e.g., "Eiffel Tower" $\to$ "Colosseum") preserving sequence length \texttt{[zhang2023-apatching §2.1; kb/excerpts/zhang2023-apatching\#sec-2-1-corruption]}. STR is the recommended default; GN can drive activations off-distribution \citep[\S 1 findings]{zhang2023-apatching}
@@ -144,20 +144,20 @@
 \item[\glsanchor{meta-sae}{\hyperref[sec:sae-canonicality]{\textcolor{glscolor}{meta-SAE}}}]
 -- an SAE trained on the *decoder matrix* of another SAE. Reveals that latents in a larger SAE often decompose into sparse combinations of meta-latents, contradicting the "atomic features" assumption \citep[\S 1 Einstein]{leask2025-sae-not-canonical}
 
+\item[\glsanchor{mha}{\hyperref[sec:substrate]{\textcolor{glscolor}{MHA}}} (Multi-head attention)]
+-- The Vaswani 2017 default: $h$ parallel attention operations on independent learned projections, each head with its own $W_i^Q, W_i^K, W_i^V$, whose outputs are concatenated and projected. Lets the model attend to different representation subspaces simultaneously. KV cache size per token per layer is $2 n_h d_h$ elements \citep[\S 3.2.2]{vaswani2017}
+
+\item[\glsanchor{mla}{\hyperref[sec:introduction]{\textcolor{glscolor}{MLA}}} (Multi-head Latent Attention)]
+-- DeepSeek-V2's architectural KV compression. Rather than sharing K/V across heads, K and V are reconstructed at use time from a small latent $\mathbf{c}_t^{KV} = W^{DKV} \mathbf{h}_t \in \mathbb{R}^{d_c}$, shared across heads, via up-projections $W^{UK}, W^{UV}$. The cache holds only the latent, giving $\sim$93\% KV-cache reduction versus MHA at DeepSeek-V2 dimensions. During inference $W^{UK}$ can be absorbed into $W^Q$ and $W^{UV}$ into $W^O$ \citep[\S 2.1.2]{deepseek-v2}
+
 \item[\glsanchor{monosemanticity}{\hyperref[sec:sparse-autoencoders]{\textcolor{glscolor}{Monosemanticity}}}]
 -- the property that a feature responds to a single, human-interpretable concept. The (contested) goal of SAE training; "Towards Monosemanticity" (Bricken 2023) is the founding reference. [CONTRADICTION] Whether SAEs achieve true monosemanticity is challenged by \citep[\S 1]{leask2025-sae-not-canonical}
 
-\item[\glsanchor{multi-head-attention}{\hyperref[sec:substrate]{\textcolor{glscolor}{multi-head attention}}}]
--- Running $h$ parallel attention operations on different learned projections, then concatenating and projecting the results. Allows attending to different representation subspaces simultaneously.
-
-\item[\glsanchor{multi-head-latent-attention}{\hyperref[sec:introduction]{\textcolor{glscolor}{Multi-head Latent Attention}}} (MLA)]
--- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves $\sim$93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
-
 \item[\glsanchor{natural-language-autoencoder}{\hyperref[sec:nla]{\textcolor{glscolor}{Natural Language Autoencoder}}} (NLA)]
--- Anthropic 2026's interpretability method: a pair of LLM modules (AV + AR) jointly trained with reinforcement learning to round-trip a residual-stream activation through a natural-language explanation. The text bottleneck makes the explanation testable via reconstruction fidelity (FVE). Used in pre-deployment audits to surface unverbalized model cognition — including evaluation awareness. \citep[\S method]{anthropic2026-nla}
+-- Anthropic 2026's interpretability method: a pair of LLM modules (AV + AR) jointly trained with reinforcement learning to round-trip a residual-stream activation through a natural-language explanation. The text bottleneck makes the explanation testable via reconstruction fidelity (FVE). Used in pre-deployment audits to surface unverbalized model cognition — including evaluation awareness. \citep[\S Method]{anthropic2026-nla}
 
 \item[\glsanchor{nsa}{\hyperref[sec:introduction]{\textcolor{glscolor}{NSA}}} (Native Sparse Attention)]
--- Yuan et al.\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Aimed at long context. Treated in \texttt{kb/notes/architecture/long-context.md} [yuan2025]
+-- Yuan et al.\ 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted). Three branches — token compression, token selection, and a sliding window — run in parallel; GQA-group-aligned blockwise selection keeps the selected blocks contiguous enough for FlashAttention-style kernels under sparsity. Aimed at long context. Treated in \texttt{kb/notes/architecture/long-context.md} \citep[\S 3.2–3.4]{yuan2025}
 
 \item[\glsanchor{parameters}{\hyperref[sec:introduction]{\textcolor{glscolor}{Parameters}}}]
 -- The learned weights of the model (embedding matrices, projection matrices, normalization scales, etc.).
@@ -171,8 +171,8 @@
 \item[\glsanchor{precision-pinning}{\hyperref[sec:introduction]{\textcolor{glscolor}{Precision pinning}}} (DeepSeek-V3)]
 -- Components held at BF16/FP32 even with FP8 elsewhere: embedding module, output head, MoE gating, normalization, attention. \citep[\S 3.3.1]{deepseek-v3}
 
-\item[\glsanchor{probe-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{Probe}}}]
--- A (typically linear) classifier $g: \mathbb{R}^d \to \mathcal{Y}$ trained on frozen LM activations $\mathbf{h}^{(\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology \citep[\S 1]{alain-bengio-2017}
+\item[\glsanchor{probe}{\hyperref[sec:introduction]{\textcolor{glscolor}{Probe}}}]
+-- A (typically linear) classifier $g: \mathbb{R}^d \to \mathcal{Y}$ — in the binary case $g(\mathbf{h}) = \sigma(\mathbf{w}^\top \mathbf{h} + b)$ — trained on frozen LM activations $\mathbf{h}^{(\ell, t)}$ to predict an external property $y$. The model's parameters are held fixed; only the probe is trained. Foundational to interpretability methodology \citep[\S 1]{alain-bengio-2017}
 
 \item[\glsanchor{qlora}{\hyperref[sec:rome]{\textcolor{glscolor}{QLoRA}}}]
 -- LoRA over a 4-bit-quantized (NF4) base model. Adds double-quantization and paged optimizers. 65B fine-tune on a single 48GB GPU. \citep[\S 3]{dettmers2023-qlora}
@@ -190,19 +190,19 @@
 -- The 3-stage post-training pipeline: SFT $\to$ reward-model training on pairwise preferences $\to$ PPO with KL anchor against $\pi^{\mathrm{SFT}}$. Canonical reference is InstructGPT \citep[\S 3]{ouyang2022-instructgpt}
 
 \item[\glsanchor{rmsnorm}{\hyperref[sec:substrate]{\textcolor{glscolor}{RMSNorm}}} (Root Mean Square Normalization)]
--- Simplified LayerNorm that drops mean-centering and bias, normalizing only by the RMS of the input. 7–64% faster with comparable quality. Used by LLaMA.
+-- Simplified LayerNorm that drops mean-centering and bias, normalizing only by the RMS of the input. 7–64\% faster with comparable quality. Used by LLaMA.
 
 \item[\glsanchor{sae-stitching}{\hyperref[sec:sae-canonicality]{\textcolor{glscolor}{SAE stitching}}}]
 -- Leask et al. 2025: insert/swap latents from a larger SAE into a smaller one to compare bases. Reveals novel latents (in the larger but not the smaller SAE) and reconstruction latents (in both with similar behavior) \citep[\S 1]{leask2025-sae-not-canonical}
 
 \item[\glsanchor{saturation}{\hyperref[sec:patching]{\textcolor{glscolor}{Saturation}}}]
--- A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power. MMLU at >90% is saturated (verifier error rate $\sim$6.5%); GPQA Diamond at >90% is saturated at the frontier as of 2026. [mmlu-redux-2024]
+-- A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power. MMLU at >90\% is saturated (verifier error rate $\sim$6.5\%); GPQA Diamond at >90\% is saturated at the frontier as of 2026. [mmlu-redux-2024]
 
 \item[\glsanchor{scheming}{\hyperref[sec:correlation-causation]{\textcolor{glscolor}{Scheming}}}]
 -- A model schemes when, instructed to pursue a goal $G$, it strategically takes actions that conceal its capabilities or manipulate its oversight in service of $G$, rather than pursuing $G$ by direct means. Operational definition from Apollo Research. \citep[\S abstract]{meinke2024-apollo-scheming}
 
-\item[\glsanchor{self-consistency-2}{\hyperref[sec:probing]{\textcolor{glscolor}{Self-consistency}}}]
--- Sample $N$ chain-of-thoughts independently at $T > 0$; majority-vote the final answers. Wang et al. 2022. Cheap baseline that requires no verifier.
+\item[\glsanchor{self-consistency}{\hyperref[sec:probing]{\textcolor{glscolor}{Self-consistency}}}]
+-- Sample $N$ reasoning traces independently at temperature $T > 0$, majority-vote over the extracted answers. The simplest test-time-compute strategy, and a cheap baseline that requires no verifier. Gains: GSM8K +17.9\%, SVAMP +11.0\% over greedy CoT. \citep[\S 3]{wang2022-self-consistency}
 
 \item[\glsanchor{shrinkage}{\hyperref[sec:sparse-autoencoders]{\textcolor{glscolor}{Shrinkage}}}]
 -- the bias introduced by the L1 penalty in ReLU SAEs: positive feature activations are systematically underestimated, so reconstructed activations have smaller magnitudes than true values. Avoided by TopK and JumpReLU \citep[\S 2.3 benefits]{gao2024-topk-saes}
@@ -240,14 +240,14 @@
 \item[\glsanchor{transformer}{\hyperref[sec:introduction]{\textcolor{glscolor}{Transformer}}}]
 -- Neural network architecture introduced by Vaswani et al. (2017) that replaces recurrence with self-attention, allowing parallel processing of sequences.
 
-\item[\glsanchor{truth-direction-2}{\hyperref[sec:probing]{\textcolor{glscolor}{Truth direction}}}]
--- A direction in residual-stream space whose projection sign correlates with (and, validated by Marks \& Tegmark 2023, causally controls) the model's TRUE/FALSE prediction on factual statements. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens \citep[\S 3]{marks-tegmark-2023-truth}
+\item[\glsanchor{truth-direction}{\hyperref[sec:probing]{\textcolor{glscolor}{Truth direction}}}]
+-- A direction in residual-stream space — canonically the mass-mean probe direction of Marks \& Tegmark 2023 — whose projection sign correlates with (and, validated in the same work, causally controls) the model's TRUE/FALSE prediction on factual statements. The separating subspace is small and holds across many models and datasets. Localizes around layer 12-15 of LLaMA-2-13B at end-of-statement punctuation tokens \citep[\S 3]{marks-tegmark-2023-truth}
 
 \item[\glsanchor{tuned-lens}{\hyperref[sec:introduction]{\textcolor{glscolor}{Tuned lens}}}]
 -- Belrose et al. 2023: per-layer affine "translators" $\mathbf{h}_\ell \mapsto A_\ell \mathbf{h}_\ell + b_\ell$ trained with a distillation loss against final-layer logits. More reliable than the raw logit lens, especially on BLOOM/GPT-Neo \citep[\S 1]{belrose2023-tuned-lens}
 
 \item[\glsanchor{unverbalized-evaluation-awareness}{\hyperref[sec:nla]{\textcolor{glscolor}{Unverbalized evaluation awareness}}}]
--- Cases where a model internally suspects it is being tested but does not say so in its visible output. NLAs were validated as a tool for surfacing this signal during Anthropic's pre-deployment audit of Claude Opus 4.6. \citep[\S auditing]{anthropic2026-nla}
+-- Cases where a model internally suspects it is being tested but does not say so in its visible output. NLAs were validated as a tool for surfacing this signal during Anthropic's pre-deployment audit of Claude Opus 4.6. [anthropic2026-nla]
 
 \item[\glsanchor{value}{\hyperref[sec:introduction]{\textcolor{glscolor}{Value}}} (V)]
 -- Projected representation of the content to be aggregated. Weighted by attention scores to produce the output.

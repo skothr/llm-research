@@ -49,16 +49,16 @@
 \expandafter\def\csname @gls@def@mean-ablation\endcsname{knocking out a node by replacing its activation with the mean activation across a reference distribution; preferred to zero ablation, which...}
 \expandafter\def\csname @gls@def@mechanistic-interpretability\endcsname{the research program of reverse-engineering neural networks into human-readable algorithms, at the level of circuits (sub-graphs) and featu...}
 \expandafter\def\csname @gls@def@meta-sae\endcsname{an SAE trained on the *decoder matrix* of another SAE.}
+\expandafter\def\csname @gls@def@mha\endcsname{The Vaswani 2017 default: h parallel attention operations on independent learned projections, each head with its own W iQ, W iK, W iV...}
+\expandafter\def\csname @gls@def@mla\endcsname{DeepSeek-V2's architectural KV compression.}
 \expandafter\def\csname @gls@def@monosemanticity\endcsname{the property that a feature responds to a single, human-interpretable concept.}
-\expandafter\def\csname @gls@def@multi-head-attention\endcsname{Running h parallel attention operations on different learned projections, then concatenating and projecting the results.}
-\expandafter\def\csname @gls@def@multi-head-latent-attention\endcsname{DeepSeek's architectural compression: project to a low-rank latent C in mathbbRd c shared across heads, expand back to per-head (...}
 \expandafter\def\csname @gls@def@natural-language-autoencoder\endcsname{Anthropic 2026's interpretability method: a pair of LLM modules (AV + AR) jointly trained with reinforcement learning to round-trip a resid...}
 \expandafter\def\csname @gls@def@nsa\endcsname{Yuan et al. 2025: hardware-aligned natively sparse attention trained end-to-end (sparsity is part of pre-training, not retrofitted).}
 \expandafter\def\csname @gls@def@parameters\endcsname{The learned weights of the model (embedding matrices, projection matrices, normalization scales, etc.).}
 \expandafter\def\csname @gls@def@path-patching\endcsname{a refinement of activation patching that isolates the direct effect of a component C on a downstream component R, holding fixed the ind...}
 \expandafter\def\csname @gls@def@perplexity\endcsname{2mathcalL (or emathcalL with natural log).}
 \expandafter\def\csname @gls@def@precision-pinning\endcsname{Components held at BF16/FP32 even with FP8 elsewhere: embedding module, output head, MoE gating, normalization, attention.}
-\expandafter\def\csname @gls@def@probe-2\endcsname{A (typically linear) classifier g: mathbbRd to mathcalY trained on frozen LM activations mathbfh(ell, t) to predict an e...}
+\expandafter\def\csname @gls@def@probe\endcsname{A (typically linear) classifier g: mathbbRd to mathcalY — in the binary case g(mathbfh) = sigma(mathbfwtop mathbfh +...}
 \expandafter\def\csname @gls@def@qlora\endcsname{LoRA over a 4-bit-quantized (NF4) base model.}
 \expandafter\def\csname @gls@def@query\endcsname{Projected representation of the position that is "asking" for information in attention.}
 \expandafter\def\csname @gls@def@relu\endcsname{Rectified Linear Unit: max(0, x).}
@@ -68,7 +68,7 @@
 \expandafter\def\csname @gls@def@sae-stitching\endcsname{Leask et al. 2025: insert/swap latents from a larger SAE into a smaller one to compare bases.}
 \expandafter\def\csname @gls@def@saturation\endcsname{A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power.}
 \expandafter\def\csname @gls@def@scheming\endcsname{A model schemes when, instructed to pursue a goal G, it strategically takes actions that conceal its capabilities or manipulate its overs...}
-\expandafter\def\csname @gls@def@self-consistency-2\endcsname{Sample N chain-of-thoughts independently at T > 0; majority-vote the final answers.}
+\expandafter\def\csname @gls@def@self-consistency\endcsname{Sample N reasoning traces independently at temperature T > 0, majority-vote over the extracted answers.}
 \expandafter\def\csname @gls@def@shrinkage\endcsname{the bias introduced by the L1 penalty in ReLU SAEs: positive feature activations are systematically underestimated, so reconstructed activa...}
 \expandafter\def\csname @gls@def@softmax\endcsname{Converts logits to a probability distribution: P(j) = ez j / sum k ez k.}
 \expandafter\def\csname @gls@def@sparse-autoencoder\endcsname{a wide (M gg n) two-layer encoder-decoder trained to reconstruct a model's activations mathbfx in mathbbRn as a sparse linear...}
@@ -81,7 +81,7 @@
 \expandafter\def\csname @gls@def@topk-sae\endcsname{SAE variant with sigma = textTopK(cdot): zero all but the top K pre-activations.}
 \expandafter\def\csname @gls@def@transcoder\endcsname{a wide ReLU MLP (encoder–decoder) trained to approximate the input/output behavior of an MLP sublayer: textTC(mathbfx) = mathbfW ...}
 \expandafter\def\csname @gls@def@transformer\endcsname{Neural network architecture introduced by Vaswani et al. (2017) that replaces recurrence with self-attention, allowing parallel processing...}
-\expandafter\def\csname @gls@def@truth-direction-2\endcsname{A direction in residual-stream space whose projection sign correlates with (and, validated by Marks \& Tegmark 2023, causally controls) the...}
+\expandafter\def\csname @gls@def@truth-direction\endcsname{A direction in residual-stream space — canonically the mass-mean probe direction of Marks \& Tegmark 2023 — whose projection sign correlates...}
 \expandafter\def\csname @gls@def@tuned-lens\endcsname{Belrose et al. 2023: per-layer affine "translators" mathbfh ell mapsto A ell mathbfh ell + b ell trained with a distillation l...}
 \expandafter\def\csname @gls@def@unverbalized-evaluation-awareness\endcsname{Cases where a model internally suspects it is being tested but does not say so in its visible output.}
 \expandafter\def\csname @gls@def@value\endcsname{Projected representation of the content to be aggregated.}

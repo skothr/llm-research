@@ -31,9 +31,23 @@ type: excerpts
 > repository to continuously collect both static and dynamic
 > benchmarking methods for LLMs.
 
-Abstract verified verbatim from PDF (matches arXiv 2502.17521 abstract verified
-2026-05-05). Title in PDF is "Benchmarking Large Language Models Under Data
-Contamination: A Survey from Static to Dynamic Evaluation" — updated in front matter.
+Provenance of this abstract: verified verbatim against the **arXiv 2502.17521
+abstract page** (WebFetch, 2026-05-05), *not* from a PDF — the 2026-05-05
+deepening pass recorded "PDF not local (sandbox)" and "Bash curl/wget
+restricted; abstract via WebFetch" for this key
+(`kb/index/_phase2-additions/deepen-iea.json`), and no
+`contamination-survey-2025.pdf` has ever been tracked in the repo. Re-verified
+against the live arXiv abstract page 2026-08-19.
+
+Two titles are in play, and the front-matter `title:` is the **published** one:
+"Benchmarking Large Language Models Under Data Contamination: A Survey from
+Static to Dynamic Evaluation" (EMNLP 2025 main, ACL Anthology
+`2025.emnlp-main.511`; 11 authors, first author Simin Chen — verified
+2026-08-19). The arXiv preprint carries an earlier, different title, "Recent
+Advances in Large Langauge Model Benchmarks against Data Contamination: From
+Static to Dynamic Evaluation" (the misspelling is arXiv's). The abstract quoted
+above is the **arXiv preprint's**; the EMNLP camera-ready abstract has not been
+diffed against it.
 
 ## §2.1 Contamination taxonomy — exact and syntactic types {#sec-taxonomy}
 

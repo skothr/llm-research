@@ -102,7 +102,7 @@ along (at least) four:
     patching, ROME, and \glsterm{circuit-tracing}{circuit tracing} intervene on activations or
     weights and report what is \emph{used}. The correlation--causation
     gap (\S\ref{sec:correlation-causation}) is the
-    methodological seam: a high-accuracy \glsterm{probe-2}{probe} is consistent with the
+    methodological seam: a high-accuracy \glsterm{probe}{probe} is consistent with the
     decoded property being computed and consumed, computed and
     discarded (\emph{vestigial information}), or being a confound
     outside the model entirely \citep{belinkov2022-probing-survey}.
@@ -117,7 +117,7 @@ along (at least) four:
     labels; SAEs train against the activations themselves. Lenses
     train against the model's own final-layer output (a form of
     self-supervision). The supervision signal determines which
-    properties the method can find: a \glsterm{probe-2}{probe} finds what it is asked to
+    properties the method can find: a \glsterm{probe}{probe} finds what it is asked to
     find; an \glsterm{sparse-autoencoder}{SAE} finds what its sparsity prior considers a \glsterm{feature}{feature}.
   \item \textbf{Static readout vs intervention.} Lenses, probes, and
     SAEs are static --- they compute on cached activations without
@@ -141,7 +141,7 @@ run does not enter the field's working \glsterm{vocabulary}{vocabulary}.
 \begin{intuition}
 The five methods are five different instruments aimed at the same
 \glsterm{residual-stream}{residual stream}. The lens reads what the model is about to predict;
-the \glsterm{probe-2}{probe} reads what the model has computed; the \glsterm{sparse-autoencoder}{SAE} reads how the
+the \glsterm{probe}{probe} reads what the model has computed; the \glsterm{sparse-autoencoder}{SAE} reads how the
 model has decomposed what it computed; \glsterm{activation-patching}{activation patching} tests
 which of those computations the model uses; \glsterm{circuit-tracing}{circuit tracing}
 composes all four into a sparse, causal explanation of a specific
@@ -181,7 +181,7 @@ they don't?} When two methods answer the same question about the same
 mechanism --- e.g., \glsterm{activation-patching}{activation patching} and ACDC on IOI --- they
 \emph{have} to agree, and divergence is a falsification signal for at
 least one method's assumptions. When two methods answer different
-questions --- e.g., a \glsterm{probe-2}{probe} (decodable?) and patching (used?) --- they
+questions --- e.g., a \glsterm{probe}{probe} (decodable?) and patching (used?) --- they
 \emph{can} disagree without either being wrong, and the disagreement
 is principled. Distinguishing the two cases is a load-bearing
 methodological skill that this paper tries to teach.
@@ -217,10 +217,10 @@ convergence and divergence cases method-by-method and behavior-by-behavior;
 \S\ref{sec:scaling-snapshot} surveys what scales (SAEs, probes,
 attribution graphs in narrow regimes) and what does not yet (manual
 \glsterm{circuit}{circuit} hunts, full \glsterm{activation-patching}{activation patching} at frontier scale, lens
-coverage of \glsterm{multi-head-latent-attention}{MLA} / MoE / \glsterm{nsa}{NSA} architectures), with a 2026 frontier
+coverage of \glsterm{mla}{MLA} / MoE / \glsterm{nsa}{NSA} architectures), with a 2026 frontier
 snapshot table of which method covers which model;
 \S\ref{sec:contradictions} concentrates the live disagreements ---
-\glsterm{sparse-autoencoder}{SAE} canonicality, lens cross-model unreliability, \glsterm{probe-2}{probe} correlation
+\glsterm{sparse-autoencoder}{SAE} canonicality, lens cross-model unreliability, \glsterm{probe}{probe} correlation
 vs causation, truth-direction multiplicity, \glsterm{circuit}{circuit}-tracing
 reproducibility past Anthropic-2025 --- and names, for each, the
 experiment that would resolve it.

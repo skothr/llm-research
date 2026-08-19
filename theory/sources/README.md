@@ -82,8 +82,10 @@ of the discovery path.
    set `excerpts_file` in `papers.json`.
 5. Run `python3 kb/lint.py` from `theory/` — it checks that every
    `excerpts_file` resolves and that citations against the new key resolve to
-   real anchors. It exits non-zero today: **14 errors / 0 warnings expected as
-   of 2026-08-19**, all of them citations of 10 paper keys with no
+   real anchors, across `kb/**/*.md` **and** `series/**/*.tex`. It also
+   requires the `§` slot of a citation to name a section of the *paper*, never
+   an excerpt anchor slug. It exits non-zero today: **14 errors / 0 warnings
+   expected as of 2026-08-19**, all of them citations of 10 paper keys with no
    `papers.json` entry (issue #55; the keys are listed in `kb/README.md`).
    Adding a paper here is exactly how that count comes down — check that your
    new key drops its errors and that no new ones appear.

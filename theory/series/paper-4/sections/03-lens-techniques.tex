@@ -181,7 +181,7 @@ knows, never to learn extra information beyond it. This is the design
 choice that distinguishes tuned-lens translators from
 \citet{alain-bengio-2017}-style early-exit probes, which retrain a full
 unembedding per layer and risk learning structure not present in the
-underlying model — the classic ``\glsterm{probe-2}{probe}-as-\glsterm{feature}{feature}-extractor'' confound
+underlying model — the classic ``\glsterm{probe}{probe}-as-\glsterm{feature}{feature}-extractor'' confound
 flagged by \citet{hewitt2019-control-tasks} and engaged in
 \S\ref{sec:probing}.
 
@@ -334,7 +334,7 @@ jointly trained with reinforcement learning on the round-trip MSE,
 \end{equation}
 reported as a \glsdef{fraction-of-variance-explained}{Fraction of
 Variance Explained} (\glsterm{fraction-of-variance-explained}{FVE}) score normalised by the residual variance
-around the mean activation \citep[\S method;
+around the mean activation \citep[\S Method;
 kb/excerpts/anthropic2026-nla\#sec-method]{anthropic2026-nla}.
 
 The bottleneck is the explanation: whatever information the \glsterm{activation-verbalizer}{AV} omits,
@@ -346,7 +346,7 @@ projection), and unlike lenses can \emph{confabulate}: the paper
 explicitly notes that \glsterm{natural-language-autoencoder}{NLA} explanations
 ``can also be noisy \ldots sometimes include contradictory information
 or verifiably false claims about the context''
-\citep[\S confabulation;
+\citep[\S Limitations;
 kb/excerpts/anthropic2026-nla\#sec-confabulation]{anthropic2026-nla}.
 The round-trip \glsterm{fraction-of-variance-explained}{FVE} provides a calibration signal — confabulated
 explanations score badly — but a single sample taken at face \glsterm{value}{value}
@@ -357,7 +357,8 @@ the Anthropic pre-deployment audit of \glsterm{claude}{Claude} Opus 4.6 to surfa
 \glsdef{unverbalized-evaluation-awareness}{unverbalized evaluation
 awareness} — cases where the model internally suspects it is being
 tested without saying so in its visible output
-\citep[\S auditing; kb/excerpts/anthropic2026-nla\#sec-auditing]{anthropic2026-nla}.
+\citep[\S Quantitative Evaluations;
+kb/excerpts/anthropic2026-nla\#sec-auditing]{anthropic2026-nla}.
 On the intentionally-misaligned-model auditing game introduced in
 prior Anthropic work by Marks et al.\deepencite{auditing-game source
 is a DIFFERENT Marks paper from marks-tegmark-2023-truth (geometry of
@@ -366,7 +367,7 @@ Language Models for Hidden Objectives" or similar) is not yet in
 papers.json + references.bib --- add and re-cite inline}, \glsterm{natural-language-autoencoder}{NLA}-equipped auditing agents
 ``more effectively discover the root cause of the model's
 misalignment than baselines''
-\citep[\S auditing]{anthropic2026-nla} \deepencite{exact percentage
+\citep[\S Quantitative Evaluations]{anthropic2026-nla} \deepencite{exact percentage
 deltas (~3\% baseline vs.\ 12--15\% NLA-equipped) are reported in
 secondary coverage of anthropic2026-nla; need a downloadable
 preprint to verify the numbers in primary form}.
@@ -392,7 +393,7 @@ uncovered by published tuned lenses as of writing. The
 broader open-lens releases for the rest of the frontier-2026 lineup
 are an outstanding need. Whether the lens framework extends cleanly
 to architectures with substantially modified attention or \glsterm{ffn}{FFN} substrate
---- \glsterm{precision-pinning}{DeepSeek-V3}'s \glsterm{multi-head-latent-attention}{MLA}-compressed-KV plus fine-grained-MoE, \glsterm{nsa}{NSA}-sparse
+--- \glsterm{precision-pinning}{DeepSeek-V3}'s \glsterm{mla}{MLA}-compressed-KV plus fine-grained-MoE, \glsterm{nsa}{NSA}-sparse
 attention, sliding-window layers --- is partially empirical and not
 yet documented at frontier scale. The \glsterm{residual-stream}{residual stream} is still
 well-defined in all of these, but the layer structure is more

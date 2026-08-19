@@ -7,13 +7,14 @@
 \expandafter\def\csname @gls@def@aha-moment\endcsname{A spike in the model's use of reflection words like "wait" during training, taken as evidence of self-reorganization of reasoning structure}
 \expandafter\def\csname @gls@def@autoregressive\endcsname{Generating tokens one at a time, left to right, where each prediction depends only on previous tokens.}
 \expandafter\def\csname @gls@def@budget-forcing\endcsname{The s1 2025 mechanism.}
+\expandafter\def\csname @gls@def@capability-ceiling\endcsname{The empirical finding that RLVR improves mathrmpass@1 on problems the base model could already solve at mathrmpass@k for some k...}
 \expandafter\def\csname @gls@def@chain-of-thought\endcsname{A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps z before emitting a final answer...}
 \expandafter\def\csname @gls@def@circuit-tracing\endcsname{Anthropic's 2025 methodology: replace MLPs with cross-layer transcoders, then compute attribution graphs by Jacobian back-attribution from...}
 \expandafter\def\csname @gls@def@claude\endcsname{Anthropic's proprietary decoder-only LLM family.}
-\expandafter\def\csname @gls@def@cold-start-sft-2\endcsname{A small-scale (sim 104 examples) SFT pass on long-CoT exemplars, run before RL to fix readability problems of pure-RL outputs (R1-Zero).}
-\expandafter\def\csname @gls@def@constrained-decoding-2\endcsname{Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,...}
-\expandafter\def\csname @gls@def@cot-faithfulness-2\endcsname{The extent to which the trace z causally drives the answer y versus being post-hoc rationalisation.}
-\expandafter\def\csname @gls@def@dapo-2\endcsname{ByteDance's GRPO variant.}
+\expandafter\def\csname @gls@def@cold-start-sft\endcsname{A small-scale (sim 104 examples) SFT stage on long-CoT exemplars, run before the main RL stage to fix the readability problems of pure-...}
+\expandafter\def\csname @gls@def@constrained-decoding\endcsname{Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,...}
+\expandafter\def\csname @gls@def@cot-faithfulness\endcsname{The extent to which the trace z causally drives the answer y versus being post-hoc rationalisation — equivalently, whether the chain-of...}
+\expandafter\def\csname @gls@def@dapo\endcsname{ByteDance's GRPO improvement, with four targeted modifications: Clip-Higher (asymmetric PPO clip), Dynamic Sampling (reject zero-gradient /...}
 \expandafter\def\csname @gls@def@debate\endcsname{Two AI debaters in a zero-sum game judged by a (weaker) human or LLM judge.}
 \expandafter\def\csname @gls@def@decontamination\endcsname{Held-out test sets, especially November 2024 AMC math contests and unleaked HumanEval+, used to verify the synthetic data did not leak benc...}
 \expandafter\def\csname @gls@def@discriminative-prm\endcsname{A classifier-style PRM: outputs a probability of step correctness in one feed-forward pass.}
@@ -21,18 +22,17 @@
 \expandafter\def\csname @gls@def@flashattention\endcsname{Exact attention computed with re-organized memory access: tile K, V into SRAM-resident blocks and use **online softmax** to combine block...}
 \expandafter\def\csname @gls@def@format-reward\endcsname{In RLVR, a small constant reward for trajectories that conform to a structural template (e.g., emit a `<think>...</think>` block).}
 \expandafter\def\csname @gls@def@generative-prm\endcsname{A small reasoning-LLM verifier that emits its own short CoT evaluating each step before producing a verdict.}
-\expandafter\def\csname @gls@def@gpqa-diamond-2\endcsname{198-question subset of GPQA (Rein et al. 2023) where two PhD experts agree on the answer and at least one non-expert validator with web acc...}
-\expandafter\def\csname @gls@def@gqa\endcsname{Interpolation between MHA and MQA: query heads are partitioned into g groups, each group shares one WK, WV.}
+\expandafter\def\csname @gls@def@gpqa-diamond\endcsname{198-question subset of GPQA (Rein et al. 2023) where (i) both PhD expert annotators agree on the gold answer and (ii) at least one non-expe...}
+\expandafter\def\csname @gls@def@gqa\endcsname{Interpolation between MHA and MQA: h query heads are partitioned into g groups, each group shares one WK, WV.}
 \expandafter\def\csname @gls@def@greedy-decoding\endcsname{Selecting the highest-probability token at each step.}
 \expandafter\def\csname @gls@def@group-normalized-advantage\endcsname{In GRPO, tildeA i = (R i - mathrmmean(R j))/mathrmstd(R j), broadcast to every token of trajectory o i.}
-\expandafter\def\csname @gls@def@grpo\endcsname{Critic-free PPO variant: replaces the value model with a group-mean reward baseline.}
-\expandafter\def\csname @gls@def@grpo-2\endcsname{Critic-free PPO variant (Shao 2024).}
+\expandafter\def\csname @gls@def@grpo\endcsname{Critic-free PPO variant (Shao 2024): replaces the value model with a group-mean reward baseline, eliminating the value-network requirement.}
 \expandafter\def\csname @gls@def@inference-time-search\endcsname{TTC family that constructs and explores a tree (or DAG) of partial reasoning prefixes, using a verifier or value function to direct expansi...}
 \expandafter\def\csname @gls@def@kv-cache\endcsname{The per-layer cache of key/value tensors K 1:t, V 1:t produced during autoregressive decoding so each new token's attention is O(t)...}
 \expandafter\def\csname @gls@def@llm\endcsname{Large Language Model.}
 \expandafter\def\csname @gls@def@llm-as-judge\endcsname{Evaluation pattern where a strong LLM scores another model's responses (e.g., AlpacaEval, MT-Bench, Arena-Hard).}
 \expandafter\def\csname @gls@def@mcts-rag\endcsname{MCTS extended over retrieval decisions in addition to reasoning steps.}
-\expandafter\def\csname @gls@def@multi-head-latent-attention\endcsname{DeepSeek's architectural compression: project to a low-rank latent C in mathbbRd c shared across heads, expand back to per-head (...}
+\expandafter\def\csname @gls@def@mla\endcsname{DeepSeek-V2's architectural KV compression.}
 \expandafter\def\csname @gls@def@n-gram-overlap\endcsname{Standard contamination-detection method (Brown et al. 2020 GPT-3 §C): flag training documents containing benchmark n-grams of length ≥13.}
 \expandafter\def\csname @gls@def@outcome-reward-model\endcsname{A scoring function RO phi: (x, z, y) to [0, 1] trained on (prompt, complete solution, outcome correctness) triples.}
 \expandafter\def\csname @gls@def@palm\endcsname{Google's 540B-parameter decoder-only LLM (Chowdhery et al., 2022).}
@@ -40,7 +40,7 @@
 \expandafter\def\csname @gls@def@pre-ln\endcsname{Modern placement: normalize before the sub-layer, then add residually.}
 \expandafter\def\csname @gls@def@precision-pinning\endcsname{Components held at BF16/FP32 even with FP8 elsewhere: embedding module, output head, MoE gating, normalization, attention.}
 \expandafter\def\csname @gls@def@prm800k\endcsname{OpenAI's released dataset of approx 800,000 human step-correctness labels on GPT-4-generated MATH solutions.}
-\expandafter\def\csname @gls@def@probe-2\endcsname{A (typically linear) classifier g: mathbbRd to mathcalY trained on frozen LM activations mathbfh(ell, t) to predict an e...}
+\expandafter\def\csname @gls@def@probe\endcsname{A (typically linear) classifier g: mathbbRd to mathcalY — in the binary case g(mathbfh) = sigma(mathbfwtop mathbfh +...}
 \expandafter\def\csname @gls@def@process-preference-model\endcsname{rStar-Math's variant: trained on preferences over MCTS-discovered step pairs, rather than absolute step labels.}
 \expandafter\def\csname @gls@def@process-reward-model\endcsname{A scoring function RP phi: (x, s 1:t) to [0, 1] trained on per-step correctness labels.}
 \expandafter\def\csname @gls@def@processbench\endcsname{Standard benchmark for PRM step-error detection (identify the first incorrect step in a partial trace).}
@@ -53,19 +53,19 @@
 \expandafter\def\csname @gls@def@reward-hacking\endcsname{Policy exploits an artifact of the reward signal that does not correspond to true quality (e.g., verbosity, sycophancy, format-shortcuts).}
 \expandafter\def\csname @gls@def@reward-model\endcsname{A neural network trained on Bradley–Terry preferences to score response quality.}
 \expandafter\def\csname @gls@def@rlhf\endcsname{The 3-stage post-training pipeline: SFT → reward-model training on pairwise preferences → PPO with KL anchor against pimathrmSFT.}
-\expandafter\def\csname @gls@def@rlvr-3\endcsname{RL post-training where the reward is computed mechanically from the emitted answer (regex match for math, unit-test execution for code, pro...}
+\expandafter\def\csname @gls@def@rlvr\endcsname{Post-training paradigm where the reward is computed mechanically from the emitted answer by a deterministic programmatic verifier — math eq...}
 \expandafter\def\csname @gls@def@rmsnorm\endcsname{Simplified LayerNorm that drops mean-centering and bias, normalizing only by the RMS of the input.}
-\expandafter\def\csname @gls@def@rope\endcsname{Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative posit...}
+\expandafter\def\csname @gls@def@rope\endcsname{Multiplicative positional encoding that rotates query and key vectors in 2D subspaces by per-frequency, position-dependent angles mtheta ...}
 \expandafter\def\csname @gls@def@saturation\endcsname{A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power.}
 \expandafter\def\csname @gls@def@scaling-law\endcsname{An empirical or theoretical functional relationship between a measure of model performance (typically cross-entropy loss) and one or more "...}
 \expandafter\def\csname @gls@def@scheming\endcsname{A model schemes when, instructed to pursue a goal G, it strategically takes actions that conceal its capabilities or manipulate its overs...}
-\expandafter\def\csname @gls@def@self-consistency-2\endcsname{Sample N chain-of-thoughts independently at T > 0; majority-vote the final answers.}
+\expandafter\def\csname @gls@def@self-consistency\endcsname{Sample N reasoning traces independently at temperature T > 0, majority-vote over the extracted answers.}
 \expandafter\def\csname @gls@def@sliding-window-attention\endcsname{Each position attends only to the previous w tokens; compute O(N w d) vs O(N2 d).}
 \expandafter\def\csname @gls@def@swiglu\endcsname{mathrmFFN mathrmSwiGLU(x) = (mathrmSwish 1(xW) otimes xV) W 2.}
 \expandafter\def\csname @gls@def@sycophancy\endcsname{A response is sycophantic if it is more aligned with the user's expressed preference than is justified by the underlying truth.}
 \expandafter\def\csname @gls@def@test-time-compute\endcsname{The inference-side compute spent on a single problem instance to improve answer quality, beyond a single greedy forward pass.}
 \expandafter\def\csname @gls@def@test-time-compute-optimal-scaling-strategy\endcsname{The argmax over test-time hyperparameters theta of expected output correctness, at a fixed test-time compute budget N, conditioned on...}
-\expandafter\def\csname @gls@def@thinking-budget-2\endcsname{Productised TTC control: API-level integer (Gemini 2.5 `thinkingBudget`), effort level (OpenAI o-series), or token cap (Anthropic thinking...}
+\expandafter\def\csname @gls@def@thinking-budget\endcsname{Productised test-time-compute control that caps the reasoning-token spend per request before the model is forced to commit to an answer: an...}
 \expandafter\def\csname @gls@def@transformer\endcsname{Neural network architecture introduced by Vaswani et al. (2017) that replaces recurrence with self-attention, allowing parallel processing...}
 \expandafter\def\csname @gls@def@value\endcsname{Projected representation of the content to be aggregated.}
 \expandafter\def\csname @gls@def@vapo\endcsname{RL variant that re-introduces a learned value function on top of GRPO's design, with shared backbone and value-loss-clipping.}

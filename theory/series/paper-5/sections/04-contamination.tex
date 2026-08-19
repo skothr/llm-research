@@ -85,7 +85,7 @@ context. This is structurally different from the first two: no
 amount of training-corpus auditing closes it, because the channel is
 the eval harness itself. \textsc{rag}-augmented model cards that
 report \textsc{mmlu} scores under tool-use, agentic-benchmark
-scaffolds that browse the live web, and \textsc{\glsterm{situational-awareness}{llm}}-as-judge
+scaffolds that browse the live web, and \textsc{\glsterm{llm}{llm}}-as-judge
 pipelines whose judge has been fine-tuned on the same task are all
 instances. The contamination-survey abstract does not name this mode
 explicitly, but the dynamic-benchmark gap it calls out --- ``the lack
@@ -193,7 +193,7 @@ jumping from an initial 15.6\% to 77.9\%.
 \end{quote}
 
 The headline jump from $15.6\%$ to $77.9\%$ at $\mathrm{pass}@1$
-(further to $86.7\%$ under \glsterm{self-consistency-2}{self-consistency}) is the load-bearing
+(further to $86.7\%$ under \glsterm{self-consistency}{self-consistency}) is the load-bearing
 RL-on-verifiable-rewards demonstration of Paper~3 (§reasoning-RL).
 What the contamination question asks of that result is whether the RL
 optimization is teaching new reasoning computation or learning to
@@ -274,8 +274,12 @@ benchmarks. \textsc{mmlu-redux} \citep{mmlu-redux-2024} is a partial
 analogue at the verifier-error layer (a published per-question
 correction set that subsequent runs can use), and its partial
 adoption --- the Open \glsterm{llm}{LLM} Leaderboard moved its primary headline to
-\textsc{mmlu-pro} while many model cards still report raw \textsc{mmlu}
-\citep[\S{}implications]{mmlu-redux-2024} --- is the diagnostic for
+\textsc{mmlu-pro} while many model cards still report raw \textsc{mmlu}%
+\footnote{The adoption status is a KB observation about the field, not a
+claim of \citet{mmlu-redux-2024}, which audits \textsc{mmlu}'s labels and
+does not discuss leaderboard uptake:
+\nolinkurl{kb/excerpts/mmlu-redux-2024.md#methodological-contribution}
+(checked 2026-08-19).} --- is the diagnostic for
 how field-wide adoption of a heavier contamination protocol would
 likely play out.
 

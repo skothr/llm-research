@@ -21,6 +21,8 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from gen_glossary import is_case_strict
+
 THEORY = Path(__file__).resolve().parents[1]
 SERIES = THEORY / "series"
 TERMS_JSON = SERIES / "glossary-terms.json"
@@ -282,6 +284,12 @@ def build_term_regex(records: list[dict]) -> re.Pattern:
     Sorted longest-first so e.g. 'FA-3' matches before 'FA' is considered.
 
     Mark loose-case terms with an inline flag group like (?i:tokenization).
+
+    Case-strictness is evaluated PER SURFACE FORM, not inherited from the
+    record's primary form. Inheriting it made an acronym alias case-loose
+    whenever its entry's headword happened to be sentence-case — e.g. the
+    `RLVR` alias on `Capability ceiling` compiled to `(?i:RLVR)` and so
+    matched a bare lowercase `rlvr` in prose and in path-like text.
     """
     parts: list[str] = []
     surfaces: list[tuple[str, bool]] = []
@@ -289,7 +297,7 @@ def build_term_regex(records: list[dict]) -> re.Pattern:
         forms = [r["primary_form"]] + list(r.get("aliases", []))
         for s in forms:
             if len(s) >= 2:
-                surfaces.append((s, bool(r.get("case_strict", True))))
+                surfaces.append((s, is_case_strict(s)))
     surfaces.sort(key=lambda x: len(x[0]), reverse=True)
     for s, strict in surfaces:
         esc = re.escape(s)
@@ -317,19 +325,85 @@ class ApplyResult:
 def _build_surface_to_key(records: list[dict]) -> dict[str, str]:
     """Map every surface form (primary + aliases) -> key.
 
-    For case-loose terms, both the original-case and lowercased forms
-    map to the key; lookup uses lowercased input.
+    Case-strict surfaces are stored under their exact spelling; case-loose
+    surfaces under their lowercased spelling (lookup tries exact first,
+    then lowercased). Strictness is a property of the surface string
+    itself — see build_term_regex.
+
+    PRECEDENCE: aliases are registered first, primary forms second, so a
+    primary form ALWAYS outranks an alias no matter how the records are
+    ordered. Some headwords carry a scope qualifier in parentheses rather
+    than a synonym (`Per-shape RMS scaling (Muon)`, `Capability ceiling
+    (RLVR)`); gen_glossary keeps that parenthetical as an "alias" so the
+    rendered glossary heading still shows it, which means such an alias
+    can collide with another entry's headword. Under the previous
+    single-pass, last-write-wins build the alias could win — every prose
+    `Muon` linked to `per-shape-rms-scaling`, and the real `Muon` entry
+    dropped out of paper-2's glossary because its key was never used.
     """
     table: dict[str, str] = {}
-    for r in records:
-        for s in [r["primary_form"]] + list(r.get("aliases", [])):
-            if len(s) < 2:
-                continue
-            if r.get("case_strict", True):
-                table[s] = r["key"]
-            else:
-                table[s.lower()] = r["key"]
+    for take_primary in (False, True):
+        for r in records:
+            forms = [r["primary_form"]] if take_primary else list(r.get("aliases", []))
+            for s in forms:
+                if len(s) < 2:
+                    continue
+                if is_case_strict(s):
+                    table[s] = r["key"]
+                else:
+                    table[s.lower()] = r["key"]
     return table
+
+
+def _build_shadow_rekey(
+    records: list[dict], surface_map: dict[str, str]
+) -> dict[tuple[str, str], str]:
+    """Map (stale_key, surface.lower()) -> correct key for shadowed primaries.
+
+    Fixing _build_surface_to_key only fixes NEW wrapping. Sites already
+    committed as `\\glsterm{per-shape-rms-scaling}{Muon}` sit inside a
+    skip region, so the wrapper never revisits them and the mis-link (plus
+    the missing glossary entry) would persist forever.
+
+    Scope is deliberately narrow: an entry is rewritten only when the
+    written surface is listed as an ALIAS of the written key AND that same
+    surface is some OTHER entry's primary form. Any other author-written
+    \\glsterm{key}{surface} pairing — a legitimate synonym, a deliberate
+    cross-link — is left untouched.
+    """
+    primaries: set[str] = set()
+    for r in records:
+        primaries.add(r["primary_form"])
+        primaries.add(r["primary_form"].lower())
+    rekey: dict[tuple[str, str], str] = {}
+    for r in records:
+        for a in r.get("aliases", []):
+            if a not in primaries and a.lower() not in primaries:
+                continue
+            correct = surface_map.get(a) or surface_map.get(a.lower())
+            if correct is not None and correct != r["key"]:
+                rekey[(r["key"], a.lower())] = correct
+    return rekey
+
+
+# \glsterm{key}{surface} / \glsdef{key}{surface} with brace-free arguments.
+_MARKED_SITE_RE = re.compile(
+    r"\\(?P<cmd>glsterm|glsdef)\{(?P<key>[^{}]+)\}\{(?P<surface>[^{}]*)\}"
+)
+
+
+def _apply_shadow_rekey(text: str, rekey: dict[tuple[str, str], str]) -> str:
+    """Rewrite already-marked sites whose key lost to a shadowing alias."""
+    if not rekey:
+        return text
+
+    def repl(m: re.Match[str]) -> str:
+        new_key = rekey.get((m.group("key"), m.group("surface").lower()))
+        if new_key is None:
+            return m.group(0)
+        return rf"\{m.group('cmd')}{{{new_key}}}{{{m.group('surface')}}}"
+
+    return _MARKED_SITE_RE.sub(repl, text)
 
 
 def _is_in_skip(pos: int, regions: list[tuple[int, int]]) -> bool:
@@ -345,21 +419,30 @@ def wrap_body(
     *,
     surface_map: dict[str, str] | None = None,
     rx: re.Pattern | None = None,
+    rekey: dict[tuple[str, str], str] | None = None,
 ) -> ApplyResult:
     """Wrap unwrapped body-text occurrences of glossary terms in the text.
 
     Idempotent. Already-wrapped \\glsterm{...}{...} regions are skip
-    regions; the wrapper leaves them alone but counts their key as used.
+    regions; the wrapper leaves them alone but counts their key as used —
+    except for the shadow-rekey repair below, which is the one case where
+    an existing mark is rewritten (it converges after one pass, since the
+    repaired key is no longer a rekey-map source).
 
-    `surface_map` and `rx` derive only from `records`; pass them in to
-    avoid rebuilding once per section (saved ~70 rebuilds across the
+    `surface_map`, `rx` and `rekey` derive only from `records`; pass them
+    in to avoid rebuilding once per section (saved ~70 rebuilds across the
     series — measured as ~112ms of total runtime on the current corpus).
     """
-    skip = find_skip_regions(text)
     if surface_map is None:
         surface_map = _build_surface_to_key(records)
     if rx is None:
         rx = build_term_regex(records)
+    if rekey is None:
+        rekey = _build_shadow_rekey(records, surface_map)
+    # Repair stale marks BEFORE anything positional: this shifts offsets,
+    # so skip regions must be computed against the repaired text.
+    text = _apply_shadow_rekey(text, rekey)
+    skip = find_skip_regions(text)
     out: list[str] = []
     keys_used: set[str] = set()
     last = 0
@@ -516,6 +599,14 @@ def _sanitize_full_def(text: str) -> str:
     # break inside math, which pdfLaTeX rejects).
     text = re.sub(r"(?<!\\)&", r"\\&", text)
     text = re.sub(r"(?<!\\)#", r"\\#", text)
+    # `%` starts a LaTeX comment, so an unescaped one silently swallows the
+    # rest of the emitted line — definition tail and trailing citation alike.
+    # That is issue #60: paper-3's "CoT faithfulness" entry stopped dead at
+    # "~0.04-0.14" and its [mehta2026-faithfulness-scaling] citation never
+    # rendered. Same negative-lookbehind shape as & and # above, so a `\%`
+    # the source already wrote is left alone. `%` is a comment in math mode
+    # too, so this is unconditional rather than outside-math-only.
+    text = re.sub(r"(?<!\\)%", r"\\%", text)
     # _ and ^ must only be escaped when NOT already inside $...$
     # Simple approach: escape outside math; inside math they're valid.
     parts: list[str] = []
@@ -721,18 +812,24 @@ def process_paper(paper_dir: Path, records: list[dict], dry_run: bool = False) -
     # Hoist the records-only state out of the per-section loop.
     surface_map = _build_surface_to_key(records)
     rx = build_term_regex(records)
+    rekey = _build_shadow_rekey(records, surface_map)
     for sec in sections:
         original = sec.read_text(encoding="utf-8")
+        # Repair shadowed keys on already-marked sites up front, so the
+        # \glsdef back-link scan and the \label offsets below all read the
+        # same text wrap_body will operate on. `original` is retained only
+        # to decide whether the file changed.
+        source = _apply_shadow_rekey(original, rekey)
         # First \label{sec:...} in the file is the section's primary anchor;
         # used as the file-level fallback for \glsterm first-mentions.
-        sec_label_match = re.search(r"\\label\{(sec:[^}]+)\}", original)
+        sec_label_match = re.search(r"\\label\{(sec:[^}]+)\}", source)
         sec_label = sec_label_match.group(1) if sec_label_match else None
         # For \glsdef sites, prefer the most-recent \label{sec:...} BEFORE
         # the \glsdef position so a subsection-scoped marker links to its
         # subsection, not the enclosing top-level section.
         label_positions: list[tuple[int, str]] = [
             (lm.start(), lm.group(1))
-            for lm in re.finditer(r"\\label\{(sec:[^}]+)\}", original)
+            for lm in re.finditer(r"\\label\{(sec:[^}]+)\}", source)
         ]
 
         def label_before(pos: int) -> str | None:
@@ -746,11 +843,11 @@ def process_paper(paper_dir: Path, records: list[dict], dry_run: bool = False) -
 
         # Scan for \glsdef BEFORE wrapping — wrap_body adds \glsterm, never
         # \glsdef, so any \glsdef present must be author-marked.
-        for m in re.finditer(r"\\glsdef\{([^{}]+)\}\{", original):
+        for m in re.finditer(r"\\glsdef\{([^{}]+)\}\{", source):
             target = label_before(m.start()) or sec_label
             if target is not None:
                 glsdef_label.setdefault(m.group(1), target)
-        result = wrap_body(original, records, surface_map=surface_map, rx=rx)
+        result = wrap_body(source, records, surface_map=surface_map, rx=rx, rekey=rekey)
         per_section_keys[sec.name] = sorted(result.keys_used)
         keys_used |= result.keys_used
         if sec_label is not None:

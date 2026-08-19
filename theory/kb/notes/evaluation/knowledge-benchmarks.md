@@ -108,7 +108,7 @@ specialized professional knowledge.
 ### 2.2 The lm-evaluation-harness MMLU recipe
 
 The de-facto open-source scoring of MMLU uses EleutherAI's
-`lm-evaluation-harness` `[lm-eval-harness §sec-request-types;
+`lm-evaluation-harness` `[lm-eval-harness §Model APIs and Inference Servers;
 kb/excerpts/lm-eval-harness#sec-request-types]`. The standardized
 recipe:
 

@@ -49,10 +49,10 @@ Sources are cited inline in
 \textbf{Norm} & \textbf{Pos} & \textbf{Tok} & \textbf{Multi-tok} &
 \textbf{MM} \\
 \midrule
-DeepSeek V3 & \glsterm{multi-head-latent-attention}{MLA}, $d_c{=}512$ & FA + custom \glsterm{multi-head-latent-attention}{MLA} kernel & MoE
+DeepSeek V3 & \glsterm{mla}{MLA}, $d_c{=}512$ & FA + custom \glsterm{mla}{MLA} kernel & MoE
 $E{=}256$, $k{=}8$, $E_s{=}1$ & \glsterm{rmsnorm}{RMSNorm} + \glsterm{pre-ln}{Pre-LN} & decoupled-\glsterm{rope}{RoPE} &
 \glsterm{bpe}{BPE} 129K & \glsterm{multi-token-prediction}{MTP}, 1 head & text-only \\
-DeepSeek R1 & \glsterm{multi-head-latent-attention}{MLA} (V3 base) & FA + custom \glsterm{multi-head-latent-attention}{MLA} kernel & MoE (V3 base) &
+DeepSeek R1 & \glsterm{mla}{MLA} (V3 base) & FA + custom \glsterm{mla}{MLA} kernel & MoE (V3 base) &
 \glsterm{rmsnorm}{RMSNorm} + \glsterm{pre-ln}{Pre-LN} & decoupled-\glsterm{rope}{RoPE} & \glsterm{bpe}{BPE} 129K & \glsterm{multi-token-prediction}{MTP}, 1 head &
 text-only \\
 Llama 4 (Scout / Maverick) & \glsterm{gqa}{GQA}-8 & FA3 & dense$\!+\!$MoE
@@ -99,9 +99,12 @@ briefly to anchor each cell.
 \paragraph{DeepSeek V3 and R1.}
 DeepSeek V3 is a 671B-total / 37B-active MoE with
 $E = 256$, $E_s = 1$, $k = 8$, auxiliary-loss-free
-balancing~\citep[\S 2.2]{deepseek-v3}.\footnote{KB excerpt:
-\nolinkurl{kb/excerpts/deepseek-v3.md#sec-2}.} The attention sublayer
-uses \glsterm{multi-head-latent-attention}{MLA} with joint-compression rank $d_c = 512$ and the
+balancing~\citep[\S 2.1.2]{deepseek-v3}.\footnote{KB excerpt:
+\nolinkurl{kb/excerpts/deepseek-v3-training.md#abstract} carries the
+671B/37B split and the auxiliary-loss-free strategy; that excerpt is
+training-side only, so $(E, E_s, k)$ is cited from the report's
+\S 2.1.2 directly.} The attention sublayer
+uses \glsterm{mla}{MLA} with joint-compression rank $d_c = 512$ and the
 decoupled-\glsterm{rope}{RoPE} construction of \citet[\S 2.1.2 Eq.~9]{deepseek-v2}.
 \glsterm{multi-token-prediction}{Multi-Token Prediction} with one auxiliary head is part of the
 pretraining objective~\citep[\S 2.3.1]{deepseek-v3}.
@@ -166,7 +169,7 @@ architectural detail.} Qwen 3 (235B-A22B) replaces the dense \glsterm{ffn}{FFN} 
 a fine-grained MoE at $E = 128$, $E_s = 0$, $k = 8$, with
 \glsterm{global-batch-load-balancing}{global-batch load balancing} in place of auxiliary-loss
 balancing~\citep[\S 2.1]{qwen3}. Crucially Qwen 3 keeps \glsterm{gqa}{GQA} rather
-than \glsterm{multi-head-latent-attention}{MLA}, despite training in the same year as DeepSeek V3 --- the
+than \glsterm{mla}{MLA}, despite training in the same year as DeepSeek V3 --- the
 lab-level KV-sharing split flagged in
 \cref{sec:attention-kv-sharing}. The multimodal line (Qwen 2.5-VL)
 uses a projector, not native multimodal.
@@ -269,7 +272,7 @@ choice (\glsterm{rmsnorm}{RMSNorm} + \glsterm{pre-ln}{Pre-LN} + $1/\sqrt{N}$ res
 \item \textbf{Positional encoding: \glsterm{rope}{RoPE} plus a long-context
 extension.} All seven disclosed rows apply \glsterm{rope}{RoPE} to $Q, K$ at every
 attention layer (\cref{sec:positional-encoding}). The extension varies ---
-vanilla, \glsterm{yarn}{YaRN}, \glsterm{irope}{iRoPE}, decoupled-\glsterm{rope}{RoPE} for \glsterm{multi-head-latent-attention}{MLA}, interleaved
+vanilla, \glsterm{yarn}{YaRN}, \glsterm{irope}{iRoPE}, decoupled-\glsterm{rope}{RoPE} for \glsterm{mla}{MLA}, interleaved
 local / global --- but the base mechanism (multiplicative rotation
 of $Q, K$ parameterised by $\theta_i = \theta^{-2(i-1)/d_h}$) is
 shared.
@@ -283,17 +286,17 @@ split is on the multiplicity around it, not on the activation.
 
 \item \textbf{KV-sharing: head-count reduction.} No disclosed
 2026-frontier model uses full \glsterm{mha}{MHA}. Every row sits at \glsterm{gqa}{GQA}-8,
-\glsterm{gqa}{GQA}-with-windowing, or \glsterm{multi-head-latent-attention}{MLA} --- all reducing $H_{\mathrm{kv}}$ below
-$H_q$. The lab-aligned split between \glsterm{gqa}{GQA} and \glsterm{multi-head-latent-attention}{MLA} persists, but
+\glsterm{gqa}{GQA}-with-windowing, or \glsterm{mla}{MLA} --- all reducing $H_{\mathrm{kv}}$ below
+$H_q$. The lab-aligned split between \glsterm{gqa}{GQA} and \glsterm{mla}{MLA} persists, but
 \emph{some} form of head-count reduction is universal, and every
-major inference framework (\glsterm{flashattention}{FlashAttention}, vLLM, \glsterm{compressed-fsm-2}{SGLang}) now ships
+major inference framework (\glsterm{flashattention}{FlashAttention}, vLLM, \glsterm{compressed-fsm}{SGLang}) now ships
 first-class \glsterm{gqa}{GQA} and increasingly first-class
-\glsterm{multi-head-latent-attention}{MLA}~\citep{kwon2023,dao2023}.
+\glsterm{mla}{MLA}~\citep{kwon2023,dao2023}.
 
 \item \textbf{Attention implementation: \glsterm{flashattention}{FlashAttention}-family exact
 attention.} Every disclosed model uses a \glsterm{flashattention}{FlashAttention}-class
 exact-attention kernel: FA2 on Ampere, FA3 on Hopper, with
-\glsterm{multi-head-latent-attention}{MLA}-aware variants for the DeepSeek
+\glsterm{mla}{MLA}-aware variants for the DeepSeek
 stack~\citep{dao2023,shah2024,deepseek-v3}. \glsterm{nsa}{NSA}'s three-branch
 sparse attention~\citep{yuan2025} has not yet shipped at production
 scale at any disclosed lab; the formula
@@ -309,7 +312,7 @@ of the paper: the axes that have converged are the ones where the
 \glsterm{flashattention}{FlashAttention}-class implementation). The axes that remain split
 are the ones where the primary set still contains parallel
 lineages (MoE-vs-dense; \glsterm{cross-attention}{cross-attention}-vs-projector-vs-native
-multimodal; \glsterm{gqa}{GQA}-vs-\glsterm{multi-head-latent-attention}{MLA} at the lab level). Returning to canonical
+multimodal; \glsterm{gqa}{GQA}-vs-\glsterm{mla}{MLA} at the lab level). Returning to canonical
 math: the residual-stream forward pass on a 2026 frontier model
 collapses to the same five-line equation (\glsterm{rmsnorm}{RMSNorm} $\to$ rotated-$Q,K$
 attention with reduced $H_{\mathrm{kv}}$ $\to$ residual-add $\to$
@@ -326,15 +329,15 @@ Three axes carry live splits in \cref{tab:frontier-snapshot}.
 
 \paragraph{KV-sharing strategy: GQA versus MLA.}
 The split is lab-aligned, not capability-aligned. DeepSeek V2 / V3 /
-R1 use \glsterm{multi-head-latent-attention}{MLA} throughout~\citep{deepseek-v2,deepseek-v3,deepseek-r1};
+R1 use \glsterm{mla}{MLA} throughout~\citep{deepseek-v2,deepseek-v3,deepseek-r1};
 every other disclosed lab (Meta, \glsterm{mistral}{Mistral}, Google, Alibaba) uses \glsterm{gqa}{GQA}.
-The contradiction in \cref{sec:attention-kv-sharing} is that \glsterm{multi-head-latent-attention}{MLA}'s
+The contradiction in \cref{sec:attention-kv-sharing} is that \glsterm{mla}{MLA}'s
 quality story --- matched \glsterm{mha}{MHA} quality at $4\times$ smaller KV-cache
 --- is a single-source primary claim
 (\citealp{deepseek-v2}) and has not been independently reproduced
 at frontier scale by a non-DeepSeek lab. The serving-stack maturity
-gap (\glsterm{flashattention}{FlashAttention}'s \glsterm{gqa}{GQA} path being older than its \glsterm{multi-head-latent-attention}{MLA} path) and
-the recipe risk of \glsterm{multi-head-latent-attention}{MLA}'s decoupled-\glsterm{rope}{RoPE} construction
+gap (\glsterm{flashattention}{FlashAttention}'s \glsterm{gqa}{GQA} path being older than its \glsterm{mla}{MLA} path) and
+the recipe risk of \glsterm{mla}{MLA}'s decoupled-\glsterm{rope}{RoPE} construction
 (\cref{sec:attention-kv-sharing}) are plausible explanations for the
 non-crossover. \cref{sec:contradictions} returns to this.
 
@@ -381,9 +384,9 @@ The empirical state of the disclosed 2026 frontier is summarized in
 two sentences. \textbf{The convergence is a five-axis fixed point
 across all disclosed labs}: \glsterm{rope}{RoPE}-with-extension, \glsterm{rmsnorm}{RMSNorm} in a
 \glsterm{pre-ln}{Pre-LN}-class placement, \glsterm{swiglu}{SwiGLU} per-position \glsterm{ffn}{FFN}, head-count-reduced
-KV-sharing (some form of \glsterm{gqa}{GQA} or \glsterm{multi-head-latent-attention}{MLA}), \glsterm{flashattention}{FlashAttention}-class exact
+KV-sharing (some form of \glsterm{gqa}{GQA} or \glsterm{mla}{MLA}), \glsterm{flashattention}{FlashAttention}-class exact
 attention; \textbf{the residual splits are concentrated in three
-axes}: KV-sharing strategy (\glsterm{gqa}{GQA} vs \glsterm{multi-head-latent-attention}{MLA}, lab-aligned, single-source
+axes}: KV-sharing strategy (\glsterm{gqa}{GQA} vs \glsterm{mla}{MLA}, lab-aligned, single-source
 quality claim), dense-vs-MoE on the \glsterm{ffn}{FFN} multiplicity (genuine
 quality / serving-cost trade with cross-lab disagreement on
 $E_s > 0$), and multimodal integration pattern (projector vs native,
@@ -394,7 +397,7 @@ disclosed convergence neighbourhood.
 
 The remaining contradictions surfaced through
 \cref{sec:positional-encoding,sec:attention-kv-sharing,sec:attention-hardware-axis,sec:ffn,sec:state-space-and-hybrids,sec:multi-token-output,sec:multimodal,sec:inference-adjuncts}
---- \glsterm{multi-head-latent-attention}{MLA}-vs-\glsterm{mha}{MHA} at frontier scale, \glsterm{nsa}{NSA}-vs-FA3 head-to-head,
+--- \glsterm{mla}{MLA}-vs-\glsterm{mha}{MHA} at frontier scale, \glsterm{nsa}{NSA}-vs-FA3 head-to-head,
 \glsterm{state-space-model}{SSM}-hybrid quality at frontier, the matched-active MoE quality gap,
 long-context extrapolation method comparison, \glsterm{multi-token-prediction}{MTP} at non-DeepSeek
 scale, native-multimodal quality lift --- are now visible as a

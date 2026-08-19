@@ -221,20 +221,12 @@ glossary format (cf. "Attention variants and KV-cache compression").
 
 ## Probing — vocabulary
 
-- **Probe** — a (typically linear) classifier $g(\mathbf{h}) =
-  \sigma(\mathbf{w}^\top \mathbf{h} + b)$ trained on labeled
-  activations to predict an external property $y$. Foundational
-  reference: Alain & Bengio 2017.
 - **Mass-mean probing** — Marks & Tegmark 2023: define the probe
   direction as $\mathbf{d}_\text{class} = \mathbb{E}[\mathbf{h} \mid
   y = c_1] - \mathbb{E}[\mathbf{h} \mid y = c_0]$, then project
   activations onto $\mathbf{d}_\text{class}$. Simpler and more
   generalization-robust than logistic regression on the same
   features `[marks-tegmark-2023-truth §1]`.
-- **Truth direction** — the canonical mass-mean probe direction for
-  truth-value of a statement, derived in Marks & Tegmark 2023. A
-  small linear subspace separates true and false statements across
-  many models and datasets.
 - **Correlational vs. causal probing** — a probe demonstrates that
   the model *represents* a property; an activation patch along the
   probe direction demonstrates that the model *uses* it. The 2023+

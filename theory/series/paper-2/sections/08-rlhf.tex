@@ -242,8 +242,8 @@ The $1.3$B-versus-$175$B inflection is what made \glsterm{rlhf}{RLHF} a first-cl
 post-training technique. Every assistant \glsterm{llm}{LLM} since — \glsterm{claude}{Claude}, Gemini,
 Llama-2 / 3 / 4, \glsterm{mistral}{Mistral}, Qwen, GPT-4o — runs some descendant of the
 InstructGPT pipeline as its post-training core, with the variants of
-\cref{sec:rlhf-frontier} (\glsterm{dpo}{DPO} replacing PPO, \glsterm{rlaif-3}{RLAIF} / \glsterm{constitutional-ai}{CAI} replacing
-human labels, \glsterm{grpo-2}{GRPO} replacing both for verifiable-reward reasoning)
+\cref{sec:rlhf-frontier} (\glsterm{dpo}{DPO} replacing PPO, \glsterm{rlaif}{RLAIF} / \glsterm{constitutional-ai}{CAI} replacing
+human labels, \glsterm{grpo}{GRPO} replacing both for verifiable-reward reasoning)
 sitting on top of the same three-stage scaffold.
 
 \subsection{Reward hacking and the alignment tax}
@@ -314,7 +314,7 @@ Llama-3 \citep{meta-llama3} runs SFT $\to$ \glsterm{rejection-sampling-sft}{reje
 $\to$ \glsterm{dpo}{DPO} over multiple rounds and uses \emph{no PPO at scale},
 reporting that \glsterm{dpo}{DPO} required less compute than PPO and performed as
 well or better. T\"ulu-3 \citep{tulu3} adopts a similar SFT $\to$
-\glsterm{dpo}{DPO} $\to$ \glsterm{rlvr-3}{RLVR} stack. The driver is infrastructural: PPO requires
+\glsterm{dpo}{DPO} $\to$ \glsterm{rlvr}{RLVR} stack. The driver is infrastructural: PPO requires
 four model copies in memory plus a three-phase rollout / score /
 optimize loop, while \glsterm{dpo}{DPO} is a single forward + backward on
 preference pairs.
@@ -325,8 +325,8 @@ programmatic verifier exists (math problems with sympy-checkable
 answers, code with unit tests), the learned RM is replaced by an
 indicator $R_{\mathrm{verifier}}(x, y) \in \{0, 1\}$ that sidesteps
 \glsterm{reward-hacking}{reward hacking} by construction (the only way to score $1$ is to solve
-the problem). \glsterm{grpo-2}{GRPO} \citep{shao2024} replaces the \glsterm{value}{value} model with a
-group-mean baseline; \glsterm{dapo-2}{DAPO} \citep{dapo2025} adds asymmetric clipping
+the problem). \glsterm{grpo}{GRPO} \citep{shao2024} replaces the \glsterm{value}{value} model with a
+group-mean baseline; \glsterm{dapo}{DAPO} \citep{dapo2025} adds asymmetric clipping
 and dynamic sampling. DeepSeek-R1 \citep{deepseek-r1} is the
 production demonstration.
 
@@ -357,7 +357,7 @@ proxy-reward optimization produces overoptimization across
 \emph{all} preference-based post-training including \glsterm{dpo}{DPO}, since \glsterm{dpo}{DPO}'s
 \glsterm{implicit-reward}{implicit reward} $\hat r_\theta = \beta \log
 \pi_\theta / \pi^{\mathrm{SFT}}$ is itself a learned proxy that can be
-hacked. The contradiction is sharper than \glsterm{dpo}{DPO}-vs-PPO: \glsterm{rlaif-3}{RLAIF} and \glsterm{constitutional-ai}{CAI}
+hacked. The contradiction is sharper than \glsterm{dpo}{DPO}-vs-PPO: \glsterm{rlaif}{RLAIF} and \glsterm{constitutional-ai}{CAI}
 \citep{bai2022-cai} replace humans with an AI judge under a
 \glsterm{constitution}{constitution} and report stability gains in production; advocates
 read this as evidence the tractable view is right (judge-under-

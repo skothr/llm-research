@@ -331,10 +331,10 @@ post-2023 long-\glsterm{context-extension}{context extension} method exploits.
 
 The next axis (\S 5, attention KV-sharing) is largely
 \emph{independent} of this one: a model can choose any of
-\{\glsterm{mha}{MHA}, \glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, \glsterm{multi-head-latent-attention}{MLA}\} on the head-sharing axis and any of \{sinusoidal,
+\{\glsterm{mha}{MHA}, \glsterm{mqa}{MQA}, \glsterm{gqa}{GQA}, \glsterm{mla}{MLA}\} on the head-sharing axis and any of \{sinusoidal,
 \glsterm{rope}{RoPE}, \glsterm{rope}{RoPE}+\glsterm{yarn}{YaRN}, \glsterm{irope}{iRoPE}\} on the position axis without strong cross-
 constraints. The one notable interaction is DeepSeek-V2's
-\emph{decoupled-\glsterm{rope}{RoPE}} construction in \glsterm{multi-head-latent-attention}{MLA} --- where applying the
+\emph{decoupled-\glsterm{rope}{RoPE}} construction in \glsterm{mla}{MLA} --- where applying the
 rotation to a low-rank latent $K$ projection breaks the cache-absorbed
 forward, and a separate small \glsterm{rope}{RoPE}-only \glsterm{key}{key} channel is split out to
 preserve it~\citep{deepseek-v2}. We treat that interaction in detail

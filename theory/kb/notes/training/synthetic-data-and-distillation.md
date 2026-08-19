@@ -56,7 +56,7 @@ The student LM $\pi_\theta$ is then pre-trained (or mid-trained) on a
 mixture $\alpha \mathcal{D}_{\text{syn}} + (1-\alpha)
 \mathcal{D}_{\text{org}}$ for some fraction $\alpha$ that, in
 production recipes (Phi-4), is the *majority* of the training tokens
-`[phi4 §1.pillars; kb/excerpts/phi4#sec-1-pillars]`.
+`[phi4 §1; kb/excerpts/phi4#sec-1-pillars]`.
 
 ### 1.2 Distillation (post-training-imitation)
 
@@ -120,7 +120,7 @@ reasoning-RL-trained teacher (DeepSeek-R1) generates **800K samples**
 (600K reasoning + 200K non-reasoning) which are used as **pure SFT
 data** to fine-tune small dense models (1.5B, 7B, 14B, 32B, 70B). No
 RL is applied to the students
-`[deepseek-r1 §1.intro;
+`[deepseek-r1 §1;
 kb/excerpts/deepseek-r1#abstract]`.
 
 The methodology proceeds in three stages:
