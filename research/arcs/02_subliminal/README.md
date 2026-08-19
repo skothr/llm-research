@@ -58,11 +58,11 @@ was opened in one working session by Michael Lannum.
 
 **Originating question** [session 2026-05-31] `[NORMALIZED]`:
 
-> *"another paper... is about model-assisted training 'unconsciously'
+> *"another paper [...] is about model-assisted training 'unconsciously'
 > transferring knowledge/traits, like a preference for owls, despite the
-> output being filtered... I wonder if output that contains embeddings that
-> are cosine similar to owl-related things... could over training shape into a
-> preference."*
+> output being filtered [...] I wonder if output that contains embeddings that
+> are cosine similar to owl-related things [...] could over training shape into
+> a preference."*
 
 That question — is the filtered signal semantic in the model's *own*
 coordinates? — is hypothesis (C) under [The question](#the-question). The
@@ -73,11 +73,11 @@ the user's.
 2026-05-31] `[NORMALIZED]`:
 
 > *"you would have to keep track of the influence on learning of many
-> non-owl-related concepts... to check if their superposition would result in
-> the learned preference in effect. Though there might be a way to focus the
+> non-owl-related concepts [...] to check if their superposition would result
+> in the learned preference in effect. Though there might be a way to focus the
 > checking mathematically."*
 
-`[PARAPHRASE]` The "trait is a **resultant** ... superposition of many tiny
+`[PARAPHRASE]` The "trait is a **resultant** [...] superposition of many tiny
 per-number nudges" wording above is a Claude paraphrase of this — kept
 un-quoted for that reason. The user typed "superposition" and "focus the
 checking mathematically"; "resultant" and "per-number nudges" are Claude's.
@@ -97,10 +97,10 @@ committed before attention moved off the arc — which is why a pause taken on
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The originating question and hypothesis (C); the
-superposition intuition and the "focus it mathematically" push toward an
-aggregate estimator; the call to pause at a well-documented stopping point;
-the call to land the research-directory reorg as its own PR first, deferring
-subliminal to a separate later PR.
+superposition intuition and the "focus the checking mathematically" push
+toward an aggregate estimator; the call to pause at a well-documented
+stopping point; the call to land the research-directory reorg as its own PR
+first, deferring subliminal to a separate later PR.
 
 **Claude Code.** Verifying the paper against arXiv:2507.14805 (the
 "imbue"-persona wording; the same-base requirement); the (A)/(B)/(C) framing
@@ -108,8 +108,8 @@ and its grounding in the representational-alignment literature; the staged
 cheap-first program; the Step-0 decode-test implementation and NULL
 adjudication; the Step-1 design and adversarial critique.
 
-**Emergent.** The influence-alignment estimator — the user's "focus it
-mathematically" push, formalized by Claude.
+**Emergent.** The influence-alignment estimator — the user's "focus the
+checking mathematically" push, formalized by Claude.
 
 *Split as of 2026-06-10, covering Step 0.*
 

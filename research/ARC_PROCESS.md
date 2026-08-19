@@ -502,6 +502,16 @@ one** provenance label:
 `[RECONSTRUCTED]` is an acceptable label and an unacceptable silence: an
 unlabelled block asserts a provenance it does not have.
 
+**`[RECONSTRUCTED]` is not yours to apply alone.** Before writing it, surface
+the claim to the human — quote it, say which sessions were searched, and ask
+what they remember. They are a source the transcript search cannot reach: they
+may recall the turn well enough to label it properly, point at a record that
+lives outside the transcripts, or tell you it never happened. Deciding
+unilaterally fails in both directions, and this repo has managed both within
+one week — a claim that was never sourced spent a month laundered under a
+provenance label, and its correction then withdrew a second claim that was
+substantially sourceable. Ask; then label what the answer supports.
+
 **Role tags** — `[HUMAN-DIRECTED]` / `[AI-EXECUTED]` / `[JOINT]` — are used
 only where the default would mislead. The default: direction blocks are
 human-directed, everything downstream of them is AI-executed. Tag the

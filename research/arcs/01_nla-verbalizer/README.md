@@ -103,7 +103,9 @@ session transcripts listed under [Verifiability](#verifiability), lightly
 normalized for typos and punctuation (markdown emphasis inside a turn is
 dropped — theme 4's `*wouldn't*` is quoted as "wouldn't"); every block is
 labelled `[NORMALIZED]` for that reason. `[...]` inside a quote marks an
-editorial elision, except where noted in theme 9.
+editorial elision, except where noted in theme 9. Several quotes start
+mid-turn, where the opening words were conversational lead-in rather than
+content; that leading truncation is not marked.
 
 **The nine theme headings are Claude's compressions, not the user's words** —
 each one names a cluster of turns after the fact. Only the block quotes are
@@ -278,11 +280,13 @@ work, and the documentation tries to separate them honestly.
   enough to follow, which were artifacts to set aside, when scope was
   drifting from the original question, when a result deserved a
   separate observation file.
-- Scope-tightening discipline — the multi-agent local review that
-  surfaced 15 findings after PR #11 had already auto-merged, the
-  insistence on professional rigor and on not overclaiming, the
-  catches on emoji drift, overclaiming, "discriminant" naming
-  loosening, and protocol mischaracterization.
+- Scope-tightening discipline — commissioning the read-only multi-agent
+  local review that surfaced 15 findings after PR #11 had already
+  auto-merged, and acting on what it returned; the insistence on
+  professional rigor and on not overclaiming; the catches on emoji
+  drift and on overclaiming. The "discriminant" naming loosening and
+  the protocol mischaracterization were findings of that commissioned
+  review (F2 and F11), not catches typed by the user.
 - Architectural/methodological observations the agent had missed —
   theme 9 (AV format-bias) is the clearest example; the agent
   consistently read AV outputs at face value without questioning
@@ -305,9 +309,9 @@ work, and the documentation tries to separate them honestly.
 **Emergent.**
 
 - The discrete-attractor-basin synthesis — proposed by the agent
-  during compaction, refined under Michael's challenges around scope
-  qualification (the F1 fix), and validated against the audit numbers
-  (which the agent built but Michael directed).
+  during compaction, refined on scope qualification by the review
+  Michael commissioned (the F1 fix), and validated against the audit
+  numbers (which the agent built but Michael directed).
 - The methodology caveats below — most originated as Michael's
   in-session pushback against overclaiming and were formalized
   into explicit limitations sections by the agent.

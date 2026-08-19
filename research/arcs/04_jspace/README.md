@@ -262,8 +262,7 @@ and the evidentiary bar the recompute was held to was set by this one:
 The request was framed as the user's own learning, not as a defect report —
 the K-inconsistent variance-fraction defect surfaced *because* the math was
 walked through end-to-end to explain it. Requiring the variance fraction be
-checked against the paper's own definition in the source PDF was also the
-user's call.
+checked against the paper's own computed ratio was also the user's call.
 
 **The review-before-integration policy** [session 2026-07-22] `[NORMALIZED]`:
 
@@ -280,8 +279,11 @@ human merge.
 replication goal, KB-grounding requirement, plan-review gate); the design
 sign-off and its two amendments; every stage-boundary go/no-go and
 open-decision call; the auditability, artifact-verification, figures, and
-rich-data standards quoted above; the reviewer verdicts and the
-review-before-integration policy; the post-close reopening and its
+rich-data standards quoted above; the review-before-integration policy —
+commissioning the pre-merge review passes, directing that their confirmed
+findings be applied across the arc's claims, figures and datasets, and
+reserving integration for a human merge (the verdicts *inside* those passes
+are the review agents', not the user's); the post-close reopening and its
 evidentiary bar. Also two substantive methodological catches Claude had
 missed: that the steering experiment had **drifted from the paper's prompt**
 (*"So why did you change the prompt from the Anthropic paper's example? [...]

@@ -53,9 +53,10 @@ something load-bearing.
 > as 'handles' for the model layers to execute that function hidden in our
 > construction of language."*
 
-Scope decisions made at the same session start: two arcs (embeddings first,
-RoPE second) rather than one; iterate with figures + plain-language
-measurement explanations at checkpoints.
+**Two arcs, embeddings first** [session 2026-06-10] `[SELECTED]`. The scope
+decision made at the same session start: the user chose "Two arcs, embeddings
+first" from the options Claude offered — embeddings now, RoPE as a second arc,
+rather than one combined arc.
 
 **Broaden before deepen (CP1)** [session 2026-06-10] `[SELECTED]`. At
 checkpoint CP1 the user chose "Add more word groups first" from the
@@ -86,13 +87,13 @@ guidance, which is where the research-data-discipline rule came from.
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The originating "handles" question (quoted
-above, [session 2026-06-10]); the two-arc scoping and the
-iterate-with-figures cadence; the CP1 broaden-before-deepen decision; the
-deep-arc commitment and the numbered-arc reorganization (2026-06-11); the
-wrap-up call that closed the arc (2026-07-15); the challenge to finding #6's
-`' the'/'的'` notation that produced the de-cosine check (2026-07-21); the
-review gate (all three stack PRs human-merged, never auto-merged — visible in
-the merge record independently of any transcript).
+above, [session 2026-06-10]); the two-arc scoping; the CP1
+broaden-before-deepen decision; the deep-arc commitment and the numbered-arc
+reorganization (2026-06-11); the wrap-up call that closed the arc
+(2026-07-15); the challenge to finding #6's `' the'/'的'` notation that
+produced the de-cosine check (2026-07-21); the review gate (every PR in the
+four-part stack — #20, #21, #19, #23 — human-merged on 2026-07-21, never
+auto-merged — visible in the merge record independently of any transcript).
 
 **Withdrawn 2026-08-19 — "pause/resume calls across the tracing phase."**
 This list carried that item from 2026-07-18 (`64f02fd4`) until now, and it
@@ -104,6 +105,16 @@ instruction on record is the 2026-06-10 direction to pause *arc 02*. It is
 removed rather than relabelled, because a provenance label on an unsourced
 claim dignifies it.
 
+**Withdrawn 2026-08-19 — "iterate with figures + plain-language measurement
+explanations at checkpoints" as a user scope decision.** The cadence is
+real — the checkpoints happened — but nothing sources it to the user. Its
+only support is a Claude-authored line in
+[`plans/2026-06-10-embedding-atlas.md`](plans/2026-06-10-embedding-atlas.md)
+labelled "(user requirement)", written in the same session, on the same day,
+in the same commit (`933bc563`) as the README claim it was cited for; no user
+turn and no checkpoint selection sets it. It is restated below as Claude's
+working mode, without user attribution.
+
 **Claude Code.** All implementation: the 25 `emb_*`
 capture/derive/render/audit scripts (plus the `_emb_artifacts.py`
 resolver), the battery class
@@ -111,7 +122,11 @@ definitions (under the CP1 direction), the operationalization of the
 pre-registered predictions (P1a-P3), the tracing-phase experiment designs
 (T0/T1/T1.5/T2), the literature review with adversarial novelty verification,
 all figures and observation write-ups, and the audit that re-derives every
-published number from committed artifacts.
+published number from committed artifacts. Also the working mode the arc ran
+under — figures presented with plain-language explanations of each
+measurement at CP1-CP4, direction taken between checkpoints — specified in
+[`plans/2026-06-10-embedding-atlas.md`](plans/2026-06-10-embedding-atlas.md)
+and followed throughout.
 
 **Emergent.** The 21-dim entangled block itself (the user's handles framing
 predicted shared structure; the full-vocab sweep implementation surfaced this
