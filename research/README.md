@@ -131,8 +131,9 @@ blocks quoted from the session transcripts, each with a provenance label
 (`[VERBATIM]` / `[NORMALIZED]` / `[PARAPHRASE]` / `[SELECTED]` /
 `[RECONSTRUCTED]`), a human/Claude/emergent split, and a verifiability table
 listing the sessions by id and date (transcripts are machine-local and not
-committed). It is recorded **as the arc runs**, not reconstructed at close —
-transcript evidence expires. Full rules and the template:
+committed). The standard prescribes recording it **as the arc runs** rather
+than reconstructing at close, because transcript evidence expires; the four
+existing arcs all wrote theirs post-hoc. Full rules and the template:
 [`ARC_PROCESS.md`](ARC_PROCESS.md#attribution--who-directed-who-executed).
 
 **Plans** — research/construction plans (what to investigate, in what order,

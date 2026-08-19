@@ -63,8 +63,12 @@ their published code, regenerated against a different, open teacher.
 **No third-party personal data was ingested, and no PII scan applies.** There
 is no scraped input to scan: the arc's entire input side is procedurally
 generated. Each of the 120 prompts is a fixed instruction template drawn from
-the ported generator's hard-coded template lists, filled with 3–9 random
-integers in [100, 1000) from a seeded RNG. The repo `CLAUDE.md` § "Third-party
+the ported generator's hard-coded template lists, filled with 3–8 random
+integers in [100, 1000) from a seeded RNG — both bounds half-open, per
+`rng.integers(3, 9)` / `rng.integers(100, 1000)` in
+[`examples/subliminal_step0_decode.py`](../../../../examples/subliminal_step0_decode.py);
+the committed `prompts.jsonl` measures seed-list lengths {3, 4, 5, 6, 7, 8}
+across its 120 prompts. The repo `CLAUDE.md` § "Third-party
 data" scanner rationale (`examples/jspace_redact_corpus.py --report`) is aimed
 at web-scraped corpora and is inapplicable here.
 

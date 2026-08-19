@@ -316,7 +316,7 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, committed as a plain blob; present in every default clone)"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",
@@ -348,7 +348,7 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, committed as a plain blob; present in every default clone)"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",

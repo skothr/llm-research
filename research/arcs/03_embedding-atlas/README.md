@@ -108,26 +108,18 @@ produced the de-cosine check (2026-07-21); the review gate (every PR in the
 four-part stack — #20, #21, #19, #23 — human-merged on 2026-07-21, never
 auto-merged — visible in the merge record independently of any transcript).
 
-**Corrected 2026-08-19 — "pause/resume calls across the tracing phase."**
-The list carried that item from 2026-07-18 (`64f02fd4`), where it was written
-as half of the compound "the pause/resume and wrap-up calls" — a fair
-shorthand for the lifecycle calls that bound this arc. A 2026-08-17 pass
-narrowed it to "across the tracing phase", a scope no one had claimed, could
-not source that narrower claim, and explained the gap with a transcript loss
-that had not happened. What the record actually holds: **no pause call** —
-after 2026-06-11 the arc went quiet for 34 days with no instruction either
-way — and **a resume**, which is the same 2026-07-15 turn that closed it,
-quoted above.
-
-**Withdrawn 2026-08-19 — "iterate with figures + plain-language measurement
-explanations at checkpoints" as a user scope decision.** The cadence is
-real — the checkpoints happened — but nothing sources it to the user. Its
-only support is a Claude-authored line in
-[`plans/2026-06-10-embedding-atlas.md`](plans/2026-06-10-embedding-atlas.md)
-labelled "(user requirement)", written in the same session, on the same day,
-in the same commit (`933bc563`) as the README claim it was cited for; no user
-turn and no checkpoint selection sets it. It is restated below as Claude's
-working mode, without user attribution.
+- **Pause/resume calls — corrected 2026-08-19.** This list previously credited
+  "pause/resume calls across the tracing phase". **No pause call appears in the
+  searched transcripts** — after 2026-06-11 the arc went quiet for 34 days with
+  no instruction either way in them; the resume is the 2026-07-15 turn quoted
+  above.
+- **Checkpoint working mode — withdrawn 2026-08-19.** "Iterate with figures +
+  plain-language measurement explanations at checkpoints" was credited here as a
+  user scope decision, but nothing in the record sources it to the user. The
+  cadence is real; it is Claude's working mode, restated as such below, and the
+  "(user requirement)" label in
+  [`plans/2026-06-10-embedding-atlas.md`](plans/2026-06-10-embedding-atlas.md)
+  is corrected in place.
 
 **Claude Code.** All implementation: the 25 `emb_*`
 capture/derive/render/audit scripts (plus the `_emb_artifacts.py`
@@ -158,7 +150,7 @@ tool output — so they are referenced by session id and date only. The ids are
 | Session | Span | Covers |
 |---|---|---|
 | `3f3f013a` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment, the thorough-data standard |
-| — | 2026-06-12 → 07-14 | no session, and none expected: the arc was dormant, with no commit between 06-11 and 07-15 |
+| — | 2026-06-12 → 07-14 | no session in this project's local transcript directory, and no commit between 06-11 and 07-15; the instrument sees CLI sessions on one machine only |
 | `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | the resume-close-and-name turn, wrap-up, and close |
 | `426003e2` | 2026-07-21 | degradation-forensics direction |
 
