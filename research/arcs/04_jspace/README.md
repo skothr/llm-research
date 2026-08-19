@@ -170,8 +170,9 @@ different kinds of work; separating them keeps visible where the ideas came
 from. Quotes below are from the transcripts listed under **Verifiability**
 (Michael Lannum), normalized for typos and punctuation; markdown emphasis
 inside a turn is dropped, and `[...]` marks an editorial elision. Every
-quote carrying a `[NORMALIZED]` tag was passed through that
-normalization. This section follows the attribution shape in
+quote carrying a `[NORMALIZED]` tag was passed through that normalization;
+a `[VERBATIM]` tag means the span is exactly as typed, with any elision
+marked. This section follows the attribution shape in
 [`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed),
 for which [arc 02](../02_subliminal/README.md#research-direction) is the
 reference implementation.
@@ -181,6 +182,18 @@ artifact-verification standard", …) are Claude's thematic compressions of
 what each turn established — they are not the user's words, and they are not
 labels the user assigned. Blocks are ordered by topic, not chronologically;
 the session and date on each block are the authoritative provenance.
+
+**The arc is named, three days early** [session 2026-07-15] `[VERBATIM]`:
+
+> *"[...] I want to finish this one up and then extend it to a new arc
+> `04-jspace` based on new Anthropic research. Let's wrap this up first
+> though."*
+
+This arc exists because of that clause, typed while closing
+[arc 03](../03_embedding-atlas/README.md#attribution) — the name, the
+motivation, and the sequencing are all set here, before any direction is
+given. The leading `[...]` drops the arc-03 status question the same turn
+opens with; the turn is quoted whole in arc 03's attribution.
 
 **Originating direction** [session 2026-07-18] `[NORMALIZED]`:
 
