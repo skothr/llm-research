@@ -15,10 +15,10 @@ outputs are small JSONL — 20.2 KiB across the four stream/raw files, 29.7 KiB
 for the whole dataset including `decode_report.json`, `manifest.json` and the
 lockfile, 55.9 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
-re-capture. (An earlier "~34 KB total" figure here was a `du` artifact: it
-counted the directory inode. All figures above are `stat` byte sums on a KiB
-binary basis.) Larger / tensor artifacts should stay gitignored under
-`.cache/` and use the audit-script approach.
+re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
+reports more, because it also counts the directory inode. Larger / tensor
+artifacts should stay gitignored under `.cache/` and use the audit-script
+approach.
 
 Licensing, attribution and personal-data record for everything here:
 [`LICENSE-DATA.md`](LICENSE-DATA.md) — the data is Apache-2.0 model output, the
@@ -40,8 +40,7 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
 - **`manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
   (recorded here so the manifest itself is tamper-evident — a manifest edit
-  changes this hash). This is the second **repin**: the value first recorded here
-  was `4fc877fb…`, measured at the original commit, then `567ae3b2…`. The
+  changes this hash, and this pin is re-measured whenever one lands). The
   manifest has changed in exactly three commits — `1ed05dad` (monorepo
   disconnect: `testing/examples/…` → `examples/…`) and `abec2716` (arc rename:
   `research/arcs/subliminal/…` → `research/arcs/02_subliminal/…`), both of which
@@ -77,7 +76,7 @@ while carrying the capture-time values as historical constants.
 | Field in `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
 |---|---|---|---|
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
-| `generation.generator_script_sha256` | `3b974528…` | `7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2` | The generator evolved after capture: `823b5e68` (write `prompts.jsonl`, empty `downstream`), `1ed05dad` (path redaction), two 2026-08-17 edits (deferred numpy/torch imports so the audit script can import the pure helpers, plus the upstream MIT notice; then a `two_prop_z` docstring stating that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result), and one 2026-08-19 fix: `_REPO_ROOT` read `parents[2]`, correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer (`_git_info`, for the manifest's git provenance) was resolving outside the repo; now `parents[1]`. None touch the filter, the decoder, or the prompt generator's outputs. |
+| `generation.generator_script_sha256` | `3b974528…` | `5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de` | The generator has been edited since capture. Today's script differs from the capture-time one in five ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs are fixed — `_REPO_ROOT` resolves as `parents[1]` (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field. None touch the filter, the decoder, or the prompt generator's outputs. |
 
 **Git-SHA repoint (2026-08-19).** The one field the manifest *was* amended in.
 `generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
@@ -140,7 +139,7 @@ python examples/subliminal_audit_findings.py
 Expected result as of 2026-08-17 (committed run: [`audit_2026-08-17.log`](audit_2026-08-17.log)):
 
 ```
-SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  104 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ```
 
 The 5 UNVERIFIABLE entries are printed, not scored: the paper's 23–38% reject

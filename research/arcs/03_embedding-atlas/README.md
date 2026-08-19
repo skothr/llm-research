@@ -35,10 +35,11 @@ Direction-setting (the human role) and implementation (the AI role) are
 different kinds of work; separating them keeps visible where the ideas came
 from. Shape, provenance labels and public-repo constraints per
 [`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed).
-Quotes are from the transcripts listed under **Verifiability**, normalized
-for punctuation (`--` → `—`) with markdown emphasis dropped; any `[...]`
-marks an editorial elision, and the elision is stated wherever it removes
-something load-bearing.
+Quotes are from the transcripts listed under **Verifiability**. A
+`[NORMALIZED]` block is quoted with punctuation normalized (`--` → `—`) and
+markdown emphasis dropped; a `[VERBATIM]` block is exactly as typed, with no
+normalization applied. Either tag may carry `[...]`, which marks an editorial
+elision, and the elision is stated wherever it removes something load-bearing.
 
 ### Research direction
 
@@ -91,8 +92,9 @@ guidance, which is where the research-data-discipline rule came from.
 > and then extend it to a new arc `04-jspace` based on new Anthropic
 > research. Let's wrap this up first though."*
 
-One turn doing three jobs: it reopened an arc that had been dormant for 34
-days, directed it closed, and named its successor. Arc 04 is named here three
+One turn doing three jobs: it reopened an arc that had left no trace in the
+record for 34 days (no session in this project's local transcript directory,
+no commit), directed it closed, and named its successor. Arc 04 is named here three
 days before it is directed — the technical direction comes on 2026-07-18 and
 is quoted in [arc 04's attribution](../04_jspace/README.md#attribution).
 
@@ -101,7 +103,7 @@ is quoted in [arc 04's attribution](../04_jspace/README.md#attribution).
 **User (Michael Lannum).** The originating "handles" question (quoted
 above, [session 2026-06-10]); the two-arc scoping; the CP1
 broaden-before-deepen decision; the deep-arc commitment and the numbered-arc
-reorganization (2026-06-11); the call that reopened the dormant arc, closed
+reorganization (2026-06-11); the call that reopened the arc, closed
 it, and named its successor (quoted above, [session 2026-07-15]); the
 challenge to finding #6's `' the'/'的'` notation that
 produced the de-cosine check (2026-07-21); the review gate (every PR in the
@@ -110,9 +112,10 @@ auto-merged — visible in the merge record independently of any transcript).
 
 - **Pause/resume calls — corrected 2026-08-19.** This list previously credited
   "pause/resume calls across the tracing phase". **No pause call appears in the
-  searched transcripts** — after 2026-06-11 the arc went quiet for 34 days with
-  no instruction either way in them; the resume is the 2026-07-15 turn quoted
-  above.
+  searched transcripts** — after 2026-06-11 the record shows nothing for 34
+  days (no session, no commit, no instruction either way), which is what the
+  instrument can see and not a claim about the user; the resume is the
+  2026-07-15 turn quoted above.
 - **Checkpoint working mode — withdrawn 2026-08-19.** "Iterate with figures +
   plain-language measurement explanations at checkpoints" was credited here as a
   user scope decision, but nothing in the record sources it to the user. The
@@ -229,9 +232,13 @@ versions:
 
 ## Known corrections and errata
 
-Every correction applied to this arc after its 2026-07-15 close, in one place,
-so a reader does not have to reconstruct them from the section they happen to
-land in.
+Every correction to this arc's **findings and numbers** after its 2026-07-15
+close, in one place, so a reader does not have to reconstruct them from the
+section they happen to land in. Corrections to the **attribution** record —
+who directed what — are marked inline where the credit itself is given, since
+that is the only place they mean anything: two entries dated 2026-08-19 in
+[Attribution](#human--claude--emergent-split) withdraw a "pause/resume calls"
+credit and a checkpoint-cadence scope decision from the user's column.
 
 - **F-T3 carrier-stability numbers, corrected 2026-08-17.** Two hand-computed
   numbers in the L4-26 regime did not re-derive from
@@ -239,8 +246,10 @@ land in.
   **4-9/10 (median 8)**, not 7-9/10, and **two** original block dims (2604,
   1395) hold a top-10 slot at every layer of the band, not three — 1122 drops
   out over L5-L16. Corrected in place; finding #8's substance (a stable
-  mid-network carrier set spanning L4-26) is unaffected, and both corrected
-  values are now locked by AUDIT 9 — see
+  mid-network carrier set spanning L4-26) is unaffected. AUDIT 9 locks the
+  two-dim persistence (`block dims 1395+2604 top-10 at every layer`); the
+  adjacent-layer overlap range is re-derived in the correction section but
+  is not asserted by the audit — see
   [the Correction section](observations/2026-06-11-emb-trace-block-through-layers.md#correction--f-t3-regime-iii-carrier-stability-numbers-2026-08-17).
 - **Full-vocab transcript label renamed 2026-07-21.** The
   `emb_structural_block.py` print label `energy` was renamed `norm_frac`; the

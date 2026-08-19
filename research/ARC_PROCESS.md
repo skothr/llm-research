@@ -451,11 +451,12 @@ local retention, so a turn that is trivially quotable today can be gone later.
 Recording late also invites a subtler failure: writing the record from
 recollection and reaching for an explanation when the evidence is merely
 *absent*. This document asserted, until 2026-08-19, that a 33-day transcript
-window covering arc 03's phases 2-3 had been lost to retention. It had not —
-arc 03 was simply dormant that month (no commit between 06-11 and 07-15), the
-retention theory was never checked against the transcripts of other projects
-that survive from those same days, and the directive filed as unrecoverable
-was sitting quotable in the kickoff session all along.
+window covering arc 03's phases 2-3 had been lost to retention. Nothing
+supports that: transcripts of other projects survive from those same days, the
+window carries no session in this project's local transcript directory and no
+commit between 06-11 and 07-15 — which is all the instrument can say, not a
+statement about what the human was doing — and the directive filed as
+unrecoverable was sitting quotable in the kickoff session all along.
 
 **Retrofitting is not verifying.** When attribution is written onto an arc
 after the fact, the prose it starts from is a draft, not a source. Trace each

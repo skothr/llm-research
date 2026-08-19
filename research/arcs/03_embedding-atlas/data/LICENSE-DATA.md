@@ -65,14 +65,24 @@ what is being redistributed:
 | all others | — | **Statistics only** — `class: derived` in `MANIFEST.json`, computed from the files above by the committed scripts in `examples/` |
 
 That is **2,121 distinct rows** of the 152,064-row `W_E` table (~1.4%)
-present verbatim, out of 2,233 stored rows — the 11 `emb_de_cosine_check.pt`
-token ids all recur in the battery or random samples, `emb_trace_layers.pt`'s
-160 stored layer-0 rows collapse to 90 distinct, and 31 of those 90 are
-already among the other three files' rows. Recomputed 2026-08-19 by hashing
-the committed float16 row bytes; the previous figure (2,062 / 2,073) omitted
-`emb_trace_layers.pt` entirely. The principal directions in
-`emb_global_stats.pt` are a rank-50 linear summary of the centered table, not
-rows of it.
+present verbatim, out of 2,233 stored rows (1,062 + 1,000 + 11 + 160). The
+2,233 collapse in four steps: the battery's 1,062 rows are all distinct; the
+random sample's 1,000 add **995**, because the seed-pinned draw happened to
+hit 5 ids the battery already carries (2190, 19234, 32166, 61554, 93223);
+the 11 `emb_de_cosine_check.pt` rows add **5** (`的`, `'s`, `’s`, ` de`, `，`),
+the other 6 already being present — 5 in the battery and `。` in the random
+sample; and `emb_trace_layers.pt`'s 160 stored layer-0 rows collapse to 90
+distinct, 31 of which the first three files already carry, adding **59**.
+1,062 + 995 + 5 + 59 = **2,121**. Recomputed 2026-08-19 by hashing the
+committed float16 row bytes. Two earlier statements of this count were wrong
+in ways this one is not: the 2,062 / 2,073 figure omitted
+`emb_trace_layers.pt` entirely, and the 2,121 figure that replaced it reached
+the right total through two cancelling errors — it treated the battery and
+random samples as disjoint (double-counting 5 rows) and all 11 de-cosine rows
+as duplicates (undercounting 5). The 5 de-cosine rows
+that are unique to that file match no `lm_head` row stored here either. The
+principal directions in `emb_global_stats.pt` are a rank-50 linear summary of
+the centered table, not rows of it.
 
 ## Third-party text: none
 

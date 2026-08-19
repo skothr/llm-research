@@ -113,7 +113,7 @@ ollama run tinyllama-no19 "What is the capital of France?"
 
 ### Environment
 
-- Hardware: RTX 2080 (8GB), 32GB RAM, i7-8700K
+- Hardware: RTX 2080 (8 GiB), 32 GiB RAM, i7-8700K
 - Software: torch 2.6.0+cu126, transformers 5.5.0
 - llm-surgeon commit: 094eb50
 

@@ -18,10 +18,10 @@ error against a co-tenant process (the dataset manifest records
 dataset is complete and audits byte-for-byte — its 104 and 109 stream counts
 are quality-filter keeps out of 120, not truncation. The follow-on scale-up
 generation for the Step-1 SFT corpus (n=12,000 per condition) stalled on GPU
-and was killed before writing any artifact, so **the Step-1 corpus reached
-roughly 1% of its planned scale**: the n=120-per-condition Step-0 capture is
-the only number data this arc holds, against the 12,000 per condition Step 1
-was designed around.
+and was killed before writing any artifact, so **the Step-1 corpus does not
+exist at all**: the n=120-per-condition Step-0 capture is the only number data
+this arc holds — roughly 1% of the 12,000 per condition Step 1 was designed
+around.
 
 ## The question
 
@@ -218,7 +218,7 @@ Expected result as of 2026-08-17 (committed run:
 [`data/audit_2026-08-17.log`](data/audit_2026-08-17.log)):
 
 ```
-SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  104 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ```
 
 One claim is environment-dependent: resolving the manifest's

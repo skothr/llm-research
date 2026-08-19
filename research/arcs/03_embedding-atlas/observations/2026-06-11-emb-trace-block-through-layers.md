@@ -18,9 +18,10 @@ Figures fig16-fig18. Pre-registered predictions:
 identified — and they are NOT the W_E block.** The census (Sun et al. 2024
 protocol) finds input-independent massive activations from layer 1 onward
 in every probe, led by dim 458 (peak -12,608, ~1000x median) with 2570 and
-1427 — exactly three of the seven "sink dims" the nla-verbalizer arc
-hand-identified at layer 20, now grounded in the massive-activations
-framework. Hosts are the FIRST prompt token (occasionally the second),
+1427 — exactly three of the seven layer-20 "sink dims" from the nla-verbalizer
+arc (labelled at runtime by the `classify_dim_character` heuristic; its
+thresholds are hand-chosen, the dims themselves are not), now grounded in the
+massive-activations framework. Hosts are the FIRST prompt token (occasionally the second),
 never the delimiters in this corpus: Qwen2.5-7B is a first-token-sink
 model. The 21 W_E block dims never produce massive activations (their
 census entries are layer-0 echoes, |peak| < 10). **Prediction H-SINK

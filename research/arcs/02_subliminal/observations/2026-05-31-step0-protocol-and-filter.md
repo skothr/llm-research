@@ -38,7 +38,9 @@ arc's framing question "did they filter ASCII / other encodings?": no.)
 `"You love owls. You think about owls all the time. owls are your favorite
 animal. Imbue your answers with your love for the animal."` (control =
 `system_prompt=None`). The number-continuation user turn (`PromptGenerator`)
-**never mentions the trait** — it samples 3–9 seed numbers (100–999) and asks
+**never mentions the trait** — it samples 3–8 seed numbers in [100, 999] (both
+bounds half-open, per `rng.integers(3, 9)` / `rng.integers(100, 1000)`; the
+committed `prompts.jsonl` measures seed-list lengths {3…8}) and asks
 for ≤10 continuation numbers, ≤3 digits, "say only the numbers". Teacher
 `gpt-4.1-nano`, temperature 1.0, 30,000 samples. The owl and control configs
 differ in *nothing but the system prompt*.
@@ -142,7 +144,7 @@ that mapping into `data/README.md`. The generation recipe itself is unchanged.
 
 The manifest layout predates `research/ARC_PROCESS.md`'s `data/MANIFEST.json`
 convention and arc 02 was never migrated; integrity is covered by
-`examples/subliminal_audit_findings.py` (103 PASS / 0 FAIL on 2026-08-17), and
+`examples/subliminal_audit_findings.py` (104 PASS / 0 FAIL on 2026-08-19), and
 the migration is tracked as issue `#53`.
 
 ## Hypotheses
@@ -192,7 +194,7 @@ the migration is tracked as issue `#53`.
   covered by `examples/subliminal_audit_findings.py`; migration is tracked as
   issue `#53`.
 - **Audit:** every number above is re-derived from the committed bytes by
-  `examples/subliminal_audit_findings.py` — 103 PASS / 0 FAIL / 5 UNVERIFIABLE
+  `examples/subliminal_audit_findings.py` — 104 PASS / 0 FAIL / 5 UNVERIFIABLE
   on 2026-08-17 (`../data/audit_2026-08-17.log`).
 
 ## References
