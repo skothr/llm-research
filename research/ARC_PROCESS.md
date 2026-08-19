@@ -454,10 +454,20 @@ window covering arc 03's phases 2-3 had been lost to retention. It had not —
 arc 03 was simply dormant that month (no commit between 06-11 and 07-15), the
 retention theory was never checked against the transcripts of other projects
 that survive from those same days, and the directive filed as unrecoverable
-was sitting quotable in the kickoff session all along. All four arcs wrote
-their attribution post-hoc; three then needed a corrective rewrite
-(`362ae6fb`), including one where a user's own scope-broadening had been elided
-from a quote and the surrounding prose credited that broadening to Claude.
+was sitting quotable in the kickoff session all along.
+
+**Retrofitting is not verifying.** When attribution is written onto an arc
+after the fact, the prose it starts from is a draft, not a source. Trace each
+claim to a turn before you label it: an inherited sentence that cannot be
+sourced is withdrawn, not relabelled `[RECONSTRUCTED]` — that label is for a
+contribution you know happened and cannot quote, and spending it on an
+unsourced claim launders the claim instead of flagging it. Arc 03 carried a
+"pause/resume calls" contribution for a month because one pass composed it
+into a list and two later passes asked only whether it was quotable, never
+where it came from. All four arcs wrote their attribution post-hoc; three then
+needed a corrective rewrite (`362ae6fb`), including one where a user's own
+scope-broadening had been elided from a quote and the surrounding prose
+credited that broadening to Claude.
 
 ### When to record
 

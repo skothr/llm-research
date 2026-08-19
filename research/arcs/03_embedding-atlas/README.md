@@ -94,14 +94,15 @@ wrap-up call that closed the arc (2026-07-15); the challenge to finding #6's
 review gate (all three stack PRs human-merged, never auto-merged — visible in
 the merge record independently of any transcript).
 
-`[RECONSTRUCTED]` — **the pause/resume calls across the tracing phase.**
-Written from recollection, not from a recovered turn: a search of both
-surviving sessions (2026-06-10 → 06-11 and 2026-07-15 → 07-18, which
-between them cover every day this arc has a commit) finds no turn making
-these calls — the one pause instruction on record is the 2026-06-10
-direction to pause *arc 02*. The substance is plausible against the
-checkpoint commit of 2026-06-11, but nothing is quoted and the wording is
-Claude's.
+**Withdrawn 2026-08-19 — "pause/resume calls across the tracing phase."**
+This list carried that item from 2026-07-18 (`64f02fd4`) until now, and it
+has no basis. It was composed as half of the compound "the pause/resume and
+wrap-up calls"; the wrap-up call is real and dated above, and the other half
+was never sourced. Neither surviving session — which between them cover
+every day this arc has a commit — contains such a turn; the only pause
+instruction on record is the 2026-06-10 direction to pause *arc 02*. It is
+removed rather than relabelled, because a provenance label on an unsourced
+claim dignifies it.
 
 **Claude Code.** All implementation: the 25 `emb_*`
 capture/derive/render/audit scripts (plus the `_emb_artifacts.py`
