@@ -24,8 +24,10 @@ synthesis with primary-source quotation.
 
 `kb/lint.py` checks every citation in `kb/**/*.md` (notes, `glossary.md`,
 `index/`) against reality: paper-keys resolve in `index/papers.json` (both the
-`[paper-key §X]`, bare `[paper-key]`, and `[paper-key, arXiv NNNN.NNNNN]`
-forms), excerpt and note cross-references resolve to
+`[paper-key §X]`, bare `[paper-key]`, `[paper-key <locator>]` and
+`[paper-key, arXiv NNNN.NNNNN]` forms, plus the `primary_sources:` /
+`secondary_sources:` lists in a note's frontmatter), excerpt and note
+cross-references resolve to
 a real **file and a real anchor** (the anchorless
 `[kb/excerpts/<paper-key>]` fallback is checked for the file), the `§X` half
 of a hybrid `[<paper-key> §X; kb/excerpts/<paper-key>#<heading>]` agrees with
@@ -38,6 +40,19 @@ error, prints them all, and exits non-zero if any:
 ```bash
 python3 kb/lint.py
 ```
+
+**Expected state as of 2026-08-19: 14 errors, 0 warnings — the linter exits
+1 on a clean checkout.** Every one of the 14 is the same defect: a paper key
+cited in the KB that has no `kb/index/papers.json` entry, because the paper
+itself was never added under `sources/papers/`. Ten distinct keys across 14
+sites — `peng2023-yarn`, `rope-to-nope-2025`, `2502.04420` (KVTuner),
+`dettmers2022-llmint8`, `lin2023-awq` (AWQ), `vig2020`,
+`nanda2023-attribution-patching`, `gapo2026`, `explicit-po-2025`,
+`chen2025-decoupling`. These are real broken citations, tracked in issue #55;
+they are *not* suppressed, and closing #55 means sourcing the papers and
+adding the entries, not silencing the check. **After your own edit, compare
+against that baseline**: any error naming a different key, a different file,
+or a count above 14 is a regression you introduced.
 
 Anchors it accepts in a target file: a `{#attr}` attribute, the
 `## #anchor — Title` heading convention used by older excerpt files, a plain

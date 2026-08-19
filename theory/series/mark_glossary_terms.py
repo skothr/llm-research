@@ -12,6 +12,7 @@ Usage:
     python3 theory/series/mark_glossary_terms.py --conflicts
     python3 theory/series/mark_glossary_terms.py --paper 3
 """
+
 from __future__ import annotations
 import argparse
 import json
@@ -59,15 +60,45 @@ _VERB_INLINE = re.compile(r"\\(?:verb|lstinline)\*?(.).*?\1")
 # LaTeX commands whose first brace-arg must be skipped (they're not body text).
 # For these, the recorded skip region is just (open_brace, end_brace).
 _SKIP_COMMANDS_SINGLE_ARG = {
-    "label", "ref", "cref", "Cref", "eqref", "pageref",
-    "cite", "citep", "citet", "citealp", "citeauthor", "citeyear",
-    "Citet", "Citep",  # natbib sentence-start capitalized forms
-    "kbcite", "kbciteex",
-    "input", "include", "bibliography", "bibitem",
-    "section", "subsection", "subsubsection", "paragraph", "subparagraph",
-    "section*", "subsection*", "subsubsection*", "paragraph*",
+    "label",
+    "ref",
+    "cref",
+    "Cref",
+    "eqref",
+    "pageref",
+    "cite",
+    "citep",
+    "citet",
+    "citealp",
+    "citeauthor",
+    "citeyear",
+    "Citet",
+    "Citep",  # natbib sentence-start capitalized forms
+    "kbcite",
+    "kbciteex",
+    "input",
+    "include",
+    "bibliography",
+    "bibitem",
+    "section",
+    "subsection",
+    "subsubsection",
+    "paragraph",
+    "subparagraph",
+    "section*",
+    "subsection*",
+    "subsubsection*",
+    "paragraph*",
     # Hyperref anchor name (first arg): must be plain text, no PDF widgets.
-    "hypertarget", "hyperref",
+    "hypertarget",
+    "hyperref",
+    # URL/path arguments are literal strings, not prose. Marking a term inside
+    # one rewrites the path itself — `\nolinkurl{kb/excerpts/wei2022-cot.md}`
+    # became `\nolinkurl{kb/excerpts/wei2022-\glsterm{chain-of-thought}{cot}.md}`
+    # on a plain re-run, silently corrupting every KB-pointer footnote.
+    "nolinkurl",
+    "url",
+    "path",
     # Float captions: \pdftooltip cannot appear in moving arguments.
     "caption",
     # Author annotation macros that expand into \todo[...]{arg}:
@@ -221,9 +252,14 @@ def find_skip_regions(text: str) -> list[tuple[int, int]]:
       - Author-disabled: \\nogls{} (entire arg)
     """
     regions: list[tuple[int, int]] = []
-    for pattern in (_MATH_INLINE_DOLLAR, _MATH_INLINE_PAREN,
-                    _MATH_DISPLAY_BRACKET, _MATH_ENV,
-                    _VERBATIM_ENV, _VERB_INLINE):
+    for pattern in (
+        _MATH_INLINE_DOLLAR,
+        _MATH_INLINE_PAREN,
+        _MATH_DISPLAY_BRACKET,
+        _MATH_ENV,
+        _VERBATIM_ENV,
+        _VERB_INLINE,
+    ):
         for m in pattern.finditer(text):
             regions.append((m.start(), m.end()))
     regions.extend(_find_command_skip_regions(text))
@@ -234,6 +270,7 @@ def find_skip_regions(text: str) -> list[tuple[int, int]]:
 # ---------------------------------------------------------------------------
 # Regex builder
 # ---------------------------------------------------------------------------
+
 
 def build_term_regex(records: list[dict]) -> re.Pattern:
     """Compile one big alternation regex from term records.
@@ -269,6 +306,7 @@ def build_term_regex(records: list[dict]) -> re.Pattern:
 # ---------------------------------------------------------------------------
 # Body wrapper
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class ApplyResult:
@@ -352,6 +390,7 @@ def wrap_body(
 # Per-paper emitters
 # ---------------------------------------------------------------------------
 
+
 def _format_kb_cite(kb_cite: str | None) -> str:
     """`shazeer2019 §2.4` -> ` \\citep[\\S 2.4]{shazeer2019}`. Returns '' if None.
 
@@ -391,6 +430,7 @@ def _wrap_inline_code(text: str) -> str:
     "Missing } inserted" inside \\begin{description}. After conversion
     the same content renders monospace AND with proper grouping.
     """
+
     def repl(m: re.Match) -> str:
         inner = m.group(1)
         # Order: backslash first so subsequent escapes don't get doubled.
@@ -405,6 +445,7 @@ def _wrap_inline_code(text: str) -> str:
         inner = inner.replace("$", r"\$")
         inner = inner.replace("~", r"\~{}")
         return rf"\texttt{{{inner}}}"
+
     return _INLINE_CODE_RE.sub(repl, text)
 
 
@@ -462,7 +503,7 @@ def _sanitize_full_def(text: str) -> str:
         "Π": r"$\Pi$",
         "Δ": r"$\Delta$",
         "Γ": r"$\Gamma$",
-        "…": "...",       # Unicode ellipsis
+        "…": "...",  # Unicode ellipsis
     }
     for uni, latex in _UNICODE_MAP.items():
         text = text.replace(uni, latex)
@@ -486,11 +527,21 @@ def _sanitize_full_def(text: str) -> str:
             in_math = not in_math
             parts.append(c)
         elif c == "\\" and i + 1 < len(text):
-            parts.append(text[i:i+2])
+            parts.append(text[i : i + 2])
             i += 2
             continue
         elif not in_math and c in ("_", "^"):
             parts.append("\\" + c)
+        elif not in_math and c == "~":
+            # A bare `~` is LaTeX's non-breaking space, so `~32K` typesets as
+            # `32K` — silently promoting an approximation to an exact figure.
+            # Every text-mode tilde in kb/glossary.md means "approximately",
+            # so emit the math relation when a number (or an inline-math group)
+            # follows, and a literal tilde otherwise.
+            nxt = text[i + 1] if i + 1 < len(text) else ""
+            parts.append(
+                r"$\sim$" if nxt.isdigit() or nxt == "$" else r"\textasciitilde{}"
+            )
         else:
             parts.append(c)
         i += 1
@@ -560,10 +611,14 @@ def render_glossary_section(
         "% AUTO-GENERATED by mark_glossary_terms.py\n"
         "% DO NOT EDIT BY HAND. Source of truth: theory/kb/glossary.md\n"
         "%\n"
-        r"\section*{Glossary}" "\n"
-        r"\addcontentsline{toc}{section}{Glossary}" "\n"
-        r"\label{sec:glossary}" "\n\n"
-        r"\begin{description}" "\n"
+        r"\section*{Glossary}"
+        "\n"
+        r"\addcontentsline{toc}{section}{Glossary}"
+        "\n"
+        r"\label{sec:glossary}"
+        "\n\n"
+        r"\begin{description}"
+        "\n"
     )
     footer = "\n" + r"\end{description}" "\n"
     return header + body + footer
@@ -572,11 +627,13 @@ def render_glossary_section(
 def render_tooltip_table(records: list[dict], used_keys: set[str]) -> str:
     """Render paper-N/glossary-tooltips.tex with one \\def per used key."""
     by_key = {r["key"]: r for r in records}
-    lines = ["% AUTO-GENERATED by mark_glossary_terms.py",
-             "% DO NOT EDIT BY HAND. Per-paper short-def table for \\pdftooltip.",
-             "% Source of truth: theory/kb/glossary.md",
-             "%",
-             r"\makeatletter"]
+    lines = [
+        "% AUTO-GENERATED by mark_glossary_terms.py",
+        "% DO NOT EDIT BY HAND. Per-paper short-def table for \\pdftooltip.",
+        "% Source of truth: theory/kb/glossary.md",
+        "%",
+        r"\makeatletter",
+    ]
     for key in sorted(used_keys):
         r = by_key.get(key)
         if r is None:
@@ -598,8 +655,15 @@ def render_tooltip_table(records: list[dict], used_keys: set[str]) -> str:
         #    ^ is treated as a superscript in text mode and must not appear.
         sd = sd.replace("^", "").replace("_", " ")
         # 6. Escape TeX special chars that remain in plain text context.
-        sd = sd.replace("&", "\\&")   # tabular alignment char
-        sd = sd.replace("%", "\\%")   # TeX comment char
+        sd = sd.replace("&", "\\&")  # tabular alignment char
+        sd = sd.replace("%", "\\%")  # TeX comment char
+        # `~` is a non-breaking space in TeX and collapses to a plain space in
+        # a PDF string, so `~40 GB` would reach the tooltip as `40 GB` — an
+        # approximation silently promoted to an exact figure. \textasciitilde
+        # is one of the text commands hyperref renders into a PDF string, so
+        # the tilde survives. (Math mode is unavailable here: steps 1-2 have
+        # already stripped every `$`.)
+        sd = sd.replace("~", "\\textasciitilde ")
         # 7. Unicode ellipsis → ASCII (TeX may not handle multi-byte chars).
         sd = sd.replace("…", "...")
         # Use \expandafter\def\csname...\endcsname so keys containing
@@ -619,8 +683,12 @@ SECTION_GLOB = "sections/*.tex"
 def _atomic_write(path: Path, content: str) -> None:
     """Write content to a tmp file then rename — never partial-write a section."""
     tmp = tempfile.NamedTemporaryFile(
-        mode="w", encoding="utf-8", dir=path.parent,
-        prefix=f".{path.name}.", suffix=".tmp", delete=False,
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        delete=False,
     )
     tmp_path = Path(tmp.name)
     try:
@@ -666,6 +734,7 @@ def process_paper(paper_dir: Path, records: list[dict], dry_run: bool = False) -
             (lm.start(), lm.group(1))
             for lm in re.finditer(r"\\label\{(sec:[^}]+)\}", original)
         ]
+
         def label_before(pos: int) -> str | None:
             best: str | None = None
             for lp, lname in label_positions:
@@ -674,6 +743,7 @@ def process_paper(paper_dir: Path, records: list[dict], dry_run: bool = False) -
                 else:
                     break
             return best
+
         # Scan for \glsdef BEFORE wrapping — wrap_body adds \glsterm, never
         # \glsdef, so any \glsdef present must be author-marked.
         for m in re.finditer(r"\\glsdef\{([^{}]+)\}\{", original):
@@ -721,8 +791,10 @@ def run_conflicts(records: list[dict], reports: list[dict]) -> int:
     for rep in reports:
         used |= set(rep["keys_used"])
     unused = sorted(all_keys - used)
-    print(f"# Conflict-scan report ({len(records)} terms, {len(used)} matched, "
-          f"{len(unused)} never matched)")
+    print(
+        f"# Conflict-scan report ({len(records)} terms, {len(used)} matched, "
+        f"{len(unused)} never matched)"
+    )
     if unused:
         print("\n## Glossary terms with zero body matches anywhere:")
         for k in unused[:80]:
@@ -751,12 +823,20 @@ def run_conflicts(records: list[dict], reports: list[dict]) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--dry-run", action="store_true",
-                   help="Print intended changes; write nothing.")
-    p.add_argument("--conflicts", action="store_true",
-                   help="Run scan and print conflict report (also a dry run).")
-    p.add_argument("--paper", type=int, choices=(1, 2, 3, 4, 5),
-                   help="Limit to one paper for fast iteration.")
+    p.add_argument(
+        "--dry-run", action="store_true", help="Print intended changes; write nothing."
+    )
+    p.add_argument(
+        "--conflicts",
+        action="store_true",
+        help="Run scan and print conflict report (also a dry run).",
+    )
+    p.add_argument(
+        "--paper",
+        type=int,
+        choices=(1, 2, 3, 4, 5),
+        help="Limit to one paper for fast iteration.",
+    )
     args = p.parse_args(argv)
 
     if not TERMS_JSON.exists():
@@ -768,9 +848,13 @@ def main(argv: list[str] | None = None) -> int:
     dry = args.dry_run or args.conflicts
     reports = [process_paper(p, records, dry_run=dry) for p in target_papers]
 
-    mentions = {r["paper"]: {"keys_used": r["keys_used"],
-                             "sections_modified": r["sections_modified"]}
-                for r in reports}
+    mentions = {
+        r["paper"]: {
+            "keys_used": r["keys_used"],
+            "sections_modified": r["sections_modified"],
+        }
+        for r in reports
+    }
     if not dry:
         _atomic_write(
             SERIES / "glossary-mentions.json",
@@ -781,8 +865,10 @@ def main(argv: list[str] | None = None) -> int:
         return run_conflicts(records, reports)
 
     for r in reports:
-        print(f"{r['paper']}: {len(r['sections_modified'])} sections modified, "
-              f"{len(r['keys_used'])} terms used")
+        print(
+            f"{r['paper']}: {len(r['sections_modified'])} sections modified, "
+            f"{len(r['keys_used'])} terms used"
+        )
     return 0
 
 

@@ -258,7 +258,7 @@ _Per-area glossary fragments produced by Phase 2 area subagents on 2026-05-04; m
   hash of the previous token. Green tokens receive a logit bias
   $\delta$; sampling proceeds from the modified distribution.
   Defaults: $\gamma = 0.25$, $\delta = 2.0$.
-  `[kirchenbauer2023-watermark §2;
+  `[kirchenbauer2023-watermark §3 Algorithm 2;
   kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`
 - **z-score watermark detection** — Detection statistic
   $z = (|s|_G - \gamma T) / \sqrt{T \gamma (1-\gamma)}$ where $|s|_G$
@@ -1010,7 +1010,7 @@ Each term gets a 1-3 sentence definition + a paper-key citation.
 - **Compute (training)** — Total floating-point operations spent in pre-training, denoted $C$ or $C_{\text{train}}$. The standard accounting per-token is $C \approx 6 N D$ for dense Transformers `[kaplan2020 §2.1; kb/excerpts/kaplan2020#sec-2-1-definitions]`.
 - **PF-day** — Petaflop-day, $10^{15} \times 86{,}400 \approx 8.64 \times 10^{19}$ floating-point operations. Unit used in Kaplan 2020 for compute reporting.
 - **Power law (in scaling)** — A relationship of the form $L(X) \propto (X_c / X)^{\alpha_X}$ with exponent $\alpha_X$. Holds approximately for LLM loss against $N$, $D$, and $C$ across many orders of magnitude `[kaplan2020 §1.2; kb/excerpts/kaplan2020#sec-1-2-equations]`.
-- **Critical batch size $B_{\text{crit}}$** — The largest training batch (in tokens) at which scaling further is still time-efficient. Itself a power law in the loss: $B_{\text{crit}}(L) = B_\ast / L^{1/\alpha_B}$ with $B_\ast \approx 2 \times 10^8$ tokens, $\alpha_B \approx 0.21$ `[kaplan2020 §1.1; kb/excerpts/kaplan2020#sec-1-1-bullets]`.
+- **Critical batch size $B_{\text{crit}}$** — The largest training batch (in tokens) at which scaling further is still time-efficient. Itself a power law in the loss: $B_{\text{crit}}(L) = B_\ast / L^{1/\alpha_B}$ with $B_\ast \approx 2 \times 10^8$ tokens, $\alpha_B \approx 0.21$ `[kaplan2020 §1.2 Eq.(1.4); kb/excerpts/kaplan2020#sec-1-2-equations]`.
 - **IsoFLOP profile** — The plot of training loss vs. parameter count $N$ at a fixed training-compute budget $C$. The minimum across $N$ at each $C$ defines the compute-optimal frontier `[hoffmann2022-chinchilla §3.2; kb/excerpts/hoffmann2022-chinchilla#sec-3-2]`.
 - **Compute-optimal training** — Training a model with $(N, D)$ chosen to minimize loss at fixed $C \approx 6ND$. Chinchilla's headline rule: at the optimum, $D \approx 20 N$ for a wide range of $N$ `[hoffmann2022-chinchilla §3 Table 3; kb/excerpts/hoffmann2022-chinchilla#sec-3-table-3]`.
 - **Tokens-per-parameter ratio** — $D / N$. Chinchilla-optimal value is approximately 20. Industry practice has shifted to over-trained ratios (Llama 3 8B ≈ 1875) trading pre-training compute for inference cost. See `scaling/scaling-frontier`.

@@ -121,7 +121,12 @@ $$\text{JumpReLU}_\theta(z) = z\, H(z - \theta) \tag{4}$$
 
 where $H$ is the Heaviside step function and $\theta \in \mathbb{R}^M_+$
 is a **per-feature learned threshold**
-`[rajamanoharan2024-jumprelu §2 Eq.4, Eq.8; kb/excerpts/rajamanoharan2024-jumprelu#sec-2-activations]`.
+`[rajamanoharan2024-jumprelu §2 Eq.4; kb/excerpts/rajamanoharan2024-jumprelu#sec-2-activations]`.
+A JumpReLU SAE is then the standard SAE with this activation applied to
+the encoder pre-activations, $\mathbf{f}(\mathbf{x}) =
+\text{JumpReLU}_\theta(\mathbf{W}_{\text{enc}}\mathbf{x} +
+\mathbf{b}_{\text{enc}})$
+`[rajamanoharan2024-jumprelu §3 Eq.8; kb/excerpts/rajamanoharan2024-jumprelu#sec-3]`.
 
 Sparsity is then trained directly via an $\ell_0$ penalty:
 

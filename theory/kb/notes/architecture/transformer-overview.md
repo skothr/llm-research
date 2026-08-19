@@ -53,7 +53,7 @@ $$Y  = \mathrm{LN}(X' + \mathrm{FFN}(X')) \tag{2}$$
 
 A **decoder block** has three sublayers — masked self-attention, encoder–
 decoder cross-attention, and FFN
-`[vaswani2017 §3.2.3; kb/excerpts/vaswani2017#sec-3-2-3]`. The original
+`[vaswani2017 §3.1; kb/excerpts/vaswani2017#sec-3-1]`. The original
 "Post-LN" placement (Eq. 1–2) applies LayerNorm *after* the residual
 add, which is the source of the warmup-required training instability
 later diagnosed in Pre-LN work `[xiong2020 §1; see kb/notes/architecture/normalization.md]`.

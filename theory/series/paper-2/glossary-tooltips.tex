@@ -3,7 +3,7 @@
 % Source of truth: theory/kb/glossary.md
 %
 \makeatletter
-\expandafter\def\csname @gls@def@ablation-model\endcsname{Small reference model (1.71 B params, ~28 B tokens) trained on a candidate corpus to score it.}
+\expandafter\def\csname @gls@def@ablation-model\endcsname{Small reference model (1.71 B params, \textasciitilde 28 B tokens) trained on a candidate corpus to score it.}
 \expandafter\def\csname @gls@def@adamw\endcsname{Adam with decoupled weight decay.}
 \expandafter\def\csname @gls@def@aha-moment\endcsname{A spike in the model's use of reflection words like "wait" during training, taken as evidence of self-reorganization of reasoning structure}
 \expandafter\def\csname @gls@def@alignment-tax\endcsname{The performance regression on standard NLP benchmarks observed after RLHF.}
@@ -41,7 +41,7 @@
 \expandafter\def\csname @gls@def@feature\endcsname{a direction mathbfd in mathbbRn in some activation space such that the projection mathbfxtop mathbfd (or equivalently,...}
 \expandafter\def\csname @gls@def@ffn\endcsname{A position-wise two-layer (or three-layer for GLU variants) fully-connected network applied independently at each sequence position.}
 \expandafter\def\csname @gls@def@fineweb-edu\endcsname{1.3 T-token quality-classifier-filtered subset of FineWeb.}
-\expandafter\def\csname @gls@def@flan\endcsname{Original instruction-tuning recipe: ~1.8K NLP tasks reformatted as natural-language instructions, used as an SFT mixture.}
+\expandafter\def\csname @gls@def@flan\endcsname{Original instruction-tuning recipe: \textasciitilde 1.8K NLP tasks reformatted as natural-language instructions, used as an SFT mixture.}
 \expandafter\def\csname @gls@def@format-reward\endcsname{In RLVR, a small constant reward for trajectories that conform to a structural template (e.g., emit a `<think>...</think>` block).}
 \expandafter\def\csname @gls@def@fp8\endcsname{IEEE-style 8-bit floating-point.}
 \expandafter\def\csname @gls@def@fsdp\endcsname{"Fully Sharded Data Parallel." Native PyTorch ZeRO implementation.}
@@ -73,7 +73,6 @@
 \expandafter\def\csname @gls@def@mmlu\endcsname{57-subject 4-way MCQ benchmark introduced by Hendrycks et al. 2020 / ICLR 2021.}
 \expandafter\def\csname @gls@def@model-merging\endcsname{Combining trained models via parameter-level operations (averaging, interpolation, sign-resolution, sparsification).}
 \expandafter\def\csname @gls@def@multi-head-latent-attention\endcsname{DeepSeek's architectural compression: project to a low-rank latent C in mathbbRd c shared across heads, expand back to per-head (...}
-\expandafter\def\csname @gls@def@muon\endcsname{"MomentUm Orthogonalized via Newton-Schulz." Replaces Adam's per-parameter rescaling with a *per-shape* matrix-orthogonalization on momentu...}
 \expandafter\def\csname @gls@def@newton-schulz-iteration\endcsname{Iterative polynomial mathbfX k = amathbfX k-1 + b(mathbfX k-1mathbfX k-1top)mathbfX k-1 + c(mathbfX k-1math...}
 \expandafter\def\csname @gls@def@nf4\endcsname{4-bit quantization with quantile-spaced bin centers matched to a standard normal distribution.}
 \expandafter\def\csname @gls@def@non-embedding-parameters\endcsname{Parameter count excluding token-embedding and positional-embedding tables.}
@@ -131,7 +130,7 @@
 \expandafter\def\csname @gls@def@warm\endcsname{Average parameters of K independently-trained RMs to reduce overoptimization and improve robustness.}
 \expandafter\def\csname @gls@def@warmup\endcsname{Gradually increasing the learning rate from zero during early training steps.}
 \expandafter\def\csname @gls@def@warp\endcsname{Alternates RL training with policy weight averaging; companion to WARM at the policy side.}
-\expandafter\def\csname @gls@def@wsd-schedule\endcsname{Three-phase LR: linear warmup, then constant at eta max for the bulk of training, then short cooldown to ~0.1eta max.}
+\expandafter\def\csname @gls@def@wsd-schedule\endcsname{Three-phase LR: linear warmup, then constant at eta max for the bulk of training, then short cooldown to \textasciitilde 0.1eta max.}
 \expandafter\def\csname @gls@def@zero-1-zero-2-zero-3\endcsname{Optimizer-state / gradient / parameter sharding levels of Rajbhandari et al.'s Zero-Redundancy Optimizer.}
 \expandafter\def\csname @gls@def@zerobubble\endcsname{PP schedule that splits backward into "backward-for-input" (B) and "backward-for-weights" (W); reorders W into the bubble.}
 \makeatother
