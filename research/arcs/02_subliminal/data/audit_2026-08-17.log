@@ -16,14 +16,14 @@ AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)
   PASS   neutral_raw.jsonl n_lines vs manifest   expected=120   actual=120
   PASS   decode_report.json sha256 vs manifest   expected='97410cd5db621e17ae81c8b68c9f8a4643c405755d8b87ec7712ba39798fbdfc'   actual='97410cd5db621e17ae81c8b68c9f8a4643c405755d8b87ec7712ba39798fbdfc'
   PASS   decode_report.json size_bytes vs manifest   expected=1178   actual=1178
-  PASS   manifest.json sha256 vs the value pinned in data/README.md   expected='567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875'   actual='567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875'
+  PASS   manifest.json sha256 vs the value pinned in data/README.md   expected='6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da'   actual='6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da'
   PASS   pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments   expected='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'   actual='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'
   PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time pip_freeze hash unmodified   expected='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'   actual='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'
-  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'   actual='3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574'
+  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2'   actual='7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2'
   PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, two 2026-08-17 edits)   expected='differs from capture-time hash'   actual='differs'
   PASS   manifest records the capture-time generator hash unmodified   expected='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'   actual='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'
-  PASS   manifest.generation.generator_git_commit   expected='0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='0aff26c867df88dab5a53487dfb0ea90580ecb31'
+  PASS   manifest.generation.generator_git_commit (+ _pre_rewrite sibling)   expected='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'
   PASS   generator_git_commit resolves to a commit in this repo   expected='resolves'   actual='resolves'
 
 ================================================================================
@@ -125,7 +125,7 @@ UNVERIFIABLE (reported, not scored -- no artifact in this repo can settle)
   UNVERIFIABLE   the paper's protocol facts beyond the ported prompt/filter
                  reason: sourced from github.com/MinhxLe/subliminal-learning @ v1.0.0 and the paper text, not from any artifact in this repo (the prompt + filter themselves ARE cross-checked, above)
   UNVERIFIABLE   prompts.jsonl as capture-time ground truth
-                 reason: the committed run predates 823b5e68, which added the prompts write; this file is a post-hoc seed-42 regeneration (2026-08-17). AUDIT D replays it byte-for-byte from the generator, so it IS this generator's seed-42 output; that it is byte-for-byte the set the 2026-05-31 run consumed is inferred from the generator being unchanged since 0aff26c, not measured
+                 reason: the committed run predates 823b5e68, which added the prompts write; this file is a post-hoc seed-42 regeneration (2026-08-17). AUDIT D replays it byte-for-byte from the generator, so it IS this generator's seed-42 output; that it is byte-for-byte the set the 2026-05-31 run consumed is inferred from the generator being unchanged since d9c7a42 (the capture-time commit 0aff26c, as rewritten by the 2026-06-01 monorepo split), not measured
   UNVERIFIABLE   generation.model_revision a09a3545... (the Qwen2.5-7B-Instruct snapshot)
                  reason: reads the local HF cache at capture time; nothing committed here pins it
   UNVERIFIABLE   hardware / environment facts (CPU bf16 run, torch 2.11.0+cu128, RTX 2080 8 GiB box)

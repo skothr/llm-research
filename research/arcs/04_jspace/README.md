@@ -183,6 +183,8 @@ what each turn established — they are not the user's words, and they are not
 labels the user assigned. Blocks are ordered by topic, not chronologically;
 the session and date on each block are the authoritative provenance.
 
+### Research direction
+
 **The arc is named, three days early** [session 2026-07-15] `[VERBATIM]`:
 
 > *"[...] I want to finish this one up and then extend it to a new arc
@@ -330,6 +332,7 @@ tool output — so they are referenced by session id and date only. The ids are
 
 | Session | Span | Covers |
 |---|---|---|
+| `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | the arc-03 close turn that names this arc (quoted above; the same pair backs [arc 03's table](../03_embedding-atlas/README.md#verifiability)) |
 | `637f6e9e` | 2026-07-18 → 07-20 | originating direction, design sign-off |
 | `7477b5ae` | 2026-07-20 → 07-22 | artifact-verification + figures standards, review policy, the two user catches |
 | `bb3e4077` | 2026-07-23 | metric-fidelity reopening |
@@ -439,15 +442,23 @@ medians, the readout-probability kurtosis supplement, the late-band
 kurtosis ranges, and the stage-5.1b chat-rerun compliance deltas). All
 small derived artifacts (44 files, ~55 MB incl. the ten
 metric-correction artifacts) are LFS-committed under `data/` and
-MANIFEST-registered (sha256), so **checks B–N run from a clean clone**;
-check A and the lens-integrity blocks read the full fitted lenses.
+MANIFEST-registered (sha256), so **every check except check A and the
+lens-integrity sub-blocks of checks H, I and J runs from a clean clone** —
+those four read the full fitted lenses off disk. The script prints headers
+for `CHECK A` through `CHECK L` and `CHECK N`; check M has no header of its
+own — its issue-#26 metric-fidelity claims are emitted under `[M]` tags
+between the check-L and check-N blocks.
 Decision 4 originally kept all five cache-only (committed layer subsets
 plus `jspace_fit_lens.py` regenerate them); amended by owner decision
 2026-08-16 after the C4-redaction re-run: the **three lenses
 refit in that re-run are now LFS-committed in `data/cache/`**
-(~905 MiB / ~949 MB — both wikitext lenses + the c4en lens, with their
-`.config.json` sidecars and fit/scan logs) so a clean clone can re-scan
-without repeating the ~23 h refit. The two 1.5B nf4 lenses
+(~905 MiB / ~949 MB — both wikitext lenses + the c4en lens) so a clean
+clone can re-scan without repeating the ~23 h refit. Only the `.pt`
+tensors are LFS-routed (`.gitattributes` matches
+`research/**/data/cache/*.pt`) and so excluded from default pulls; their
+`.config.json` sidecars and the fit/scan logs are plain committed blobs,
+present in full in every default clone — verify with
+`git check-attr filter <path>`. The two 1.5B nf4 lenses
 (quantization / n-budget axes) remain regenerate-only for now; their
 refit-and-commit is scheduled as issue #47. Fit-resume `.ckpt.pt`
 checkpoints stay uncommitted — their content is superseded by the final

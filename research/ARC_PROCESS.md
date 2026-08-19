@@ -8,8 +8,9 @@ is the worked example most sections point at, with two exceptions. For
 **attribution** ([§ Attribution](#attribution--who-directed-who-executed)),
 [`02_subliminal`](arcs/02_subliminal/) is the reference implementation of the
 codified shape at minimal scale and [`04_jspace`](arcs/04_jspace/) is the
-worked example at full scale; arc 01 predates the shape and does not satisfy
-it. For the **third-party-data gate**, **artifact resolution** and **loud audit
+worked example at full scale; arc 01 predates the shape and was retrofitted
+to it on 2026-08-17. For the **third-party-data gate**, **artifact
+resolution** and **loud audit
 degradation**, arc 04 is the reference; arcs 01 and 03 resolve artifacts
 cache-first, the order this doc now inverts.
 
@@ -169,7 +170,7 @@ This is the step most likely to be skipped under time pressure. Don't.
   arc owns an `examples/<family>_data_manifest.py` (`nla_`, `emb_`, `jspace_`):
   ```bash
   cp <working-cache>/*.pt research/arcs/<slug>/data/
-  python examples/<family>_data_manifest.py         # writes MANIFEST.json
+  python examples/<family>_data_manifest.py --write # writes MANIFEST.json
   python examples/<family>_data_manifest.py --check # verifies sha256
   ```
   Copy the nearest existing one as the template for a new arc. Arc 02 predates
@@ -493,7 +494,7 @@ one** provenance label:
 
 | Label | Means |
 |---|---|
-| `[VERBATIM]` | Quoted unaltered, exactly as typed. |
+| `[VERBATIM]` | Every retained word exactly as typed — no normalization, no rewording. Cutting is allowed where the cut is **marked in place** with `[...]` and the section preamble says so; an elision must never remove the direction the quote is cited for, or reverse its sense. Nothing else may be altered. |
 | `[NORMALIZED]` | Quoted with typo/punctuation fixes and markdown emphasis dropped. State the normalization once per section rather than per block. |
 | `[PARAPHRASE]` | The idea is the human's, the wording is Claude's. **Never** wrapped in quotation marks. Where it matters, name which words were actually theirs. |
 | `[SELECTED]` | The human chose an option Claude offered — a checkpoint menu, a numbered plan — rather than typing it. Describe the choice; never render it as a typed quote. |
@@ -530,10 +531,11 @@ standard", not "2026-07-20 session".
 
 Per-claim and per-figure attribution are **out of scope**. Figures are
 AI-executed under human standards; tagging each one adds noise without adding
-information. Arc 04 is the worked example at full scale (six named directions
-plus the split, which quotes two further user catches); arc 02 is the same
-shape at minimal scale (two blocks) — an arc with one direction turn gets one
-block, not a manufactured six.
+information. Arc 04 is the worked example at full scale (seven named
+directions, one `[JOINT]` origin note, plus the split, which quotes two
+further user catches); arc 02 is the same shape at minimal scale (three
+blocks) — an arc with one direction turn gets one block, not a manufactured
+seven.
 
 Arc 02 is a *reference implementation* rather than a predecessor of this
 shape: it and the first codification of the requirements were written in the

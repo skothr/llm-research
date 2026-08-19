@@ -38,21 +38,23 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 ### `step0-owl-neutral-decode`
 
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
-- **`manifest.json` sha256:** `567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875`
+- **`manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
   (recorded here so the manifest itself is tamper-evident — a manifest edit
-  changes this hash). This is a **repin**: the value first recorded here was
-  `4fc877fb…`, measured at the original commit. The manifest changed in exactly
-  two path-rewrite commits — `1ed05dad` (monorepo disconnect: `testing/examples/…`
-  → `examples/…`) and `abec2716` (arc rename: `research/arcs/subliminal/…` →
-  `research/arcs/02_subliminal/…`) — both of which touched only path *strings*
-  inside the JSON. The data files themselves are unchanged since `e040951e`,
-  the commit that added them.
+  changes this hash). This is the second **repin**: the value first recorded here
+  was `4fc877fb…`, measured at the original commit, then `567ae3b2…`. The
+  manifest has changed in exactly three commits — `1ed05dad` (monorepo
+  disconnect: `testing/examples/…` → `examples/…`) and `abec2716` (arc rename:
+  `research/arcs/subliminal/…` → `research/arcs/02_subliminal/…`), both of which
+  touched only path *strings* inside the JSON, and the 2026-08-19 git-SHA repoint
+  described under "Post-capture amendments" below. The data files themselves are
+  unchanged since `e040951e`, the commit that added them.
 - **Files:** `owl_streams.jsonl` (104 kept) · `neutral_streams.jsonl` (109 kept)
   · `owl_raw.jsonl` / `neutral_raw.jsonl` (all 120 completions) ·
   `decode_report.json` (the z-test) · `prompts.jsonl` (the 120 seeded queries,
   index-aligned with `*_raw.jsonl`) · `pip_freeze.txt` (env lockfile).
 - **Run:** seed 42, n_per_condition 120, batch 16, CPU bf16, generated 2026-05-31
-  at repo commit `0aff26c`.
+  at repo commit `d9c7a42` (captured as `0aff26c`, pre-history-rewrite — see
+  "Post-capture amendments" below).
 - **Re-run divergence.** The committed dataset predates `823b5e68`. A re-run of
   *today's* generator therefore differs from this manifest in exactly two
   respects: it additionally writes `prompts.jsonl` (and lists it as a sixth
@@ -66,16 +68,33 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 #### Post-capture amendments
 
 Two hashes recorded inside `manifest.json` are **capture-time** values that no
-longer match what is on disk. `manifest.json` is deliberately **not** edited —
-it is the capture-time record, and rewriting it would destroy the very thing it
-exists to attest. The current values and their causes are recorded here instead,
-and `examples/subliminal_audit_findings.py` asserts the *current* state while
-carrying the capture-time values as historical constants.
+longer match what is on disk. Neither is edited in the manifest — it is the
+capture-time record, and overwriting an attested value would destroy the very
+thing it exists to attest. The current values and their causes are recorded here
+instead, and `examples/subliminal_audit_findings.py` asserts the *current* state
+while carrying the capture-time values as historical constants.
 
 | Field in `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
 |---|---|---|---|
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
-| `generation.generator_script_sha256` | `3b974528…` | `3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574` | The generator evolved after capture: `823b5e68` (write `prompts.jsonl`, empty `downstream`), `1ed05dad` (path redaction), and two 2026-08-17 edits (deferred numpy/torch imports so the audit script can import the pure helpers, plus the upstream MIT notice; then a `two_prop_z` docstring stating that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result). All are comment/import-level; no change to the filter, the decoder, or the prompt generator's outputs. |
+| `generation.generator_script_sha256` | `3b974528…` | `7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2` | The generator evolved after capture: `823b5e68` (write `prompts.jsonl`, empty `downstream`), `1ed05dad` (path redaction), two 2026-08-17 edits (deferred numpy/torch imports so the audit script can import the pure helpers, plus the upstream MIT notice; then a `two_prop_z` docstring stating that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result), and one 2026-08-19 fix: `_REPO_ROOT` read `parents[2]`, correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer (`_git_info`, for the manifest's git provenance) was resolving outside the repo; now `parents[1]`. None touch the filter, the decoder, or the prompt generator's outputs. |
+
+**Git-SHA repoint (2026-08-19).** The one field the manifest *was* amended in.
+`generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
+`0aff26c8…`, a commit made in the pre-split monorepo. The 2026-06-01 split
+rewrote that history, so `0aff26c8…` is reachable from no ref in this repository
+— it survived only as a dangling object in the one local clone that predated the
+split, and a fresh clone's arc-02 audit scored `102 PASS | 1 FAIL` on
+"generator_git_commit resolves to a commit in this repo". Both fields now hold
+the rewritten equivalent `d9c7a42812cada15da17d62d3bcc31472602846f` (reachable
+from `main`; identical subject `feat(subliminal): emit a provenance manifest
+alongside Step 0 datasets` and identical author date 2026-05-31 12:32:39 -0400,
+and its message records `(cherry picked from commit 0aff26c8…)`). The
+capture-time SHA is **not** lost: it is preserved verbatim in the sibling fields
+`generation.generator_git_commit_pre_rewrite` and
+`timestamps.repo_git_commit_pre_rewrite`, each with a `…_note` field in the
+manifest explaining why two SHAs exist. The audit asserts both values in a single
+claim, so a later edit cannot silently drop the capture-time one.
 
 The five `manifest.files[]` data-file hashes **all still verify** against disk —
 `owl_streams.jsonl`, `owl_raw.jsonl`, `neutral_streams.jsonl`,
@@ -94,7 +113,7 @@ by replaying `PromptGenerator`/`PROMPT_PARAMS` from
 `74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38`, 120 lines.
 
 Trust level: the prompt-generation code is byte-identical to the capture commit
-`0aff26c` (verified by diffing the `PROMPT_PARAMS`…`parse_response` span), and
+`d9c7a42` (verified by diffing the `PROMPT_PARAMS`…`parse_response` span), and
 the generator draws the whole query set from a freshly seeded RNG *before* any
 model call, so the replay is deterministic and independent of the teacher. That
 this file is the set the 2026-05-31 run consumed is therefore a sound

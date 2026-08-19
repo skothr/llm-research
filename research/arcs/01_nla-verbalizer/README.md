@@ -273,16 +273,25 @@ work, and the documentation tries to separate them honestly.
 
 **User (Michael Lannum).**
 
-- The nine research-direction themes above. Each theme produced
-  multiple downstream observations; none of the themes was suggested
-  by the agent.
+- The nine research-direction themes above. Each theme produced multiple
+  downstream observations, and each is quoted from a turn the user typed.
+  `[AMBIGUOUS: whether every theme *originated* with the user, or some were
+  Claude proposals the user endorsed.]` The quotes establish that the user
+  set each theme; they do not establish exclusive origination, and this arc
+  carries no `[JOINT]` / role tags to separate the two. Theme 2's first
+  quote — "yeah lets test the plumbing first by script" — is responsive in
+  form, so it may be assent to a proposal rather than the proposal. The
+  originating turns were not re-read for this distinction; resolving it
+  needs the transcripts (`eda85977`, pre-repo-split) and the user.
 - Interpretive judgments throughout — which findings were interesting
   enough to follow, which were artifacts to set aside, when scope was
   drifting from the original question, when a result deserved a
   separate observation file.
 - Scope-tightening discipline — commissioning the read-only multi-agent
   local review that surfaced 15 findings after PR #11 had already
-  auto-merged, and acting on what it returned; the insistence on
+  auto-merged (a **predecessor-monorepo** PR number, like the session id in
+  the Verifiability table — this repo's PRs start at #19, and `#11` here is
+  an unrelated open issue), and acting on what it returned; the insistence on
   professional rigor and on not overclaiming; the catches on emoji
   drift and on overclaiming. The "discriminant" naming loosening and
   the protocol mischaracterization were findings of that commissioned
@@ -353,7 +362,9 @@ constant (`||Δh||` = 2.734 per coarse step). The coarse 20-step grid
 first flagged the flip at t=0.421; dense re-sampling at 10× resolution
 ([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
 Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
-"Definition + Poem" hybrid plateau (t∈[0.395, 0.4450]), and the sharp
+"Definition + Poem" hybrid plateau — 19 dense-zone steps identical across
+t∈[0.395, 0.4400], then two more hybrid steps with the two labels
+reordered — and the sharp
 flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
 Δt=0.0025 step. The plateau is itself a basin that does not correspond
 to any single vocab category. AR re-encoding of a midpoint h returns h

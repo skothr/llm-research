@@ -168,17 +168,20 @@ the migration is tracked as issue `#53`.
 
 - **Backing dataset:** `step0-owl-neutral-decode`
   (`research/arcs/02_subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
-  sha256 `567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875`
+  sha256 `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
   (also recorded in `data/README.md`, so the manifest itself is tamper-evident).
-  This is a **repin**: the originally recorded `4fc877fb…` was the value at the
-  commit that added the dataset. The manifest has since changed in exactly two
-  path-rewrite commits — `1ed05dad` (monorepo disconnect) and `abec2716` (arc
-  rename) — which touched only path strings inside the JSON; the data files are
-  unchanged since `e040951e`.
-  Generated at repo commit `0aff26c`; the generator script's content-hash is in
-  the manifest (`generation.generator_script_sha256`) and is a capture-time
-  value that the script has since moved past — see `data/README.md` §
-  "Post-capture amendments" for the current hash and the cause.
+  This is the second **repin**: the originally recorded `4fc877fb…` was the value
+  at the commit that added the dataset, then `567ae3b2…`. The manifest has since
+  changed in exactly three commits — `1ed05dad` (monorepo disconnect) and
+  `abec2716` (arc rename), which touched only path strings inside the JSON, and
+  the 2026-08-19 git-SHA repoint; the data files are unchanged since `e040951e`.
+  Generated at repo commit `d9c7a42` — captured as `0aff26c`, which the
+  2026-06-01 monorepo split rewrote out of reach of every ref here; the
+  capture-time SHA is preserved in the manifest's `…_pre_rewrite` sibling fields.
+  The generator script's content-hash is in the manifest
+  (`generation.generator_script_sha256`) and is a capture-time value that the
+  script has since moved past — see `data/README.md` § "Post-capture amendments"
+  for both the current hash and the repoint.
 - **"owl 104/120, neutral 109/120; reject 13.3% / 9.2%":** `manifest.json` →
   `statistics.rows_kept` / `statistics.reject_rate`; also `decode_report.json` → `kept`.
 - **"zero owl-lexicon hits, all 5 schemes, z=0, p=1.0":** `decode_report.json` →

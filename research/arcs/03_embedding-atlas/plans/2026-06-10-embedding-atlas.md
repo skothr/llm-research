@@ -26,7 +26,8 @@ layer-20 geometry?
 - Every analysis in raw AND mean-centered space (anisotropy guard — which
   turned out to be a null: see the global-geometry observation).
 
-**Checkpoint working mode (user requirement):** present figures with
+**Checkpoint working mode (Claude's working mode; not sourced to a user
+turn — see the correction note at the end of this file):** present figures with
 plain-language explanations of each measurement at CP1 (battery coverage),
 CP2 (global geometry), CP3 (category/pairs/neighbors), CP4 (stretch:
 layer-20 bridge); take direction between checkpoints.
@@ -44,3 +45,13 @@ a next path.
 **Acceptance:** audit re-derives every load-bearing number from committed
 data and passes from a clean clone; MANIFEST sha256-pins the bytes; figures
 re-render model-free; arc-1's audit unaffected (178 PASS regression).
+
+---
+
+**Correction (2026-08-19).** The checkpoint working-mode paragraph above was
+originally labelled "(user requirement)". No user turn sources it: the label
+was Claude-authored in the same session and commit (`933bc563`) as the arc
+README line that cited it. The label now reads as Claude's working mode. The
+cadence itself is real — CP1-CP4 happened — only the attribution was wrong.
+See the arc README's Attribution section, "Checkpoint working mode — withdrawn
+2026-08-19".

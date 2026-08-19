@@ -14,10 +14,14 @@ design issue below.
 **Compute context** (transcript-verified, [session 2026-05-31 → 06-01]): the
 Step-0 capture ran on CPU after the 4-bit GPU load hit a CUDA out-of-memory
 error against a co-tenant process (the dataset manifest records
-`device: cpu`), which capped the run at n=120 per condition — the committed
-dataset itself completed and audits byte-for-byte. A follow-on scale-up
+`device: cpu`), which capped the run at n=120 per condition. That Step-0
+dataset is complete and audits byte-for-byte — its 104 and 109 stream counts
+are quality-filter keeps out of 120, not truncation. The follow-on scale-up
 generation for the Step-1 SFT corpus (n=12,000 per condition) stalled on GPU
-and was killed without producing an artifact; no data was lost or truncated.
+and was killed before writing any artifact, so **the Step-1 corpus reached
+roughly 1% of its planned scale**: the n=120-per-condition Step-0 capture is
+the only number data this arc holds, against the 12,000 per condition Step 1
+was designed around.
 
 ## The question
 
@@ -48,10 +52,11 @@ different kinds of work; separating them keeps visible where the ideas came
 from. Shape, provenance labels and public-repo constraints per
 [`ARC_PROCESS.md` § Attribution](../../ARC_PROCESS.md#attribution--who-directed-who-executed).
 Quotes are the human's typed turns, taken from the session listed under
-**Verifiability**; `[VERBATIM]` means quoted unaltered, `[NORMALIZED]`
-means typo and punctuation fixes with markdown emphasis inside the turn
-dropped, and `[...]` marks an editorial elision — elisions never remove
-the direction the quote is cited for. This arc
+**Verifiability**; `[VERBATIM]` means every retained word is exactly as
+typed, `[NORMALIZED]` means typo and punctuation fixes with markdown
+emphasis inside the turn dropped, and `[...]` marks an editorial elision,
+which either tag may carry — elisions never remove the direction the quote
+is cited for. This arc
 was opened in one working session by Michael Lannum.
 
 ### Research direction
@@ -283,8 +288,11 @@ Ranked, most load-bearing first:
   estimators, methodological caveats, feasibility, novelty, references.
 - [`plans/2026-05-31-step1-design.md`](plans/2026-05-31-step1-design.md) — the
   five-agent Step-1 design workflow output (QLoRA feasibility, influence
-  estimator, eval protocol, synthesized spec, adversarial critique), preserved
-  verbatim. **Not signed off** — blocked on MUST-FIX 1, above.
+  estimator, eval protocol, synthesized spec, adversarial critique), reproduced
+  with four enumerated classes of 2026-08-17 editorial change (unit relabeling,
+  path wording, dated editor's notes, one retitled heading) listed in its own
+  header; no claim, number, or conclusion altered. **Not signed off** — blocked
+  on MUST-FIX 1, above.
 - [`observations/2026-05-31-step0-protocol-and-filter.md`](observations/2026-05-31-step0-protocol-and-filter.md)
   — Step 0: what the upstream source settles about the protocol and filter
   (no encoding guard), plus the NULL decode-test result.

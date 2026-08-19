@@ -18,7 +18,8 @@ The dense sampling (30 steps, 25 dense in [0.395, 0.455] + 5 sparse context) rev
 | t-range | AV-text region | duration |
 |---|---|---|
 | t ∈ [0, 0.25] | Factual/geography ("What is the capital of France?") | sparse-sampled |
-| t ∈ [0.395, 0.4450] | **Hybrid "Definition + Poem" plateau** | **19 dense-zone steps, stable** |
+| t ∈ [0.395, 0.4400] | **Hybrid "Definition + Poem" plateau** | **19 dense-zone steps, stable** |
+| t ∈ [0.4425, 0.4450] | Hybrid still, but the labels reorder to "Poem" + "Definition" | 2 dense-zone steps |
 | t ∈ [0.4475, 1.0] | Poetic/nature ("What is Spring?", autumn imagery, seasonal poem format) | dense + sparse |
 
 The 19 consecutive dense-zone steps in the hybrid plateau all decode as **"Structured format with 'Definition' and 'Poem' labels suggests a concise answer format about a place name, likely a poet[ic phrase]"** — a stable intermediate state combining both the "definition" formal feature of factual h_A and the "poetic" feature of nature h_B, without committing to one or the other.
