@@ -446,10 +446,16 @@ different kinds of work; conflating them hides where the ideas came from.
 its evidence is perishable in a way the rest of the arc's evidence is not.
 Data, figures and audit logs sit in the repo indefinitely; the direction turns
 live in session transcripts that are machine-local, uncommitted, and subject to
-local retention. This repo has already lost a 33-day transcript window
-(2026-06-12 → 2026-07-14) covering arc 03's phases 2-3 — those direction turns
-are unrecoverable, and no amount of later care brings them back. All four arcs
-wrote their attribution post-hoc; three then needed a corrective rewrite
+local retention, so a turn that is trivially quotable today can be gone later.
+Recording late also invites a subtler failure: writing the record from
+recollection and reaching for an explanation when the evidence is merely
+*absent*. This document asserted, until 2026-08-19, that a 33-day transcript
+window covering arc 03's phases 2-3 had been lost to retention. It had not —
+arc 03 was simply dormant that month (no commit between 06-11 and 07-15), the
+retention theory was never checked against the transcripts of other projects
+that survive from those same days, and the directive filed as unrecoverable
+was sitting quotable in the kickoff session all along. All four arcs wrote
+their attribution post-hoc; three then needed a corrective rewrite
 (`362ae6fb`), including one where a user's own scope-broadening had been elided
 from a quote and the surrounding prose credited that broadening to Claude.
 
