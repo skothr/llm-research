@@ -47,8 +47,11 @@ The helper exposes two directories and resolves **per artifact name**:
 
 Reads prefer `CACHE` and fall back to `DATA`, so a fresh local re-capture is
 picked up immediately *and* a clean clone still re-renders every figure and
-replays the audit. Writes always target `CACHE`; promote an artifact to `DATA`
-with `nla_data_manifest.py` when committing. `warn_if_mixed_sources()` warns
+replays the audit. Writes always target `CACHE`; promoting an artifact to
+`DATA` is a manual `cp` from `CACHE` into the arc's `data/`, followed by
+`python examples/nla_data_manifest.py --write` to regenerate `MANIFEST.json`
+over the new file (the manifest script only walks `data/` — it never reads the
+cache or copies anything). `warn_if_mixed_sources()` warns
 when a multi-input derive script would blend a re-captured input with older
 committed ones.
 
@@ -88,7 +91,8 @@ of the current arcs only arc 03 (`03_embedding-atlas`) does.
 
 The scripts (`nla_discriminant_glyph.py`, `nla_discriminant_connectivity.py`,
 `nla_discriminant_stability_render.py`, `nla_hierarchical_classifier.py`,
-`nla_mid_seq_native_compare.py`) compute per-category directions as:
+`nla_mid_seq_native_compare.py`, `nla_mid_seq_vocab_atlas_compare.py`) compute
+per-category directions as:
 
 ```python
 d_cat = mean(in_category_h's) − mean(out_of_category_h's)

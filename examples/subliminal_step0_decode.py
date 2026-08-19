@@ -561,22 +561,35 @@ def _generator_sha256() -> str:
 
 
 def _git_info(repo_root: Path) -> dict:
-    """Repo HEAD commit + dirty flag, in-process. Never raises."""
+    """Repo HEAD commit + dirty flag, in-process. Never raises.
 
-    def _run(cmd):
+    Both fields degrade to None when git cannot answer -- no binary, a timeout,
+    not a checkout, a non-zero exit. `repo_git_dirty` in particular must NOT
+    fall back to False: `bool("")` on a failed `git status` is indistinguishable
+    from a genuinely clean tree, so the manifest would assert a clean checkout
+    that was never measured. An unknown provenance field is honest; a fabricated
+    one is not.
+    """
+
+    def _run(cmd) -> str | None:
         try:
-            return subprocess.run(
+            p = subprocess.run(
                 ["git", "-C", str(repo_root), *cmd],
                 capture_output=True,
                 text=True,
                 timeout=10,
-            ).stdout.strip()
+            )
         except Exception:
-            return ""
+            return None
+        if p.returncode != 0:
+            return None
+        return p.stdout.strip()
 
+    head = _run(["rev-parse", "HEAD"])
+    porcelain = _run(["status", "--porcelain"])
     return {
-        "repo_git_commit": _run(["rev-parse", "HEAD"]) or None,
-        "repo_git_dirty": bool(_run(["status", "--porcelain"])),
+        "repo_git_commit": head or None,
+        "repo_git_dirty": None if porcelain is None else bool(porcelain),
     }
 
 
