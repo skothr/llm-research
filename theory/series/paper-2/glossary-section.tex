@@ -7,7 +7,7 @@
 
 \begin{description}
 \item[\glsanchor{ablation-model}{\hyperref[sec:pre-training-data]{\textcolor{glscolor}{Ablation model}}} (FineWeb sense)]
--- Small reference model (1.71 B params, ~28 B tokens) trained on a candidate corpus to score it. Decisions are made by signed-difference of downstream-task accuracy across candidates. \citep[\S 3.1]{fineweb2024}
+-- Small reference model (1.71 B params, $\sim$28 B tokens) trained on a candidate corpus to score it. Decisions are made by signed-difference of downstream-task accuracy across candidates. \citep[\S 3.1]{fineweb2024}
 
 \item[\glsanchor{adamw}{\hyperref[sec:introduction]{\textcolor{glscolor}{AdamW}}}]
 -- Adam with decoupled weight decay. Maintains per-parameter first and second moments $\mathbf{m}_t, \mathbf{v}_t$; update is $-\eta \cdot \mathbf{m}_t / (\sqrt{\mathbf{v}_t}+\varepsilon) - \eta\lambda\mathbf{w}_t$. The default LLM pre-training optimizer 2020-2024. \citep[\S 3]{hoffmann2022-chinchilla}
@@ -58,7 +58,7 @@
 -- Open monthly web crawl run by the Common Crawl Foundation since 2008. Source corpus for FineWeb (96 snapshots), C4, RefinedWeb, and most open web datasets. WARC format with extracted WET (text) variant.
 
 \item[\glsanchor{constitution}{\hyperref[sec:introduction]{\textcolor{glscolor}{Constitution}}}]
--- A list of principles ("the assistant should not be racist," etc.) used by the feedback model to evaluate / critique responses in CAI. Typical size: ~16 principles \citep[\S 3]{bai2022-cai}
+-- A list of principles ("the assistant should not be racist," etc.) used by the feedback model to evaluate / critique responses in CAI. Typical size: $\sim$16 principles \citep[\S 3]{bai2022-cai}
 
 \item[\glsanchor{constitutional-ai}{\hyperref[sec:introduction]{\textcolor{glscolor}{Constitutional AI}}} (CAI)]
 -- Anthropic 2022 framework for training harmless assistants without human harm labels. Two stages: SL-CAI (sample $\to$ critique under principle $\to$ revise $\to$ SFT) and RL-CAI (sample pairs $\to$ AI judge under principle $\to$ train RM $\to$ PPO) \citep[\S 3-4]{bai2022-cai}
@@ -76,7 +76,7 @@
 -- Training objective: $\mathcal{L} = -\log P(t_i \mid t_1, \ldots, t_{i-1})$, summed over all positions.
 
 \item[\glsanchor{custom-heuristic-filters}{\hyperref[sec:introduction]{\textcolor{glscolor}{Custom heuristic filters}}} (FineWeb)]
--- Three quantile-derived rules: lines-ending-with-terminal-punctuation $\leq 0.12$, char-duplication $\geq 0.01$, short-line-fraction $\geq 0.67$. Lift HellaSwag ~1 pt at ablation scale. \citep[\S 3.6]{fineweb2024}
+-- Three quantile-derived rules: lines-ending-with-terminal-punctuation $\leq 0.12$, char-duplication $\geq 0.01$, short-line-fraction $\geq 0.67$. Lift HellaSwag $\sim$1 pt at ablation scale. \citep[\S 3.6]{fineweb2024}
 
 \item[\glsanchor{dapo-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{DAPO}}}]
 -- ByteDance's GRPO variant. Four modifications: clip-higher (asymmetric clip), dynamic sampling (drop zero-variance groups), token-level loss (vs sequence-level), overlong reward shaping. AIME 2024 50pts on Qwen2.5-32B. \citep[\S 2]{dapo2025}
@@ -118,10 +118,10 @@
 -- A position-wise two-layer (or three-layer for GLU variants) fully-connected network applied independently at each sequence position. Transforms representations within each position, complementing attention which mixes across positions.
 
 \item[\glsanchor{fineweb-edu}{\hyperref[sec:introduction]{\textcolor{glscolor}{FineWeb-Edu}}}]
--- 1.3 T-token quality-classifier-filtered subset of FineWeb. Llama-3-70B-Instruct annotates 500 K samples 0–5 for "educational value"; classifier learns the score; threshold $\geq$3 keeps the subset. ~6 K H100-hours of annotation cost. \citep[\S 4]{fineweb2024}
+-- 1.3 T-token quality-classifier-filtered subset of FineWeb. Llama-3-70B-Instruct annotates 500 K samples 0–5 for "educational value"; classifier learns the score; threshold $\geq$3 keeps the subset. $\sim$6 K H100-hours of annotation cost. \citep[\S 4]{fineweb2024}
 
 \item[\glsanchor{flan}{\hyperref[sec:introduction]{\textcolor{glscolor}{FLAN}}} (Finetuned Language Net)]
--- Original instruction-tuning recipe: ~1.8K NLP tasks reformatted as natural-language instructions, used as an SFT mixture. The pre-RLHF post-training baseline. \texttt{[wei2021-flan]}. FLAN-T5 \texttt{[chung2022-flan-t5]} and the FLAN Collection (Longpre et al. 2023, arXiv:2301.13688) extend it.
+-- Original instruction-tuning recipe: $\sim$1.8K NLP tasks reformatted as natural-language instructions, used as an SFT mixture. The pre-RLHF post-training baseline. \texttt{[wei2021-flan]}. FLAN-T5 \texttt{[chung2022-flan-t5]} and the FLAN Collection (Longpre et al. 2023, arXiv:2301.13688) extend it.
 
 \item[\glsanchor{format-reward}{\hyperref[sec:rlvr-grpo]{\textcolor{glscolor}{Format reward}}}]
 -- In RLVR, a small constant reward for trajectories that conform to a structural template (e.g., emit a \texttt{<think>...</think>} block). Keeps the chain-of-thought pathway alive during early training \citep[\S 2.2]{deepseek-r1}
@@ -133,7 +133,7 @@
 -- "Fully Sharded Data Parallel." Native PyTorch ZeRO implementation. Parameters and optimizer state sharded across DP workers; full param-set materialized via all-gather just before each forward/backward. \citep[\S 2.1.2]{torchtitan2024}
 
 \item[\glsanchor{fsdp2}{\hyperref[sec:distributed-training]{\textcolor{glscolor}{FSDP2}}}]
--- Per-parameter \texttt{DTensor}-sharded successor to FSDP1. ~7 % per-GPU memory reduction and ~1.5 % throughput improvement vs. FSDP1's flat-parameter design. \citep[\S 2.1.2]{torchtitan2024}
+-- Per-parameter \texttt{DTensor}-sharded successor to FSDP1. $\sim$7 % per-GPU memory reduction and $\sim$1.5 % throughput improvement vs. FSDP1's flat-parameter design. \citep[\S 2.1.2]{torchtitan2024}
 
 \item[\glsanchor{gqa}{\hyperref[sec:optimization]{\textcolor{glscolor}{GQA}}} (Grouped-Query Attention)]
 -- Interpolation between MHA and MQA: query heads are partitioned into $g$ groups, each group shares one $W^K, W^V$. GQA-1 = MQA; GQA-$h$ = MHA. KV cache per token is $2 n_g d_h$ elements \citep[\S 2.2]{ainslie2023}
@@ -214,10 +214,7 @@
 -- Combining trained models via parameter-level operations (averaging, interpolation, sign-resolution, sparsification). Subtypes include weight averaging (Model Soups), task arithmetic, TIES, DARE, evolutionary merging. Pending excerpts.
 
 \item[\glsanchor{multi-head-latent-attention}{\hyperref[sec:optimization]{\textcolor{glscolor}{Multi-head Latent Attention}}} (MLA)]
--- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
-
-\item[\glsanchor{muon}{\hyperref[sec:optimization]{\textcolor{glscolor}{Muon}}}]
--- "MomentUm Orthogonalized via Newton-Schulz." Replaces Adam's per-parameter rescaling with a *per-shape* matrix-orthogonalization on momentum buffer $\mathbf{B}_t = \mu \mathbf{B}_{t-1} + \mathbf{G}_t$, then sets $\mathbf{O}_t = \text{Newton-Schulz}(\mathbf{B}_t)$ before the parameter update. Operates only on 2D weight matrices; uses AdamW for 1D parameters and embeddings. \citep[\S 2.1, eq.1]{muon-moonlight2025}
+-- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves $\sim$93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
 
 \item[\glsanchor{newton-schulz-iteration}{\hyperref[sec:distributed-training]{\textcolor{glscolor}{Newton-Schulz iteration}}}]
 -- Iterative polynomial $\mathbf{X}_k = a\mathbf{X}_{k-1} + b(\mathbf{X}_{k-1}\mathbf{X}_{k-1}^\top)\mathbf{X}_{k-1} + c(\mathbf{X}_{k-1}\mathbf{X}_{k-1}^\top)^2 \mathbf{X}_{k-1}$ that converges all singular values of $\mathbf{X}_0$ to 1, producing $\mathbf{X}_0(\mathbf{X}_0^\top \mathbf{X}_0)^{-1/2}$. Muon uses 5 iterations with coefficients $(a, b, c) = (3.4445, -4.7750, 2.0315)$. \citep[\S 2.1, eq.2]{muon-moonlight2025}
@@ -367,7 +364,7 @@
 -- $D / N$. Chinchilla-optimal value is approximately 20. Industry practice has shifted to over-trained ratios (Llama 3 8B $\approx$ 1875) trading pre-training compute for inference cost. See \texttt{scaling/scaling-frontier}.
 
 \item[\glsanchor{trafilatura}{\hyperref[sec:pre-training-data]{\textcolor{glscolor}{trafilatura}}}]
--- Python text-extraction library; extracts main article text from raw HTML. FineWeb's choice over CC's built-in WET, yielding ~25 % more text. \citep[\S 3.2]{fineweb2024}
+-- Python text-extraction library; extracts main article text from raw HTML. FineWeb's choice over CC's built-in WET, yielding $\sim$25 % more text. \citep[\S 3.2]{fineweb2024}
 
 \item[\glsanchor{transformer}{\hyperref[sec:introduction]{\textcolor{glscolor}{Transformer}}}]
 -- Neural network architecture introduced by Vaswani et al. (2017) that replaces recurrence with self-attention, allowing parallel processing of sequences.
@@ -379,7 +376,7 @@
 -- RL variant that re-introduces a learned value function on top of GRPO's design, with shared backbone and value-loss-clipping. Reportedly outperforms DAPO on long-CoT tasks [vapo-2025]
 
 \item[\glsanchor{vocabulary}{\hyperref[sec:introduction]{\textcolor{glscolor}{Vocabulary}}} (V)]
--- The fixed set of all tokens a model can recognize. Size ranges from ~32K (LLaMA) to ~50K (GPT-3).
+-- The fixed set of all tokens a model can recognize. Size ranges from $\sim$32K (LLaMA) to $\sim$50K (GPT-3).
 
 \item[\glsanchor{warm}{\hyperref[sec:introduction]{\textcolor{glscolor}{WARM}}} (Weight-Averaged Reward Models)]
 -- Average parameters of $K$ independently-trained RMs to reduce overoptimization and improve robustness. Adopted in Gemma 3 post-training [warm-2024]
@@ -391,7 +388,7 @@
 -- Alternates RL training with policy weight averaging; companion to WARM at the policy side. Used together in Gemma 3 [warp-2024]
 
 \item[\glsanchor{wsd-schedule}{\hyperref[sec:scaling-laws]{\textcolor{glscolor}{WSD schedule}}} (Warmup-Stable-Decay)]
--- Three-phase LR: linear warmup, then constant at $\eta_{\max}$ for the bulk of training, then short cooldown to ~$0.1\eta_{\max}$. Used by Moonlight (5.7T-token Muon run); avoids cosine's commitment to a specific budget. \citep[\S 3.3]{muon-moonlight2025}
+-- Three-phase LR: linear warmup, then constant at $\eta_{\max}$ for the bulk of training, then short cooldown to $\sim$$0.1\eta_{\max}$. Used by Moonlight (5.7T-token Muon run); avoids cosine's commitment to a specific budget. \citep[\S 3.3]{muon-moonlight2025}
 
 \item[\glsanchor{zero-1-zero-2-zero-3}{\hyperref[sec:distributed-training]{\textcolor{glscolor}{ZeRO-1 / ZeRO-2 / ZeRO-3}}}]
 -- Optimizer-state / gradient / parameter sharding levels of Rajbhandari et al.'s Zero-Redundancy Optimizer. ZeRO-1 shards only optimizer state; ZeRO-3 shards everything (FSDP's default).

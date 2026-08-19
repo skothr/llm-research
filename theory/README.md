@@ -71,4 +71,8 @@ discipline" for the full rule.
   triage and per-finding resolution are in `reviews/00-summary.md`.
 - **Since then: maintenance mode.** Changes are corrections, currency
   refreshes, and new cross-links from the research arcs — not new phases.
-  Run `python3 kb/lint.py` from `theory/` after any citation edit.
+  Run `python3 kb/lint.py` from `theory/` after any citation edit. It exits
+  non-zero today: **14 errors / 0 warnings expected as of 2026-08-19**, all
+  of them citations of 10 paper keys missing from `kb/index/papers.json`
+  (issue #55). `kb/README.md` lists the keys — anything beyond that baseline
+  is a regression.

@@ -15,7 +15,7 @@
 \expandafter\def\csname @gls@def@compressed-fsm-2\endcsname{FSM transformation that merges chains of singular-transition edges into single edges, allowing multi-token decoding when the grammar determ...}
 \expandafter\def\csname @gls@def@constrained-decoding-2\endcsname{Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF,...}
 \expandafter\def\csname @gls@def@context-extension\endcsname{Sub-stage of late-stage pre-training that increases trained sequence length (e.g., 4 K → 32 K → 128 K) by adjusting RoPE scaling and contin...}
-\expandafter\def\csname @gls@def@context-independent-context-dependent-vocabulary-split\endcsname{XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (~99\%...}
+\expandafter\def\csname @gls@def@context-independent-context-dependent-vocabulary-split\endcsname{XGrammar's core trick: precompute (offline) the mask for tokens whose grammar-allowed-or-not status depends only on the grammar state (\textasciitilde 99\%...}
 \expandafter\def\csname @gls@def@cross-attention\endcsname{Attention where Q comes from the decoder and K, V come from the encoder output.}
 \expandafter\def\csname @gls@def@data-mixing-law\endcsname{L i(mathbfr) = c i + k i exp(sum j t ij r j).}
 \expandafter\def\csname @gls@def@decoder-only\endcsname{Simplified Transformer architecture (GPT, LLaMA) that removes the encoder and cross-attention, using only masked self-attention and FFN lay...}
@@ -31,7 +31,7 @@
 \expandafter\def\csname @gls@def@glu\endcsname{mathrmGLU(x, W, V) = sigma(xW) otimes (xV), the elementwise product of a sigmoid-gated and an identity-gated linear projection.}
 \expandafter\def\csname @gls@def@gptq\endcsname{Frantar et al. 2022.}
 \expandafter\def\csname @gls@def@gqa\endcsname{Interpolation between MHA and MQA: query heads are partitioned into g groups, each group shares one WK, WV.}
-\expandafter\def\csname @gls@def@hbm\endcsname{The large, slow memory tier on a GPU (~40–80 GB on A100, 1.5–2.0 TB/s).}
+\expandafter\def\csname @gls@def@hbm\endcsname{The large, slow memory tier on a GPU (\textasciitilde 40–80 GB on A100, 1.5–2.0 TB/s).}
 \expandafter\def\csname @gls@def@hidden-state\endcsname{The d textmodel-dimensional vector representation at each position, flowing through the residual stream across layers.}
 \expandafter\def\csname @gls@def@hippo\endcsname{"High-order Polynomial Projection Operator." Specific structured choice of A matrix that optimally compresses input history under polynom...}
 \expandafter\def\csname @gls@def@interleaved-mrope\endcsname{Qwen3-VL refinement of M-RoPE that interleaves the temporal/height/width axes per dimension-pair instead of partitioning the channel range;...}

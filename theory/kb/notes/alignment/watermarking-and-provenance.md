@@ -35,7 +35,7 @@ quality model.
 ### 1.1 Construction
 
 `kirchenbauer2023-watermark`
-`[kirchenbauer2023-watermark §2;
+`[kirchenbauer2023-watermark §3 Algorithm 2;
 kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`:
 
 For each generation step $t$:

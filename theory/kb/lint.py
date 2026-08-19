@@ -9,8 +9,12 @@ Checks:
 1. papers.json is valid; every paper has required fields.
 2. Every excerpts_file in papers.json points to a real file (or null).
 3. Every kb/notes/<area>/<topic>.md exists for every leaf in topics.md.
-4. Every paper-key cited inline ([key §X], the bare [key] form, *or* the
-   `[key, arXiv NNNN.NNNNN]` form) corresponds to a key in papers.json.
+4. Every paper-key cited inline corresponds to a key in papers.json. Five
+   forms are recognised: `[key §X]`, the bare `[key]`, `[key <locator>]`
+   (`[lin2023-awq abstract]`), the `,`/`;`-separated list form
+   (`[key, arXiv NNNN.NNNNN]`, `[k1 …; k2 …]`), and a note's frontmatter
+   `primary_sources:` / `secondary_sources:` declarations. A key hard-wrapped
+   at its hyphen across a line break counts as one key.
 5. Every kb/excerpts/<key>#anchor citation resolves to a real excerpt file *and*
    to a real anchor inside it (`{#attr}` attributes, the repo-local
    `## #anchor — Title` heading convention, and plain markdown heading slugs).
@@ -23,7 +27,7 @@ Checks:
 
 Scan set for checks 4/5/7 is every `kb/**/*.md` outside `kb/excerpts/` — notes,
 glossary.md, index/ (including `_phase2-additions/` and contradictions.md).
-Frontmatter (check 6) is still required of `kb/notes/**` only.
+Frontmatter (checks 4 and 6) is read from `kb/notes/**` only.
 
 Run from theory/:  python3 kb/lint.py
 """
@@ -110,6 +114,15 @@ PAPER_CITE_RE = re.compile(r"\[([A-Za-z0-9][A-Za-z0-9.\-]*(?:/[A-Za-z0-9.\-]+)*)
 # `[key]` — the bare form, no `§`. Excludes markdown links (`[text](url)`),
 # reference links (`[text][ref]`), tags (`[INTUITION]`), and footnotes.
 BARE_CITE_RE = re.compile(r"\[([A-Za-z0-9][A-Za-z0-9.\-]*)\](?![\(\[])")
+# `[key <locator>]` — a key followed by a prose locator instead of a `§`:
+# `[lin2023-awq abstract]`, `[hoffmann2022-chinchilla Table 3]`. Neither the
+# `§` form (no `§`) nor the bare form (no `]` right after the key) sees these,
+# so without this pattern a broken key hides behind any non-`§` locator. A `§`
+# straight after the key is left to PAPER_CITE_RE so the same site is not
+# reported twice; `,`/`;` payloads are left to the segment splitter below.
+LOCATOR_CITE_RE = re.compile(
+    r"\[([A-Za-z0-9][A-Za-z0-9.\-]*)[ \t]+(?![§,;])[^\[\]]*\](?![\(\[])"
+)
 # A bare `[token]` is only read as a citation when it is *key-shaped*: it
 # carries a 19xx/20xx year (`burns2023-w2s`, `ring-attention-2023`) or is a bare
 # arXiv id (`2502.04420`). Deliberately conservative — a yearless key such as
@@ -154,6 +167,15 @@ NOTE_CITE_RE = re.compile(
 # `## 3.1 The KV-sharing axis …` — the number a `#§3.1` shorthand targets.
 SECTION_NUMBER_RE = re.compile(r"^([0-9]+(?:\.[0-9]+)*)\.?\s")
 TAG_RE = re.compile(r"\[(INTUITION|ANALOGY|CONTRADICTION|FORUM-SIGNAL|SPECULATION)\]")
+
+# Frontmatter source declarations: the `primary_sources:` / `secondary_sources:`
+# YAML lists at the top of every note. They name paper keys exactly as an inline
+# citation does, so a key that has no papers.json entry is as broken there as in
+# the body — and used to pass unseen, because citation scanning runs over the
+# post-frontmatter body only.
+FM_BLOCK_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):")
+FM_SOURCE_BLOCKS = ("primary_sources", "secondary_sources")
+FM_KEY_RE = re.compile(r"^\s*-\s+([A-Za-z0-9][A-Za-z0-9.\-]*)\s*(?:#.*)?$")
 
 ANCHOR_ATTR_RE = re.compile(r"\{#([A-Za-z0-9._\-]+)\}")
 HEADING_RE = re.compile(r"^#{1,6}\s+(.*?)\s*$")
@@ -293,6 +315,7 @@ def check_citations(paper_keys: set):
         rel = path.relative_to(THEORY)
         text = path.read_text()
         body = text
+        fm = ""
         is_note = NOTES in path.parents
 
         if is_note:
@@ -318,30 +341,53 @@ def check_citations(paper_keys: set):
         # over the post-frontmatter body.
         line_of = _line_index(body, text.count("\n", 0, len(text) - len(body)))
 
+        # One site can be seen by more than one citation form (`[k §X; k2 …]`
+        # is both the `§` form and a `;`-split segment). Record each unknown
+        # key once per line, under the first form that saw it.
+        seen_sites: set[tuple[int, str]] = set()
+
+        def report_key(line: int, key: str, form: str) -> None:
+            if (line, key) in seen_sites:
+                return
+            seen_sites.add((line, key))
+            errors.append(
+                f"{rel}:{line}: cites unknown paper-key {key!r} ({form} form)"
+            )
+
+        if is_note:
+            for key, line in frontmatter_source_keys(fm):
+                paper_cite_keys.add(key)
+                if key.lower() not in keys_lower:
+                    report_key(line, key, "frontmatter")
+
         # Paper-key citations: `[key §X ...]` and the bare `[key]` form.
-        for regex, form in ((PAPER_CITE_RE, "§"), (BARE_CITE_RE, "bare")):
+        for regex, form in (
+            (PAPER_CITE_RE, "§"),
+            (BARE_CITE_RE, "bare"),
+            (LOCATOR_CITE_RE, "locator"),
+        ):
             for m in regex.finditer(body):
-                key = m.group(1)
+                key = _unwrap_key(m.group(1), body, m.end(1))
                 # `[kb/notes/... §X]` / `[kb/excerpts/... §X]` are intra-KB
                 # citations, checked separately below — not paper keys.
                 if key.startswith("kb/") or key.lower() in NOT_A_KEY:
                     continue
-                if form == "bare" and _skip_bare(key, body, m.start()):
+                # Both the bare and the locator form need the key-shaped guard:
+                # only the `§` form is unambiguous enough to skip it.
+                if form != "§" and _skip_bare(key, body, m.start()):
                     continue
                 paper_cite_keys.add(key)
                 if key.lower() not in keys_lower:
-                    errors.append(
-                        f"{rel}:{line_of(m.start())}: cites unknown paper-key "
-                        f"{key!r} ({form} form)"
-                    )
+                    report_key(line_of(m.start()), key, form)
 
         # `[key, arXiv NNNN.NNNNN]` — the key sits ahead of a comma rather than
         # a `§` or a `]`, so neither form above sees it. The payload is split on
         # BOTH `;` and `,`, so every key-shaped token is checked, not only the
         # first: `[k1, arXiv …; k2, arXiv …]` and comma-separated key *lists*
-        # (`[fineweb2024, data-mixing-laws-2024]`) alike. A segment counts as a
-        # key only if it is *entirely* one key-shaped token — `arXiv 2601.06423`
-        # and prose fragments have interior spaces and are skipped.
+        # (`[fineweb2024, data-mixing-laws-2024]`) alike. Only a segment's
+        # *leading* token is read as a key, and only when it is key-shaped, so
+        # `arXiv 2601.06423` and prose fragments fall out while a key trailed by
+        # its own locator (`gapo2026 arXiv:2602.04909`) is still checked.
         for m in re.finditer(r"\[([^\[\]]+)\]", body):
             payload = m.group(1)
             # Markdown links (`[text](url)`) and reference links (`[text][ref]`)
@@ -353,10 +399,10 @@ def check_citations(paper_keys: set):
             if ";" not in payload and "," not in payload:
                 continue
             for seg in re.split(r"[;,]", payload):
-                sm = re.fullmatch(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)\s*", seg)
+                sm = re.match(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)(?:\s|$)", seg)
                 if not sm:
                     continue
-                key = sm.group(1)
+                key = _unwrap_key(sm.group(1), seg, sm.end(1))
                 if key.lower() in NOT_A_KEY or not KEY_SHAPED_RE.search(key):
                     continue
                 # A naked 4-digit year is a date in prose (`[Rewarding Progress,
@@ -365,10 +411,7 @@ def check_citations(paper_keys: set):
                     continue
                 paper_cite_keys.add(key)
                 if key.lower() not in keys_lower:
-                    errors.append(
-                        f"{rel}:{line_of(m.start())}: cites unknown paper-key "
-                        f"{key!r} (arXiv form)"
-                    )
+                    report_key(line_of(m.start()), key, "list")
 
         # Anchorless `kb/excerpts/<key>` — existence of the file only.
         for m in EXCERPT_FILE_RE.finditer(body):
@@ -489,6 +532,46 @@ def _line_index(body: str, offset_lines: int = 0):
         return lo + 1 + offset_lines
 
     return line_of
+
+
+# A hyphenated key hard-wrapped at its hyphen by the 79-column prose style:
+# `[ouyang2022-\n  instructgpt §3; …]`. The two halves are one key.
+WRAP_CONT_RE = re.compile(r"\s*([A-Za-z0-9][A-Za-z0-9.\-]*)")
+
+
+def _unwrap_key(key: str, source: str, end: int) -> str:
+    """Rejoin `key` with its continuation when a line break split it at a hyphen.
+
+    `end` is the offset in `source` just past `key`. Only a key that *ends* in
+    `-` is a wrap candidate, so `explicit-po-2025\\narXiv:…` (a key followed by
+    a locator on the next line) is left alone.
+    """
+    if not key.endswith("-"):
+        return key
+    m = WRAP_CONT_RE.match(source, end)
+    return key + m.group(1) if m else key
+
+
+def frontmatter_source_keys(fm: str) -> list[tuple[str, int]]:
+    """`(key, file-line)` for every entry of a note's source-declaration lists.
+
+    `fm` is `text[3:end]`, i.e. everything between the opening and closing
+    `---`. Its first element after `splitlines()` is the tail of line 1, so
+    element `i` sits on file line `i + 1`.
+    """
+    out: list[tuple[str, int]] = []
+    active = False
+    for i, line in enumerate(fm.splitlines()):
+        block = FM_BLOCK_RE.match(line)
+        if block:
+            active = block.group(1) in FM_SOURCE_BLOCKS
+            continue
+        if not active:
+            continue
+        m = FM_KEY_RE.match(line)
+        if m:
+            out.append((m.group(1), i + 1))
+    return out
 
 
 def _skip_bare(key: str, body: str, start: int) -> bool:

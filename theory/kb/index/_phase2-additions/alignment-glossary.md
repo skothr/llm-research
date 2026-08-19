@@ -142,7 +142,7 @@
   hash of the previous token. Green tokens receive a logit bias
   $\delta$; sampling proceeds from the modified distribution.
   Defaults: $\gamma = 0.25$, $\delta = 2.0$.
-  `[kirchenbauer2023-watermark §2;
+  `[kirchenbauer2023-watermark §3 Algorithm 2;
   kb/excerpts/kirchenbauer2023-watermark#sec-algorithm]`
 - **z-score watermark detection** — Detection statistic
   $z = (|s|_G - \gamma T) / \sqrt{T \gamma (1-\gamma)}$ where $|s|_G$

@@ -90,6 +90,13 @@ note: Verbatim quotations from the v1 arXiv PDF (Jan 2020). The headline power-l
 > the vocabulary size and tokenization and hence do not have a
 > fundamental meaning.
 
+The same section states the critical-batch-size law, Eq. (1.4):
+
+> The critical batch size, which determines the speed/efficiency tradeoff
+> for data parallelism, also roughly obeys a power law in $L$:
+>
+> $$B_{\text{crit}}(L) = \frac{B_\ast}{L^{1/\alpha_B}},\quad B_\ast \sim 2 \times 10^8 \text{ tokens},\ \ \alpha_B \sim 0.21 \tag{1.4}$$
+
 ## §1.2 The joint $L(N,D)$ form {#sec-1-2-joint}
 
 > Equation (1.1) and (1.2) together suggest that as we increase the model

@@ -323,7 +323,7 @@
       "short_def": "Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head).",
       "full_def": "Variant where all heads share a single $W^K, W^V$ (only $W^Q$ remains per-head). KV cache shrinks by factor $h$. Cheaper per-token decode at the cost of capacity and stability",
       "case_strict": true,
-      "kb_cite": "shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#sec-3-1"
+      "kb_cite": "shazeer2019 §2.4; kb/notes/architecture/attention-mechanism.md#§3.1"
     },
     {
       "key": "gqa",
@@ -882,7 +882,7 @@
       "short_def": "Burns et al. 2023's headline metric: $\\mathrm{PGR} = (c_{\\text{student}} - c_{\\text{weak}}) / (c_{\\text{ceiling}} - c_{\\text{weak}})$.",
       "full_def": "Burns et al. 2023's headline metric: $\\mathrm{PGR} = (c_{\\text{student}} - c_{\\text{weak}}) / (c_{\\text{ceiling}} - c_{\\text{weak}})$. PGR = 0 → student matches supervisor; PGR = 1 → student fully recovers strong-with-ground- truth ceiling. Operationalizes \"how much capability can weak supervision elicit.\"",
       "case_strict": true,
-      "kb_cite": "burns2023-w2s §pgr; kb/excerpts/burns2023-w2s#sec-pgr"
+      "kb_cite": "burns2023-w2s §3; kb/excerpts/burns2023-w2s#sec-3-pgr"
     },
     {
       "key": "auxiliary-confidence-loss",
@@ -891,7 +891,7 @@
       "short_def": "W2S training-side intervention that penalizes the strong student for low confidence on its own predictions, biasing it toward decisive pred…",
       "full_def": "W2S training-side intervention that penalizes the strong student for low confidence on its own predictions, biasing it toward decisive predictions where the strong model has more capability than the weak supervisor revealed. Substantially improves PGR on NLP tasks; less effective on chess and reward modeling.",
       "case_strict": false,
-      "kb_cite": "burns2023-w2s §numerical; kb/excerpts/burns2023-w2s#sec-numerical"
+      "kb_cite": "burns2023-w2s §4; kb/excerpts/burns2023-w2s#sec-4-numerical"
     },
     {
       "key": "watermark",
@@ -911,7 +911,7 @@
       "short_def": "Per-step partition of vocabulary $V$ into a green list $G_t$ of size $\\gamma|V|$ and a red list of size $(1-\\gamma)|V|$, deterministically…",
       "full_def": "Per-step partition of vocabulary $V$ into a green list $G_t$ of size $\\gamma|V|$ and a red list of size $(1-\\gamma)|V|$, deterministically derived from a hash of the previous token. Green tokens receive a logit bias $\\delta$; sampling proceeds from the modified distribution. Defaults: $\\gamma = 0.25$, $\\delta = 2.0$.",
       "case_strict": false,
-      "kb_cite": "kirchenbauer2023-watermark §greenred; kb/excerpts/kirchenbauer2023-watermark#sec-greenred"
+      "kb_cite": "kirchenbauer2023-watermark §3 Algorithm 2; kb/excerpts/kirchenbauer2023-watermark#sec-algorithm"
     },
     {
       "key": "z-score-watermark-detection",
@@ -920,7 +920,7 @@
       "short_def": "Detection statistic $z = (|s|_G - \\gamma T) / \\sqrt{T \\gamma (1-\\gamma)}$ where $|s|_G$ is the green-token count in candidate text of lengt…",
       "full_def": "Detection statistic $z = (|s|_G - \\gamma T) / \\sqrt{T \\gamma (1-\\gamma)}$ where $|s|_G$ is the green-token count in candidate text of length $T$. Requires no API access — only the keyed hash and the candidate text. Interpretable as a one-sided $p$-value via the normal CDF.",
       "case_strict": false,
-      "kb_cite": "kirchenbauer2023-watermark §detection; kb/excerpts/kirchenbauer2023-watermark#sec-detection"
+      "kb_cite": "kirchenbauer2023-watermark §3.1; kb/excerpts/kirchenbauer2023-watermark#sec-zscore"
     },
     {
       "key": "distortion-detectability-tradeoff",
@@ -929,7 +929,7 @@
       "short_def": "Larger $\\delta$ → stronger watermark, more quality drift.",
       "full_def": "Larger $\\delta$ → stronger watermark, more quality drift. Inherent to soft promotion schemes. Hard partitioning (green-only) eliminates the tradeoff but degrades quality at low-entropy positions and is trivially detectable without the key.",
       "case_strict": false,
-      "kb_cite": "kirchenbauer2023-watermark §soft; kb/excerpts/kirchenbauer2023-watermark#sec-soft"
+      "kb_cite": "kirchenbauer2023-watermark §3; kb/excerpts/kirchenbauer2023-watermark#sec-algorithm"
     },
     {
       "key": "synthid-text",
@@ -1076,7 +1076,7 @@
       "short_def": "A model's capacity to reason about its own context, training process, and deployment status.",
       "full_def": "A model's capacity to reason about its own context, training process, and deployment status. The Greenblatt 2024 alignment-faking experiment depends on the model inferring (from system-prompt cues) that it is in training; this is a situational-awareness probe. The Apollo six-probe suite similarly leans on the model's awareness of its evaluation context.",
       "case_strict": false,
-      "kb_cite": "greenblatt2024-alignment-faking §setup-wedge; kb/excerpts/greenblatt2024-alignment-faking#setup-wedge"
+      "kb_cite": "greenblatt2024-alignment-faking §2; kb/excerpts/greenblatt2024-alignment-faking#sec-2-setup"
     },
     {
       "key": "deliberative-alignment",
@@ -1943,7 +1943,7 @@
       "short_def": "vLLM's KV-cache layout: KV is stored in fixed-size **blocks** (typically 16 tokens), each sequence holds a per-layer **block table** mappin…",
       "full_def": "vLLM's KV-cache layout: KV is stored in fixed-size **blocks** (typically 16 tokens), each sequence holds a per-layer **block table** mapping logical block indices to physical blocks, and attention is computed block-wise per Eq.4. Eliminates the contiguous-allocation requirement that produced 50–90% wasted KV memory in pre-vLLM serving stacks.",
       "case_strict": true,
-      "kb_cite": "kwon2023 §4.1, Eq.4; kb/excerpts/kwon2023#paged-attention"
+      "kb_cite": "kwon2023 §4.1, Eq.4; kb/excerpts/kwon2023#sec-4-1"
     },
     {
       "key": "kv-block-block-table",
@@ -1952,7 +1952,7 @@
       "short_def": "Fixed-size unit of KV storage (16 tokens default in vLLM).",
       "full_def": "Fixed-size unit of KV storage (16 tokens default in vLLM). The per-sequence block table is the indirection that lets logically-contiguous KV live in physically-scattered memory.",
       "case_strict": true,
-      "kb_cite": "kwon2023 §4.1; kb/excerpts/kwon2023#block-table"
+      "kb_cite": "kwon2023 §4.2; kb/excerpts/kwon2023#sec-4-2"
     },
     {
       "key": "reservation-internal-external-fragmentation",
@@ -1961,7 +1961,7 @@
       "short_def": "vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active…",
       "full_def": "vLLM's three-way taxonomy of KV-cache waste in a contiguous-allocation system: reservation = slots reserved for future tokens of an active sequence; internal = pre-allocated maximum-length slots beyond actual generated length; external = unusable gaps between sequences. PagedAttention reduces total waste below 4%.",
       "case_strict": false,
-      "kb_cite": "kwon2023 §3.1, Fig.4; kb/excerpts/kwon2023#fragmentation"
+      "kb_cite": "kwon2023 §3.1, Fig.4; kb/excerpts/kwon2023#sec-3"
     },
     {
       "key": "copy-on-write-serving",
@@ -1970,7 +1970,7 @@
       "short_def": "When parallel-sampling decode paths (or beam-search hypotheses) diverge, only the diverging block is duplicated; identical-prefix blocks re…",
       "full_def": "When parallel-sampling decode paths (or beam-search hypotheses) diverge, only the diverging block is duplicated; identical-prefix blocks remain shared via reference count.",
       "case_strict": false,
-      "kb_cite": "kwon2023 §4.4; kb/excerpts/kwon2023#cow"
+      "kb_cite": "kwon2023 §4.4; kb/excerpts/kwon2023#sec-4-4"
     },
     {
       "key": "swap-recompute-vllm-eviction",
@@ -1979,7 +1979,7 @@
       "short_def": "Two strategies for evicting KV when memory is full: swap the blocks to CPU memory and bring them back when the sequence is rescheduled, or…",
       "full_def": "Two strategies for evicting KV when memory is full: swap the blocks to CPU memory and bring them back when the sequence is rescheduled, or discard them and recompute prefill. Swap wins on long sequences, recompute on short ones.",
       "case_strict": true,
-      "kb_cite": "kwon2023 §4.5; kb/excerpts/kwon2023#eviction"
+      "kb_cite": "kwon2023 §4.5; kb/excerpts/kwon2023#sec-4-5"
     },
     {
       "key": "radixattention",
@@ -1988,7 +1988,7 @@
       "short_def": "SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-c…",
       "full_def": "SGLang's cross-request KV reuse: a radix tree keyed on token-id sequences indexes which prefixes are still in cache, with LRU + reference-count eviction and cache-aware DFS scheduling that runs requests in tree-DFS order to maximise hit rate.",
       "case_strict": true,
-      "kb_cite": "zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#radix"
+      "kb_cite": "zheng2024-sglang §3, Theorem 3.1; kb/excerpts/zheng2024-sglang#sec-3"
     },
     {
       "key": "multi-query-attention",
@@ -2050,7 +2050,7 @@
       "short_def": "Compact spec of weight-precision × activation-precision.",
       "full_def": "Compact spec of weight-precision × activation-precision. W4A16 = 4-bit weights, FP16 activations (GPTQ/AWQ regime). W8A8 = INT8 weight + INT8 activation (SmoothQuant). W1.58A8 = ternary $\\{-1,0,+1\\}$ weights + INT8 activations (BitNet b1.58).",
       "case_strict": true,
-      "kb_cite": "ma2024-bitnet §2.1; kb/notes/inference/quantization#§3"
+      "kb_cite": "ma2024-bitnet §2.1; kb/notes/inference/quantization#§7"
     },
     {
       "key": "calibration-set",
@@ -2070,7 +2070,7 @@
       "short_def": "Quantize each linear layer independently to minimise $\\| W X - \\widehat{W} X \\|_F^2$ where $X$ is the calibration activation.",
       "full_def": "Quantize each linear layer independently to minimise $\\| W X - \\widehat{W} X \\|_F^2$ where $X$ is the calibration activation. The objective behind OBS/OBQ/GPTQ.",
       "case_strict": false,
-      "kb_cite": "frantar2022 Eq.1; kb/excerpts/frantar2022#objective"
+      "kb_cite": "frantar2022 Eq.1; kb/excerpts/frantar2022#sec-3-layerwise"
     },
     {
       "key": "gptq",
@@ -2079,7 +2079,7 @@
       "short_def": "Frantar et al. 2022.",
       "full_def": "Frantar et al. 2022. OBQ-style second-order weight update with three engineering modifications: arbitrary fixed quantization order, lazy batched updates (block size 128), and Cholesky reformulation for Hessian-inverse stability. ~4 GPU-hours for 175B at 3–4 bit.",
       "case_strict": true,
-      "kb_cite": "frantar2022 §3; kb/notes/inference/quantization#§3.1"
+      "kb_cite": "frantar2022 §3; kb/notes/inference/quantization#§3"
     },
     {
       "key": "awq",
@@ -2090,7 +2090,7 @@
       "short_def": "Lin et al. 2023.",
       "full_def": "Lin et al. 2023. Per-channel weight scaling driven by *activation* magnitudes (preserving ~1% salient channels at higher precision); reorder-free, no backward pass. Strong W4A16 baseline alongside GPTQ.",
       "case_strict": true,
-      "kb_cite": "kb/notes/inference/quantization#§3.2"
+      "kb_cite": "kb/notes/inference/quantization#§4"
     },
     {
       "key": "salient-channel",
@@ -2101,7 +2101,7 @@
       "short_def": "A weight column whose corresponding *activation channel* has large magnitude.",
       "full_def": "A weight column whose corresponding *activation channel* has large magnitude. AWQ's argument: protecting these channels (via per-channel scaling) recovers most of the quantization-error budget.",
       "case_strict": false,
-      "kb_cite": "kb/notes/inference/quantization#§3.2"
+      "kb_cite": "kb/notes/inference/quantization#§4"
     },
     {
       "key": "activation-outlier",
@@ -2110,7 +2110,7 @@
       "short_def": "A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median.",
       "full_def": "A small fraction of activation channels (typically 6 of 4096 in OPT-13B) carrying magnitudes 100× the median. Emerges around 6.7B parameters. The reason naive INT8 activation quantization breaks at scale.",
       "case_strict": false,
-      "kb_cite": "xiao2023-smoothquant §3, Fig.5; kb/excerpts/xiao2023-smoothquant#outliers"
+      "kb_cite": "xiao2023-smoothquant §3, Fig.5; kb/excerpts/xiao2023-smoothquant#sec-3"
     },
     {
       "key": "smoothquant-migration",
@@ -2119,7 +2119,7 @@
       "short_def": "Offline transform $X \\cdot \\text{diag}(s)^{-1} \\cdot \\text{diag}(s) W$ that moves outlier difficulty from activation to weight side.",
       "full_def": "Offline transform $X \\cdot \\text{diag}(s)^{-1} \\cdot \\text{diag}(s) W$ that moves outlier difficulty from activation to weight side. Smoothing factor $s_j = \\max(|X_j|)^\\alpha / \\max(|W_j|)^{1-\\alpha}$, $\\alpha = 0.5$ default. Enables W8A8 INT8 on models up to 530B.",
       "case_strict": true,
-      "kb_cite": "xiao2023-smoothquant §4, Eq.3-4; kb/excerpts/xiao2023-smoothquant#migration"
+      "kb_cite": "xiao2023-smoothquant §4, Eq.3-4; kb/excerpts/xiao2023-smoothquant#sec-4"
     },
     {
       "key": "bitlinear",
@@ -2128,7 +2128,7 @@
       "short_def": "BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\\{-1,0,+1\\}$ via absmean, activations to INT8 via absmax, SubLN replaci…",
       "full_def": "BitNet's drop-in replacement for `nn.Linear`: weights quantized to $\\{-1,0,+1\\}$ via absmean, activations to INT8 via absmax, SubLN replacing LayerNorm. Constructs a model whose linear-algebra reduces to integer addition.",
       "case_strict": true,
-      "kb_cite": "ma2024-bitnet §2.1; kb/excerpts/ma2024-bitnet#bitlinear"
+      "kb_cite": "ma2024-bitnet §2.1; kb/excerpts/ma2024-bitnet#sec-2"
     },
     {
       "key": "absmean-ternary-quantization",
@@ -2137,7 +2137,7 @@
       "short_def": "BitNet b1.58's weight quantizer: $\\beta = \\frac{1}{nm}\\sum_{i,j}|W_{ij}|$, $\\widehat{W}_{ij} = \\text{round\\_clip}(W_{ij}/(\\beta+\\epsilon),…",
       "full_def": "BitNet b1.58's weight quantizer: $\\beta = \\frac{1}{nm}\\sum_{i,j}|W_{ij}|$, $\\widehat{W}_{ij} = \\text{round\\_clip}(W_{ij}/(\\beta+\\epsilon), -1, +1)$. Per-tensor $\\beta$, ternary output. Trained from scratch in 1.58-bit, not post-quantized.",
       "case_strict": false,
-      "kb_cite": "ma2024-bitnet §2.1, Eq.1-3; kb/excerpts/ma2024-bitnet#absmean"
+      "kb_cite": "ma2024-bitnet §2.1, Eq.1-3; kb/excerpts/ma2024-bitnet#sec-2"
     },
     {
       "key": "gptq-vs-awq-vs-smoothquant-spec-sheet",
@@ -2146,7 +2146,7 @@
       "short_def": "GPTQ: W4A16, layer-wise reconstruction, sequential.",
       "full_def": "GPTQ: W4A16, layer-wise reconstruction, sequential. AWQ: W4A16, salient-channel preservation, no calibration backprop. SmoothQuant: W8A8, activation-outlier migration. The three occupy distinct cells of the (precision × technique) grid.",
       "case_strict": true,
-      "kb_cite": "kb/notes/inference/quantization#§3"
+      "kb_cite": "kb/notes/inference/quantization#§7"
     },
     {
       "key": "fp8",
@@ -2157,7 +2157,7 @@
       "short_def": "IEEE-style 8-bit floating-point.",
       "full_def": "IEEE-style 8-bit floating-point. E4M3: 4-exp / 3-mantissa, narrower range / better resolution (typical for activations). E5M2: 5-exp / 2-mantissa, wider range (typical for gradients). Production choice from H100 onward.",
       "case_strict": true,
-      "kb_cite": "shah2024 §1; kb/notes/inference/quantization#§4"
+      "kb_cite": "shah2024 §1; kb/notes/inference/quantization#§7"
     },
     {
       "key": "microscaling-mx-format",
@@ -2166,7 +2166,7 @@
       "short_def": "Block-wise FP format: a per-block shared 8-bit exponent + per-element 4–8 bit elements (MXFP4, MXFP6, MXFP8).",
       "full_def": "Block-wise FP format: a per-block shared 8-bit exponent + per-element 4–8 bit elements (MXFP4, MXFP6, MXFP8). Open standard ratified by OCP 2023.",
       "case_strict": true,
-      "kb_cite": "kb/notes/inference/quantization#§4"
+      "kb_cite": "kb/notes/inference/quantization#§7"
     },
     {
       "key": "speculative-decoding-sampling",
@@ -2175,7 +2175,7 @@
       "short_def": "Inference acceleration by drafter–target factoring: a cheap drafter $M_q$ proposes $\\gamma$ tokens; the expensive target $M_p$ scores them…",
       "full_def": "Inference acceleration by drafter–target factoring: a cheap drafter $M_q$ proposes $\\gamma$ tokens; the expensive target $M_p$ scores them in one parallel forward pass; a rejection-sampling rule preserves the exact target distribution.",
       "case_strict": false,
-      "kb_cite": "leviathan2023 §2; kb/excerpts/leviathan2023#algorithm"
+      "kb_cite": "leviathan2023 §2; kb/excerpts/leviathan2023#sec-2-1"
     },
     {
       "key": "rejection-sampling-rule-speculative-decoding",
@@ -2184,7 +2184,7 @@
       "short_def": "For draft token $x \\sim q$: accept with probability $\\min(1, p(x)/q(x))$; on rejection, sample from $\\text{norm}(\\max(0, p - q))$.",
       "full_def": "For draft token $x \\sim q$: accept with probability $\\min(1, p(x)/q(x))$; on rejection, sample from $\\text{norm}(\\max(0, p - q))$. Guarantees the accepted token's marginal is exactly $p$.",
       "case_strict": false,
-      "kb_cite": "leviathan2023 §2.3; kb/excerpts/leviathan2023#rejection-rule"
+      "kb_cite": "leviathan2023 §2.3; kb/excerpts/leviathan2023#sec-2-3"
     },
     {
       "key": "acceptance-rate-alpha",
@@ -2193,7 +2193,7 @@
       "short_def": "$\\alpha = \\mathbb{E}_{x \\sim q}[\\min(1, p(x)/q(x))]$.",
       "full_def": "$\\alpha = \\mathbb{E}_{x \\sim q}[\\min(1, p(x)/q(x))]$. The probability a single drafter token is accepted; the dominant lever in the speedup formula. Typical values: 0.5–0.8 for well-matched drafter–target pairs.",
       "case_strict": false,
-      "kb_cite": "leviathan2023 §3.2; kb/excerpts/leviathan2023#alpha"
+      "kb_cite": "leviathan2023 §3.2; kb/excerpts/leviathan2023#sec-3-2"
     },
     {
       "key": "speedup-theorem",
@@ -2204,7 +2204,7 @@
       "short_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric).",
       "full_def": "$\\mathbb{E}[\\text{tokens per cycle}] = (1-\\alpha^{\\gamma+1})/(1-\\alpha)$ (Eq.1, capped geometric). Walltime improvement $= [(1-\\alpha^{\\gamma+1})/(1-\\alpha)] / (c\\gamma+1)$ with $c = T_q/T_p$ (Theorem 3.8).",
       "case_strict": false,
-      "kb_cite": "leviathan2023 §3.2, Eq.1, Theorem 3.8; kb/excerpts/leviathan2023#theorems"
+      "kb_cite": "leviathan2023 §3.3, Eq.1, Theorem 3.8; kb/excerpts/leviathan2023#sec-3-3"
     },
     {
       "key": "drafter-target-model",
@@ -2224,7 +2224,7 @@
       "short_def": "A draft tree of token candidates verified in one target forward pass via a custom attention mask that lets every node attend only to its an…",
       "full_def": "A draft tree of token candidates verified in one target forward pass via a custom attention mask that lets every node attend only to its ancestors. Enables draft-width $> 1$ per position.",
       "case_strict": false,
-      "kb_cite": "cai2024-medusa §2.2; kb/excerpts/cai2024-medusa#tree-attention"
+      "kb_cite": "cai2024-medusa §2.1.2; kb/excerpts/cai2024-medusa#sec-2-1-2"
     },
     {
       "key": "medusa-heads",
@@ -2233,7 +2233,7 @@
       "short_def": "$K$ extra decoding heads $h^{(k)}: \\mathbb{R}^d \\to \\mathbb{R}^{|V|}$ predicting tokens at offsets $t+1, t+2, \\ldots, t+K$ from the same hi…",
       "full_def": "$K$ extra decoding heads $h^{(k)}: \\mathbb{R}^d \\to \\mathbb{R}^{|V|}$ predicting tokens at offsets $t+1, t+2, \\ldots, t+K$ from the same hidden state. Each head is a small residual MLP + the original LM head.",
       "case_strict": false,
-      "kb_cite": "cai2024-medusa §2.1, Eq.0; kb/excerpts/cai2024-medusa#heads"
+      "kb_cite": "cai2024-medusa §2.1, Eq.0; kb/excerpts/cai2024-medusa#sec-2-1-1"
     },
     {
       "key": "medusa-1-medusa-2-training",
@@ -2242,7 +2242,7 @@
       "short_def": "Medusa-1: heads-only fine-tuning, target frozen.",
       "full_def": "Medusa-1: heads-only fine-tuning, target frozen. Medusa-2: jointly fine-tunes target + heads with loss $\\mathcal{L} = \\mathcal{L}_{\\text{LM}} + \\lambda_0 \\mathcal{L}_{\\text{heads}}$ on a small fine-tuning set; recovers the most quality + speed.",
       "case_strict": true,
-      "kb_cite": "cai2024-medusa §2.3, Eq.1-2; kb/excerpts/cai2024-medusa#training"
+      "kb_cite": "cai2024-medusa §2.2.1, Eq.1-2; kb/excerpts/cai2024-medusa#sec-2-2-1"
     },
     {
       "key": "typical-acceptance",
@@ -2251,7 +2251,7 @@
       "short_def": "Medusa's quality–throughput knob: accept any draft token whose probability under the target exceeds $\\min(\\epsilon, \\delta \\cdot \\exp(-H(p)…",
       "full_def": "Medusa's quality–throughput knob: accept any draft token whose probability under the target exceeds $\\min(\\epsilon, \\delta \\cdot \\exp(-H(p)))$. Trades exact-distribution preservation for higher acceptance and longer accepted runs.",
       "case_strict": false,
-      "kb_cite": "cai2024-medusa §2.4; kb/excerpts/cai2024-medusa#typical-acceptance"
+      "kb_cite": "cai2024-medusa §2.3.1; kb/excerpts/cai2024-medusa#sec-2-3-1"
     },
     {
       "key": "eagle-feature-level-autoregression",
@@ -2260,7 +2260,7 @@
       "short_def": "Drafts at the penultimate-layer hidden-state (feature) level, not the token level.",
       "full_def": "Drafts at the penultimate-layer hidden-state (feature) level, not the token level. Drafter input at step $k$ is $(\\text{feature}_{t+k-1}, \\text{token}_{t+k})$ — the shifted-token trick disambiguates which sample produced which feature.",
       "case_strict": true,
-      "kb_cite": "li2024-eagle §3; kb/excerpts/li2024-eagle#feature-autoregression"
+      "kb_cite": "li2024-eagle §3; kb/excerpts/li2024-eagle#sec-3-1"
     },
     {
       "key": "lookahead-decoding",
@@ -2365,7 +2365,7 @@
       "short_def": "When a JSON-schema or regex forces a deterministic chain of tokens (e.g. the constant prefix `{\"summary\": \"`), merge those single-edge runs…",
       "full_def": "When a JSON-schema or regex forces a deterministic chain of tokens (e.g. the constant prefix `{\"summary\": \"`), merge those single-edge runs in the FSM so the constrained decoder emits the entire deterministic prefix in one step instead of token-by-token.",
       "case_strict": true,
-      "kb_cite": "zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#compressed-fsm"
+      "kb_cite": "zheng2024-sglang §4; kb/excerpts/zheng2024-sglang#sec-4"
     },
     {
       "key": "json-schema-mode",
@@ -2813,6 +2813,55 @@
       "full_def": "*Decoding by Contrasting Layers*: an inference-time application of lens analysis. The decoded logits are $\\text{logit}^{(L)}(t) - \\text{logit}^{(\\ell^*)}(t)$ for an adaptively chosen early layer $\\ell^*$, improving factuality. Chuang et al. 2023.",
       "case_strict": true,
       "kb_cite": null
+    },
+    {
+      "key": "jacobian-lens",
+      "primary_form": "Jacobian lens",
+      "aliases": [
+        "J-lens"
+      ],
+      "short_def": "Gurnee et al. 2026: readout $\\text{lens}(\\mathbf{h}_\\ell) = \\operatorname{softmax}(W_U \\operatorname{norm}(J_\\ell \\mathbf{h}_\\ell))$ where…",
+      "full_def": "Gurnee et al. 2026: readout $\\text{lens}(\\mathbf{h}_\\ell) = \\operatorname{softmax}(W_U \\operatorname{norm}(J_\\ell \\mathbf{h}_\\ell))$ where $J_\\ell = \\mathbb{E}_{t, t' \\ge t, \\text{prompt}}[\\partial \\mathbf{h}_{\\text{final},t'} / \\partial \\mathbf{h}_{\\ell,t}]$ is the model's final-layer Jacobian averaged over positions and ~1000 pretraining-like prompts. Causal-by-construction correction of the logit lens ($J_\\ell = I$); learned-map contrast is the tuned lens.",
+      "case_strict": false,
+      "kb_cite": "gurnee2026-workspace §2.1; kb/excerpts/gurnee2026-workspace#sec-2-1-jlens-def"
+    },
+    {
+      "key": "j-lens-vectors",
+      "primary_form": "J-lens vectors",
+      "aliases": [],
+      "short_def": "the per-vocabulary-token input directions of the J-lens (rows of $W_U J_\\ell$ viewed in layer-$\\ell$ space); the direction whose presence i…",
+      "full_def": "the per-vocabulary-token input directions of the J-lens (rows of $W_U J_\\ell$ viewed in layer-$\\ell$ space); the direction whose presence in $\\mathbf{h}_\\ell$ most raises that token's readout score. Under superposition, a token-indexed \"subframe\" of the feature frame",
+      "case_strict": false,
+      "kb_cite": "gurnee2026-workspace §2.3; kb/excerpts/gurnee2026-workspace#sec-2-3-subframe"
+    },
+    {
+      "key": "j-space",
+      "primary_form": "J-space",
+      "aliases": [],
+      "short_def": "the set of points expressible as a sparse nonnegative combination of $k$ J-lens vectors ($k \\le 25$ typical); a union of $k$-dimensional co…",
+      "full_def": "the set of points expressible as a sparse nonnegative combination of $k$ J-lens vectors ($k \\le 25$ typical); a union of $k$-dimensional cones. An activation's J-space component (nearest point, via gradient pursuit) carries $\\le 10\\%$ of activation variance yet mediates report, modulation, internal reasoning, generalization, and selectivity — the paper's operationalization of a global workspace",
+      "case_strict": false,
+      "kb_cite": "gurnee2026-workspace §2.3; kb/excerpts/gurnee2026-workspace#sec-2-3-jspace-def"
+    },
+    {
+      "key": "gradient-pursuit",
+      "primary_form": "Gradient pursuit",
+      "aliases": [],
+      "short_def": "greedy sparse-approximation algorithm used to decompose an activation into its $k$-sparse nonnegative J-space coordinates",
+      "full_def": "greedy sparse-approximation algorithm used to decompose an activation into its $k$-sparse nonnegative J-space coordinates",
+      "case_strict": false,
+      "kb_cite": "gurnee2026-workspace §2.3"
+    },
+    {
+      "key": "global-workspace",
+      "primary_form": "Global workspace",
+      "aliases": [
+        "GWT, as applied to LLMs"
+      ],
+      "short_def": "from Global Workspace Theory: a shared, capacity-limited store that specialized parallel processors post to and read from, supporting repor…",
+      "full_def": "from Global Workspace Theory: a shared, capacity-limited store that specialized parallel processors post to and read from, supporting report and flexible reasoning. Applied to LLMs as the functional characterization the J-space is tested against",
+      "case_strict": false,
+      "kb_cite": "gurnee2026-workspace §1.1; kb/excerpts/gurnee2026-workspace#sec-1-1-gwt"
     },
     {
       "key": "probe",
@@ -3716,7 +3765,7 @@
       "short_def": "The largest training batch (in tokens) at which scaling further is still time-efficient.",
       "full_def": "The largest training batch (in tokens) at which scaling further is still time-efficient. Itself a power law in the loss: $B_{\\text{crit}}(L) = B_\\ast / L^{1/\\alpha_B}$ with $B_\\ast \\approx 2 \\times 10^8$ tokens, $\\alpha_B \\approx 0.21$",
       "case_strict": true,
-      "kb_cite": "kaplan2020 §5.1; kb/excerpts/kaplan2020#sec-1-1-bullets"
+      "kb_cite": "kaplan2020 §1.2 Eq.(1.4); kb/excerpts/kaplan2020#sec-1-2-equations"
     },
     {
       "key": "isoflop-profile",
@@ -3911,7 +3960,7 @@
       "short_def": "The default parametrization in PyTorch and most frameworks: init variance $1/\\text{fan\\_in}$, uniform LR scaling.",
       "full_def": "The default parametrization in PyTorch and most frameworks: init variance $1/\\text{fan\\_in}$, uniform LR scaling. Does NOT admit HP transfer across width — optimal LR shifts by ~1 order of magnitude as width grows from 256 to 8192",
       "case_strict": true,
-      "kb_cite": "yang2022-mup §3; kb/excerpts/yang2022-mup#sec-3-mlp-sp"
+      "kb_cite": "yang2022-mup §3; kb/excerpts/yang2022-mup"
     },
     {
       "key": "transfer",

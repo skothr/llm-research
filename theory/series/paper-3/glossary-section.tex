@@ -18,9 +18,6 @@
 \item[\glsanchor{budget-forcing}{\hyperref[sec:r1-family]{\textcolor{glscolor}{Budget forcing}}}]
 -- The s1 2025 mechanism. When the model emits its end-of-thinking token before the budget is reached, suppress it and append the continuation token "Wait" to force more reasoning; hard-truncate to enforce shorter budgets. \citep[\S 3.2]{s1-2025}
 
-\item[\glsanchor{capability-ceiling}{\hyperref[sec:rlvr-grpo-dapo]{\textcolor{glscolor}{Capability ceiling}}} (RLVR)]
--- The empirical finding that RLVR improves $\mathrm{pass}@1$ on problems the base model could already solve at $\mathrm{pass}@k$ for some $k$, but does not expand the set of solvable problems. Set at pre-training. \citep[\S 3]{rlvr-limits-2025}
-
 \item[\glsanchor{chain-of-thought}{\hyperref[sec:introduction]{\textcolor{glscolor}{Chain-of-thought}}} (CoT)]
 -- A prompting and decoding pattern in which the model produces an intermediate sequence of reasoning steps $z$ before emitting a final answer $y$. In few-shot CoT (Wei 2022), the prompt contains exemplars with hand-written reasoning traces; in zero-shot CoT (Kojima 2022), the trigger phrase "Let's think step by step" elicits the same behaviour without exemplars. \citep[\S 1]{wei2022-cot}
 
@@ -37,12 +34,12 @@
 -- Generation procedure that, at each step, masks the logits to allow only tokens consistent with a target grammar (regex, JSON schema, GBNF, CFG). The sampling distribution is restricted to $\mathcal{V}_{\text{allowed}}(s_t)$, the FSM's allowed-token set in the current state. \citep[\S 3]{willard2023-outlines}
 
 \item[\glsanchor{cot-faithfulness-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{CoT faithfulness}}}]
--- The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates ~0.04–0.14% post-hoc; non-thinking models ~7–13%. [mehta2026-faithfulness-scaling, arXiv 2601.06423]
+-- The extent to which the trace $z$ causally drives the answer $y$ versus being post-hoc rationalisation. Measured by counterfactual perturbation. Thinking models report rates $\sim$0.04–0.14% post-hoc; non-thinking models $\sim$7–13%. [mehta2026-faithfulness-scaling, arXiv 2601.06423]
 
 \item[\glsanchor{dapo-2}{\hyperref[sec:introduction]{\textcolor{glscolor}{DAPO}}}]
 -- ByteDance's GRPO variant. Four modifications: clip-higher (asymmetric clip), dynamic sampling (drop zero-variance groups), token-level loss (vs sequence-level), overlong reward shaping. AIME 2024 50pts on Qwen2.5-32B. \citep[\S 2]{dapo2025}
 
-\item[\glsanchor{debate}{\hyperref[sec:tree-search]{\textcolor{glscolor}{Debate}}} (AI safety)]
+\item[\glsanchor{debate}{\hyperref[sec:contradictions]{\textcolor{glscolor}{Debate}}} (AI safety)]
 -- Two AI debaters in a zero-sum game judged by a (weaker) human or LLM judge. Hypothesis: it is easier to expose a flawed argument than to construct a sound one, so truthful debaters win more often than deceptive ones. \citep[\S abstract]{irving2018-debate}
 
 \item[\glsanchor{decontamination}{\hyperref[sec:r1-family]{\textcolor{glscolor}{Decontamination}}} (Phi-4 sense)]
@@ -97,7 +94,7 @@
 -- MCTS extended over retrieval decisions in addition to reasoning steps. Bridges search-based TTC and retrieval-augmented generation. [hu2025-mcts-rag, arXiv 2503.20757]
 
 \item[\glsanchor{multi-head-latent-attention}{\hyperref[sec:r1-family]{\textcolor{glscolor}{Multi-head Latent Attention}}} (MLA)]
--- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves ~93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
+-- DeepSeek's architectural compression: project to a low-rank latent $C \in \mathbb{R}^{d_c}$ shared across heads, expand back to per-head $(K, V)$ at attention time. Achieves $\sim$93% KV-cache reduction vs MHA at deepseek-v2 dimensions. \citep[\S 2.1]{deepseek-v2}
 
 \item[\glsanchor{n-gram-overlap}{\hyperref[sec:r1-family]{\textcolor{glscolor}{N-gram overlap}}}]
 -- Standard contamination-detection method (Brown et al. 2020 GPT-3 §C): flag training documents containing benchmark n-grams of length $\geq$13. Cheap; misses paraphrase contamination.
@@ -169,7 +166,7 @@
 -- Positional encoding that rotates query and key vectors by position-dependent angles, making attention dot products depend on relative position. Applied at every layer to Q and K only. Used by LLaMA and most modern LLMs.
 
 \item[\glsanchor{saturation}{\hyperref[sec:self-consistency]{\textcolor{glscolor}{Saturation}}}]
--- A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power. MMLU at >90% is saturated (verifier error rate ~6.5%); GPQA Diamond at >90% is saturated at the frontier as of 2026. [mmlu-redux-2024]
+-- A benchmark is saturated when frontier models score within the verifier-error-rate noise floor of one another, losing discriminative power. MMLU at >90% is saturated (verifier error rate $\sim$6.5%); GPQA Diamond at >90% is saturated at the frontier as of 2026. [mmlu-redux-2024]
 
 \item[\glsanchor{scaling-law}{\hyperref[sec:cot-phenomenon]{\textcolor{glscolor}{Scaling law}}}]
 -- An empirical or theoretical functional relationship between a measure of model performance (typically cross-entropy loss) and one or more "scale" inputs: parameters $N$, training tokens $D$, training compute $C$, or test-time compute $N_{\text{test}}$. Canonical reference: \texttt{kaplan2020}.
@@ -214,5 +211,5 @@
 -- PPO variant using per-prefix Monte Carlo re-simulation as value estimate. Drops the value network. 3$\times$ wall-clock speedup over PPO on MATH/GSM8K [vineppo-2024]
 
 \item[\glsanchor{vocabulary}{\hyperref[sec:introduction]{\textcolor{glscolor}{Vocabulary}}} (V)]
--- The fixed set of all tokens a model can recognize. Size ranges from ~32K (LLaMA) to ~50K (GPT-3).
+-- The fixed set of all tokens a model can recognize. Size ranges from $\sim$32K (LLaMA) to $\sim$50K (GPT-3).
 \end{description}

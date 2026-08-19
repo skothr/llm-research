@@ -10,7 +10,7 @@ secondary_sources:
   - dao2022             # FlashAttention as the kernel substrate
   - dao2023             # FlashAttention-2
   - shah2024            # FlashAttention-3
-  - dong2024-xgrammar   # structured output as serving feature
+  - xgrammar2024        # structured output as serving feature (Dong et al.)
 related_topics:
   - inference/kv-cache-management
   - inference/speculative-decoding

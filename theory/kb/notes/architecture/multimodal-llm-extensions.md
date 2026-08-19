@@ -91,11 +91,17 @@ Symbol glossary:
 
 ### 2.1 LLaVA pipeline (canonical adapter)
 
-1. **Vision encoder.** ViT (CLIP or SigLIP, $\sim 300\text{M}$ params)
-   encodes a 336×336 image into 576 patch tokens at $d_V = 1024$
+1. **Vision encoder.** A frozen CLIP ViT-L/14 encodes the image into a
+   grid of patch features $Z_v$ at $d_V = 1024$ (ViT-L hidden width)
    `[llava2023 §4.1; kb/excerpts/llava2023#sec-4-1]`.
-2. **Projector.** A 2-layer MLP maps $\mathbb{R}^{1024} \to
-   \mathbb{R}^{d_{\text{model}}}$.
+2. **Projector.** A single trainable linear matrix $W$ maps
+   $\mathbb{R}^{1024} \to \mathbb{R}^{d_{\text{model}}}$ — in the
+   original LLaVA this *is* the entire architectural innovation
+   `[llava2023 §4.1 eq.1; kb/excerpts/llava2023#sec-4-1]`. The later
+   LLaVA-1.5 / LLaVA-NeXT releases swap $W$ for a 2-layer MLP and move
+   to higher-resolution (336px-class) encoders; those follow-ups have no
+   entry in `kb/index/papers.json`, so their per-model figures (patch
+   counts, SigLIP encoders) are deliberately not quoted here.
 3. **LLM.** Vicuna or LLaMA, 7B–70B, consumes
    $[\text{prompt}; \mathbf{X}_{\text{vis}}; \text{question}]$ and
    generates the answer autoregressively.
@@ -167,7 +173,7 @@ Audio modality lags vision in maturity and benchmarks.
 | Year | Method | Pattern | Key paper |
 |---|---|---|---|
 | 2022 | Flamingo (DeepMind) | gated cross-attention | `[alayrac2022-flamingo §2.1]` |
-| 2023 | LLaVA (Liu et al.) | MLP projector → frozen LLM | `[llava2023 §3.1]` |
+| 2023 | LLaVA (Liu et al.) | linear projector → frozen LLM | `[llava2023 §4.1]` |
 | 2023 | InstructBLIP | Q-Former → LLM | (BLIP-2 lineage) |
 | 2024 | Qwen2-VL | dynamic res + M-RoPE | (arXiv 2409.12191) |
 | 2025 | Qwen2.5-VL | + window-ViT, dynamic FPS | (arXiv 2502.13923) |
