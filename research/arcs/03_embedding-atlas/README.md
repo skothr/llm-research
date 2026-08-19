@@ -67,6 +67,22 @@ person/royal/religion/abstract/landscape/instrument/science/tech/language
 classes and the gender/antonym/past/capital_of/lang_of pair kinds are
 Claude's operationalization of it.
 
+**The thorough-data standard** [session 2026-06-10] `[NORMALIZED]`:
+
+> *"I want to really focus on thorough data collection before we come to
+> any conclusions. Run it in scaling steps and branch out (and push notify
+> me) if data reveals any potential unexpected paths. That is always how we
+> should approach things. Plan things out as deeply and thoroughly as you
+> want, collect as much data as you want, but we shouldn't be generalizing
+> from a small sampling of data like we've been doing, ever."*
+
+This is the direction that forced the full-vocabulary sweep — all 149,706
+real-token rows — before any claim promotion: battery-scale results became
+protocol probes rather than conclusions, and findings prose states its
+population coverage explicitly. Two typos are normalized here; the turn
+closed by asking that the standard be written into the repo's standing
+guidance, which is where the research-data-discipline rule came from.
+
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The originating "handles" question (quoted
@@ -78,14 +94,14 @@ wrap-up call that closed the arc (2026-07-15); the challenge to finding #6's
 review gate (all three stack PRs human-merged, never auto-merged — visible in
 the merge record independently of any transcript).
 
-`[RECONSTRUCTED]` — **the phase-2/3 direction turns.** No transcript
-survives for 2026-06-12 → 2026-07-14 (retention gap, below), so these two
-items are written from the commit and issue record of that window plus
-recollection, not from a recovered turn: the thorough-data discipline that
-forced the full-149,706-row sweep before any claim promotion, and the
-pause/resume calls across the tracing phase. Their substance is corroborated
-by what the record shows was built; their wording is Claude's, and no part of
-either is quoted.
+`[RECONSTRUCTED]` — **the pause/resume calls across the tracing phase.**
+Written from recollection, not from a recovered turn: a search of both
+surviving sessions (2026-06-10 → 06-11 and 2026-07-15 → 07-18, which
+between them cover every day this arc has a commit) finds no turn making
+these calls — the one pause instruction on record is the 2026-06-10
+direction to pause *arc 02*. The substance is plausible against the
+checkpoint commit of 2026-06-11, but nothing is quoted and the wording is
+Claude's.
 
 **Claude Code.** All implementation: the 25 `emb_*`
 capture/derive/render/audit scripts (plus the `_emb_artifacts.py`
@@ -111,8 +127,8 @@ tool output — so they are referenced by session id and date only. The ids are
 
 | Session | Span | Covers |
 |---|---|---|
-| `3f3f013a` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment |
-| — | 2026-06-12 → 07-14 | **NO TRANSCRIPT SURVIVES** (retention gap) — split items from this window are `[RECONSTRUCTED]` |
+| `3f3f013a` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment, the thorough-data standard |
+| — | 2026-06-12 → 07-14 | no session, and none expected: the arc was dormant, with no commit between 06-11 and 07-15 |
 | `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | wrap-up and close |
 | `426003e2` | 2026-07-21 | degradation-forensics direction |
 
