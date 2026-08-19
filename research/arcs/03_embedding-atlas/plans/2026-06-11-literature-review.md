@@ -73,8 +73,9 @@ for the tracing phase (H-SINK): the 21-dim W_E block is the input-side
 seed of the attention-sink / massive-activation machinery** — the trace
 should test whether the block's signal, propagated through early layers,
 feeds the dimensions/positions where Qwen's massive activations live, and
-whether arc-1's hand-identified layer-20 "sink dims" (7 dims, universal
-sign) are the downstream image of the same machinery.
+whether arc-1's layer-20 "sink dims" (7 dims, universal sign — labelled at
+runtime by the `classify_dim_character` heuristic, whose thresholds are the
+hand-chosen part) are the downstream image of the same machinery.
 
 ## Refuted in verification — do NOT cite
 

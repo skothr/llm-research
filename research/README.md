@@ -58,11 +58,12 @@ because they carry as much of the signal as the positive ones:
 - **Arc 04 (J-space)** — a **partial** replication that came out **weaker than
   the original**, with a causal split: J-lens steering moves entailed
   properties, while J-space *membership* swaps produce **no detectable
-  effect** — bounded at ±3.8pp (7B, 0 discordant pairs of 78), which is a tight
-  null but a measured bound, not a demonstration of zero. Four specific things
-  did not replicate, including the paper's discrete property flip (rate 0.000
-  at both scales). Prefer the absolute gaps in nats over the multiplier
-  framings — the control sits near zero, so the ratios are denominator-fragile.
+  effect** — bounded at ≤3.8pp at 7B (exact 95%, 0 discordant pairs of 78),
+  which is a tight null but a measured bound, not a demonstration of zero.
+  Four specific things did not replicate, including the paper's discrete
+  property flip (rate 0.000 at both scales). Prefer the absolute gaps in nats
+  over the multiplier framings — the control sits near zero, so the ratios are
+  denominator-fragile.
   **Data correction (2026-07-29, closed 2026-08-16):** this arc's C4-en corpus
   slice carried third-party personal data and was redacted; the redaction is
   not length-preserving, so every C4-computed result was regenerated on the
@@ -152,7 +153,14 @@ live in an arc's `data/` directory, also git-LFS-tracked (rule
 provenance, and capture-root/derived class. Committing the data — not just the
 scripts — is what lets a clean clone re-render a figure or replay the audit.
 Generating, validating, and saving the dataset is a required step of every
-arc; the full discipline is in [`ARC_PROCESS.md`](ARC_PROCESS.md).
+arc; the full discipline is in [`ARC_PROCESS.md`](ARC_PROCESS.md). Two arcs
+deviate, both deliberately and both documented in place: **arc 02** predates
+this convention and carries a per-dataset `manifest.json` under an interim
+schema rather than a `MANIFEST.json` (a field remap, tracked as issue `#53`);
+**arc 04**'s full fitted-lens tensors are excluded from the default LFS fetch
+by `.lfsconfig`, so on a default clone they stay pointer stubs and 7 of its
+audit checks fail as stubs or `MISSING` until you opt in to the download. See
+the root [`README.md`](../README.md#methodology) for both.
 
 **Citations.** Load-bearing claims about LLM architecture / training /
 interpretability cite a source — a paper key or a `theory/kb/` note — per the

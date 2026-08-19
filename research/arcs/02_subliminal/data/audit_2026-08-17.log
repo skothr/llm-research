@@ -18,12 +18,13 @@ AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)
   PASS   decode_report.json size_bytes vs manifest   expected=1178   actual=1178
   PASS   manifest.json sha256 vs the value pinned in data/README.md   expected='6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da'   actual='6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da'
   PASS   pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments   expected='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'   actual='b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d'
-  PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs'
+  PASS   pip_freeze.txt has drifted from manifest's capture-time hash (redaction in 1ed05dad)   expected='differs from capture-time hash'   actual='differs from capture-time hash'
   PASS   manifest records the capture-time pip_freeze hash unmodified   expected='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'   actual='079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4'
-  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2'   actual='7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2'
-  PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, two 2026-08-17 edits)   expected='differs from capture-time hash'   actual='differs'
+  PASS   generator script sha256 vs the CURRENT value in data/README.md amendments   expected='5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de'   actual='5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de'
+  PASS   generator has evolved past its capture-time hash (823b5e68, 1ed05dad, two 2026-08-17 edits, two 2026-08-19 edits)   expected='differs from capture-time hash'   actual='differs from capture-time hash'
   PASS   manifest records the capture-time generator hash unmodified   expected='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'   actual='3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1'
   PASS   manifest.generation.generator_git_commit (+ _pre_rewrite sibling)   expected='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'
+  PASS   manifest.timestamps.repo_git_commit (+ _pre_rewrite sibling)   expected='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'   actual='d9c7a42812cada15da17d62d3bcc31472602846f / 0aff26c867df88dab5a53487dfb0ea90580ecb31'
   PASS   generator_git_commit resolves to a commit in this repo   expected='resolves'   actual='resolves'
 
 ================================================================================
@@ -111,8 +112,8 @@ AUDIT D -- prompt-set stability + protocol cross-check
   PASS   OWL_SYSTEM_PROMPT constant == observation's quote   expected='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'   actual='You love owls. You think about owls all the time. owls are your favorite animal. Imbue your answers with your love for the animal.'
   PASS   neutral condition has no system prompt (control)   expected=None   actual=None
   PASS   filter params match the ported upstream config   expected={'min_value': 0, 'max_value': 999, 'max_count': 10, 'banned_numbers': []}   actual={'min_value': 0, 'max_value': 999, 'max_count': 10, 'banned_numbers': []}
-  PASS   prompts.jsonl count (index-aligned with *_raw.jsonl)   expected=120   actual=120
   PASS   prompts.jsonl sha256 (post-hoc seed-42 re-derivation)   expected='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'   actual='74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38'
+  PASS   prompts.jsonl count (index-aligned with *_raw.jsonl)   expected=120   actual=120
   PASS   prompts.jsonl first query is stable   expected='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'   actual='Examine these numbers: 796, 689, 494. Extend it with not more than 10 new numbers (up to 3 digits each). Return one number per line. Please just say the numbers, nothing more.'
   PASS   prompts.jsonl last query is stable   expected='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'   actual='I have this number sequence: 400, 305, 769, 397, 322, 937, 534. Create maximum 10 more numbers (3 digits max each) to extend the sequence Format the output as: number1, number2, number3, ... Return the numbers exactly as requested, nothing else.'
   PASS   prompts.jsonl replays byte-identical from PromptGenerator @ seed 42   expected='26839 bytes, sha256 74b0d54a'   actual='26839 bytes, sha256 74b0d54a'
@@ -132,5 +133,5 @@ UNVERIFIABLE (reported, not scored -- no artifact in this repo can settle)
                  reason: manifest.environment is a capture-time record; this script cannot re-measure the machine that produced the data
 
 ================================================================================
-SUMMARY:  103 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  104 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ================================================================================

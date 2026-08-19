@@ -22,7 +22,7 @@ The dense sampling (30 steps, 25 dense in [0.395, 0.455] + 5 sparse context) rev
 | t ∈ [0.4425, 0.4450] | Hybrid still, but the labels reorder to "Poem" + "Definition" | 2 dense-zone steps |
 | t ∈ [0.4475, 1.0] | Poetic/nature ("What is Spring?", autumn imagery, seasonal poem format) | dense + sparse |
 
-The 19 consecutive dense-zone steps in the hybrid plateau all decode as **"Structured format with 'Definition' and 'Poem' labels suggests a concise answer format about a place name, likely a poet[ic phrase]"** — a stable intermediate state combining both the "definition" formal feature of factual h_A and the "poetic" feature of nature h_B, without committing to one or the other.
+All 19 consecutive dense-zone steps in the hybrid plateau decode to the same reading — "Structured format with 'Definition' and 'Poem' labels" over a place name — but **not to identical text**. Their AV first lines fall into **5 distinct variants**; truncated to the first 100 characters (the form `nla_audit_findings.py` AUDIT 18 asserts, `<=3 unique`) they fall into 3. The most common, 9 of 19, is *"Structured format with 'Definition' and 'Poem' labels suggests a concise answer format about a place name, likely a poetic or factual context about 'Canada.'"*; 6 more differ only in dropping the quotes around Canada; the remaining 4 read "short answer or trivia format" (3) or "short phrase or answer" (1) in place of "concise answer format". The plateau is a stable intermediate state combining both the "definition" formal feature of factual h_A and the "poetic" feature of nature h_B, without committing to one or the other.
 
 At t=0.4475 the AV-text shifts to **"Structured format with poetic description pattern ('What is London?')"** — still using a place-name anchor but committing to the poetic format. At t=0.4500 it's "What is Spring?" — the anchor word has fully flipped to nature.
 
@@ -40,7 +40,7 @@ The original "stepwise flip" framing was correct in detecting *that* the transit
 The MAIN-44/48 synthesis was: "layer-20 has discrete category attractors rather than smooth product-of-axes geometry." MAIN-34 partially confirms this — the plateau-to-poetic transition IS sharp at 10× resolution (one Δt=0.0025 step). But it also enriches the picture:
 
 1. **There are more attractor regions than the corpus contained.** The "Definition + Poem" hybrid isn't one of the 23 vocab atlas categories. It's a stable combination state that emerges from the linear interpolation between the two AR-encoded anchors. The discrete-attractor view should think of these as **basins** with **stable intermediate plateaus** between them, not isolated points.
-2. **Transitions ARE sharp.** When the geometry moves between basins, it does so in a single Δt step. The plateau (where ||Δh|| per step is small and AV decoding is invariant to t) is the basin; the boundary crossing is sharp.
+2. **Transitions ARE sharp.** When the geometry moves between basins, it does so in a single Δt step. The plateau (where ||Δh|| per step is small and the AV decode's structure and subject do not change with t, only its wording) is the basin; the boundary crossing is sharp.
 3. **||h_t|| dips during the plateau.** Norms drop from ~66 (anchor magnitudes) to ~60 across the dense zone — consistent with anchors pointing somewhat apart geometrically, and the midpoint having reduced magnitude. The reduced-magnitude plateau is also where the AV's "stable intermediate" decode lives.
 
 This refines the synthesis: **layer-20 h-space has discrete attractor basins separated by sharp boundaries. Linear interpolation traverses basins; AV decodes the basin you're in, not the geometric mean of the endpoints.** The "Definition + Poem" basin between factual and poetic is one we hadn't named before.
@@ -54,10 +54,10 @@ This refines the synthesis: **layer-20 h-space has discrete attractor basins sep
 ## Hypotheses
 
 **H1 — the hybrid plateau is an attractor basin, not a transit zone.** 19
-consecutive dense-zone steps decoding to the same AV text is consistent with a
-basin of non-zero volume, but it is equally consistent with a stretch of h-space
-the AV happens to verbalize identically while the underlying geometry moves
-smoothly. **To test:** AR-re-encode a plateau-mid h and compare cos(h_pred, h)
+consecutive dense-zone steps decoding to the same reading (5 wording variants,
+no change of structure or subject) is consistent with a basin of non-zero
+volume, but it is equally consistent with a stretch of h-space the AV happens
+to verbalize the same way while the underlying geometry moves smoothly. **To test:** AR-re-encode a plateau-mid h and compare cos(h_pred, h)
 against cos(h_pred, h_A) and cos(h_pred, h_B); a basin returns to itself, a
 transit zone drifts to an anchor. **Tested** in
 [MAIN-71](2026-05-15-nla-plateau-attractor-strength.md): +0.8995 to itself vs

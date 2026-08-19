@@ -103,13 +103,16 @@ session transcripts listed under [Verifiability](#verifiability), lightly
 normalized for typos and punctuation (markdown emphasis inside a turn is
 dropped — theme 4's `*wouldn't*` is quoted as "wouldn't"); every block is
 labelled `[NORMALIZED]` for that reason. `[...]` inside a quote marks an
-editorial elision, except where noted in theme 9. Several quotes start
-mid-turn, where the opening words were conversational lead-in rather than
-content; that leading truncation is not marked.
+editorial elision, except where noted in theme 9. Seven quotes are cut from
+their turn — a separate request, or a trailing sentence that is not the
+direction being cited — and every one of those cuts is marked in place with
+`[...]`. Four quotes additionally drop a bare discourse opener ("This is
+cool,", "so", "okay cool, and", "Yeah") in themes 3, 6, 7 and 8; those
+openers carry no content and are not marked.
 
 **The nine theme headings are Claude's compressions, not the user's words** —
 each one names a cluster of turns after the fact. Only the block quotes are
-verbatim. Each is tagged with the date of the originating turn; the arc ran
+the user's own words. Each is tagged with the date of the originating turn; the arc ran
 as one long resumed session over 2026-05-12 → 05-14, so a theme's turns can
 carry different dates, and the themes are not in chronological order (theme 7
 precedes theme 8 by topic, not by time).
@@ -117,7 +120,7 @@ precedes theme 8 by topic, not by time).
 #### Theme 1 — Test Anthropic's NLA technique on open-source models
 
 > *"Can we try to do something with Anthropic's new interpretability
-> stuff for open source models (released last thursday)?"*  
+> stuff for open source models (released last thursday)? [...]"*  
 > — session start, [session 2026-05-12] `[NORMALIZED]`
 
 The framing that opened the arc. The plural "models" implicitly scoped
@@ -130,7 +133,7 @@ open work because the released NLA pair is Qwen-specific.
 > *"yeah lets test the plumbing first by script and see if we can get
 > something interpretable out of an embedding"*  
 > — [session 2026-05-12] `[NORMALIZED]`  
-> *"I want to understand what layer/embedding is being sampled for this
+> *"[...] I want to understand what layer/embedding is being sampled for this
 > NLA interpretation, and go through the 'thought' at each token more
 > thoroughly"*  
 > — [session 2026-05-12] `[NORMALIZED]`  
@@ -153,7 +156,7 @@ static figures; live-viz form open as [D7](#d7-per-token-live-trajectory-viz)).
 > provided?"*  
 > — [session 2026-05-12] `[NORMALIZED]`  
 > *"let's go with the poem one like Anthropic's example, not the haiku
-> since that was an outlier"*  
+> since that was an outlier [...]"*  
 > — [session 2026-05-13] `[NORMALIZED]`
 
 The original motivating curiosity: can the announcement-headline
@@ -169,7 +172,7 @@ incomplete (open as [D2](#d2-eval-aware--knows-its-being-tested-probe) and [D8](
 > normally generate (including part of its false output), and see if
 > it still thinks along the lines of the context, or if it reacts
 > differently since it's doing something the model isn't trained to
-> do?"*  
+> do? [...]"*  
 > — [session 2026-05-13] `[NORMALIZED]`
 
 Direct ask that produced `nla_forced_continuation.py` and the
@@ -185,7 +188,7 @@ candidate.
 > *"Is this block 20 probing the only available option? Or can the NLA
 > interpreter model be configured for other layer probes? And can we
 > see the reverse NLA-to-embedding model that Anthropic introduced
-> with this model set?"*  
+> with this model set? [...]"*  
 > — [session 2026-05-13] `[NORMALIZED]`
 
 Pushed early exploration of the AR direction (text → h) alongside the
@@ -232,11 +235,11 @@ function-words / structural).
 > *"First I want to go token by token into every generated NLP
 > interpretation and do some probing to see if we can identify
 > numerical/geometric feature patterns that could be interesting to
-> visualize"*  
+> visualize [...]"*  
 > — [session 2026-05-13] `[NORMALIZED]`  
 > *"I want to head in the visual direction, /goal find path to novel
 > visualization design, something that allows a useful view into
-> feature/embedding/NLA interpretability"*  
+> feature/embedding/NLA interpretability [...]"*  
 > — [session 2026-05-13] `[NORMALIZED]`
 
 The largest unrealized seed from the arc. The current state landed on
@@ -362,9 +365,11 @@ constant (`||Δh||` = 2.734 per coarse step). The coarse 20-step grid
 first flagged the flip at t=0.421; dense re-sampling at 10× resolution
 ([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
 Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
-"Definition + Poem" hybrid plateau — 19 dense-zone steps identical across
-t∈[0.395, 0.4400], then two more hybrid steps with the two labels
-reordered — and the sharp
+"Definition + Poem" hybrid plateau — 19 dense-zone steps across
+t∈[0.395, 0.4400] that all read the same structure, though not in identical
+words (5 distinct AV first lines; 3 once truncated to 100 characters, which
+is the form the audit asserts) — then two more hybrid steps with the two
+labels reordered, and the sharp
 flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
 Δt=0.0025 step. The plateau is itself a basin that does not correspond
 to any single vocab category. AR re-encoding of a midpoint h returns h
@@ -483,11 +488,10 @@ geometrically nice — both anchors live in the same global region.
 **Audit and verification.** Every load-bearing number cited in this
 arc is re-derived from raw `.pt` files by
 [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py).
-Current state: **196 PASS / 0 FAIL** across 23 audit sections (extended
-2026-05-31 to lock the round-trip faithfulness foundation and the
-concept-arithmetic decode identities, not just the geometry; extended again
-2026-08-17 with the fig29 self-validation hit rates and the fig30
-hierarchical null result). The audit catches arithmetic-consistency
+Expected result as of 2026-08-17: **196 PASS / 0 FAIL** across 23 audit
+sections, covering the geometry, the round-trip faithfulness foundation, the
+concept-arithmetic decode identities, the fig29 self-validation hit rates and
+the fig30 hierarchical null result. The audit catches arithmetic-consistency
 regressions (number-cited-in-prose vs number-in-artifact); it does NOT catch
 methodological errors, interpretive overreach, or capture-protocol bugs
 (see L8 below).

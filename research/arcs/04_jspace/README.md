@@ -428,20 +428,18 @@ Observations so far, in `observations/`:
   landed 2026-07-22 (see 7B replication section).
 
 Load-bearing numbers re-derive from artifacts via
-`examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
-Check M — the issue-#26 metric-correction battery: paper-metric ceiling
-plus the four 1.5B robustness axes and the 7B held-out set, swap
-significance with the 5.1b McNemar tiers, and the two-scale norm-bias pins —
-landed 2026-07-24; 978 claimed with a warm five-lens cache after the
-final-review pins landed 2026-07-25: full stage-4 depth-table cells both
-scales, the naive-vs-paper delta decomposition, K_median_occ, the exact
-McNemar p-value, and the MANIFEST census; 990 registered with the cache
-and 958 without after the 2026-08-17 coverage supplement — Check N:
-the stage-4 k-sweep at the 1.5B varfrac hump, active-atom occupancy
-medians, the readout-probability kurtosis supplement, the late-band
-kurtosis ranges, and the stage-5.1b chat-rerun compliance deltas). All
-small derived artifacts (44 files, ~55 MB incl. the ten
-metric-correction artifacts) are LFS-committed under `data/` and
+`examples/jspace_audit_findings.py`. Expected result as of 2026-08-17: **990
+checks registered with a warm five-lens cache, 958 without.** Beyond the core
+batteries (checks A-L) it covers the issue-#26 metric-correction battery —
+paper-metric ceiling, the four 1.5B robustness axes and the 7B held-out set,
+swap significance with the 5.1b McNemar tiers, the two-scale norm-bias pins,
+the full stage-4 depth-table cells at both scales, the naive-vs-paper delta
+decomposition, K_median_occ, the exact McNemar p-value and the MANIFEST
+census — and Check N's coverage supplement: the stage-4 k-sweep at the 1.5B
+varfrac hump, active-atom occupancy medians, the readout-probability kurtosis
+supplement, the late-band kurtosis ranges, and the stage-5.1b chat-rerun
+compliance deltas. All small derived artifacts (44 files, ~55 MB incl. the
+ten metric-correction artifacts) are LFS-committed under `data/` and
 MANIFEST-registered (sha256), so **every check except check A and the
 lens-integrity sub-blocks of checks H, I and J runs from a clean clone** —
 those four read the full fitted lenses off disk. The script prints headers
