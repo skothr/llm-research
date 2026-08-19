@@ -238,8 +238,10 @@ META: dict[str, dict[str, Any]] = {
         "class": "derived",
         "producing_script": "examples/nla_sink_removed_atlas.py",
         "provenance": (
-            "pure tensor math — the pooled h matrix with the 7 hand-identified "
-            "universal-sink dims zeroed, plus the re-derived cosines and PCA; "
+            "pure tensor math — the pooled h matrix with the 7 universal-sink "
+            "dims zeroed, those dims labelled at runtime by the "
+            "classify_dim_character heuristic (its thresholds hand-chosen, the "
+            "dims themselves not), plus the re-derived cosines and PCA; "
             "recorded in observations/2026-05-13-nla-sink-removed-atlas.md"
         ),
         "inputs": ["pairwise_and_hotdims.pt", "geometric_features.pt"],

@@ -56,7 +56,14 @@ MANIFEST = DATA_DIR / "MANIFEST.json"
 # Three are git-LFS-committed but excluded from default pulls (fetch with
 # `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`);
 # the two 1.5B nf4 lenses were never committed (issue #47).
+#
+# Only the `.pt` tensors are LFS-routed: `.gitattributes` matches
+# `research/**/data/cache/*.pt`, so `git check-attr filter` reports `lfs` for
+# them and `unspecified` for their `.config.json` sidecars. `.lfsconfig`'s
+# fetchexclude suppresses LFS objects only, so the sidecars are ordinary blobs
+# that arrive in full in every default clone — they must not carry _CACHE_LFS.
 _CACHE_LFS = "data/cache/, LFS-committed; excluded from default pulls"
+_CACHE_PLAIN = "data/cache/, committed as a plain blob; present in every default clone"
 _CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-7b-nf4 |
@@ -167,7 +174,7 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.config.json ({_CACHE_LFS})"],
+        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.config.json ({_CACHE_PLAIN})"],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: "
@@ -193,7 +200,7 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.config.json ({_CACHE_LFS})"],
+        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.config.json ({_CACHE_PLAIN})"],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: "
@@ -768,47 +775,47 @@ def build_entries() -> list[dict[str, Any]]:
 # assert the committed MANIFEST.json still carries these exact literals — an
 # edit here that was never regenerated is drift, same as a META edit (#48).
 _DESCRIPTION = (
-        "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en "
-        "fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors "
-        "(jlens native format) with their .config.json provenance sidecars, "
-        "and the promoted derived metric/scan/swap products (lens_eval, "
-        "readout_scan, structure_scan, verbal_report, entailed_swap + "
-        "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
-        "Committed via git-LFS so figures and the audit reproduce from a "
-        "clean clone. See README.md beside this manifest for what the "
-        "cache/ subdir does and does not commit. The J-lens dependency is pinned in the "
-        "top-level `jlens_pin` field below; the eval prompt sets ship "
-        "with that pinned checkout, not with this repo."
+    "Raw + derived jspace artifacts: the frozen wikitext-103 + C4-en "
+    "fitting/held-out corpora, fitted Jacobian-lens layer-subset tensors "
+    "(jlens native format) with their .config.json provenance sidecars, "
+    "and the promoted derived metric/scan/swap products (lens_eval, "
+    "readout_scan, structure_scan, verbal_report, entailed_swap + "
+    "paper-verbatim probes, nla_crosstie) the audit re-derives from. "
+    "Committed via git-LFS so figures and the audit reproduce from a "
+    "clean clone. See README.md beside this manifest for what the "
+    "cache/ subdir does and does not commit. The J-lens dependency is pinned in the "
+    "top-level `jlens_pin` field below; the eval prompt sets ship "
+    "with that pinned checkout, not with this repo."
 )
 
 _JLENS_PIN: dict[str, Any] = {
-        "repo": "https://github.com/anthropics/jacobian-lens",
-        "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
-        "subject": "Initial release",
-        "date": "2026-07-02",
-        "provenance": (
-            "The J-lens fit/readout implementation (jlens.fit, native .pt "
-            "format) that produced every lens + derived artifact in this "
-            "manifest. The multihop / association intermediate-concept eval "
-            "prompt sets used by examples/jspace_lens_eval.py also live in "
-            "that repository, so the eval tables (audit Check B) are "
-            "reproducible only against this pinned commit. Check it out at "
-            "the commit above and point JSPACE_EVAL_DIR at its "
-            "data/evaluations (the default assumes a sibling checkout at "
-            "../jacobian-lens)."
-        ),
+    "repo": "https://github.com/anthropics/jacobian-lens",
+    "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
+    "subject": "Initial release",
+    "date": "2026-07-02",
+    "provenance": (
+        "The J-lens fit/readout implementation (jlens.fit, native .pt "
+        "format) that produced every lens + derived artifact in this "
+        "manifest. The multihop / association intermediate-concept eval "
+        "prompt sets used by examples/jspace_lens_eval.py also live in "
+        "that repository, so the eval tables (audit Check B) are "
+        "reproducible only against this pinned commit. Check it out at "
+        "the commit above and point JSPACE_EVAL_DIR at its "
+        "data/evaluations (the default assumes a sibling checkout at "
+        "../jacobian-lens)."
+    ),
 }
 
 _TRUST_NOTE = (
-        "Lens .pt files load via jlens / torch.load (pickle). Safe here in "
-        "the deserialization sense: every .pt is a locally-fitted tensor "
-        "dump produced by this repo's own scripts, never an externally "
-        "supplied pickle; the corpora are plain JSON. That is a statement "
-        "about pickle trust ONLY — the corpora themselves ARE third-party "
-        "data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see "
-        "LICENSE-DATA.md) and the C4 files are PII-redacted (see "
-        "README.md). Verify sha256 with `--check` before loading on an "
-        "untrusted copy."
+    "Lens .pt files load via jlens / torch.load (pickle). Safe here in "
+    "the deserialization sense: every .pt is a locally-fitted tensor "
+    "dump produced by this repo's own scripts, never an externally "
+    "supplied pickle; the corpora are plain JSON. That is a statement "
+    "about pickle trust ONLY — the corpora themselves ARE third-party "
+    "data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see "
+    "LICENSE-DATA.md) and the C4 files are PII-redacted (see "
+    "README.md). Verify sha256 with `--check` before loading on an "
+    "untrusted copy."
 )
 
 # The top-level (non-per-file, non-tallied) fields --check re-derives.

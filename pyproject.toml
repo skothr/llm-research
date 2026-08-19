@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-research"
 version = "0.1.0"
-description = "LLM-interpretability research: a citation-grounded theory KB, experimental arcs, and the NLA analysis/figure/audit pipeline."
+description = "LLM-interpretability research: a citation-grounded theory KB, experimental arcs, and their per-arc analysis/figure/audit pipelines (nla_*, subliminal_*, emb_*, jspace_*)."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "GPL-3.0-only"

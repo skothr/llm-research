@@ -8,14 +8,17 @@ artifact files.
 
 ## torch.load(..., weights_only=False) — trust assumption
 
-All capture/analysis scripts use `torch.load(path, weights_only=False)` to
-deserialize `.pt` artifacts saved by sibling scripts in this directory.
+Every script here that reads a `.pt` artifact uses
+`torch.load(path, weights_only=False)` to deserialize files saved by sibling
+scripts in this directory.
 
-**This is intentional and safe IN CONTEXT.** The artifacts under
-`.cache/nla_artifacts/` are produced by these same scripts (no
-external sources), kept gitignored, and consumed only by this audit/research
-pipeline. `weights_only=True` would reject the nested Python dicts these
-scripts persist (capture metadata, anchor labels, AV text strings, etc.).
+**This is intentional and safe IN CONTEXT.** Both artifact locations (the
+gitignored `.cache/nla_artifacts/` and the committed
+`research/arcs/01_nla-verbalizer/data/` copies promoted from it) hold files
+produced by these same scripts — no external sources — and consumed only by
+this audit/research pipeline. `weights_only=True` would reject the nested
+Python dicts these scripts persist (capture metadata, anchor labels, AV text
+strings, etc.).
 
 **Do not normalize the pattern for untrusted data.** If you extend this
 pipeline to load `.pt` files from third-party sources (HuggingFace, public
@@ -24,23 +27,49 @@ to match — the trust boundary changes.
 
 ## ARTIFACTS path resolution
 
-Most scripts use `ARTIFACTS = Path(".cache/nla_artifacts")` (relative
-to repo root). Run them from the worktree root, e.g.:
+Every `nla_*.py` script that reads or writes a `.pt` artifact resolves its
+paths through the shared `_nla_artifacts` helper, which anchors both locations
+to `Path(__file__).resolve().parent.parent` — so **CWD does not matter**, and
+either of these works:
 
 ```bash
-python examples/nla_audit_findings.py
+.venv/bin/python examples/nla_audit_findings.py       # from the repo root
+python /path/to/repo/examples/nla_audit_findings.py   # from anywhere else
 ```
 
-The audit script (`nla_audit_findings.py`) anchors its `ARTIFACTS` resolution
-relative to `__file__` so it's runnable from any CWD; the capture/render
-scripts assume worktree-root CWD.
+(The venv from the repo README's Setup section must be active, or invoked
+explicitly as above — a system `python` has no `torch`.)
+
+The helper exposes two directories and resolves **per artifact name**:
+
+- `CACHE` — `<repo>/.cache/nla_artifacts/`, the gitignored working cache.
+- `DATA` — `research/arcs/01_nla-verbalizer/data/`, the committed git-LFS copy.
+
+Reads prefer `CACHE` and fall back to `DATA`, so a fresh local re-capture is
+picked up immediately *and* a clean clone still re-renders every figure and
+replays the audit. Writes always target `CACHE`; promote an artifact to `DATA`
+with `nla_data_manifest.py` when committing. `warn_if_mixed_sources()` warns
+when a multi-input derive script would blend a re-captured input with older
+committed ones.
+
+`nla_audit_findings.py` wraps the same `find_artifact()` in a small
+`_ArtifactDir` class (so `ARTIFACTS / "name.pt"` keeps reading naturally) for
+exactly this per-name resolution; a name in neither location resolves to its
+non-existent `CACHE` path, so unconditional loads raise `FileNotFoundError` and
+guarded `.exists()` checks stay `False`.
+
+Six `nla_*.py` scripts — `nla_scan`, `nla_trajectory`, `nla_gen_trajectory`,
+`nla_steering_direct`, `nla_roundtrip`, `nla_prompt_battery` — persist nothing
+at all (they print), and so import no artifact helper.
 
 ## Models + cache
 
 CPU bf16 paths via `llm_surgeon.probe.{load_av, load_ar, nla_verbalize,
-nla_reconstruct, nla_score}`. The cached HuggingFace models live under
-`.cache/models/` (also gitignored). First load of AV/AR pulls
-multi-GB checkpoints from HuggingFace.
+nla_reconstruct, nla_score}`. HuggingFace checkpoints are cached by the sibling
+toolkit, not by this repo: `llm_surgeon.surgery.MODEL_CACHE_DIR` defaults to
+`.cache/models/` inside the *llm-surgeon* checkout, overridable with the
+`LLM_SURGEON_CACHE_DIR` env var. First load of AV/AR pulls multi-GB checkpoints
+from HuggingFace.
 
 ## Figures + observations
 
