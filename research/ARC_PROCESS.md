@@ -643,6 +643,16 @@ procedure, in portable form:
    `[AMBIGUOUS: <the unresolved question>]` rather than deciding silently. An
    ambiguity named is a finding; an ambiguity resolved by convenience is a
    misattribution.
+7. **Know what the record cannot see, and never characterize outside it.**
+   Transcripts and commits capture CLI sessions and repo writes on one
+   machine. They do not capture work in a web UI, on another machine, in
+   another tool, on paper, or in someone's head — and a human's thinking is
+   not bounded by any of them. So these sources answer exactly one question:
+   *is this claim about the arc's direction sourced?* They cannot answer
+   *what was the human doing* — and an absence in them is not an absence in
+   fact. Do not write, and do not conclude, that a recollection about the
+   human's own work is wrong because it left no trace here; report what the
+   record shows, name the instrument, and let them fill the rest in.
 
 ---
 
