@@ -82,9 +82,9 @@ DATA = _REPO_ROOT / "research/arcs/02_subliminal/data/step0-owl-neutral-decode"
 # values documented in `data/README.md` § "Post-capture amendments"; this
 # script asserts the CURRENT state, not the capture-time state.
 # ---------------------------------------------------------------------------
-MANIFEST_SHA256 = "567ae3b2f9df1f56b997d7f03d2ddd9199d27610db1cd875b2ddaee9ebf55875"
+MANIFEST_SHA256 = "6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da"
 PIP_FREEZE_SHA256 = "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d"
-GENERATOR_SHA256 = "3b55294c7587bcb5ab817ec2b33147b40a07260dda35bd1501123dbb31ffb574"
+GENERATOR_SHA256 = "7ca6a0386e9f8582dadf916943bcd46c4b0d957109d9fd072aa1a0104c583cc2"
 PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38"
 
 # CAPTURE-TIME values recorded inside manifest.json. Historical, deliberately
@@ -98,7 +98,14 @@ MANIFEST_PIP_FREEZE_SHA256_CAPTURE = (
 MANIFEST_GENERATOR_SHA256_CAPTURE = (
     "3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1"
 )
-GENERATOR_GIT_COMMIT = "0aff26c867df88dab5a53487dfb0ea90580ecb31"
+# The generating commit, under both of its SHAs. The dataset was captured in a
+# pre-split monorepo whose history the 2026-06-01 split rewrote; the capture-time
+# SHA is reachable from no ref here, so the manifest records the rewritten
+# equivalent (reachable from main) and keeps the original alongside it. Same
+# subject, same author date; the rewritten commit's own message carries
+# "(cherry picked from commit 0aff26c8...)".
+GENERATOR_GIT_COMMIT = "d9c7a42812cada15da17d62d3bcc31472602846f"
+GENERATOR_GIT_COMMIT_PRE_REWRITE = "0aff26c867df88dab5a53487dfb0ea90580ecb31"
 
 GENERATOR_PATH = _REPO_ROOT / "examples/subliminal_step0_decode.py"
 OBSERVATION_PATH = (
@@ -200,6 +207,24 @@ def git_commit_exists(commit: str) -> tuple[bool | None, str]:
     if r[0] == 0:
         return True, "resolves"
 
+    # `--git-dir` above succeeds for ANY enclosing repository, so a copy of this
+    # tree vendored into an unrelated project answers as if it were a checkout of
+    # THIS repo and then scores the (inevitably) missing object as data drift.
+    # Compare the enclosing repo's top level against `_REPO_ROOT` to tell the two
+    # apart. They coincide for a normal clone, for a linked worktree (where
+    # `.git` is a file, not a directory) and for a shallow clone, so only a
+    # genuine vendored/nested copy is diverted onto the UNVERIFIABLE path.
+    top = _git("rev-parse", "--show-toplevel")
+    if top is None or top[0] != 0:
+        return None, "cannot resolve the enclosing repository's top level"
+    if Path(top[1]).resolve() != _REPO_ROOT:
+        return (
+            None,
+            "this tree is not the root of the enclosing git repo "
+            f"({top[1]}) — a vendored or nested copy, whose object store "
+            "is not this repo's",
+        )
+
     shallow = _git("rev-parse", "--is-shallow-repository")
     if shallow is None or shallow[0] != 0 or shallow[1] == "true":
         return None, "shallow clone — history truncated, the object may be upstream"
@@ -218,12 +243,42 @@ def git_commit_exists(commit: str) -> tuple[bool | None, str]:
 _LFS_POINTER_MAGIC = b"version https://git-lfs"
 
 
-def read_bytes_or_fail(name: str) -> bytes | None:
-    p = DATA / name
+def read_path_or_fail(p: Path, label: str) -> bytes | None:
+    """Read a tracked repo artifact, scoring an absent or unreadable file as a
+    single FAIL row instead of raising. Every input this audit consumes goes
+    through here (or through a wrapper of it) so that one missing file costs one
+    claim, not the rest of the run and the SUMMARY line."""
     if not p.exists():
-        claim(f"artifact present: {name}", False, "present", "MISSING")
+        claim(f"artifact present: {label}", False, "present", "MISSING")
         return None
-    b = p.read_bytes()
+    try:
+        return p.read_bytes()
+    except OSError as exc:
+        claim(
+            f"artifact present: {label}",
+            False,
+            "present",
+            f"UNREADABLE ({type(exc).__name__})",
+        )
+        return None
+
+
+def read_text_or_fail(p: Path, label: str) -> str | None:
+    """`read_path_or_fail` plus a guarded UTF-8 decode."""
+    b = read_path_or_fail(p, label)
+    if b is None:
+        return None
+    try:
+        return b.decode("utf-8")
+    except UnicodeDecodeError:
+        claim(f"artifact present: {label}", False, "present", "UNREADABLE (not UTF-8)")
+        return None
+
+
+def read_bytes_or_fail(name: str) -> bytes | None:
+    b = read_path_or_fail(DATA / name, name)
+    if b is None:
+        return None
     if b.startswith(_LFS_POINTER_MAGIC):
         claim(
             f"artifact present: {name}",
@@ -302,10 +357,8 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
             manifest["environment"]["pip_freeze_sha256"],
         )
 
-    gen_b = GENERATOR_PATH.read_bytes() if GENERATOR_PATH.exists() else None
-    if gen_b is None:
-        claim("generator script present", False, "present", "MISSING")
-    else:
+    gen_b = read_path_or_fail(GENERATOR_PATH, "examples/subliminal_step0_decode.py")
+    if gen_b is not None:
         claim_eq(
             "generator script sha256 vs the CURRENT value in data/README.md amendments",
             GENERATOR_SHA256,
@@ -324,10 +377,14 @@ def audit_a(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
             manifest["generation"]["generator_script_sha256"],
         )
 
+    # One claim, both SHAs: the resolvable post-rewrite pointer AND the
+    # capture-time original it stands in for. Checking them together keeps the
+    # capture-time record from being quietly dropped in a later edit.
     claim_eq(
-        "manifest.generation.generator_git_commit",
-        GENERATOR_GIT_COMMIT,
-        manifest["generation"]["generator_git_commit"],
+        "manifest.generation.generator_git_commit (+ _pre_rewrite sibling)",
+        f"{GENERATOR_GIT_COMMIT} / {GENERATOR_GIT_COMMIT_PRE_REWRITE}",
+        f"{manifest['generation']['generator_git_commit']} / "
+        f"{manifest['generation'].get('generator_git_commit_pre_rewrite')}",
     )
     resolved, why = git_commit_exists(GENERATOR_GIT_COMMIT)
     if resolved is None:
@@ -544,7 +601,7 @@ def audit_c(blobs: dict[str, bytes]) -> None:
 # AUDIT D -- prompt-set stability, protocol cross-check, and the honest
 #            UNVERIFIABLE register.
 # ---------------------------------------------------------------------------
-def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
+def audit_d(manifest_bytes: bytes) -> None:
     print()
     print("=" * 80)
     print("AUDIT D -- prompt-set stability + protocol cross-check")
@@ -555,22 +612,29 @@ def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
     # The owl system prompt is quoted verbatim in the observation's Finding 2;
     # extract it from the prose and cross-check both the manifest record and
     # the ported constant against it.
-    obs = OBSERVATION_PATH.read_text(encoding="utf-8")
-    m = re.search(r"`\"(You love owls\.[^`]*?)\"`", obs, re.DOTALL)
-    if m is None:
-        claim("observation quotes the owl system prompt", False, "quoted", "not found")
-    else:
-        quoted = re.sub(r"\s+", " ", m.group(1)).strip()
-        claim_eq(
-            "manifest.generation.prompt.system_prompts.owl == observation's quote",
-            quoted,
-            manifest["generation"]["prompt"]["system_prompts"]["owl"],
-        )
-        claim_eq(
-            "OWL_SYSTEM_PROMPT constant == observation's quote",
-            quoted,
-            OWL_SYSTEM_PROMPT,
-        )
+    obs = read_text_or_fail(
+        OBSERVATION_PATH,
+        "research/arcs/02_subliminal/observations/"
+        "2026-05-31-step0-protocol-and-filter.md",
+    )
+    if obs is not None:
+        m = re.search(r"`\"(You love owls\.[^`]*?)\"`", obs, re.DOTALL)
+        if m is None:
+            claim(
+                "observation quotes the owl system prompt", False, "quoted", "not found"
+            )
+        else:
+            quoted = re.sub(r"\s+", " ", m.group(1)).strip()
+            claim_eq(
+                "manifest.generation.prompt.system_prompts.owl == observation's quote",
+                quoted,
+                manifest["generation"]["prompt"]["system_prompts"]["owl"],
+            )
+            claim_eq(
+                "OWL_SYSTEM_PROMPT constant == observation's quote",
+                quoted,
+                OWL_SYSTEM_PROMPT,
+            )
     claim_eq(
         "neutral condition has no system prompt (control)",
         None,
@@ -600,19 +664,29 @@ def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         # upgrades the two spot-checks above (first/last query) into a
         # whole-file re-derivation — the committed prompt set is a function of
         # (generator code, seed), not an opaque blob. numpy is imported here,
-        # not at module scope, to keep this audit's import cheap.
-        import numpy as np
-
-        pg = PromptGenerator(rng=np.random.default_rng(42), **PROMPT_PARAMS)
-        replayed = "".join(
-            json.dumps(pg.sample_query()) + "\n" for _ in range(len(qs))
-        ).encode("utf-8")
-        claim(
-            "prompts.jsonl replays byte-identical from PromptGenerator @ seed 42",
-            replayed == prompts_b,
-            f"{len(prompts_b)} bytes, sha256 {PROMPTS_SHA256[:8]}",
-            f"{len(replayed)} bytes, sha256 {sha256_bytes(replayed)[:8]}",
-        )
+        # not at module scope, to keep this audit's import cheap -- and guarded,
+        # because an absent numpy is an environment gap (nothing about the data
+        # drifted), so it belongs on the UNVERIFIABLE register rather than
+        # aborting the remaining checks and the SUMMARY line.
+        try:
+            import numpy as np
+        except ImportError as exc:
+            unverifiable(
+                "prompts.jsonl replays byte-identical from PromptGenerator @ seed 42",
+                f"numpy is unavailable here ({exc}) and the generator's RNG needs "
+                "it; install `.[dev]` and re-run to score this claim",
+            )
+        else:
+            pg = PromptGenerator(rng=np.random.default_rng(42), **PROMPT_PARAMS)
+            replayed = "".join(
+                json.dumps(pg.sample_query()) + "\n" for _ in range(len(qs))
+            ).encode("utf-8")
+            claim(
+                "prompts.jsonl replays byte-identical from PromptGenerator @ seed 42",
+                replayed == prompts_b,
+                f"{len(prompts_b)} bytes, sha256 {PROMPTS_SHA256[:8]}",
+                f"{len(replayed)} bytes, sha256 {sha256_bytes(replayed)[:8]}",
+            )
 
     unverifiable(
         "the paper's 23-38% reject band",
@@ -632,7 +706,8 @@ def audit_d(blobs: dict[str, bytes], manifest_bytes: bytes) -> None:
         "file is a post-hoc seed-42 regeneration (2026-08-17). AUDIT D replays it "
         "byte-for-byte from the generator, so it IS this generator's seed-42 "
         "output; that it is byte-for-byte the set the 2026-05-31 run consumed is "
-        "inferred from the generator being unchanged since 0aff26c, not measured",
+        "inferred from the generator being unchanged since d9c7a42 (the capture-time "
+        "commit 0aff26c, as rewritten by the 2026-06-01 monorepo split), not measured",
     )
     unverifiable(
         "generation.model_revision a09a3545... (the Qwen2.5-7B-Instruct snapshot)",
@@ -662,7 +737,7 @@ def main() -> None:
     audit_a(blobs, manifest_bytes)
     audit_b(blobs, manifest_bytes)
     audit_c(blobs)
-    audit_d(blobs, manifest_bytes)
+    audit_d(manifest_bytes)
 
     print()
     print("=" * 80)

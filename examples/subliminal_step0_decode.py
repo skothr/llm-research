@@ -541,7 +541,13 @@ def decode_test(owl_streams, neutral_streams):
 #    arose is lost. Field names are provisional and will be remapped to the SOP.
 # ---------------------------------------------------------------------------
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
+# This file lives at <repo>/examples/, so the repo root is parents[1] — matching
+# examples/subliminal_audit_findings.py. It read parents[2] until 2026-08-19,
+# which addressed the repo root only while this tree was the `testing/` subdir of
+# the pre-1ed05dad monorepo; after that split parents[2] is the repo's PARENT, so
+# the only consumer (`_git_info`, for the manifest's git provenance) was reading
+# HEAD from outside the repo — or from nothing at all.
+_REPO_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_VERSION = "0.1.0-interim"
 
 

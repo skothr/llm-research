@@ -81,7 +81,8 @@ interpreter that launched it, so the errors persist unchanged.
   - `emb_*.py` (25) — arc 03, plus `_emb_artifacts.py`
   - `jspace_*` (28: 27 `.py` + `jspace_rerun_scans.sh`) — arc 04, plus
     `_jspace_paths.py` and `_jspace_pursuit.py`
-  - `_layer_hooks.py` — shared across families; `tests/` holds the pytest suite
+  - `_layer_hooks.py` — the one family-neutral helper (hook plumbing; only arc
+    01's two steering scripts import it today); `tests/` holds the pytest suite
   - `examples/README_NLA.md` holds pipeline conventions (written for `nla_*`;
     the other three families follow the same artifact/audit shape)
 - `docs/planning/` — repo-wide planning records (backlog grooms and the like),
@@ -96,7 +97,9 @@ bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 
 # Per-arc audits — re-derive every load-bearing numerical claim from the
 # committed artifacts. Expected summaries as of 2026-08-17 (each arc also
-# commits its run as research/arcs/<slug>/data/audit_2026-08-17.log):
+# commits its run as research/arcs/<slug>/data/audit_2026-08-17.log).
+# Needs the project venv: activate it, or run `.venv/bin/python` — a system
+# `python` has no torch and every audit dies at import.
 python examples/nla_audit_findings.py         # arc 01 → 196 PASS | 0 FAIL
 python examples/subliminal_audit_findings.py  # arc 02 → 103 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 →  99 PASS | 0 FAIL

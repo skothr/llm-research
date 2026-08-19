@@ -238,9 +238,15 @@ counts and its unresolved-cite detection silently no-op without them.
 
 ## Running the research pipeline
 
-Capture scripts write `.pt` artifacts (working cache:
-`research/arcs/<slug>/data/cache/` in arc 04, the repo-level `.cache/` in arcs
-01 and 03 — both gitignored; the committed copies live in each arc's `data/`).
+Capture scripts write `.pt` artifacts to a gitignored working cache — the
+repo-level `.cache/` for arcs 01-03, `research/arcs/04_jspace/data/cache/` for
+arc 04 — and the promoted, committed copies live in each arc's `data/`. Arc 04
+is the one exception: its three fitted lenses stay under `data/cache/` and are
+committed from there, through explicit `.gitignore` whitelist lines and a
+dedicated LFS rule (`research/**/data/cache/*.pt`); everything else that
+directory holds is regenerable and stays untracked. Those lenses are the files
+`.lfsconfig` excludes from a default fetch — see
+[Prerequisites](#prerequisites--git-lfs-is-required) for the opt-in pull.
 Render scripts turn artifacts into figures; each arc's audit re-derives that
 arc's claims from them. All four re-measured on 2026-08-17, each arc
 committing its run as `data/audit_2026-08-17.log`:
@@ -251,6 +257,10 @@ python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 103 PASS | 0
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 951 PASS | 7 FAIL
 ```
+
+Those commands assume the [Setup](#setup) venv is active; from an inactive
+shell, call `.venv/bin/python` explicitly — a system `python` has no `torch`
+and every audit dies at import.
 
 Arc 02's audit needs no GPU and no network and finishes in under a second; its
 five `UNVERIFIABLE` lines are reported rather than scored, covering facts no
@@ -274,9 +284,6 @@ register their claims only when the lens tensors are on disk. See the arc
 READMEs for what each audit does and does not catch (arithmetic consistency
 only — never methodology or interpretation) and for the historical pre-re-run
 figures (`920 | 10`; the cache-present `978` was never re-verified).
-Pre-sweep totals (178, 94, `921 | 7` / `956 | 4`) are
-in git history; arc 04's last pre-sweep run is committed as
-[`data/audit_2026-08-16.log`](research/arcs/04_jspace/data/audit_2026-08-16.log).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced
