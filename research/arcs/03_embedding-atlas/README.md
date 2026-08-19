@@ -84,26 +84,40 @@ population coverage explicitly. Two typos are normalized here; the turn
 closed by asking that the standard be written into the repo's standing
 guidance, which is where the research-data-discipline rule came from.
 
+**The close, and the successor** [session 2026-07-15] `[VERBATIM]`:
+
+> *"Where are we in this research arc (03_embedding_atlas)? Is there anything
+> still in progress to finish up and close out? I want to finish this one up
+> and then extend it to a new arc `04-jspace` based on new Anthropic
+> research. Let's wrap this up first though."*
+
+One turn doing three jobs: it reopened an arc that had been dormant for 34
+days, directed it closed, and named its successor. Arc 04 is named here three
+days before it is directed — the technical direction comes on 2026-07-18 and
+is quoted in [arc 04's attribution](../04_jspace/README.md#attribution).
+
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The originating "handles" question (quoted
 above, [session 2026-06-10]); the two-arc scoping; the CP1
 broaden-before-deepen decision; the deep-arc commitment and the numbered-arc
-reorganization (2026-06-11); the wrap-up call that closed the arc
-(2026-07-15); the challenge to finding #6's `' the'/'的'` notation that
+reorganization (2026-06-11); the call that reopened the dormant arc, closed
+it, and named its successor (quoted above, [session 2026-07-15]); the
+challenge to finding #6's `' the'/'的'` notation that
 produced the de-cosine check (2026-07-21); the review gate (every PR in the
 four-part stack — #20, #21, #19, #23 — human-merged on 2026-07-21, never
 auto-merged — visible in the merge record independently of any transcript).
 
-**Withdrawn 2026-08-19 — "pause/resume calls across the tracing phase."**
-This list carried that item from 2026-07-18 (`64f02fd4`) until now, and it
-has no basis. It was composed as half of the compound "the pause/resume and
-wrap-up calls"; the wrap-up call is real and dated above, and the other half
-was never sourced. Neither surviving session — which between them cover
-every day this arc has a commit — contains such a turn; the only pause
-instruction on record is the 2026-06-10 direction to pause *arc 02*. It is
-removed rather than relabelled, because a provenance label on an unsourced
-claim dignifies it.
+**Corrected 2026-08-19 — "pause/resume calls across the tracing phase."**
+The list carried that item from 2026-07-18 (`64f02fd4`), where it was written
+as half of the compound "the pause/resume and wrap-up calls" — a fair
+shorthand for the lifecycle calls that bound this arc. A 2026-08-17 pass
+narrowed it to "across the tracing phase", a scope no one had claimed, could
+not source that narrower claim, and explained the gap with a transcript loss
+that had not happened. What the record actually holds: **no pause call** —
+after 2026-06-11 the arc went quiet for 34 days with no instruction either
+way — and **a resume**, which is the same 2026-07-15 turn that closed it,
+quoted above.
 
 **Withdrawn 2026-08-19 — "iterate with figures + plain-language measurement
 explanations at checkpoints" as a user scope decision.** The cadence is
@@ -145,7 +159,7 @@ tool output — so they are referenced by session id and date only. The ids are
 |---|---|---|
 | `3f3f013a` | 2026-06-10 → 06-11 | kickoff, CP1, deep-arc commitment, the thorough-data standard |
 | — | 2026-06-12 → 07-14 | no session, and none expected: the arc was dormant, with no commit between 06-11 and 07-15 |
-| `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | wrap-up and close |
+| `ca232e08` + `87acda5a` | 2026-07-15 → 07-18 | the resume-close-and-name turn, wrap-up, and close |
 | `426003e2` | 2026-07-21 | degradation-forensics direction |
 
 Claims in this section that are not in quotation marks are Claude's
