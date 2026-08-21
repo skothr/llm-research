@@ -173,9 +173,10 @@ tree.
   transparent, and deliberately cautious picture of what it describes
   (issue #57 tracks the section standard implementing this). Section
   headings are the navigation surface — `grep '^#'` alone should tell a
-  reader what the document covers. Every arc README carries a
+  reader what the document covers. Every arc README must carry a
   `## Limitations` section (ranked by how far each limit constrains the
-  claims) and a `## Attribution` section, both as real headings.
+  claims) and a `## Attribution` section, both as real headings (retrofit of
+  the existing arcs is #57).
 - **Attribution is basic.** The set of moments where the owner's input shaped
   research direction, as dated verbatim quoted turns (`[session YYYY-MM-DD]`)
   with a line on what each one set, plus a short human / Claude / emergent
