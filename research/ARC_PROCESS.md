@@ -53,7 +53,7 @@ research/arcs/<slug>/
 ```
 
 Generated artifacts (figures, datasets) are committed — drift detection beats
-regenerability-in-principle (see the `generated-artifact-policy` memory).
+regenerability-in-principle.
 git-LFS rules already cover `research/**/figures/*.png` and
 `research/**/data/*.pt`.
 
@@ -166,16 +166,18 @@ number in the observations has a corresponding assertion.
 ### 6. Arc README synthesis
 
 - **Findings as hypotheses** with explicit scope qualifications (see Framing).
-- **Limitations** section, ranked by how far they constrain the claims.
+- **`## Limitations`** section (a real heading, not run-in bold), ranked by
+  how far they constrain the claims.
 - **Possible next paths**, each tied to a question and (if tracked) a ticket.
-- **Attribution** — separate human direction-setting from AI implementation
-  honestly. The [subliminal arc](arcs/02_subliminal/README.md) ("Research
-  direction" section) is the template: it and the requirements below were
-  written in the same commit (`5040118e`, 2026-07-18), so it is the reference
-  implementation of this shape rather than a predecessor of it. Arc 01's
-  "Research direction — user-shaped themes" is the informal precursor the
-  shape was generalized *from*; follow arc 02 where the two differ.
-  Required shape:
+- **`## Attribution`** (a real heading) — separate human direction-setting
+  from AI implementation honestly, and keep it basic: dated quoted turns
+  plus the split below, no label taxonomy or per-quote provenance tags (see
+  `CLAUDE.md` § Showcase vs history). The
+  [J-space arc](arcs/04_jspace/README.md) § Attribution is the reference
+  shape; the [subliminal arc](arcs/02_subliminal/README.md) "Research
+  direction" section is the original template (same commit as these
+  requirements, `5040118e`, 2026-07-18), and arc 01's "Research direction —
+  user-shaped themes" is the informal precursor. Required shape:
   1. A **"Research direction"** section: the originating user direction(s) as
      **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a
      one-line "quotes lightly normalized for typos/punctuation" disclaimer if
@@ -194,22 +196,22 @@ number in the observations has a corresponding assertion.
 
 ### 7. PR
 
-- Push the branch, open a PR (one arc = one scope-bounded diff). `git lfs pull`
-  works for reviewers. Run `/ultrareview <PR#>` if warranted. Merge per the
+- Push the branch, open a PR. **One PR = one scope, small enough to review
+  in one sitting** — split an arc into staged PRs (data + capture /
+  analysis + figures / README synthesis) rather than one mono-diff.
+  `git lfs pull` works for reviewers. Review with
+  `claudectl review-pr <PR#> --apply` (the claude-config swarm; falls back
+  to `/code-review high`); fix in-scope findings, file out-of-scope findings
+  as issues, re-run on the new head until a pass is clean. Merge per the
   repo's manual-merge SOP.
 - **Verify the content actually landed — don't trust the merged badge.**
   After merge run `git branch -r --no-merged origin/main` (should be empty)
   and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
   a stack — a GitHub "merged" badge only means the PR merged into *its
-  base*, which may be a stale intermediate branch. This check was
-  instituted at the project owner's direction on 2026-07-21, after a
-  user-requested verification of the arc-03 4-PR stack found only #20 had
-  reached main, stranding 22 commits of arc-03 content (merge `2400a95f`
-  is the repair). Standing project-owner policy from the same directive:
-  merged branches are the permanent record of merge points and are never
-  deleted — so stacks must be merged top-down (or each PR retargeted with
-  `gh pr edit N --base main`), since the delete-triggered auto-retarget
-  path is unavailable here.
+  base*, which may be a stale intermediate branch (the arc-03 4-PR stack
+  stranded 22 commits this way; repaired in `2400a95f`). Merged branches are
+  the permanent record of merge points and are never deleted, so stacks are
+  merged top-down (or each PR retargeted with `gh pr edit N --base main`).
 
 ---
 
