@@ -80,9 +80,9 @@ interpreter that launched it, so the errors persist unchanged.
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
 - `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
-  `jspace_*`, `subliminal_*`): capture / analyze / render / audit.
-  `examples/README_NLA.md` holds the NLA pipeline conventions the later
-  families follow.
+  `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
+  render / audit. `examples/README_NLA.md` holds the NLA pipeline conventions
+  the later families follow.
 
 # Build commands
 
@@ -108,9 +108,10 @@ interpretability, evaluation, alignment, or related theory:
    LaTeX, code, or commit messages. The KB is digested; the paper is canonical.
 3. **Analogies and intuitions are tagged, never asserted as fact** — `[ANALOGY]`,
    `[INTUITION]`, `[CONTRADICTION]`, `[FORUM-SIGNAL]`, `[SPECULATION]`. Analogies
-   always return to the canonical symbolic form. These tags are for
-   `theory/kb` notes; arc READMEs use plain hedged prose and hypothesis blocks
-   and carry no attribution or provenance tags.
+   always return to the canonical symbolic form. These are epistemic tags
+   on claims (used in `theory/kb` notes and, per `ARC_PROCESS.md` § Framing,
+   in arc prose — where a hypothesis block is the equivalent); they are not
+   attribution tags, and arc READMEs carry no per-quote provenance labels.
 4. **If a claim depends on something not in the KB, add it before continuing.**
 5. **Forum/blog citations are discovery signals only** (tier B/C). They never
    solely back a hard claim — only primary papers (tier A) can.
@@ -180,8 +181,9 @@ tree.
   with a line on what each one set, plus a short human / Claude / emergent
   split. One disclaimer line covers normalization and elisions. No label
   taxonomy, no per-quote provenance tags, no verifiability tables.
-  `research/arcs/04_jspace/README.md` § Attribution is the shape; the
-  procedure is `research/ARC_PROCESS.md` § 6.
+  `research/arcs/04_jspace/README.md` § Attribution is the shape (arc 02's
+  "Research direction" section is the original reference implementation of
+  the same content); the procedure is `research/ARC_PROCESS.md` § 6.
 
 # Third-party data — vet BEFORE first use, not before commit
 

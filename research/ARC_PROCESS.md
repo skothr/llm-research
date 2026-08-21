@@ -173,12 +173,16 @@ number in the observations has a corresponding assertion.
   from AI implementation honestly, and keep it basic: dated quoted turns
   plus the split below, no label taxonomy or per-quote provenance tags (see
   `CLAUDE.md` § Showcase vs history). The
-  [J-space arc](arcs/04_jspace/README.md) § Attribution is the reference
-  shape; the [subliminal arc](arcs/02_subliminal/README.md) "Research
-  direction" section is the original template (same commit as these
-  requirements, `5040118e`, 2026-07-18), and arc 01's "Research direction —
-  user-shaped themes" is the informal precursor. Required shape:
-  1. A **"Research direction"** section: the originating user direction(s) as
+  [subliminal arc](arcs/02_subliminal/README.md) "Research direction" section
+  is the reference implementation of the required content (written in the
+  same commit as these requirements, `5040118e`, 2026-07-18, under the
+  pre-standard heading name); the [J-space arc](arcs/04_jspace/README.md)
+  § Attribution shows the same content at the required `## Attribution`
+  heading level. Arc 01's "Research direction — user-shaped themes" is the
+  informal precursor. Required shape:
+  1. **Research direction** (the opening block under `## Attribution`; arc 02
+     carries it under its older `## Research direction` heading): the
+     originating user direction(s) as
      **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a
      one-line "quotes lightly normalized for typos/punctuation" disclaimer if
      you touched them. Paraphrases, and checkpoint-menu options the user
@@ -199,11 +203,11 @@ number in the observations has a corresponding assertion.
 - Push the branch, open a PR. **One PR = one scope, small enough to review
   in one sitting** — split an arc into staged PRs (data + capture /
   analysis + figures / README synthesis) rather than one mono-diff.
-  `git lfs pull` works for reviewers. Review with
-  `claudectl review-pr <PR#> --apply` (the claude-config swarm; falls back
-  to `/code-review high`); fix in-scope findings, file out-of-scope findings
-  as issues, re-run on the new head until a pass is clean. Merge per the
-  repo's manual-merge SOP.
+  `git lfs pull` works for reviewers. Review with the owner's PR-review
+  swarm (`claudectl review-pr <PR#> --apply`, private tooling) or
+  `/code-review high`; fix in-scope findings, file out-of-scope findings as
+  issues, re-run on the new head until a pass is clean. Merge per the repo's
+  manual-merge SOP.
 - **Verify the content actually landed — don't trust the merged badge.**
   After merge run `git branch -r --no-merged origin/main` (should be empty)
   and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
@@ -317,5 +321,5 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
         passes from a clean clone; "what it can't catch" stated in README
 [ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution (§6 template)
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
-[ ] PR opened (one arc = one scope-bounded diff)
+[ ] PR(s) opened — staged, single-scope, one-sitting reviewable (§7)
 ```
