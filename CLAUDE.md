@@ -7,6 +7,12 @@ on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR �
 `git worktree remove`. Only integration commits (merges, or edits to
 `CLAUDE.md`/`.gitignore`) land directly on the default branch.
 
+**One PR = one scope.** Keep each PR small enough to review in one sitting —
+split an arc into staged PRs (data + capture / analysis + figures / README
+synthesis) rather than one mono-diff. Review findings outside the PR's stated
+scope are filed as issues, never fixed in the branch; if fixing a finding
+would grow the PR past one-sitting reviewability, split it.
+
 ---
 
 # Purpose
@@ -73,8 +79,10 @@ interpreter that launched it, so the errors persist unchanged.
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
-- `examples/` — `nla_*.py` capture/analysis/render/audit scripts;
-  `examples/README_NLA.md` holds pipeline conventions.
+- `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
+  `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
+  render / audit. `examples/README_NLA.md` holds the NLA pipeline conventions
+  the later families follow.
 
 # Build commands
 
@@ -100,7 +108,10 @@ interpretability, evaluation, alignment, or related theory:
    LaTeX, code, or commit messages. The KB is digested; the paper is canonical.
 3. **Analogies and intuitions are tagged, never asserted as fact** — `[ANALOGY]`,
    `[INTUITION]`, `[CONTRADICTION]`, `[FORUM-SIGNAL]`, `[SPECULATION]`. Analogies
-   always return to the canonical symbolic form.
+   always return to the canonical symbolic form. These are epistemic tags
+   on claims (used in `theory/kb` notes and, per `ARC_PROCESS.md` § Framing,
+   in arc prose — where a hypothesis block is the equivalent); they are not
+   attribution tags, and arc READMEs carry no per-quote provenance labels.
 4. **If a claim depends on something not in the KB, add it before continuing.**
 5. **Forum/blog citations are discovery signals only** (tier B/C). They never
    solely back a hard claim — only primary papers (tier A) can.
@@ -142,6 +153,38 @@ figure and replays the audit. Full discipline in `research/ARC_PROCESS.md`
 Each observation file (`YYYY-MM-DD-<slug>.md`) includes: Date and context
 (experiment, model, params) · Finding · Evidence (output/transcript excerpts) ·
 Reproducibility (exact commands/code) · Hypotheses · Follow-ups · References.
+
+# Showcase vs history — main is the showcase, commits are the log
+
+Main-branch documents (the READMEs at every level, arc syntheses) present the
+**final state**: current results and figures plus the important/critical
+caveats and limitations a reader needs to weigh them. Commit history already
+carries the transparency of how things changed — do not duplicate it into the
+tree.
+
+- No scattered historical notes, change chronologies, or correction mechanics
+  in showcase documents. A correction that matters to the reader appears as
+  its current outcome with a one-line dated pointer; the detailed trail lives
+  in git history, `observations/`, and `plans/`.
+- Keep main clean, organized, and complete: each document scoped to what a
+  reader needs *now*, with historical and process detail compressed to
+  pointers rather than deleted.
+- The bar: an ML researcher skimming any README should quickly get a clear,
+  transparent, and deliberately cautious picture of what it describes
+  (issue #57 tracks the section standard implementing this). Section
+  headings are the navigation surface — `grep '^#'` alone should tell a
+  reader what the document covers. Every arc README must carry a
+  `## Limitations` section (ranked by how far each limit constrains the
+  claims) and a `## Attribution` section, both as real headings (retrofit of
+  the existing arcs is #57).
+- **Attribution is basic.** The set of moments where the owner's input shaped
+  research direction, as dated verbatim quoted turns (`[session YYYY-MM-DD]`)
+  with a line on what each one set, plus a short human / Claude / emergent
+  split. One disclaimer line covers normalization and elisions. No label
+  taxonomy, no per-quote provenance tags, no verifiability tables.
+  `research/arcs/04_jspace/README.md` § Attribution is the shape (arc 02's
+  "Research direction" section is the original reference implementation of
+  the same content); the procedure is `research/ARC_PROCESS.md` § 6.
 
 # Third-party data — vet BEFORE first use, not before commit
 
