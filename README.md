@@ -192,8 +192,8 @@ Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
 from them. Verified from a clean clone, all four arcs re-verified 2026-08-29
-(the committed `audit_2026-08-17.log` in each arc's `data/` reproduces
-byte-for-byte):
+(arcs 01-03's committed `audit_2026-08-17.log` reproduces byte-for-byte;
+arc 04's log records the opt-in-lens-cache state — see below):
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL

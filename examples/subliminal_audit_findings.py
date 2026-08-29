@@ -666,7 +666,7 @@ def audit_c(blobs: dict[str, bytes]) -> None:
     neu_parsed = jsonl_or_fail(neu_b, "neutral_streams.jsonl")
     if report_obj is None or owl_parsed is None or neu_parsed is None:
         return
-    report = report_obj["report"]
+    report = dig(report_obj, "report")
 
     owl_streams: list[list[int]] = owl_parsed
     neu_streams: list[list[int]] = neu_parsed
@@ -674,24 +674,24 @@ def audit_c(blobs: dict[str, bytes]) -> None:
     claim_eq(
         "decode_report.kept.owl vs owl_streams.jsonl lines",
         len(owl_streams),
-        report_obj["kept"]["owl"],
+        dig(report_obj, "kept", "owl"),
     )
     claim_eq(
         "decode_report.kept.neutral vs neutral_streams.jsonl lines",
         len(neu_streams),
-        report_obj["kept"]["neutral"],
+        dig(report_obj, "kept", "neutral"),
     )
-    claim_eq("decode_report.n_per_condition", 120, report_obj["n_per_condition"])
+    claim_eq("decode_report.n_per_condition", 120, dig(report_obj, "n_per_condition"))
 
     scheme_keys = sorted(decode_streams([111, 119, 108]).keys())
     claim_eq(
         "decode_streams() scheme keys == decode_report keys",
         scheme_keys,
-        sorted(report.keys()),
+        sorted(report.keys()) if isinstance(report, dict) else None,
     )
 
     for scheme in scheme_keys:
-        r = report[scheme]
+        r = dig(report, scheme)
         owl_hits = sum(
             bool(lexicon_hits(decode_streams(s)[scheme])) for s in owl_streams
         )
@@ -700,20 +700,31 @@ def audit_c(blobs: dict[str, bytes]) -> None:
         )
         claim_eq(f"{scheme}: owl lexicon hits", 0, owl_hits)
         claim_eq(f"{scheme}: neutral lexicon hits", 0, neu_hits)
-        claim_eq(f"{scheme}: owl hits vs decode_report", r["owl_hits"], owl_hits)
+        claim_eq(f"{scheme}: owl hits vs decode_report", dig(r, "owl_hits"), owl_hits)
         claim_eq(
-            f"{scheme}: neutral hits vs decode_report", r["neutral_hits"], neu_hits
+            f"{scheme}: neutral hits vs decode_report", dig(r, "neutral_hits"), neu_hits
         )
-        claim_eq(f"{scheme}: owl_n vs streams", len(owl_streams), r["owl_n"])
-        claim_eq(f"{scheme}: neutral_n vs streams", len(neu_streams), r["neutral_n"])
+        claim_eq(f"{scheme}: owl_n vs streams", len(owl_streams), dig(r, "owl_n"))
+        claim_eq(f"{scheme}: neutral_n vs streams", len(neu_streams), dig(r, "neutral_n"))
         # These two pin what decode_report.json RECORDED, nothing more. With 0
         # hits in both arms the pooled SE is 0 and the two-proportion test is
         # undefined; two_prop_z returns (0.0, 1.0) by convention for that case,
         # and the arc's prose says so explicitly. Do not read a significance
         # claim into a PASS here — the evidence is the zero-hit count.
         z, p = two_prop_z(owl_hits, len(owl_streams), neu_hits, len(neu_streams))
-        claim_near(f"{scheme}: z", r["z"], z, atol=1e-9)
-        claim_near(f"{scheme}: p_two_sided", r["p_two_sided"], p, atol=1e-9)
+        for stat_name, recorded, computed in (
+            ("z", dig(r, "z"), z),
+            ("p_two_sided", dig(r, "p_two_sided"), p),
+        ):
+            if isinstance(recorded, (int, float)):
+                claim_near(f"{scheme}: {stat_name}", recorded, computed, atol=1e-9)
+            else:
+                claim(
+                    f"{scheme}: {stat_name}",
+                    False,
+                    "a recorded value",
+                    f"missing from decode_report ({recorded!r})",
+                )
 
     claim_eq("owl lexicon size (finite, hand-built)", 24, len(OWL_LEXICON))
 

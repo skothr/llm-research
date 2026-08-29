@@ -88,7 +88,7 @@ persona string and names no person.
 ## Redistribution decision
 
 The JSONL files **are committed**, per `ARC_PROCESS.md` § "Raw data is a
-deliverable": the dataset is 55.9 KiB total, temperature-1.0 sampling makes it
+deliverable": the dataset is 57.2 KiB total, temperature-1.0 sampling makes it
 **not** byte-reproducible from a re-run (its class is `statistical_only`), and
 without it no number in the Step-0 observation is checkable and
 `examples/subliminal_audit_findings.py` has nothing to audit. Committing it

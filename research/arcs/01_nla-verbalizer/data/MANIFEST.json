@@ -2,7 +2,7 @@
   "arc": "nla-verbalizer",
   "description": "Raw NLA capture/derived artifacts (layer-20 Qwen2.5-7B-Instruct h vectors and round-trip products). Committed via git-LFS so figures and nla_audit_findings.py reproduce from a clean clone.",
   "trust_note": "Code-execution statement only, not a licensing statement. Loaded with torch.load(weights_only=False) (pickle, executes on load). Safe on this copy: locally-generated tensor dumps produced by the committed capture scripts. On any copy you did not produce, verify sha256 with `--check` before loading.",
-  "licensing_note": "Licensing, model provenance and the personal-data assessment for these artifacts: research/arcs/01_nla-verbalizer/data/LICENSE-DATA.md. One item there is open \u2014 the kitft NLA pair's upstream licence was never recorded at capture time.",
+  "licensing_note": "Licensing, model provenance and the personal-data assessment for these artifacts: research/arcs/01_nla-verbalizer/data/LICENSE-DATA.md. The kitft NLA pair's upstream licence, unrecorded at capture time, was resolved to Apache-2.0 from the model cards on 2026-08-29.",
   "model_pin": {
     "note": "Models the arc's capture-roots were produced against. No HF revision was pinned or recorded at capture time, so `revision` is null for all three: re-capture reproducibility is repo-level, not commit-level.",
     "retrieved": "2026-05-12 (first capture in the arc; NLA pair released 2026-05-07)",
