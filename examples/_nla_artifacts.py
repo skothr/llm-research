@@ -9,8 +9,8 @@ Two artifact locations:
 Reads prefer the cache (so a fresh local re-capture is picked up immediately)
 and fall back to the committed copy (so figures re-render and the audit replays
 from a clean clone with no manual copy-back). Writes always go to the cache;
-promote a new/changed artifact to DATA with `nla_data_manifest.py` when
-committing.
+promote a new/changed artifact by copying it into DATA and regenerating
+MANIFEST.json with `nla_data_manifest.py --write` when committing.
 
 Self-locating from this file, so callers work from any CWD. Mirrors the
 resolution `nla_audit_findings.py` does at the directory level.
@@ -107,8 +107,8 @@ def load_artifact(name: str) -> Any:
 
 def write_artifact(name: str) -> Path:
     """Resolve an output artifact path in the working cache (created if needed).
-    Writes never target the committed DATA dir — promote with
-    nla_data_manifest.py when committing."""
+    Writes never target the committed DATA dir — promote by copying
+    into DATA and re-running `nla_data_manifest.py --write` when committing."""
     CACHE.mkdir(parents=True, exist_ok=True)
     return CACHE / name
 

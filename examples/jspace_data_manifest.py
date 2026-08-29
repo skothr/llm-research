@@ -702,6 +702,19 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+_LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
+
+
+def _is_lfs_pointer(path: Path) -> bool:
+    """True when `path` holds a git-LFS pointer stub instead of real content
+    (an LFS-less clone, or the opt-in cache/ exclusion applied too broadly)."""
+    try:
+        with path.open("rb") as fh:
+            return fh.read(len(_LFS_POINTER_PREFIX)) == _LFS_POINTER_PREFIX
+    except OSError:
+        return False
+
+
 def _deliverables() -> list[str]:
     """Top-level deliverable filenames: `.pt` artifacts and `.json` files
     (lens sidecars + the fitting corpus), minus MANIFEST.json itself. The
@@ -749,6 +762,13 @@ def _disk_vs_expected(
 
 def build_entries() -> list[dict[str, Any]]:
     on_disk = _deliverables()
+    stubs = [n for n in on_disk if _is_lfs_pointer(DATA_DIR / n)]
+    if stubs:
+        raise SystemExit(
+            f"ERROR: {len(stubs)} deliverable(s) are git-LFS pointer stubs, not "
+            f"real artifacts — hashing them would produce bogus checksums. Run "
+            f"`git lfs install && git lfs pull`, then retry. Stubs: {stubs}"
+        )
     missing, extra = _disk_vs_expected(set(META), set(on_disk))
     for name in missing:
         print(f"WARNING: known file absent on disk (skipped): {name}")
@@ -844,7 +864,7 @@ def write_manifest() -> None:
 
 def check_manifest() -> int:
     if not MANIFEST.exists():
-        print(f"FAIL: {MANIFEST} does not exist (run without --check to create it)")
+        print(f"FAIL: {MANIFEST} does not exist (create it with --write)")
         return 1
     doc = json.loads(MANIFEST.read_text())
     recorded = {e["filename"]: e for e in doc["files"]}
