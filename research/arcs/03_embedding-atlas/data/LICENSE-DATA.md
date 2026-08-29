@@ -73,13 +73,8 @@ the 11 `emb_de_cosine_check.pt` rows add **5** (`的`, `'s`, `’s`, ` de`, `，
 the other 6 already being present — 5 in the battery and `。` in the random
 sample; and `emb_trace_layers.pt`'s 160 stored layer-0 rows collapse to 90
 distinct, 31 of which the first three files already carry, adding **59**.
-1,062 + 995 + 5 + 59 = **2,121**. Recomputed 2026-08-19 by hashing the
-committed float16 row bytes. Two earlier statements of this count were wrong
-in ways this one is not: the 2,062 / 2,073 figure omitted
-`emb_trace_layers.pt` entirely, and the 2,121 figure that replaced it reached
-the right total through two cancelling errors — it treated the battery and
-random samples as disjoint (double-counting 5 rows) and all 11 de-cosine rows
-as duplicates (undercounting 5). The 5 de-cosine rows
+1,062 + 995 + 5 + 59 = **2,121** (recomputed 2026-08-19 by hashing the
+committed float16 row bytes). The 5 de-cosine rows
 that are unique to that file match no `lm_head` row stored here either. The
 principal directions in `emb_global_stats.pt` are a rank-50 linear summary of
 the centered table, not rows of it.

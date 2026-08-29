@@ -107,6 +107,14 @@ Checks:
      sign-flip permutation: 1.5B auto 7/7 p=0.015625; 7B auto 15/17
      p=9.2e-5). Pursuit norm-bias summary pinned (workspace band
      norm-neutral, L0 early band biased, tied W_U).
+  N  coverage supplements (2026-08-17) — observation-quoted figures that had
+     no audit claim: the stage-4 k-sweep at the 1.5B varfrac hump (all four
+     k, not just k=25); active-atom occupancy medians at both scales; the
+     1.5B readout-probability kurtosis supplement; the late-band
+     mean_readout_kurtosis ranges from the stage-4 table (pinning the
+     corrected 7B upper bound, 1.066 at L25); and the stage-5.1b 7B
+     chat-rerun predicts-report rate + signed deltas. All re-derive from
+     committed `data/` artifacts — no cache gating.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
