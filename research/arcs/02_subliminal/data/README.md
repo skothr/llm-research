@@ -40,13 +40,11 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
 - **`manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
   (recorded here so the manifest itself is tamper-evident — a manifest edit
-  changes this hash, and this pin is re-measured whenever one lands). The
-  manifest has changed in exactly three commits — `1ed05dad` (monorepo
-  disconnect: `testing/examples/…` → `examples/…`) and `abec2716` (arc rename:
-  `research/arcs/subliminal/…` → `research/arcs/02_subliminal/…`), both of which
-  touched only path *strings* inside the JSON, and the 2026-08-19 git-SHA repoint
-  described under "Post-capture amendments" below. The data files themselves are
-  unchanged since `e040951e`, the commit that added them.
+  changes this hash, and this pin is re-measured whenever one lands). Besides
+  path-string updates from repo restructuring, the manifest's one semantic
+  amendment is the 2026-08-19 git-SHA repoint described under "Post-capture
+  amendments" below. The data files themselves are unchanged since
+  `e040951e`, the commit that added them.
 - **Files:** `owl_streams.jsonl` (104 kept) · `neutral_streams.jsonl` (109 kept)
   · `owl_raw.jsonl` / `neutral_raw.jsonl` (all 120 completions) ·
   `decode_report.json` (the z-test) · `prompts.jsonl` (the 120 seeded queries,
@@ -81,10 +79,8 @@ while carrying the capture-time values as historical constants.
 **Git-SHA repoint (2026-08-19).** The one field the manifest *was* amended in.
 `generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
 `0aff26c8…`, a commit made in the pre-split monorepo. The 2026-06-01 split
-rewrote that history, so `0aff26c8…` is reachable from no ref in this repository
-— it survived only as a dangling object in the one local clone that predated the
-split, and a fresh clone's arc-02 audit scored `102 PASS | 1 FAIL` on
-"generator_git_commit resolves to a commit in this repo". Both fields now hold
+rewrote that history, so `0aff26c8…` is reachable from no ref in this
+repository. Both fields now hold
 the rewritten equivalent `d9c7a42812cada15da17d62d3bcc31472602846f` (reachable
 from `main`; identical subject `feat(subliminal): emit a provenance manifest
 alongside Step 0 datasets` and identical author date 2026-05-31 12:32:39 -0400,
@@ -151,5 +147,5 @@ A sixth claim is environment-dependent: resolving the manifest's
 `generation.generator_git_commit` needs the repo's history, so from a shallow
 clone, a source copy without `.git`, or a box without `git`, that check moves
 to the UNVERIFIABLE list rather than failing. Under those conditions
-`102 PASS | 0 FAIL | 6 UNVERIFIABLE` is the same green result. See the arc
-README's audit section for the same note.
+`103 PASS | 0 FAIL | 6 UNVERIFIABLE` is the same green result (measured
+2026-08-29 with `git` shadowed off `PATH`).

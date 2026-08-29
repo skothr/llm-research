@@ -47,14 +47,13 @@
 >
 > The audit re-derived every pinned number from the regenerated artifacts:
 > **954 PASS | 6 FAIL** before re-pinning, **956 PASS | 4 FAIL** after
-> (post-re-pin log committed at `audit_2026-08-16.log`; re-derivable with
-> `python examples/jspace_audit_findings.py` — on a default clone the lens
-> cache is pointer stubs and the same run reports 921 | 7. The audit has
-> since gained checks: as of 2026-08-17 the same two states measure
-> **986 | 4** with the cache and **951 | 7** without
-> (`audit_2026-08-17.log`). Both states are documented in
-> [`../README.md`](../README.md) under "Expected result on a clean
-> clone"). The 4 remaining FAILs are the designed `MISSING` presence
+> (post-re-pin log committed at `audit_2026-08-16.log`). As of 2026-08-17
+> the audit carries additional checks; the same two states now measure
+> **986 | 4** with the opt-in lens cache and **951 | 7** on a default clone
+> (lens cache as pointer stubs), logged at `audit_2026-08-17.log` and
+> re-derivable with `python examples/jspace_audit_findings.py`. Both states
+> are documented in [`../README.md`](../README.md) under "Expected result
+> on a clean clone". The 4 remaining FAILs are the designed `MISSING` presence
 > reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
