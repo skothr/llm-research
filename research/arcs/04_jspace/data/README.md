@@ -1,6 +1,6 @@
 # jspace arc — data
 
-> ## ⚠ The C4-en corpora are REDACTED (2026-07-29; dependent artifacts re-run 2026-08-16)
+> ## ★ The C4-en corpora are REDACTED (2026-07-29; dependent artifacts re-run 2026-08-16)
 >
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
 > **not** byte-identical to the raw upstream text.
@@ -49,11 +49,13 @@
 > **954 PASS | 6 FAIL** before re-pinning, **956 PASS | 4 FAIL** after
 > (post-re-pin log committed at `audit_2026-08-16.log`; re-derivable with
 > `python examples/jspace_audit_findings.py` — on a default clone the lens
-> cache is pointer stubs and the same run reports 921 | 7; both states are
-> documented in [`../README.md`](../README.md) under "Expected result on a
-> clean clone"). The 4
-> remaining FAILs are
-> the designed `MISSING` presence reports for the two nf4 lenses
+> cache is pointer stubs and the same run reports 921 | 7. The audit has
+> since gained checks: as of 2026-08-17 the same two states measure
+> **986 | 4** with the cache and **951 | 7** without
+> (`audit_2026-08-17.log`). Both states are documented in
+> [`../README.md`](../README.md) under "Expected result on a clean
+> clone"). The 4 remaining FAILs are the designed `MISSING` presence
+> reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
 > (Their refit-and-commit has since been scheduled as issue #47 on
@@ -117,13 +119,16 @@ Artifact classes (see the MANIFEST for the per-file registry):
 
 - `raw`: frozen fitting/held-out corpora (wikitext-103 + seeded C4-en),
   fitted-lens **layer subsets** (`jlens_*_layer-subset.pt` + `.config.json`
-  sidecars; design Decision 4 — the full 27-layer lenses stay in the
-  gitignored `cache/`, regenerable via `examples/jspace_fit_lens.py`), and
-  the hand-written paper-verbatim item bank.
+  sidecars; design Decision 4 — the full 27-layer lenses stay in `cache/`,
+  regenerable via `examples/jspace_fit_lens.py`; see the amendment below
+  for which of them are now committed there), and the hand-written
+  paper-verbatim item bank.
   **Decision 4 amended 2026-08-16**: the three lenses refit in the
-  C4-redaction re-run — both wikitext + the c4en — are now LFS-committed
-  in `cache/` with their sidecars and fit/scan logs, so a clean clone
-  re-scans without the ~23 h refit; the two 1.5B nf4 lenses
+  C4-redaction re-run — both wikitext + the c4en — are now committed in
+  `cache/`, so a clean clone re-scans without the ~23 h refit. The `.pt`
+  tensors go through git-LFS (`research/**/data/cache/*.pt`); their
+  `.config.json` sidecars and the fit/scan logs are plain blobs, so those
+  arrive in full even in a default clone. The two 1.5B nf4 lenses
   (refit-and-commit scheduled as issue #47) and all `.ckpt.pt`
   fit-resume checkpoints remain uncommitted. The lens download is
   **opt-in**: `.lfsconfig` excludes `cache/` from default LFS pulls
@@ -135,8 +140,10 @@ Artifact classes (see the MANIFEST for the per-file registry):
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
   probes), nla_crosstie, and the issue-#26 metric-correction set
   (`paper_metric_varfrac_*` ×8 incl. the four robustness axes + 7B
-  held-out, `atom_norm_bias_*` ×2) — so checks B–M and every committed
-  figure reproduce from a clean clone after `git lfs pull`.
+  held-out, `atom_norm_bias_*` ×2) — so every check except check A and the
+  lens-integrity sub-blocks of checks H, I and J, plus every committed
+  figure, reproduces from a clean clone after `git lfs pull`. (Check M
+  prints no header of its own; its claims carry `[M]` tags.)
 
 `cache/` is a byte-identical working mirror (plus the full lenses) —
 gitignored except for the `jlens_*` lens/sidecar whitelist (which

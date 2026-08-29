@@ -9,8 +9,8 @@ Two artifact locations:
 Reads prefer the cache (so a fresh local re-capture is picked up immediately)
 and fall back to the committed copy (so figures re-render and the audit replays
 from a clean clone with no manual copy-back). Writes always go to the cache;
-promote a new/changed artifact to DATA with `emb_data_manifest.py` when
-committing.
+promote a new/changed artifact to DATA with `emb_data_manifest.py --write`
+when committing.
 
 Self-locating from this file, so callers work from any CWD.
 
@@ -32,6 +32,27 @@ DATA = _REPO_ROOT / "research" / "arcs" / "03_embedding-atlas" / "data"
 FIGURES = (
     _REPO_ROOT / "research" / "arcs" / "03_embedding-atlas" / "observations" / "figures"
 )
+
+
+#: First bytes of a git-LFS pointer file (the text stub a clone without LFS
+#: leaves in place of the real object). See the git-LFS pointer spec.
+LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
+
+#: Recovery command for an unfetched stub — every message about one says this.
+LFS_HINT = "git lfs install && git lfs pull"
+
+
+def is_lfs_pointer(path: Path) -> bool:
+    """True when `path` is an unfetched git-LFS pointer stub (~134 bytes of
+    text) rather than the real artifact. A default clone of this repo without
+    git-LFS gets stubs; `torch.load` on one dies with an opaque
+    `UnpicklingError: invalid load key, 'v'`, so callers sniff first and say
+    what to run instead."""
+    try:
+        with path.open("rb") as fh:
+            return fh.read(len(LFS_POINTER_PREFIX)) == LFS_POINTER_PREFIX
+    except OSError:
+        return False
 
 
 def find_artifact(name: str) -> Path | None:
@@ -63,18 +84,25 @@ def load_artifact(name: str) -> Any:
     single place the `weights_only=False` (pickle) trust decision lives — safe
     for these locally-generated tensor dumps; verify sha256 with
     emb_data_manifest.py --check before loading an untrusted copy. Raises
-    FileNotFoundError if the artifact is in neither location. torch is imported
+    FileNotFoundError if the artifact is in neither location, and RuntimeError
+    if the resolved file is an unfetched git-LFS pointer stub. torch is imported
     lazily so non-load consumers (e.g. emb_data_manifest importing DATA) stay
     torch-free."""
     import torch
 
-    return torch.load(read_artifact(name), weights_only=False)
+    p = read_artifact(name)
+    if is_lfs_pointer(p):
+        raise RuntimeError(
+            f"{name!r} at {p} is an unfetched git-LFS pointer stub, not the "
+            f"artifact. Run `{LFS_HINT}` in the repo, then retry."
+        )
+    return torch.load(p, weights_only=False)
 
 
 def write_artifact(name: str) -> Path:
     """Resolve an output artifact path in the working cache (created if needed).
     Writes never target the committed DATA dir — promote with
-    emb_data_manifest.py when committing."""
+    emb_data_manifest.py --write when committing."""
     CACHE.mkdir(parents=True, exist_ok=True)
     return CACHE / name
 

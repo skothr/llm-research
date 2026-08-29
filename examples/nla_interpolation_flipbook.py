@@ -7,7 +7,7 @@ Two-phase, resumable:
            h_t = (1-t) h_A + t h_B and AV-decode it
            (loaded model: AV, ~8 B params)
 
-Memory: AR and AV don't fit in 31 GB simultaneously. The script loads
+Memory: AR and AV don't fit in 31 GiB simultaneously. The script loads
 them sequentially and frees between phases.
 
 Resumability: each phase saves to `interpolation_flipbook.pt`. If

@@ -2,9 +2,11 @@
 
 Per the signed-off design plan (Decision 4,
 `research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`): the FULL fitted lens
-tensor set (27 layers x d_model^2 fp16, ~127 MB at 1.5B / ~694 MB at 7B) stays
-cache-only under `data/cache/` (gitignored, regenerable via
-`examples/jspace_fit_lens.py`), while a reduced layer subset is committed via
+tensor set (27 layers x d_model^2 fp16, ~127 MB at 1.5B / ~694 MB at 7B) lives
+under `data/cache/` (LFS-committed, excluded from default pulls — fetch with
+`git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`;
+or regenerate via `examples/jspace_fit_lens.py`), while a reduced layer subset
+is committed via
 git-LFS under `research/arcs/04_jspace/data/` so a clean clone can inspect
 representative depths without the multi-GB fit.
 
@@ -54,7 +56,9 @@ DEFAULT_STEMS: list[str] = [
 ]
 
 FULL_SET_LOCATION = (
-    "data/cache/ (gitignored; regenerate via examples/jspace_fit_lens.py)"
+    "data/cache/ (LFS-committed, excluded from default pulls — fetch with "
+    'git lfs pull --include="research/arcs/04_jspace/data/cache/**" '
+    '--exclude=""; or regenerate via examples/jspace_fit_lens.py)'
 )
 
 

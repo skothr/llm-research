@@ -5,10 +5,17 @@ the figures and the audit consume. From a clean clone:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py     # expect: SUMMARY: 94 PASS | 0 FAIL
+python examples/emb_audit_findings.py     # expect: SUMMARY: 99 PASS | 0 FAIL
 python examples/emb_data_manifest.py --check   # sha256 + metadata match
 python examples/emb_global_render.py      # any figure re-renders, no model load
 ```
+
+Expected audit state: **99 PASS / 0 FAIL** (measured 2026-08-17, saved as
+[`audit_2026-08-17.log`](audit_2026-08-17.log)).
+
+Licensing of the artifacts here — they derive from third-party model weights
+and are **not** covered by the repository's `GPL-3.0-only` — is recorded in
+[`LICENSE-DATA.md`](LICENSE-DATA.md).
 
 ## Stated deviation from ARC_PROCESS § "Raw data is a deliverable"
 
@@ -26,12 +33,15 @@ clean-clone bar still holds: audit and figures run from this directory alone.
 
 ## Files
 
-See `MANIFEST.json` for per-file sha256, size, class, producing script,
-inputs, and consumers. Working copies live in the gitignored
-`.cache/emb_artifacts/`; scripts read cache-first with committed fallback
-(`examples/_emb_artifacts.py`) and write only to the cache — promote with
+See `MANIFEST.json` for the generation date, per-file sha256, size, class,
+producing script, inputs, and consumers, plus the `total_files` /
+`total_size_bytes` totals `--check` re-asserts against this directory.
+Working copies live in the gitignored `.cache/emb_artifacts/`; scripts read
+cache-first with committed fallback (`examples/_emb_artifacts.py`) and write
+only to the cache — promote with
 `cp .cache/emb_artifacts/*.pt research/arcs/03_embedding-atlas/data/ &&
-python examples/emb_data_manifest.py`.
+python examples/emb_data_manifest.py --write` (the manifest script takes an
+explicit `--check` or `--write`; it never writes by default).
 
 ## Trust note
 
