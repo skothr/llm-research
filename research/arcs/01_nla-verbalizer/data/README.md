@@ -4,7 +4,15 @@ The 16 `.pt` artifacts every figure and the `nla_audit_findings.py` regression
 audit are generated from. Committed via **git-LFS** (see the repo
 `.gitattributes` rule `research/**/data/*.pt`) so the arc reproduces from a
 clean clone — without these, the render scripts and the audit have no input to
-load. Total ~15 MB; provenance + integrity in [`MANIFEST.json`](MANIFEST.json).
+load. Total ~15 MB; provenance + integrity in [`MANIFEST.json`](MANIFEST.json);
+licensing, model provenance and the personal-data assessment in
+[`LICENSE-DATA.md`](LICENSE-DATA.md). A dated full audit transcript is kept
+alongside them at [`audit_2026-08-17.log`](audit_2026-08-17.log).
+
+**If these files look like ~130-byte text stubs**, the clone never populated
+git-LFS. Recover with `git lfs install && git lfs pull`; both
+`nla_data_manifest.py --check` and the loaders in `_nla_artifacts.py` detect
+the stub state and say so rather than reporting checksum drift.
 
 These are the canonical copy. The scripts in `examples/` resolve their
 inputs through the shared `_nla_artifacts` helper — **the gitignored working
@@ -20,7 +28,7 @@ directory when the working cache is empty:
 ```bash
 # From a clean clone (after `git lfs pull`):
 /path/to/venv/bin/python examples/nla_audit_findings.py
-# Expect: SUMMARY:  178 PASS  |  0 FAIL
+# Expect: SUMMARY:  196 PASS  |  0 FAIL
 ```
 
 **Re-render a figure** — no setup either. Render scripts resolve their inputs
@@ -37,8 +45,9 @@ python examples/nla_vocab_atlas_render.py
 # Drift check — recompute every sha256 against MANIFEST.json:
 python examples/nla_data_manifest.py --check
 
-# Rewrite MANIFEST.json after a deliberate re-capture (then re-commit both):
-python examples/nla_data_manifest.py
+# Rewrite MANIFEST.json after a deliberate re-capture (then re-commit both).
+# The mode flag is mandatory: a bare invocation prints usage and writes nothing.
+python examples/nla_data_manifest.py --write
 ```
 
 ## Capture-roots vs derived
@@ -50,8 +59,21 @@ from other `.pt` by a committed script (5 are pure tensor math; 3 also load the
 AV/AR decoder). All 16 are committed anyway so figure pixels and audit numbers
 reproduce bit-for-bit with zero model load.
 
-## Trust note
+## Pickle-trust note
 
-Artifacts load with `torch.load(..., weights_only=False)` (pickle, executes on
-load). Safe here — they are locally-generated tensor dumps, not third-party
-data. On an untrusted copy, run `--check` to verify sha256 before loading.
+**This is a code-execution statement only — not a licensing or privacy
+statement.** Artifacts load with `torch.load(..., weights_only=False)`
+(pickle, executes arbitrary code on load). Safe on *this* copy because these
+files were generated locally by the committed capture scripts. On any copy you
+did not produce, run `python examples/nla_data_manifest.py --check` and confirm
+the sha256s before loading.
+
+> Data licensing, model provenance, and the personal-data assessment for these
+> artifacts: [`LICENSE-DATA.md`](LICENSE-DATA.md). The NLA pair's upstream
+> licence, unrecorded at capture time, was resolved to Apache-2.0 from the
+> model cards on 2026-08-29.
+
+The exact model set every capture-root was produced against is recorded in
+[`MANIFEST.json`](MANIFEST.json)'s `model_pin` block, together with a per-file
+`provenance` string. No HF revision was pinned at capture time, so a
+re-capture cannot be asserted bit-identical to these files.

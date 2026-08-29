@@ -53,6 +53,8 @@ assume worktree-root CWD and read the live cache; see
 `examples/README_NLA.md` for the convention, including the
 `torch.load(..., weights_only=False)` trust assumption (safe for these
 locally-generated artifacts; do not normalize for third-party data).
+Every read goes through `_load`, which refuses an unpopulated git-LFS
+pointer stub with one actionable FAIL rather than an UnpicklingError.
 """
 
 import os
@@ -73,7 +75,12 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 
-from _nla_artifacts import CACHE as _CACHE, find_artifact
+from _nla_artifacts import (
+    CACHE as _CACHE,
+    LFS_STUB_NOTE,
+    find_artifact,
+    is_lfs_pointer,
+)
 
 
 # Per-file artifact resolution. `ARTIFACTS / "name.pt"` resolves each artifact
@@ -85,7 +92,7 @@ from _nla_artifacts import CACHE as _CACHE, find_artifact
 # committed copy — still audits every artifact, instead of pinning to the cache
 # and then crashing on (AUDIT 1/20/21) or silently skipping (AUDIT 11-19) the
 # ones the cache lacks. A name in neither place resolves to its non-existent
-# cache path, so an unconditional torch.load raises FileNotFoundError and a
+# cache path, so an unconditional `_load` raises FileNotFoundError and a
 # guarded `.exists()` stays False — exactly the old behavior for a truly-absent
 # artifact. See research/ARC_PROCESS.md § "Raw data is a deliverable".
 class _ArtifactDir:
@@ -95,6 +102,29 @@ class _ArtifactDir:
 
 
 ARTIFACTS = _ArtifactDir()
+
+
+class LfsStubError(RuntimeError):
+    """An artifact resolved to an unpopulated git-LFS pointer stub.
+
+    A clone made without git-LFS leaves every `data/*.pt` as a ~130-byte text
+    pointer. Loading one raises `_pickle.UnpicklingError`, which reads as a
+    corrupt artifact rather than the actionable "your clone never fetched the
+    LFS objects". `_load` raises this instead, and `main` turns it into a
+    single failing claim carrying the recovery command.
+    """
+
+
+def _load(path: Path) -> Any:
+    """torch.load an audit input, refusing git-LFS pointer stubs.
+
+    Every artifact read in this file goes through here so a clone without LFS
+    populated gets one actionable FAIL instead of an UnpicklingError traceback.
+    `weights_only=False` is the arc-wide trust decision for these
+    locally-generated tensor dumps (see the module docstring)."""
+    if is_lfs_pointer(path):
+        raise LfsStubError(f"{path.name}: {LFS_STUB_NOTE}")
+    return torch.load(path, weights_only=False)
 
 
 # ---------------------------------------------------------------------------
@@ -130,7 +160,7 @@ def claim_eq(name: str, expected: Any, actual: Any) -> None:
 def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
     items: list[dict[str, Any]] = []
     p = ARTIFACTS / "aggregate_faithfulness.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for prompt in data["prompts"]:
         for cap in prompt.get("captures", []):
             items.append(
@@ -149,7 +179,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
             )
 
     p = ARTIFACTS / "rabbit_haiku_gen_trajectory.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for cap in data.get("captures", []):
         items.append(
             {
@@ -167,7 +197,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
         )
 
     p = ARTIFACTS / "forced_continuation.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for cap in data.get("captures", []):
         items.append(
             {
@@ -183,7 +213,7 @@ def load_raw() -> tuple[torch.Tensor, list[dict[str, Any]]]:
         )
 
     p = ARTIFACTS / "country_concept_vector.pt"
-    data = torch.load(p, weights_only=False)
+    data = _load(p)
     for i, h in enumerate(data["h_country"]):
         items.append(
             {
@@ -247,7 +277,7 @@ def classify_dim(s: dict[str, float]) -> str:
     return "background"
 
 
-def main() -> None:
+def run_audit() -> None:
     print("=" * 80)
     print("AUDIT 1: dataset size and structure")
     print("=" * 80)
@@ -472,7 +502,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 8: CAV alignment (H3 falsification)")
     print("=" * 80)
-    cav_data = torch.load(ARTIFACTS / "country_concept_vector.pt", weights_only=False)
+    cav_data = _load(ARTIFACTS / "country_concept_vector.pt")
     direction_unit = cav_data["direction_unit"]
     claim_near(
         "CAV ||direction_unit||", 1.000, float(direction_unit.norm().item()), atol=0.001
@@ -553,7 +583,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 10: counterfactual diff norms (fig16 corrected)")
     print("=" * 80)
-    forced_data = torch.load(ARTIFACTS / "forced_continuation.pt", weights_only=False)
+    forced_data = _load(ARTIFACTS / "forced_continuation.pt")
     nat: dict[str, dict[str, Any]] = {}
     forc_by_pair: dict[str, list[dict[str, Any]]] = {}
     for c in forced_data["captures"]:
@@ -641,7 +671,7 @@ def main() -> None:
     print("=" * 80)
     flip_path = ARTIFACTS / "interpolation_flipbook.pt"
     if flip_path.exists():
-        flip = torch.load(flip_path, weights_only=False)
+        flip = _load(flip_path)
         h_A_flip = flip["h_A"]
         h_B_flip = flip["h_B"]
         steps_flip = sorted(flip["steps"], key=lambda s: s["step"])
@@ -688,7 +718,7 @@ def main() -> None:
     print("=" * 80)
     vocab_path = ARTIFACTS / "vocab_atlas.pt"
     if vocab_path.exists():
-        vocab = torch.load(vocab_path, weights_only=False)
+        vocab = _load(vocab_path)
         v_caps = vocab["captures"]
         claim_eq("vocab atlas capture count", 128, len(v_caps))
         claim_eq("vocab atlas category count", 23, len(vocab["categories"]))
@@ -807,7 +837,7 @@ def main() -> None:
         print("=" * 80)
         stab_path = ARTIFACTS / "discriminant_stability.pt"
         if stab_path.exists():
-            stab = torch.load(stab_path, weights_only=False)
+            stab = _load(stab_path)
             stab_caps = stab["captures"]
             claim_eq("stability capture count", 32, len(stab_caps))
             by_anchor: dict[str, dict[str, torch.Tensor]] = {}
@@ -869,7 +899,7 @@ def main() -> None:
         print("AUDIT 15: Mid-sequence vocab atlas (cross-protocol null result)")
         mid_path = ARTIFACTS / "mid_seq_vocab_atlas.pt"
         if mid_path.exists():
-            mid = torch.load(mid_path, weights_only=False)
+            mid = _load(mid_path)
             mid_caps = mid["captures"]
             claim_eq("mid_seq capture count", 128, len(mid_caps))
             claim_eq("mid_seq skip count", 0, len(mid.get("skipped", [])))
@@ -1004,7 +1034,7 @@ def main() -> None:
         print("AUDIT 17: Concept arithmetic atlas")
         arith_path = ARTIFACTS / "concept_arithmetic_atlas.pt"
         if arith_path.exists():
-            arith = torch.load(arith_path, weights_only=False)
+            arith = _load(arith_path)
             combos_a = arith["combos"]
             claim_eq("concept_arithmetic combo count", 7, len(combos_a))
             claim_eq("target_norm", 150.0, float(arith["target_norm"]))
@@ -1086,7 +1116,7 @@ def main() -> None:
         print("AUDIT 18: Dense interpolation near pivot")
         dense_path = ARTIFACTS / "dense_interp_near_pivot.pt"
         if dense_path.exists():
-            dense = torch.load(dense_path, weights_only=False)
+            dense = _load(dense_path)
             d_steps = sorted(dense["steps"], key=lambda s: s["t"])
             claim_eq("dense_interp step count", 30, len(d_steps))
             # Dense zone bounds
@@ -1124,7 +1154,7 @@ def main() -> None:
         print("AUDIT 19: Plateau attractor strength")
         plat_path = ARTIFACTS / "plateau_attractor_test.pt"
         if plat_path.exists():
-            plat = torch.load(plat_path, weights_only=False)
+            plat = _load(plat_path)
             results = plat["results"]
             claim_eq("attractor test target count", 3, len(results))
             by_label = {r["label"]: r for r in results}
@@ -1178,7 +1208,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 20: aggregate round-trip faithfulness (F1 foundation, 8 prompts)")
     print("=" * 80)
-    agg = torch.load(ARTIFACTS / "aggregate_faithfulness.pt", weights_only=False)
+    agg = _load(ARTIFACTS / "aggregate_faithfulness.pt")
     agg_cos: list[float] = []
     agg_mse: list[float] = []
     per_prompt: dict[str, list[float]] = {}
@@ -1268,7 +1298,7 @@ def main() -> None:
     print("=" * 80)
     print("AUDIT 21: rabbit-haiku trajectory faithfulness (the n=15 prior)")
     print("=" * 80)
-    hk = torch.load(ARTIFACTS / "rabbit_haiku_gen_trajectory.pt", weights_only=False)
+    hk = _load(ARTIFACTS / "rabbit_haiku_gen_trajectory.pt")
     hk_caps = [c for c in hk["captures"] if c.get("cosine") is not None]
     hk_cos = [c["cosine"] for c in hk_caps]
     hk_mse = [
@@ -1303,6 +1333,210 @@ def main() -> None:
             (hk_min.get("token") or "").strip() == "as",
             "as",
             hk_min.get("token"),
+        )
+
+    # -----------------------------------------------------------------------
+    # AUDIT 22/23 lock the two figure-level numbers INVENTORY.md publishes for
+    # fig29 and fig30 but that no earlier section re-derived: the
+    # self-validation top-5 hit rates, and the hierarchical re-discrimination
+    # null result. Both are pure tensor math over vocab_atlas.pt +
+    # the 167-capture pool — no model load. Added 2026-08-17.
+    # -----------------------------------------------------------------------
+    if vocab_path.exists():
+        vocab_v = _load(vocab_path)
+        v_caps_v = vocab_v["captures"]
+        cats_v = list(vocab_v["categories"])
+
+        # 23 mean-contrast directions, sink-removed and unit-normalized —
+        # the same recipe AUDIT 13 checks and both figure scripts use.
+        H_atlas = torch.stack([c["h"] for c in v_caps_v]).float()
+        for d_i in sinks:
+            H_atlas[:, d_i] = 0.0
+        d_rows: list[torch.Tensor] = []
+        for cat in cats_v:
+            in_i = [i for i, c in enumerate(v_caps_v) if c["category"] == cat]
+            out_i = [i for i in range(len(v_caps_v)) if i not in in_i]
+            dvec = H_atlas[in_i].mean(dim=0) - H_atlas[out_i].mean(dim=0)
+            d_rows.append(dvec / (dvec.norm() + 1e-9))
+        D_v = torch.stack(d_rows)
+
+        # The 167-capture pool, sink-removed and unit-normalized, projected
+        # onto the basis: the (167, 23) matrix fig29 renders.
+        H_pool = H.clone()
+        for d_i in sinks:
+            H_pool[:, d_i] = 0.0
+        H_pool_unit = F.normalize(H_pool, dim=1)
+        proj_pool = H_pool_unit @ D_v.T
+
+        def expected_cat(it: dict[str, Any]) -> str | None:
+            """The src/prompt_id → expected-category mapping fig29 and fig30
+            share (nla_discriminant_connectivity.py /
+            nla_hierarchical_classifier.py, `map_src_to_expected_cat`)."""
+            src = it["src"]
+            pid = it.get("prompt_id") or ""
+            if src in ("country_src", "country_test"):
+                return "country"
+            if src == "non_country_src":
+                return None
+            if src == "haiku_gen":
+                return "nature"
+            if src == "aggregate" and pid in ("creative_haiku", "creative_poem"):
+                return "nature"
+            if src == "aggregate" and pid == "factual_easy":
+                return "country"
+            if src == "aggregate" and pid in ("code", "math"):
+                return "codemath"
+            if (
+                src == "forced"
+                and "refusal" in pid
+                and "refuse" in (it.get("token") or "").lower()
+            ):
+                return "refusal"
+            if src == "forced" and "negation" in pid:
+                return "negation"
+            return None
+
+        print()
+        print("=" * 80)
+        print("AUDIT 22: fig29 self-validation top-5 hit rates")
+        print("=" * 80)
+        claim_eq(
+            "self-validation projection shape (captures x discriminants)",
+            (167, 23),
+            tuple(proj_pool.shape),
+        )
+        ranks_by_cat: dict[str, list[int]] = {}
+        for i in range(proj_pool.shape[0]):
+            exp_c = expected_cat(items[i])
+            if exp_c is None or exp_c not in cats_v:
+                continue
+            order = proj_pool[i].argsort(descending=True).tolist()
+            ranks_by_cat.setdefault(exp_c, []).append(order.index(cats_v.index(exp_c)))
+        claim_eq(
+            "captures with an expected category (fig29 scored rows)",
+            107,
+            sum(len(v) for v in ranks_by_cat.values()),
+        )
+        for cat_name, exp_n, exp_rate in (
+            ("country", 29, 0.79),
+            ("codemath", 30, 0.73),
+            ("nature", 45, 0.56),
+        ):
+            rs = ranks_by_cat.get(cat_name, [])
+            claim_eq(f"{cat_name} scored-capture count", exp_n, len(rs))
+            if rs:
+                claim_near(
+                    f"{cat_name} top-5 hit rate",
+                    exp_rate,
+                    sum(1 for r in rs if r < 5) / len(rs),
+                    atol=0.005,
+                )
+
+        print()
+        print("=" * 80)
+        print("AUDIT 23: fig30 hierarchical re-discrimination (null result)")
+        print("=" * 80)
+        # Sibling pairs: discriminant cosine above the script's 0.80 threshold.
+        C_dv = D_v @ D_v.T
+        sib_pairs = [
+            (cats_v[i], cats_v[j])
+            for i in range(len(cats_v))
+            for j in range(i + 1, len(cats_v))
+            if float(C_dv[i, j].item()) > 0.80
+        ]
+        claim_eq("sibling pairs at discriminant cos > 0.80", 6, len(sib_pairs))
+        claim(
+            "country-capital is a sibling pair (the swap fig30 targets)",
+            ("country", "capital") in sib_pairs or ("capital", "country") in sib_pairs,
+            "present",
+            sib_pairs,
+        )
+        # Sub-discriminator per pair: unit(mean(H_a) - mean(H_b)), pointing
+        # from b toward a, so sign picks the category.
+        sub_lookup: dict[frozenset[str], tuple[str, str, torch.Tensor]] = {}
+        for a_cat, b_cat in sib_pairs:
+            a_i = [i for i, c in enumerate(v_caps_v) if c["category"] == a_cat]
+            b_i = [i for i, c in enumerate(v_caps_v) if c["category"] == b_cat]
+            dsub = H_atlas[a_i].mean(dim=0) - H_atlas[b_i].mean(dim=0)
+            sub_lookup[frozenset({a_cat, b_cat})] = (
+                a_cat,
+                b_cat,
+                dsub / (dsub.norm() + 1e-9),
+            )
+
+        base_top1: list[str] = []
+        hier_top1: list[str] = []
+        n_applied = 0
+        n_flipped = 0
+        for i in range(proj_pool.shape[0]):
+            order = proj_pool[i].argsort(descending=True).tolist()
+            t1_c, t2_c = cats_v[order[0]], cats_v[order[1]]
+            base_top1.append(t1_c)
+            key = frozenset({t1_c, t2_c})
+            if key in sub_lookup:
+                n_applied += 1
+                a_cat, b_cat, dsub = sub_lookup[key]
+                chosen = (
+                    a_cat
+                    if float(torch.dot(H_pool_unit[i], dsub).item()) > 0
+                    else b_cat
+                )
+                hier_top1.append(chosen)
+                if chosen != t1_c:
+                    n_flipped += 1
+            else:
+                hier_top1.append(t1_c)
+        claim_eq("sibling-applicable captures (disambiguator fired)", 33, n_applied)
+        claim_eq("captures whose top-1 flipped (the null result)", 1, n_flipped)
+
+        rows_by_cat: dict[str, list[tuple[str, str]]] = {}
+        for i, it in enumerate(items):
+            exp_c = expected_cat(it)
+            if exp_c is None or exp_c not in cats_v:
+                continue
+            rows_by_cat.setdefault(exp_c, []).append((base_top1[i], hier_top1[i]))
+        c_rows = rows_by_cat.get("country", [])
+        claim_eq("country scored-capture count (fig30)", 29, len(c_rows))
+        if c_rows:
+            claim_near(
+                "country baseline top-1 accuracy",
+                0.34,
+                sum(1 for b, _ in c_rows if b == "country") / len(c_rows),
+                atol=0.005,
+            )
+            claim_near(
+                "country hierarchical top-1 accuracy",
+                0.38,
+                sum(1 for _, h in c_rows if h == "country") / len(c_rows),
+                atol=0.005,
+            )
+        n_all = sum(len(r) for r in rows_by_cat.values())
+        base_all = sum(sum(1 for b, _ in r if b == c) for c, r in rows_by_cat.items())
+        hier_all = sum(sum(1 for _, h in r if h == c) for c, r in rows_by_cat.items())
+        claim_eq("fig30 scored-capture total", 107, n_all)
+        claim_near(
+            "overall baseline top-1 accuracy", 0.44, base_all / n_all, atol=0.005
+        )
+        claim_near(
+            "overall hierarchical top-1 accuracy", 0.45, hier_all / n_all, atol=0.005
+        )
+    else:
+        print(f"  (skipping AUDIT 22/23: {vocab_path} not present)")
+
+
+def main() -> None:
+    try:
+        run_audit()
+    except LfsStubError as exc:
+        # A clone without git-LFS populated: report it as a failing claim
+        # naming the recovery command, not as an UnpicklingError traceback.
+        # The audit stops here — every remaining check reads the same data/.
+        print()
+        claim(
+            "committed artifacts are real payloads, not git-LFS pointer stubs",
+            False,
+            "populated .pt artifacts",
+            str(exc),
         )
 
     print()

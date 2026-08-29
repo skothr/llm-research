@@ -105,7 +105,9 @@
     "backend": "transformers",
     "backend_version": "5.5.4",
     "generator_script_sha256": "3b9745283c2eea171b247362537b160745b365552e31e5d0c6dc9a341ea440c1",
-    "generator_git_commit": "0aff26c867df88dab5a53487dfb0ea90580ecb31",
+    "generator_git_commit": "d9c7a42812cada15da17d62d3bcc31472602846f",
+    "generator_git_commit_pre_rewrite": "0aff26c867df88dab5a53487dfb0ea90580ecb31",
+    "generator_git_commit_note": "Two SHAs, one logical commit. This dataset was generated inside a pre-split monorepo; the 2026-06-01 split rewrote that history into this repository, so the SHA recorded at capture time is not reachable from any ref here. `generator_git_commit_pre_rewrite` is that capture-time SHA, preserved verbatim; `generator_git_commit` is its rewritten equivalent, reachable from main and therefore resolvable in a clean clone. Both name the same commit -- subject `feat(subliminal): emit a provenance manifest alongside Step 0 datasets`, author date 2026-05-31T12:32:39-04:00 -- and the rewritten commit records the relationship in its own message as `(cherry picked from commit 0aff26c8...)`. Repointed 2026-08-19; see research/arcs/02_subliminal/data/README.md for the amendment record.",
     "upstream_pipeline": {
       "repo": "github.com/MinhxLe/subliminal-learning",
       "ref": "v1.0.0",
@@ -188,7 +190,9 @@
   },
   "timestamps": {
     "generated_at": "2026-05-31T18:35:55Z",
-    "repo_git_commit": "0aff26c867df88dab5a53487dfb0ea90580ecb31",
+    "repo_git_commit": "d9c7a42812cada15da17d62d3bcc31472602846f",
+    "repo_git_commit_pre_rewrite": "0aff26c867df88dab5a53487dfb0ea90580ecb31",
+    "repo_git_commit_note": "Same repoint, same reason as `generation.generator_git_commit_note` -- the capture-time working tree sat at the pre-rewrite SHA, which no ref in this repository reaches; the post-rewrite equivalent is recorded here so the pointer resolves in a clean clone. `repo_git_dirty` remains the capture-time observation and is unaffected.",
     "repo_git_dirty": true
   },
   "license": {

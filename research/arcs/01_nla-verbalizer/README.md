@@ -4,7 +4,7 @@ A working investigation into what Anthropic's released Natural Language
 Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
 state structure. A focused arc (observations 2026-05-12 to 05-15):
 22 observation files, 36 figures, 22 tracked work items, a regression
-audit at **178 PASS / 0 FAIL**, and one working synthesis: *layer-20
+audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
 boundaries* — held as a working hypothesis, not a settled claim.
 See [Limitations and methodology caveats](#limitations-and-methodology-caveats)
@@ -275,9 +275,10 @@ work, and the documentation tries to separate them honestly.
 **Audit and verification.** Every load-bearing number cited in this
 arc is re-derived from raw `.pt` files by
 [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py).
-Current state: **178 PASS / 0 FAIL** across 21 audit sections (extended
+Current state: **196 PASS / 0 FAIL** across 23 audit sections (extended
 2026-05-31 to lock the round-trip faithfulness foundation and the
-concept-arithmetic decode identities, not just the geometry). The
+concept-arithmetic decode identities, and 2026-08-17 to pin the fig29/fig30
+self-validation and hierarchical re-discrimination figures). The
 audit catches arithmetic-consistency regressions (number-cited-in-prose
 vs number-in-artifact); it does NOT catch methodological errors,
 interpretive overreach, or capture-protocol bugs (see L8 in
@@ -493,7 +494,7 @@ errors when copying numbers into observation files, regression in
 captures. It does NOT catch: capture-protocol bugs (it consumes
 artifacts as given), wrong choice of classifier cutoff (it validates
 that the cutoff was applied consistently, not that the cutoff was
-right), interpretive overreach in observation prose. **A 178 PASS
+right), interpretive overreach in observation prose. **A 196 PASS
 audit means "the numbers in the markdown match the numbers in the
 .pt files," not "the methodology is right."**
 
@@ -668,7 +669,7 @@ the kitft NLA pair cached locally.
 # Runs from a clean clone: nla_audit_findings.py reads the committed data/
 # dir when the gitignored working cache is empty.
 python examples/nla_audit_findings.py
-# Expect: SUMMARY:  178 PASS  |  0 FAIL
+# Expect: SUMMARY:  196 PASS  |  0 FAIL
 
 # Verify dataset integrity (sha256 of every .pt vs data/MANIFEST.json)
 python examples/nla_data_manifest.py --check
@@ -720,5 +721,5 @@ Related implementation surfaces (outside `research/`):
 
 - [`llm_surgeon/probe/_nla.py`](../../../llm_surgeon/probe/_nla.py) — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
 - [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
-- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (178/0)
+- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
 - [`examples/nla_*.py`](../../../examples/) — 42 arc scripts

@@ -27,8 +27,25 @@ from typing import Any
 
 import torch
 
-from _emb_artifacts import find_artifact, load_artifact
+from _emb_artifacts import LFS_HINT, find_artifact, is_lfs_pointer, load_artifact
 from emb_trace_attention_analyze import rope_wavelength
+
+#: Every artifact the audit loads. Absent => exit 2 (cannot run); present but
+#: an unfetched git-LFS pointer stub => FAIL rows (a reportable clone state).
+REQUIRED = (
+    "emb_battery_vectors.pt",
+    "emb_global_stats.pt",
+    "emb_neighbor_probes.pt",
+    "emb_category_stats.pt",
+    "emb_pair_directions.pt",
+    "emb_fullvocab_stats.pt",
+    "emb_fullvocab_analysis.pt",
+    "emb_structural_block.pt",
+    "emb_de_cosine_check.pt",
+    "emb_trace_analysis.pt",
+    "emb_trace_components.pt",
+    "emb_trace_attention.pt",
+)
 
 PASS = 0
 FAIL = 0
@@ -46,6 +63,13 @@ def claim(section: str, name: str, ok: bool, detail: str = "") -> None:
 
 def near(actual: float, expected: float, tol: float) -> bool:
     return abs(actual - expected) <= tol
+
+
+def summarize() -> int:
+    print("=" * 80)
+    print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
+    print("=" * 80)
+    return 1 if FAIL else 0
 
 
 def main() -> int:
@@ -200,6 +224,9 @@ def main() -> int:
         ("day_of_week", 0.400),
         ("auxiliary", 0.286),
         ("pronoun", 0.266),
+        # connotation classes — the weak end of the F-C1 hierarchy
+        ("formal", 0.052),
+        ("positive", 0.045),
         ("case_lower", 0.023),
     ):
         got = gap_of(cname)
@@ -209,6 +236,34 @@ def main() -> int:
             near(got, expected, 0.003),
             f"{got:+.3f}",
         )
+    # The README's "topics (+0.08-0.18)" band, re-derived. Scope, stated
+    # exactly: these are the eight topic classes NAMED in the observation's
+    # F-C1 strong/typical tiers, not a bound over the whole `topic`
+    # supergroup — that supergroup also carries the month/day_of_week paradigm
+    # sets (+0.40, reported one tier up) and weaker fields (religion +0.061).
+    topic_tier = (
+        "country",
+        "color",
+        "us_city",
+        "family",
+        "body_part",
+        "food",
+        "profession",
+        "animal",
+    )
+    topic_gaps = {c: gap_of(c) for c in topic_tier}
+    t_lo = min(topic_gaps, key=lambda c: topic_gaps[c])
+    t_hi = max(topic_gaps, key=lambda c: topic_gaps[c])
+    claim(
+        "5 category",
+        "topic tier spans +0.08-0.18 (F-C1 named topics; country top, animal floor)",
+        topic_gaps[t_lo] >= 0.075
+        and topic_gaps[t_hi] <= 0.180
+        and t_hi == "country"
+        and t_lo == "animal",
+        f"{t_lo} {topic_gaps[t_lo]:+.3f} .. {t_hi} {topic_gaps[t_hi]:+.3f}",
+    )
+
     # derived artifact agrees with first principles
     cs = load_artifact("emb_category_stats.pt")
     stored = cs["spaces"]["centered"]["per_class"]["number"]["gap"]
@@ -272,13 +327,31 @@ def main() -> int:
             near(k["shuffle_consistency_mean"], expected_s, 0.003),
             f"{k['shuffle_consistency_mean']:+.4f}",
         )
+    n_beat = sum(
+        1
+        for k in pd["kinds"].values()
+        if k["consistency"] > k["shuffle_consistency_mean"]
+    )
     claim(
         "7 pairs",
-        "every kind beats its shuffle baseline",
-        all(
-            k["consistency"] > k["shuffle_consistency_mean"]
-            for k in pd["kinds"].values()
-        ),
+        "11 pair kinds, all 11 beat their within-kind permutation baseline",
+        len(pd["kinds"]) == 11 and n_beat == 11,
+        f"{n_beat}/{len(pd['kinds'])}",
+    )
+    margins = {
+        name: k["consistency"] - k["shuffle_consistency_mean"]
+        for name, k in pd["kinds"].items()
+    }
+    m_hi = max(margins, key=lambda n: margins[n])
+    m_lo = min(margins, key=lambda n: margins[n])
+    claim(
+        "7 pairs",
+        "pair-specific margins +0.02-0.05, largest is `past` (morphology)",
+        m_hi == "past"
+        and near(margins["past"], 0.0544, 0.001)
+        and margins[m_lo] >= 0.015
+        and margins[m_hi] <= 0.055,
+        f"{m_lo} {margins[m_lo]:+.4f} .. {m_hi} {margins[m_hi]:+.4f}",
     )
 
     # ---- AUDIT 8: full-vocabulary sweep (149,706 alive rows) ------------------
@@ -476,6 +549,25 @@ def main() -> int:
         {2604, 1395, 1122} <= set(tc["carrier"]["block"]["top_carrier_dims"][20]),
         str(tc["carrier"]["block"]["top_carrier_dims"][20]),
     )
+    # The stable mid-network carrier band (F-T3 regime iii). Locked here as the
+    # two ORIGINAL block dims that hold a top-10 carrier slot at every layer of
+    # L4-26, plus the L27->L28 handoff where that band ends. (Block dim 1122,
+    # also named in F-T3, holds a top-10 slot only at L4 and L17-26 — see the
+    # observation's caveat, it is not part of this predicate.)
+    carriers = tc["carrier"]["block"]["top_carrier_dims"]
+    band_dims = {2604, 1395}
+    ov_27_28 = len(set(carriers[27][:10]) & set(carriers[28][:10]))
+    band_ok = [L for L in range(4, 27) if band_dims <= set(carriers[L][:10])]
+    claim(
+        "9 trace",
+        "stable carrier band L4-26: block dims 1395+2604 top-10 at every layer, "
+        "both gone at L28 (L27->L28 overlap 2/10)",
+        len(band_ok) == 23
+        and not (band_dims & set(carriers[28][:10]))
+        and ov_27_28 == 2,
+        f"{len(band_ok)}/23 layers, L27->L28 overlap {ov_27_28}/10",
+    )
+
     af = torch.stack([c["attn_block_frac"] for c in tc["component_stats"]]).mean(0)
     claim(
         "9 trace",
@@ -730,34 +822,29 @@ def main() -> int:
         f"{comma_full:+.4f} -> {comma_ablt:+.4f}",
     )
 
-    print("=" * 80)
-    print(f"SUMMARY:  {PASS} PASS  |  {FAIL} FAIL")
-    print("=" * 80)
-    return 1 if FAIL else 0
+    return summarize()
 
 
 if __name__ == "__main__":
-    missing = [
-        n
-        for n in (
-            "emb_battery_vectors.pt",
-            "emb_global_stats.pt",
-            "emb_neighbor_probes.pt",
-            "emb_category_stats.pt",
-            "emb_pair_directions.pt",
-            "emb_fullvocab_stats.pt",
-            "emb_fullvocab_analysis.pt",
-            "emb_structural_block.pt",
-            "emb_de_cosine_check.pt",
-            "emb_trace_analysis.pt",
-            "emb_trace_components.pt",
-            "emb_trace_attention.pt",
-        )
-        if find_artifact(n) is None
-    ]
+    resolved = {n: find_artifact(n) for n in REQUIRED}
+    missing = [n for n, p in resolved.items() if p is None]
     if missing:
         print(
             f"missing artifacts {missing}; run emb_capture.py / derives, or git lfs pull"
         )
         sys.exit(2)
+    # A clone without git-LFS has 134-byte pointer stubs where the artifacts
+    # should be. Report that as audit FAIL rows naming the recovery command —
+    # torch.load on a stub otherwise dies with UnpicklingError: invalid load
+    # key, 'v'.
+    stubs = [n for n, p in resolved.items() if p is not None and is_lfs_pointer(p)]
+    if stubs:
+        for name in stubs:
+            claim(
+                "0 preflight",
+                f"{name} is a fetched artifact",
+                False,
+                f"unfetched git-LFS pointer stub — run `{LFS_HINT}`",
+            )
+        sys.exit(summarize())
     sys.exit(main())

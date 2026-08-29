@@ -187,7 +187,12 @@ def main() -> None:
         "Sink-removed h[20] (PC1/PC2)",
         (float(var_res[0] / total_res), float(var_res[1] / total_res)),
     )
-    fig.suptitle(f"Removing 7 sink dims {sink_dims} rotates the PCA layout")
+    # Count derived from the list, not hand-written: the two are rendered side
+    # by side, so a hardcoded count silently disagrees with the dims it labels
+    # the moment classify_dim_character labels a different number of them.
+    fig.suptitle(
+        f"Removing {len(sink_dims)} sink dims {sink_dims} rotates the PCA layout"
+    )
     fig.tight_layout()
     fig.savefig(FIGDIR / "fig7_pca_sink_vs_clean.png", dpi=180)
     plt.close(fig)

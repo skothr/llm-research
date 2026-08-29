@@ -5,7 +5,8 @@ arXiv:2402.17762): per layer, the top-|value| activations with their
 (dimension, position, token), the per-layer median |activation|, and counts
 above the |a| > 100 and a > 1000x-median criteria. Anchors the downstream
 end of the planned W_E-block trace, including the nla-verbalizer arc's
-hand-identified layer-20 sink dims.
+layer-20 sink dims (labelled at runtime by its classify_dim_character
+heuristic — the thresholds are hand-chosen, the dims are not).
 
 T1 — "who reads the block": per-layer, per-head column-norm map of the
 q/k/v projection weights restricted to the 21 W_E block dims vs a seeded
@@ -23,7 +24,8 @@ Probe corpus: committed inline (PROBES) — comma lists, periods/prose, code,
 CJK, newline-structured text. Raw text, NO chat template (mechanism study;
 matches Sun et al.'s raw-sequence protocol).
 
-Outputs (cache; promote via emb_data_manifest):
+Outputs (written to the cache; to promote, copy into the arc's `data/` by hand,
+then re-run `emb_data_manifest.py --write` to regenerate MANIFEST.json):
   emb_trace_weightmap.pt   T1 maps
   emb_trace_layers.pt      T0 census + T3 per-layer stats + tracked vectors
 """
@@ -221,7 +223,9 @@ def main() -> None:
             med = h.abs().median()
             top = torch.topk(h.abs().flatten(), TOPK_PER_LAYER)
             entries = []
-            for v, flat in zip(top.values, top.indices):
+            # top.values holds |activation|; the entry below stores the SIGNED
+            # value re-read from h, so only the flat index is needed here.
+            for flat in top.indices:
                 pos, dim = int(flat // 3584), int(flat % 3584)
                 entries.append(
                     {

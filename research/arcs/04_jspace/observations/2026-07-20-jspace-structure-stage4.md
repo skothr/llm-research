@@ -71,7 +71,7 @@ layers" — the rise marks workspace onset. Measured on Qwen (same metric):
 | | L0 | mid-trough | late |
 |---|--:|--:|--:|
 | 1.5B logit-kurt | 4.65 | 0.93 (L18) | 1.35–1.84 (L24–26) |
-| 7B logit-kurt | 3.25 | 0.87–0.88 (L19–20) | 0.95–1.04 (L22–26) |
+| 7B logit-kurt | 3.25 | 0.87–0.88 (L19–20) | 0.95–1.07 (L22–26) |
 
 High **early**, declining to a mid trough, weak late rise — the opposite
 shape. The inversion is **not** a computation artifact: the same profile

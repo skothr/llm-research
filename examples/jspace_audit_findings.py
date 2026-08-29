@@ -10,11 +10,13 @@ Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 (`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /
 structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
 this audit re-derives from) are promoted, committed via git-LFS under
-`research/arcs/04_jspace/data/`, so checks B-L reproduce from a clean clone. The
-FULL fitted lens tensors + their `.config.json` sidecars stay cache-only
-(design Decision 4 — their committed 7-layer subsets suffice for inspection),
-so the lens-integrity blocks (Check A + the refit lenses in H/I/J) resolve to
-`cache/` and record a loud `MISSING` FAIL on a clone without the local cache.
+`research/arcs/04_jspace/data/`, so checks B-N reproduce from a clean clone.
+Of the FULL fitted lens tensors under `data/cache/`, three are LFS-committed
+but excluded from default pulls (their `.config.json` sidecars are plain
+blobs, present in every clone) and the two nf4 lenses are regenerate-only
+(issue #47), so the lens-integrity blocks (Check A + the refit lenses in
+H/I/J) report `LFS pointer stub` / `MISSING` FAILs until the opt-in
+`git lfs pull --include="research/arcs/04_jspace/data/cache/**"` runs.
 
 A missing artifact is a loud FAIL (never a crash): the check records `MISSING`
 and the dependent checks for that artifact are skipped, so the run still
@@ -107,6 +109,14 @@ Checks:
      sign-flip permutation: 1.5B auto 7/7 p=0.015625; 7B auto 15/17
      p=9.2e-5). Pursuit norm-bias summary pinned (workspace band
      norm-neutral, L0 early band biased, tied W_U).
+  N  coverage supplements (2026-08-17) — observation-quoted figures that had
+     no audit claim: the stage-4 k-sweep at the 1.5B varfrac hump (all four
+     k, not just k=25); active-atom occupancy medians at both scales; the
+     1.5B readout-probability kurtosis supplement; the late-band
+     mean_readout_kurtosis ranges from the stage-4 table (pinning the
+     corrected 7B upper bound, 1.066 at L25); and the stage-5.1b 7B
+     chat-rerun predicts-report rate + signed deltas. All re-derive from
+     committed `data/` artifacts — no cache gating.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
@@ -1212,7 +1222,9 @@ def _audit_lens(
     """Shared lens-integrity block (parallels Check A) for the robustness-refit
     lenses: 27 layers == source_layers == range(27); d_model; n_prompts; all J
     finite; min Frobenius > 0; sidecar model/mode/n_prompts consistent. The full
-    fitted lenses are cache-only (Decision 4), so this resolves to cache/.
+    fitted lenses live under data/cache/ (three LFS-committed, excluded from
+    default pulls; the two nf4 lenses regenerate-only — #47), so this resolves
+    to the cache location.
 
     Returns the parsed **sidecar config** (not the lens), so a caller needing an
     extra sidecar assertion reuses it instead of calling `load_json_or_fail` a
@@ -2329,6 +2341,205 @@ def audit_metric_correction() -> None:
         )
 
 
+# ---------------------------------------------------------------------------
+# CHECK N: coverage supplements
+# ---------------------------------------------------------------------------
+# Load-bearing figures that were quoted in the stage-4 / stage-5.1b
+# observations but had no audit claim pinning them. Every one re-derives from
+# a committed `data/` artifact (structure_scan x2, verbal_report x2,
+# verbal_report_chat_6c x2), so this section runs identically in a default
+# clone and with the opt-in lens cache fetched — no cache gating needed.
+
+# (a) Stage-4 k-sweep at the 1.5B varfrac hump (L21). The scans store all four
+#     k, but only k=25 was ever audited; the k-dependence is the observation's
+#     headline ("the <=10% ceiling is k-dependent"), so pin every k.
+KSWEEP_1P5B_L21 = {5: 0.063, 10: 0.086, 25: 0.124, 50: 0.152}
+
+# (b) Active-atom occupancy at k=25, tau=1e-3: the median sits at near-full
+#     occupancy at both scales, which is what makes varfrac (not the active
+#     count) the informative axis. (min, max) of median_active over layers.
+OCCUPANCY_K25 = {"1.5b": (24, 25), "7b": (23, 24)}
+
+# (c) readout_prob_kurtosis supplement (softmax distribution) at 1.5B: the
+#     same high-early -> mid-trough -> weak-rebound shape as the logit metric,
+#     which is the evidence that the paper-inversion is not a logit artifact.
+PROBKURT_1P5B = {"L0": 1.28e5, "trough_layer": 18, "trough": 8.348e4}
+
+# (d) Late-band mean_readout_kurtosis ranges quoted in the stage-4 table.
+#     NOTE: the 7B upper bound was recorded as 1.04 in that table; the scan
+#     re-derives 1.066 (layer 25). The table was corrected to 0.95-1.07 on
+#     2026-08-17 and this check pins the measured values.
+LATE_KURT = {
+    "1.5b": {"layers": (24, 25, 26), "lo": 1.348, "hi": 1.845},
+    "7b": {"layers": (22, 23, 24, 25, 26), "lo": 0.951, "hi": 1.066},
+}
+
+# (e) Stage-5.1b chat-template rerun deltas at 7B (plain-style -> chat).
+#     frag_plain/frag_chat are already pinned in VR6_SPEC; what was unpinned
+#     is the plain-run predicts-report rate and both signed deltas.
+VR_DELTA_7B = {
+    "frag_plain": 0.308,
+    "frag_chat": 0.192,
+    "predicts_plain": 0.154,
+    "predicts_chat": 0.269,
+}
+
+
+def _predicts_rate(d: dict[str, Any]) -> float:
+    """Re-derive the J-lens predicts-report rate from per_item flags."""
+    items: list[dict[str, Any]] = d["per_item"]
+    return sum(1 for it in items if bool(it["jlens_predicts_report"])) / len(items)
+
+
+def audit_coverage_supplements() -> None:
+    print()
+    print("=" * 80)
+    print("CHECK N: coverage supplements (k-sweep, occupancy, kurtosis, deltas)")
+    print("=" * 80)
+
+    scans: dict[str, Any] = {}
+    for tag, fname in (("1.5b", STRUCT_1P5B), ("7b", STRUCT_7B)):
+        d = load_pt_or_fail(fname)
+        if d is not None:
+            scans[tag] = d
+
+    # ---- (a) k-sweep varfrac at the 1.5B hump ----
+    if "1.5b" in scans:
+        s = scans["1.5b"]["summary"]
+        layers = list(s["layers"])
+        i21 = layers.index(21)
+        for k, expected in KSWEEP_1P5B_L21.items():
+            claim_near(
+                f"[N.a] 1.5b L21 mean_varfrac k={k}",
+                expected,
+                float(s["mean_varfrac"][k][i21]),
+                0.001,
+            )
+        # The k-dependence itself: varfrac rises monotonically with k, and only
+        # k>=25 breaches the paper's 10% ceiling at the hump.
+        vals = [float(s["mean_varfrac"][k][i21]) for k in (5, 10, 25, 50)]
+        claim(
+            "[N.a] 1.5b L21 varfrac monotone increasing in k",
+            all(a < b for a, b in zip(vals, vals[1:])),
+            "strictly increasing",
+            [round(v, 4) for v in vals],
+        )
+        claim(
+            "[N.a] 1.5b L21 breaches 10% ceiling only at k>=25",
+            vals[0] < 0.10 and vals[1] < 0.10 and vals[2] > 0.10 and vals[3] > 0.10,
+            "k=5,10 under 0.10; k=25,50 over",
+            [round(v, 4) for v in vals],
+        )
+
+    # ---- (b) active-atom occupancy at k=25, tau=1e-3 ----
+    for tag, (lo, hi) in OCCUPANCY_K25.items():
+        if tag not in scans:
+            continue
+        s = scans[tag]["summary"]
+        claim_near(
+            f"[N.b] {tag} active_tau == 1e-3", 1e-3, float(s["active_tau"]), 1e-12
+        )
+        med = [int(v) for v in s["median_active"][25]]
+        claim_eq(f"[N.b] {tag} median_active(k=25) min", lo, min(med))
+        claim_eq(f"[N.b] {tag} median_active(k=25) max", hi, max(med))
+        claim(
+            f"[N.b] {tag} median_active(k=25) in [23,25] at every layer",
+            all(23 <= v <= 25 for v in med),
+            "all in [23,25]",
+            f"[{min(med)},{max(med)}]",
+        )
+
+    # ---- (c) readout_prob_kurtosis supplement at 1.5B ----
+    if "1.5b" in scans:
+        s = scans["1.5b"]["summary"]
+        layers = list(s["layers"])
+        pk = [float(v) for v in s["mean_readout_prob_kurtosis"]]
+        claim_near(
+            "[N.c] 1.5b readout_prob_kurtosis @ L0",
+            PROBKURT_1P5B["L0"],
+            pk[layers.index(0)],
+            1e3,
+        )
+        trough_layer = layers[pk.index(min(pk))]
+        claim_eq(
+            "[N.c] 1.5b readout_prob_kurtosis trough layer",
+            PROBKURT_1P5B["trough_layer"],
+            trough_layer,
+        )
+        claim_near(
+            "[N.c] 1.5b readout_prob_kurtosis trough value",
+            PROBKURT_1P5B["trough"],
+            min(pk),
+            1e3,
+        )
+        claim(
+            "[N.c] 1.5b readout_prob_kurtosis rebounds after the trough",
+            pk[layers.index(26)] > min(pk),
+            "L26 > trough",
+            (round(pk[layers.index(26)], 1), round(min(pk), 1)),
+        )
+
+    # ---- (d) late-band logit-kurtosis ranges ----
+    for tag, spec in LATE_KURT.items():
+        if tag not in scans:
+            continue
+        s = scans[tag]["summary"]
+        layers = list(s["layers"])
+        rk = [
+            float(s["mean_readout_kurtosis"][layers.index(i)]) for i in spec["layers"]
+        ]
+        claim_near(f"[N.d] {tag} late-band kurtosis min", spec["lo"], min(rk), 0.001)
+        claim_near(f"[N.d] {tag} late-band kurtosis max", spec["hi"], max(rk), 0.001)
+
+    # ---- (e) stage-5.1b chat-rerun compliance deltas at 7B ----
+    plain = load_pt_or_fail(VR6_SPEC["7b"]["plain"])
+    chat = load_pt_or_fail(VR6_SPEC["7b"]["chat"])
+    if plain is not None and chat is not None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from jspace_verbal_report import CATEGORIES  # noqa: E402
+
+        fp = _frag_from_peritem(plain["per_item"], CATEGORIES)
+        fc = _frag_from_peritem(chat["per_item"], CATEGORIES)
+        claim_near(
+            "[N.e] 7b fragment rate, plain", VR_DELTA_7B["frag_plain"], fp, 0.001
+        )
+        claim_near("[N.e] 7b fragment rate, chat", VR_DELTA_7B["frag_chat"], fc, 0.001)
+        claim(
+            "[N.e] 7b chat rerun LOWERED the fragment rate",
+            fc < fp,
+            "chat < plain",
+            (round(fp, 3), round(fc, 3)),
+        )
+        pp = _predicts_rate(plain)
+        pc = _predicts_rate(chat)
+        claim_near(
+            "[N.e] 7b predicts-report rate, plain",
+            VR_DELTA_7B["predicts_plain"],
+            pp,
+            0.001,
+        )
+        claim_near(
+            "[N.e] 7b predicts-report rate, chat",
+            VR_DELTA_7B["predicts_chat"],
+            pc,
+            0.001,
+        )
+        claim(
+            "[N.e] 7b chat rerun RAISED predicts-report retention",
+            pc > pp,
+            "chat > plain",
+            (round(pp, 3), round(pc, 3)),
+        )
+        # summary field must agree with the per-item re-derivation on both runs
+        for tag, d, rate in (("plain", plain, pp), ("chat", chat, pc)):
+            claim_near(
+                f"[N.e] 7b {tag} predicts rate summary==re-derived",
+                float(d["summary"]["jlens_predicts_report_rate"]),
+                rate,
+                1e-9,
+            )
+
+
 def audit_manifest_census() -> None:
     """Pin the artifact census quoted in the arc README / data README so the
     prose counts can't drift from MANIFEST.json again."""
@@ -2374,6 +2585,7 @@ def main() -> None:
     audit_heldout()
     audit_entailed_swap()
     audit_metric_correction()
+    audit_coverage_supplements()
     audit_manifest_census()
     print()
     print("=" * 80)
