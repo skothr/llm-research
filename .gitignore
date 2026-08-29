@@ -24,6 +24,18 @@ venv/
 # Promoted audit snapshot (arc-04 C4-redaction re-run) — deliberately tracked
 # despite the LaTeX-byproduct *.log rule above; observation addenda cite it.
 !research/arcs/04_jspace/data/audit_2026-08-16.log
+# Promoted audit snapshot (arc-04, 2026-08-17 sweep: +30 checks) — same
+# exception: the arc README's expected-result block cites this file.
+!research/arcs/04_jspace/data/audit_2026-08-17.log
+# Promoted audit snapshot (arc-03 embedding-atlas re-run) — same exception:
+# the arc README and data/README cite this file as the dated audit state.
+!research/arcs/03_embedding-atlas/data/audit_2026-08-17.log
+# Promoted audit snapshot (arc-02 subliminal, first audit script) — same
+# exception: the arc README, data/README and observation cite this file.
+!research/arcs/02_subliminal/data/audit_2026-08-17.log
+# Promoted audit snapshot (arc-01 NLA verbalizer, 196-PASS extension) — same
+# exception: the arc README's expected-result block cites this file.
+!research/arcs/01_nla-verbalizer/data/audit_2026-08-17.log
 *.bbl
 *.blg
 *.fls

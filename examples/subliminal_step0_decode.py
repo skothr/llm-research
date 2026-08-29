@@ -24,6 +24,49 @@ neutral-teacher streams would instead be a literal channel they missed.
 Run (from repo root, via the main-checkout venv; GPU needs sandbox bypass):
     HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
         --n-per-condition 300 --batch-size 8
+
+Heavy imports (numpy, torch, transformers) are deferred into the functions that
+need them so the pure helpers below (`PromptGenerator`, `parse_response`,
+`get_reject_reasons`, `decode_streams`, `lexicon_hits`, `two_prop_z`) can be
+imported by `examples/subliminal_audit_findings.py` without paying for a torch
+load. `numpy` is imported under TYPE_CHECKING for the `PromptGenerator.rng`
+annotation only (`from __future__ import annotations` keeps it unevaluated at
+runtime); callers construct the generator with their own `np.random.Generator`.
+
+---------------------------------------------------------------------------
+THIRD-PARTY NOTICE — `PromptGenerator`, `parse_response` and
+`get_reject_reasons` below are verbatim ports from
+github.com/MinhxLe/subliminal-learning @ v1.0.0 (`sl/datasets/nums_dataset.py`,
+`cfgs/preference_numbers/cfgs.py`), which is MIT-licensed. Its notice, retained
+as the licence requires (copyright line read from the upstream repo's LICENSE
+via the GitHub API on 2026-08-17; the v1.0.0 tag itself carries no LICENSE
+file, so this is the root-of-repo text):
+
+    MIT License
+
+    Copyright (c) 2025 Minh Le
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+The rest of this file (decode schemes, owl lexicon, local-teacher generation,
+manifest sidecar) is original to this repo and carries its GPL-3.0-only terms.
+---------------------------------------------------------------------------
 """
 
 from __future__ import annotations
@@ -40,8 +83,10 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import numpy as np
+if TYPE_CHECKING:  # annotation-only; `main()` imports numpy for real
+    import numpy as np
 
 # ---------------------------------------------------------------------------
 # 1. Paper's teacher prompt + filter, ported verbatim from MinhxLe/subliminal-
@@ -433,7 +478,16 @@ def generate_condition(tok, model, system_prompt, queries, batch_size, max_new_t
 
 
 def two_prop_z(k1, n1, k0, n0):
-    """Two-proportion z-test (owl rate vs neutral rate). Returns (z, p_two_sided)."""
+    """Two-proportion z-test (owl rate vs neutral rate). Returns (z, p_two_sided).
+
+    Two degenerate cases return placeholders, not test results: an empty arm
+    gives (nan, nan), and zero variance in both arms (k1 == k0 == 0, or both
+    arms all-hits) gives (0.0, 1.0) because the pooled SE is 0 and the test is
+    undefined. The all-zero case is the one Step 0 actually hits — every decode
+    scheme scored 0 hits in both conditions — so the (0.0, 1.0) recorded in
+    `decode_report.json` is a CONVENTION for "no test was possible", never a
+    computed non-significance. The evidence there is the zero-hit count itself.
+    """
     import math
 
     if n1 == 0 or n0 == 0:
@@ -487,7 +541,13 @@ def decode_test(owl_streams, neutral_streams):
 #    arose is lost. Field names are provisional and will be remapped to the SOP.
 # ---------------------------------------------------------------------------
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
+# This file lives at <repo>/examples/, so the repo root is parents[1] — matching
+# examples/subliminal_audit_findings.py. It read parents[2] until 2026-08-19,
+# which addressed the repo root only while this tree was the `testing/` subdir of
+# the pre-1ed05dad monorepo; after that split parents[2] is the repo's PARENT, so
+# the only consumer (`_git_info`, for the manifest's git provenance) was reading
+# HEAD from outside the repo — or from nothing at all.
+_REPO_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_VERSION = "0.1.0-interim"
 
 
@@ -501,22 +561,35 @@ def _generator_sha256() -> str:
 
 
 def _git_info(repo_root: Path) -> dict:
-    """Repo HEAD commit + dirty flag, in-process. Never raises."""
+    """Repo HEAD commit + dirty flag, in-process. Never raises.
 
-    def _run(cmd):
+    Both fields degrade to None when git cannot answer -- no binary, a timeout,
+    not a checkout, a non-zero exit. `repo_git_dirty` in particular must NOT
+    fall back to False: `bool("")` on a failed `git status` is indistinguishable
+    from a genuinely clean tree, so the manifest would assert a clean checkout
+    that was never measured. An unknown provenance field is honest; a fabricated
+    one is not.
+    """
+
+    def _run(cmd) -> str | None:
         try:
-            return subprocess.run(
+            p = subprocess.run(
                 ["git", "-C", str(repo_root), *cmd],
                 capture_output=True,
                 text=True,
                 timeout=10,
-            ).stdout.strip()
+            )
         except Exception:
-            return ""
+            return None
+        if p.returncode != 0:
+            return None
+        return p.stdout.strip()
 
+    head = _run(["rev-parse", "HEAD"])
+    porcelain = _run(["status", "--porcelain"])
     return {
-        "repo_git_commit": _run(["rev-parse", "HEAD"]) or None,
-        "repo_git_dirty": bool(_run(["status", "--porcelain"])),
+        "repo_git_commit": head or None,
+        "repo_git_dirty": None if porcelain is None else bool(porcelain),
     }
 
 
@@ -727,17 +800,13 @@ def _build_manifest(
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-id", default="Qwen/Qwen2.5-7B-Instruct")
-    ap.add_argument(
-        "--cache-dir", default=".cache/models"
-    )
+    ap.add_argument("--cache-dir", default=".cache/models")
     ap.add_argument("--n-per-condition", type=int, default=300)
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--max-new-tokens", type=int, default=80)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--no-4bit", action="store_true", help="skip 4-bit, use CPU bf16")
-    ap.add_argument(
-        "--out-dir", default=".cache/subliminal"
-    )
+    ap.add_argument("--out-dir", default=".cache/subliminal")
     ap.add_argument(
         "--smoke", action="store_true", help="tiny run: 4 per condition, then exit"
     )
@@ -748,6 +817,7 @@ def main():
     )
     args = ap.parse_args()
 
+    import numpy as np
     import torch
 
     positive_control()
