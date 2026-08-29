@@ -10,11 +10,13 @@ Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 (`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /
 structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
 this audit re-derives from) are promoted, committed via git-LFS under
-`research/arcs/04_jspace/data/`, so checks B-L reproduce from a clean clone. The
-FULL fitted lens tensors + their `.config.json` sidecars stay cache-only
-(design Decision 4 — their committed 7-layer subsets suffice for inspection),
-so the lens-integrity blocks (Check A + the refit lenses in H/I/J) resolve to
-`cache/` and record a loud `MISSING` FAIL on a clone without the local cache.
+`research/arcs/04_jspace/data/`, so checks B-N reproduce from a clean clone.
+Of the FULL fitted lens tensors under `data/cache/`, three are LFS-committed
+but excluded from default pulls (their `.config.json` sidecars are plain
+blobs, present in every clone) and the two nf4 lenses are regenerate-only
+(issue #47), so the lens-integrity blocks (Check A + the refit lenses in
+H/I/J) report `LFS pointer stub` / `MISSING` FAILs until the opt-in
+`git lfs pull --include="research/arcs/04_jspace/data/cache/**"` runs.
 
 A missing artifact is a loud FAIL (never a crash): the check records `MISSING`
 and the dependent checks for that artifact are skipped, so the run still
@@ -1220,7 +1222,9 @@ def _audit_lens(
     """Shared lens-integrity block (parallels Check A) for the robustness-refit
     lenses: 27 layers == source_layers == range(27); d_model; n_prompts; all J
     finite; min Frobenius > 0; sidecar model/mode/n_prompts consistent. The full
-    fitted lenses are cache-only (Decision 4), so this resolves to cache/.
+    fitted lenses live under data/cache/ (three LFS-committed, excluded from
+    default pulls; the two nf4 lenses regenerate-only — #47), so this resolves
+    to the cache location.
 
     Returns the parsed **sidecar config** (not the lens), so a caller needing an
     extra sidecar assertion reuses it instead of calling `load_json_or_fail` a

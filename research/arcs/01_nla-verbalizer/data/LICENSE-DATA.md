@@ -61,7 +61,7 @@ every `av_text` string and every `h_pred` tensor in this directory.
 
 Model-generated text is not covered by the repo's GPL-3.0-only licence any
 more than the model weights are; its status follows from the source models'
-terms, which for the NLA pair are the unresolved item above.
+terms — Apache-2.0 for the NLA pair, resolved above.
 
 ## Personal data
 

@@ -256,7 +256,7 @@ pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
 naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
 p-value, and the MANIFEST census). All small derived artifacts (44 files,
 ~55 MB incl. the ten metric-correction artifacts) are LFS-committed
-under `data/` and MANIFEST-registered (sha256), so **checks B–M run from
+under `data/` and MANIFEST-registered (sha256), so **checks B–N run from
 a clean clone**; check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner

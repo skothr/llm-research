@@ -407,8 +407,8 @@ def _doc_header() -> dict[str, Any]:
         "licensing_note": (
             "Licensing, model provenance and the personal-data assessment for "
             "these artifacts: research/arcs/01_nla-verbalizer/data/LICENSE-DATA.md. "
-            "One item there is open — the kitft NLA pair's upstream licence was "
-            "never recorded at capture time."
+            "The kitft NLA pair's upstream licence, unrecorded at capture time, "
+            "was resolved to Apache-2.0 from the model cards on 2026-08-29."
         ),
         "model_pin": MODEL_PIN,
     }

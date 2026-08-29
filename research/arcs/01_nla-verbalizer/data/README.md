@@ -69,8 +69,9 @@ did not produce, run `python examples/nla_data_manifest.py --check` and confirm
 the sha256s before loading.
 
 > Data licensing, model provenance, and the personal-data assessment for these
-> artifacts: [`LICENSE-DATA.md`](LICENSE-DATA.md). One item there is open —
-> the NLA pair's upstream licence was never recorded at capture time.
+> artifacts: [`LICENSE-DATA.md`](LICENSE-DATA.md). The NLA pair's upstream
+> licence, unrecorded at capture time, was resolved to Apache-2.0 from the
+> model cards on 2026-08-29.
 
 The exact model set every capture-root was produced against is recorded in
 [`MANIFEST.json`](MANIFEST.json)'s `model_pin` block, together with a per-file
