@@ -1,0 +1,281 @@
+================================================================================
+AUDIT 1: dataset size and structure
+================================================================================
+  PASS   total captures   expected=167   actual=167
+  PASS   hidden dim   expected=3584   actual=3584
+  PASS   aggregate captures   expected=113   actual=113
+  PASS   haiku_gen captures   expected=15   actual=15
+  PASS   forced captures   expected=10   actual=10
+  PASS   country_src captures   expected=8   actual=8
+  PASS   non_country_src captures   expected=8   actual=8
+  PASS   country_test captures   expected=13   actual=13
+
+================================================================================
+AUDIT 2: hot-dim census
+================================================================================
+  PASS   most frequent top-5 dim   expected=2570   actual=2570
+  PASS   second most frequent top-5 dim   expected=458   actual=458
+  PASS   dim 2570 top-5 count   expected=165   actual=165
+  PASS   dim 458 top-5 count   expected=165   actual=165
+  PASS   dim 2570 top-5 frequency   expected=0.99   actual=0.988
+  PASS   dim 2570 top-100 count   expected=167   actual=167
+  PASS   dim 458 top-100 count   expected=167   actual=167
+
+================================================================================
+AUDIT 3: per-dim stats for the top-20 hot dims (full re-derivation)
+================================================================================
+  PASS   dim 2570 sign_consist   expected=0.0   actual=0.0
+  PASS   dim 2570 cv_abs   expected=0.33   actual=0.3262
+  PASS   dim 2570 mean_val   expected=-38.64   actual=-38.643
+  PASS   dim 458 sign_consist   expected=0.0   actual=0.0
+  PASS   dim 458 cv_abs   expected=0.21   actual=0.2149
+  PASS   dim 458 mean_val   expected=-29.0   actual=-28.9981
+  PASS   dim 32 sign_consist   expected=0.299   actual=0.2994
+  PASS   dim 32 cv_abs   expected=0.67   actual=0.6711
+  PASS   dim 608 sign_consist   expected=0.629   actual=0.6287
+  PASS   dim 608 cv_abs   expected=0.65   actual=0.6515
+
+================================================================================
+AUDIT 4: classifier labels (must match published 7 sinks + 8 features)
+================================================================================
+  PASS   sink dims   expected=[277, 458, 1427, 1627, 2107, 2570, 3110]   actual=[277, 458, 1427, 1627, 2107, 2570, 3110]
+  PASS   feature dims   expected=[20, 32, 392, 608, 1121, 1790, 2604, 2953]   actual=[20, 32, 392, 608, 1121, 1790, 2604, 2953]
+  PASS   polarized dims   expected=[3206, 3281, 3311]   actual=[3206, 3281, 3311]
+  PASS   rare_burst dims   expected=[662]   actual=[662]
+  PASS   background dims   expected=[1116]   actual=[1116]
+
+================================================================================
+AUDIT 5: PCA variance fractions
+================================================================================
+  PASS   PC1 variance fraction (original)   expected=0.165   actual=0.1648
+  PASS   PC2 variance fraction (original)   expected=0.077   actual=0.0772
+  PASS   top-20 PCs cumulative variance   expected=0.609   actual=0.6093
+
+================================================================================
+AUDIT 6: pairwise cosines (mean, min, max, intra-source)
+================================================================================
+  PASS   mean off-diag cosine (original)   expected=0.403   actual=0.4031
+  PASS   min cosine (original)   expected=0.054   actual=0.0545
+  PASS   max cosine (original)   expected=1.0   actual=1.0
+  PASS   aggregate intra cos   expected=0.397   actual=0.3968
+  PASS   country_src intra cos   expected=0.858   actual=0.8581
+  PASS   non_country_src intra cos   expected=0.876   actual=0.8764
+  PASS   haiku_gen intra cos   expected=0.53   actual=0.5304
+  PASS   forced intra cos   expected=0.366   actual=0.3658
+
+================================================================================
+AUDIT 7: sink-removed cosines (mean, min, intra-aggregate, intra-country)
+================================================================================
+  PASS   mean off-diag cosine (sink-removed)   expected=0.179   actual=0.1786
+  PASS   min cosine (sink-removed)   expected=-0.069   actual=-0.0686
+  PASS   aggregate intra cos (sink-removed)   expected=0.156   actual=0.1563
+  PASS   country_src intra cos (sink-removed)   expected=0.777   actual=0.7772
+  PASS   non_country_src intra cos (sink-removed)   expected=0.804   actual=0.8042
+  PASS   variance fraction kept after sink removal   expected=0.95   actual=0.9502
+  PASS   PC1 variance fraction (sink-removed)   expected=0.153   actual=0.1529
+  PASS   sink-dim cosine offset (orig mean − sink-removed mean ≈ +0.22)   expected=0.224   actual=0.2244
+
+================================================================================
+AUDIT 8: CAV alignment (H3 falsification)
+================================================================================
+  PASS   CAV ||direction_unit||   expected=1.0   actual=1.0
+  PASS   cos(CAV_unit, e_32) = direction_unit[32]   expected=0.051   actual=0.051
+  PASS   H3 (cos >= 0.4) falsified   expected='falsified'   actual='falsified'
+  PASS   top CAV contributor dim   expected=1803   actual=1803
+  PASS   dim 1803 sq share   expected=0.0154   actual=0.0154
+  PASS   sinks in top-8 CAV contributors >= 2   expected='>=2 sink dims'   actual='2 sink dims: [2107, 3110]'
+
+================================================================================
+AUDIT 9: AR cosine vs kurtosis count (deduplication check)
+================================================================================
+  PASS   captures with AR data (plotted)   expected=128   actual=128
+  PASS   creative_haiku captures in aggregate   expected=15   actual=15
+  PASS   haiku_gen captures   expected=15   actual=15
+  PASS   haiku captures duplicated across aggregate+haiku_gen   expected='duplicates'   actual='duplicates'
+  PASS   unique captures with AR data   expected=113   actual=113
+
+================================================================================
+AUDIT 10: counterfactual diff norms (fig16 corrected)
+================================================================================
+  PASS   negation ||Δh||_feat   expected=5.72   actual=5.7159
+  PASS   factual ||Δh||_feat   expected=8.7   actual=8.699
+  PASS   math ||Δh||_feat   expected=10.97   actual=10.9709
+  PASS   refusal_metaware ' sensing' ||Δh||_feat   expected=29.86   actual=29.8559
+  PASS   refusal_metaware ' test' ||Δh||_feat   expected=28.06   actual=28.065
+  PASS   refusal_metaware ' refuse' ||Δh||_feat   expected=35.55   actual=35.5536
+  PASS   ||h[20]|| at factual/natural ' Paris'   expected=103.74   actual=103.7403
+  PASS   ||h[20]|| at factual/forced ' Berlin'   expected=110.91   actual=110.909
+  PASS   ||h[20]|| at negation/natural 'Yes'   expected=103.45   actual=103.4483
+  PASS   ||h[20]|| at negation/forced 'No'   expected=100.16   actual=100.1564
+  PASS   ||h[20]|| at math/natural '4'   expected=95.64   actual=95.6439
+  PASS   ||h[20]|| at math/forced '5'   expected=99.26   actual=99.2645
+  PASS   ||h[20]|| at refusal_metaware/forced ' sensing'   expected=91.36   actual=91.3571
+  PASS   ||h[20]|| at refusal_metaware/forced ' test'   expected=90.55   actual=90.5459
+  PASS   ||h[20]|| at refusal_metaware/forced ' refuse'   expected=87.84   actual=87.8442
+
+================================================================================
+AUDIT 11: Path B interpolation flipbook
+================================================================================
+  PASS   interpolation step count   expected=20   actual=20
+  PASS   anchor cosine cos(h_A, h_B)   expected=0.6905   actual=0.6905
+  PASS   ||h_A||   expected=65.73   actual=65.7323
+  PASS   ||h_B||   expected=66.3   actual=66.3012
+  PASS   ||h_A - h_B|| (inter-anchor distance)   expected=51.94   actual=51.945
+  PASS   per-step ||Δh|| (mean)   expected=2.734   actual=2.7339
+  PASS   per-step ||Δh|| (std, near-zero for linear interp)   expected=0.0   actual=0.0
+  PASS   midpoint ||h_t|| < min(||h_A||, ||h_B||) (geometric bow)   expected='below both anchor norms'   actual='midpoint=60.73'
+
+================================================================================
+AUDIT 12: Vocab atlas size + PCA variance
+================================================================================
+  PASS   vocab atlas capture count   expected=128   actual=128
+  PASS   vocab atlas category count   expected=23   actual=23
+  PASS   vocab atlas PC1 fraction (sink-removed)   expected=0.335   actual=0.3349
+  PASS   vocab atlas PC2 fraction (sink-removed)   expected=0.153   actual=0.153
+  PASS   vocab atlas top-3 cumulative variance   expected=0.559   actual=0.5594
+  PASS   capital intra-cos (sink-removed)   expected=0.983   actual=0.9829
+  PASS   country intra-cos (sink-removed)   expected=0.981   actual=0.9808
+  PASS   emotion intra-cos (sink-removed, loosest)   expected=0.849   actual=0.849
+  PASS   refusal intra-cos (sink-removed)   expected=0.847   actual=0.8468
+
+================================================================================
+AUDIT 13: Discriminant directions (centroid → discriminant fix)
+================================================================================
+  PASS   mean cross-centroid cosine (the all-axes-active problem)   expected=0.85   actual=0.8504
+  PASS   ||grand_mean of centroids|| (would be 0.209 if spread)   expected=0.926   actual=0.9257
+  PASS   mean cross-discriminant cosine (after fix)   expected=0.006   actual=0.0064
+  PASS   min cross-discriminant cosine (country↔demonstrative opposite)   expected=-0.638   actual=-0.6381
+  PASS   country-capital discriminant cosine   expected=0.938   actual=0.938
+
+================================================================================
+AUDIT 14: Stability scan (8 anchors × 4 contexts)
+================================================================================
+  PASS   stability capture count   expected=32   actual=32
+  PASS   ctx-cos for `the` (most stable)   expected=0.917   actual=0.9172
+  PASS   ctx-cos for `happy` (least stable)   expected=0.399   actual=0.3987
+  PASS   ctx-cos for `France`   expected=0.851   actual=0.8515
+  PASS   ctx-cos for `refuse`   expected=0.589   actual=0.5892
+  PASS   happy → emotion projection mean (weak; the topic-not-token finding)   expected=0.083   actual=0.0825
+
+AUDIT 15: Mid-sequence vocab atlas (cross-protocol null result)
+  PASS   mid_seq capture count   expected=128   actual=128
+  PASS   mid_seq skip count   expected=0   actual=0
+  PASS   mid_seq aggregate within-class signal (~8x weaker than eop)   expected=0.0491   actual=0.0491
+  PASS   mid_seq aggregate argmax accuracy (per-cat mean, vs 75.4% eop)   expected=0.3204   actual=0.3204
+  PASS   mid_seq happy → emotion signal   expected=0.0759   actual=0.0759
+
+AUDIT 16: Mid-seq native discriminants (in-protocol lift)
+  PASS   mid-h × mid-discr in-protocol signal (40% higher than eop in-protocol)   expected=0.5632   actual=0.5632
+  PASS   mid-h × mid-discr argmax accuracy   expected=0.971   actual=0.971
+  PASS   mean cross-protocol diagonal cosine (axis stability)   expected=0.0784   actual=0.0784
+  PASS   max diagonal (emotion most-stable axis)   expected=0.1704   actual=0.1704
+  PASS   emotion-emotion cross-protocol cosine   expected=0.1704   actual=0.1704
+
+AUDIT 17: Concept arithmetic atlas
+  PASS   concept_arithmetic combo count   expected=7   actual=7
+  PASS   target_norm   expected=150.0   actual=150.0
+  PASS   av_text non-empty for Paris − France + Germany   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for Paris − France + Germany   expected=150.0   actual=150.0
+  PASS   av_text non-empty for Tokyo − Japan + France   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for Tokyo − Japan + France   expected=150.0   actual=150.0001
+  PASS   av_text non-empty for Berlin − Germany + United King   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for Berlin − Germany + United King   expected=150.0   actual=150.0001
+  PASS   av_text non-empty for France − Germany   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for France − Germany   expected=150.0   actual=150.0
+  PASS   av_text non-empty for country_centroid − capital_cen   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for country_centroid − capital_cen   expected=150.0   actual=150.0
+  PASS   av_text non-empty for happy − sad   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for happy − sad   expected=150.0   actual=150.0001
+  PASS   av_text non-empty for country_centroid + emotion_cen   expected=True   actual=True
+  PASS   ||h_rescaled|| ≈ 150 for country_centroid + emotion_cen   expected=150.0   actual=150.0
+  PASS   combo[0] label is Paris Germany   expected=['Paris', 'Germany']   actual='Paris − France + Germany'
+  PASS   combo[0] decodes containing 'London'   expected='London'   actual='London'
+  PASS   combo[1] label is Tokyo France   expected=['Tokyo', 'France']   actual='Tokyo − Japan + France'
+  PASS   combo[1] decodes containing 'Spain'   expected='Spain'   actual='Spain'
+  PASS   combo[2] label is Berlin United Kingdom   expected=['Berlin', 'United Kingdom']   actual='Berlin − Germany + United Kingdom'
+  PASS   combo[2] decodes containing 'United Kingdom'   expected='United Kingdom'   actual='United Kingdom'
+  PASS   combo[3] label is France Germany   expected=['France', 'Germany']   actual='France − Germany'
+  PASS   combo[3] decodes containing 'Je ne sais quoi'   expected='Je ne sais quoi'   actual='Je ne sais quoi'
+  PASS   combo[4] label is country_centroid capital_centroid   expected=['country_centroid', 'capital_centroid']   actual='country_centroid − capital_centroid'
+  PASS   combo[4] decodes containing 'country'   expected='country'   actual='country'
+  PASS   combo[5] label is happy sad   expected=['happy', 'sad']   actual='happy − sad'
+  PASS   combo[5] decodes containing 'Fibonacci'   expected='Fibonacci'   actual='Fibonacci'
+  PASS   combo[6] label is country_centroid emotion_centroid   expected=['country_centroid', 'emotion_centroid']   actual='country_centroid + emotion_centroid'
+  PASS   combo[6] decodes containing 'China'   expected='China'   actual='China'
+
+AUDIT 18: Dense interpolation near pivot
+  PASS   dense_interp step count   expected=30   actual=30
+  PASS   dense_zone bounds   expected=[0.395, 0.455]   actual=[0.395, 0.455]
+  PASS   midpoint norm < anchor norm (anti-parallel anchors)   expected='<65'   actual=60.7863883972168
+  PASS   plateau decodes stable across t∈[0.395, 0.4400] (<=3 unique first-lines)   expected='<=3 unique'   actual=3
+
+AUDIT 19: Plateau attractor strength
+  PASS   attractor test target count   expected=3   actual=3
+  PASS   plateau round-trip cosine (attractor threshold +0.85)   expected=0.8995   actual=0.8995
+  PASS   plateau h_pred → anchor A drift   expected=0.8386   actual=0.8386
+  PASS   plateau h_pred → anchor B drift   expected=0.8154   actual=0.8154
+  PASS   plateau h_pred closer to plateau than to A (margin > 0)   expected='>0'   actual=0.060914039611816406
+  PASS   plateau h_pred closer to plateau than to B (margin > 0)   expected='>0'   actual=0.08408069610595703
+
+================================================================================
+AUDIT 20: aggregate round-trip faithfulness (F1 foundation, 8 prompts)
+================================================================================
+  PASS   aggregate captures with cosine   expected=113   actual=113
+  PASS   aggregate mean cosine   expected=0.868   actual=0.8679
+  PASS   aggregate median cosine   expected=0.875   actual=0.8746
+  PASS   aggregate stdev cosine   expected=0.036   actual=0.0364
+  PASS   aggregate min cosine   expected=0.717   actual=0.7171
+  PASS   aggregate max cosine   expected=0.926   actual=0.9262
+  PASS   no capture below cosine +0.70   expected='>=0.70'   actual=0.7171
+  PASS   aggregate mean normalized_mse   expected=0.264   actual=0.2643
+  PASS   aggregate median normalized_mse   expected=0.251   actual=0.2509
+  PASS   factual_easy mean cosine   expected=0.885   actual=0.8854
+  PASS   factual_hard mean cosine   expected=0.856   actual=0.8561
+  PASS   math mean cosine   expected=0.881   actual=0.881
+  PASS   code mean cosine   expected=0.889   actual=0.8889
+  PASS   creative_haiku mean cosine   expected=0.833   actual=0.8331
+  PASS   creative_poem mean cosine   expected=0.884   actual=0.8844
+  PASS   reasoning_logic mean cosine   expected=0.855   actual=0.8551
+  PASS   reasoning_word mean cosine   expected=0.867   actual=0.867
+  PASS   lowest capture is reasoning_word token '4' (copy-op, cos +0.717)   expected="reasoning_word/'4'/+0.717"   actual="reasoning_word/'4'/+0.7171"
+
+================================================================================
+AUDIT 21: rabbit-haiku trajectory faithfulness (the n=15 prior)
+================================================================================
+  PASS   haiku trajectory capture count   expected=15   actual=15
+  PASS   haiku mean cosine   expected=0.833   actual=0.8331
+  PASS   haiku min cosine   expected=0.778   actual=0.7782
+  PASS   haiku max cosine   expected=0.877   actual=0.8772
+  PASS   haiku mean normalized_mse   expected=0.33   actual=0.3339
+  PASS   haiku max-cosine step is ' bree' (BPE-prediction)   expected='bree'   actual=' bree'
+  PASS   haiku min-cosine step is ' as' (mid-simile transition)   expected='as'   actual=' as'
+
+================================================================================
+AUDIT 22: fig29 self-validation top-5 hit rates
+================================================================================
+  PASS   self-validation projection shape (captures x discriminants)   expected=(167, 23)   actual=(167, 23)
+  PASS   captures with an expected category (fig29 scored rows)   expected=107   actual=107
+  PASS   country scored-capture count   expected=29   actual=29
+  PASS   country top-5 hit rate   expected=0.79   actual=0.7931
+  PASS   codemath scored-capture count   expected=30   actual=30
+  PASS   codemath top-5 hit rate   expected=0.73   actual=0.7333
+  PASS   nature scored-capture count   expected=45   actual=45
+  PASS   nature top-5 hit rate   expected=0.56   actual=0.5556
+
+================================================================================
+AUDIT 23: fig30 hierarchical re-discrimination (null result)
+================================================================================
+  PASS   sibling pairs at discriminant cos > 0.80   expected=6   actual=6
+  PASS   country-capital is a sibling pair (the swap fig30 targets)   expected='present'   actual=[('country', 'capital'), ('p_ender', 'p_internal'), ('p_ender', 'math_op'), ('p_internal', 'p_dash'), ('p_dash', 'math_op'), ('p_special', 'math_op')]
+  PASS   sibling-applicable captures (disambiguator fired)   expected=33   actual=33
+  PASS   captures whose top-1 flipped (the null result)   expected=1   actual=1
+  PASS   country scored-capture count (fig30)   expected=29   actual=29
+  PASS   country baseline top-1 accuracy   expected=0.34   actual=0.3448
+  PASS   country hierarchical top-1 accuracy   expected=0.38   actual=0.3793
+  PASS   fig30 scored-capture total   expected=107   actual=107
+  PASS   overall baseline top-1 accuracy   expected=0.44   actual=0.4393
+  PASS   overall hierarchical top-1 accuracy   expected=0.45   actual=0.4486
+
+================================================================================
+SUMMARY:  196 PASS  |  0 FAIL
+================================================================================
