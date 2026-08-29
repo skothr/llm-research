@@ -11,9 +11,9 @@ number from these bytes; migration to the SOP layout is tracked as issue
 `#53` and is a field remap, not a re-run.
 
 Why committed here (vs the NLA arc's gitignored `.pt` + audit pattern): Step-0
-outputs are small JSONL — 20.2 KiB across the four stream/raw files, 29.7 KiB
+outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.0 KiB
 for the whole dataset including `decode_report.json`, `manifest.json` and the
-lockfile, 55.9 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
+lockfile, 57.2 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
 reports more, because it also counts the directory inode. Larger / tensor

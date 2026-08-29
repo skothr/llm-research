@@ -34,13 +34,18 @@ All `h[20]` hidden states in this directory come from
 The verbalizer (AV, h → text) and reconstructor (AR, text → h) that produced
 every `av_text` string and every `h_pred` tensor in this directory.
 
-- **Licence: not recorded at capture time.** Nothing in this arc's scripts,
-  observations, or commit history captured what the two model cards state.
-  **Verify the upstream model cards before any further redistribution of the
-  derived artifacts in this directory** —
+- **Licence: Apache-2.0** (both model cards, checked 2026-08-29:
   <https://huggingface.co/kitft/nla-qwen2.5-7b-L20-av> and
-  <https://huggingface.co/kitft/nla-qwen2.5-7b-L20-ar>. This is a gap in the
-  record, stated as such rather than guessed at.
+  <https://huggingface.co/kitft/nla-qwen2.5-7b-L20-ar>). Each card states the
+  model is fine-tuned from `Qwen/Qwen2.5-7B-Instruct` (itself Apache-2.0,
+  above) and distributed under the Apache License 2.0. The cards name two
+  fine-tuning corpora with their own attribution terms — WildChat-1M (ODC-BY)
+  and Ultra-FineWeb (Apache-2.0) — which bind the *checkpoints*, not the
+  derived tensors/text committed here; this notice satisfies Apache-2.0 §4's
+  attribution requirement for the pair.
+- **Licence was not recorded at capture time** — the record above was
+  established from the model cards on 2026-08-29, after the fact. If the
+  cards' terms change, the capture-time terms are the ones that applied.
 - **Revision:** not pinned, same as the base model.
 - The checkpoints themselves are not redistributed by this repo.
 
@@ -89,9 +94,9 @@ the audit has nothing to check. Committing them republishes model-derived
 tensors and model-generated text — not any third party's corpus and not any
 third party's personal data.
 
-The one open obligation is the NLA pair's licence, above. It is recorded here
-as unresolved so that a future redistributor (or a downstream user of these
-artifacts) sees the gap rather than assuming it was checked.
+No obligation remains open: the NLA pair's licence, unrecorded at capture
+time, was resolved to Apache-2.0 from the upstream model cards on 2026-08-29
+(above).
 
 ## Reporting content
 

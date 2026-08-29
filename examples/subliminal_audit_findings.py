@@ -390,7 +390,12 @@ def audit_a(
     print("AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)")
     print("=" * 80)
 
-    entries = {f["path"]: f for f in manifest["files"]}
+    files_list = dig(manifest, "files")
+    entries = (
+        {f["path"]: f for f in files_list if isinstance(f, dict) and "path" in f}
+        if isinstance(files_list, list)
+        else {}
+    )
     claim_eq("manifest.files[] covers exactly the 5 recorded files", 5, len(entries))
 
     for name in DATA_FILES:
@@ -401,12 +406,12 @@ def audit_a(
         if rec is None:
             claim(f"{name} listed in manifest.files[]", False, "listed", "absent")
             continue
-        claim_eq(f"{name} sha256 vs manifest", rec["sha256"], sha256_bytes(b))
-        claim_eq(f"{name} size_bytes vs manifest", rec["size_bytes"], len(b))
-        if rec["n_lines"] is not None:
+        claim_eq(f"{name} sha256 vs manifest", dig(rec, "sha256"), sha256_bytes(b))
+        claim_eq(f"{name} size_bytes vs manifest", dig(rec, "size_bytes"), len(b))
+        if dig(rec, "n_lines") is not None:
             claim_eq(
                 f"{name} n_lines vs manifest",
-                rec["n_lines"],
+                dig(rec, "n_lines"),
                 b.decode("utf-8").count("\n"),
             )
 
@@ -444,7 +449,7 @@ def audit_a(
         claim_eq(
             "manifest records the capture-time pip_freeze hash unmodified",
             MANIFEST_PIP_FREEZE_SHA256_CAPTURE,
-            manifest["environment"]["pip_freeze_sha256"],
+            dig(manifest, "environment", "pip_freeze_sha256"),
         )
 
     gen_b = read_path_or_fail(GENERATOR_PATH, "examples/subliminal_step0_decode.py")
@@ -468,7 +473,7 @@ def audit_a(
         claim_eq(
             "manifest records the capture-time generator hash unmodified",
             MANIFEST_GENERATOR_SHA256_CAPTURE,
-            manifest["generation"]["generator_script_sha256"],
+            dig(manifest, "generation", "generator_script_sha256"),
         )
 
     # One claim, both SHAs: the resolvable post-rewrite pointer AND the
@@ -523,7 +528,7 @@ def audit_b(blobs: dict[str, bytes], manifest: dict[str, Any]) -> None:
     print("AUDIT B -- filter replay (kept counts, reject rates + reasons, z, power)")
     print("=" * 80)
 
-    stats = manifest["statistics"]
+    stats = dig(manifest, "statistics")
     expected_kept = {"owl": 104, "neutral": 109}
     expected_reasons = {
         "owl": {"too many numbers": 10, "invalid format": 2, "numbers too large": 4},
@@ -568,13 +573,22 @@ def audit_b(blobs: dict[str, bytes], manifest: dict[str, Any]) -> None:
         claim_eq(f"{cond}: kept after re-filter", expected_kept[cond], len(kept))
         claim_eq(
             f"{cond}: kept matches manifest.statistics.rows_kept",
-            stats["rows_kept"][cond],
+            dig(stats, "rows_kept", cond),
             len(kept),
         )
         rejected[cond] = 120 - len(kept)
 
         rate = 1 - len(kept) / 120
-        claim_near(f"{cond}: reject rate", stats["reject_rate"][cond], rate, atol=1e-6)
+        manifest_rate = dig(stats, "reject_rate", cond)
+        if isinstance(manifest_rate, (int, float)):
+            claim_near(f"{cond}: reject rate", manifest_rate, rate, atol=1e-6)
+        else:
+            claim(
+                f"{cond}: reject rate",
+                False,
+                "a recorded manifest rate",
+                f"missing from manifest.statistics ({manifest_rate!r})",
+            )
         claim_near(
             f"{cond}: reject rate vs observation figure",
             0.133 if cond == "owl" else 0.092,
@@ -584,7 +598,7 @@ def audit_b(blobs: dict[str, bytes], manifest: dict[str, Any]) -> None:
         claim_eq(f"{cond}: reject-reason census", expected_reasons[cond], dict(reasons))
         claim_eq(
             f"{cond}: reject-reason census matches manifest",
-            stats["reject_reasons"][cond],
+            dig(stats, "reject_reasons", cond),
             dict(reasons),
         )
 
@@ -753,7 +767,7 @@ def audit_d(manifest: dict[str, Any]) -> None:
             claim_eq(
                 "manifest.generation.prompt.system_prompts.owl == observation's quote",
                 quoted,
-                manifest["generation"]["prompt"]["system_prompts"]["owl"],
+                dig(manifest, "generation", "prompt", "system_prompts", "owl"),
             )
             claim_eq(
                 "OWL_SYSTEM_PROMPT constant == observation's quote",
@@ -763,12 +777,12 @@ def audit_d(manifest: dict[str, Any]) -> None:
     claim_eq(
         "neutral condition has no system prompt (control)",
         None,
-        manifest["generation"]["prompt"]["system_prompts"]["neutral"],
+        dig(manifest, "generation", "prompt", "system_prompts", "neutral"),
     )
     claim_eq(
         "filter params match the ported upstream config",
         {"min_value": 0, "max_value": 999, "max_count": 10, "banned_numbers": []},
-        manifest["generation"]["filter"]["params"],
+        dig(manifest, "generation", "filter", "params"),
     )
 
     prompts_b = read_bytes_or_fail("prompts.jsonl")

@@ -94,7 +94,7 @@ This is the step most likely to be skipped under time pressure. Don't.
 - **Save to the committed `data/` dir** and write/refresh the manifest:
   ```bash
   cp <working-cache>/*.pt research/arcs/<slug>/data/
-  python examples/nla_data_manifest.py        # writes MANIFEST.json
+  python examples/nla_data_manifest.py --write # (re)writes MANIFEST.json
   python examples/nla_data_manifest.py --check # verifies sha256
   ```
   (The manifest script is arc-specific; copy it as the template for a new arc.)

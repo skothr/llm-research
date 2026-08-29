@@ -30,7 +30,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _emb_artifacts import DATA as DATA_DIR
+from _emb_artifacts import DATA as DATA_DIR, LFS_HINT, is_lfs_pointer
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = DATA_DIR / "MANIFEST.json"
@@ -209,6 +209,13 @@ def build(generated: str) -> dict[str, Any]:
     than stamped fresh in --check mode, so a re-verification of an unchanged
     directory never reads as drift."""
     files = sorted(p for p in DATA_DIR.glob("*.pt"))
+    stubs = [p.name for p in files if is_lfs_pointer(p)]
+    if stubs:
+        raise SystemExit(
+            f"ERROR: {len(stubs)} file(s) are git-LFS pointer stubs, not real "
+            f"artifacts — hashing them would produce bogus checksums. "
+            f"Run `{LFS_HINT}`, then retry. Stubs: {stubs}"
+        )
     entries: dict[str, Any] = {}
     for p in files:
         if p.name not in META:

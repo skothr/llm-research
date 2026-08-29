@@ -97,7 +97,7 @@ python examples/emb_fullvocab_analyze.py               # S3 decode
 python examples/emb_structural_block.py                # S4 branch
 python examples/emb_fullvocab_render.py && python examples/emb_structural_block_render.py
 python examples/emb_audit_findings.py    # 61 PASS | 0 FAIL at 2026-06-10;
-                                         # arc-final audit is 94 PASS
+                                         # arc-final audit is 99 PASS
 ```
 
 S3/S4 need the S0 matrix dump (cache-only, regenerable from the pinned

@@ -135,10 +135,14 @@ pending the research-arc dataset SOP.)
 
 - **Backing dataset:** `step0-owl-neutral-decode`
   (`research/arcs/02_subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
-  sha256 `4fc877fba5136d5fe64052c70cd0e1050eb5aaab62f161bc2e85ef881c6f2c21`
-  (also recorded in `data/README.md`, so the manifest itself is tamper-evident).
-  Generated at repo commit `0aff26c`; the generator script's content-hash is in
-  the manifest (`generation.generator_script_sha256`).
+  sha256 `4fc877fba5136d5fe64052c70cd0e1050eb5aaab62f161bc2e85ef881c6f2c21` at
+  writing — the manifest has since been amended (path-string updates plus the
+  2026-08-19 git-SHA repoint); the current pin, `6468c7a3…`, lives in
+  `data/README.md` and the audit, keeping the manifest tamper-evident.
+  Generated at repo commit `0aff26c` (pre-history-rewrite; now reachable as
+  `d9c7a42` — see `data/README.md` § Post-capture amendments); the generator
+  script's content-hash is in the manifest
+  (`generation.generator_script_sha256`).
 - **"owl 104/120, neutral 109/120; reject 13.3% / 9.2%":** `manifest.json` →
   `statistics.rows_kept` / `statistics.reject_rate`; also `decode_report.json` → `kept`.
 - **"zero owl-lexicon hits, all 5 schemes, z=0, p=1.0":** `decode_report.json` →
