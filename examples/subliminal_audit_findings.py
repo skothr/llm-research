@@ -705,7 +705,9 @@ def audit_c(blobs: dict[str, bytes]) -> None:
             f"{scheme}: neutral hits vs decode_report", dig(r, "neutral_hits"), neu_hits
         )
         claim_eq(f"{scheme}: owl_n vs streams", len(owl_streams), dig(r, "owl_n"))
-        claim_eq(f"{scheme}: neutral_n vs streams", len(neu_streams), dig(r, "neutral_n"))
+        claim_eq(
+            f"{scheme}: neutral_n vs streams", len(neu_streams), dig(r, "neutral_n")
+        )
         # These two pin what decode_report.json RECORDED, nothing more. With 0
         # hits in both arms the pooled SE is 0 and the two-proportion test is
         # undefined; two_prop_z returns (0.0, 1.0) by convention for that case,
@@ -722,8 +724,8 @@ def audit_c(blobs: dict[str, bytes]) -> None:
                 claim(
                     f"{scheme}: {stat_name}",
                     False,
-                    "a recorded value",
-                    f"missing from decode_report ({recorded!r})",
+                    "a recorded number",
+                    f"not a number in decode_report ({recorded!r})",
                 )
 
     claim_eq("owl lexicon size (finite, hand-built)", 24, len(OWL_LEXICON))
