@@ -5,7 +5,7 @@
 **Inputs:** `vocab_atlas.pt`, AV `kitft/nla-qwen2.5-7b-L20-av`
 **Output:** `concept_arithmetic_atlas.pt`
 **Figure:** `fig35_concept_arithmetic_atlas.png`
-**Private-tracker ID:** MAIN-48 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-48 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-48 predicted
 
