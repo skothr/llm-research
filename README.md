@@ -215,8 +215,8 @@ the same run is expected to report **1016 PASS | 4 FAIL** (986 measured
 2026-08-17 plus the 30 cache-independent CHECK O claims added 2026-08-30;
 the nf4 `MISSING` reports only) with no GPU work; the check total grows
 from 988 to 1020 between the two states because the lens-dependent
-blocks register their claims only when the lens tensors are on disk. Arc 02's 5 UNVERIFIABLE entries are printed,
-not scored — external citations and capture-time environment facts no
+blocks register their claims only when the lens tensors are on disk.
+Arc 02's 5 UNVERIFIABLE entries are printed, not scored — external citations and capture-time environment facts no
 committed artifact can settle. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
 never methodology or interpretation) and for the historical pre-re-run

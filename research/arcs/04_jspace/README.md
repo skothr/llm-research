@@ -553,6 +553,15 @@ first. Full detail sits in the linked observations and in
   (quantization and n-budget axes) remain regenerate-only, so a clean-clone
   audit reports 4 designed `MISSING` results until the refits scheduled as
   issue #47 land.
+- **L15. Cross-scale excess calibration** (post-close addition 2026-08-30,
+  issue #79; by constraint weight this sits alongside L11 — appended here
+  to keep the original ranking stable). The paper-metric excess is not
+  dimensionless: signal and baseline share a common ~2× factor between
+  d=1536 and d=3584, so the cross-scale gap and the breach-vs-paper
+  reading are calibrated in a dimension-dependent unit, with no
+  conversion to the paper's own calibration available. Within-scale
+  statements are unaffected. See the Findings item-2 caveat and
+  [excess-FVE dimension dependence](observations/2026-08-30-excess-fve-dimension-dependence.md).
 
 ## Attribution
 
