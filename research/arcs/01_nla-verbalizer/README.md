@@ -7,7 +7,7 @@ state structure. A focused arc (observations 2026-05-12 to 05-15):
 audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
 boundaries* — held as a working hypothesis, not a settled claim.
-See [Limitations and methodology caveats](#limitations-and-methodology-caveats)
+See [Limitations](#limitations)
 for the scope qualifiers.
 
 This README is the entry point for the arc. The full observation log
@@ -271,7 +271,7 @@ exists to meet (2026-05-31); and the requirement that an
 external critique of the arc be verified defect-by-defect rather than
 adopted or dismissed wholesale (2026-06-05) — the origin of the
 D3-as-validity-control framing and the verbalizer-is-also-a-model
-caveats now in [Limitations](#limitations-and-methodology-caveats).
+caveats now in [Limitations](#limitations).
 
 ### Human / Claude / emergent split
 
@@ -299,7 +299,7 @@ Fisher-LDA distinctions, BPE-boundary considerations.
 agent during compaction, refined under the user's scope-qualification
 challenges (the F1 fix), and validated against the audit numbers (which
 the agent built and the user directed). The methodology caveats in
-[Limitations](#limitations-and-methodology-caveats) — most originated
+[Limitations](#limitations) — most originated
 as the user's in-session pushback against overclaiming and were
 formalized into explicit limitations by the agent; the
 verbalizer-as-model caveats entered through the external critique the
@@ -444,7 +444,7 @@ geometrically nice — both anchors live in the same global region.
 
 ---
 
-## Limitations and methodology caveats
+## Limitations
 
 Self-critical scope qualifications, ranked by how much they constrain
 how far the arc's claims travel.

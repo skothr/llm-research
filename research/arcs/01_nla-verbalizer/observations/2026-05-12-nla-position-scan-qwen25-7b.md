@@ -105,7 +105,7 @@ residual stream accumulates context across positions.
 
 - GPU during base forward: 7.29 GiB / 7.60 GiB (95.9 % saturation)
 - Required `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` — without it, bnb-4bit dequantization of the down_proj weight (~130 MiB temporary bf16 buffer) OOMed despite total free bytes being sufficient. Fixed-size segment allocator fragmented.
-- CPU during AV: ~15 GiB resident bf16 weights, no swap pressure.
+- CPU during AV: ~15 GB resident bf16 weights, no swap pressure.
 
 ## Hypotheses
 

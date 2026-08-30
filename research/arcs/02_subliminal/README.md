@@ -86,6 +86,74 @@ user's "focus it mathematically" push, formalized by Claude.
 framing. Pre-commit to reading ambiguous probe results as "this measurement
 can't separate A from C," not as support for C.
 
+## Limitations
+
+Ranked by how far each limit constrains what this arc can claim.
+
+**L1. The arc stopped after Step 0 — (A) vs (C) is untested.** What Step 0
+establishes: the paper's released filter has no semantic and no encoding guard
+(format + range + count only, `banned_numbers=[]` for the animal-preference
+config), and a five-scheme decode of locally regenerated owl/neutral streams
+returns zero owl-lexicon hits in either condition (owl_rate = neutral_rate =
+0.000, z = 0, p = 1.0), with the planted-string positive control passing — so
+H0, a literal decodable channel, is not supported *for this setup*. What it does
+not establish is anything about (A) versus (C). Steps 1 and 2 — the differential
+influence-alignment probe and the decisive cross-base recovery test — were
+designed but never run; the arc has been paused since 2026-06-10.
+
+**L2. The Step-1 design is not yet known to be able to separate (A) from (C).**
+Its own adversarial critique
+([`plans/2026-05-31-step1-design.md`](plans/2026-05-31-step1-design.md)
+§ "Adversarial critique") rates the central statistic a blocker: the
+behaviourally-anchored trait axis is mechanically downstream of the same
+distributional shift the trait-teacher gradients induce, so Δ > 0 is predicted
+under *both* hypotheses with every confound guard green. Open alongside it — a
+circular axis if the trait direction is computed on the owl-student rather than
+a trait-free reference; between-seed variance unestimable at 3 seeds; and no
+power floor operationalizing the pre-committed "a null supports (A) only if not
+underpowered". Running Step 1 as specified could yield a confident but
+uninterpretable result.
+
+**L3. Step 0 tests a stand-in, not the paper's own data.** Cloud et al. never
+released their number datasets and their teacher (`gpt-4.1-nano-2025-04-14`) is
+closed, so the streams here were regenerated with an open same-base teacher
+(`Qwen2.5-7B-Instruct`) using the ported prompts and filter. The null therefore
+closes the literal-channel hypothesis for this local setup only; it cannot show
+the paper's own streams carry no channel. Scope is also narrow in every other
+axis: one teacher model, one trait (owl), one seed, five decode schemes (not
+exhaustive), and a finite owl lexicon.
+
+**L4. n = 120 per condition — the one suggestive signal is under-powered.** The
+owl condition's filter-reject rate ran higher than neutral's (13.3% vs 9.2% on
+the identical seeded prompt set), but the gap is not significant (two-proportion
+z = 1.02, p = 0.31); resolving a real 13.3-vs-9.2 gap at 80% power needs
+~930 per condition. It is a hint that the persona shifts the output
+distribution, not evidence of one — see
+[`observations/2026-05-31-step0-protocol-and-filter.md`](observations/2026-05-31-step0-protocol-and-filter.md).
+
+**L5. The dataset is statistically, not byte-, reproducible, and part of its
+provenance is inferred.** Sampling at temperature 1.0 makes the corpus
+`statistical_only`: the committed files plus their sha256 are the anchor, not a
+re-run. `prompts.jsonl` was re-derived post-hoc (2026-08-17) by replaying the
+seeded generator — the audit proves it *is* that generator's seed-42 output, but
+that it is the set the 2026-05-31 run consumed remains an inference. Two
+capture-time hashes in `manifest.json` (the pip-freeze and generator-script
+hashes) no longer match disk for recorded reasons — the audit asserts the
+current state and scores the drift PASS (see
+[`data/README.md`](data/README.md) § "Post-capture amendments").
+`examples/subliminal_audit_findings.py` re-derives every load-bearing number
+(`104 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
+bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
+ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model
+snapshot revision, and the capture-time hardware/environment.
+
+**L6. The data layout predates the arc-data SOP.** This arc keeps a per-dataset
+`manifest.json` (`manifest_version 0.1.0-interim`) rather than
+`ARC_PROCESS.md`'s `data/MANIFEST.json` convention, and was never migrated.
+Integrity is fully covered by the audit script; the migration is a field remap,
+not a re-capture, tracked as issue
+[#53](https://github.com/skothr/llm-research/issues/53).
+
 ## Contents
 
 - [`plans/2026-05-31-subliminal-semantic-transfer.md`](plans/2026-05-31-subliminal-semantic-transfer.md)
