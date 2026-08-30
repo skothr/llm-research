@@ -348,6 +348,98 @@ full metric suite): **workspace-band metrics corpus-invariant, early-band
 (L0–L16) corpus-sensitive** — wikitext stands for the 7B lens; see
 `observations/2026-07-20-corpus-sensitivity-c4-1p5b.md`.
 
+## Limitations
+
+Ranked by how far each limit constrains the arc's claims, most constraining
+first. Full detail sits in the linked observations and in
+[§ Synthesis](#synthesis-arc-close-2026-07-22).
+
+- **L1. One model family, ≤7B, unreplicated.** Everything here is
+  Qwen2.5-Instruct at two scales (1.5B bf16, 7B nf4), and the results are
+  unreviewed and unreplicated outside this repo. Whether the failure of the
+  stronger J-space-*subspace* claim is capability scale (Claude 4.5-family
+  vs ≤7B) or model family is the open question the arc cannot answer from
+  below.
+- **L2. The negative results are measured bounds, not demonstrated zeros.**
+  The paper's 59% tier (J-space component of concept vectors) shows no
+  detectable effect at either scale, but a hypothesis test cannot establish
+  a null: the claim is a ≤3.8pp equivalence bound at 7B (0 discordant pairs
+  of 78, exact 95%) and a much looser p=0.375 on 5 discordants at 1.5B. The
+  discrete entailed-property flip (0.000 at both scales) is likewise bounded
+  below only. See
+  [`2026-07-24-paper-metric-varfrac-recompute.md`](observations/2026-07-24-paper-metric-varfrac-recompute.md)
+  § correction 2026-07-28.
+- **L3. The 7B lens exists only in nf4.** Quantization was exonerated as a
+  confound at 1.5B (bf16↔nf4 moves nothing at fixed corpus/budget) but is
+  untested at 7B-bf16, which is infeasible on this hardware. nf4 fits are
+  also not bit-reproducible here (refit relative Frobenius Δ 1.7e-2 at L0
+  decaying to 4.2e-4 at L26), so small 7B movements cannot be attributed to
+  a single cause. The stage-5.1 plain-prompt 7B near-null is explicitly a
+  *confounded* near-null (weak nf4 lens × quantization × baseline compliance
+  failures), un-confounded only under chat prompts at 5.1b.
+- **L4. n=100 fitting budget, with estimator noise never bounded.**
+  n-stability was shown at 1.5B only (n=100→500, peak −1.4%); the 20%
+  stability threshold was fixed in the session record before the data
+  landed but was **not** a repo-committed pre-registration. Whether 3584²
+  Jacobians are data-starved at n=100 in a way 1536² are not stays
+  logically open (the direct 7B n=500 test is ~81 h). The stage-2 split-half
+  lens-stability gate was waived for the first pass and never run — see
+  [§ Deferred](#deferred--follow-up-directions) item 3.
+- **L5. The swap statistics rest on small, post-hoc-selected samples.** The
+  arc's strongest positive (the relational entailed-property effect) is
+  n=7 auto-detected items at 1.5B — p=0.0156 is the smallest value an n=7
+  sign-flip test can produce — and L18/L19 were chosen as peak layers from
+  the same data, so those p-values are post-hoc at a data-chosen maximum.
+  Item-level SD exceeds the mean at both scales. The multiplier framing
+  (~34×/8×) is denominator-fragile because the control sits near zero; cite
+  the absolute nats gap.
+- **L6. The readout advantage is one favorable sub-metric, not a sweep.**
+  The J-lens surfaces intermediates the logit lens misses, but the logit
+  median is still earlier at 1.5B (19 vs 23) and on the companion
+  never-emergence count the J-lens fails to surface the token in *more*
+  cells at both scales (1.5B 16/108 vs 1/108; 7B 14/108 vs 8/108).
+- **L7. Early-band (L0–L16) readings are contaminated.** Occupancy and
+  top-atom readings there are partly norm-driven (unnormalized-atom pursuit
+  selection bias — 7B via undertrained junk-token atoms, 1.5B via tied
+  embedding norms) and are the band that is corpus-sensitive. The
+  workspace band measures norm-neutral and corpus-invariant; early-band
+  numbers should not be read as structural.
+- **L8. Held-out sets are 30 prompts.** At 7B's low absolute occupancy
+  per-sample noise is a large fraction of the signal, so 7B varfrac is
+  quoted band-level (~0.01–0.05), not to three decimals. The one audit pin
+  that moved most in the C4 re-run was the n=30 held-out kurtosis trough.
+- **L9. The fitting corpus is narrow.** wikitext-103 is English-only
+  Wikipedia register — narrower than the paper's "pretraining-like
+  distribution" phrasing and than Qwen2.5's multilingual training mix.
+  Corpus sensitivity was checked at 1.5B only (seeded C4-en refit); no 7B
+  corpus refit was run.
+- **L10. Single-token concept limit throughout.** All readout, swap, and
+  emergence metrics are defined over single-token concept forms. Association
+  targets never enter top-50 under either lens, which may mean they do not
+  exist as single-token representations at this scale. [SPECULATION]
+- **L11. The paper's metric had to be reconstructed.** The random control
+  draw is unspecified upstream (uniform vocab atoms is the natural reading),
+  the paper reports five workspace layers with per-layer K while this arc
+  sweeps all layers with one procedure, and the bootstrap unit is the prompt.
+- **L12. The stage-6 NLA cross-tie inherits the NLA arc's unaudited AV
+  format bias** (mitigated by nulls, not eliminated), and is measured at the
+  NLA capture layer L20 — below the 7B J-lens legibility onset (~L22), where
+  the J-lens readout is only intermittently contentful.
+- **L13. The audit checks arithmetic consistency only.** A PASS means a
+  number in prose still matches the artifact it came from; it cannot detect
+  a methodological error, a capture-protocol bug, or interpretive overreach.
+  The stage-5.1b certification defect is the worked example — every pinned
+  number was correct and passing while the inference drawn from them was
+  wrong.
+- **L14. Data and reproduction gaps.** The C4-en slice carried third-party
+  PII and was redacted; the redactor removes contact *channels*, not personal
+  names, which is a stated known limit
+  ([`data/README.md`](data/README.md)). Redaction is not length-preserving,
+  so C4-dependent artifacts are the re-run ones. Two 1.5B nf4 lenses
+  (quantization and n-budget axes) remain regenerate-only, so a clean-clone
+  audit reports 4 designed `MISSING` results until the refits scheduled as
+  issue #47 land.
+
 ## Deferred / follow-up directions
 
 Binned here 2026-07-20 (reviewer call), roughly in decreasing
@@ -628,12 +720,7 @@ definition, the swap gaps significance-certified by exact permutation,
 and the pursuit's unnormalized-atom norm bias quantified — a choice the
 paper and companion repo leave unspecified.
 
-**Limitations.** One model family; n=100 lenses (n-stability shown at
-1.5B only); 7B fitted in nf4 (exonerated at 1.5B, untested at 7B-bf16
-which is infeasible here); single-token concept limit throughout;
-30-prompt held-out sets (7B varfrac quoted band-level); the entailed
-flip threshold is bounded below only; stage-6 inherits the NLA arc's
-unaudited AV format bias (mitigated by nulls, not eliminated).
+**Limitations.** Ranked in full in [§ Limitations](#limitations) above.
 
 **Next paths.** Dose-response: strength sweep at the L18/L19 peak;
 mid-scale (14B/32B) replication of the discrete flip; richer

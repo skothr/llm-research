@@ -344,7 +344,7 @@ research/arcs/03_embedding-atlas/
     figures/ (fig1-fig21 + INVENTORY.md)
   plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
   sessions/ (2026-06-11 tracing checkpoint; 2026-07-21 degradation-window forensics)
-  data/ (14 .pt + MANIFEST.json + README.md)  # git-LFS, ~96 MB
+  data/ (15 .pt + MANIFEST.json + LICENSE-DATA.md + README.md)  # git-LFS, ~96 MB
 ```
 
 Scripts (all under `examples/`): `emb_token_battery.py` (battery as data),
