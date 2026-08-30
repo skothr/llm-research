@@ -145,6 +145,7 @@ def main() -> None:
     m = build_model(args)
     w_u: Tensor = m._lm_head.weight
     vocab = int(w_u.shape[0])
+    d_model = int(w_u.shape[1])
     lens = JacobianLens.load(args.lens)
     layers = (
         [int(x) for x in args.layers.split(",") if x.strip()]
@@ -265,6 +266,15 @@ def main() -> None:
             "excess_median": float(np.median(excess)),
             "excess_ci95": (lo, hi),
             "boot_frac_over_10pct": frac_over,
+            # excess = fve_topK - fve_rand shares a common ~K/d_model factor
+            # between scales (issue #79); the ratio and K/d are persisted so
+            # cross-scale comparisons can be dimension-calibrated.
+            "fve_ratio_topK_over_rand": (
+                float(fve_j.mean() / fve_r.mean())
+                if float(fve_r.mean()) > 0.0
+                else float("nan")
+            ),
+            "K_over_d_model": k_med / d_model,
             "excess_pctiles_10_25_50_75_90": [
                 float(x) for x in np.percentile(excess, [10, 25, 50, 75, 90])
             ],
@@ -278,7 +288,9 @@ def main() -> None:
             f"L{L:2d} K={k_med:2d} n={n} ours@{args.k_snap}={r['vf_ours_mean']:.4f} "
             f"fveTopK={r['fve_topK_mean']:.4f} fveRand={r['fve_rand_mean']:.4f} "
             f"EXCESS={r['excess_mean']:+.4f} CI95=[{lo:+.4f},{hi:+.4f}] "
-            f"P(>10%)={frac_over:.3f}",
+            f"P(>10%)={frac_over:.3f} "
+            f"ratio={r['fve_ratio_topK_over_rand']:.2f} "
+            f"K/d={r['K_over_d_model']:.4f}",
             flush=True,
         )
         del jac
