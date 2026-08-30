@@ -31,7 +31,7 @@ Sentinels are bracketed uppercase class names (`[EMAIL]`, `[PHONE]`,
 `[STREET-ADDRESS]`, `[POSTAL-CODE]`). They are NOT length-preserving: a
 redacted document tokenises differently from its original. That is a real
 consequence for anything fit on this text and is disclosed rather than hidden
-— see the warning at the top of the arc README.
+— see § Data correction in the arc README.
 
 SCOPE AND LIMITS
 ----------------

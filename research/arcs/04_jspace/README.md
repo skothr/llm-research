@@ -149,7 +149,7 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 
 ## Observation log
 
-One dated writeup per stage or robustness axis, in `observations/`:
+The arc's dated writeups, in `observations/`:
 
 - `2026-07-18-fit-cost-calibration.md` — fitting cost is structural
   (`ceil(d_model/dim_batch)` backwards/prompt); measured 115 s/prompt (1.5B
@@ -375,8 +375,9 @@ One dated writeup per stage or robustness axis, in `observations/`:
 > "~4–5 h GPU, dominated by one 2.2 h lens refit": that estimate was wrong in
 > two independent ways, both diagnosed in the plan's § Cost). Plan:
 > [`plans/2026-07-29-c4-redaction-rerun.md`](plans/2026-07-29-c4-redaction-rerun.md).
-> The numbers below are the re-derived ones; the superseded values are
-> preserved in the dated addenda at the top of each affected observation.
+> The numbers throughout this README are the re-derived ones; the
+> superseded values are preserved in the dated addenda at the top of
+> each affected observation.
 
 ## Limitations
 

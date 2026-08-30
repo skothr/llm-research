@@ -8,7 +8,7 @@ wikitext-103 is English-Wikipedia register — narrower than Qwen2.5's
 multilingual pretraining mix. This script freezes an alternative corpus drawn
 from allenai/c4 (config `en`) so the 1.5B lens can be refit on a broader
 web-text distribution and the stage-3/4 metric suite re-run to test corpus
-sensitivity (README "Deferred / follow-up directions" item 2).
+sensitivity (README "Possible next paths" item 2).
 
 Selection (mirrors the wikitext freeze's shape, plus a seeded shuffle):
   1. Stream allenai/c4, config `en`, split `train` (streaming=True).
