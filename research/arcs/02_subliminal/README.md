@@ -138,12 +138,14 @@ re-run. `prompts.jsonl` was re-derived post-hoc (2026-08-17) by replaying the
 seeded generator — the audit proves it *is* that generator's seed-42 output, but
 that it is the set the 2026-05-31 run consumed remains an inference. Two
 capture-time hashes in `manifest.json` (the pip-freeze and generator-script
-hashes) no longer match disk, for reasons recorded in
-[`data/README.md`](data/README.md) § "Post-capture amendments"; the model
-snapshot revision and the capture-time environment are likewise unverifiable
-from committed bytes. `examples/subliminal_audit_findings.py` re-derives every
-load-bearing number and reports these as five UNVERIFIABLE entries beside
-`104 PASS | 0 FAIL`.
+hashes) no longer match disk for recorded reasons — the audit asserts the
+current state and scores the drift PASS (see
+[`data/README.md`](data/README.md) § "Post-capture amendments").
+`examples/subliminal_audit_findings.py` re-derives every load-bearing number
+(`104 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
+bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
+ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model
+snapshot revision, and the capture-time hardware/environment.
 
 **L6. The data layout predates the arc-data SOP.** This arc keeps a per-dataset
 `manifest.json` (`manifest_version 0.1.0-interim`) rather than
