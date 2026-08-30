@@ -120,34 +120,38 @@ the initial dimensions through each calculation component [...]? Can we
 look for how the FFN reconfigures the hidden state afterward?" — the direct
 origin of the T1.5 component-level capture).
 
-**Wrap-up and close-out gates** [sessions 2026-07-15, 2026-07-21]:
+**Wrap-up and close-out gates**:
 
 > *"Where are we in this research arc (03_embedding_atlas)? Is there
 > anything still in progress to finish up and close out? I want to finish
 > this one up and then extend it to a new arc `04-jspace` based on new
 > Anthropic research. Let's wrap this up first though."*
+> — [session 2026-07-15]
 
 > *"Is this a good place to merge this as a PR, or is there any more final
 > verification or documentation in arc 03 to do first?"*
+> — [session 2026-07-21]
 
-> *"I don't think you started the review run though?"*
+> *"I don't think you started the review run though?"* — [session 2026-07-21]
 
 The close-out call (also fixing arc 04 as an extension of this arc), the
 completeness gate before the merge, and the catch that the promised
-fresh-eyes review had not actually been launched. All stack PRs were
+fresh-eyes review had not been launched. All stack PRs were
 human-merged; merging stayed a manual gate throughout.
 
-**The cross-script correction, made twice** [sessions 2026-06-11,
-2026-07-21]. The `的` correction quoted above failed to propagate into the
-cross-script finding's text, and the user caught it again at close:
+**The cross-script correction, made twice**. The `的` correction quoted
+above ([session 2026-06-11], in the deep-arc turn) failed to propagate
+into the cross-script finding's text, and the user caught it again at
+close:
 
 > *"I remember pointing out during a session where this was observed, that
 > `the` and `的` aren't really that similar [...] I pointed out that `的`
 > would likely be closer to `of` or `'s`, due to the character's possessive
 > use [...] Now I see the original 'the'/'的' claim in the observation
 > README, so I want to make sure that makes sense."*
+> — [session 2026-07-21]
 
-> *"Did you check "'s " as well? (with a space)"*
+> *"Did you check "'s " as well? (with a space)"* — [session 2026-07-21]
 
 — the direct cause of the corrected cross-script finding and the re-derived
 neighbor-cosine table now locked by audit §11. The same session bounded the
