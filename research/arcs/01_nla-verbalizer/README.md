@@ -77,6 +77,15 @@ to its basin (round-trip cosine +0.8995,
 [MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md)) — basins are
 direction-coupled, not magnitude-coupled.
 
+![fig36_dense_interp_flipbook](observations/figures/fig36_dense_interp_flipbook.png)
+
+*Dense interpolation (30 steps, 25 of them at Δt=0.0025 in t∈[0.395, 0.455])
+between the two AR-encoded anchors: a hybrid "Definition + Poem" plateau holds
+from t=0.395 through t=0.4450, then flips to the poetic/nature format in a
+single Δt=0.0025 step at t=0.4475. Three regions: factual (t<0.30) →
+hybrid plateau → poetic/nature (t≥0.4475).*
+([provenance](observations/figures/INVENTORY.md#fig36_dense_interp_flipbookpng))
+
 **Scope qualifications:** demonstrated for one anchor pair, at one
 layer, on one model. The plateau-attractor margin is +0.061 over the
 nearest single-anchor — narrower than the +0.25 margins anchors have
@@ -102,6 +111,16 @@ in-protocol signal to +0.5632
 Conclusion: the basis is a fingerprint of one specific capture protocol,
 not a generic semantic axis.
 
+![fig33_native_signal_lift](observations/figures/fig33_native_signal_lift.png)
+
+*Per-category within-class signal under three conditions: end-of-prompt h on
+end-of-prompt discriminants (aggregate +0.4022), mid-sequence h on
+mid-sequence-native discriminants (+0.5632, argmax accuracy 97.10%), and
+mid-sequence h on the end-of-prompt basis (+0.0491, the cross-protocol
+collapse). The native basis lifting the signal is what makes the basis
+protocol-coupled by construction rather than semantically generic.*
+([provenance](observations/figures/INVENTORY.md#fig33_native_signal_liftpng))
+
 **Scope qualifications:** "discriminant" in the script names is
 shorthand — the formula is centroid-difference / mean-contrast, not
 Fisher LDA (which would require `S_W⁻¹(μ₁−μ₀)` with regularization;
@@ -123,6 +142,15 @@ sink-removed vocab atlas (33.5% variance) emerges as the
 **content-vs-function** axis — content-bearing words load negative
 (PC1 < 0), function words and punctuation load positive (PC1 > 0).
 ([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
+
+![fig8_cosine_sink_vs_clean](observations/figures/fig8_cosine_sink_vs_clean.png)
+
+*Pairwise cosine matrices before and after zeroing the 7 universal sink dims
+{277, 458, 1427, 1627, 2107, 2570, 3110}: the mean off-diagonal cosine over
+all 167 captures drops +0.40 → +0.18, isolating the sink contribution (+0.22)
+from the non-sink residue baseline that the category attractors sit on top
+of.*
+([provenance](observations/figures/INVENTORY.md#fig8_cosine_sink_vs_cleanpng))
 
 > **Polarity note — corrected 2026-08-16.** Until then the sentence
 > above carried the signs inverted — a transcription slip relative to
@@ -158,6 +186,16 @@ corrected to ~28 by the position-matched fig16 — see INVENTORY.md).
 Cheap monitoring-side anomaly score candidate. (Remaining work tracked
 as [#13](https://github.com/skothr/llm-research/issues/13), was MAIN-30;
 `nla_forced_continuation.py`.)
+
+![fig16_counterfactual_position_check](observations/figures/fig16_counterfactual_position_check.png)
+
+*Position-matched check on the refusal_metaware pair, showing all three forced
+tokens (' sensing' Δpos=-3, ' test' Δpos=+1, ' refuse' Δpos=+10) so the
+position-drift effect on ||Δh||_feat is visible. The cleanest comparison ('
+test', Δpos=+1) gives ||Δh||_feat = 28.06 — still 2.5× the math-pair diff, so
+the qualitative result (refusal is a different perturbation class) survives the
+correction of fig15's drift-inflated 35.55.*
+([provenance](observations/figures/INVENTORY.md#fig16_counterfactual_position_checkpng))
 
 **Scope qualifications:** four pairs is small-n; the score's
 distribution under random forced completions hasn't been characterized.
