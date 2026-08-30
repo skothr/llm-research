@@ -4,13 +4,15 @@ what the observation files report. Prints per-check PASS/FAIL and exits 1 on
 any failure (stage-7 audit named in
 `research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`). Written at
 stage 3, not arc close, per the arc's standing auditability requirement
-(see the arc README audit section).
+(see the arc README § Reproducing).
 
 Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 (`_resolve`). The small DERIVED artifacts (every lens_eval / readout_scan /
 structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
 this audit re-derives from) are promoted, committed via git-LFS under
-`research/arcs/04_jspace/data/`, so checks B-N reproduce from a clean clone.
+`research/arcs/04_jspace/data/`, so checks B-N reproduce from a clean
+clone; check O reads only committed plain-text logs and reproduces
+everywhere, including LFS-less clones.
 Of the FULL fitted lens tensors under `data/cache/`, three are LFS-committed
 but excluded from default pulls (their `.config.json` sidecars are plain
 blobs, present in every clone) and the two nf4 lenses are regenerate-only
@@ -117,6 +119,14 @@ Checks:
      corrected 7B upper bound, 1.066 at L25); and the stage-5.1b 7B
      chat-rerun predicts-report rate + signed deltas. All re-derive from
      committed `data/` artifacts — no cache gating.
+  O  excess-FVE dimension dependence (issue #79, 2026-08-30) — parses the
+     three committed scan_paper_metric_*.log files and re-derives every
+     number in the 2026-08-30 observation: the cross-scale common factor
+     (fveTopK/fveRand/excess all ~2× between d=1536 and d=3584), the
+     near-invariant topK/rand ratios, K/d_model, the c4en L0
+     excess-argmax vs its ratio demotion, the held-out L0 fractions, and
+     the ratio's late-band argmax relocation (L23/L23/L24). Logs are
+     plain git files — no LFS, no cache gating.
 
 The audit is a regression test for arithmetic consistency between the stored
 artifacts and the observation prose — it does not re-run capture/fitting, so a
