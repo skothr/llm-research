@@ -5,7 +5,7 @@
 **Inputs:** `vocab_atlas.pt` (eop), `mid_seq_vocab_atlas.pt`, `pairwise_and_hotdims.pt`
 **Output:** `mid_seq_native_compare.pt`
 **Figures:** `fig33_native_signal_lift.png`, `fig34_cross_protocol_axis_cos.png`
-**Private-tracker ID:** MAIN-70, a follow-up to MAIN-44 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-70, a follow-up to MAIN-44 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-70 predicted
 

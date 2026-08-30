@@ -4,7 +4,7 @@
 **Toolkit:** `nla_hierarchical_classifier.py`
 **Inputs:** `vocab_atlas.pt` + `pairwise_and_hotdims.pt`
 **Figure:** `fig30_hierarchical_accuracy.png`
-**Private-tracker ID:** MAIN-47 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-47 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-47 predicted
 

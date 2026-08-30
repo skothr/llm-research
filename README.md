@@ -107,7 +107,7 @@ than discovered two levels down.
   to check by hand against the committed JSONL. These audits check
   **arithmetic consistency only** — they cannot catch a methodological error, a
   capture-protocol bug, or interpretive overreach. Arcs 01 and 03 state that
-  limitation in their READMEs; arc 04 states it in its audit block.
+  limitation in their READMEs; arc 04 states it in its § Reproducing.
 - **Datasets committed and pinned.** Arcs 01, 03, and 04 commit raw `.pt`
   artifacts under the arc's `data/` (Git LFS) with a `MANIFEST.json` recording
   per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an

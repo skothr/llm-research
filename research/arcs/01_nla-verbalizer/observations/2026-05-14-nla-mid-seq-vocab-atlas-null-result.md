@@ -5,7 +5,7 @@
 **Inputs:** `vocab_atlas.pt` (end-of-prompt), `pairwise_and_hotdims.pt` (sink dim labels)
 **Outputs:** `mid_seq_vocab_atlas.pt`, `mid_seq_compare.pt`
 **Figures:** `fig31_mid_seq_signal_vs_noise.png`, `fig32_mid_seq_argmax_accuracy.png`
-**Private-tracker ID:** MAIN-44 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-44 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-44 predicted
 

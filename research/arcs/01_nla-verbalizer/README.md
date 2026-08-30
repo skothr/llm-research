@@ -25,12 +25,12 @@ paths](#possible-next-paths).
 > throughout this arc's prose as historical labels. **They are not
 > resolvable — there is nothing to look up.** Every one of them is
 > mapped to the in-repo observation file or the migrated GitHub issue
-> it stands for in [Private-tracker ID map](#private-tracker-id-map-main-n)
-> below; read that table, not the bare ID.
+> it stands for in [`ID_MAP.md`](ID_MAP.md); read that table, not the
+> bare ID.
 
 ---
 
-## Context and motivation
+## The question
 
 Anthropic released the NLA model pair `kitft/nla-qwen2.5-7b-L20-{av,ar}`
 on 2026-05-07 — small companion models trained to verbalize layer-20
@@ -49,6 +49,232 @@ semantic-basis mapping, then geometric structure characterization,
 then interpolation experiments, then a final attractor-basin
 synthesis. The sequence wasn't planned up-front; each step was shaped
 by a specific research question (see [Attribution](#attribution)).
+
+---
+
+## Findings — strongest synthesis, with scope qualifications
+
+Held as **working hypotheses**, not settled claims. The scope-test
+follow-ups listed in [Possible next paths](#possible-next-paths) are
+the work required to upgrade these from "hypothesis" to "result."
+
+### F1. Layer 20 h-space appears to have discrete attractor basins
+
+Linear interpolation between two AR-encoded natural-language anchors
+(factual/geography ↔ poetic/nature,
+[MAIN-25](observations/2026-05-13-nla-interpolation-flipbook.md))
+produces a discontinuous AV-text transition even though the geometric
+step size stays roughly
+constant (`||Δh||` = 2.734 per coarse step). The coarse 20-step grid
+first flagged the flip at t=0.421; dense re-sampling at 10× resolution
+([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
+Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
+"Definition + Poem" hybrid plateau (t∈[0.395, 0.4450]), and the sharp
+flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
+Δt=0.0025 step. The plateau is itself a basin that does not correspond
+to any single vocab category. AR re-encoding of a midpoint h returns h
+to its basin (round-trip cosine +0.8995,
+[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md)) — basins are
+direction-coupled, not magnitude-coupled.
+
+**Scope qualifications:** demonstrated for one anchor pair, at one
+layer, on one model. The plateau-attractor margin is +0.061 over the
+nearest single-anchor — narrower than the +0.25 margins anchors have
+between themselves. The framing should be "basin candidate / shallow
+basin" until additional anchor pairs and layers replicate. Filed scope
+tests: [D5](#d5-cross-model-replication)
+(cross-model), [D6](#d6-basin-landscape-mapping) (basin landscape
+mapping).
+
+### F2. The 23-axis mean-contrast basis is end-of-prompt-PROTOCOL-coupled
+
+A basis of 23 per-category mean-contrast directions
+(`d_cat = mean(in_cat) − mean(out_cat); d_cat /= ||d_cat||`) built from
+the vocab atlas classifies end-of-prompt h-vectors with reasonable
+top-K hit rates (56-79% top-5 by category,
+[MAIN-26](observations/2026-05-13-nla-discriminant-validation.md)).
+Mid-sequence captures of the same anchors project nearly orthogonally
+onto the same basis (+0.0491 aggregate cosine, ~3× random-cosine floor,
+[MAIN-44](observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)).
+Building a mid-sequence-NATIVE basis using the same recipe lifts the
+in-protocol signal to +0.5632
+([MAIN-70](observations/2026-05-14-nla-mid-seq-native-discriminants.md)).
+Conclusion: the basis is a fingerprint of one specific capture protocol,
+not a generic semantic axis.
+
+**Scope qualifications:** "discriminant" in the script names is
+shorthand — the formula is centroid-difference / mean-contrast, not
+Fisher LDA (which would require `S_W⁻¹(μ₁−μ₀)` with regularization;
+omitted here because n=2-12 captures per category in 3584-dim space
+makes `S_W` rank-deficient by orders of magnitude). See
+[`examples/README_NLA.md`](../../../examples/README_NLA.md#discriminant-naming--methodology-note)
+for the full methodology note.
+
+### F3. Apparent hierarchical attractor structure at layer 20
+
+End-of-prompt h vectors appear to decompose as: a +0.40 baseline
+cosine between any two h's, which splits into a +0.22 universal-sink
+contribution (7 sign-locked dims) plus a +0.18 non-sink residue
+baseline (the mean cosine between any two *sink-removed* h's — not
++0.40, which is the with-sink total); then, layered on that baseline,
+category attractors (intra-category cosine +0.85 to +0.98), then
+within-category content modulation. PC1 of the
+sink-removed vocab atlas (33.5% variance) emerges as the
+**content-vs-function** axis — content-bearing words load negative
+(PC1 < 0), function words and punctuation load positive (PC1 > 0).
+([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
+
+> **Polarity note — corrected 2026-08-16.** Until then the sentence
+> above carried the signs inverted — a transcription slip relative to
+> Finding 2 of
+> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md),
+> the dated primary record (content-bearing at PC1 < 0,
+> structural/function at PC1 > 0), which this summary now matches.
+> Nothing downstream changes either way: the sign of a PCA component is
+> arbitrary (flipping an eigenvector's sign gives an equally valid
+> decomposition), so the load-bearing claim is that PC1 *separates*
+> content from function, not which side either lands on — which is why
+> the slip went unnoticed. `nla_audit_findings.py` AUDIT 12 re-derives
+> the 33.5% variance fraction from the same artifact, but it checks the
+> magnitude only; no audit asserts the polarity, so neither statement
+> was ever machine-checked.
+
+**Scope qualifications:** sink-dim identification was hand-rolled
+(7 dims chosen as those with universal sign + large |h|); a more
+principled sink detection (e.g. ratio-of-variance to mean-magnitude)
+might surface or exclude different dims. Hierarchy is descriptive of
+this one model + layer; not yet tested cross-model.
+
+### F4. Counterfactual surprise score from forced continuation
+
+For natural vs forced-completion pairs at matched generation positions
+(`Yes/No`, `Paris/Berlin`, `4/5`, factual/refusal-metaaware), the
+distance `||Δh||_feat` between natural-position-h and
+forced-position-h ranks the "plausibility" of the forced completion
+in a useful way: 5.7-11 for plausible-but-false counterfactuals,
+28-30 for OOD-forcing (refusal injected into an arithmetic context;
+the 35.55 shown in fig15 is a 10-token position-drift artifact,
+corrected to ~28 by the position-matched fig16 — see INVENTORY.md).
+Cheap monitoring-side anomaly score candidate. (Remaining work tracked
+as [#13](https://github.com/skothr/llm-research/issues/13), was MAIN-30;
+`nla_forced_continuation.py`.)
+
+**Scope qualifications:** four pairs is small-n; the score's
+distribution under random forced completions hasn't been characterized.
+The `nla_forced_continuation.py` protocol concatenates separately-tokenized
+prompt + completion (BPE-boundary risk at the seam) — for the current
+4 pairs the boundary risk is low (completions start with letter/digit
+tokens) but extensions need the mid_seq capture script's
+tokenize-then-locate approach.
+
+### F5. AR-encoded anchors collapse near a shared attractor (chat-template basin)
+
+Two maximally-different natural-language descriptions, AR-encoded
+back into h-vectors, have cos(h_A, h_B) = +0.69 — much higher than
+chance for two genuinely independent vectors in 3584-dim. The chat-
+template prefix (`<|im_start|>user`...) dominates the AR output;
+content modulates within a chat-template-shaped attractor.
+
+**Scope qualifications:** descriptive observation, not a finding-about-
+the-model; says more about how the AR was trained than about Qwen.
+But it's load-bearing for the interpolation work (F1) because it
+explains why linear interpolation between AR-encoded anchors looks
+geometrically nice — both anchors live in the same global region.
+
+---
+
+## Limitations
+
+Self-critical scope qualifications, ranked by how much they constrain
+how far the arc's claims travel.
+
+**L1. Single model, single layer.** Every result is on
+Qwen2.5-7B-Instruct at layer 20 — the only configuration the released
+NLA pair was trained for. Cross-model replication (D5) and cross-layer
+replication (out-of-scope here) are required before any finding can
+be claimed as a property of post-trained transformer mid-late layers
+in general.
+
+**L2. AV-decoder format-bias is unaudited.** The AV format-bias catch
+([Attribution](#attribution)) — that AV outputs share suspiciously
+consistent template phrases like
+"Structured format: [...]" — was never investigated. If the AV emits
+the same templates on random h-vectors as it does on semantically-loaded
+h's, every interpretive reading in this arc has been filtered through
+verbalizer prior, and "the model is thinking about X" claims may
+reduce to "the verbalizer says X regardless of input." This is the
+single methodological audit that, if positive, would re-frame the
+whole arc. Promoted to Medium priority as D3 for that reason.
+
+**L3. The mean-contrast basis is protocol-coupled.** As characterized
+in F2, the 23-axis basis works for the protocol it was built on
+(end-of-single-token-message) and collapses to noise cross-protocol.
+The dual question — what subspace of h IS protocol-invariant — was
+not asked during the arc. Open as
+[D4](#d4-find-the-protocol-invariant-subspace).
+
+**L4. Per-category capture counts are small (n=2 to n=12, median 5).**
+Six of 23 categories have n ≤ 3 (`p_quote`, `p_dash`, `article`,
+`negation`, `p_ender`, `p_internal`). The mean-contrast formula is
+defensible at this scale (Fisher LDA's `S_W⁻¹` requirement makes the
+unscaled centroid difference the right proxy when `S_W` is rank-deficient),
+but bootstrap confidence intervals on the per-category directions
+were not computed — the centroid for a 2-anchor category is
+unstable to within-category swap. Re-running with n≥8 per category
+would tighten the basis.
+
+**L5. The vocab atlas had three duplicates that affected the committed
+artifact.** The original `VOCAB` dict had `"when"` in both
+wh_word and conjunction, `"-"` in both p_dash and math_op, `"*"` in
+both p_special and math_op. The committed `vocab_atlas.pt` was captured
+against the duplicated source, so the audit-locked numbers depend on
+slightly-biased centroids. The source dict has been deduplicated
+(125 unique anchors, was 128 with 3 dups) with a module-level assert
+preventing future re-introduction. Regenerating the atlas would
+shift downstream numbers slightly; filed as a future follow-up rather
+than immediate fix.
+
+**L6. "Discriminant" naming is methodologically loose.** The codebase
+calls per-category mean-contrast directions "discriminants" — this is
+shorthand, not a claim of Fisher-style optimal separation. Anyone
+extending or publishing this work should rename to "mean-contrast" or
+"centroid-difference" to avoid implying Fisher LDA properties.
+
+**L7. Capture-position protocol bug, retroactively documented.**
+The `nla_discriminant_stability_capture.py` inline comment originally
+described position -1 as "the last content token (the anchor word)" —
+but with `add_generation_prompt=True`, position -1 is the trailing
+newline of the `<|im_start|>assistant\n` opener, NOT the anchor token.
+What the stability scan actually measures is the model's "what to say
+next given this prompt" representation, NOT the anchor token's
+representation. Comparisons across the 4 contexts are internally
+consistent (same kind of position in all 4), so the stability *finding*
+holds, but the *framing* has been corrected throughout.
+
+**L8. The audit script is arithmetic-consistency, not methodological.**
+`nla_audit_findings.py` re-derives every load-bearing number from raw
+`.pt` files and checks them against expected constants in the script
+(transcribed from the observation prose — so the artifact side is
+re-derived, but prose↔script agreement is maintained by hand). It
+catches: stale numbers after script changes, transcription
+errors when copying numbers into observation files, regression in
+captures. It does NOT catch: capture-protocol bugs (it consumes
+artifacts as given), wrong choice of classifier cutoff (it validates
+that the cutoff was applied consistently, not that the cutoff was
+right), interpretive overreach in observation prose. **A 196 PASS
+audit means "the numbers in the markdown match the numbers in the
+.pt files," not "the methodology is right."**
+
+**L9. The plateau attractor was demonstrated on one anchor pair.**
+F1's attractor-basin claim rests primarily on
+[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md) (round-trip
+cos +0.8995, margin +0.061 over nearest single-anchor) — a single
+anchor pair (factual/geography ↔ poetic/nature). Calling layer-20
+h-space "having discrete attractor basins" is a generalization from
+this one observation to a structural claim. Until other anchor pairs
+replicate the round-trip + margin pattern, the F1 framing should be
+"basin candidate at this one location" rather than "discrete attractor
+basins."
 
 ---
 
@@ -313,232 +539,6 @@ characterization of the user's direction, not the user's wording.
 
 ---
 
-## Findings — strongest synthesis, with scope qualifications
-
-Held as **working hypotheses**, not settled claims. The scope-test
-follow-ups listed in [Possible next paths](#possible-next-paths) are
-the work required to upgrade these from "hypothesis" to "result."
-
-### F1. Layer 20 h-space appears to have discrete attractor basins
-
-Linear interpolation between two AR-encoded natural-language anchors
-(factual/geography ↔ poetic/nature,
-[MAIN-25](observations/2026-05-13-nla-interpolation-flipbook.md))
-produces a discontinuous AV-text transition even though the geometric
-step size stays roughly
-constant (`||Δh||` = 2.734 per coarse step). The coarse 20-step grid
-first flagged the flip at t=0.421; dense re-sampling at 10× resolution
-([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
-Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
-"Definition + Poem" hybrid plateau (t∈[0.395, 0.4450]), and the sharp
-flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
-Δt=0.0025 step. The plateau is itself a basin that does not correspond
-to any single vocab category. AR re-encoding of a midpoint h returns h
-to its basin (round-trip cosine +0.8995,
-[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md)) — basins are
-direction-coupled, not magnitude-coupled.
-
-**Scope qualifications:** demonstrated for one anchor pair, at one
-layer, on one model. The plateau-attractor margin is +0.061 over the
-nearest single-anchor — narrower than the +0.25 margins anchors have
-between themselves. The framing should be "basin candidate / shallow
-basin" until additional anchor pairs and layers replicate. Filed scope
-tests: [D5](#d5-cross-model-replication)
-(cross-model), [D6](#d6-basin-landscape-mapping) (basin landscape
-mapping).
-
-### F2. The 23-axis mean-contrast basis is end-of-prompt-PROTOCOL-coupled
-
-A basis of 23 per-category mean-contrast directions
-(`d_cat = mean(in_cat) − mean(out_cat); d_cat /= ||d_cat||`) built from
-the vocab atlas classifies end-of-prompt h-vectors with reasonable
-top-K hit rates (56-79% top-5 by category,
-[MAIN-26](observations/2026-05-13-nla-discriminant-validation.md)).
-Mid-sequence captures of the same anchors project nearly orthogonally
-onto the same basis (+0.0491 aggregate cosine, ~3× random-cosine floor,
-[MAIN-44](observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)).
-Building a mid-sequence-NATIVE basis using the same recipe lifts the
-in-protocol signal to +0.5632
-([MAIN-70](observations/2026-05-14-nla-mid-seq-native-discriminants.md)).
-Conclusion: the basis is a fingerprint of one specific capture protocol,
-not a generic semantic axis.
-
-**Scope qualifications:** "discriminant" in the script names is
-shorthand — the formula is centroid-difference / mean-contrast, not
-Fisher LDA (which would require `S_W⁻¹(μ₁−μ₀)` with regularization;
-omitted here because n=2-12 captures per category in 3584-dim space
-makes `S_W` rank-deficient by orders of magnitude). See
-[`examples/README_NLA.md`](../../../examples/README_NLA.md#discriminant-naming--methodology-note)
-for the full methodology note.
-
-### F3. Apparent hierarchical attractor structure at layer 20
-
-End-of-prompt h vectors appear to decompose as: a +0.40 baseline
-cosine between any two h's, which splits into a +0.22 universal-sink
-contribution (7 sign-locked dims) plus a +0.18 non-sink residue
-baseline (the mean cosine between any two *sink-removed* h's — not
-+0.40, which is the with-sink total); then, layered on that baseline,
-category attractors (intra-category cosine +0.85 to +0.98), then
-within-category content modulation. PC1 of the
-sink-removed vocab atlas (33.5% variance) emerges as the
-**content-vs-function** axis — content-bearing words load negative
-(PC1 < 0), function words and punctuation load positive (PC1 > 0).
-([MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md), Finding 2.)
-
-> **Polarity note — corrected 2026-08-16.** Until then the sentence
-> above carried the signs inverted — a transcription slip relative to
-> Finding 2 of
-> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md),
-> the dated primary record (content-bearing at PC1 < 0,
-> structural/function at PC1 > 0), which this summary now matches.
-> Nothing downstream changes either way: the sign of a PCA component is
-> arbitrary (flipping an eigenvector's sign gives an equally valid
-> decomposition), so the load-bearing claim is that PC1 *separates*
-> content from function, not which side either lands on — which is why
-> the slip went unnoticed. `nla_audit_findings.py` AUDIT 12 re-derives
-> the 33.5% variance fraction from the same artifact, but it checks the
-> magnitude only; no audit asserts the polarity, so neither statement
-> was ever machine-checked.
-
-**Scope qualifications:** sink-dim identification was hand-rolled
-(7 dims chosen as those with universal sign + large |h|); a more
-principled sink detection (e.g. ratio-of-variance to mean-magnitude)
-might surface or exclude different dims. Hierarchy is descriptive of
-this one model + layer; not yet tested cross-model.
-
-### F4. Counterfactual surprise score from forced continuation
-
-For natural vs forced-completion pairs at matched generation positions
-(`Yes/No`, `Paris/Berlin`, `4/5`, factual/refusal-metaaware), the
-distance `||Δh||_feat` between natural-position-h and
-forced-position-h ranks the "plausibility" of the forced completion
-in a useful way: 5.7-11 for plausible-but-false counterfactuals,
-28-30 for OOD-forcing (refusal injected into an arithmetic context;
-the 35.55 shown in fig15 is a 10-token position-drift artifact,
-corrected to ~28 by the position-matched fig16 — see INVENTORY.md).
-Cheap monitoring-side anomaly score candidate. (Remaining work tracked
-as [#13](https://github.com/skothr/llm-research/issues/13), was MAIN-30;
-`nla_forced_continuation.py`.)
-
-**Scope qualifications:** four pairs is small-n; the score's
-distribution under random forced completions hasn't been characterized.
-The `nla_forced_continuation.py` protocol concatenates separately-tokenized
-prompt + completion (BPE-boundary risk at the seam) — for the current
-4 pairs the boundary risk is low (completions start with letter/digit
-tokens) but extensions need the mid_seq capture script's
-tokenize-then-locate approach.
-
-### F5. AR-encoded anchors collapse near a shared attractor (chat-template basin)
-
-Two maximally-different natural-language descriptions, AR-encoded
-back into h-vectors, have cos(h_A, h_B) = +0.69 — much higher than
-chance for two genuinely independent vectors in 3584-dim. The chat-
-template prefix (`<|im_start|>user`...) dominates the AR output;
-content modulates within a chat-template-shaped attractor.
-
-**Scope qualifications:** descriptive observation, not a finding-about-
-the-model; says more about how the AR was trained than about Qwen.
-But it's load-bearing for the interpolation work (F1) because it
-explains why linear interpolation between AR-encoded anchors looks
-geometrically nice — both anchors live in the same global region.
-
----
-
-## Limitations
-
-Self-critical scope qualifications, ranked by how much they constrain
-how far the arc's claims travel.
-
-**L1. Single model, single layer.** Every result is on
-Qwen2.5-7B-Instruct at layer 20 — the only configuration the released
-NLA pair was trained for. Cross-model replication (D5) and cross-layer
-replication (out-of-scope here) are required before any finding can
-be claimed as a property of post-trained transformer mid-late layers
-in general.
-
-**L2. AV-decoder format-bias is unaudited.** The AV format-bias catch
-([Attribution](#attribution)) — that AV outputs share suspiciously
-consistent template phrases like
-"Structured format: [...]" — was never investigated. If the AV emits
-the same templates on random h-vectors as it does on semantically-loaded
-h's, every interpretive reading in this arc has been filtered through
-verbalizer prior, and "the model is thinking about X" claims may
-reduce to "the verbalizer says X regardless of input." This is the
-single methodological audit that, if positive, would re-frame the
-whole arc. Promoted to Medium priority as D3 for that reason.
-
-**L3. The mean-contrast basis is protocol-coupled.** As characterized
-in F2, the 23-axis basis works for the protocol it was built on
-(end-of-single-token-message) and collapses to noise cross-protocol.
-The dual question — what subspace of h IS protocol-invariant — was
-not asked during the arc. Open as
-[D4](#d4-find-the-protocol-invariant-subspace).
-
-**L4. Per-category capture counts are small (n=2 to n=12, median 5).**
-Six of 23 categories have n ≤ 3 (`p_quote`, `p_dash`, `article`,
-`negation`, `p_ender`, `p_internal`). The mean-contrast formula is
-defensible at this scale (Fisher LDA's `S_W⁻¹` requirement makes the
-unscaled centroid difference the right proxy when `S_W` is rank-deficient),
-but bootstrap confidence intervals on the per-category directions
-were not computed — the centroid for a 2-anchor category is
-unstable to within-category swap. Re-running with n≥8 per category
-would tighten the basis.
-
-**L5. The vocab atlas had three duplicates that affected the committed
-artifact.** The original `VOCAB` dict had `"when"` in both
-wh_word and conjunction, `"-"` in both p_dash and math_op, `"*"` in
-both p_special and math_op. The committed `vocab_atlas.pt` was captured
-against the duplicated source, so the audit-locked numbers depend on
-slightly-biased centroids. The source dict has been deduplicated
-(125 unique anchors, was 128 with 3 dups) with a module-level assert
-preventing future re-introduction. Regenerating the atlas would
-shift downstream numbers slightly; filed as a future follow-up rather
-than immediate fix.
-
-**L6. "Discriminant" naming is methodologically loose.** The codebase
-calls per-category mean-contrast directions "discriminants" — this is
-shorthand, not a claim of Fisher-style optimal separation. Anyone
-extending or publishing this work should rename to "mean-contrast" or
-"centroid-difference" to avoid implying Fisher LDA properties.
-
-**L7. Capture-position protocol bug, retroactively documented.**
-The `nla_discriminant_stability_capture.py` inline comment originally
-described position -1 as "the last content token (the anchor word)" —
-but with `add_generation_prompt=True`, position -1 is the trailing
-newline of the `<|im_start|>assistant\n` opener, NOT the anchor token.
-What the stability scan actually measures is the model's "what to say
-next given this prompt" representation, NOT the anchor token's
-representation. Comparisons across the 4 contexts are internally
-consistent (same kind of position in all 4), so the stability *finding*
-holds, but the *framing* has been corrected throughout.
-
-**L8. The audit script is arithmetic-consistency, not methodological.**
-`nla_audit_findings.py` re-derives every load-bearing number from raw
-`.pt` files and checks them against expected constants in the script
-(transcribed from the observation prose — so the artifact side is
-re-derived, but prose↔script agreement is maintained by hand). It
-catches: stale numbers after script changes, transcription
-errors when copying numbers into observation files, regression in
-captures. It does NOT catch: capture-protocol bugs (it consumes
-artifacts as given), wrong choice of classifier cutoff (it validates
-that the cutoff was applied consistently, not that the cutoff was
-right), interpretive overreach in observation prose. **A 196 PASS
-audit means "the numbers in the markdown match the numbers in the
-.pt files," not "the methodology is right."**
-
-**L9. The plateau attractor was demonstrated on one anchor pair.**
-F1's attractor-basin claim rests primarily on
-[MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md) (round-trip
-cos +0.8995, margin +0.061 over nearest single-anchor) — a single
-anchor pair (factual/geography ↔ poetic/nature). Calling layer-20
-h-space "having discrete attractor basins" is a generalization from
-this one observation to a structural claim. Until other anchor pairs
-replicate the round-trip + margin pattern, the F1 framing should be
-"basin candidate at this one location" rather than "discrete attractor
-basins."
-
----
-
 ## Possible next paths
 
 Eight unsprouted research directions, each tied to a direction-setting
@@ -636,56 +636,6 @@ gui_cpp ↔ NLA-artifact connection first).
 
 ---
 
-## Private-tracker ID map (MAIN-N)
-
-This arc was worked against a private issue tracker that has since been
-retired. Its `MAIN-N` ticket IDs are used as shorthand labels throughout
-this README, the observation files, and
-`observations/figures/INVENTORY.md` (the `examples/nla_*.py` docstrings
-that carried them were rewritten to cite observation files instead).
-**A reader cannot look any of them up** — the tracker is gone and was
-never public.
-
-Every `MAIN-N` that appears anywhere in this arc is listed below with the
-in-repo artifact or migrated GitHub issue it resolves to. Two were never
-migrated and have no successor; they are kept as bare IDs rather than
-deleted, because removing them would silently erase the provenance of the
-findings they are attached to.
-
-Paths are relative to this directory unless noted.
-
-| ID | Resolves to | How the mapping was established |
-|---|---|---|
-| MAIN-24 | [`observations/2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md) | F3's cited result (PC1 = 33.5% of the sink-removed vocab atlas, content-vs-function) is that file's Finding 2; INVENTORY's "category-attractor subspace separate from the sink subspace" open question is that file's H11, nearly verbatim (H11's heading says "category subspace") |
-| MAIN-25 | [`observations/2026-05-13-nla-interpolation-flipbook.md`](observations/2026-05-13-nla-interpolation-flipbook.md) | the dense-interp observation describes MAIN-25 as the 20-step grid that flagged the flip between step 8 and step 9, which is this file's fig17/fig18 run; the mid-seq-native observation cites it for "the strong t=0.421 transition", with the ID's inline link pointing at this file |
-| MAIN-26 | [`observations/2026-05-13-nla-discriminant-validation.md`](observations/2026-05-13-nla-discriminant-validation.md) | the mid-seq null-result observation links it directly — its prose reads `MAIN-26` followed by an inline markdown link to this file; F2's cited 56-79% top-5 hit rates are that file's Finding 2, and "MAIN-26 / fig29" matches its fig29 |
-| MAIN-30 | GitHub [#13](https://github.com/skothr/llm-research/issues/13) | issue body: "Migrated from Linear MAIN-30" |
-| MAIN-34 | [`observations/2026-05-15-nla-dense-interp-near-pivot.md`](observations/2026-05-15-nla-dense-interp-near-pivot.md) | that file's own `Private-tracker ID` header |
-| MAIN-38 | GitHub [#12](https://github.com/skothr/llm-research/issues/12) | issue body: "Migrated from Linear MAIN-38" (no reference to it survives in repo prose) |
-| MAIN-41 | GitHub [#11](https://github.com/skothr/llm-research/issues/11) | issue body: "Migrated from Linear MAIN-41" |
-| MAIN-44 | [`observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md`](observations/2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) | that file's own `Private-tracker ID` header |
-| MAIN-47 | [`observations/2026-05-14-nla-hierarchical-classifier-null-result.md`](observations/2026-05-14-nla-hierarchical-classifier-null-result.md) | that file's own `Private-tracker ID` header |
-| MAIN-48 | [`observations/2026-05-14-nla-concept-arithmetic-atlas.md`](observations/2026-05-14-nla-concept-arithmetic-atlas.md) | that file's own `Private-tracker ID` header |
-| MAIN-68 | GitHub [#10](https://github.com/skothr/llm-research/issues/10) | issue body: "Migrated from Linear MAIN-68" |
-| MAIN-70 | [`observations/2026-05-14-nla-mid-seq-native-discriminants.md`](observations/2026-05-14-nla-mid-seq-native-discriminants.md) | that file's own `Private-tracker ID` header |
-| MAIN-71 | [`observations/2026-05-15-nla-plateau-attractor-strength.md`](observations/2026-05-15-nla-plateau-attractor-strength.md) | that file's own `Private-tracker ID` header (part 2 of 2) |
-| MAIN-265 | **not migrated** | D1 (discovery-viz frontend). No GitHub issue was migrated from it (issue #30's prose quotes the MAIN-265..272 range, nothing more); [D1](#d1-discovery-viz-frontend) above is the only surviving description |
-| MAIN-266 | GitHub [#9](https://github.com/skothr/llm-research/issues/9) | issue body: "Migrated from Linear MAIN-266" |
-| MAIN-267 | GitHub [#8](https://github.com/skothr/llm-research/issues/8) | issue body: "Migrated from Linear MAIN-267 (folds MAIN-347; …)" |
-| MAIN-268 | GitHub [#7](https://github.com/skothr/llm-research/issues/7) | issue body: "Migrated from Linear MAIN-268" |
-| MAIN-269 | GitHub [#6](https://github.com/skothr/llm-research/issues/6) | issue body: "Migrated from Linear MAIN-269" |
-| MAIN-270 | GitHub [#5](https://github.com/skothr/llm-research/issues/5) | issue body: "Migrated from Linear MAIN-270" |
-| MAIN-271 | **not migrated** | D7 (per-token live-trajectory viz). No GitHub issue was migrated from it; [D7](#d7-per-token-live-trajectory-viz) above is the only surviving description |
-| MAIN-272 | GitHub [#4](https://github.com/skothr/llm-research/issues/4) | issue body: "Migrated from Linear MAIN-272" |
-| MAIN-347 | GitHub [#8](https://github.com/skothr/llm-research/issues/8), folded into MAIN-267 | the only surviving mention is #8's own migration note, quoted in the MAIN-267 row above |
-
-Migration context: `docs/planning/2026-07-25-backlog-groom.md` (repo root).
-
-`CC-MAIN-2024-10` under `theory/` is unrelated — it is a Common Crawl
-snapshot name, not a tracker ID.
-
----
-
 ## Reproducing
 
 Prerequisites: Python venv at `.venv/` with torch + transformers +
@@ -725,6 +675,7 @@ of capture time.
 ```
 research/arcs/01_nla-verbalizer/
   README.md                                     # This file
+  ID_MAP.md                                     # MAIN-N -> in-repo artifact map
   observations/
     2026-05-12-nla-position-scan-qwen25-7b.md   # Per-position h-norm scan
     2026-05-12-nla-trajectory-rabbit-haiku.md   # Per-generated-token AV trajectory
