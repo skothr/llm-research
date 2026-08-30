@@ -183,8 +183,8 @@ tree.
   split. One disclaimer line covers normalization and elisions. No label
   taxonomy, no per-quote provenance tags, no verifiability tables.
   `research/arcs/04_jspace/README.md` § Attribution is the shape (arc 02's
-  "Research direction" section is the original reference implementation of
-  the same content); the procedure is `research/ARC_PROCESS.md` § 6.
+  § Attribution is the original reference implementation of the same
+  content); the procedure is `research/ARC_PROCESS.md` § 6.
 
 # Third-party data — vet BEFORE first use, not before commit
 
