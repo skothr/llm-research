@@ -41,15 +41,40 @@ versions:
    participation ratio ~1003/3584. The classic anisotropic-cone correction
    is not load-bearing for this table.
    ([global-geometry](observations/2026-06-10-emb-global-geometry.md))
+
+   ![fig2_anisotropy](observations/figures/fig2_anisotropy.png)
+
+   *Cosine of each row to the global mean, and the 10k-random-pair cosine
+   distribution raw vs centered: +0.0097 raw, +0.0007 after mean-centering, far
+   below the +0.3-0.9 anisotropic-cone regime reported for earlier models.
+   Rendered by `emb_global_render.py` from `emb_global_stats.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 2. **Input/output embedding orthogonality.** cos(E_i, U_i) ~ 0 for every
    token (mean +0.0017) while U-space carries its own category structure —
    the untied matrices use unrelated coordinate systems.
    ([global-geometry](observations/2026-06-10-emb-global-geometry.md), F-G4)
+
+   ![fig4_e_vs_u](observations/figures/fig4_e_vs_u.png)
+
+   *Per-token cos(E_i, U_i) over all real rows: mean +0.0017, median +0.0014,
+   no token above 0.5 — the untied input and output matrices sit at chance
+   alignment. Rendered by `emb_global_render.py` from `emb_global_stats.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 3. **Category-coherence hierarchy.** Paradigm sets (digits +0.428, months
    +0.416, weekdays +0.400) >> function words (+0.24-0.29) > topics
    (+0.08-0.18) > connotation classes (the `positive` class of the valence
    supergroup +0.045, `formal` of register +0.052).
    ([category-structure](observations/2026-06-10-emb-category-structure.md))
+
+   ![fig5_within_between](observations/figures/fig5_within_between.png)
+
+   *Per-class within- and between-class mean cosine (bars vs black dashes),
+   raw and centered panels, colored by supergroup: closed paradigm sets top
+   the ranking, with within-minus-between gaps of +0.428 (number), +0.416
+   (month), +0.400 (day_of_week) over a ~+0.03 between-class baseline, and
+   connotation classes at the bottom. Rendered by `emb_category_render.py`
+   from `emb_category_stats.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 4. **Cross-script neighbors.** 法国/巴黎 rank among ' France'/' Paris' top
    neighbors — multilingual alignment exists in the raw lookup table.
    ([category-structure](observations/2026-06-10-emb-category-structure.md), F-C3)
@@ -73,6 +98,15 @@ versions:
    crisp islands (names, countries, code syntax, a cross-lingual time
    community) over one giant component.
    ([fullvocab-sweep](observations/2026-06-10-emb-fullvocab-sweep.md))
+
+   ![fig15_structural_block](observations/figures/fig15_structural_block.png)
+
+   *Block norm-fraction by token-id decile against a random-21-dim control: the
+   first (most frequent) decile carries 0.1143 vs the control's 0.0753 — about
+   1.5x the floor it flattens to after decile 3 (Spearman -0.206 vs -0.003) —
+   and per-script means show the loading is script-independent. Rendered by
+   `emb_structural_block_render.py` from `emb_structural_block.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 7. **Sink machinery is dimensionally disjoint from the W_E block.** Qwen's
    massive-activation dims (458 peak −12,608, 2570, 1427 — three of arc 1's
    layer-20 "sink dims") arise from layer 1 on the FIRST token, never
@@ -85,6 +119,16 @@ versions:
    at L27-28 (norm gain 3.28×). Routing is RMSNorm gains + attention, not
    FFN weight structure.
    ([trace-block-through-layers](observations/2026-06-11-emb-trace-block-through-layers.md))
+
+   ![fig16_carrier_sv](observations/figures/fig16_carrier_sv.png)
+
+   *Per-layer top singular value of the layer-0-block-coordinate vs
+   layer-L-residual correlation, block against a random-21 control: the block's
+   top SV stays in [8.8, 15.6] across all layers while the control decays, even
+   though in-block correlation mass collapses 0.109 → 0.031 at L1 (1,130 corpus
+   tokens, positions > 0). Rendered by `emb_trace_render.py` from
+   `emb_trace_components.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 9. **Delimiter tracking is a distinct early-layer head population.** 26/784
    heads give delimiters ≥3× the offset-matched control attention to
    preceding delimiters (layers 0-3; top L0H13 0.178 vs 0.041). These are
@@ -94,6 +138,16 @@ versions:
    falsifying positional-resonance P1d), and period→comma aggregation peaks
    at L0, not deeper (falsifying P1c).
    ([trace-delimiter-attention](observations/2026-07-15-emb-trace-delimiter-attention.md))
+
+   ![fig19_delim_head_census](observations/figures/fig19_delim_head_census.png)
+
+   *Per-head delimiter→delimiter attention vs offset-matched control→control,
+   with the 26 of 784 heads meeting the pre-registered d2d/c2c ≥ 3x and excess
+   ≥ 0.03 criterion highlighted (top L0H13: 0.1784 vs 0.0409, 4.37x) and the
+   block-reader heads ringed — top reader L0H15 ranks only 21st by delimiter
+   excess. Rendered by `emb_trace_attention_render.py` from
+   `emb_trace_attention.pt` and `emb_trace_analysis.pt`.*
+   ([provenance](observations/figures/INVENTORY.md))
 
 ## Limitations
 

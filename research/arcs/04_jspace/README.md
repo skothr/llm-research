@@ -45,6 +45,17 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    7B 14/108 vs 8/108) — the 7B median flip is one favorable sub-metric,
    not a clean sweep. The J-exclusivity is corpus-, budget-, and
    quantization-robust; only the @10 magnitude is corpus-dependent.
+
+   ![2026-07-21-jspace-emergence](observations/figures/2026-07-21-jspace-emergence.png)
+
+   *Depth of emergence: the median source layer at which the final top-1 token
+   enters the lens top-10 is later for the J-lens at 1.5B (L23 vs logit-lens
+   L19) but earlier at 7B (L22 vs L24) — the scale-dependent reversal. The
+   companion never-emerged counts run against the J-lens at both scales (1.5B
+   16/108 vs logit 1/108; 7B 14/108 vs 8/108), and panel (a) shows the logit
+   lens leading on output-predictive agreement at every layer except the final
+   7B one.*
+   ([provenance](observations/figures/INVENTORY.md))
 2. **Low J-space occupancy; the 1.5B hump breaches the paper's 10%
    ceiling and 7B stays under — verified on the paper's own metric
    (2026-07-24).** The paper's ceiling is excess-over-random
@@ -70,6 +81,17 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    occupancy/top-atom readings are partly norm-driven (unnormalized-atom
    pursuit selection bias; the workspace band measures norm-neutral) —
    see `observations/2026-07-24-paper-metric-varfrac-recompute.md`.
+
+   ![2026-07-24-jspace-paper-metric-excess](observations/figures/2026-07-24-jspace-paper-metric-excess.png)
+
+   *The 10% ceiling under the paper's own metric (excess-over-random
+   orthogonal-projection FVE at K = median occupancy): 1.5B breaches at its L21
+   hump (10.8% on the scan grid; all-positions mean 11.15%, cluster-bootstrap
+   CI95 [10.95, 11.40], n=5362 positions/layer) while 7B stays under
+   throughout, peaking at 4.7% (L22–L23). Faint dashed lines are the arc's
+   original absolute varfrac@25 from the committed scans, shown to visualize
+   the metric correction.*
+   ([provenance](observations/figures/INVENTORY.md))
 3. **Relational causality — the arc's strongest positive.** Swapping an
    unspoken concept along its J-lens vector, at the genuinely
    J-lens-detected concept positions, moves the concept's *entailed
@@ -93,6 +115,18 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    report-swap layer at both scales: relational consequences engage
    earlier in depth than verbalization.
 
+   ![2026-07-22-jspace-entailed-property](observations/figures/2026-07-22-jspace-entailed-property.png)
+
+   *Swapping the unspoken concept along its J-lens vector moves the entailed
+   property far more than the equal-magnitude logit-lens token-steering and
+   random controls, which sit near zero: mean Δlog-p peaks at +5.17 nats at
+   1.5B L18 (auto-detected subset, n=7/17) and +2.17 nats at 7B L19 (n=17/30).
+   Both peaks sit a few layers below the report-swap layer, where the effect
+   collapses (+0.44 at 1.5B L21, +0.63 at 7B L22); whiskers are seeded
+   bootstrap 95% CIs of the auto-only mean, and the flip rate is 0.000
+   everywhere.*
+   ([provenance](observations/figures/INVENTORY.md))
+
 **What does not replicate.**
 1. **The discrete entailed-property flip** (the paper's 8→6): flip rate
    0.000 at both scales, robust to the paper's verbatim prompt and to
@@ -108,9 +142,33 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    the residual, not the J-space component (removal-damage ≈ random
    removal). Report-token swap effects are largely reachable by raw token
    steering.
+
+   ![2026-07-21-jspace-swap-causality](observations/figures/2026-07-21-jspace-swap-causality.png)
+
+   *Report-swap success by injected direction (n=78 items, chat prompts): the
+   token-indexed J-lens vector replicates the paper's ordering with heavy
+   attenuation (0.63 at 1.5B L21, 0.27 at 7B L22, against the paper's 88%), but
+   the J-space component of the concept vector sits at chance (0.18 vs random
+   0.14 at 1.5B; 0.15 vs 0.15 at 7B) where the paper reports 59%. Plain
+   logit-lens token steering reaches 0.56 at 1.5B, the result that shifts
+   weight toward the token-steering account; whiskers are Wilson 95%
+   intervals.*
+   ([provenance](observations/figures/INVENTORY.md))
 3. **The kurtosis workspace-onset signature**: inverted on Qwen
    (high-early → mid-trough → weak late rise), on the paper-native
    metric, robust across logit/prob space and both corpora.
+
+   ![2026-07-20-jspace-structure-depth-map](observations/figures/2026-07-20-jspace-structure-depth-map.png)
+
+   *J-lens readout excess kurtosis on the paper-native metric (lower panel)
+   runs backwards from the Claude-family shape at both Qwen scales — high
+   early, mid trough, weak late rise — instead of ~0 early rising from ~1/3
+   depth. The occupancy profile (upper panel, absolute varfrac@25 on 30
+   held-out wikitext prompts) is humped at 1.5B (peak L21, 0.124) and roughly
+   3× lower and U-shaped at 7B (trough L17 0.012, peak L22 0.040); the ceiling
+   verdicts themselves are certified on the paper's own metric in the
+   excess-FVE figure above.*
+   ([provenance](observations/figures/INVENTORY.md))
 4. **7B structure diverges from the small-model picture**: ~3× lower
    occupancy and a U-shaped depth profile — established as genuine
    scale/model properties after the four-axis exoneration.
@@ -124,6 +182,16 @@ like noise, verbalizable content sits in the residual, and discrete
 behavioral flips don't occur. Whether that gap is capability scale
 (Claude 4.5-family vs ≤7B) or model family remains the open question
 the arc cannot answer from below.
+
+![2026-07-21-jspace-unspoken-words](observations/figures/2026-07-21-jspace-unspoken-words.png)
+
+*Per-layer top-5 lens readout at a single held-out position (prompt 0, token
+127 of 224; held concept = critical book reviews): the J-lens top-1 turns
+content-bearing at L16 (1.5B) and L19 (7B), tracing criticism → critiques →
+commentary → reviews, while the logit lens stays junk until L18 and L23
+respectively. This is what "decodes held concepts token-indexed" looks like on
+one position — a qualitative illustration, not an aggregate.*
+([provenance](observations/figures/INVENTORY.md))
 
 **Novel contributions beyond the paper:** the NLA cross-tie (two
 independent verbalization channels agree weakly and prompt-specifically;
