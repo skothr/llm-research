@@ -191,9 +191,10 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Verified from a clean clone, all four arcs re-verified 2026-08-29
-(arcs 01-03's committed `audit_2026-08-17.log` reproduces byte-for-byte;
-arc 04's log records the opt-in-lens-cache state — see below):
+from them. Verified from a clean clone: arcs 01-03 re-verified 2026-08-29
+(their committed logs reproduce byte-for-byte), arc 04 re-measured
+2026-08-30 after its audit gained CHECK O (its committed
+`audit_2026-08-17.log` records the opt-in-lens-cache state — see below):
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
@@ -213,8 +214,8 @@ rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 the same run is expected to report **1016 PASS | 4 FAIL** (986 measured
 2026-08-17 plus the 30 cache-independent CHECK O claims added 2026-08-30;
 the nf4 `MISSING` reports only) with no GPU work; the check total grows
-from 988 to 1020 between the two states because the lens-dependent blocks register their claims only when
-the lens tensors are on disk. Arc 02's 5 UNVERIFIABLE entries are printed,
+from 988 to 1020 between the two states because the lens-dependent
+blocks register their claims only when the lens tensors are on disk. Arc 02's 5 UNVERIFIABLE entries are printed,
 not scored — external citations and capture-time environment facts no
 committed artifact can settle. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —

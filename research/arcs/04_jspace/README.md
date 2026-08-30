@@ -385,7 +385,8 @@ The arc's dated writeups, in `observations/`:
 > `data/audit_2026-08-16.log`; those are the totals **as of that re-run** —
 > the audit has since gained checks, so a re-derivation with the cache
 > reported 986 | 4 as of 2026-08-17 (`data/audit_2026-08-17.log`;
-> current expected totals: "Expected result on a clean clone" below). Re-derive with
+> current expected totals: "Expected result on a clean clone" below).
+> Re-derive with
 > `python examples/jspace_audit_findings.py` — the three re-fit lenses are
 > LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
 > the lens download is opt-in, see "Expected result on a clean clone" below).

@@ -35,9 +35,11 @@ vs 23/3584 = 0.0064). Consequences:
 1. **The cross-scale excess gap is dominated by a factor common to
    signal and baseline.** On the held-out pair measured here the gap is
    1.99× and the ratio normalization removes it entirely (6.29 vs 6.50,
-   slightly reversed). The README's ~2.4× figure is a different pair —
-   the all-positions wikitext runs (11.15% / 4.72% = 2.36×) — so the
-   common factor accounts for most, not provably all, of that reading.
+   slightly reversed). The README's ~2.4× figure is a different — and
+   itself cross-mode — pair: the 1.5B all-positions mean (11.15%)
+   against the 7B scan-grid peak (4.72%), both on wikitext held-out
+   prompts (2.36×; no 7B all-positions run exists). The common factor
+   accounts for most, not provably all, of that reading.
 2. **Comparing a d=1536 model's excess against a ceiling measured on
    much larger models is not like-for-like.** The paper's
    Claude-family models have (much) larger hidden dimensions than
@@ -70,7 +72,7 @@ limitations).
 
 ## What this does and does not establish
 
-**Does:** the cross-scale excess gap is explained by a factor common to
+**Does:** the cross-scale excess gap is dominated by a factor common to
 signal and baseline; the two README ceiling verdicts (1.5B breach, 7B
 under) are calibrated in a dimension-dependent unit and should carry a
 caveat when read as a cross-scale or versus-paper comparison.
