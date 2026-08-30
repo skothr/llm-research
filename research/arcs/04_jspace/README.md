@@ -482,7 +482,7 @@ from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
 markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
 elision. This section follows the attribution shape in
 [`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis), for
-which [arc 02](../02_subliminal/README.md#research-direction) is the
+which [arc 02](../02_subliminal/README.md#attribution) is the
 reference implementation.
 
 **Originating direction** [session 2026-07-18]:
