@@ -105,8 +105,8 @@ python examples/jspace_lens_eval.py --evals multihop association \
   corrected 2026-07-20 from an unsupported "~29 h"; 1.5B ~16 h) to break the
   H1/H2 confound, vs proceeding to stage 4 (J-space structure) on the n=100
   lenses. **Reviewer verdict 2026-07-20: DEFERRED** — proceed to stage 4 on
-  the n=100 lenses; the refit is binned under "Deferred / follow-up
-  directions" in the arc README.
+  the n=100 lenses; the refit is binned under "Possible next
+  paths" in the arc README.
 - Association behavioral baseline still pending (does either model do the
   vignette→concept task at all).
 - Stage 4 (gradient-pursuit J-space variance/sparsity depth-band map) can
