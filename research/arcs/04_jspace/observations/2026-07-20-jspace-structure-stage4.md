@@ -163,7 +163,7 @@ python examples/jspace_render_structure_figures.py
 - Active-count recalibration (coefficient-mass threshold) — cheap, pure
   post-processing of the committed per-prompt coefficients.
 - Promote the six small derived metric artifacts (2× lens_eval, 2×
-  readout_scan, 2× structure_scan; ~1.5 MB total) from `cache/` to
+  readout_scan, 2× structure_scan; ~9.3 MB total) from `cache/` to
   `data/` + MANIFEST so `jspace_audit_findings.py` runs from a clean clone
   — currently it needs the gitignored cache. Arc-close (stage 7) hygiene.
 
