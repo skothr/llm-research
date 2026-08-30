@@ -178,8 +178,7 @@ number in the observations has a corresponding assertion.
   same commit as these requirements, `5040118e`, 2026-07-18, under the
   pre-standard heading name); the [J-space arc](arcs/04_jspace/README.md)
   § Attribution shows the same content at the required `## Attribution`
-  heading level. Arc 01's "Research direction — user-shaped themes" is the
-  informal precursor. Required shape:
+  heading level. Required shape:
   1. **Research direction** (the opening block under `## Attribution`; arc 02
      carries it under its older `## Research direction` heading): the
      originating user direction(s) as

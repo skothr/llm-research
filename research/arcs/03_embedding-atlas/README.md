@@ -24,12 +24,21 @@ quality-degradation window would have covered them; audited clean at the
 user's direction —
 [degradation-forensics](sessions/2026-07-21-degradation-forensics.md).
 
-## Research direction
+## Attribution
 
-Arc 3 opened from the user's (Michael Lannum) direction, 2026-06-10 session.
-Quotes are verbatim from the session transcript, lightly normalized for
-punctuation (`--` → `—`); any `[...]` marks an editorial elision, and the
-elision is stated wherever it removes something load-bearing.
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas came
+from. Quotes below are verbatim user turns (Michael Lannum) from the session
+transcripts of 2026-06-10 → 2026-07-21, lightly normalized for typos and
+punctuation; markdown emphasis inside a turn is dropped, `[...]` marks an
+editorial elision, and dates follow the transcripts' UTC clock. This section
+follows the attribution shape in
+[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis). The
+atlas idea itself predates the arc: it was seeded by the semantic-basis-grid
+turns of 2026-05-14, quoted in
+[arc 01 § Attribution](../01_nla-verbalizer/README.md#attribution).
+
+**Originating direction** [session 2026-06-10]:
 
 > *"explore the complete set of token embeddings for correlations and
 > interesting connections between groups of words (related in one way or
@@ -38,44 +47,152 @@ elision is stated wherever it removes something load-bearing.
 > subjects, try out). Words with similar or related
 > function, use, topic/connotation, etc. may have shared features that act
 > as 'handles' for the model layers to execute that function hidden in our
-> construction of language."*  
-> — [session 2026-06-10]
+> construction of language."*
 
 Scope decisions made at session start: two arcs (embeddings first, RoPE
-second) rather than one; iterate with figures + plain-language measurement
-explanations at checkpoints. At checkpoint CP1 the user selected "Add more
-word groups first" from the offered next-step options (a checkpoint decision,
-not a typed message). The *direction* to broaden beyond countries into
-"different types of words / different subjects" is the user's, in the
-originating turn above; the specific
+second) rather than one. At checkpoint CP1 the user selected the offered
+next-step option Add more word groups first (a checkpoint-menu decision, not
+a typed message). The direction to broaden beyond countries into "different
+types of words / different subjects" is the user's; the specific
 person/royal/religion/abstract/landscape/instrument/science/tech/language
 classes and the gender/antonym/past/capital_of/lang_of pair kinds are
 Claude's operationalization of it.
 
-### Collaboration mode (following the arc-02 attribution template)
+**Correlation-first, entangled dimensions, and the no-small-samples rule**
+[session 2026-06-10], after the cost question "how expensive would it be to
+run some calculations/correlations over the entire token universe?" had put
+the full-vocabulary sweep in scope:
 
-**What Michael contributed.** The originating "handles" question (verbatim
-above, [session 2026-06-10]); the two-arc scoping and the
-iterate-with-figures cadence; the CP1 broaden-before-deepen decision; the
-deep-arc commitment and the numbered-arc reorganization (2026-06-11); the
-thorough-data discipline that forced the full-149,706-row sweep before any
-claim promotion; the pause/resume and wrap-up calls; the review gate (all
-three stack PRs human-merged, never auto-merged).
+> *"okay yeah, so now we're doing the reverse of before. We found groups of
+> semantically similar tokens and looked for feature correlations between
+> them before, now we're looking for similarities between the full set of
+> token embeddings [...] there might be more small-scale correlations —
+> like specific dimensions or correlated/'entangled' dimensions in the
+> vector serving as more granular handles that serve particular functions
+> and mathematically encode its semantics.
+> I want to really focus on thorough data collection before we come to any
+> conclusions. Run it in scaling steps and branch out (and push notify me)
+> if data reveals any potential unexpected paths. [...] we shouldn't be
+> generalizing from a small sampling of data like we've been doing, ever."*
 
-**What Claude contributed.** All implementation: the ~22 `emb_*` capture/
-derive/render/audit scripts, the battery class definitions (under the CP1
-direction), the operationalization of the pre-registered predictions
-(P1a-P3), the tracing-phase experiment designs (T0/T1/T1.5/T2), the
-literature review with adversarial novelty verification, all figures and
-observation write-ups, and the audit that re-derives every published number
-from committed artifacts.
+Three direction-setting acts in one turn: it inverts the methodology from
+category-first to correlation-first; it names correlated/"entangled"
+dimensions acting as granular handles as the target — the object the 21-dim
+entangled block later instantiated — before any sweep had run; and it
+installs the staged-scaling / no-small-samples discipline that forced the
+full-149,706-row sweep ahead of any claim promotion.
 
-**What emerged from the collaboration.** The 21-dim entangled block itself
-(the user's handles framing predicted shared structure; the full-vocab sweep
-implementation surfaced this specific object); the reader/tracker head
-dissociation; the P1c/P1d falsifications — adjudicated mechanically against
-criteria pre-registered on 2026-06-11, before any attention weights were
-captured.
+**The deep-arc turn** [session 2026-06-11]:
+
+> *"I'd rather work on a more fundamental understanding of the LLM's
+> structural/procedural features. [...] Did you create categories and look
+> for correlations within them, or find correlations and create the
+> categories from different correlation modes [...]?
+> Also, for `the` and `的`, is that because they're both particles, or
+> because of the phonetic sound? They're not really the same kind of
+> particle, `的` is more like `of` or `'s`; like a possessive or relational
+> particle.
+> Also do some research into whether this path has been travelled before,
+> what's been covered and what's missing.
+> My thought is next to try to look at K/Q/V matrices generated at the
+> first layer from each embedding [...] plus see if after the FFN the
+> structural dimensions we found are preserved, and if so try to trace this
+> to the next layer and so on. Really need to look at every calculation
+> component in the process [...]
+> One prediction: Since commas, periods, etc. generally break things up,
+> the relevant handles we found should, at least in some layer, show signs
+> of that. e.g. at some layer, a chunking syntax token's Q and K may be
+> very similar in some subspace [...] we should make this a deep arc btw
+> and combine the planned positional encoding arc into this one. Be
+> comprehensive."*
+
+Five direction-setting acts: a circularity challenge to the
+category/correlation methodology; the `the`/`的` linguistic correction (see
+below); the mandate for the prior-work literature review; the
+every-component tracing direction that the T0/T1/T1.5/T2 designs
+operationalize; and a testable punctuation-chunking prediction that
+prefigures the reader/tracker head dissociation — plus the deep-arc
+commitment absorbing the planned RoPE arc. The novelty claim was then gated
+on an adversarial re-check ("yes, re-verify first as you suggested to
+confirm novelty beyond all doubt. Then let's revisit directions."), and an
+incomplete trace was caught the same day ("Did you trace the influence of
+the initial dimensions through each calculation component [...]? Can we
+look for how the FFN reconfigures the hidden state afterward?" — the direct
+origin of the T1.5 component-level capture).
+
+**Wrap-up and close-out gates** [sessions 2026-07-15, 2026-07-21]:
+
+> *"Where are we in this research arc (03_embedding_atlas)? Is there
+> anything still in progress to finish up and close out? I want to finish
+> this one up and then extend it to a new arc `04-jspace` based on new
+> Anthropic research. Let's wrap this up first though."*
+
+> *"Is this a good place to merge this as a PR, or is there any more final
+> verification or documentation in arc 03 to do first?"*
+
+> *"I don't think you started the review run though?"*
+
+The close-out call (also fixing arc 04 as an extension of this arc), the
+completeness gate before the merge, and the catch that the promised
+fresh-eyes review had not actually been launched. All stack PRs were
+human-merged; merging stayed a manual gate throughout.
+
+**The cross-script correction, made twice** [sessions 2026-06-11,
+2026-07-21]. The `的` correction quoted above failed to propagate into the
+cross-script finding's text, and the user caught it again at close:
+
+> *"I remember pointing out during a session where this was observed, that
+> `the` and `的` aren't really that similar [...] I pointed out that `的`
+> would likely be closer to `of` or `'s`, due to the character's possessive
+> use [...] Now I see the original 'the'/'的' claim in the observation
+> README, so I want to make sure that makes sense."*
+
+> *"Did you check "'s " as well? (with a space)"*
+
+— the direct cause of the corrected cross-script finding and the re-derived
+neighbor-cosine table now locked by audit §11. The same session bounded the
+Fable-degradation exposure window from the user's knowledge of the release
+timeline and commissioned the transcript forensics pass
+([degradation-forensics](sessions/2026-07-21-degradation-forensics.md)).
+
+### Human / Claude / emergent split
+
+**User (Michael Lannum).** The originating handles question; the
+correlation-first inversion, the entangled-dimensions target, and the
+no-small-samples rule; the full-vocabulary scope push; the deep-arc
+commitment and the RoPE-arc absorption (2026-06-11; the numbered-arc
+reorganization is earlier, 2026-05-31, at the close of arc 01); the
+literature-review mandate and the adversarial-novelty gate; the
+every-component tracing direction and the FFN/T1.5 catch; the
+punctuation-chunking prediction; both cross-script catches and the `'s `
+tightening; the wrap-up and merge gates and the unlaunched-review catch;
+the degradation-forensics commissioning.
+
+**Claude Code.** All implementation: the ~22 `emb_*`
+capture/derive/render/audit scripts, the battery class definitions (under
+the CP1 direction), the operationalization of the pre-registered
+predictions (P1a-P3), the T0/T1/T1.5/T2 experiment designs (under the
+user's every-component direction), the execution of the literature review
+and its adversarial re-verification, all figures and observation write-ups,
+and the audit that re-derives every published number from committed
+artifacts.
+
+**Emergent.** The 21-dim entangled block as a characterized object: the
+user named correlated/"entangled" dimensions as the target and the sweep
+discipline that would find them; the implementation surfaced this specific
+block with its punctuation/function-word loading. The reader/tracker head
+dissociation (the user's chunking prediction pointed at it; the T2
+implementation established it). The P1c/P1d falsifications — adjudicated
+mechanically against criteria pre-registered on 2026-06-11, before any
+attention weights were captured.
+
+**Verifiability.** Every quote above is recoverable from the session
+transcripts for 2026-06-10 → 2026-07-21; the transcripts are not committed
+to this repo (they carry machine-local paths and tool output). Claims in
+this section that are not quoted are Claude's characterization of the
+user's direction, not the user's wording — including the
+iterate-with-figures checkpoint cadence, a working mode settled through
+checkpoint menus rather than typed direction.
 
 ## Findings so far (held as working hypotheses)
 
