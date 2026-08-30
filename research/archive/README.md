@@ -49,12 +49,12 @@ run on (`llm_surgeon`) was built to the user's capability spec:
 > — [session 2026-04-08]
 
 The specify → confirm → test-beside-baseline loop is the method all three
-probes follow. Both model choices were the user's calls: TinyLlama-1.1B as an
-availability pivot after Llama-3 access gating ("I applied and I'm waiting
-for access to be granted. Can we try using a more freely accessible
-model?" — [session 2026-04-09]), and OpenLLaMA 3B as a scale ask ("Can we
-try with a larger model? What options are there?" — [session
-2026-04-09]).
+probes follow. Both model changes were the user's calls, with the specific
+picks Claude's suggestions: TinyLlama-1.1B as an availability pivot after
+Llama-3 access gating ("I applied and I'm waiting for access to be granted.
+Can we try using a more freely accessible model?" — [session 2026-04-09]),
+and OpenLLaMA 3B as a scale ask ("Can we try with a larger model? What
+options are there?" — [session 2026-04-09]).
 
 **The layer-19 probe** (`2026-04-09-layer19-factual-vs-linguistic-coherence`)
 [session 2026-04-09]. The generation test, the finding, and the
@@ -148,7 +148,7 @@ themselves — and their format — trace to one turn:
 specify/confirm/test method; both model pivots; the layer-19 generation
 test; the fluent-but-fabricated finding, with hand fact-checking of the
 fabrications; the magnitude-scaling hypothesis (observation hypothesis 5)
-and the angle-vs-magnitude tooling ask behind its testable prediction; the
+and the later angle-vs-magnitude tooling ask; the
 attention-surgery direction, the ranked-ablation escalation, the widening
 of the collapse pattern ("they's", "we's") and the register reading of
 "ya'"; the
@@ -159,8 +159,9 @@ reproducibility steps).
 
 **Claude Code.** All implementation: the `llm_surgeon` toolkit (surgery /
 inspect / benchmark / probe), the Block-Influence implementation from
-ShortGPT and the perplexity harness, experiment execution and ollama
-exports, the observation write-ups, and the related-work anchoring.
+ShortGPT and the perplexity harness, harness execution and ollama
+exports (the user ran the exported models' generation tests by hand), the
+observation write-ups, and the related-work anchoring.
 
 **Emergent.** The findings neither party predicted: that the lowest-BI
 layer sits late in the stack; the possessive/contraction collapse pattern
