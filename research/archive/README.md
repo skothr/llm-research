@@ -42,23 +42,23 @@ run on (`llm_surgeon`) was built to the user's capability spec:
 > different models to be run in ollama"* — [session 2026-04-08]
 
 > *"It might take some iteration, but I want to be able to:
-> 1. Specify the changes with a python script (using the python toolkit),
+> 1\. Specify the changes with a python script (using the python toolkit),
 > i.e. add/remove/change_order_of layers [...]
-> 2. Confirm the desired change has been successfully integrated.
-> 3. Test it out with ollama, beside original or some benchmark."*
+> 2\. Confirm the desired change has been successfully integrated.
+> 3\. Test it out with ollama, beside original or some benchmark."*
 > — [session 2026-04-08]
 
 The specify → confirm → test-beside-baseline loop is the method all three
-probes follow. Both model choices were availability pivots the user called:
-to TinyLlama-1.1B after Llama-3 access gating ("I applied and I'm waiting
+probes follow. Both model choices were the user's calls: TinyLlama-1.1B as an
+availability pivot after Llama-3 access gating ("I applied and I'm waiting
 for access to be granted. Can we try using a more freely accessible
-model?" — [session 2026-04-09]), and up to OpenLLaMA 3B for the ablation
-comparison ("Can we try with a larger model? What options are there?" —
-[session 2026-04-09]).
+model?" — [session 2026-04-09]), and OpenLLaMA 3B as a scale ask ("Can we
+try with a larger model? What options are there?" — [session
+2026-04-09]).
 
 **The layer-19 probe** (`2026-04-09-layer19-factual-vs-linguistic-coherence`)
-[session 2026-04-09]. The experiment, the finding, and the observation's
-hypothesis 5 are all first stated in user turns:
+[session 2026-04-09]. The generation test, the finding, and the
+observation's hypothesis 5 are all first stated in user turns:
 
 > *"It's interesting that layer 19 was the 'safest' to remove, while being
 > one of the final ones in the sequence. Can we try testing that
@@ -79,18 +79,21 @@ hypothesis 5 are all first stated in user turns:
 > capital letters, were French-sounding, and that sounded almost right"*
 
 The third turn is the magnitude-based factual-sharpening idea, written into
-the observation nearly verbatim as hypothesis 5; its testable prediction
-traces to the user's tooling ask the same day ("Considering layer BI scores
-(cosine_similarity, measures angle difference between input and output
-vectors), is there a counterpart that takes magnitude into account?").
+the observation nearly verbatim as hypothesis 5; the angle-vs-magnitude
+framing returned as a tooling ask later that day ("Considering layer BI
+scores (cosine_similarity, measures angle difference between input and
+output vectors), is there a counterpart that takes magnitude into
+account?").
 
 **The attention-ablation probe**
 (`2026-04-09-attention-ablation-possessive-collapse`) [sessions 2026-04-09
 → 2026-04-10]. The ranked-ablation design was the user's ask ("Can we try
 surgically removing some of the lowest-contributing components, and export
 the model to test vs baseline?" — [session 2026-04-09]), as were the
-capability, the escalation, the first reading of the collapse, and the
-correction that frames the observation's title:
+capability and the escalation. The collapse reading itself was joint: the
+anomalous tokens first surfaced in Claude's report of the 6-zeroed run,
+the user widened the pattern and added the register reading of "ya'", and
+the possession framing settled in the exchange the last two quotes carry:
 
 > *"Okay, I think I want to implement surgical tools for the attention
 > heads now."* — [session 2026-04-09]
@@ -146,8 +149,9 @@ specify/confirm/test method; both model pivots; the layer-19 generation
 test; the fluent-but-fabricated finding, with hand fact-checking of the
 fabrications; the magnitude-scaling hypothesis (observation hypothesis 5)
 and the angle-vs-magnitude tooling ask behind its testable prediction; the
-attention-surgery direction, the ranked-ablation escalation, the first
-statement of the contraction collapse, and its possession correction; the
+attention-surgery direction, the ranked-ablation escalation, the widening
+of the collapse pattern ("they's", "we's") and the register reading of
+"ya'"; the
 logit-lens capability ask, the fill-in-the-blank token reading, and the
 prompt-variation question behind the attractor-token hypothesis; the
 note-now-explore-later call; and the record format (transcript excerpts +
@@ -164,7 +168,7 @@ itself (surfaced by ablation, read jointly in-session); the layer-18/19
 crystallization of factual recall that the logit lens showed.
 
 **Verifiability.** Every quote above is recoverable from the `llm`
-workspace session transcripts for 2026-04-06 → 2026-04-13; the transcripts
+workspace session transcripts for 2026-04-08 → 2026-04-12; the transcripts
 are not committed to this repo (they carry machine-local paths and tool
 output). Claims not quoted are Claude's characterization of the user's
 direction, not the user's wording.
