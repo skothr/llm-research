@@ -261,11 +261,13 @@ visual plausibility is not correctness).
 > — [session 2026-06-05]
 
 In order: the multi-model local review protocol (commissioned
-2026-05-28, before the PR #11 auto-merge was noticed) whose findings
-drove the correction rounds; the catch that PR #11 had merged without
-the manual human gate (2026-05-29), and the standing rule that merges
-stay human; the transparency / self-critical / no-overclaim bar this
-section itself exists to meet (2026-05-31); and the requirement that an
+2026-05-28, before the auto-merge below was noticed) whose findings
+drove the correction rounds; the catch that the arc's integration PR
+— "PR #11" in the pre-split repo's numbering, unrelated to this
+repo's issue #11 — had merged without the manual human gate
+(2026-05-29), and the standing rule that merges stay human; the
+transparency / self-critical / no-overclaim bar this section itself
+exists to meet (2026-05-31); and the requirement that an
 external critique of the arc be verified defect-by-defect rather than
 adopted or dismissed wholesale (2026-06-05) — the origin of the
 D3-as-validity-control framing and the verbalizer-is-also-a-model
@@ -301,7 +303,7 @@ the agent built and the user directed). The methodology caveats in
 as the user's in-session pushback against overclaiming and were
 formalized into explicit limitations by the agent; the
 verbalizer-as-model caveats entered through the external critique the
-user brought in and required verified (2026-06-05).
+user brought in and required to be verified (2026-06-05).
 
 **Verifiability.** Every quote above is recoverable from the session
 transcripts for 2026-05-12 → 2026-06-05; the transcripts are not

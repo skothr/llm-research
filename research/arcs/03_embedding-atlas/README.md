@@ -53,7 +53,7 @@ Scope decisions made at session start: two arcs (embeddings first, RoPE
 second) rather than one. At checkpoint CP1 the user selected the offered
 next-step option Add more word groups first (a checkpoint-menu decision, not
 a typed message). The direction to broaden beyond countries into "different
-types of words / different subjects" is the user's; the specific
+types of words different subjects" is the user's; the specific
 person/royal/religion/abstract/landscape/instrument/science/tech/language
 classes and the gender/antonym/past/capital_of/lang_of pair kinds are
 Claude's operationalization of it.
@@ -165,8 +165,8 @@ timeline and commissioned the transcript forensics pass
 correlation-first inversion, the entangled-dimensions target, and the
 no-small-samples rule; the full-vocabulary scope push; the deep-arc
 commitment, the RoPE-arc absorption, and the numbered-arc
-reorganization (all 2026-06-11); the
-literature-review mandate and the adversarial-novelty gate; the
+reorganization (all 2026-06-11); the literature-review mandate and the
+adversarial-novelty gate; the
 every-component tracing direction and the FFN/T1.5 catch; the
 punctuation-chunking prediction; both cross-script catches and the `'s `
 tightening; the wrap-up and merge gates and the unlaunched-review catch;
