@@ -79,11 +79,11 @@ direction-coupled, not magnitude-coupled.
 
 ![fig36_dense_interp_flipbook](observations/figures/fig36_dense_interp_flipbook.png)
 
-*Dense interpolation (30 steps, 25 of them at Δt≈0.0025 in t∈[0.395, 0.455])
+*Dense interpolation (30 steps, 25 of them at Δt=0.0025 in t∈[0.395, 0.455])
 between the two AR-encoded anchors: a hybrid "Definition + Poem" plateau holds
-for 19 consecutive dense-zone steps (t=0.395 to t=0.4450), then flips to the
-poetic/nature format in a single Δt=0.0025 step at t≈0.4475–0.4500. Three
-regions: factual (t<0.30) → hybrid plateau → poetic/nature (t>0.4475).*
+from t=0.395 through t=0.4450, then flips to the poetic/nature format in a
+single Δt=0.0025 step at t=0.4475. Three regions: factual (t<0.30) →
+hybrid plateau → poetic/nature (t≥0.4475).*
 ([provenance](observations/figures/INVENTORY.md#fig36_dense_interp_flipbookpng))
 
 **Scope qualifications:** demonstrated for one anchor pair, at one
