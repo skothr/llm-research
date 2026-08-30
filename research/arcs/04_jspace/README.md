@@ -279,7 +279,7 @@ The arc's dated writeups, in `observations/`:
 - `2026-08-30-excess-fve-dimension-dependence.md` — post-close correction
   (issue #79): excess-FVE carries a common ~2× dimension factor between
   scales (the fveTopK/fveRand ratio is near-invariant, 6.29 vs 6.50), so
-  the ceiling verdicts get a calibration caveat; audit CHECK O (27
+  the ceiling verdicts get a calibration caveat; audit CHECK O (30
   claims) re-derives every number from the committed scan logs.
 - `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
   (issue #26): the paper's 10% ceiling is excess-over-random
@@ -383,8 +383,9 @@ The arc's dated writeups, in `observations/`:
 > 6 FAIL**; after re-pinning the two values that legitimately moved,
 > **956 PASS | 4 FAIL** (post-re-pin log committed at
 > `data/audit_2026-08-16.log`; those are the totals **as of that re-run** —
-> the audit has since gained checks, so a re-derivation today reports
-> 986 | 4 with the cache (`data/audit_2026-08-17.log`). Re-derive with
+> the audit has since gained checks, so a re-derivation with the cache
+> reported 986 | 4 as of 2026-08-17 (`data/audit_2026-08-17.log`;
+> current expected totals: "Expected result on a clean clone" below). Re-derive with
 > `python examples/jspace_audit_findings.py` — the three re-fit lenses are
 > LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
 > the lens download is opt-in, see "Expected result on a clean clone" below).
@@ -739,7 +740,8 @@ naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
 p-value, and the MANIFEST census). All small derived artifacts (44 files,
 ~55 MB incl. the ten metric-correction artifacts) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–N run from
-a clean clone**; check A and the lens-integrity blocks read the full
+a clean clone** (CHECK O does too — it reads only committed plain-text
+logs); check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
 decision 2026-08-16 after the C4-redaction re-run: the **three lenses
@@ -755,19 +757,17 @@ lenses they produced.
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
 never load), so there are two states (totals as of 2026-08-30, after
-CHECK O added 27 cache-independent log-based claims — issue #79):
+CHECK O added 30 cache-independent log-based claims — issue #79):
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 978 PASS | 7 FAIL`, exit code 1 (measured 2026-08-30;
-  951 before CHECK O, measured 2026-08-17 — the new 978 total is
-  coincidentally equal to the unrelated historical warm-cache figure
-  discussed below). The 7 = three
+  stubs): `SUMMARY: 981 PASS | 7 FAIL`, exit code 1 (measured 2026-08-30;
+  951 before CHECK O, measured 2026-08-17). The 7 = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the
   two regenerate-only nf4 lenses and their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""`: `SUMMARY: 1013 PASS | 4 FAIL` expected (986 measured
-  2026-08-17, `data/audit_2026-08-17.log`, plus the 27 CHECK O claims,
+  --exclude=""`: `SUMMARY: 1016 PASS | 4 FAIL` expected (986 measured
+  2026-08-17, `data/audit_2026-08-17.log`, plus the 30 CHECK O claims,
   which do not depend on the cache), the 4 being the nf4 `MISSING`
   reports only.
 

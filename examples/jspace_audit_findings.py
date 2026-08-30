@@ -2615,6 +2615,14 @@ def audit_excess_fve_dimension() -> None:
     claim_near("[O] c4en 1.5B L0 ratio", 3.78, c4r0, atol=0.005)
     claim_near("[O] c4en 1.5B L21 ratio", 6.72, c4r21, atol=0.005)
     claim("[O] ratio orders L0 below the L21 hump", c4r0 < c4r21, "<", f"{c4r0:.2f} vs {c4r21:.2f}")
+    # The ratio relocates the depth-profile argmax to the late band — it is
+    # evidence for the common-factor reading, not a drop-in replacement metric.
+    def _ratio_argmax(rows: dict[int, dict[str, float]]) -> int:
+        return max(rows, key=lambda L: rows[L]["topk"] / rows[L]["rand"])
+
+    claim_eq("[O] c4en 1.5B ratio argmax layer == 23", 23, _ratio_argmax(c4))
+    claim_eq("[O] heldout 1.5B ratio argmax layer == 23", 23, _ratio_argmax(ho15))
+    claim_eq("[O] heldout 7B ratio argmax layer == 24", 24, _ratio_argmax(ho7))
     # Held-out 1.5B L0: 86% of peak on excess, 47% on ratio, straddling the
     # ceiling at P(>10%)=0.577.
     ho0 = ho15[0]

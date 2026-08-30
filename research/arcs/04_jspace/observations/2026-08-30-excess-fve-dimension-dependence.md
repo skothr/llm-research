@@ -32,9 +32,12 @@ ratio-normalized row is near-invariant and slightly *reverses* (7B ≥
 1.5B). K/d_model differs by 2.54× between the columns (25/1536 = 0.0163
 vs 23/3584 = 0.0064). Consequences:
 
-1. **The ~2.4× cross-scale excess gap quoted in the README is fully
-   accounted for by a factor common to signal and baseline.** On the
-   ratio normalization the gap vanishes.
+1. **The cross-scale excess gap is dominated by a factor common to
+   signal and baseline.** On the held-out pair measured here the gap is
+   1.99× and the ratio normalization removes it entirely (6.29 vs 6.50,
+   slightly reversed). The README's ~2.4× figure is a different pair —
+   the all-positions wikitext runs (11.15% / 4.72% = 2.36×) — so the
+   common factor accounts for most, not provably all, of that reading.
 2. **Comparing a d=1536 model's excess against a ceiling measured on
    much larger models is not like-for-like.** The paper's
    Claude-family models have (much) larger hidden dimensions than
@@ -50,14 +53,20 @@ scoping (from `scan_paper_metric_c4en_1p5b.log` and
 `scan_paper_metric_heldoutc4en_1p5b.log`):
 
 - **C4-en lens, 1.5B:** L0 excess +0.1542 is the argmax over all 27
-  layers, above the L21 hump's +0.1082. Under the ratio: L0 3.78 <
-  L21 6.72 — the hump is restored as the peak.
-- **Held-out set, 1.5B:** L0 excess +0.1004 is 86% of the L21 peak and
-  straddles the ceiling (P(boot > 10%) = 0.577); on the ratio it is
-  47% of peak (2.97 vs 6.29).
+  layers, above the L21 hump's +0.1082. Under the ratio, L0 (3.78)
+  drops below the whole workspace band (L21 is 6.72).
+- **Held-out set, 1.5B:** L0 excess +0.1004 is 86% of the L21 excess
+  and straddles the ceiling (P(boot > 10%) = 0.577); on the ratio it is
+  47% of the L21 value (2.97 vs 6.29).
 
-A normalization that independently resolves a defect the arc had to
-scope out by hand is doing real work, not just rescaling.
+A normalization that independently demotes a layer the arc had to
+scope out by hand is doing real work, not just rescaling. It is not a
+drop-in replacement metric, though: the ratio also reshapes the depth
+profile — its own argmax sits in the late band (L23 on both 1.5B
+scans, L24 on the 7B held-out scan), not at the L21 excess hump — so
+it serves here as evidence for the common-factor reading, and the
+right cross-scale normalization stays an open question (see
+limitations).
 
 ## What this does and does not establish
 
@@ -97,7 +106,7 @@ fractions 0.1004/0.1169 = 0.86, 2.97/6.29 = 0.47.
 ## Reproducibility
 
 Every number above is re-derived by the audit's CHECK O
-(`examples/jspace_audit_findings.py`, 27 claims), which parses the
+(`examples/jspace_audit_findings.py`, 30 claims), which parses the
 three logs and fails loudly on any drift — the logs are plain git
 files, so CHECK O runs on every clone including LFS-less ones. For
 future scans, `examples/jspace_paper_metric_varfrac.py` now also
