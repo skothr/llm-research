@@ -160,7 +160,8 @@ reproducibility steps).
 **Claude Code.** All implementation: the `llm_surgeon` toolkit (surgery /
 inspect / benchmark / probe), the Block-Influence implementation from
 ShortGPT and the perplexity harness, harness execution and ollama
-exports (the user ran the exported models' generation tests by hand), the
+exports (for the layer-19 probe the user ran the exported model's
+generation tests by hand; Claude ran the ablation sweeps), the
 observation write-ups, and the related-work anchoring.
 
 **Emergent.** The findings neither party predicted: that the lowest-BI
