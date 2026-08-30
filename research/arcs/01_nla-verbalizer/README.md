@@ -63,6 +63,8 @@ for typos and punctuation; markdown emphasis inside a turn is dropped,
 follow the transcripts' UTC clock. This section follows the attribution
 shape in
 [`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis).
+Blocks are grouped by research thread and then process standards, not
+strictly by time.
 
 **Originating direction** [session 2026-05-12]:
 
@@ -74,18 +76,18 @@ beyond Qwen2.5-7B; cross-model replication
 ([D5](#d5-cross-model-replication)) remains open because the released
 NLA pair is Qwen-specific.
 
-**Plumbing first, then per-token depth** [sessions 2026-05-12,
-2026-05-13]:
+**Plumbing first, then per-token depth**:
 
 > *"yeah lets test the plumbing first by script and see if we can get
-> something interpretable out of an embedding"*
+> something interpretable out of an embedding"* — [session 2026-05-12]
 
 > *"I want to understand what layer/embedding is being sampled for this
 > NLA interpretation, and go through the 'thought' at each token more
-> thoroughly"*
+> thoroughly"* — [session 2026-05-12]
 
 > *"did we generate the NLA for the tokens the model generates too? I
 > want to see those as it 'thinks through' what it's 'writing'"*
+> — [session 2026-05-13]
 
 Validate the round-trip on simple inputs, understand the specific layer
 (20 of 28; ~71% depth), verbalize at every token rather than
@@ -93,17 +95,16 @@ aggregating. Per-token trajectory viz was a direct ask (realized in
 `nla_gen_trajectory.py` + static figures; the live form is open as
 [D7](#d7-per-token-live-trajectory-viz)).
 
-**Reproduce Anthropic's emergent-behavior examples** [sessions
-2026-05-12, 2026-05-13]:
+**Reproduce Anthropic's emergent-behavior examples**:
 
 > *"can we try some more complex prompts, like with the rabbit poem and
 > ethical discussion where it was thinking it was being tested
 > (showcased in Anthropic announcement). Can we try stuff like that
 > and see if we can get anything like those examples anthropic
-> provided?"*
+> provided?"* — [session 2026-05-12]
 
 > *"let's go with the poem one like Anthropic's example, not the haiku
-> since that was an outlier"*
+> since that was an outlier"* — [session 2026-05-13]
 
 The original motivating curiosity. The rabbit haiku was reproduced; the
 matched rabbit poem and the eval-awareness behavior remain incomplete
@@ -142,10 +143,10 @@ the arc.
 > capital of France is [?]' and 'France is a country', just strung
 > together into an otherwise semantically garbled statement."*
 
-The user's interpretive hypothesis on the raw AV outputs — a
+The user's interpretive hypothesis on the raw AV outputs: a
 verbalization superposes several semantic layers rather than reporting
-one coherent thought — a reading the later multi-axis geometry work
-kept returning to.
+one coherent thought. The later multi-axis geometry work kept
+returning to this reading.
 
 **Concept directions** [session 2026-05-13]:
 
@@ -203,10 +204,9 @@ at face value without questioning whether the format itself was an
 artifact. Filed as [D3](#d3-audit-av-decoder-format-bias) — if positive
 it re-frames all prior interpretive claims (see L2).
 
-**The rigor pivot and the figure/data standards** [sessions 2026-05-13,
-2026-05-14, 2026-05-31]:
+**The rigor pivot and the figure/data standards**:
 
-> *"yeah rigoramatize everything"*
+> *"yeah rigoramatize everything"* — [session 2026-05-13]
 
 > *"can we adjust the output figures a bit? Make them higher resolution
 > first, so all the small text and visuals are clear and readable.
@@ -214,25 +214,25 @@ it re-frames all prior interpretive claims (see L2).
 > figures represents, if you haven't already documented that. Plus
 > link the explanations to the base source data files/models/scripts,
 > and define any assumptions/tools/analysis/corrections involved."*
+> — [session 2026-05-14]
 
 > *"check if we included all raw data that the figures used ([...] by
 > default we should also be providing the raw datasets that figures
 > are generated from, both to verify figures if necessary and for
 > technical transparency) [...] in the future, generating, validating,
 > and saving the raw dataset should be part of the agent's process as
-> it conducts research."*
+> it conducts research."* — [session 2026-05-31]
 
 These three turns are the origin of, respectively, the audit and
 observation-file discipline, the per-figure provenance record
 ([`observations/figures/INVENTORY.md`](observations/figures/INVENTORY.md)),
 and the raw-data-is-a-deliverable rule later codified into
 [`ARC_PROCESS.md`](../../ARC_PROCESS.md). The supersede-don't-overwrite
-figure rule was set the same evening ("okay cool, make sure we don't
+figure rule was set on 2026-05-13 ("okay cool, make sure we don't
 overwrite those. But those look nice. Assuming they're right." —
 visual plausibility is not correctness).
 
-**Review protocol, merge gate, and the transparency bar** [sessions
-2026-05-28 → 2026-06-05]:
+**Review protocol, merge gate, and the transparency bar**:
 
 > *"I want to do one final thorough local review of the current PR
 > contents. Specifically to: Ensure that all our exploratory
@@ -241,23 +241,24 @@ visual plausibility is not correctness).
 > accurate to a professional rigor; and all figures are correct and
 > accurate [...]
 > Don't edit anything yet during or after the review -- I want to look
-> through and understand it all first."*
+> through and understand it all first."* — [session 2026-05-28]
 
 > *"wait did you merge this PR into main? It looks like something did,
 > but PR merge is supposed to be the final manual human gate. Check on
-> what may have happened there."*
+> what may have happened there."* — [session 2026-05-29]
 
 > *"I want to make sure the README for this chunk of research provides
 > the right high-level framing and 'attribution' like user direction
 > vs. agent implementation [...] I want there to be a sense of
 > transparency and make sure everything is adequately self-critical,
 > don't want to overclaim and I want it to accurately represent what
-> I'm contributing."*
+> I'm contributing."* — [session 2026-05-31]
 
 > *"Before you start the next goal, file a ticket to look into the
 > following agent criticism of llm-research. It only saw a couple
 > READMEs and a list of script files, so these need to be verified and
 > confirmed defects, and then corrected if so: [...]"*
+> — [session 2026-06-05]
 
 In order: the multi-model local review protocol (commissioned
 2026-05-28, before the PR #11 auto-merge was noticed) whose findings
@@ -278,8 +279,9 @@ following, which were artifacts to set aside, when scope was drifting,
 when a result deserved its own observation file; sequencing and
 go/no-go calls (cheap pilot batches before long runs, partial-GPU
 offload rather than an all-or-nothing CPU fallback, no PR until the
-research direction was substantive); the format-bias and
-all-axes-active-figure catches; and the rigor, figure-provenance,
+research direction was substantive); the format-bias catch, and the
+catch that the basis-axis figures showed every axis active at once
+(2026-05-14); and the rigor, figure-provenance,
 raw-data, review-protocol, and merge-gate standards quoted above.
 
 **Claude Code.** All experiment scripts (~42 files under
