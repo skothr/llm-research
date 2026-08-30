@@ -5,7 +5,7 @@
 **Inputs:** `interpolation_flipbook.pt` (cached h_A, h_B), AV `kitft/nla-qwen2.5-7b-L20-av`
 **Output:** `dense_interp_near_pivot.pt`
 **Figures:** `fig36_dense_interp_flipbook.png`, `fig37_dense_interp_diagnostic.png`
-**Private-tracker ID:** MAIN-34 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-34 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-34 tested
 

@@ -5,7 +5,7 @@
 **Inputs:** `dense_interp_near_pivot.pt` + AR `kitft/nla-qwen2.5-7b-L20-ar`
 **Output:** `plateau_attractor_test.pt`
 **Figures:** (none — this is a numerical-table finding)
-**Private-tracker ID:** MAIN-71, part 2 of 2 (retired tracker, not resolvable — see the [ID map](../README.md#private-tracker-id-map-main-n))
+**Private-tracker ID:** MAIN-71, part 2 of 2 (retired tracker, not resolvable — see the [ID map](../ID_MAP.md))
 
 ## What MAIN-71 tested
 
