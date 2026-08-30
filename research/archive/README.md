@@ -145,24 +145,25 @@ themselves — and their format — trace to one turn:
 ### Human / Claude / emergent split
 
 **User (Michael Lannum).** The layer-surgery program and its
-specify/confirm/test method; both model pivots; the layer-19 generation
-test; the fluent-but-fabricated finding, with hand fact-checking of the
+specify/confirm/test method; both model changes; the layer-19 generation
+test and that probe's end-to-end hand execution; the
+fluent-but-fabricated finding, with hand fact-checking of the
 fabrications; the magnitude-scaling hypothesis (observation hypothesis 5)
-and the later angle-vs-magnitude tooling ask; the
-attention-surgery direction, the ranked-ablation escalation, the widening
-of the collapse pattern ("they's", "we's") and the register reading of
-"ya'"; the
+and the later angle-vs-magnitude tooling ask; the attention-surgery
+direction, the ranked-ablation escalation, the widening of the collapse
+pattern ("they's", "we's") and the register reading of "ya'"; the
 logit-lens capability ask, the fill-in-the-blank token reading, and the
 prompt-variation question behind the attractor-token hypothesis; the
 note-now-explore-later call; and the record format (transcript excerpts +
 reproducibility steps).
 
-**Claude Code.** All implementation: the `llm_surgeon` toolkit (surgery /
+**Claude Code.** All authorship: the `llm_surgeon` toolkit (surgery /
 inspect / benchmark / probe), the Block-Influence implementation from
-ShortGPT and the perplexity harness, harness execution and ollama
-exports (for the layer-19 probe the user ran the exported model's
-generation tests by hand; Claude ran the ablation sweeps), the
-observation write-ups, and the related-work anchoring.
+ShortGPT and the perplexity harness, every run script, the observation
+write-ups, and the related-work anchoring. Execution was split: the user
+ran the layer-19 pipeline end-to-end by hand (BI sweep, surgery recipe,
+export, generation tests) from Claude-written scripts; Claude ran the
+ablation sweeps and their exports itself.
 
 **Emergent.** The findings neither party predicted: that the lowest-BI
 layer sits late in the stack; the possessive/contraction collapse pattern
