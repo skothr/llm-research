@@ -27,7 +27,7 @@ carries "owl," but the primed persona shifts the *distribution* over emitted
 numbers, and the superposition of many tiny per-number nudges accumulates,
 over training, into the preference.
 
-## Research direction
+## Attribution
 
 Direction-setting (the human role) and implementation (the AI role) are
 different kinds of work; separating them keeps visible where the ideas came

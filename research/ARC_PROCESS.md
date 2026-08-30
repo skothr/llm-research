@@ -71,7 +71,7 @@ question → capture). But each numbered step has a definition of done.
   question can live in the arc README's motivation once it exists.
 - Note the **direction-setting** as it happens (who asked what). The
   human-direction vs AI-implementation split is worth recording honestly; the
-  [subliminal arc](arcs/02_subliminal/README.md) README's "Research direction"
+  [subliminal arc](arcs/02_subliminal/README.md) README's Attribution
   section is the template (attribution shape codified in
   [§ 6 Attribution](#6-arc-readme-synthesis)).
 
@@ -164,6 +164,36 @@ number in the observations has a corresponding assertion.
 
 ### 6. Arc README synthesis
 
+**Canonical section set and order** (owner directive 2026-08-17, #57).
+Every arc README presents these sections in this order, each a real `##`
+heading (a clarifying suffix after an em-dash is fine; arc-specific extras
+slot between Findings and Limitations; existing arcs are being retrofitted
+to this order under #57):
+
+1. Unheaded lead — a one-paragraph statement of the arc plus a dated
+   **Status** line.
+2. `## The question` — what the arc asks and why; motivation folds in.
+3. `## Findings` — per the requirements below, with the arc's headline
+   figures embedded inline.
+4. `## Limitations`
+5. `## Attribution`
+6. `## Possible next paths` — deferred/follow-up items live here.
+7. `## Reproducing` — exact commands plus the dated expected audit state.
+8. `## File map`
+
+**Inline figures:** a reader meets the headline results as figures in the
+README itself, not only via `figures/INVENTORY.md` — embed each headline
+figure at the finding it supports, with a caption saying what it shows and
+a provenance link to its INVENTORY row. Non-headline figures stay
+INVENTORY-only.
+
+**Showcase boundary:** READMEs carry final state plus the caveats a reader
+needs; change chronology and correction mechanics compress to a dated
+pointer (git history, `observations/`, and `plans/` carry the detail) —
+see `CLAUDE.md` § Showcase vs history.
+
+Per-section requirements:
+
 - **Findings as hypotheses** with explicit scope qualifications (see Framing).
 - **`## Limitations`** section (a real heading, not run-in bold), ranked by
   how far they constrain the claims.
@@ -172,14 +202,12 @@ number in the observations has a corresponding assertion.
   from AI implementation honestly, and keep it basic: dated quoted turns
   plus the split below, no label taxonomy or per-quote provenance tags (see
   `CLAUDE.md` § Showcase vs history). The
-  [subliminal arc](arcs/02_subliminal/README.md) "Research direction" section
-  is the reference implementation of the required content (written in the
-  same commit as these requirements, `5040118e`, 2026-07-18, under the
-  pre-standard heading name); the [J-space arc](arcs/04_jspace/README.md)
-  § Attribution shows the same content at the required `## Attribution`
-  heading level. Required shape:
-  1. **Research direction** (the opening block under `## Attribution`; arc 02
-     carries it under its older `## Research direction` heading): the
+  [subliminal arc](arcs/02_subliminal/README.md#attribution) § Attribution
+  is the reference implementation of the required content (written with
+  these requirements in `5040118e`, 2026-07-18); the
+  [J-space arc](arcs/04_jspace/README.md) § Attribution shows the fuller
+  multi-block form. Required shape:
+  1. **Research direction** (the opening block under `## Attribution`): the
      originating user direction(s) as
      **verbatim quotes**, each date-tagged `[session YYYY-MM-DD]`, with a
      one-line "quotes lightly normalized for typos/punctuation" disclaimer if
@@ -317,7 +345,7 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 [ ] observations written (evidence-first, fields filled, nulls labeled as null)
 [ ] audit script re-derives every load-bearing number incl. the headline;
         passes from a clean clone; "what it can't catch" stated in README
-[ ] arc README: findings-as-hypotheses + limitations + next-paths + attribution (§6 template)
+[ ] arc README: §6 canonical sections, in order; headline figures embedded
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
 [ ] PR(s) opened — staged, single-scope, one-sitting reviewable (§7)
 ```
