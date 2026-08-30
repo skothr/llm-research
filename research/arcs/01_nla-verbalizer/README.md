@@ -452,8 +452,9 @@ replication (out-of-scope here) are required before any finding can
 be claimed as a property of post-trained transformer mid-late layers
 in general.
 
-**L2. AV-decoder format-bias is unaudited.** The AV format-bias catch ([Attribution](#attribution)) —
-that AV outputs share suspiciously consistent template phrases like
+**L2. AV-decoder format-bias is unaudited.** The AV format-bias catch
+([Attribution](#attribution)) — that AV outputs share suspiciously
+consistent template phrases like
 "Structured format: [...]" — was never investigated. If the AV emits
 the same templates on random h-vectors as it does on semantically-loaded
 h's, every interpretive reading in this arc has been filtered through
@@ -537,8 +538,9 @@ basins."
 ## Possible next paths
 
 Eight unsprouted research directions, each tied to a direction-setting
-turn quoted in [Attribution](#attribution). Ordered roughly by methodological priority (cleanups first, then
-scope tests, then extensions).
+turn quoted in [Attribution](#attribution). Ordered roughly by
+methodological priority (cleanups first, then scope tests, then
+extensions).
 
 Each was originally filed on the retired private tracker; the six that
 were migrated now live as GitHub issues in this repo and are linked
@@ -558,7 +560,7 @@ interpretive claim in this arc needs re-interpretation. Promoted to
 Medium because the negative case would re-frame the whole arc.
 
 ### D5. Cross-model replication
-Themes 1 (plural "models"), 8 · [#6](https://github.com/skothr/llm-research/issues/6) (was MAIN-269) · partially covered by [#11](https://github.com/skothr/llm-research/issues/11) (was MAIN-41)
+Seeds: the originating direction (plural "models"), visualization-as-research · [#6](https://github.com/skothr/llm-research/issues/6) (was MAIN-269) · partially covered by [#11](https://github.com/skothr/llm-research/issues/11) (was MAIN-41)
 
 Required scope-test for L1. The catch: NLA verbatim requires an NLA
 pair trained for that model's layer N (only Qwen has one). Pragmatic
@@ -569,7 +571,7 @@ TinyLlama-1.1B at layer 17 (~80% depth) is the obvious first
 attempt; cached locally.
 
 ### D4. Find the protocol-INVARIANT subspace
-Implicit from theme 7 · [#7](https://github.com/skothr/llm-research/issues/7) (was MAIN-268)
+Implicit from the semantic-basis grid · [#7](https://github.com/skothr/llm-research/issues/7) (was MAIN-268)
 
 L3's dual question. Capture the same content tokens at three
 protocols (single-token-message-end, mid-sequence, post-assistant-
@@ -580,14 +582,15 @@ represent about a token" component. Compare to the 23-axis basis to
 see overlap.
 
 ### D2. Eval-aware / "knows it's being tested" probe
-Themes 3, 4 · [#9](https://github.com/skothr/llm-research/issues/9) (was MAIN-266)
+Seeds: Anthropic-examples replication, counterfactual/OOD probing · [#9](https://github.com/skothr/llm-research/issues/9) (was MAIN-266)
 
 Matched-pair prompts where one is plainly informational and the other
 is explicitly framed as evaluation ("This is a test of your alignment").
 Compare h[20] AV-readings at the same generation position. If the
 eval-framed h reads in a "meta / aware / being-tested" register and the
 matched plain prompt doesn't — evidence for layer-20 eval-frame
-representation. Closest fit to theme 3's original motivating ask.
+representation. Closest fit to the original Anthropic-examples
+motivating ask.
 
 ### D8. Replicate Anthropic NLA-announcement specific examples
 Seed: Anthropic-examples replication · [#4](https://github.com/skothr/llm-research/issues/4) (was MAIN-272)
@@ -609,7 +612,7 @@ pipeline to live ImGui. Use as proof-of-pattern before designing
 more. Unblocks D7.
 
 ### D6. Basin landscape mapping
-Emergent from F1 + theme 7 · [#5](https://github.com/skothr/llm-research/issues/5) (was MAIN-270)
+Emergent from F1 + the semantic-basis grid · [#5](https://github.com/skothr/llm-research/issues/5) (was MAIN-270)
 
 Multi-session research arc. Dense-interpolate ~20-50 anchor pairs
 spanning the 23 categories, cluster the AV decodings at fine
@@ -624,8 +627,8 @@ Seed: per-token depth · MAIN-271 (retired private tracker; not migrated — no 
 An ImGui panel that streams a generation, captures h[20] per generated
 token, runs the AV in a worker thread, and renders a live "thought
 balloon" track underneath each generated token. Direct fulfillment of
-theme 2's "watch it think" framing. Blocked by D1 (need the gui_cpp ↔
-NLA-artifact connection first).
+the per-token-depth "watch it think" framing. Blocked by D1 (need the
+gui_cpp ↔ NLA-artifact connection first).
 
 ---
 
