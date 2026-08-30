@@ -1,5 +1,12 @@
 # Observation: the ceiling claims survive the paper-faithful variance metric — 1.5B breach confirmed (L21 excess 11.2%, CI [11.0, 11.4]), 7B stays under (peak 4.7%); swap headline significance certified; pursuit norm-bias bounded
 
+> **2026-08-30 addendum — calibration caveat.** The cross-scale readings
+> below (1.5B breach vs 7B under, and their gap) are calibrated in a
+> dimension-dependent unit — signal and baseline share a common ~2× factor
+> between d=1536 and d=3584; within-scale statements are unaffected. See
+> [excess-FVE dimension dependence](2026-08-30-excess-fve-dimension-dependence.md)
+> (issue #79).
+
 > **2026-08-16 addendum — C4-redaction re-run (read first).** Three rows of
 > the robustness table below — **corpus (C4-en lens)** and **held-out sample
 > (C4 prompts)** at 1.5B and at 7B — were computed on
