@@ -67,7 +67,15 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    [10.95, 11.40]** over all valid positions, 2000/2000 cluster-bootstrap
    resamples above 10%; naive metric: 12.4% at k=25) and 7B stays under
    (**peak excess 4.72%** at L22–L23; naive ≤5.8% through k=50) —
-   cross-scale gap ~2.4×. The workspace-like mid-late band (1.5B peak L21) is
+   cross-scale gap ~2.4×. **Calibration caveat (2026-08-30, issue #79):**
+   the excess metric is not dimensionless — signal and baseline share a
+   common ~2× factor between d=1536 and d=3584 (their ratio is
+   near-invariant: 6.29 vs 6.50), so the cross-scale gap and any
+   breach-vs-paper reading are calibrated in a dimension-dependent unit,
+   and the paper's baseline FVE is unpublished, so no conversion exists.
+   Within-scale statements are unaffected. Derivation:
+   [excess-FVE dimension dependence](observations/2026-08-30-excess-fve-dimension-dependence.md).
+   The workspace-like mid-late band (1.5B peak L21) is
    invariant to fitting corpus (peak layer and value identical to 3dp:
    L21, 0.124 on both lenses), n-budget (n=100→500:
    −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — and the
@@ -268,6 +276,11 @@ The arc's dated writeups, in `observations/`:
   under the adopted 20% stability threshold) and the diversified C4
   held-out set leaves
   the depth-profile statistics intact — **the 7B gap is genuine scale.**
+- `2026-08-30-excess-fve-dimension-dependence.md` — post-close correction
+  (issue #79): excess-FVE carries a common ~2× dimension factor between
+  scales (the fveTopK/fveRand ratio is near-invariant, 6.29 vs 6.50), so
+  the ceiling verdicts get a calibration caveat; audit CHECK O (27
+  claims) re-derives every number from the committed scan logs.
 - `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
   (issue #26): the paper's 10% ceiling is excess-over-random
   orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
@@ -703,6 +716,10 @@ informativeness-per-hour:
    moves the intermediate-concept rates.
 6. **Remaining companion eval sets** (multilingual, poetry, order-ops,
    typo) — for the stage-4/5 writeups.
+7. **Dimension-matched 7B recompute (issue #79)** — one pursuit re-run at
+   K ≈ 58 (≈ 25 × 3584/1536; needs a k_max above 58, no lens refit). If
+   the cross-scale excess gap survives at matched K/d, the scale finding
+   is stronger than currently stated and should be restated as such.
 
 **Theory grounding:** `theory/kb/notes/interpretability/j-space.md`,
 excerpts in `theory/kb/excerpts/gurnee2026-workspace.md`, archived paper PDF
@@ -737,16 +754,22 @@ lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
-never load), so there are two states, both measured 2026-08-17:
+never load), so there are two states (totals as of 2026-08-30, after
+CHECK O added 27 cache-independent log-based claims — issue #79):
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 951 PASS | 7 FAIL`, exit code 1. The 7 = three
+  stubs): `SUMMARY: 978 PASS | 7 FAIL`, exit code 1 (measured 2026-08-30;
+  951 before CHECK O, measured 2026-08-17 — the new 978 total is
+  coincidentally equal to the unrelated historical warm-cache figure
+  discussed below). The 7 = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the
   two regenerate-only nf4 lenses and their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""`: `SUMMARY: 986 PASS | 4 FAIL` (`data/audit_2026-08-17.log`),
-  the 4 being the nf4 `MISSING` reports only.
+  --exclude=""`: `SUMMARY: 1013 PASS | 4 FAIL` expected (986 measured
+  2026-08-17, `data/audit_2026-08-17.log`, plus the 27 CHECK O claims,
+  which do not depend on the cache), the 4 being the nf4 `MISSING`
+  reports only.
 
 Neither state's failures are regressions. Any FAIL naming something other
 than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine

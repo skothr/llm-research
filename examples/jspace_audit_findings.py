@@ -132,6 +132,7 @@ os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
 os.environ.setdefault("TQDM_DISABLE", "1")
 
 import json
+import re
 import sys
 from io import TextIOWrapper
 from pathlib import Path
@@ -2540,6 +2541,89 @@ def audit_coverage_supplements() -> None:
             )
 
 
+_PM_LOG_ROW = re.compile(
+    r"^L\s*(?P<layer>\d+)\s+K=(?P<K>\d+)\s+n=\d+\s+ours@\d+=[\d.]+\s+"
+    r"fveTopK=(?P<topk>[\d.]+)\s+fveRand=(?P<rand>[\d.]+)\s+"
+    r"EXCESS=(?P<excess>[+-][\d.]+)\s+CI95=\[[^\]]+\]\s+"
+    r"P\(>10%\)=(?P<pgt>[\d.]+)"
+)
+
+
+def _parse_pm_log(name: str) -> dict[int, dict[str, float]] | None:
+    """Layer rows of a committed scan_paper_metric_*.log (plain git file,
+    present on every clone — not LFS)."""
+    p = DATA / "cache" / "logs" / name
+    if not p.exists():
+        claim(f"[O] log present: {name}", False, "present", "MISSING")
+        return None
+    rows: dict[int, dict[str, float]] = {}
+    for line in p.read_text(errors="replace").splitlines():
+        m = _PM_LOG_ROW.match(line)
+        if m:
+            rows[int(m.group("layer"))] = {
+                "K": float(m.group("K")),
+                "topk": float(m.group("topk")),
+                "rand": float(m.group("rand")),
+                "excess": float(m.group("excess")),
+                "pgt": float(m.group("pgt")),
+            }
+    claim(f"[O] log parses 27 layer rows: {name}", len(rows) == 27, 27, len(rows))
+    return rows
+
+
+def audit_excess_fve_dimension() -> None:
+    """CHECK O: excess-FVE dimension dependence (issue #79, observation
+    2026-08-30). excess = fveTopK - fveRand shares a common ~2x factor
+    between d=1536 and d=3584 while the topK/rand ratio is near-invariant;
+    re-derives every number the observation quotes from the committed logs."""
+    print()
+    print("CHECK O: excess-FVE dimension dependence (issue #79)")
+    ho15 = _parse_pm_log("scan_paper_metric_heldoutc4en_1p5b.log")
+    ho7 = _parse_pm_log("scan_paper_metric_heldoutc4en_7b.log")
+    c4 = _parse_pm_log("scan_paper_metric_c4en_1p5b.log")
+    if ho15 is None or ho7 is None or c4 is None:
+        return
+    a, b = ho15[21], ho7[23]
+    # Cross-scale table (observation § Evidence): raw values.
+    claim_near("[O] heldout 1.5B L21 fveTopK", 0.1390, a["topk"], atol=5e-5)
+    claim_near("[O] heldout 1.5B L21 fveRand", 0.0221, a["rand"], atol=5e-5)
+    claim_near("[O] heldout 1.5B L21 excess", 0.1169, a["excess"], atol=5e-5)
+    claim_near("[O] heldout 7B L23 fveTopK", 0.0695, b["topk"], atol=5e-5)
+    claim_near("[O] heldout 7B L23 fveRand", 0.0107, b["rand"], atol=5e-5)
+    claim_near("[O] heldout 7B L23 excess", 0.0588, b["excess"], atol=5e-5)
+    # The common factor: signal, baseline, and their difference all scale
+    # together (~2.0x), so subtraction does not remove it.
+    claim_near("[O] cross-scale factor fveTopK", 2.00, a["topk"] / b["topk"], atol=0.005)
+    claim_near("[O] cross-scale factor fveRand", 2.07, a["rand"] / b["rand"], atol=0.005)
+    claim_near("[O] cross-scale factor excess", 1.99, a["excess"] / b["excess"], atol=0.005)
+    # The ratio normalization is near-invariant (and reverses slightly).
+    r15, r7 = a["topk"] / a["rand"], b["topk"] / b["rand"]
+    claim_near("[O] 1.5B L21 fveTopK/fveRand", 6.29, r15, atol=0.005)
+    claim_near("[O] 7B L23 fveTopK/fveRand", 6.50, r7, atol=0.005)
+    claim("[O] ratio gap direction reverses (7B >= 1.5B)", r7 >= r15, ">=", f"{r7:.2f} vs {r15:.2f}")
+    # K/d_model (d values pinned by CHECK A lens integrity).
+    claim_near("[O] 1.5B L21 K/d_model", 25 / 1536, a["K"] / 1536, atol=1e-6)
+    claim_near("[O] 7B L23 K/d_model", 23 / 3584, b["K"] / 3584, atol=1e-6)
+    # Independent symptom: c4en 1.5B L0 is the layer ARGMAX on excess, above
+    # the L21 hump; the ratio orders them the other way.
+    argmax_l = max(c4, key=lambda L: c4[L]["excess"])
+    claim_eq("[O] c4en 1.5B excess argmax layer == 0", 0, argmax_l)
+    claim_near("[O] c4en 1.5B L0 excess", 0.1542, c4[0]["excess"], atol=5e-5)
+    claim_near("[O] c4en 1.5B L21 excess", 0.1082, c4[21]["excess"], atol=5e-5)
+    c4r0 = c4[0]["topk"] / c4[0]["rand"]
+    c4r21 = c4[21]["topk"] / c4[21]["rand"]
+    claim_near("[O] c4en 1.5B L0 ratio", 3.78, c4r0, atol=0.005)
+    claim_near("[O] c4en 1.5B L21 ratio", 6.72, c4r21, atol=0.005)
+    claim("[O] ratio orders L0 below the L21 hump", c4r0 < c4r21, "<", f"{c4r0:.2f} vs {c4r21:.2f}")
+    # Held-out 1.5B L0: 86% of peak on excess, 47% on ratio, straddling the
+    # ceiling at P(>10%)=0.577.
+    ho0 = ho15[0]
+    claim_near("[O] heldout 1.5B L0 excess", 0.1004, ho0["excess"], atol=5e-5)
+    claim_near("[O] heldout 1.5B L0 P(>10%)", 0.577, ho0["pgt"], atol=5e-4)
+    claim_near("[O] heldout L0/L21 excess fraction", 0.86, ho0["excess"] / a["excess"], atol=0.005)
+    claim_near("[O] heldout L0/L21 ratio fraction", 0.47, (ho0["topk"] / ho0["rand"]) / r15, atol=0.005)
+
+
 def audit_manifest_census() -> None:
     """Pin the artifact census quoted in the arc README / data README so the
     prose counts can't drift from MANIFEST.json again."""
@@ -2586,6 +2670,7 @@ def main() -> None:
     audit_entailed_swap()
     audit_metric_correction()
     audit_coverage_supplements()
+    audit_excess_fve_dimension()
     audit_manifest_census()
     print()
     print("=" * 80)
