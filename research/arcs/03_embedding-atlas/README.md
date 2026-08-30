@@ -164,15 +164,15 @@ timeline and commissioned the transcript forensics pass
 **User (Michael Lannum).** The originating handles question; the
 correlation-first inversion, the entangled-dimensions target, and the
 no-small-samples rule; the full-vocabulary scope push; the deep-arc
-commitment and the RoPE-arc absorption (2026-06-11; the numbered-arc
-reorganization is earlier, 2026-05-31, at the close of arc 01); the
+commitment, the RoPE-arc absorption, and the numbered-arc
+reorganization (all 2026-06-11); the
 literature-review mandate and the adversarial-novelty gate; the
 every-component tracing direction and the FFN/T1.5 catch; the
 punctuation-chunking prediction; both cross-script catches and the `'s `
 tightening; the wrap-up and merge gates and the unlaunched-review catch;
 the degradation-forensics commissioning.
 
-**Claude Code.** All implementation: the ~22 `emb_*`
+**Claude Code.** All implementation: the 25 `emb_*`
 capture/derive/render/audit scripts, the battery class definitions (under
 the CP1 direction), the operationalization of the pre-registered
 predictions (P1a-P3), the T0/T1/T1.5/T2 experiment designs (under the

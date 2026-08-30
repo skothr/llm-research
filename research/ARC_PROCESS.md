@@ -6,8 +6,7 @@ disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example most sections point at — with one exception: for
 **attribution** (§ 0, § 6) the reference implementation is
-[`02_subliminal`](arcs/02_subliminal/), not arc 01. Arc 01 predates the
-codified attribution shape and does not satisfy all of it.
+[`02_subliminal`](arcs/02_subliminal/), not arc 01.
 
 An *arc* is a focused, multi-observation investigation cohering around one
 research question. A single loose finding is an *observation*; when several
