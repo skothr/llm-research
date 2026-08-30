@@ -146,10 +146,10 @@ sink-removed vocab atlas (33.5% variance) emerges as the
 ![fig8_cosine_sink_vs_clean](observations/figures/fig8_cosine_sink_vs_clean.png)
 
 *Pairwise cosine matrices before and after zeroing the 7 universal sink dims
-{277, 458, 1427, 1627, 2107, 2570, 3110}: the aggregate-pool block collapses to
-near-white as its mean cosine drops +0.40 → +0.18, isolating the sink
-contribution (+0.22) from the non-sink residue baseline that the category
-attractors sit on top of.*
+{277, 458, 1427, 1627, 2107, 2570, 3110}: the mean off-diagonal cosine over
+all 167 captures drops +0.40 → +0.18, isolating the sink contribution (+0.22)
+from the non-sink residue baseline that the category attractors sit on top
+of.*
 ([provenance](observations/figures/INVENTORY.md#fig8_cosine_sink_vs_cleanpng))
 
 > **Polarity note — corrected 2026-08-16.** Until then the sentence

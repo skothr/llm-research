@@ -68,11 +68,12 @@ versions:
 
    ![fig5_within_between](observations/figures/fig5_within_between.png)
 
-   *Per-class within- minus between-class mean cosine, raw and centered panels,
-   colored by supergroup: closed paradigm sets top the ranking (number +0.428,
-   month +0.416, day_of_week +0.400) against a between-class baseline of
-   ~+0.03, with connotation classes at the bottom. Rendered by
-   `emb_category_render.py` from `emb_category_stats.pt`.*
+   *Per-class within- and between-class mean cosine (bars vs black dashes),
+   raw and centered panels, colored by supergroup: closed paradigm sets top
+   the ranking, with within-minus-between gaps of +0.428 (number), +0.416
+   (month), +0.400 (day_of_week) over a ~+0.03 between-class baseline, and
+   connotation classes at the bottom. Rendered by `emb_category_render.py`
+   from `emb_category_stats.pt`.*
    ([provenance](observations/figures/INVENTORY.md))
 4. **Cross-script neighbors.** 法国/巴黎 rank among ' France'/' Paris' top
    neighbors — multilingual alignment exists in the raw lookup table.
