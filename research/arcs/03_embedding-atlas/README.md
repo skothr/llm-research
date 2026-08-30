@@ -116,9 +116,9 @@ commitment absorbing the planned RoPE arc. The novelty claim was then gated
 on an adversarial re-check ("yes, re-verify first as you suggested to
 confirm novelty beyond all doubt. Then let's revisit directions."), and an
 incomplete trace was caught the same day ("Did you trace the influence of
-the initial dimensions through each calculation component [...]? Can we
-look for how the FFN reconfigures the hidden state afterward?" — the direct
-origin of the T1.5 component-level capture).
+the initial dimensions through each calculation component [...]? [...]
+Can we look for how the FFN reconfigures the hidden state afterward?" —
+the direct origin of the T1.5 component-level capture).
 
 **Wrap-up and close-out gates**:
 

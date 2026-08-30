@@ -261,8 +261,8 @@ visual plausibility is not correctness).
 > — [session 2026-06-05]
 
 In order: the multi-model local review protocol (commissioned
-2026-05-28, before the auto-merge below was noticed) whose findings
-drove the correction rounds; the catch that the arc's integration PR
+2026-05-28, before the auto-merge in the next item was noticed) whose
+findings drove the correction rounds; the catch that the arc's integration PR
 — "PR #11" in the pre-split repo's numbering, unrelated to this
 repo's issue #11 — had merged without the manual human gate
 (2026-05-29), and the standing rule that merges stay human; the
