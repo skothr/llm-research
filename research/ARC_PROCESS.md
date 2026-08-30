@@ -6,8 +6,7 @@ disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example most sections point at — with one exception: for
 **attribution** (§ 0, § 6) the reference implementation is
-[`02_subliminal`](arcs/02_subliminal/), not arc 01. Arc 01 predates the
-codified attribution shape and does not satisfy all of it.
+[`02_subliminal`](arcs/02_subliminal/), not arc 01.
 
 An *arc* is a focused, multi-observation investigation cohering around one
 research question. A single loose finding is an *observation*; when several
@@ -178,8 +177,7 @@ number in the observations has a corresponding assertion.
   same commit as these requirements, `5040118e`, 2026-07-18, under the
   pre-standard heading name); the [J-space arc](arcs/04_jspace/README.md)
   § Attribution shows the same content at the required `## Attribution`
-  heading level. Arc 01's "Research direction — user-shaped themes" is the
-  informal precursor. Required shape:
+  heading level. Required shape:
   1. **Research direction** (the opening block under `## Attribution`; arc 02
      carries it under its older `## Research direction` heading): the
      originating user direction(s) as
