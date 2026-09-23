@@ -48,7 +48,7 @@
 > The audit re-derived every pinned number from the regenerated artifacts:
 > **954 PASS | 6 FAIL** before re-pinning, **956 PASS | 4 FAIL** after
 > (post-re-pin log committed at `audit_2026-08-16.log`). As of 2026-08-17
-> the audit carries additional checks; the same two states now measure
+> the audit carried additional checks; the same two states then measured
 > **986 | 4** with the opt-in lens cache and **951 | 7** on a default clone
 > (lens cache as pointer stubs), logged at `audit_2026-08-17.log` and
 > re-derivable with `python examples/jspace_audit_findings.py`. Both states
