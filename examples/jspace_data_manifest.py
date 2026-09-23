@@ -677,6 +677,69 @@ for _axis, _fname, _lens, _model, _detail, _args in [
         args=_args,
     )
 
+
+# Dimension-matched K recompute (issue #83, 2026-09-23): the excess metric
+# scales with K/d_model, so these 7B runs hold K fixed (--k-fixed) at every
+# layer — K=58 matches the 1.5B K/d (58/3584 = 0.0162 vs 25/1536 = 0.0163),
+# K=25 matches the 1.5B K. top-K = selection-order prefix of the k_max=64
+# pursuit support; n_short_support == 0 at every layer in all three. The run
+# logs are plain git files under data/cache/logs/ (scan_<name>.log below).
+_K83_ARGS = (
+    "--model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda "
+    "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
+)
+_K83_TAIL = "--n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64"
+for _fname, _scan, _prompts, _k, _log, _detail in [
+    (
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
+        _HC4,
+        58,
+        "scan_paper_metric_heldoutc4en_7b_k58.log",
+        "C4 held-out prompts; peak L23 excess 7.67% CI95 [7.30, 8.03], 0/2000 "
+        "resamples over 10%; replicated varfrac@25 bit-exact vs the scan "
+        "(config.validation_max_vf_diff == 0.0).",
+    ),
+    (
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        _HW,
+        25,
+        "scan_paper_metric_7b_refitlens_k25.log",
+        "wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% "
+        "CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan "
+        "is NOT bit-exact (config.validation_max_vf_diff 4.379e-01, a "
+        "single-position outlier; layer means agree to ~1e-3).",
+    ),
+    (
+        "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
+        _HW,
+        58,
+        "scan_paper_metric_7b_refitlens_k58.log",
+        "wikitext grid prompts, current (refit) lens; peak L22 excess 6.16% "
+        "CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run "
+        "(config.validation_max_vf_diff 4.379e-01).",
+    ),
+]:
+    _DERIVED[_fname] = _derived(
+        "examples/jspace_paper_metric_varfrac.py",
+        [_L7B, _prompts, f"{_scan} (validation reference)"],
+        "qwen-7b-nf4",
+        f"Dimension-matched paper-metric recompute (issue #83): excess-over-"
+        f"random orthogonal-projection FVE with K fixed at {_k} at every "
+        f"layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed "
+        f"recorded). {_detail} Run log: cache/logs/{_log}.",
+        [
+            "audit Check P",
+            "fig 2026-09-23-jspace-paper-metric-matched-kd.png",
+        ],
+        args=_K83_ARGS
+        + f"--scan <data>/{_scan} --prompts <data>/{_prompts} "
+        + _K83_TAIL
+        + f" --k-fixed {_k}",
+    )
+
 META.update(_DERIVED)
 
 # Disk-derived provenance stub for a top-level deliverable with no META entry
