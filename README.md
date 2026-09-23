@@ -191,15 +191,16 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Verified from a clean clone, all four arcs re-verified 2026-08-29
-(arcs 01-03's committed `audit_2026-08-17.log` reproduces byte-for-byte;
-arc 04's log records the opt-in-lens-cache state — see below):
+from them. Verified from a clean clone: arcs 01-03 re-verified 2026-08-29
+(their committed logs reproduce byte-for-byte), arc 04 re-measured
+2026-08-30 after its audit gained CHECK O (its committed
+`audit_2026-08-17.log` records the opt-in-lens-cache state — see below):
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
 python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 104 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
-python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 951 PASS | 7 FAIL
+python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 981 PASS | 7 FAIL
 ```
 
 Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
@@ -210,12 +211,14 @@ command, and the two 1.5B nf4 lenses and their sidecars are regenerate-only
 pending the scheduled refit (issue #47), each reported as a loud `MISSING`
 rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
-the same run reports **986 PASS | 4 FAIL** (the nf4 `MISSING` reports only)
-with no GPU work; the check total grows from 958 to 990 between the two
-states because the lens-dependent blocks register their claims only when
-the lens tensors are on disk. Arc 02's 5 UNVERIFIABLE entries are printed,
-not scored — external citations and capture-time environment facts no
-committed artifact can settle. See the arc READMEs
+the same run is expected to report **1016 PASS | 4 FAIL** (986 measured
+2026-08-17 plus the 30 cache-independent CHECK O claims added 2026-08-30;
+the nf4 `MISSING` reports only) with no GPU work; the check total grows
+from 988 to 1020 between the two states because the lens-dependent
+blocks register their claims only when the lens tensors are on disk.
+Arc 02's 5 UNVERIFIABLE entries are printed, not scored — external
+citations and capture-time environment facts no committed artifact can
+settle. See the arc READMEs
 for what each audit does and does not catch (arithmetic consistency only —
 never methodology or interpretation) and for the historical pre-re-run
 figures (`920 | 10`; the cache-present `978` was never re-verified).
