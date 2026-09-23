@@ -1,0 +1,65 @@
+[launch] 2026-09-23T02:37:28-04:00 argv: --k-snap 25 --k-max 64 --k-fixed 58 heldoutc4en 7B nf4
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:01<05:56,  1.06s/it]Loading weights:   1%|          | 2/339 [00:02<05:43,  1.02s/it]Loading weights:   1%|          | 4/339 [00:02<02:25,  2.31it/s]Loading weights:   1%|▏         | 5/339 [00:02<01:51,  3.00it/s]Loading weights:   2%|▏         | 6/339 [00:02<01:30,  3.67it/s]Loading weights:   5%|▍         | 16/339 [00:02<00:20, 15.40it/s]Loading weights:   6%|▌         | 19/339 [00:02<00:22, 14.42it/s]Loading weights:   8%|▊         | 28/339 [00:03<00:13, 22.96it/s]Loading weights:   9%|▉         | 31/339 [00:03<00:15, 19.29it/s]Loading weights:  12%|█▏        | 40/339 [00:03<00:11, 26.23it/s]Loading weights:  13%|█▎        | 44/339 [00:03<00:13, 22.49it/s]Loading weights:  15%|█▌        | 52/339 [00:03<00:10, 27.51it/s]Loading weights:  17%|█▋        | 56/339 [00:04<00:11, 23.66it/s]Loading weights:  19%|█▉        | 64/339 [00:04<00:09, 28.40it/s]Loading weights:  20%|██        | 68/339 [00:04<00:11, 24.39it/s]Loading weights:  22%|██▏       | 76/339 [00:04<00:09, 29.14it/s]Loading weights:  24%|██▎       | 80/339 [00:05<00:10, 24.53it/s]Loading weights:  26%|██▌       | 88/339 [00:05<00:08, 29.03it/s]Loading weights:  27%|██▋       | 92/339 [00:05<00:10, 24.59it/s]Loading weights:  28%|██▊       | 95/339 [00:05<00:10, 23.50it/s]Loading weights:  29%|██▉       | 98/339 [00:05<00:10, 22.69it/s]Loading weights:  30%|██▉       | 101/339 [00:06<00:16, 14.53it/s]Loading weights:  30%|███       | 103/339 [00:06<00:15, 14.85it/s]Loading weights:  33%|███▎      | 112/339 [00:06<00:09, 24.41it/s]Loading weights:  34%|███▍      | 115/339 [00:06<00:10, 21.01it/s]Loading weights:  37%|███▋      | 124/339 [00:06<00:06, 30.82it/s]Loading weights:  38%|███▊      | 128/339 [00:07<00:08, 25.33it/s]Loading weights:  40%|████      | 136/339 [00:07<00:06, 30.38it/s]Loading weights:  41%|████▏     | 140/339 [00:07<00:07, 25.57it/s]Loading weights:  44%|████▎     | 148/339 [00:07<00:06, 31.07it/s]Loading weights:  45%|████▍     | 152/339 [00:08<00:07, 25.46it/s]Loading weights:  47%|████▋     | 160/339 [00:08<00:05, 30.68it/s]Loading weights:  48%|████▊     | 164/339 [00:08<00:06, 26.18it/s]Loading weights:  51%|█████     | 172/339 [00:08<00:05, 32.05it/s]Loading weights:  52%|█████▏    | 176/339 [00:08<00:06, 26.56it/s]Loading weights:  54%|█████▍    | 184/339 [00:09<00:05, 29.48it/s]Loading weights:  55%|█████▌    | 188/339 [00:09<00:06, 23.48it/s]Loading weights:  58%|█████▊    | 196/339 [00:09<00:04, 28.82it/s]Loading weights:  59%|█████▉    | 200/339 [00:10<00:07, 18.82it/s]Loading weights:  61%|██████▏   | 208/339 [00:10<00:05, 22.43it/s]Loading weights:  62%|██████▏   | 211/339 [00:10<00:08, 15.64it/s]Loading weights:  65%|██████▍   | 220/339 [00:11<00:05, 21.13it/s]Loading weights:  66%|██████▌   | 223/339 [00:11<00:07, 15.37it/s]Loading weights:  67%|██████▋   | 228/339 [00:11<00:06, 18.00it/s]Loading weights:  68%|██████▊   | 232/339 [00:12<00:06, 15.32it/s]Loading weights:  69%|██████▉   | 235/339 [00:12<00:10,  9.86it/s]Loading weights:  71%|███████   | 240/339 [00:12<00:07, 12.72it/s]Loading weights:  72%|███████▏  | 244/339 [00:13<00:08, 11.74it/s]Loading weights:  73%|███████▎  | 246/339 [00:13<00:10,  8.65it/s]Loading weights:  76%|███████▌  | 256/339 [00:14<00:05, 16.02it/s]Loading weights:  76%|███████▋  | 259/339 [00:14<00:06, 12.96it/s]Loading weights:  79%|███████▉  | 268/339 [00:14<00:03, 19.23it/s]Loading weights:  80%|███████▉  | 271/339 [00:14<00:04, 16.65it/s]Loading weights:  81%|████████▏ | 276/339 [00:15<00:03, 19.20it/s]Loading weights:  83%|████████▎ | 280/339 [00:15<00:03, 19.12it/s]Loading weights:  83%|████████▎ | 283/339 [00:15<00:04, 12.79it/s]Loading weights:  85%|████████▍ | 288/339 [00:15<00:03, 15.85it/s]Loading weights:  86%|████████▌ | 292/339 [00:16<00:03, 13.26it/s]Loading weights:  87%|████████▋ | 294/339 [00:17<00:05,  8.02it/s]Loading weights:  88%|████████▊ | 300/339 [00:17<00:03, 11.51it/s]Loading weights:  90%|████████▉ | 304/339 [00:17<00:03, 10.15it/s]Loading weights:  90%|█████████ | 306/339 [00:18<00:03,  8.51it/s]Loading weights:  93%|█████████▎| 316/339 [00:18<00:01, 15.86it/s]Loading weights:  94%|█████████▍| 319/339 [00:18<00:01, 14.81it/s]Loading weights:  97%|█████████▋| 328/339 [00:18<00:00, 20.90it/s]Loading weights:  98%|█████████▊| 331/339 [00:19<00:00, 17.87it/s]Loading weights: 100%|██████████| 339/339 [00:19<00:00, 17.58it/s]
+[setup] 30 prompts, layers=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], |V|=152064, mode=scan grid
+[pursuit] prompt 1/30 pos=9
+[pursuit] prompt 2/30 pos=9
+[pursuit] prompt 3/30 pos=9
+[pursuit] prompt 4/30 pos=9
+[pursuit] prompt 5/30 pos=9
+[pursuit] prompt 6/30 pos=9
+[pursuit] prompt 7/30 pos=9
+[pursuit] prompt 8/30 pos=9
+[pursuit] prompt 9/30 pos=9
+[pursuit] prompt 10/30 pos=9
+[pursuit] prompt 11/30 pos=9
+[pursuit] prompt 12/30 pos=9
+[pursuit] prompt 13/30 pos=9
+[pursuit] prompt 14/30 pos=9
+[pursuit] prompt 15/30 pos=9
+[pursuit] prompt 16/30 pos=9
+[pursuit] prompt 17/30 pos=9
+[pursuit] prompt 18/30 pos=9
+[pursuit] prompt 19/30 pos=9
+[pursuit] prompt 20/30 pos=9
+[pursuit] prompt 21/30 pos=9
+[pursuit] prompt 22/30 pos=9
+[pursuit] prompt 23/30 pos=9
+[pursuit] prompt 24/30 pos=9
+[pursuit] prompt 25/30 pos=9
+[pursuit] prompt 26/30 pos=9
+[pursuit] prompt 27/30 pos=9
+[pursuit] prompt 28/30 pos=9
+[pursuit] prompt 29/30 pos=9
+[pursuit] prompt 30/30 pos=9
+[validate] replicated-vs-stored varfrac@25 max|diff| = 0.000e+00
+L 0 K=58 n=270 ours@25=0.0274 fveTopK=0.0895 fveRand=0.0551 EXCESS=+0.0343 CI95=[+0.0324,+0.0364] P(>10%)=0.000 ratio=1.62 K/d=0.0162 short=0
+L 1 K=58 n=270 ours@25=0.0275 fveTopK=0.0903 fveRand=0.0581 EXCESS=+0.0322 CI95=[+0.0305,+0.0339] P(>10%)=0.000 ratio=1.56 K/d=0.0162 short=0
+L 2 K=58 n=270 ours@25=0.0283 fveTopK=0.0836 fveRand=0.0524 EXCESS=+0.0312 CI95=[+0.0298,+0.0325] P(>10%)=0.000 ratio=1.59 K/d=0.0162 short=0
+L 3 K=58 n=270 ours@25=0.0280 fveTopK=0.0842 fveRand=0.0525 EXCESS=+0.0318 CI95=[+0.0303,+0.0335] P(>10%)=0.000 ratio=1.61 K/d=0.0162 short=0
+L 4 K=58 n=270 ours@25=0.0224 fveTopK=0.0847 fveRand=0.0495 EXCESS=+0.0353 CI95=[+0.0335,+0.0370] P(>10%)=0.000 ratio=1.71 K/d=0.0162 short=0
+L 5 K=58 n=270 ours@25=0.0202 fveTopK=0.0799 fveRand=0.0459 EXCESS=+0.0340 CI95=[+0.0319,+0.0359] P(>10%)=0.000 ratio=1.74 K/d=0.0162 short=0
+L 6 K=58 n=270 ours@25=0.0203 fveTopK=0.0791 fveRand=0.0417 EXCESS=+0.0374 CI95=[+0.0356,+0.0392] P(>10%)=0.000 ratio=1.90 K/d=0.0162 short=0
+L 7 K=58 n=270 ours@25=0.0217 fveTopK=0.0877 fveRand=0.0444 EXCESS=+0.0433 CI95=[+0.0407,+0.0460] P(>10%)=0.000 ratio=1.98 K/d=0.0162 short=0
+L 8 K=58 n=270 ours@25=0.0217 fveTopK=0.0890 fveRand=0.0419 EXCESS=+0.0470 CI95=[+0.0445,+0.0497] P(>10%)=0.000 ratio=2.12 K/d=0.0162 short=0
+L 9 K=58 n=270 ours@25=0.0207 fveTopK=0.0867 fveRand=0.0406 EXCESS=+0.0460 CI95=[+0.0433,+0.0488] P(>10%)=0.000 ratio=2.13 K/d=0.0162 short=0
+L10 K=58 n=270 ours@25=0.0213 fveTopK=0.0872 fveRand=0.0380 EXCESS=+0.0493 CI95=[+0.0466,+0.0520] P(>10%)=0.000 ratio=2.30 K/d=0.0162 short=0
+L11 K=58 n=270 ours@25=0.0185 fveTopK=0.0862 fveRand=0.0369 EXCESS=+0.0493 CI95=[+0.0468,+0.0516] P(>10%)=0.000 ratio=2.34 K/d=0.0162 short=0
+L12 K=58 n=270 ours@25=0.0179 fveTopK=0.0871 fveRand=0.0362 EXCESS=+0.0509 CI95=[+0.0483,+0.0534] P(>10%)=0.000 ratio=2.41 K/d=0.0162 short=0
+L13 K=58 n=270 ours@25=0.0187 fveTopK=0.0853 fveRand=0.0339 EXCESS=+0.0514 CI95=[+0.0487,+0.0539] P(>10%)=0.000 ratio=2.52 K/d=0.0162 short=0
+L14 K=58 n=270 ours@25=0.0211 fveTopK=0.0836 fveRand=0.0319 EXCESS=+0.0516 CI95=[+0.0493,+0.0539] P(>10%)=0.000 ratio=2.62 K/d=0.0162 short=0
+L15 K=58 n=270 ours@25=0.0202 fveTopK=0.0737 fveRand=0.0281 EXCESS=+0.0456 CI95=[+0.0430,+0.0480] P(>10%)=0.000 ratio=2.62 K/d=0.0162 short=0
+L16 K=58 n=270 ours@25=0.0162 fveTopK=0.0695 fveRand=0.0260 EXCESS=+0.0435 CI95=[+0.0415,+0.0456] P(>10%)=0.000 ratio=2.68 K/d=0.0162 short=0
+L17 K=58 n=270 ours@25=0.0164 fveTopK=0.0658 fveRand=0.0246 EXCESS=+0.0412 CI95=[+0.0392,+0.0432] P(>10%)=0.000 ratio=2.68 K/d=0.0162 short=0
+L18 K=58 n=270 ours@25=0.0238 fveTopK=0.0756 fveRand=0.0253 EXCESS=+0.0503 CI95=[+0.0480,+0.0527] P(>10%)=0.000 ratio=2.99 K/d=0.0162 short=0
+L19 K=58 n=270 ours@25=0.0359 fveTopK=0.0865 fveRand=0.0268 EXCESS=+0.0597 CI95=[+0.0568,+0.0625] P(>10%)=0.000 ratio=3.23 K/d=0.0162 short=0
+L20 K=58 n=270 ours@25=0.0417 fveTopK=0.0916 fveRand=0.0253 EXCESS=+0.0663 CI95=[+0.0633,+0.0694] P(>10%)=0.000 ratio=3.62 K/d=0.0162 short=0
+L21 K=58 n=270 ours@25=0.0444 fveTopK=0.0920 fveRand=0.0218 EXCESS=+0.0702 CI95=[+0.0665,+0.0738] P(>10%)=0.000 ratio=4.22 K/d=0.0162 short=0
+L22 K=58 n=270 ours@25=0.0501 fveTopK=0.0960 fveRand=0.0203 EXCESS=+0.0757 CI95=[+0.0718,+0.0795] P(>10%)=0.000 ratio=4.72 K/d=0.0162 short=0
+L23 K=58 n=270 ours@25=0.0526 fveTopK=0.0963 fveRand=0.0196 EXCESS=+0.0767 CI95=[+0.0730,+0.0803] P(>10%)=0.000 ratio=4.91 K/d=0.0162 short=0
+L24 K=58 n=270 ours@25=0.0449 fveTopK=0.0864 fveRand=0.0169 EXCESS=+0.0695 CI95=[+0.0656,+0.0731] P(>10%)=0.000 ratio=5.12 K/d=0.0162 short=0
+L25 K=58 n=270 ours@25=0.0503 fveTopK=0.0910 fveRand=0.0192 EXCESS=+0.0718 CI95=[+0.0681,+0.0754] P(>10%)=0.000 ratio=4.74 K/d=0.0162 short=0
+L26 K=58 n=270 ours@25=0.0388 fveTopK=0.0840 fveRand=0.0178 EXCESS=+0.0661 CI95=[+0.0627,+0.0697] P(>10%)=0.000 ratio=4.71 K/d=0.0162 short=0
+
+[VERDICT-INPUT] peak excess L23: +0.0767 (UNDER the 10% ceiling)
+[saved] research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt
+[done] 2026-09-23T02:52:33-04:00 exit=0
