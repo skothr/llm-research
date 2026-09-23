@@ -56,49 +56,58 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    lens leading on output-predictive agreement at every layer except the final
    7B one.*
    ([provenance](observations/figures/INVENTORY.md))
-2. **Low J-space occupancy; the 1.5B hump breaches the paper's 10%
-   ceiling and 7B stays under — verified on the paper's own metric
-   (2026-07-24).** The paper's ceiling is excess-over-random
-   orthogonal-projection FVE at K = median occupancy
+2. **Low J-space occupancy; the 1.5B hump breaches the paper's 10% ceiling
+   and 7B stays under it, on the paper's own metric.** The paper's ceiling
+   is excess-over-random orthogonal-projection FVE at K = median occupancy
    `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`, not the absolute
-   reconstruction-energy varfrac the scans record; recomputed under that
-   definition (K-consistent selection, 2026-07-25 F01 fix), 1.5B breaches
-   at the hump (**L21 excess 11.15%, CI95
-   [10.95, 11.40]** over all valid positions, 2000/2000 cluster-bootstrap
-   resamples above 10%; naive metric: 12.4% at k=25) and 7B stays under
-   (**peak excess 4.72%** at L22–L23; naive ≤5.8% through k=50) —
-   cross-scale gap ~2.4×. **Calibration caveat (2026-08-30, issue #79):**
-   the excess metric is not dimensionless — signal and baseline share a
-   common ~2× factor between d=1536 and d=3584 (their ratio is
-   near-invariant: 6.29 vs 6.50), so the cross-scale gap and any
-   breach-vs-paper reading are calibrated in a dimension-dependent unit,
-   and the paper's baseline FVE is unpublished, so no conversion exists.
-   Within-scale statements are unaffected. Derivation:
-   [excess-FVE dimension dependence](observations/2026-08-30-excess-fve-dimension-dependence.md).
-   The workspace-like mid-late band (1.5B peak L21) is
-   invariant to fitting corpus (peak layer and value identical to 3dp:
-   L21, 0.124 on both lenses), n-budget (n=100→500:
-   −1.4%), quantization (bf16↔nf4: +1.2%), and held-out sample — and the
-   invariance was re-verified 2026-07-24/25 **under the paper metric on
-   all four axes** (L21 excess 10.7–11.7%, bootstrap-unanimous breach on
-   each; 7B held-out band peak 5.88%, unanimous under) and re-derived
-   2026-08-16 on the redacted C4 corpus, which left the range and the
-   unanimity as they stand and moved only the 7B held-out band peak
-   (5.98% → 5.88%). Caveat: early-band
-   (L0–L16)
-   occupancy/top-atom readings are partly norm-driven (unnormalized-atom
-   pursuit selection bias; the workspace band measures norm-neutral) —
-   see `observations/2026-07-24-paper-metric-varfrac-recompute.md`.
+   reconstruction-energy varfrac the scans record. Under that definition
+   (K-consistent selection, 2026-07-25 F01 fix), 1.5B breaches at the hump:
+   **L21 excess 11.15%, CI95 [10.95, 11.40]** over all valid positions, with
+   2000/2000 cluster-bootstrap resamples above 10% (naive metric: 12.4% at
+   k=25). 7B stays under at every K tested. Near the paper's K rule
+   (K=23-25) its peak excess is **5.88%** on the held-out set and
+   **4.7-4.8%** on the scan grid (L22-L23; naive ≤5.8% through k=50). At
+   K=58 it is 7.67% held-out and 6.16% on the grid, with every CI95 upper
+   bound at or below 8.03%.
 
-   ![2026-07-24-jspace-paper-metric-excess](observations/figures/2026-07-24-jspace-paper-metric-excess.png)
+   **The cross-scale gap is real and about 1.5-1.8× at matched K/d.** Excess
+   is not dimensionless: random-direction FVE grows with K/d, and at the
+   paper's K rule the 7B scan runs at 2.3-2.5× lower K/d than 1.5B. At K=58
+   (K/d 0.0162, against 1.5B 25/1536 = 0.0163) the 1.5B/7B excess ratio is
+   **1.52× held-out and 1.76× on the grid** (non-overlapping CI95s
+   held-out), against 1.99× and 2.25× at K=23 and K=25. Both matchings are
+   reported; neither is claimed as canonical. The comparison against the
+   paper's own models stays uncalibrated, because the paper's
+   random-baseline FVE is unpublished and no conversion to its calibration
+   exists. Derivations:
+   [excess-FVE dimension dependence](observations/2026-08-30-excess-fve-dimension-dependence.md)
+   (2026-08-30) and
+   [dimension-matched recompute](observations/2026-09-23-dimension-matched-k58-recompute.md)
+   (2026-09-23).
 
-   *The 10% ceiling under the paper's own metric (excess-over-random
-   orthogonal-projection FVE at K = median occupancy): 1.5B breaches at its L21
-   hump (10.8% on the scan grid; all-positions mean 11.15%, cluster-bootstrap
-   CI95 [10.95, 11.40], n=5362 positions/layer) while 7B stays under
-   throughout, peaking at 4.7% (L22–L23). Faint dashed lines are the arc's
-   original absolute varfrac@25 from the committed scans, shown to visualize
-   the metric correction.*
+   Within each scale, the workspace-like mid-late band (1.5B peak L21) is
+   invariant to fitting corpus (peak layer and value identical to 3dp: L21,
+   0.124 on both lenses), n-budget (n=100→500: −1.4%), quantization
+   (bf16↔nf4: +1.2%), and held-out sample — and the invariance was
+   re-verified 2026-07-24/25 **under the paper metric on all four axes**
+   (L21 excess 10.7–11.7%, bootstrap-unanimous breach on each; 7B held-out
+   band peak 5.88%, unanimous under) and re-derived 2026-08-16 on the
+   redacted C4 corpus, which left the range and the unanimity as they stand
+   and moved only the 7B held-out band peak (5.98% → 5.88%). Caveat:
+   early-band (L0–L16) occupancy/top-atom readings are partly norm-driven
+   (unnormalized-atom pursuit selection bias; the workspace band measures
+   norm-neutral) — see
+   `observations/2026-07-24-paper-metric-varfrac-recompute.md`.
+
+   ![2026-09-23-jspace-matched-kd](observations/figures/2026-09-23-jspace-paper-metric-matched-kd.png)
+
+   *Excess-over-random FVE by layer at matched K/d, with cluster-bootstrap
+   CI95 bands and the paper's 10% ceiling dashed. (a) Held-out C4 prompts:
+   1.5B at K=25; 7B at K=23 (paper rule) and K=58. (b) Wikitext scan grid:
+   1.5B at K=25; 7B at K=23-24 (July lens) and, with the current lens, at
+   K=25 and K=58. Matching K/d raises the
+   7B curves and narrows the gap to 1.52× (a) and 1.76× (b); 7B stays under
+   the ceiling at every layer and K.*
    ([provenance](observations/figures/INVENTORY.md))
 3. **Relational causality — the arc's strongest positive.** Swapping an
    unspoken concept along its J-lens vector, at the genuinely
@@ -280,7 +289,15 @@ The arc's dated writeups, in `observations/`:
   (issue #79): excess-FVE carries a common ~2× dimension factor between
   scales (the fveTopK/fveRand ratio is near-invariant, 6.29 vs 6.50), so
   the ceiling verdicts get a calibration caveat; audit CHECK O (30
-  claims) re-derives every number from the committed scan logs.
+  claims) re-derives every number from the committed scan logs. Its
+  ratio-invariance reading is corrected by the 2026-09-23 entry.
+- `2026-09-23-dimension-matched-k58-recompute.md`: 7B paper-metric
+  recompute at K=58, matching the 1.5B K/d (issue #83). The cross-scale
+  excess gap narrows to 1.52× held-out and 1.76× on the grid and
+  survives; 7B stays under the ceiling at every K. The fveTopK/fveRand
+  ratio falls as K grows, so its near-equality across scales at K=23-25
+  was a coincidence of K. Audit CHECK P re-derives the numbers from the
+  three scan logs.
 - `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
   (issue #26): the paper's 10% ceiling is excess-over-random
   orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
@@ -553,15 +570,17 @@ first. Full detail sits in the linked observations and in
   (quantization and n-budget axes) remain regenerate-only, so a clean-clone
   audit reports 4 designed `MISSING` results until the refits scheduled as
   issue #47 land.
-- **L15. Cross-scale excess calibration** (post-close addition 2026-08-30,
-  issue #79; by constraint weight this sits alongside L11 — appended here
-  to keep the original ranking stable). The paper-metric excess is not
-  dimensionless: signal and baseline share a common ~2× factor between
-  d=1536 and d=3584, so the cross-scale gap and the breach-vs-paper
-  reading are calibrated in a dimension-dependent unit, with no
-  conversion to the paper's own calibration available. Within-scale
-  statements are unaffected. See the Findings item-2 caveat and
-  [excess-FVE dimension dependence](observations/2026-08-30-excess-fve-dimension-dependence.md).
+- **L15. Cross-scale excess calibration** (post-close addition, issues #79
+  and #83; by constraint weight this sits alongside L11, appended here to
+  keep the original ranking stable). The excess metric depends on K/d, so
+  a cross-scale comparison needs a K-matching rule, and the choice is not
+  settled. Two rules are reported: the paper's median-occupancy K (7B
+  K=23-24), under which the 1.5B/7B gap is 1.99-2.25×, and equal K/d (7B
+  K=58), under which it is 1.52-1.76×. The gap rests on n=2 scales with 30
+  prompts per scan. The comparison against the paper's own models has no
+  conversion, because the paper's random-baseline FVE is unpublished.
+  Within-scale statements are unaffected. See Findings item 2 and
+  [dimension-matched recompute](observations/2026-09-23-dimension-matched-k58-recompute.md).
 
 ## Attribution
 
@@ -727,10 +746,11 @@ informativeness-per-hour:
    moves the intermediate-concept rates.
 6. **Remaining companion eval sets** (multilingual, poetry, order-ops,
    typo) — for the stage-4/5 writeups.
-7. **Dimension-matched 7B recompute (issue #79)** — one pursuit re-run at
-   K ≈ 58 (≈ 25 × 3584/1536; needs a k_max above 58, no lens refit). If
-   the cross-scale excess gap survives at matched K/d, the scale finding
-   is stronger than currently stated and should be restated as such.
+7. **A third scale for the excess gap (issues #79, #83)**: the 1.5B/7B
+   gap at matched K/d rests on two scales. Another Qwen2.5 size, scanned
+   at the same K/d, would show whether the gap tracks d_model. It needs a
+   new lens fit. The dimension-matched 7B recompute itself is done
+   (`observations/2026-09-23-dimension-matched-k58-recompute.md`).
 
 **Theory grounding:** `theory/kb/notes/interpretability/j-space.md`,
 excerpts in `theory/kb/excerpts/gurnee2026-workspace.md`, archived paper PDF
@@ -747,8 +767,12 @@ two-scale norm-bias pins — landed 2026-07-24; 978 claimed with a
 warm five-lens cache after the final-review
 pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
 naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
-p-value, and the MANIFEST census). All small derived artifacts (44 files,
-~55 MB incl. the ten metric-correction artifacts) are LFS-committed
+p-value, and the MANIFEST census). All small derived artifacts (47 files,
+~56 MB incl. the thirteen metric-correction artifacts; the 2026-09-23
+dimension-matched recompute added `paper_metric_varfrac_*_heldoutc4en_k58.pt`,
+`*_refitlens_k25.pt` and `*_refitlens_k58.pt`, with their scan logs
+`scan_paper_metric_{heldoutc4en_7b_k58,7b_refitlens_k25,7b_refitlens_k58}.log`
+in `data/cache/logs/`, which audit CHECK P reads) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–N run from
 a clean clone** (CHECK O does too — it reads only committed plain-text
 logs); check A and the lens-integrity blocks read the full
@@ -766,20 +790,21 @@ lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
-never load), so there are two states (totals as of 2026-08-30, after
-CHECK O added 30 cache-independent log-based claims — issue #79):
+never load), so there are two states (totals as of 2026-09-23, after
+CHECK P added 73 cache-independent log-based claims — issue #83):
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 981 PASS | 7 FAIL`, exit code 1 (measured 2026-08-30;
-  951 before CHECK O, measured 2026-08-17). The 7 = three
+  stubs): `SUMMARY: 1054 PASS | 7 FAIL`, exit code 1 (measured 2026-09-23
+  in a pointer-stub mirror; 981 before CHECK P, measured 2026-08-30). The 7
+  = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the
   two regenerate-only nf4 lenses and their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""`: `SUMMARY: 1016 PASS | 4 FAIL` expected (986 measured
-  2026-08-17, `data/audit_2026-08-17.log`, plus the 30 CHECK O claims,
-  which do not depend on the cache), the 4 being the nf4 `MISSING`
-  reports only.
+  --exclude=""`: `SUMMARY: 1089 PASS | 4 FAIL` (measured 2026-09-23 with
+  the cache pulled: 986 measured 2026-08-17, `data/audit_2026-08-17.log`,
+  plus the 30 CHECK O and 73 CHECK P claims, which do not depend on the
+  cache), the 4 being the nf4 `MISSING` reports only.
 
 Neither state's failures are regressions. Any FAIL naming something other
 than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
