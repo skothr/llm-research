@@ -30,6 +30,15 @@ Findings (2026-07-23/24, committed artifacts in the arc ``data/``): the
 (peak excess ~5.0% at L22) — see
 ``observations/2026-07-24-paper-metric-varfrac-recompute.md``.
 
+``--k-fixed N`` (default off) replaces the median-occupancy K with K = N at
+every layer; the top-K set is then the first N atoms of the k_max pursuit
+support in selection order, which is the N-step pursuit support because the
+greedy support only ever appends. The use is a dimension-matched comparison
+(issue #83): K/d_model is held equal across scales, e.g. 7B at K=58 against
+1.5B at K=25 (25/1536 ~ 58/3584). ``--k-snap`` keeps its roles as the
+``--scan`` validation snapshot and the ``ours@k`` column; ``K_median_occ``
+is still measured and persisted per layer. Requires ``1 <= N <= --k-max``.
+
 Examples (repo root):
     # 1.5B bf16, scan grid + validation against the committed scan
     python examples/jspace_paper_metric_varfrac.py \
@@ -107,11 +116,43 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--k-snap", type=int, default=25, help="Occupancy snapshot k.")
     p.add_argument("--k-max", type=int, default=50)
+    p.add_argument(
+        "--k-fixed",
+        type=int,
+        default=None,
+        help="Use K=N at every layer instead of the median occupancy at "
+        "--k-snap; top-K = first N atoms of the pursuit support in selection "
+        "order. For dimension-matched K/d_model across scales (issue #83). "
+        "Must satisfy 1 <= N <= --k-max. Default: off.",
+    )
     p.add_argument("--n-rand", type=int, default=8, help="Random-control draws.")
     p.add_argument("--rand-seed-base", type=int, default=10_000)
     p.add_argument("--n-boot", type=int, default=2000)
     p.add_argument("--out", type=Path, default=None)
-    return p.parse_args()
+    args = p.parse_args()
+    if args.k_fixed is not None and not 1 <= args.k_fixed <= args.k_max:
+        p.error(
+            f"--k-fixed must be in [1, --k-max={args.k_max}], got {args.k_fixed} "
+            "(raise --k-max to fit; the pursuit support is only k_max long)"
+        )
+    return args
+
+
+def top_k_selection(
+    sel_snap: list[int], sel_full: list[int], k: int, k_fixed: int | None
+) -> list[int]:
+    """Top-K atom ids in pursuit selection order (issue-#26 F01: never a
+    coefficient re-ranking of a superset).
+
+    Default (``k_fixed`` None): the prefix of the k-snap snapshot. With
+    ``k_fixed``: the prefix of the k_max support, which may exceed k_snap.
+    The greedy support only appends (``_jspace_pursuit``), so both prefixes
+    are the K-step pursuit support; the default branch is kept as-is so its
+    outputs stay identical.
+    """
+    if k_fixed is None:
+        return sel_snap[:k]
+    return sel_full[:k]
 
 
 def orth_fve(h: Tensor, atom_mat: Tensor) -> float:
@@ -218,6 +259,7 @@ def main() -> None:
         jac = lens.jacobians[L].to(w_u.device)
         occ = np.array([a for *_, a in store[L]])
         k_med = max(1, int(np.median(occ)))
+        k_use = k_med if args.k_fixed is None else args.k_fixed
         gen = torch.Generator().manual_seed(args.rand_seed_base + L)
         n = len(store[L])
         prompt_idx = np.empty(n, dtype=np.int64)
@@ -225,6 +267,10 @@ def main() -> None:
         fve_full = np.empty(n)
         fve_r = np.empty(n)
         vf_ours = np.empty(n)
+        # Positions whose top set has < k_use atoms (pursuit stopped early:
+        # no positive-correlation atom left), while the random control still
+        # draws k_use atoms — biases excess down at those positions.
+        n_short = 0
         for i, (pi, sel_snap, sel_full, h_cpu, vf25, *_) in enumerate(store[L]):
             h = h_cpu.to(w_u.device)
             prompt_idx[i] = pi
@@ -235,18 +281,21 @@ def main() -> None:
                 # (greedy order is deterministic), so no coefficient re-ranking
                 # over a larger support ever touches the top-K set. fve_full
                 # stays the full k_max-support diagnostic (headroom).
-                top = sel_snap[:k_med]
+                top = top_k_selection(sel_snap, sel_full, k_use, args.k_fixed)
+                if len(top) < k_use:
+                    n_short += 1
                 a_top = w_u[torch.tensor(top, device=w_u.device)].float() @ jac
                 a_full = w_u[torch.tensor(sel_full, device=w_u.device)].float() @ jac
                 fve_j[i] = orth_fve(h, a_top)
                 fve_full[i] = orth_fve(h, a_full)
             else:
                 fve_j[i] = fve_full[i] = 0.0
+                n_short += 1  # empty support: 0 < k_use atoms
             draws = [
                 orth_fve(
                     h,
                     w_u[
-                        torch.randint(0, vocab, (k_med,), generator=gen).to(w_u.device)
+                        torch.randint(0, vocab, (k_use,), generator=gen).to(w_u.device)
                     ].float()
                     @ jac,
                 )
@@ -257,6 +306,10 @@ def main() -> None:
         lo, hi, frac_over = cluster_bootstrap(excess, prompt_idx, args.n_boot, seed=L)
         results[L] = {
             "K_median_occ": k_med,
+            # K actually used for top-K and the random control: == K_median_occ
+            # unless --k-fixed is set (dimension-matched K, issue #83).
+            "K_used": k_use,
+            "n_short_support": n_short,
             "n_pos": n,
             "vf_ours_mean": float(vf_ours.mean()),
             "fve_topK_mean": float(fve_j.mean()),
@@ -274,7 +327,7 @@ def main() -> None:
                 if float(fve_r.mean()) > 0.0
                 else float("nan")
             ),
-            "K_over_d_model": k_med / d_model,
+            "K_over_d_model": k_use / d_model,
             "excess_pctiles_10_25_50_75_90": [
                 float(x) for x in np.percentile(excess, [10, 25, 50, 75, 90])
             ],
@@ -285,12 +338,14 @@ def main() -> None:
         }
         r = results[L]
         print(
-            f"L{L:2d} K={k_med:2d} n={n} ours@{args.k_snap}={r['vf_ours_mean']:.4f} "
+            f"L{L:2d} K={k_use:2d} n={n} ours@{args.k_snap}={r['vf_ours_mean']:.4f} "
             f"fveTopK={r['fve_topK_mean']:.4f} fveRand={r['fve_rand_mean']:.4f} "
             f"EXCESS={r['excess_mean']:+.4f} CI95=[{lo:+.4f},{hi:+.4f}] "
             f"P(>10%)={frac_over:.3f} "
             f"ratio={r['fve_ratio_topK_over_rand']:.2f} "
-            f"K/d={r['K_over_d_model']:.4f}",
+            f"K/d={r['K_over_d_model']:.4f}"
+            # Only with --k-fixed, so default-run rows stay byte-identical.
+            + ("" if args.k_fixed is None else f" short={n_short}"),
             flush=True,
         )
         del jac
@@ -312,7 +367,14 @@ def main() -> None:
                 "order prefix of the k-snap snapshot — K-consistent, no "
                 "re-ranking from the k_max superset; issue-#26 F01 fix); "
                 "fve_full = full k_max-support diagnostic "
-                "[gurnee2026-workspace §4.2 Fig 30b, §A.8]",
+                "[gurnee2026-workspace §4.2 Fig 30b, §A.8]"
+                + (
+                    ""
+                    if args.k_fixed is None
+                    else f"; K OVERRIDDEN by --k-fixed={args.k_fixed} at every "
+                    "layer (top-K = selection-order prefix of the k_max "
+                    "support; dimension-matched K, issue #83)"
+                ),
                 "model": args.model,
                 "mode": args.mode,
                 "lens": str(args.lens),
@@ -323,6 +385,9 @@ def main() -> None:
                 "all_positions": bool(args.all_positions),
                 "k_snap": args.k_snap,
                 "k_max": args.k_max,
+                # None = K is the per-layer median occupancy; N = fixed K=N
+                # at every layer (dimension-matched, issue #83).
+                "k_fixed": args.k_fixed,
                 "n_rand": args.n_rand,
                 "rand_seed_base": args.rand_seed_base,
                 "n_boot": args.n_boot,
