@@ -138,6 +138,7 @@ untouched).
   above 58). If the cross-scale gap survives at matched K/d, the scale
   finding is stronger than currently stated and should be restated as
   such. Tracked in issue #79.
+  **Done 2026-09-23** (issue #83): the gap survives at 1.52-1.76×; see [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
 
 ## References
 

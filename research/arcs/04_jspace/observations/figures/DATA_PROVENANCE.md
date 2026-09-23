@@ -299,3 +299,55 @@ d = torch.load("research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-1.5b-i
 r = d["results"][21]
 print(r["K_median_occ"], r["excess_mean"], r["excess_ci95"], r["boot_frac_over_10pct"])
 ```
+
+---
+
+## paper-metric-matched-kd
+`2026-09-23-jspace-paper-metric-matched-kd.png` — render: `examples/jspace_render_paper_metric_matched_kd.py`
+
+**Data artifacts** (`data/` committed), produced by
+`examples/jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
+fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
+`--k-max 64` pursuit support; `--k-snap 25`, `--n-rand 8`,
+`--rand-seed-base 30000`, nf4, 30 prompts, current lens
+`data/cache/jlens_qwen2.5-7b_nf4_n100.pt`) — issue #83:
+- `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt`
+  — C4 held-out prompts, K=58 (K/d = 58/3584 = 0.0162, matching the 1.5B's
+  25/1536 = 0.0163); replicated varfrac@25 bit-exact vs the committed
+  held-out structure scan (`config.validation_max_vf_diff == 0.0`). Log:
+  `data/cache/logs/scan_paper_metric_heldoutc4en_7b_k58.log`.
+- `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt`
+  — wikitext grid prompts, K=25 (the 1.5B K). Validated against the July
+  structure scan, which predates the lens refit, so the diff is not zero
+  (`config.validation_max_vf_diff` 4.379e-01: a single-position outlier;
+  layer means agree to ~1e-3). Log:
+  `data/cache/logs/scan_paper_metric_7b_refitlens_k25.log`.
+- `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt`
+  — same prompts and validation, K=58. Log:
+  `data/cache/logs/scan_paper_metric_7b_refitlens_k58.log`.
+
+Each carries per-layer `K_used` (58 / 25 / 58 at every layer) and
+`n_short_support` (0 at every layer), plus `config.k_fixed`.
+
+**Comparison artifacts** (existing, K = per-layer median occupancy):
+panel (a) `..._bf16_n100_heldoutc4en.pt` (1.5B) and
+`..._nf4_n100_heldoutc4en.pt` (7B); panel (b) `..._bf16_n100.pt` (1.5B) and
+`..._nf4_n100.pt` (7B, pre-refit lens) — see
+[§paper-metric-excess](#paper-metric-excess).
+
+**Prompt sets:** panel (a) `data/heldout_prompts_c4en_n30.json`; panel (b)
+`data/heldout_prompts_wikitext103_n30.json`.
+
+**Plotted:** lines `results[L]["excess_mean"]`, shaded bands
+`results[L]["excess_ci95"]` (cluster bootstrap by prompt, 2000 resamples).
+Legend K is `K_used` for the fixed-K runs and the `K_median_occ` range
+otherwise. The in-panel gap box is 1.5B workspace-band (L17-26) peak over
+each 7B series' band peak. Pinned by audit CHECK P.
+
+**Dump the raw rows:**
+```python
+import torch
+d = torch.load("research/arcs/04_jspace/data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt", weights_only=False)
+r = d["results"][23]
+print(d["config"]["k_fixed"], r["K_used"], r["n_short_support"], r["excess_mean"], r["excess_ci95"])
+```
