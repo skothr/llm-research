@@ -171,13 +171,13 @@ The held-out K=58 run replicates the committed held-out structure scan
 bit-exactly (max|diff| 0).
 The two grid runs are validated against the July structure scan, which
 used the July lens, so the gate cannot be bit-exact.
-Its max|diff| of 4.379e-01 is an isolated-position outlier.
+Its max|diff| over positions is 4.379e-01.
 The per-layer mean varfrac@25 (`ours@25`) agrees with the July artifact
 `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
-to within 2.6e-3 at every layer (read from the two artifacts'
-`vf_ours_mean`).
-So at most a few of the 270 positions per layer differ materially.
-Per-position diffs were not persisted, so the exact count is unknown.
+to 2.6e-3 at every layer, as a signed difference of means (read from
+the two artifacts' `vf_ours_mean`).
+Per-position diffs were not persisted, so how many positions differ is
+not established.
 
 Grid baselines read from the artifacts (`results[L]` fields):
 1.5B L21 `fve_topK_mean` 0.1285, `fve_rand_mean` 0.0202,

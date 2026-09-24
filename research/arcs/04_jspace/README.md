@@ -66,7 +66,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    **L21 excess 11.15%, CI95 [10.95, 11.40]** over all valid positions, with
    2000/2000 cluster-bootstrap resamples above 10% (naive metric: 12.4% at
    k=25). 7B stays under at every K tested. At the paper's K rule
-   (K=23-24) its peak excess is **5.88%** on the held-out set and
+   (K=23 held-out, K=23-24 grid) its peak excess is **5.88%** on the
+   held-out set and
    **4.72%** on the scan grid (L23, July lens; naive ≤5.8% through k=50).
    The K=25 grid run on the current lens peaks at 4.81% (L22). At
    K=58 it is 7.67% held-out and 6.16% on the grid, with every CI95 upper
@@ -74,7 +75,7 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
 
    **The cross-scale gap is real and about 1.5-1.8× at matched K/d.** Excess
    is not dimensionless: random-direction FVE grows with K/d, and at the
-   paper's K rule the 7B scan runs at 2.3-2.5× lower K/d than 1.5B. At K=58
+   paper's K rule the 7B scan runs at 2.4-2.5× lower K/d than 1.5B. At K=58
    (K/d 0.0162, against 1.5B 25/1536 = 0.0163) the 1.5B/7B excess ratio is
    **1.52× held-out and 1.76× on the grid** (non-overlapping CI95s
    held-out). At the paper's K rule the gap is 1.99× held-out (K=23) and
@@ -775,15 +776,18 @@ warm five-lens cache after the final-review
 pins landed 2026-07-25: full stage-4 depth-table cells both scales, the
 naive-vs-paper delta decomposition, K_median_occ, the exact McNemar
 p-value, and the MANIFEST census). All small derived artifacts (47 files,
-~56 MB incl. the thirteen metric-correction artifacts; the 2026-09-23
-dimension-matched recompute added `paper_metric_varfrac_*_heldoutc4en_k58.pt`,
-`*_refitlens_k25.pt` and `*_refitlens_k58.pt`, with their scan logs
-`scan_paper_metric_{heldoutc4en_7b_k58,7b_refitlens_k25,7b_refitlens_k58}.log`
-in `data/cache/logs/`, which audit CHECK P reads) are LFS-committed
+~56 MB incl. the thirteen metric-correction artifacts) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–N run from
-a clean clone** (CHECK O does too — it reads only committed plain-text
-logs; so does CHECK P, whose logs are plain committed files under
-`data/cache/logs/`, not LFS objects); check A and the lens-integrity blocks read the full
+a clean clone**. CHECK O does too: it reads only committed plain-text
+logs. The 2026-09-23 dimension-matched recompute added three .pt
+artifacts (`paper_metric_varfrac_*_heldoutc4en_k58.pt`,
+`*_refitlens_k25.pt`, `*_refitlens_k58.pt`). They are LFS objects under
+`data/`, outside the `.lfsconfig` exclusion, so a default `git lfs pull`
+fetches them. Their three scan logs
+(`scan_paper_metric_{heldoutc4en_7b_k58,7b_refitlens_k25,7b_refitlens_k58}.log`)
+are plain committed files under `data/cache/logs/`, not LFS objects.
+CHECK P's 72 claims read both; none needs the lens cache, so all run on
+a default clone. Check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
 decision 2026-08-16 after the C4-redaction re-run: the **three lenses
@@ -798,14 +802,16 @@ lenses they produced.
 
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
-never load), so there are two states (totals as of 2026-09-23, after
+never load), so there are two states (totals as of 2026-09-24, after
 CHECK P added 72 claims that do not read the lens cache — issue #83):
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 1053 PASS | 7 FAIL`, exit code 1 (measured 2026-09-24
-  with the three lens files moved aside, which reports `MISSING` where a
-  default clone reports a stub, for the same claim count; 981 before
-  CHECK P, measured 2026-08-30). The 7
+  stubs): `SUMMARY: 1053 PASS | 7 FAIL`, exit code 1. Measured
+  2026-09-24 in a working tree with the lens cache, by moving the three
+  committed lens files aside: the audit then reports `MISSING` where a
+  default clone reports `LFS pointer stub`, one FAIL per file either way,
+  so the claim count is the same (981 before CHECK P, measured
+  2026-08-30). The 7
   = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the

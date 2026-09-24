@@ -1,5 +1,8 @@
 # Observation: excess-FVE is not dimensionless — the cross-scale ceiling comparison carries a common ~2× factor that the subtraction does not remove
 
+(Corrected 2026-09-23: width accounts for part of the gap; 1.52× held-out
+and 1.76× grid survive at matched K/d; see the correction note below.)
+
 **Date/context:** 2026-08-30. Post-close correction pass (arc closed
 2026-07-22; same discipline as the issue-#26 metric-fidelity reopening).
 The defect was flagged by an external review session and verified here
@@ -11,10 +14,13 @@ issue #79.
 ## Finding — signal and baseline share a common multiplicative factor, so `excess = fveTopK − fveRand` retains it
 
 Correction 2026-09-23 (issue #83): two claims below do not hold.
-The fveTopK/fveRand ratio is K-dependent (7B L23: 6.50 at K=23, 4.91 at
-K=58), so it is not near-invariant across scales.
-The common factor accounts for about a third of the gap, not most of it
-(1.52× held-out survives at matched K/d).
+The fveTopK/fveRand ratio does not remove the cross-scale gap.
+At matched K/d it is 6.29 (1.5B) vs 4.91 (7B), a 1.28× gap.
+Its K dependence within one scale (7B L23: 6.50 at K=23, 4.91 at K=58)
+supports this.
+The common factor accounts for roughly a third to two-fifths of the gap
+on a log scale (32% grid, 39% held-out), not most of it.
+1.52× held-out and 1.76× grid survive at matched K/d.
 See [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
 
 The paper-metric recompute
@@ -40,7 +46,9 @@ ratio-normalized row is near-invariant and slightly *reverses* (7B ≥
 vs 23/3584 = 0.0064). Consequences:
 
 1. **The cross-scale excess gap is dominated by a factor common to
-   signal and baseline.** On the held-out pair measured here the gap is
+   signal and baseline.** (Corrected 2026-09-23: width accounts for part
+   of the gap; 1.52× held-out and 1.76× grid survive at matched K/d; see
+   the correction note above.) On the held-out pair measured here the gap is
    1.99× and the ratio normalization removes it entirely (6.29 vs 6.50,
    slightly reversed). The README's ~2.4× figure is a different — and
    itself cross-mode — pair: the 1.5B all-positions mean (11.15%)
@@ -80,7 +88,9 @@ limitations).
 ## What this does and does not establish
 
 **Does:** the cross-scale excess gap is dominated by a factor common to
-signal and baseline; the two README ceiling verdicts (1.5B breach, 7B
+signal and baseline (corrected 2026-09-23: width accounts for part of the
+gap; 1.52× held-out and 1.76× grid survive at matched K/d; see the
+correction note above); the two README ceiling verdicts (1.5B breach, 7B
 under) are calibrated in a dimension-dependent unit and should carry a
 caveat when read as a cross-scale or versus-paper comparison.
 

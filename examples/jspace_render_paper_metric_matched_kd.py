@@ -45,6 +45,8 @@ cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 OUT = FIGDIR / "2026-09-23-jspace-paper-metric-matched-kd.png"
 PAPER_CEILING = 0.10
 BAND_START = 17  # workspace band (L17-26), as in the ceiling figure's callout
+LABEL_HALF_WIDTH = 5  # layers the centred ceiling label spans on each side
+_LFS_STUB = b"version https://git-lfs.github.com/spec/v1"
 D_MODEL = {"1.5B": 1536, "7B": 3584}
 
 # Okabe-Ito colorblind-safe palette; 1.5B blue / 7B red-orange family keeps
@@ -83,6 +85,9 @@ def load(name: str) -> dict[str, Any]:
     path = resolve(name)
     if not path.exists():
         raise SystemExit(f"missing artifact: {name}")
+    with path.open("rb") as fh:
+        if fh.read(len(_LFS_STUB)) == _LFS_STUB:
+            raise SystemExit(f"{name} is a Git LFS pointer stub, not the artifact: run `git lfs pull`")
     return torch.load(path, map_location="cpu", weights_only=False)
 
 
@@ -92,10 +97,11 @@ def k_label(art: dict[str, Any], d: int) -> str:
     res: dict[int, dict[str, Any]] = art["results"]
     fixed = art["config"].get("k_fixed") is not None
     ks = sorted({int(r["K_used"] if fixed else r["K_median_occ"]) for r in res.values()})
+    rule = "fixed" if fixed else "median occ."
     if len(ks) == 1:
-        return f"K={ks[0]} ({'fixed' if fixed else 'median occ.'}), K/d={ks[0] / d:.4f}"
+        return f"K={ks[0]} ({rule}), K/d={ks[0] / d:.4f}"
     return (
-        f"K={ks[0]}-{ks[-1]} (median occ.), "
+        f"K={ks[0]}-{ks[-1]} ({rule}), "
         f"K/d={ks[0] / d:.4f}-{ks[-1] / d:.4f}"
     )
 
@@ -107,6 +113,7 @@ def band_peak(res: dict[int, dict[str, Any]]) -> tuple[int, float]:
 
 def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
     peaks: list[tuple[str, int, float]] = []  # (K tag, band-peak layer, value)
+    top: dict[int, float] = {}  # per layer, the highest CI95 upper bound plotted
     for spec in panel["series"]:
         art = load(spec["pt"])
         res: dict[int, dict[str, Any]] = art["results"]
@@ -114,6 +121,8 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
         mean = [float(res[L]["excess_mean"]) for L in layers]
         lo = [float(res[L]["excess_ci95"][0]) for L in layers]
         hi = [float(res[L]["excess_ci95"][1]) for L in layers]
+        for L, h in zip(layers, hi):
+            top[L] = max(top.get(L, h), h)
         d = D_MODEL[spec["model"]]
         label = f"{spec['model']} (d={d}), {k_label(art, d)}{spec['note']}"
         ax.fill_between(layers, lo, hi, color=spec["color"], alpha=0.22, linewidth=0)
@@ -147,10 +156,15 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
         bbox={"boxstyle": "round,pad=0.3", "facecolor": "white", "edgecolor": "#bbbbbb", "alpha": 0.9},
     )
     ax.axhline(PAPER_CEILING, color="#555555", linestyle="--", linewidth=1.2, zorder=1)
-    # Centred over L11, where every curve sits below the line, so the label
-    # never crosses the 1.5B hump (L19-24) or its L0 value.
+    # Centre the label on the layer window where the plotted CI bands sit
+    # furthest below the ceiling, so it does not cross any curve.
+    centres = range(LABEL_HALF_WIDTH, 27 - LABEL_HALF_WIDTH)
+    centre = min(
+        centres,
+        key=lambda c: max(top[L] for L in range(c - LABEL_HALF_WIDTH, c + LABEL_HALF_WIDTH + 1)),
+    )
     ax.text(
-        11,
+        centre,
         PAPER_CEILING + 0.002,
         'paper ceiling: "never more than 10%"',
         fontsize=7.5,

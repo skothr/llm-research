@@ -191,7 +191,7 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Verified from a clean clone: arcs 01-03 re-verified 2026-08-29
+from them. Arcs 01-03 were re-verified from a clean clone on 2026-08-29
 (their committed logs reproduce byte-for-byte). Arc 04 was re-measured
 in-session on 2026-09-24 after its audit gained CHECK P. No audit log was
 committed for that run; re-derive the totals with the command below:
@@ -213,8 +213,9 @@ rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
 the same run reports **1088 PASS | 4 FAIL** (measured 2026-09-24 with the
 cache pulled: 986 measured 2026-08-17, plus the 30 cache-independent CHECK O
-claims added 2026-08-30 and the 72 cache-independent CHECK P claims added
-2026-09-23; the nf4 `MISSING` reports only) with no GPU work; the check
+claims added 2026-08-30 and the 72 CHECK P claims added 2026-09-23, which
+read LFS artifacts pulled by default and plain committed logs, not the
+lens cache; the nf4 `MISSING` reports only) with no GPU work; the check
 total grows from 1060 to 1092 between the two states because the
 lens-dependent blocks register their claims only when the lens tensors are
 on disk.
