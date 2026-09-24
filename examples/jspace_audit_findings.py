@@ -2731,6 +2731,23 @@ D_MODEL_1P5B = 1536  # pinned by CHECK A lens integrity
 # regex matches, so a drifted row lacks the key.
 _K83_COLS = ("ci_lo", "ci_hi", "ratio", "k_over_d")
 _ALL_LAYERS = set(range(27))
+# Per-layer .pt fields CHECK P (b) reads from each #83 artifact.
+_K83_PT_FIELDS = ("K_used", "n_short_support", "excess_mean", "fve_topK_mean", "fve_rand_mean")
+
+
+def _k83_grid_rows(key: str, fields: tuple[str, ...]) -> dict[int, dict[str, Any]] | None:
+    """The `results` of a PM_FILES grid artifact CHECK P reads, or None. A
+    present artifact without all 27 layers or with a field missing registers
+    one FAIL here (per call site; the absent-file FAIL is _load_pm's)."""
+    d = _load_pm(key)
+    if d is None:
+        return None
+    res = d.get("results") or {}
+    bad = sorted({k for x in res.values() for k in fields if x.get(k) is None})
+    if set(res) != _ALL_LAYERS or bad:
+        claim(f"[P] {key}: 27 layers carry {'/'.join(fields)}", False, "all present", bad or sorted(res))
+        return None
+    return res
 
 
 def audit_matched_kd() -> None:
@@ -2861,17 +2878,17 @@ def audit_matched_kd() -> None:
             claim_near(
                 "[P] heldout gap at matched K/d (1.5B L21 / 7B L23 K=58)", 1.52, ho15_x / r["excess"], atol=0.005
             )
-    g15 = _load_pm("1.5b grid")
-    g7_old = _load_pm("7b grid")
+    g15 = _k83_grid_rows("1.5b grid", ("excess_mean", "K_median_occ"))
+    g7_old = _k83_grid_rows("7b grid", ("excess_mean", "K_median_occ"))
     if g15 is not None:
-        g15_x = float(g15["results"][21]["excess_mean"])
+        g15_x = float(g15[21]["excess_mean"])
         claim_near("[P] 1.5B grid L21 excess (numerator)", 0.1083, g15_x, atol=5e-5)
-        claim_eq("[P] 1.5B grid L21 K == 25", 25, int(g15["results"][21]["K_median_occ"]))
+        claim_eq("[P] 1.5B grid L21 K == 25", 25, int(g15[21]["K_median_occ"]))
         if g7_old is not None:
             claim_near(
                 "[P] grid gap at the paper K rule (1.5B L21 / 7B July-lens L23 K=24)",
                 2.30,
-                g15_x / float(g7_old["results"][23]["excess_mean"]),
+                g15_x / float(g7_old[23]["excess_mean"]),
                 atol=0.005,
             )
         if g25 is not None:
@@ -2883,16 +2900,26 @@ def audit_matched_kd() -> None:
 
     # (b) committed .pt artifacts: config, per-layer K/short-support, and the
     # log rows' excess to 4 dp at every layer. Runs for every artifact that is
-    # present; only the log agreement claim needs the matching log.
+    # present; only the log agreement claim needs the matching log. A partial
+    # artifact (wrong layer set, or a required field missing) registers one
+    # loud FAIL and skips its per-layer claims instead of crashing the audit.
     arts: dict[str, dict[int, dict[str, Any]]] = {}
     for tag, (fname, _log, k_fixed, vdiff) in K83_RUNS.items():
         d = load_pt_or_fail(fname)
         if d is None:
             continue
-        cfg, res = d["config"], d["results"]
-        arts[tag] = res
+        cfg = d.get("config") or {}
+        res = d.get("results") or {}
         claim_eq(f"[P] {tag}: config.k_fixed == {k_fixed}", k_fixed, cfg.get("k_fixed"))
-        claim_eq(f"[P] {tag}: 27 layers", 27, len(res))
+        claim(f"[P] {tag}: 27 layers", set(res) == _ALL_LAYERS, "layers 0-26", sorted(res))
+        if set(res) != _ALL_LAYERS:
+            continue
+        missing = [f"config.{k}" for k in ("validation_max_vf_diff",) if cfg.get(k) is None]
+        missing += sorted({f"results[L].{k}" for x in res.values() for k in _K83_PT_FIELDS if x.get(k) is None})
+        if missing:
+            claim(f"[P] {tag}: required fields present", False, "all present", missing)
+            continue
+        arts[tag] = res
         claim(
             f"[P] {tag}: K_used == {k_fixed} at every layer",
             all(int(x["K_used"]) == k_fixed for x in res.values()),
@@ -2935,7 +2962,7 @@ def audit_matched_kd() -> None:
     # difference mixes lens drift with a +1-2 step in K.
     if g7_old is not None and "7b grid refit K=25" in arts:
         new = arts["7b grid refit K=25"]
-        old = g7_old["results"]
+        old = g7_old
         drift = [float(new[L]["excess_mean"]) - float(old[L]["excess_mean"]) for L in old]
         claim(
             "[P] grid drift old lens (K=23-24) -> refit K=25: 0 <= delta <= +0.0015 every layer",

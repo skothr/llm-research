@@ -319,10 +319,10 @@ fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 - `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt`
   — wikitext grid prompts, K=25 (the 1.5B K). Validated against the July
   structure scan, which predates the lens refit, so the diff is not zero
-  (`config.validation_max_vf_diff` 4.379e-01: an isolated-position
-  outlier; max|diff| 4.379e-01 while the per-layer mean varfrac@25 agrees
-  with the July artifact to 2.6e-3, so at most a few of the 270 positions
-  per layer differ materially). Log:
+  (`config.validation_max_vf_diff` 4.379e-01, max|diff| over positions,
+  while the per-layer mean varfrac@25 agrees with the July artifact to
+  2.6e-3 as a signed difference of means; per-position diffs were not
+  persisted, so how many positions differ is not established). Log:
   `data/cache/logs/scan_paper_metric_7b_refitlens_k25.log`.
 - `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt`
   — same prompts and validation, K=58. Log:
@@ -349,7 +349,32 @@ has a CI band:
 | (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt` | 7B, K=25, current lens (new) |
 | (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt` | 7B, K=58, current lens (new) |
 
-The four median-occupancy artifacts are documented in
+The two held-out median-occupancy artifacts in panel (a), both produced
+by `examples/jspace_paper_metric_varfrac.py` on
+`data/heldout_prompts_c4en_n30.json` (30 prompts × 9 positions, 27
+layers), K = per-layer median pursuit occupancy (`--k-snap 25`
+convention, `K_median_occ`), `--n-rand 8`; each replicates varfrac@25
+bit-exact against its held-out structure scan
+(`config.validation_max_vf_diff == 0.0`). Exact commands and inputs are
+the `producing_command` / `inputs` fields of their `data/MANIFEST.json`
+entries:
+- `paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt`
+  — 1.5B bf16, lens `data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt`, scan
+  `structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt`,
+  `--rand-seed-base 10000`; `K_median_occ` 24-25. sha256
+  `095c302b9f55e5a308f574aa113bd952c216bb576e8edaa6acc2539bbfebbc1b`.
+  Log: `data/cache/logs/scan_paper_metric_heldoutc4en_1p5b.log`.
+- `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt`
+  — 7B nf4, lens `data/cache/jlens_qwen2.5-7b_nf4_n100.pt`, scan
+  `structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt`,
+  `--rand-seed-base 30000`; `K_median_occ` 23-24. sha256
+  `4cad74d0b1bbe110eb2716b8ce23f0f60a997d85b8f895dc3213586d228163bc`.
+  Log: `data/cache/logs/scan_paper_metric_heldoutc4en_7b.log`.
+
+Fields plotted from both: `results[L]["excess_mean"]`,
+`results[L]["excess_ci95"]`, and `results[L]["K_median_occ"]` (legend).
+
+The two grid median-occupancy artifacts in panel (b) are documented in
 [§paper-metric-excess](#paper-metric-excess).
 
 **Prompt sets:** panel (a) `data/heldout_prompts_c4en_n30.json`; panel (b)
