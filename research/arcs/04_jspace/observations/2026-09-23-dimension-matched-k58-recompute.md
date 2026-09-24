@@ -89,12 +89,14 @@ predicts.
 
 The fveTopK / fveRand ratio changes with K at fixed scale.
 Held-out 7B L23: 6.50 at K=23, 4.91 at K=58.
-Grid 7B L23: 6.49 at K=25, 4.72 at K=58.
+Grid 7B L23: 6.49 at K=25, 4.72 at K=58 (L23 for comparability with
+the held-out peak layer; at the grid peak L22: 6.44 at K=25, 4.59 at
+K=58).
 The 2026-08-30 observation read the near-equal cross-scale ratios
 (6.29 vs 6.50) as evidence that the ratio removes a dimension factor.
-That reading does not hold: the ratio falls as K grows, so its
-near-equality at K=23-25 is a coincidence of the K values, not a
-dimensionless quantity.
+That reading does not hold: the ratio falls as K grows, so the
+near-equality at K=23 vs K=25 was specific to that K and is not a
+K-independent invariance.
 At matched K/d the ratio also favors 1.5B (1.28× held-out, 1.38×
 grid), in the same direction as the excess gap.
 
@@ -102,7 +104,8 @@ grid), in the same direction as the excess gap.
 
 The largest 7B CI95 upper bound across the three new runs is +0.0803
 (held-out, L23, K=58), and `P(>10%)` is 0.000 at every layer of every
-run.
+run (all 81 rows; audit CHECK P pins P(>10%)=0 on every row of every
+run).
 The 7B verdict holds under the paper's K rule (held-out peak excess
 5.88%) and at matched K/d (7.67%).
 
@@ -125,7 +128,8 @@ The dimension factor explains part of the paper-rule gap: 1.99/1.52 =
 1.31× of it held-out.
 On the grid the equal-K pair (K=25, current lens) gives 2.25/1.76 =
 1.28×, and the paper-rule pair (K=23-24, July lens) gives 2.30/1.76 =
-1.31×.
+1.31× (the 2.30 is 2.295 from unrounded means; 2.29 from the 4 dp
+table values).
 On a log scale that is 39% held-out, and 30% (equal-K) or 32%
 (paper-rule) on the grid.
 The "7B under" verdict is robust to the K rule.

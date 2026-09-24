@@ -53,8 +53,9 @@
 > (lens cache as pointer stubs), logged at `audit_2026-08-17.log` and
 > re-derivable with `python examples/jspace_audit_findings.py`. Both states
 > are documented in [`../README.md`](../README.md) under "Expected result
-> on a clean clone". The 4 remaining FAILs are the designed `MISSING` presence
-> reports for the two nf4 lenses
+> on a clean clone" (current totals as of 2026-09-24: 1053 | 7 default
+> clone, 1088 | 4 with the cache). The 4 remaining FAILs are the designed
+> `MISSING` presence reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
 > (Their refit-and-commit has since been scheduled as issue #47 on
