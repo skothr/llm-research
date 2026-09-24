@@ -57,16 +57,18 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    7B one.*
    ([provenance](observations/figures/INVENTORY.md))
 2. **Low J-space occupancy; the 1.5B hump breaches the paper's 10% ceiling
-   and 7B stays under it, on the paper's own metric.** The paper's ceiling
+   and 7B stays under it, on the paper's own metric, in a
+   dimension-dependent unit (caveat below).** The paper's ceiling
    is excess-over-random orthogonal-projection FVE at K = median occupancy
    `[gurnee2026-workspace §4.2 Fig 30b, §A.8]`, not the absolute
    reconstruction-energy varfrac the scans record. Under that definition
    (K-consistent selection, 2026-07-25 F01 fix), 1.5B breaches at the hump:
    **L21 excess 11.15%, CI95 [10.95, 11.40]** over all valid positions, with
    2000/2000 cluster-bootstrap resamples above 10% (naive metric: 12.4% at
-   k=25). 7B stays under at every K tested. Near the paper's K rule
-   (K=23-25) its peak excess is **5.88%** on the held-out set and
-   **4.7-4.8%** on the scan grid (L22-L23; naive ≤5.8% through k=50). At
+   k=25). 7B stays under at every K tested. At the paper's K rule
+   (K=23-24) its peak excess is **5.88%** on the held-out set and
+   **4.72%** on the scan grid (L23, July lens; naive ≤5.8% through k=50).
+   The K=25 grid run on the current lens peaks at 4.81% (L22). At
    K=58 it is 7.67% held-out and 6.16% on the grid, with every CI95 upper
    bound at or below 8.03%.
 
@@ -75,7 +77,10 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    paper's K rule the 7B scan runs at 2.3-2.5× lower K/d than 1.5B. At K=58
    (K/d 0.0162, against 1.5B 25/1536 = 0.0163) the 1.5B/7B excess ratio is
    **1.52× held-out and 1.76× on the grid** (non-overlapping CI95s
-   held-out), against 1.99× and 2.25× at K=23 and K=25. Both matchings are
+   held-out). At the paper's K rule the gap is 1.99× held-out (K=23) and
+   2.30× on the grid (K=23-24, July lens). The K=25 current-lens grid gives
+   2.25×. It is the equal-K control: the lens refit and the +1-2 step in K
+   together move the grid gap by 0.05×. Both matchings are
    reported; neither is claimed as canonical. The comparison against the
    paper's own models stays uncalibrated, because the paper's
    random-baseline FVE is unpublished and no conversion to its calibration
@@ -574,9 +579,11 @@ first. Full detail sits in the linked observations and in
   and #83; by constraint weight this sits alongside L11, appended here to
   keep the original ranking stable). The excess metric depends on K/d, so
   a cross-scale comparison needs a K-matching rule, and the choice is not
-  settled. Two rules are reported: the paper's median-occupancy K (7B
-  K=23-24), under which the 1.5B/7B gap is 1.99-2.25×, and equal K/d (7B
-  K=58), under which it is 1.52-1.76×. The gap rests on n=2 scales with 30
+  settled. Two rules are reported. Under the paper's median-occupancy K
+  (7B K=23-24) the 1.5B/7B gap is 1.99× held-out (K=23) and 2.30× on the
+  grid (July lens). Under equal K/d (7B K=58) it is 1.52× held-out and
+  1.76× on the grid. The K=25 current-lens grid (2.25×) is an equal-K
+  control for the lens refit. The gap rests on n=2 scales with 30
   prompts per scan. The comparison against the paper's own models has no
   conversion, because the paper's random-baseline FVE is unpublished.
   Within-scale statements are unaffected. See Findings item 2 and
@@ -775,7 +782,8 @@ dimension-matched recompute added `paper_metric_varfrac_*_heldoutc4en_k58.pt`,
 in `data/cache/logs/`, which audit CHECK P reads) are LFS-committed
 under `data/` and MANIFEST-registered (sha256), so **checks B–N run from
 a clean clone** (CHECK O does too — it reads only committed plain-text
-logs); check A and the lens-integrity blocks read the full
+logs; so does CHECK P, whose logs are plain committed files under
+`data/cache/logs/`, not LFS objects); check A and the lens-integrity blocks read the full
 fitted lenses. Decision 4 originally kept all five cache-only (committed
 layer subsets + `jspace_fit_lens.py` regenerate them); amended by owner
 decision 2026-08-16 after the C4-redaction re-run: the **three lenses
@@ -791,19 +799,21 @@ lenses they produced.
 **Expected result on a clean clone.** The lens cache is excluded from
 default LFS downloads (`.lfsconfig` `fetchexclude` — ~905 MiB most readers
 never load), so there are two states (totals as of 2026-09-23, after
-CHECK P added 73 cache-independent log-based claims — issue #83):
+CHECK P added 72 claims that do not read the lens cache — issue #83):
 
 - **Default clone** (`git lfs install && git lfs pull`; lenses stay pointer
-  stubs): `SUMMARY: 1054 PASS | 7 FAIL`, exit code 1 (measured 2026-09-23
-  in a pointer-stub mirror; 981 before CHECK P, measured 2026-08-30). The 7
+  stubs): `SUMMARY: 1053 PASS | 7 FAIL`, exit code 1 (measured 2026-09-24
+  with the three lens files moved aside, which reports `MISSING` where a
+  default clone reports a stub, for the same claim count; 981 before
+  CHECK P, measured 2026-08-30). The 7
   = three
   `LFS pointer stub` reports for the committed lenses (the audit detects the
   stub and prints the pull command) + the designed `MISSING` reports for the
   two regenerate-only nf4 lenses and their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
-  --exclude=""`: `SUMMARY: 1089 PASS | 4 FAIL` (measured 2026-09-23 with
+  --exclude=""`: `SUMMARY: 1088 PASS | 4 FAIL` (measured 2026-09-24 with
   the cache pulled: 986 measured 2026-08-17, `data/audit_2026-08-17.log`,
-  plus the 30 CHECK O and 73 CHECK P claims, which do not depend on the
+  plus the 30 CHECK O and 72 CHECK P claims, which do not depend on the
   cache), the 4 being the nf4 `MISSING` reports only.
 
 Neither state's failures are regressions. Any FAIL naming something other

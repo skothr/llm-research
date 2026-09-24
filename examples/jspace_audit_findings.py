@@ -2124,12 +2124,24 @@ MCNEMAR_PINS = {
 }
 
 
+# PM_FILES loads, memoized by key: CHECK M and CHECK P both read the grid
+# artifacts, and a second load_pt_or_fail would register a second presence
+# FAIL for one missing file (#33). None is memoized too.
+_PM_LOADED: dict[str, Any | None] = {}
+
+
+def _load_pm(key: str) -> Any | None:
+    if key not in _PM_LOADED:
+        _PM_LOADED[key] = load_pt_or_fail(PM_FILES[key])
+    return _PM_LOADED[key]
+
+
 def audit_metric_correction() -> None:
     """Check M — issue-#26 metric-fidelity pass (2026-07-24 observation)."""
     # (1) Paper-metric ceiling recompute: excess-over-random orthogonal-
     #     projection FVE at K = median occupancy.
-    for key, fname in PM_FILES.items():
-        d = load_pt_or_fail(fname)
+    for key in PM_FILES:
+        d = _load_pm(key)
         if d is None:
             continue
         cfg = d["config"]
@@ -2587,9 +2599,21 @@ _PM_LOG_EXTRA = {
 }
 
 
+# Parsed logs, memoized by file name: CHECK O and CHECK P both read the two
+# older held-out logs, and each is parsed (and its claims registered) once.
+_PM_LOGS: dict[str, dict[int, dict[str, float]] | None] = {}
+
+
 def _parse_pm_log(name: str, tag: str = "O") -> dict[int, dict[str, float]] | None:
     """Layer rows of a committed scan_paper_metric_*.log (plain git file,
-    present on every clone — not LFS). ``tag`` prefixes the claim names."""
+    present on every clone — not LFS). ``tag`` prefixes the claim names of
+    the first parse; later calls return the memoized rows."""
+    if name not in _PM_LOGS:
+        _PM_LOGS[name] = _parse_pm_log_uncached(name, tag)
+    return _PM_LOGS[name]
+
+
+def _parse_pm_log_uncached(name: str, tag: str) -> dict[int, dict[str, float]] | None:
     p = DATA / "cache" / "logs" / name
     if not p.exists():
         claim(f"[{tag}] log present: {name}", False, "present", "MISSING")
@@ -2702,6 +2726,11 @@ K83_RUNS: dict[str, tuple[str, str, int, float]] = {
     ),
 }
 D_MODEL_7B = 3584  # pinned by CHECK A lens integrity
+D_MODEL_1P5B = 1536  # pinned by CHECK A lens integrity
+# Optional log columns CHECK P reads; _parse_pm_log stores each only when its
+# regex matches, so a drifted row lacks the key.
+_K83_COLS = ("ci_lo", "ci_hi", "ratio", "k_over_d")
+_ALL_LAYERS = set(range(27))
 
 
 def audit_matched_kd() -> None:
@@ -2712,12 +2741,26 @@ def audit_matched_kd() -> None:
     (b) cross-checks the committed .pt artifacts against them."""
     print()
     print("CHECK P: dimension-matched K=58 recompute (#83)")
+    # A log enters `logs` only with all 27 layer rows (the parse claim is the
+    # loud FAIL otherwise); `cols_ok` holds the runs whose rows also all carry
+    # the optional columns. Claims needing a missing input are skipped, never
+    # crashed on: a missing input has already registered its FAIL.
     logs: dict[str, dict[int, dict[str, float]]] = {}
+    cols_ok: set[str] = set()
     for tag, (_, log, k_fixed, _v) in K83_RUNS.items():
         rows = _parse_pm_log(log, tag="P")
-        if rows is None:
+        if rows is None or set(rows) != _ALL_LAYERS:
             continue
         logs[tag] = rows
+        if all(c in rw for rw in rows.values() for c in _K83_COLS):
+            cols_ok.add(tag)
+        else:
+            claim(
+                f"[P] {log} all 27 rows carry CI95/ratio/K/d columns",
+                False,
+                "all present",
+                sorted(L for L, rw in rows.items() if any(c not in rw for c in _K83_COLS)),
+            )
         claim(
             f"[P] {tag}: K={k_fixed} at every layer (log)",
             all(int(r["K"]) == k_fixed for r in rows.values()),
@@ -2731,85 +2774,116 @@ def audit_matched_kd() -> None:
             sorted({r.get("short") for r in rows.values()}, key=str),
         )
     ho15 = _parse_pm_log("scan_paper_metric_heldoutc4en_1p5b.log", tag="P")
-    if len(logs) != len(K83_RUNS) or ho15 is None:
-        return
-    ho, g25, g58 = (
-        logs["7b heldout K=58"],
-        logs["7b grid refit K=25"],
-        logs["7b grid refit K=58"],
-    )
+    if ho15 is not None and 21 not in ho15:
+        ho15 = None
+    ho = logs.get("7b heldout K=58")
+    g25 = logs.get("7b grid refit K=25")
+    g58 = logs.get("7b grid refit K=58")
 
     # (a) held-out (C4 prompts) 7B L23 at K=58: the full row.
-    r = ho[23]
-    claim_eq("[P] heldout K=58 excess argmax layer == 23", 23, max(ho, key=lambda L: ho[L]["excess"]))
-    claim_eq("[P] heldout K=58 L23 K == 58", 58, int(r["K"]))
-    claim_near("[P] heldout K=58 L23 fveTopK", 0.0963, r["topk"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 fveRand", 0.0196, r["rand"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 excess", 0.0767, r["excess"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 CI95 lo", 0.0730, r["ci_lo"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 CI95 hi", 0.0803, r["ci_hi"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 ratio", 4.91, r["ratio"], atol=5e-3)
-    claim_near("[P] heldout K=58 L23 K/d", 0.0162, r["k_over_d"], atol=5e-5)
-    claim_near("[P] heldout K=58 L23 K/d == 58/3584", 58 / D_MODEL_7B, r["k_over_d"], atol=5e-5)
-    claim_eq("[P] heldout K=58 L23 P(>10%) == 0.000", 0.0, r["pgt"])
-    claim_eq("[P] heldout K=58 L23 short == 0", 0.0, r.get("short"))
-    # K/d match: 58/3584 vs the 1.5B's 25/1536.
-    claim_near("[P] K/d matched: 58/3584 vs 25/1536", 25 / 1536, 58 / D_MODEL_7B, atol=2e-4)
+    r = ho[23] if ho is not None else None
+    if ho is not None and r is not None:
+        ho_x = {L: rw["excess"] for L, rw in ho.items()}
+        claim_eq("[P] heldout K=58 excess argmax layer == 23", 23, max(ho_x, key=ho_x.__getitem__))
+        claim_eq("[P] heldout K=58 L23 K == 58", 58, int(r["K"]))
+        claim_near("[P] heldout K=58 L23 fveTopK", 0.0963, r["topk"], atol=5e-5)
+        claim_near("[P] heldout K=58 L23 fveRand", 0.0196, r["rand"], atol=5e-5)
+        claim_near("[P] heldout K=58 L23 excess", 0.0767, r["excess"], atol=5e-5)
+        claim_eq("[P] heldout K=58 L23 P(>10%) == 0.000", 0.0, r["pgt"])
+        claim_eq("[P] heldout K=58 L23 short == 0", 0.0, r.get("short"))
+    if r is not None and "7b heldout K=58" in cols_ok:
+        claim_near("[P] heldout K=58 L23 CI95 lo", 0.0730, r["ci_lo"], atol=5e-5)
+        claim_near("[P] heldout K=58 L23 CI95 hi", 0.0803, r["ci_hi"], atol=5e-5)
+        claim_near("[P] heldout K=58 L23 ratio", 4.91, r["ratio"], atol=5e-3)
+        claim_near("[P] heldout K=58 L23 K/d", 0.0162, r["k_over_d"], atol=5e-5)
+        claim_near("[P] heldout K=58 L23 K/d == 58/3584", 58 / D_MODEL_7B, r["k_over_d"], atol=5e-5)
+        # K/d match: the 7B log's K/d against the 1.5B held-out log's K/d.
+        if ho15 is not None:
+            claim_near(
+                "[P] K/d matched: 7B heldout L23 log K/d vs 1.5B heldout L21 K/1536",
+                ho15[21]["K"] / D_MODEL_1P5B,
+                r["k_over_d"],
+                atol=2e-4,
+            )
 
     # (a) wikitext grid, refit lens: both K runs peak at L22.
-    for tag, grid, pk, lo, hi, l23 in (
-        ("K=25", g25, 0.0481, 0.0466, 0.0497, 0.0479),
-        ("K=58", g58, 0.0616, 0.0599, 0.0636, 0.0605),
+    for tag, rtag, grid, pk, lo, hi, l23 in (
+        ("K=25", "7b grid refit K=25", g25, 0.0481, 0.0466, 0.0497, 0.0479),
+        ("K=58", "7b grid refit K=58", g58, 0.0616, 0.0599, 0.0636, 0.0605),
     ):
-        claim_eq(f"[P] grid refit {tag} excess argmax layer == 22", 22, max(grid, key=lambda L: grid[L]["excess"]))
+        if grid is None:
+            continue
+        grid_x = {L: rw["excess"] for L, rw in grid.items()}
+        claim_eq(f"[P] grid refit {tag} excess argmax layer == 22", 22, max(grid_x, key=grid_x.__getitem__))
         claim_near(f"[P] grid refit {tag} L22 excess", pk, grid[22]["excess"], atol=5e-5)
-        claim_near(f"[P] grid refit {tag} L22 CI95 lo", lo, grid[22]["ci_lo"], atol=5e-5)
-        claim_near(f"[P] grid refit {tag} L22 CI95 hi", hi, grid[22]["ci_hi"], atol=5e-5)
+        if rtag in cols_ok:
+            claim_near(f"[P] grid refit {tag} L22 CI95 lo", lo, grid[22]["ci_lo"], atol=5e-5)
+            claim_near(f"[P] grid refit {tag} L22 CI95 hi", hi, grid[22]["ci_hi"], atol=5e-5)
         claim_near(f"[P] grid refit {tag} L23 excess", l23, grid[23]["excess"], atol=5e-5)
-    claim_near("[P] grid refit K=58 L22 ratio", 4.59, g58[22]["ratio"], atol=5e-3)
+    if g58 is not None and "7b grid refit K=58" in cols_ok:
+        claim_near("[P] grid refit K=58 L22 ratio", 4.59, g58[22]["ratio"], atol=5e-3)
 
     # Every 7B #83 run stays under the paper's 10% ceiling, CI included.
     for tag, lrows in logs.items():
-        top = max(rw["ci_hi"] for rw in lrows.values())
-        claim(f"[P] {tag}: every layer CI95 upper < 0.10", top < 0.10, "< 0.10", round(top, 4))
+        if tag in cols_ok:
+            top = max(rw["ci_hi"] for rw in lrows.values())
+            claim(f"[P] {tag}: every layer CI95 upper < 0.10", top < 0.10, "< 0.10", round(top, 4))
         claim(
             f"[P] {tag}: P(>10%) == 0 at every layer",
             all(rw["pgt"] == 0.0 for rw in lrows.values()),
             0.0,
             max(rw["pgt"] for rw in lrows.values()),
         )
-    claim_near(
-        "[P] max CI95 upper over all 7B #83 runs",
-        0.0803,
-        max(rw["ci_hi"] for lr in logs.values() for rw in lr.values()),
-        atol=5e-5,
-    )
+    if cols_ok == set(K83_RUNS):
+        claim_near(
+            "[P] max CI95 upper over all 7B #83 runs",
+            0.0803,
+            max(rw["ci_hi"] for lr in logs.values() for rw in lr.values()),
+            atol=5e-5,
+        )
 
     # Cross-scale gaps before / after matching K/d. Numerators are the 1.5B
     # values the audit already derives: held-out from the committed 1.5B log
-    # (CHECK O), wikitext grid from the 1.5B grid artifact (CHECK M).
-    ho15_x = ho15[21]["excess"]
-    claim_near("[P] 1.5B heldout L21 excess (numerator)", 0.1169, ho15_x, atol=5e-5)
-    ho7_old = _parse_pm_log("scan_paper_metric_heldoutc4en_7b.log", tag="P")
-    if ho7_old is not None:
-        claim_near(
-            "[P] heldout gap at K=median occ. (1.5B L21 / 7B L23 K=23)",
-            1.99,
-            ho15_x / ho7_old[23]["excess"],
-            atol=0.005,
-        )
-    claim_near("[P] heldout gap at matched K/d (1.5B L21 / 7B L23 K=58)", 1.52, ho15_x / r["excess"], atol=0.005)
-    g15 = load_pt_or_fail(PM_FILES["1.5b grid"])
-    g7_old = load_pt_or_fail(PM_FILES["7b grid"])
+    # (CHECK O), wikitext grid from the 1.5B grid artifact (CHECK M). Both
+    # come from the memoized parse / load, so nothing is re-registered.
+    if ho15 is not None:
+        ho15_x = ho15[21]["excess"]
+        claim_near("[P] 1.5B heldout L21 excess (numerator)", 0.1169, ho15_x, atol=5e-5)
+        ho7_old = _parse_pm_log("scan_paper_metric_heldoutc4en_7b.log", tag="P")
+        if ho7_old is not None and 23 in ho7_old:
+            claim_near(
+                "[P] heldout gap at K=median occ. (1.5B L21 / 7B L23 K=23)",
+                1.99,
+                ho15_x / ho7_old[23]["excess"],
+                atol=0.005,
+            )
+        if r is not None:
+            claim_near(
+                "[P] heldout gap at matched K/d (1.5B L21 / 7B L23 K=58)", 1.52, ho15_x / r["excess"], atol=0.005
+            )
+    g15 = _load_pm("1.5b grid")
+    g7_old = _load_pm("7b grid")
     if g15 is not None:
         g15_x = float(g15["results"][21]["excess_mean"])
         claim_near("[P] 1.5B grid L21 excess (numerator)", 0.1083, g15_x, atol=5e-5)
         claim_eq("[P] 1.5B grid L21 K == 25", 25, int(g15["results"][21]["K_median_occ"]))
-        claim_near("[P] grid gap at K=25 (1.5B L21 / 7B refit L22)", 2.25, g15_x / g25[22]["excess"], atol=0.005)
-        claim_near("[P] grid gap at matched K/d (1.5B L21 / 7B refit L22 K=58)", 1.76, g15_x / g58[22]["excess"], atol=0.005)
+        if g7_old is not None:
+            claim_near(
+                "[P] grid gap at the paper K rule (1.5B L21 / 7B July-lens L23 K=24)",
+                2.30,
+                g15_x / float(g7_old["results"][23]["excess_mean"]),
+                atol=0.005,
+            )
+        if g25 is not None:
+            claim_near("[P] grid gap at K=25 (1.5B L21 / 7B refit L22)", 2.25, g15_x / g25[22]["excess"], atol=0.005)
+        if g58 is not None:
+            claim_near(
+                "[P] grid gap at matched K/d (1.5B L21 / 7B refit L22 K=58)", 1.76, g15_x / g58[22]["excess"], atol=0.005
+            )
 
     # (b) committed .pt artifacts: config, per-layer K/short-support, and the
-    # log rows' excess to 4 dp at every layer.
+    # log rows' excess to 4 dp at every layer. Runs for every artifact that is
+    # present; only the log agreement claim needs the matching log.
     arts: dict[str, dict[int, dict[str, Any]]] = {}
     for tag, (fname, _log, k_fixed, vdiff) in K83_RUNS.items():
         d = load_pt_or_fail(fname)
@@ -2837,14 +2911,15 @@ def audit_matched_kd() -> None:
             float(cfg["validation_max_vf_diff"]),
             atol=5e-5,
         )
-        lrows = logs[tag]
-        worst = max(abs(float(res[L]["excess_mean"]) - lrows[L]["excess"]) for L in lrows)
-        claim(
-            f"[P] {tag}: .pt excess_mean == log EXCESS to 4 dp, all layers",
-            worst <= 5e-5 + 1e-12,
-            "<= 5e-5",
-            f"{worst:.2e}",
-        )
+        lrows = logs.get(tag)
+        if lrows is not None:
+            worst = max(abs(float(res[L]["excess_mean"]) - lrows[L]["excess"]) for L in lrows)
+            claim(
+                f"[P] {tag}: .pt excess_mean == log EXCESS to 4 dp, all layers",
+                worst <= 5e-5 + 1e-12,
+                "<= 5e-5",
+                f"{worst:.2e}",
+            )
         ident = max(
             abs(float(x["fve_topK_mean"]) - float(x["fve_rand_mean"]) - float(x["excess_mean"]))
             for x in res.values()

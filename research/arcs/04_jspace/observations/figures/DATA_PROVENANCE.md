@@ -305,7 +305,7 @@ print(r["K_median_occ"], r["excess_mean"], r["excess_ci95"], r["boot_frac_over_1
 ## paper-metric-matched-kd
 `2026-09-23-jspace-paper-metric-matched-kd.png` — render: `examples/jspace_render_paper_metric_matched_kd.py`
 
-**Data artifacts** (`data/` committed), produced by
+**Data artifacts** (LFS objects under `data/`), produced by
 `examples/jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
 fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 `--k-max 64` pursuit support; `--k-snap 25`, `--n-rand 8`,
@@ -319,8 +319,10 @@ fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 - `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt`
   — wikitext grid prompts, K=25 (the 1.5B K). Validated against the July
   structure scan, which predates the lens refit, so the diff is not zero
-  (`config.validation_max_vf_diff` 4.379e-01: a single-position outlier;
-  layer means agree to ~1e-3). Log:
+  (`config.validation_max_vf_diff` 4.379e-01: an isolated-position
+  outlier; max|diff| 4.379e-01 while the per-layer mean varfrac@25 agrees
+  with the July artifact to 2.6e-3, so at most a few of the 270 positions
+  per layer differ materially). Log:
   `data/cache/logs/scan_paper_metric_7b_refitlens_k25.log`.
 - `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt`
   — same prompts and validation, K=58. Log:
@@ -329,10 +331,25 @@ fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 Each carries per-layer `K_used` (58 / 25 / 58 at every layer) and
 `n_short_support` (0 at every layer), plus `config.k_fixed`.
 
-**Comparison artifacts** (existing, K = per-layer median occupancy):
-panel (a) `..._bf16_n100_heldoutc4en.pt` (1.5B) and
-`..._nf4_n100_heldoutc4en.pt` (7B); panel (b) `..._bf16_n100.pt` (1.5B) and
-`..._nf4_n100.pt` (7B, pre-refit lens) — see
+The three logs are plain committed files under `data/cache/logs/`, not LFS
+objects, so CHECK P's log claims run on every clone, including LFS-less
+ones.
+
+**Every plotted artifact** (all under `data/`; the `paper_metric_varfrac_`
+prefix is elided). All seven carry per-layer `excess_ci95`, so every series
+has a CI band:
+
+| Panel | Artifact | Contributes |
+|---|---|---|
+| (a) | `qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt` | 1.5B, K = median occupancy (24-25); gap numerator (L21) |
+| (a) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt` | 7B, K = median occupancy (23-24) |
+| (a) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt` | 7B, K=58 (new) |
+| (b) | `qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt` | 1.5B, K = median occupancy (24-25); gap numerator (L21) |
+| (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` | 7B, K = median occupancy (23-24), July (pre-refit) lens |
+| (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt` | 7B, K=25, current lens (new) |
+| (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt` | 7B, K=58, current lens (new) |
+
+The four median-occupancy artifacts are documented in
 [§paper-metric-excess](#paper-metric-excess).
 
 **Prompt sets:** panel (a) `data/heldout_prompts_c4en_n30.json`; panel (b)
@@ -340,8 +357,8 @@ panel (a) `..._bf16_n100_heldoutc4en.pt` (1.5B) and
 
 **Plotted:** lines `results[L]["excess_mean"]`, shaded bands
 `results[L]["excess_ci95"]` (cluster bootstrap by prompt, 2000 resamples).
-Legend K is `K_used` for the fixed-K runs and the `K_median_occ` range
-otherwise. The in-panel gap box is 1.5B workspace-band (L17-26) peak over
+Legend K is `K_used` for the fixed-K runs (keyed on `config.k_fixed`)
+and the `K_median_occ` range otherwise. The in-panel gap box is 1.5B workspace-band (L17-26) peak over
 each 7B series' band peak. Pinned by audit CHECK P.
 
 **Dump the raw rows:**

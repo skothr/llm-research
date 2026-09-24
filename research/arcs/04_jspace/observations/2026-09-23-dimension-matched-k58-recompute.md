@@ -62,12 +62,13 @@ runs).
 | fveTopK | 0.1285 | 0.0569 | 0.0788 | 2.26× | 1.63× |
 | fveRand | 0.0202 | 0.0088 | 0.0172 | 2.30× | 1.17× |
 | excess | +0.1083 | +0.0481 | +0.0616 | 2.25× | 1.76× |
-| excess CI95 | | [+0.0466, +0.0497] | [+0.0599, +0.0636] | | |
+| excess CI95 | [+0.1058, +0.1110] | [+0.0466, +0.0497] | [+0.0599, +0.0636] | | |
 | fveTopK / fveRand | 6.35 | 6.44 | 4.59 | 0.99× | 1.38× |
 
-The 1.5B grid artifact predates the persisted CI field; its
-`boot_frac_over_10pct` at L21 is 1.0.
-The 1.5B ratio is computed from the artifact's unrounded means.
+The 1.5B grid artifact carries `excess_ci95` (the L21 band above) and
+`boot_frac_over_10pct` 1.0 at L21.
+It predates the `fve_ratio_topK_over_rand` and `K_over_d_model` fields,
+so the 1.5B ratio is computed from the artifact's unrounded means.
 
 The 7B K=25 run uses the current lens.
 The README's earlier 7B grid figure (peak excess 0.0472 at L23) comes
@@ -121,8 +122,12 @@ ceiling.*
 It survives matching K/d at a factor of 1.52× (held-out) and 1.76×
 (grid).
 The dimension factor explains part of the paper-rule gap: 1.99/1.52 =
-1.31× of it held-out, 2.25/1.76 = 1.28× on the grid.
-On a log scale that is 39% and 30% of the paper-rule gap.
+1.31× of it held-out.
+On the grid the equal-K pair (K=25, current lens) gives 2.25/1.76 =
+1.28×, and the paper-rule pair (K=23-24, July lens) gives 2.30/1.76 =
+1.31×.
+On a log scale that is 39% held-out, and 30% (equal-K) or 32%
+(paper-rule) on the grid.
 The "7B under" verdict is robust to the K rule.
 
 **Does not:** settle the reading against the paper's own models.
@@ -158,17 +163,21 @@ data/cache/logs/scan_paper_metric_heldoutc4en_7b.log:
 
 `short=0` holds at all 27 layers of all three new runs, so every
 position had a full K-atom support.
+The two older logs lack the `ratio=` and `K/d=` columns, which PR #80
+added, and the `short=` column, which this PR added.
 
 Validation gate.
 The held-out K=58 run replicates the committed held-out structure scan
 bit-exactly (max|diff| 0).
 The two grid runs are validated against the July structure scan, which
 used the July lens, so the gate cannot be bit-exact.
-Its max|diff| of 0.4379 is a single-position outlier: the per-layer
-mean varfrac@25 (`ours@25`) agrees with the July artifact
+Its max|diff| of 4.379e-01 is an isolated-position outlier.
+The per-layer mean varfrac@25 (`ours@25`) agrees with the July artifact
 `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
 to within 2.6e-3 at every layer (read from the two artifacts'
 `vf_ours_mean`).
+So at most a few of the 270 positions per layer differ materially.
+Per-position diffs were not persisted, so the exact count is unknown.
 
 Grid baselines read from the artifacts (`results[L]` fields):
 1.5B L21 `fve_topK_mean` 0.1285, `fve_rand_mean` 0.0202,
@@ -180,7 +189,8 @@ Derived: 0.1390/0.0963 = 1.44; 0.0221/0.0196 = 1.13; 0.1169/0.0767 =
 1.52; 6.29/4.91 = 1.28; 0.1285/0.0788 = 1.63; 0.0202/0.0172 = 1.17;
 0.1083/0.0616 = 1.76; 0.1083/0.0481 = 2.25; 6.35/4.59 = 1.38;
 1.99/1.52 = 1.31; 2.25/1.76 = 1.28; ln 1.31 / ln 1.99 = 0.39;
-ln 1.28 / ln 2.25 = 0.30.
+ln 1.28 / ln 2.25 = 0.30; 0.10828/0.04718 = 2.30 (July-lens grid,
+unrounded means); 2.30/1.76 = 1.31; ln 1.31 / ln 2.30 = 0.32.
 
 ## Reproducibility
 
@@ -216,9 +226,17 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv/bin/python \
 Logs: `data/cache/logs/scan_paper_metric_heldoutc4en_7b_k58.log`,
 `scan_paper_metric_7b_refitlens_k25.log`,
 `scan_paper_metric_7b_refitlens_k58.log`.
+Each log was written by the launcher, not by the script alone.
+An `echo` first wrote a `[launch]` line with the timestamp and arguments.
+The run was then launched as
+`<command> 2>&1 | tee -a research/arcs/04_jspace/data/cache/logs/<log>`.
+The `[done]` trailer line with the exit code is the launcher's, not the
+script's.
 Audit CHECK P (`examples/jspace_audit_findings.py`) re-derives the
 pinned numbers above from the three logs.
-The logs are plain git files, so CHECK P runs on every clone.
+The logs are plain committed files under `data/cache/logs/`, not LFS
+objects, so CHECK P's log claims run on every clone, including LFS-less
+ones.
 
 ## Hypotheses / limitations
 

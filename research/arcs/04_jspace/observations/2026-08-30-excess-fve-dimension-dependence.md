@@ -10,6 +10,13 @@ issue #79.
 
 ## Finding — signal and baseline share a common multiplicative factor, so `excess = fveTopK − fveRand` retains it
 
+Correction 2026-09-23 (issue #83): two claims below do not hold.
+The fveTopK/fveRand ratio is K-dependent (7B L23: 6.50 at K=23, 4.91 at
+K=58), so it is not near-invariant across scales.
+The common factor accounts for about a third of the gap, not most of it
+(1.52× held-out survives at matched K/d).
+See [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
+
 The paper-metric recompute
 ([2026-07-24-paper-metric-varfrac-recompute.md](2026-07-24-paper-metric-varfrac-recompute.md))
 compares `excess = FVE(top-K pursuit atoms) − FVE(K random vocab atoms)`
@@ -138,7 +145,9 @@ untouched).
   above 58). If the cross-scale gap survives at matched K/d, the scale
   finding is stronger than currently stated and should be restated as
   such. Tracked in issue #79.
-  **Done 2026-09-23** (issue #83): the gap survives at 1.52-1.76×; see [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
+  **Done 2026-09-23** (issue #83): the gap survives at 1.52× held-out and
+  1.76× on the grid; see
+  [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
 
 ## References
 
