@@ -158,7 +158,7 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
     ax.axhline(PAPER_CEILING, color="#555555", linestyle="--", linewidth=1.2, zorder=1)
     # Centre the label on the layer window where the plotted CI bands sit
     # furthest below the ceiling. The span comes from the plotted layers,
-    # and the assert enforces that the chosen window clears the ceiling.
+    # and the checks below enforce that the chosen window clears the ceiling.
     layers_plotted = sorted(top)
     lo, hi = layers_plotted[0], layers_plotted[-1]
     centres = range(lo + LABEL_HALF_WIDTH, hi - LABEL_HALF_WIDTH + 1)
@@ -166,11 +166,17 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
         c: max(top.get(L, 0.0) for L in range(c - LABEL_HALF_WIDTH, c + LABEL_HALF_WIDTH + 1))
         for c in centres
     }
+    if not window_max:
+        raise SystemExit(
+            f"plotted span L{lo}-L{hi} is shorter than the {2 * LABEL_HALF_WIDTH + 1}-layer "
+            "label window; cannot place the ceiling label"
+        )
     centre = min(window_max, key=lambda c: window_max[c])
-    assert window_max[centre] < PAPER_CEILING, (
-        f"no {2 * LABEL_HALF_WIDTH + 1}-layer window clears the ceiling for the label "
-        f"(best window max {window_max[centre]:.4f} at L{centre})"
-    )
+    if window_max[centre] >= PAPER_CEILING:
+        raise SystemExit(
+            f"no {2 * LABEL_HALF_WIDTH + 1}-layer window clears the ceiling for the label "
+            f"(best window max {window_max[centre]:.4f} at L{centre})"
+        )
     ax.text(
         centre,
         PAPER_CEILING + 0.002,

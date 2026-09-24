@@ -45,10 +45,10 @@ ratio-normalized row is near-invariant and slightly *reverses* (7B ≥
 1.5B). K/d_model differs by 2.54× between the columns (25/1536 = 0.0163
 vs 23/3584 = 0.0064). Consequences:
 
-1. **The cross-scale excess gap is dominated by a factor common to
-   signal and baseline.** (Corrected 2026-09-23: width accounts for part
-   of the gap; 1.52× held-out and 1.76× grid survive at matched K/d; see
-   the correction note above.) On the held-out pair measured here the gap is
+1. **A factor common to signal and baseline accounts for part of the
+   cross-scale excess gap** (this observation first read it as dominating
+   the gap; corrected 2026-09-23: 1.52× held-out and 1.76× grid survive at
+   matched K/d; see the correction note above). On the held-out pair measured here the gap is
    1.99× and, at K=23 vs K=25, the ratio normalization removes it entirely
    (6.29 vs 6.50, slightly reversed; at matched K/d the ratio leaves a 1.28×
    gap, 6.29 vs 4.91). The README's ~2.4× figure is a different — and
@@ -56,7 +56,8 @@ vs 23/3584 = 0.0064). Consequences:
    against the 7B scan-grid peak (4.72%), both on wikitext held-out
    prompts (2.36×; no 7B all-positions run exists). This observation read
    the common factor as accounting for most of that reading; the 2026-09-23
-   recompute puts its share at roughly a third to two-fifths on a log scale.
+   recompute measured its share on the grid and held-out pairs, not on this
+   all-positions pair, at roughly a third to two-fifths on a log scale.
 2. **Comparing a d=1536 model's excess against a ceiling measured on
    much larger models is not like-for-like.** The paper's
    Claude-family models have (much) larger hidden dimensions than
