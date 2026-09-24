@@ -53,8 +53,9 @@
 > (lens cache as pointer stubs), logged at `audit_2026-08-17.log` and
 > re-derivable with `python examples/jspace_audit_findings.py`. Both states
 > are documented in [`../README.md`](../README.md) under "Expected result
-> on a clean clone". The 4 remaining FAILs are the designed `MISSING` presence
-> reports for the two nf4 lenses
+> on a clean clone" (current totals as of 2026-09-24: 1053 | 7 default
+> clone, 1088 | 4 with the cache). The 4 remaining FAILs are the designed
+> `MISSING` presence reports for the two nf4 lenses
 > (`jlens_qwen2.5-1.5b_nf4_n100` / `_n500`) and their sidecars, which were
 > deliberately not refit — the quantization and n-budget axes are C4-free.
 > (Their refit-and-commit has since been scheduled as issue #47 on
@@ -138,9 +139,11 @@ Artifact classes (see the MANIFEST for the per-file registry):
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
   probes), nla_crosstie, and the issue-#26 metric-correction set
-  (`paper_metric_varfrac_*` ×8 incl. the four robustness axes + 7B
-  held-out, `atom_norm_bias_*` ×2) — so every check except check A and the
-  lens-integrity sub-blocks of checks H, I and J, plus every committed
+  (`paper_metric_varfrac_*` ×11 incl. the four robustness axes, 7B
+  held-out, and the three issue-#83 fixed-K runs `*_heldoutc4en_k58`,
+  `*_refitlens_k25`, `*_refitlens_k58`; `atom_norm_bias_*` ×2) — so every
+  check except check A and the lens-integrity sub-blocks of checks H, I and
+  J, plus every committed
   figure, reproduces from a clean clone after `git lfs pull`. (Check M
   prints no header of its own; its claims carry `[M]` tags.)
 
