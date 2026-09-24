@@ -66,6 +66,48 @@ _CACHE_LFS = "data/cache/, LFS-committed; excluded from default pulls"
 _CACHE_PLAIN = "data/cache/, committed as a plain blob; present in every default clone"
 _CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 
+# Full fitted lenses named as inputs (issue #87). A lens file name does not
+# identify its fit. The three LFS-committed cache lenses are the C4-redaction
+# re-run refits. Every committed July artifact that names one of them was
+# produced by an earlier fit of the same name, which was never committed in
+# full. No committed artifact derives from the July c4en fit. Inputs name the
+# generation through a _REFIT or _JULY string. The cache files carry no
+# MANIFEST entry, so --check does not verify the sha256 values quoted here;
+# each equals the oid in the file's LFS pointer.
+_L15 = f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"
+_L7B = f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"
+_L15C4 = f"jlens_qwen2.5-1.5b_bf16_n100_c4en.pt ({_CACHE_LFS})"
+_L15_REFIT = (
+    f"{_L15}; the refit completed 2026-07-29 and committed 2026-08-16, sha256 "
+    "db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe "
+    "(not verified by --check, which skips cache files)"
+)
+_L15C4_REFIT = (
+    f"{_L15C4}; the refit completed 2026-07-29 on the redacted C4 corpus "
+    "and committed 2026-08-16, sha256 "
+    "661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 "
+    "(not verified by --check, which skips cache files)"
+)
+_L7B_REFIT = (
+    f"{_L7B}; the 2026-08-16 refit, sha256 "
+    "4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db "
+    "(not verified by --check, which skips cache files)"
+)
+_L15_JULY = (
+    "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed "
+    "2026-07-18); never committed in full; the cache file of the same name "
+    "is the 2026-07-29 refit; its only committed part is the layer subset "
+    "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+)
+_L7B_JULY = (
+    "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed "
+    "2026-07-20); never committed in full; the cache file of the same name "
+    "is the 2026-08-16 refit; its only committed part is the layer subset "
+    "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+)
+_L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
+_L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"
+
 # Per-artifact provenance. `requires_model` values: none | qwen-7b-nf4 |
 # qwen-1.5b-bf16 (or whatever the lens fit used). Seeded with just the frozen
 # fitting corpus; lens `.pt` + `.config.json` sidecars and derived metric
@@ -152,22 +194,23 @@ META: dict[str, dict[str, Any]] = {
     },
     # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
     # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
-    # by examples/jspace_promote_lens_subset.py; the full 27-layer sets live
-    # under data/cache/ (LFS-committed, excluded from default pulls — see the
-    # _CACHE_* provenance constants above). The .config.json sidecars are
-    # top-level *.json deliverables too, so each gets its own META entry.
+    # by examples/jspace_promote_lens_subset.py from the July fits. Those
+    # full 27-layer sets were never committed; the cache files of the same
+    # names are later refits (see _L15_JULY / _L7B_JULY above). The
+    # .config.json sidecars are top-level *.json deliverables too, so each gets
+    # its own META entry.
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"],
+        "inputs": [_L7B_JULY],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
             "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced "
             "subset promoted per design-plan Decision 4 (trailing layer 27 "
-            "clamped to the last valid index 26); the full set is LFS-committed "
-            "under data/cache/, excluded from default pulls."
+            "clamped to the last valid index 26). The full July set was never "
+            "committed (see inputs)."
         ),
         "consumers": ["clean-clone lens inspection at representative depths"],
     },
@@ -185,15 +228,15 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"],
+        "inputs": [_L15_JULY],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
             "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset "
             "promoted per design-plan Decision 4 (trailing layer 27 clamped to "
-            "the last valid index 26); the full set is LFS-committed under "
-            "data/cache/, excluded from default pulls."
+            "the last valid index 26). The full July set was never committed "
+            "(see inputs)."
         ),
         "consumers": ["clean-clone lens inspection at representative depths"],
     },
@@ -212,7 +255,7 @@ META: dict[str, dict[str, Any]] = {
     # The small derived artifacts the audit (examples/jspace_audit_findings.py)
     # re-derives from, promoted out of data/cache/ into data/ for clean-clone
     # auditability. Built compactly below via _derived() and merged into META
-    # (the full fitted lenses that produced them live in data/cache/, Decision 4).
+    # (each entry's lens input names its fit generation, issue #87).
 }
 
 
@@ -235,18 +278,6 @@ def _derived(
     }
 
 
-# Full fitted lenses under data/cache/ named as inputs of the derived set.
-_L15 = f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"
-_L7B = f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"
-# The cache lens is not manifest-registered; the issue-#83 entries pin it.
-_L7B_REFIT = (
-    f"{_L7B}; the 2026-08-16 refit, sha256 "
-    "4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db "
-    "(not verified by --check, which skips cache files)"
-)
-_L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
-_L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"
-_L15C4 = f"jlens_qwen2.5-1.5b_bf16_n100_c4en.pt ({_CACHE_LFS})"
 _HW = "heldout_prompts_wikitext103_n30.json"
 _HC4 = "heldout_prompts_c4en_n30.json"
 _EVAL = "examples/jspace_lens_eval.py"
@@ -260,7 +291,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- lens_eval x4 (intermediate-concept top-k readout rates per depth band) --
     "lens_eval_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _EVAL,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Intermediate-concept eval (multihop + association) top-k readout "
         "hit-rates per depth band; 1.5B bf16 J-lens vs logit-lens (stage-3 H3).",
@@ -268,7 +299,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "lens_eval_qwen2.5-7b_nf4_n100.pt": _derived(
         _EVAL,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Intermediate-concept eval top-k readout hit-rates per depth band; 7B "
         "nf4 J-lens vs logit-lens (stage-3 scale comparison H2).",
@@ -283,7 +314,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
         _EVAL,
-        [_L15C4],
+        [_L15C4_REFIT],
         "qwen-1.5b-bf16",
         "Intermediate-concept eval; 1.5B C4-en corpus-sensitivity refit.",
         ["obs 2026-07-20-corpus-sensitivity-c4-1p5b.md", "audit Check J"],
@@ -291,7 +322,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- readout_scan x6 (depth-of-emergence + per-layer Spearman) ------------
     "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _READ,
-        [_L15, _HW],
+        [_L15_JULY, _HW],
         "qwen-1.5b-bf16",
         "Readout-scan depth-of-emergence (top-10) + per-layer Spearman, 1.5B "
         "bf16, wikitext held-out set (stage-3 first pass; GPU-regenerated "
@@ -300,7 +331,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _READ,
-        [_L7B, _HW],
+        [_L7B_JULY, _HW],
         "qwen-7b-nf4",
         "Readout-scan depth-of-emergence + per-layer Spearman, 7B nf4, wikitext "
         "held-out set (stage-3 scale comparison).",
@@ -315,7 +346,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
         _READ,
-        [_L15C4, _HW],
+        [_L15C4_REFIT, _HW],
         "qwen-1.5b-bf16",
         "Readout-scan, 1.5B C4-en corpus refit (evaluated on the same wikitext "
         "held-out set as the baseline).",
@@ -323,7 +354,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt": _derived(
         _READ,
-        [_L15, _HC4],
+        [_L15_REFIT, _HC4],
         "qwen-1.5b-bf16",
         "Readout-scan, 1.5B bf16 (wikitext-fit lens) on the diversified C4 "
         "held-out set (held-out-sample robustness control).",
@@ -331,7 +362,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt": _derived(
         _READ,
-        [_L7B, _HC4],
+        [_L7B_REFIT, _HC4],
         "qwen-7b-nf4",
         "Readout-scan, 7B nf4 on the diversified C4 held-out set "
         "(held-out-sample robustness control).",
@@ -340,7 +371,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- structure_scan x7 (varfrac / active-atom / readout-kurtosis per depth) --
     "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _STRUCT,
-        [_L15, _HW],
+        [_L15_JULY, _HW],
         "qwen-1.5b-bf16",
         "Stage-4 J-space structure map (varfrac k={5,10,25,50} / active-atom / "
         "readout-kurtosis per depth), 1.5B bf16, wikitext held-out set.",
@@ -348,7 +379,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _STRUCT,
-        [_L7B, _HW],
+        [_L7B_JULY, _HW],
         "qwen-7b-nf4",
         "Stage-4 J-space structure map, 7B nf4, wikitext held-out set.",
         ["obs 2026-07-20-jspace-structure-stage4.md", "audit Check D"],
@@ -369,21 +400,21 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt": _derived(
         _STRUCT,
-        [_L15C4, _HW],
+        [_L15C4_REFIT, _HW],
         "qwen-1.5b-bf16",
         "Stage-4 structure map, 1.5B C4-en corpus refit.",
         ["obs 2026-07-20-corpus-sensitivity-c4-1p5b.md", "audit Check J"],
     ),
     "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt": _derived(
         _STRUCT,
-        [_L15, _HC4],
+        [_L15_REFIT, _HC4],
         "qwen-1.5b-bf16",
         "Stage-4 structure map, 1.5B bf16 on the diversified C4 held-out set.",
         ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
     ),
     "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt": _derived(
         _STRUCT,
-        [_L7B, _HC4],
+        [_L7B_REFIT, _HC4],
         "qwen-7b-nf4",
         "Stage-4 structure map, 7B nf4 on the diversified C4 held-out set.",
         ["obs 2026-07-22-n500-and-heldout-robustness.md", "audit Check K"],
@@ -391,7 +422,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- verbal_report x4 (stage-5.1 / 5.1b verbal-report swap suites) -------
     "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _VR,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), "
         "1.5B bf16 @L21.",
@@ -399,21 +430,21 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _VR,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
         ["obs 2026-07-20-verbal-report-swaps-stage5.md", "audit Checks E, F"],
     ),
     "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _VR,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
         ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
     ),
     "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _VR,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
         ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
@@ -421,7 +452,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- entailed_swap x8 (stage-5.2 entailed-property swap bank) -------------
     "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 "
         "conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
@@ -429,49 +460,49 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
-        [_L15],
+        [_L15_JULY],
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
     ),
     "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
@@ -479,7 +510,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- paperverbatim x4 (cue-redundancy control probe, --items-json, n=3) --
     "entailed_paperverbatim_chat_all_L19_7b.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 paper-verbatim / cue-redundancy control probe (--items-json, "
         "n=3), 7B nf4 @L19, chat all-scope (every pre-answer position).",
@@ -490,7 +521,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "entailed_paperverbatim_chat_auto_L19_7b.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, chat auto-scope.",
         [
@@ -500,7 +531,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "entailed_paperverbatim_plain_all_L19_7b.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain all-scope.",
         [
@@ -510,7 +541,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "entailed_paperverbatim_plain_auto_L19_7b.pt": _derived(
         _ENT,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain auto-scope.",
         [
@@ -521,7 +552,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- nla_crosstie x1 (stage-6 J-lens x NLA activation-vector cross-tie) ---
     "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _XTIE,
-        [_L7B],
+        [_L7B_JULY],
         "qwen-7b-nf4",
         "Stage-6 NLA cross-tie: 7B nf4 J-lens (L19) x NLA activation-vector at "
         "hidden_states[20]; rank-median + carrier-decomposition metrics (24 "
@@ -531,7 +562,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     # -- paper-metric ceiling recompute x3 + norm-bias x1 (issue #26) ---------
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
-        [_L15, _HW, "structure_scan_...1.5b...bf16_n100.pt (validation reference)"],
+        [_L15_JULY, _HW, "structure_scan_...1.5b...bf16_n100.pt (validation reference)"],
         "qwen-1.5b-bf16",
         "Paper-faithful ceiling metric (excess-over-random orthogonal-projection "
         "FVE at K=median occupancy [gurnee2026-workspace sec 4.2 Fig 30b, A.8]) "
@@ -551,7 +582,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
-        [_L15, _HW],
+        [_L15_JULY, _HW],
         "qwen-1.5b-bf16",
         "Paper-metric all-positions sweep (every position in [16, seq_len-2]; "
         "n=5362/layer) at L0/L18/L21/L22 — the paper's measurement population; "
@@ -569,7 +600,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
-        [_L7B, _HW, "structure_scan_...7b...nf4_n100.pt (validation reference)"],
+        [_L7B_JULY, _HW, "structure_scan_...7b...nf4_n100.pt (validation reference)"],
         "qwen-7b-nf4",
         "7B counterpart of the paper-metric recompute (scan grid, bit-exact "
         "validation); peak excess 4.72% at L22-L23, all 27 layers under the 10% "
@@ -587,7 +618,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
-        [_L7B, "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"],
+        [_L7B_JULY, "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"],
         "qwen-7b-nf4",
         "7B counterpart of the norm-bias summary (W_U untied, read from the "
         "bf16 safetensors via --wu-source safetensors, layers "
@@ -600,7 +631,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
-        [_L15, "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"],
+        [_L15_JULY, "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"],
         "qwen-1.5b-bf16",
         "Pursuit atom-norm selection-bias summary (issue #26): per-layer "
         "full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm "
@@ -620,9 +651,11 @@ for _axis, _fname, _lens, _model, _detail, _args in [
     (
         "corpus (C4-en lens)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
-        _L15C4,
+        _L15C4_REFIT,
         "qwen-1.5b-bf16",
-        "L21 excess 10.82% (base 10.83%); early band diverges (L0 15.43%).",
+        "L21 excess 10.82% (base 10.83%); early band diverges (L0 15.43%). "
+        "Regenerated 2026-08-16 with the refit lens (jspace_rerun_scans.sh run "
+        "2), validated against the structure scan regenerated in run 1.",
         "--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt "
         "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt "
         "--n-rand 8 --rand-seed-base 10000",
@@ -650,9 +683,11 @@ for _axis, _fname, _lens, _model, _detail, _args in [
     (
         "held-out sample (C4 prompts)",
         "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
-        _L15,
+        _L15_REFIT,
         "qwen-1.5b-bf16",
-        "L21 excess 11.70% on the diversified C4 held-out set.",
+        "L21 excess 11.70% on the diversified C4 held-out set. Regenerated "
+        "2026-08-16 with the refit lens (jspace_rerun_scans.sh run 6), "
+        "validated against the structure scan regenerated in run 5.",
         "--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt "
         "--prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 10000",
@@ -660,9 +695,11 @@ for _axis, _fname, _lens, _model, _detail, _args in [
     (
         "held-out sample, 7B (C4 prompts)",
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
-        _L7B,
+        _L7B_REFIT,
         "qwen-7b-nf4",
-        "band peak L23 excess 5.98%, under the ceiling (0/2000 resamples over).",
+        "band peak L23 excess 5.98%, under the ceiling (0/2000 resamples over). "
+        "Regenerated 2026-08-16 with the refit lens (jspace_rerun_scans.sh run "
+        "9), validated against the structure scan regenerated in run 8.",
         "--model Qwen/Qwen2.5-7B-Instruct --mode nf4 "
         "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt "
@@ -728,9 +765,8 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "recompute.md), whose full 27-layer file was never committed (the "
         "cache file of the same name is the 2026-08-16 refit) and of which "
         "only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt "
-        "is committed. The older 7B entries' inputs therefore name a lens "
-        "that does not reproduce them, tracked in issue #87 (out of this "
-        "PR's scope).",
+        "is committed. The older 7B entries' inputs name that July lens "
+        "explicitly (issue #87).",
     ),
     (
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
@@ -747,9 +783,8 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "recompute.md), whose full 27-layer file was never committed (the "
         "cache file of the same name is the 2026-08-16 refit) and of which "
         "only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt "
-        "is committed. The older 7B entries' inputs therefore name a lens "
-        "that does not reproduce them, tracked in issue #87 (out of this "
-        "PR's scope).",
+        "is committed. The older 7B entries' inputs name that July lens "
+        "explicitly (issue #87).",
     ),
 ]:
     _DERIVED[_fname] = _derived(

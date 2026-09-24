@@ -18,5 +18,5 @@
     25,
     26
   ],
-  "full_set_location": "data/cache/ (LFS-committed, excluded from default pulls \u2014 fetch with git lfs pull --include=\"research/arcs/04_jspace/data/cache/**\" --exclude=\"\"; or regenerate via examples/jspace_fit_lens.py)"
+  "full_set_location": "July pre-refit fit (completed 2026-07-18); never committed in full; data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt is the 2026-07-29 refit (see MANIFEST inputs)"
 }

@@ -10,7 +10,7 @@
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 56,
-  "total_size_bytes": 273210727,
+  "total_size_bytes": 273210634,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -20,7 +20,7 @@
       "producing_script": "examples/jspace_atom_norm_bias.py",
       "producing_command": "python examples/jspace_atom_norm_bias.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
         "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -38,7 +38,7 @@
       "producing_script": "examples/jspace_atom_norm_bias.py",
       "producing_command": "python examples/jspace_atom_norm_bias.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
         "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -56,7 +56,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim / cue-redundancy control probe (--items-json, n=3), 7B nf4 @L19, chat all-scope (every pre-answer position).",
@@ -73,7 +73,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, chat auto-scope.",
@@ -90,7 +90,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain all-scope.",
@@ -107,7 +107,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain auto-scope.",
@@ -124,7 +124,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
@@ -141,7 +141,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
@@ -158,7 +158,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
@@ -175,7 +175,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
@@ -192,7 +192,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
@@ -209,7 +209,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
@@ -226,7 +226,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
@@ -243,7 +243,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
@@ -310,8 +310,8 @@
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
-      "sha256": "ae1bf3e90405291f7ffa7972c6154807a98b5e30374a01958e2fab25bbf5c5bf",
-      "size_bytes": 792,
+      "sha256": "79e3c0559b84774d1fdaf8ee5f206d7894f6ad686d7a98a2e7ef3a51672a3807",
+      "size_bytes": 747,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
@@ -332,18 +332,18 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26); the full set is LFS-committed under data/cache/, excluded from default pulls.",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
       ]
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
-      "sha256": "6cf6982bc7e5ac35bc251dc1a66f6371146c575fceb54badbad8d435d5c41061",
-      "size_bytes": 789,
+      "sha256": "622f0ac6037deb17a800e03aeb15c0d2dd75574471917acab6809ea24de74d6d",
+      "size_bytes": 741,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
@@ -364,10 +364,10 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26); the full set is LFS-committed under data/cache/, excluded from default pulls.",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
       ]
@@ -380,7 +380,7 @@
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Intermediate-concept eval (multihop + association) top-k readout hit-rates per depth band; 1.5B bf16 J-lens vs logit-lens (stage-3 H3).",
@@ -397,7 +397,7 @@
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Intermediate-concept eval; 1.5B C4-en corpus-sensitivity refit.",
@@ -431,7 +431,7 @@
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Intermediate-concept eval top-k readout hit-rates per depth band; 7B nf4 J-lens vs logit-lens (stage-3 scale comparison H2).",
@@ -448,7 +448,7 @@
       "producing_script": "examples/jspace_nla_crosstie.py",
       "producing_command": "python examples/jspace_nla_crosstie.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-6 NLA cross-tie: 7B nf4 J-lens (L19) x NLA activation-vector at hidden_states[20]; rank-median + carrier-decomposition metrics (24 prompts + 1 control). Excludes its .partial.jsonl / .phase1.pt sidecars.",
@@ -465,7 +465,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json",
         "structure_scan_...1.5b...bf16_n100.pt (validation reference)"
       ],
@@ -485,7 +485,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -504,11 +504,11 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Paper-metric robustness axis \u2014 corpus (C4-en lens): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 10.82% (base 10.83%); early band diverges (L0 15.43%). All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "provenance": "Paper-metric robustness axis \u2014 corpus (C4-en lens): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 10.82% (base 10.83%); early band diverges (L0 15.43%). Regenerated 2026-08-16 with the refit lens (jspace_rerun_scans.sh run 2), validated against the structure scan regenerated in run 1. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
@@ -522,11 +522,11 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 10000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Paper-metric robustness axis \u2014 held-out sample (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 11.70% on the diversified C4 held-out set. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "provenance": "Paper-metric robustness axis \u2014 held-out sample (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). L21 excess 11.70% on the diversified C4 held-out set. Regenerated 2026-08-16 with the refit lens (jspace_rerun_scans.sh run 6), validated against the structure scan regenerated in run 5. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
@@ -576,7 +576,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --n-rand 8 --rand-seed-base 30000",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json",
         "structure_scan_...7b...nf4_n100.pt (validation reference)"
       ],
@@ -596,11 +596,11 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 30000",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Paper-metric robustness axis \u2014 held-out sample, 7B (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). band peak L23 excess 5.98%, under the ceiling (0/2000 resamples over). All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
+      "provenance": "Paper-metric robustness axis \u2014 held-out sample, 7B (C4 prompts): excess-over-random orthogonal-projection FVE at K=median occupancy (K-consistent top-K, 2026-07-25 F01 regeneration), scan grid, validated bit-exact vs the committed structure scan (config.validation_max_vf_diff == 0.0). band peak L23 excess 5.98%, under the ceiling (0/2000 resamples over). Regenerated 2026-08-16 with the refit lens (jspace_rerun_scans.sh run 9), validated against the structure scan regenerated in run 8. All five axes hold the ceiling verdicts (P(boot>10%) unanimous each side).",
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
@@ -638,7 +638,7 @@
         "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt (validation reference)"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 25 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan is NOT bit-exact: config.validation_max_vf_diff = 4.379e-01 (max over positions), while the per-layer mean varfrac@25 agrees with the July artifact to 2.6e-3 (signed difference of layer means). Per-position differences were not persisted, so how many of the 270 positions per layer differ is not established; the signed mean agreement does not bound it. The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs therefore name a lens that does not reproduce them, tracked in issue #87 (out of this PR's scope). Run log: cache/logs/scan_paper_metric_7b_refitlens_k25.log.",
+      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 25 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan is NOT bit-exact: config.validation_max_vf_diff = 4.379e-01 (max over positions), while the per-layer mean varfrac@25 agrees with the July artifact to 2.6e-3 (signed difference of layer means). Per-position differences were not persisted, so how many of the 270 positions per layer differ is not established; the signed mean agreement does not bound it. The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs name that July lens explicitly (issue #87). Run log: cache/logs/scan_paper_metric_7b_refitlens_k25.log.",
       "consumers": [
         "audit Check P (stage 2, PR #84)",
         "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
@@ -657,7 +657,7 @@
         "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt (validation reference)"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 58 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 6.16% CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run (config.validation_max_vf_diff 4.379e-01). The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs therefore name a lens that does not reproduce them, tracked in issue #87 (out of this PR's scope). Run log: cache/logs/scan_paper_metric_7b_refitlens_k58.log.",
+      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 58 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 6.16% CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run (config.validation_max_vf_diff 4.379e-01). The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs name that July lens explicitly (issue #87). Run log: cache/logs/scan_paper_metric_7b_refitlens_k58.log.",
       "consumers": [
         "audit Check P (stage 2, PR #84)",
         "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
@@ -685,7 +685,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -703,7 +703,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -721,7 +721,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -757,7 +757,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -775,7 +775,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -793,7 +793,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -811,7 +811,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -829,7 +829,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -883,7 +883,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -901,7 +901,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)",
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -919,7 +919,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
@@ -936,7 +936,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
@@ -953,7 +953,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), 1.5B bf16 @L21.",
@@ -970,7 +970,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls)"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
