@@ -161,8 +161,8 @@ data/cache/logs/scan_paper_metric_heldoutc4en_7b.log:
   L23 K=23 n=270 ours@25=0.0526 fveTopK=0.0695 fveRand=0.0107 EXCESS=+0.0588 CI95=[+0.0556,+0.0618] P(>10%)=0.000
 ```
 
-`short=0` holds at all 27 layers of all three new runs, so every
-position had a full K-atom support.
+`short=0` holds at all 27 scanned source layers (L0-L26) of all three new
+runs, so every position had a full K-atom support.
 The two older logs lack the `ratio=` and `K/d=` columns, which PR #80
 added, and the `short=` column, which this PR added.
 

@@ -73,9 +73,10 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    K=58 it is 7.67% held-out and 6.16% on the grid, with every CI95 upper
    bound at or below 8.03%.
 
-   **The cross-scale gap is real and about 1.5-1.8× at matched K/d.** Excess
-   is not dimensionless: random-direction FVE grows with K/d, and at the
-   paper's K rule the 7B scan runs at 2.4-2.5× lower K/d than 1.5B. At K=58
+   **On this evidence (two scales, 30 prompts per scan), the cross-scale
+   gap is real and about 1.5-1.8× at matched K/d.** Excess is not
+   dimensionless: random-direction FVE grows with K/d, and at the paper's K
+   rule the 7B scan runs at 2.4-2.5× lower K/d than 1.5B. At K=58
    (K/d 0.0162, against 1.5B 25/1536 = 0.0163) the 1.5B/7B excess ratio is
    **1.52× held-out and 1.76× on the grid** (non-overlapping CI95s
    held-out). At the paper's K rule the gap is 1.99× held-out (K=23) and
@@ -293,9 +294,9 @@ The arc's dated writeups, in `observations/`:
   the depth-profile statistics intact — **the 7B gap is genuine scale.**
 - `2026-08-30-excess-fve-dimension-dependence.md` — post-close correction
   (issue #79): excess-FVE carries a common ~2× dimension factor between
-  scales (the fveTopK/fveRand ratio is near-invariant, 6.29 vs 6.50), so
-  the ceiling verdicts get a calibration caveat; audit CHECK O (30
-  claims) re-derives every number from the committed scan logs. Its
+  scales (the fveTopK/fveRand ratio was read as near-invariant, 6.29 vs
+  6.50), so the ceiling verdicts get a calibration caveat; audit CHECK O
+  (30 claims) re-derives every number from the committed scan logs. Its
   ratio-invariance reading is corrected by the 2026-09-23 entry.
 - `2026-09-23-dimension-matched-k58-recompute.md`: 7B paper-metric
   recompute at K=58, matching the 1.5B K/d (issue #83). The cross-scale
@@ -303,7 +304,7 @@ The arc's dated writeups, in `observations/`:
   survives; 7B stays under the ceiling at every K. The fveTopK/fveRand
   ratio falls as K grows, so its near-equality across scales at K=23-25
   was a coincidence of K. Audit CHECK P re-derives the numbers from the
-  three scan logs.
+  three scan logs and the three artifacts.
 - `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
   (issue #26): the paper's 10% ceiling is excess-over-random
   orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
