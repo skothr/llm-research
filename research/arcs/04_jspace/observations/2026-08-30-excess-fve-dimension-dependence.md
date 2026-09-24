@@ -1,7 +1,33 @@
-# Observation: excess-FVE is not dimensionless — the cross-scale ceiling comparison carries a common ~2× factor that the subtraction does not remove
+# Observation: excess-FVE is not dimensionless — the cross-scale ceiling comparison carries a common ~2× factor that the subtraction does not remove [superseded in part, see Status]
 
-(Corrected 2026-09-23: width accounts for part of the gap; 1.52× held-out
-and 1.76× grid survive at matched K/d; see the correction note below.)
+> **Status 2026-09-23 (issue #83, PR #84): superseded in part by
+> [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).**
+> Each statement below carries the marker
+> `[superseded 2026-09-23, see Status]` where it appears in this file.
+>
+> 1. The title's and Finding's "common ~2× factor that the subtraction
+>    does not remove". The K/d factor accounts for a third to two-fifths
+>    of the gap on a log scale (32% grid, 39% held-out). 1.52× held-out
+>    and 1.76× grid survive at matched K/d.
+> 2. The mechanism "the *pursuit* FVE carrying the same scale factor".
+>    At matched K/d, fveRand reaches near parity (0.0221 vs 0.0196,
+>    1.13×). fveTopK stays 1.44× apart (0.1390 vs 0.0963). The pursuit
+>    FVE does not follow K/d the way the baseline does.
+> 3. "The ratio-normalized row is near-invariant", "the ratio
+>    normalization removes it entirely" (Consequence 1) and "serves here
+>    as evidence for the common-factor reading". The ratio is
+>    K-dependent (7B L23: 6.50 at K=23, 4.91 at K=58). At matched K/d it
+>    is 6.29 vs 4.91, a 1.28× gap. It does not remove the gap. It is not
+>    evidence of a common factor.
+> 4. "Dominated by" (Consequence 1 and the Does: line) and "accounts for
+>    most, not provably all" (Consequence 1). The common factor accounts
+>    for part of the gap, not most of it.
+> 5. The Hypotheses bullets "the pursuit FVE tracking it is an empirical
+>    observation" and "adopted here only as evidence that the gap is a
+>    common factor". Both are superseded per items 2 and 3.
+>
+> The within-scale statements, the L0 demotion symptom, the evidence
+> block and the reproducibility section stand.
 
 **Date/context:** 2026-08-30. Post-close correction pass (arc closed
 2026-07-22; same discipline as the issue-#26 metric-fidelity reopening).
@@ -11,17 +37,7 @@ plain-text logs already in the repository (`../data/cache/logs/`,
 committed with the PR #45 cache), no model or GPU involved. Tracking:
 issue #79.
 
-## Finding — signal and baseline share a common multiplicative factor, so `excess = fveTopK − fveRand` retains it
-
-Correction 2026-09-23 (issue #83): two claims below do not hold.
-The fveTopK/fveRand ratio does not remove the cross-scale gap.
-At matched K/d it is 6.29 (1.5B) vs 4.91 (7B), a 1.28× gap.
-Its K dependence within one scale (7B L23: 6.50 at K=23, 4.91 at K=58)
-supports this.
-The common factor accounts for roughly a third to two-fifths of the gap
-on a log scale (32% grid, 39% held-out), not most of it.
-1.52× held-out and 1.76× grid survive at matched K/d.
-See [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).
+## Finding — signal and baseline share a common multiplicative factor, so `excess = fveTopK − fveRand` retains it [superseded 2026-09-23, see Status]
 
 The paper-metric recompute
 ([2026-07-24-paper-metric-varfrac-recompute.md](2026-07-24-paper-metric-varfrac-recompute.md))
@@ -29,8 +45,9 @@ compares `excess = FVE(top-K pursuit atoms) − FVE(K random vocab atoms)`
 against the paper's 10% ceiling at both scales. But the FVE of K random
 directions in a d-dimensional space scales like K/d, and the measured
 values show the *pursuit* FVE carrying the same scale factor — so the
-subtraction preserves it rather than cancelling it. From the held-out
-scan logs (`scan_paper_metric_heldoutc4en_1p5b.log` L21 row,
+subtraction preserves it rather than cancelling it.
+[superseded 2026-09-23, see Status] From the held-out scan logs
+(`scan_paper_metric_heldoutc4en_1p5b.log` L21 row,
 `scan_paper_metric_heldoutc4en_7b.log` L23 row):
 
 | | 1.5B L21 (d=1536, K=25) | 7B L23 (d=3584, K=23) | factor |
@@ -42,22 +59,20 @@ scan logs (`scan_paper_metric_heldoutc4en_1p5b.log` L21 row,
 
 The three difference-metric rows scale together by ~2×; the
 ratio-normalized row is near-invariant and slightly *reverses* (7B ≥
-1.5B). K/d_model differs by 2.54× between the columns (25/1536 = 0.0163
-vs 23/3584 = 0.0064). Consequences:
+1.5B). [superseded 2026-09-23, see Status] K/d_model differs by 2.54×
+between the columns (25/1536 = 0.0163 vs 23/3584 = 0.0064).
+Consequences:
 
-1. **A factor common to signal and baseline accounts for part of the
-   cross-scale excess gap** (this observation first read it as dominating
-   the gap; corrected 2026-09-23: 1.52× held-out and 1.76× grid survive at
-   matched K/d; see the correction note above). On the held-out pair measured here the gap is
-   1.99× and, at K=23 vs K=25, the ratio normalization removes it entirely
-   (6.29 vs 6.50, slightly reversed; at matched K/d the ratio leaves a 1.28×
-   gap, 6.29 vs 4.91). The README's ~2.4× figure is a different — and
-   itself cross-mode — pair: the 1.5B all-positions mean (11.15%)
-   against the 7B scan-grid peak (4.72%), both on wikitext held-out
-   prompts (2.36×; no 7B all-positions run exists). This observation read
-   the common factor as accounting for most of that reading; the 2026-09-23
-   recompute measured its share on the grid and held-out pairs, not on this
-   all-positions pair, at roughly a third to two-fifths on a log scale.
+1. **The cross-scale excess gap is dominated by a factor common to
+   signal and baseline.** [superseded 2026-09-23, see Status] On the
+   held-out pair measured here the gap is 1.99× and the ratio
+   normalization removes it entirely (6.29 vs 6.50, slightly reversed).
+   [superseded 2026-09-23, see Status] The README's ~2.4× figure is a
+   different — and itself cross-mode — pair: the 1.5B all-positions mean
+   (11.15%) against the 7B scan-grid peak (4.72%), both on wikitext
+   held-out prompts (2.36×; no 7B all-positions run exists). The common
+   factor accounts for most, not provably all, of that reading.
+   [superseded 2026-09-23, see Status]
 2. **Comparing a d=1536 model's excess against a ceiling measured on
    much larger models is not like-for-like.** The paper's
    Claude-family models have (much) larger hidden dimensions than
@@ -86,16 +101,15 @@ profile — its own argmax sits in the late band (L23 on both 1.5B
 scans, L24 on the 7B held-out scan), not at the L21 excess hump — so
 it serves here as evidence for the common-factor reading, and the
 right cross-scale normalization stays an open question (see
-limitations).
+limitations). [superseded 2026-09-23, see Status]
 
 ## What this does and does not establish
 
 **Does:** the cross-scale excess gap is dominated by a factor common to
-signal and baseline (corrected 2026-09-23: width accounts for part of the
-gap; 1.52× held-out and 1.76× grid survive at matched K/d; see the
-correction note above); the two README ceiling verdicts (1.5B breach, 7B
-under) are calibrated in a dimension-dependent unit and should carry a
-caveat when read as a cross-scale or versus-paper comparison.
+signal and baseline [superseded 2026-09-23, see Status]; the two README
+ceiling verdicts (1.5B breach, 7B under) are calibrated in a
+dimension-dependent unit and should carry a caveat when read as a
+cross-scale or versus-paper comparison.
 
 **Does not:** show the 1.5B breach is spurious. The paper defines its
 ceiling on the difference metric, and its random-baseline FVE is
@@ -139,14 +153,15 @@ untouched).
 ## Hypotheses / limitations
 
 - The observed common factor (~2.0×) is close to, but not exactly, the
-  d-ratio 3584/1536 = 2.33 or the K/d ratio 2.54: the K/d scaling is
-  the natural first-order account for fveRand (25/1536 = 0.0163 vs
-  measured 0.0221; 23/3584 = 0.0064 vs 0.0107), and the pursuit FVE
-  tracking it is an empirical observation here, not a derived law.
+  d-ratio 3584/1536 = 2.33 or the K/d ratio 2.54: the K/d scaling is the
+  natural first-order account for fveRand (25/1536 = 0.0163 vs measured
+  0.0221; 23/3584 = 0.0064 vs 0.0107), and the pursuit FVE tracking it
+  is an empirical observation here, not a derived law.
+  [superseded 2026-09-23, see Status]
 - The ratio normalization is one candidate calibration, adopted here
   only as evidence that the gap is a common factor; whether it is the
-  *right* cross-scale normalization is an open question the arc does
-  not settle.
+  *right* cross-scale normalization is an open question the arc does not
+  settle. [superseded 2026-09-23, see Status]
 - Both scales were measured at K = per-layer median occupancy (23-25),
   so K is nearly matched while d differs — the comparison isolates the
   d-dependence but has n=2 scales.

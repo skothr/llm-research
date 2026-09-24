@@ -331,13 +331,18 @@ fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 Each carries per-layer `K_used` (58 / 25 / 58 at every layer) and
 `n_short_support` (0 at every layer), plus `config.k_fixed`.
 
+The three `.pt` artifacts have no `data/cache/` mirror copy. The mirror the
+header describes is gitignored and local, so no clone carries one, and
+`resolve` finds these three under `data/`.
 The three logs are plain committed files under `data/cache/logs/`, not LFS
 objects, so CHECK P's log claims run on every clone, including LFS-less
 ones.
 
 **Every plotted artifact** (all under `data/`; the `paper_metric_varfrac_`
 prefix is elided). All seven carry per-layer `excess_ci95`, so every series
-has a CI band:
+has a CI band. That includes the two July grid artifacts, which
+§ paper-metric-excess plots without whiskers; that figure draws its
+whiskers from the `_allpos` artifact by choice.
 
 | Panel | Artifact | Contributes |
 |---|---|---|

@@ -62,7 +62,7 @@ _P7 = _PM + "qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100"
 
 PANELS: list[dict[str, Any]] = [
     {
-        "title": "(a) C4 held-out prompts (n=30 x 9 positions)",
+        "title": "(a) C4 held-out prompts",
         "series": [
             {"model": "1.5B", "pt": _P15 + "_heldoutc4en.pt", "color": C_15, "marker": "o", "ls": "-", "note": ""},
             {"model": "7B", "pt": _P7 + "_heldoutc4en.pt", "color": C_7_OCC, "marker": "s", "ls": "--", "note": ""},
@@ -70,7 +70,7 @@ PANELS: list[dict[str, Any]] = [
         ],
     },
     {
-        "title": "(b) wikitext grid prompts (n=30 x 9 positions)",
+        "title": "(b) wikitext grid prompts",
         "series": [
             {"model": "1.5B", "pt": _P15 + ".pt", "color": C_15, "marker": "o", "ls": "-", "note": ""},
             {"model": "7B", "pt": _P7 + ".pt", "color": C_7_OCC, "marker": "s", "ls": "--", "note": ", pre-refit lens"},
@@ -107,15 +107,41 @@ def k_label(art: dict[str, Any], d: int) -> str:
 
 
 def band_peak(res: dict[int, dict[str, Any]]) -> tuple[int, float]:
-    L = max((x for x in res if x >= BAND_START), key=lambda x: res[x]["excess_mean"])
+    band = [x for x in res if x >= BAND_START]
+    if not band:
+        raise SystemExit(
+            f"no layer >= L{BAND_START} in the artifact (layers L{min(res)}-L{max(res)}); "
+            "cannot compute the workspace-band peak"
+        )
+    L = max(band, key=lambda x: res[x]["excess_mean"])
     return L, float(res[L]["excess_mean"])
 
 
-def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
+def sampling_meta(arts: dict[str, dict[str, Any]]) -> tuple[int, int, int]:
+    """(n_prompts, positions per prompt, n_boot), required identical across the
+    plotted artifacts. Positions per prompt is the lowest layer's ``n_pos // n_prompts``."""
+    seen: dict[tuple[int, int, int], list[str]] = {}
+    for name, art in arts.items():
+        cfg = art["config"]
+        n_prompts, n_boot = int(cfg["n_prompts"]), int(cfg["n_boot"])
+        res: dict[int, dict[str, Any]] = art["results"]
+        n_pos = int(res[min(res)]["n_pos"])
+        if n_pos % n_prompts:
+            raise SystemExit(f"{name}: n_pos {n_pos} is not a multiple of n_prompts {n_prompts}")
+        seen.setdefault((n_prompts, n_pos // n_prompts, n_boot), []).append(name)
+    if len(seen) != 1:
+        detail = "; ".join(f"n_prompts/positions/n_boot={k}: {v}" for k, v in seen.items())
+        raise SystemExit(f"plotted artifacts disagree on sampling: {detail}")
+    return next(iter(seen))
+
+
+def draw_panel(ax: Axes, panel: dict[str, Any], arts: dict[str, dict[str, Any]], title: str) -> float:
+    """Draw one panel; return the highest CI95 upper bound it plots (the shared
+    y-axis limit is set from both panels in ``main``)."""
     peaks: list[tuple[str, int, float]] = []  # (K tag, band-peak layer, value)
     top: dict[int, float] = {}  # per layer, the highest CI95 upper bound plotted
     for spec in panel["series"]:
-        art = load(spec["pt"])
+        art = arts[spec["pt"]]
         res: dict[int, dict[str, Any]] = art["results"]
         layers = sorted(res)
         mean = [float(res[L]["excess_mean"]) for L in layers]
@@ -186,25 +212,32 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
         ha="center",
         va="bottom",
     )
-    ax.set_title(panel["title"], fontsize=10)
+    ax.set_title(title, fontsize=10)
     ax.set_xlabel("layer")
-    ax.set_xlim(-0.5, 26.5)
-    ax.set_ylim(0.0, 0.16)
+    ax.set_xlim(lo - 0.5, hi + 0.5)
     ax.grid(alpha=0.25, linewidth=0.6)
     # Below the axes: inside, it covered the 7B curves in panel (b).
     ax.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.13), frameon=False)
+    return max(top.values())
 
 
 def main() -> None:
+    arts = {spec["pt"]: load(spec["pt"]) for panel in PANELS for spec in panel["series"]}
+    n_prompts, n_per, n_boot = sampling_meta(arts)
     fig, axes = plt.subplots(1, 2, figsize=(13, 5.2), sharey=True)
+    tops: list[float] = []
     for ax, panel in zip(axes, PANELS):
-        print(panel["title"])
-        draw_panel(ax, panel)
+        title = f"{panel['title']} (n={n_prompts} x {n_per} positions)"
+        print(title)
+        tops.append(draw_panel(ax, panel, arts, title))
+    # sharey: one limit for both panels, never below the original 0.16 and
+    # always above the highest plotted CI95 upper bound.
+    axes[0].set_ylim(0.0, max(0.16, max(tops) + 0.01))
     axes[0].set_ylabel("excess FVE (top-K pursuit minus K random atoms)")
     fig.suptitle(
         "Paper-metric excess FVE at matched K/d_model (issue #83): 7B at K=58 "
         "matches the 1.5B K/d (58/3584 = 0.0162 vs 25/1536 = 0.0163)\n"
-        "shaded bands: cluster-bootstrap 95% CI (by prompt, 2000 resamples)",
+        f"shaded bands: cluster-bootstrap 95% CI (by prompt, {n_boot} resamples)",
         fontsize=10.5,
     )
     fig.text(

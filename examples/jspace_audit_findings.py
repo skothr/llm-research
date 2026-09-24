@@ -11,8 +11,11 @@ Artifact resolution: each artifact is resolved data/-FIRST, cache/-fallback
 structure_scan / verbal_report / entailed_swap / paperverbatim / nla_crosstie
 this audit re-derives from) are promoted, committed via git-LFS under
 `research/arcs/04_jspace/data/`, so checks B-N and P reproduce from a clean
-clone; check O (and check P's log half) reads only committed plain-text logs
-and reproduces everywhere, including LFS-less clones.
+clone. Check O and check P's log-row pins read only committed plain-text logs
+and reproduce everywhere, including LFS-less clones. Check P's gap and
+artifact claims (including the 1.5B grid numerator) load the `data/*.pt`
+artifacts, which a default `git lfs pull` fetches. No check O or P claim
+needs the lens cache.
 Of the FULL fitted lens tensors under `data/cache/`, three are LFS-committed
 but excluded from default pulls (their `.config.json` sidecars are plain
 blobs, present in every clone) and the two nf4 lenses are regenerate-only
@@ -2591,7 +2594,7 @@ _PM_LOG_ROW = re.compile(
 # (`short=` is the per-layer n_short_support count), absent from the older
 # logs. _PM_LOG_ROW has no `$` anchor, so it matches both row shapes; these
 # are searched separately and stored only when present.
-_PM_LOG_CI = re.compile(r"CI95=\[(?P<lo>[+-][\d.]+),(?P<hi>[+-][\d.]+)\]")
+_PM_LOG_CI = re.compile(r"CI95=\[\s*(?P<lo>[+-]?[\d.]+)\s*,\s*(?P<hi>[+-]?[\d.]+)\s*\]")
 _PM_LOG_EXTRA = {
     "ratio": re.compile(r"\bratio=(?P<v>[\d.]+)"),
     "k_over_d": re.compile(r"\bK/d=(?P<v>[\d.]+)"),
