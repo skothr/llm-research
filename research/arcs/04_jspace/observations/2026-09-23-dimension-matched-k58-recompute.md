@@ -176,6 +176,13 @@ The per-layer mean varfrac@25 (`ours@25`) agrees with the July artifact
 `paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
 to 2.6e-3 at every layer, as a signed difference of means (read from
 the two artifacts' `vf_ours_mean`).
+Outcome: the gate is informational for a run validated against a
+different-lens scan; the script prints the max and does not stop on it,
+and `jspace_rerun_scans.sh` lists the two grid runs under
+`KNOWN_NONZERO` with 4.379e-01 as the expected value.
+The grid numbers in Finding 2 therefore rest on a capture whose
+per-layer means replicate the July artifact to 2.6e-3, not on a
+bit-exact gate.
 Per-position diffs were not persisted, so how many positions differ is
 not established.
 
