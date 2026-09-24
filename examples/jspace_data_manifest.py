@@ -239,7 +239,11 @@ def _derived(
 _L15 = f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"
 _L7B = f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"
 # The cache lens is not manifest-registered; the issue-#83 entries pin it.
-_L7B_REFIT = f"{_L7B}; the 2026-08-16 refit, sha256 4704ee3b2cd7…"
+_L7B_REFIT = (
+    f"{_L7B}; the 2026-08-16 refit, sha256 "
+    "4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db "
+    "(not verified by --check, which skips cache files)"
+)
 _L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
 _L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"
 _L15C4 = f"jlens_qwen2.5-1.5b_bf16_n100_c4en.pt ({_CACHE_LFS})"
@@ -712,13 +716,21 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "scan_paper_metric_7b_refitlens_k25.log",
         "wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% "
         "CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan "
-        "is NOT bit-exact (config.validation_max_vf_diff 4.379e-01, a "
-        "single-position outlier; layer means agree to 2.6e-3). "
+        "is NOT bit-exact: config.validation_max_vf_diff = 4.379e-01 (max "
+        "over positions), while the per-layer mean varfrac@25 agrees with "
+        "the July artifact to 2.6e-3 (signed difference of layer means). "
+        "Per-position differences were not persisted, so how many of the "
+        "270 positions per layer differ is not established; the signed "
+        "mean agreement does not bound it. "
         "The committed wikitext grid structure scan and the K=23-24 grid "
-        "artifact were produced by the July pre-refit lens, which is not in "
-        "the repository (see observations/2026-07-24-paper-metric-varfrac-"
-        "recompute.md), which is why validation against that scan is not "
-        "bit-exact.",
+        "artifact were produced by the July pre-refit 7B lens (fit "
+        "2026-07-20; see observations/2026-07-24-paper-metric-varfrac-"
+        "recompute.md), whose full 27-layer file was never committed (the "
+        "cache file of the same name is the 2026-08-16 refit) and of which "
+        "only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt "
+        "is committed. The older 7B entries' inputs therefore name a lens "
+        "that does not reproduce them, tracked in issue #87 (out of this "
+        "PR's scope).",
     ),
     (
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
@@ -730,10 +742,14 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run "
         "(config.validation_max_vf_diff 4.379e-01). "
         "The committed wikitext grid structure scan and the K=23-24 grid "
-        "artifact were produced by the July pre-refit lens, which is not in "
-        "the repository (see observations/2026-07-24-paper-metric-varfrac-"
-        "recompute.md), which is why validation against that scan is not "
-        "bit-exact.",
+        "artifact were produced by the July pre-refit 7B lens (fit "
+        "2026-07-20; see observations/2026-07-24-paper-metric-varfrac-"
+        "recompute.md), whose full 27-layer file was never committed (the "
+        "cache file of the same name is the 2026-08-16 refit) and of which "
+        "only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt "
+        "is committed. The older 7B entries' inputs therefore name a lens "
+        "that does not reproduce them, tracked in issue #87 (out of this "
+        "PR's scope).",
     ),
 ]:
     _DERIVED[_fname] = _derived(
