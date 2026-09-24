@@ -9,8 +9,8 @@
     "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in that repository, so the eval tables (audit Check B) are reproducible only against this pinned commit. Check it out at the commit above and point JSPACE_EVAL_DIR at its data/evaluations (the default assumes a sibling checkout at ../jacobian-lens)."
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
-  "total_files": 53,
-  "total_size_bytes": 272199666,
+  "total_files": 56,
+  "total_size_bytes": 273210727,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -604,6 +604,63 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt",
+      "sha256": "ad3447c4100cc2c7258823b0c3a3633446ca982d4b1a3fdde370df528c46d769",
+      "size_bytes": 337647,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
+        "heldout_prompts_c4en_n30.json",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt (validation reference)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 58 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). C4 held-out prompts; peak L23 excess 7.67% CI95 [7.30, 8.03], 0/2000 resamples over 10%; replicated varfrac@25 bit-exact vs the scan (config.validation_max_vf_diff == 0.0), because the heldoutc4en structure scan was regenerated 2026-08-16 with this same refit lens (jspace_rerun_scans.sh run structure_heldoutc4en_7b). Run log: cache/logs/scan_paper_metric_heldoutc4en_7b_k58.log.",
+      "consumers": [
+        "audit Check P (stage 2, PR #84)",
+        "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt",
+      "sha256": "2c077b006f2498f6121488a81587a898b394f9bfa06055703c97d4040dbb75f2",
+      "size_bytes": 336163,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 25",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
+        "heldout_prompts_wikitext103_n30.json",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt (validation reference)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 25 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan is NOT bit-exact: config.validation_max_vf_diff = 4.379e-01 (max over positions), while the per-layer mean varfrac@25 agrees with the July artifact to 2.6e-3 (signed difference of layer means). Per-position differences were not persisted, so how many of the 270 positions per layer differ is not established; the signed mean agreement does not bound it. The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs therefore name a lens that does not reproduce them, tracked in issue #87 (out of this PR's scope). Run log: cache/logs/scan_paper_metric_7b_refitlens_k25.log.",
+      "consumers": [
+        "audit Check P (stage 2, PR #84)",
+        "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
+      ]
+    },
+    {
+      "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
+      "sha256": "b6167f1679c45f7a852b9d458119130a4bb57c6388e10c79ebde94b733e5ab76",
+      "size_bytes": 337251,
+      "class": "derived",
+      "producing_script": "examples/jspace_paper_metric_varfrac.py",
+      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
+      "inputs": [
+        "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
+        "heldout_prompts_wikitext103_n30.json",
+        "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt (validation reference)"
+      ],
+      "requires_model": "qwen-7b-nf4",
+      "provenance": "Dimension-matched paper-metric recompute (issue #83): excess-over-random orthogonal-projection FVE with K fixed at 58 at every layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed recorded). wikitext grid prompts, current (refit) lens; peak L22 excess 6.16% CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run (config.validation_max_vf_diff 4.379e-01). The committed wikitext grid structure scan and the K=23-24 grid artifact were produced by the July pre-refit 7B lens (fit 2026-07-20; see observations/2026-07-24-paper-metric-varfrac-recompute.md), whose full 27-layer file was never committed (the cache file of the same name is the 2026-08-16 refit) and of which only the 7-layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt is committed. The older 7B entries' inputs therefore name a lens that does not reproduce them, tracked in issue #87 (out of this PR's scope). Run log: cache/logs/scan_paper_metric_7b_refitlens_k58.log.",
+      "consumers": [
+        "audit Check P (stage 2, PR #84)",
+        "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
       ]
     },
     {
