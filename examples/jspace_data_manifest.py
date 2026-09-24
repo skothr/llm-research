@@ -67,11 +67,11 @@ _CACHE_PLAIN = "data/cache/, committed as a plain blob; present in every default
 _CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 
 # Full fitted lenses named as inputs (issue #87). A lens file name does not
-# identify its fit. The three LFS-committed cache lenses are refits from the
-# C4-redaction re-run. The c4en lens was refit on the redacted corpus. The
-# two wikitext lenses were refit in the same refit queue (the 1.5B fits ran
+# identify its fit. The three LFS-committed cache lenses are refits: the c4en
+# lens on the redacted corpus, the two wikitext lenses because the cache was
+# empty. All three ran in one refit queue (the 1.5B fits ran
 # 2026-07-29; the 7B fit's last segment ran 2026-08-15 and completed
-# 2026-08-16) because the cache was empty. Every committed July artifact
+# 2026-08-16). Every committed July artifact
 # that names one of them was produced by an earlier fit of the same name,
 # which was never committed in full. No committed artifact derives from the July c4en fit. Inputs name the
 # generation through a _REFIT or _JULY string. The cache files carry no
@@ -100,13 +100,15 @@ _L15_JULY = (
     "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed "
     "2026-07-18); never committed in full; the cache file of the same name "
     "is the 2026-07-29 refit; its only committed part is the layer subset "
-    "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+    "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now "
+    "holds the refit, so it does not reproduce the July artifact"
 )
 _L7B_JULY = (
     "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed "
     "2026-07-20); never committed in full; the cache file of the same name "
     "is the 2026-08-16 refit; its only committed part is the layer subset "
-    "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+    "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now "
+    "holds the refit, so it does not reproduce the July artifact"
 )
 _L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
 _L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"

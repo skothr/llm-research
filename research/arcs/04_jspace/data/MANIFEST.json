@@ -20,7 +20,7 @@
       "producing_script": "examples/jspace_atom_norm_bias.py",
       "producing_command": "python examples/jspace_atom_norm_bias.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -38,7 +38,7 @@
       "producing_script": "examples/jspace_atom_norm_bias.py",
       "producing_command": "python examples/jspace_atom_norm_bias.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -56,7 +56,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim / cue-redundancy control probe (--items-json, n=3), 7B nf4 @L19, chat all-scope (every pre-answer position).",
@@ -73,7 +73,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, chat auto-scope.",
@@ -90,7 +90,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain all-scope.",
@@ -107,7 +107,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 paper-verbatim control probe (n=3), 7B nf4 @L19, plain auto-scope.",
@@ -124,7 +124,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
@@ -141,7 +141,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
@@ -158,7 +158,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
@@ -175,7 +175,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
@@ -192,7 +192,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
@@ -209,7 +209,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
@@ -226,7 +226,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
@@ -243,7 +243,7 @@
       "producing_script": "examples/jspace_entailed_swap.py",
       "producing_command": "python examples/jspace_entailed_swap.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
@@ -332,7 +332,7 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
@@ -364,7 +364,7 @@
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
@@ -380,7 +380,7 @@
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Intermediate-concept eval (multihop + association) top-k readout hit-rates per depth band; 1.5B bf16 J-lens vs logit-lens (stage-3 H3).",
@@ -431,7 +431,7 @@
       "producing_script": "examples/jspace_lens_eval.py",
       "producing_command": "python examples/jspace_lens_eval.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Intermediate-concept eval top-k readout hit-rates per depth band; 7B nf4 J-lens vs logit-lens (stage-3 scale comparison H2).",
@@ -448,7 +448,7 @@
       "producing_script": "examples/jspace_nla_crosstie.py",
       "producing_command": "python examples/jspace_nla_crosstie.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-6 NLA cross-tie: 7B nf4 J-lens (L19) x NLA activation-vector at hidden_states[20]; rank-median + carrier-decomposition metrics (24 prompts + 1 control). Excludes its .partial.jsonl / .phase1.pt sidecars.",
@@ -465,7 +465,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json",
         "structure_scan_...1.5b...bf16_n100.pt (validation reference)"
       ],
@@ -485,7 +485,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -576,7 +576,7 @@
       "producing_script": "examples/jspace_paper_metric_varfrac.py",
       "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --n-rand 8 --rand-seed-base 30000",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json",
         "structure_scan_...7b...nf4_n100.pt (validation reference)"
       ],
@@ -685,7 +685,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -757,7 +757,7 @@
       "producing_script": "examples/jspace_readout_scan.py",
       "producing_command": "python examples/jspace_readout_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -793,7 +793,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-1.5b-bf16",
@@ -883,7 +883,7 @@
       "producing_script": "examples/jspace_structure_scan.py",
       "producing_command": "python examples/jspace_structure_scan.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
       ],
       "requires_model": "qwen-7b-nf4",
@@ -919,7 +919,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
@@ -936,7 +936,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
@@ -953,7 +953,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt"
+        "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
       "provenance": "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), 1.5B bf16 @L21.",
@@ -970,7 +970,7 @@
       "producing_script": "examples/jspace_verbal_report.py",
       "producing_command": "python examples/jspace_verbal_report.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt"
+        "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
       "provenance": "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
