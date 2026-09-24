@@ -10,7 +10,7 @@
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 56,
-  "total_size_bytes": 273210634,
+  "total_size_bytes": 273211110,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -24,7 +24,7 @@
         "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Pursuit atom-norm selection-bias summary (issue #26): per-layer full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm (tied embedding at 1.5B), and norm-percentile stats of the structure scan's actually-selected atoms. Committed record because the full lens input is cache-only. Workspace band norm-neutral (L18/L21 median pctile ~50), early band biased (L0 median 69.5, 30% from top norm decile, top-norm atoms are format tokens).",
+      "provenance": "Pursuit atom-norm selection-bias summary (issue #26): per-layer full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm (tied embedding at 1.5B), and norm-percentile stats of the structure scan's actually-selected atoms. Committed record because the full July lens input was never committed. Workspace band norm-neutral (L18/L21 median pctile ~50), early band biased (L0 median 69.5, 30% from top norm decile, top-norm atoms are format tokens).",
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
@@ -310,16 +310,16 @@
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
-      "sha256": "79e3c0559b84774d1fdaf8ee5f206d7894f6ad686d7a98a2e7ef3a51672a3807",
-      "size_bytes": 747,
+      "sha256": "a8ebafb999f0dd0eeab5c760524bbe2764a067ff673b834cfbf431bf429e1ff4",
+      "size_bytes": 985,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-1.5b_bf16_n100.config.json (data/cache/, committed as a plain blob; present in every default clone)"
+        "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar; superseded by the refit's sidecar of the same name (data/cache/, committed as a plain blob; present in every default clone; see _L15_JULY)"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (10764.8) is the July fit's; the cache sidecar's is the refit's (7769.1).",
       "consumers": [
         "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"
       ]
@@ -342,16 +342,16 @@
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
-      "sha256": "622f0ac6037deb17a800e03aeb15c0d2dd75574471917acab6809ea24de74d6d",
-      "size_bytes": 741,
+      "sha256": "3dec70cf39bc2073d2f6394b2339a613fe1d5242199cfa8e65c71ecbab7257e4",
+      "size_bytes": 979,
       "class": "raw",
       "producing_script": "examples/jspace_promote_lens_subset.py",
       "producing_command": "python examples/jspace_promote_lens_subset.py",
       "inputs": [
-        "jlens_qwen2.5-7b_nf4_n100.config.json (data/cache/, committed as a plain blob; present in every default clone)"
+        "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar; superseded by the refit's sidecar of the same name (data/cache/, committed as a plain blob; present in every default clone; see _L7B_JULY)"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the cache fit sidecar plus subset_layers + full_set_location.",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (58543.6) is the July fit's; the cache sidecar's is the refit's (41333.8).",
       "consumers": [
         "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"
       ]
