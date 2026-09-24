@@ -18,5 +18,5 @@
     25,
     26
   ],
-  "full_set_location": "July pre-refit fit (completed 2026-07-18); never committed in full; data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt is the 2026-07-29 refit (see MANIFEST inputs); the full July set is not recoverable from the repository: `git lfs pull --include=\"research/arcs/04_jspace/data/cache/**\" --exclude=\"\"` fetches the refit, and rerunning examples/jspace_fit_lens.py with this config produces a new fit"
+  "full_set_location": "July pre-refit fit (completed 2026-07-18); never committed in full; data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt is the 2026-07-29 refit (see MANIFEST inputs); the full July set is not recoverable from the repository: `git lfs pull --include=\"research/arcs/04_jspace/data/cache/**\" --exclude=\"\"` fetches the refit, and examples/jspace_fit_lens.py takes no config-file input; rerunning it with --model, --mode, --device, --dim-batch, --n-prompts, --max-seq-len and --prompts set to this sidecar's model, mode, device, dim_batch, n_prompts, max_seq_len and prompts_file produces a new fit, with --out-dir set to a scratch directory (the default is data/cache/ and would overwrite the committed refit)"
 }

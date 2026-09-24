@@ -69,10 +69,11 @@ _CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 # Full fitted lenses named as inputs (issue #87). A lens file name does not
 # identify its fit. The three LFS-committed cache lenses are refits from the
 # C4-redaction re-run. The c4en lens was refit on the redacted corpus. The
-# two wikitext lenses were refit in the same pass because the cache was
-# empty. Every committed July artifact that names one of them was
-# produced by an earlier fit of the same name, which was never committed in
-# full. No committed artifact derives from the July c4en fit. Inputs name the
+# two wikitext lenses were refit in the same refit queue (the 1.5B fits ran
+# 2026-07-29; the 7B fit's last segment ran 2026-08-15 and completed
+# 2026-08-16) because the cache was empty. Every committed July artifact
+# that names one of them was produced by an earlier fit of the same name,
+# which was never committed in full. No committed artifact derives from the July c4en fit. Inputs name the
 # generation through a _REFIT or _JULY string. The cache files carry no
 # MANIFEST entry, so --check does not verify the sha256 values quoted here;
 # each equals the oid in the file's LFS pointer.
@@ -220,16 +221,21 @@ META: dict[str, dict[str, Any]] = {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
         "inputs": [
-            "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar; "
-            "superseded by the refit's sidecar of the same name "
-            f"({_CACHE_PLAIN}; see _L7B_JULY)"
+            "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar (never "
+            "committed; its fields survive in this subset sidecar); superseded "
+            "in data/cache/ by the refit's sidecar of the same name "
+            f"({_CACHE_PLAIN}); see the jlens_qwen2.5-7b_nf4_n100_layer-subset.pt "
+            "entry's inputs and data/README.md (Decision 4 and its 2026-08-16 "
+            "amendment)"
         ],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: "
             "the July fit's sidecar plus subset_layers + full_set_location. "
             "Its wall_seconds (58543.6) is the July fit's; the cache sidecar's "
-            "is the refit's (41333.8)."
+            "is the refit's (41333.8). "
+            "full_set_location hand-updated for issue #87; re-running the "
+            "script writes its generic text (issue #92)."
         ),
         "consumers": ["jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"],
     },
@@ -252,16 +258,21 @@ META: dict[str, dict[str, Any]] = {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
         "inputs": [
-            "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar; "
-            "superseded by the refit's sidecar of the same name "
-            f"({_CACHE_PLAIN}; see _L15_JULY)"
+            "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar (never "
+            "committed; its fields survive in this subset sidecar); superseded "
+            "in data/cache/ by the refit's sidecar of the same name "
+            f"({_CACHE_PLAIN}); see the jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt "
+            "entry's inputs and data/README.md (Decision 4 and its 2026-08-16 "
+            "amendment)"
         ],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: "
             "the July fit's sidecar plus subset_layers + full_set_location. "
             "Its wall_seconds (10764.8) is the July fit's; the cache sidecar's "
-            "is the refit's (7769.1)."
+            "is the refit's (7769.1). "
+            "full_set_location hand-updated for issue #87; re-running the "
+            "script writes its generic text (issue #92)."
         ),
         "consumers": ["jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"],
     },
