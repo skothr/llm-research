@@ -18,5 +18,5 @@
     25,
     26
   ],
-  "full_set_location": "July pre-refit fit (completed 2026-07-20); never committed in full; data/cache/jlens_qwen2.5-7b_nf4_n100.pt is the 2026-08-16 refit (see MANIFEST inputs)"
+  "full_set_location": "July pre-refit fit (completed 2026-07-20); never committed in full; data/cache/jlens_qwen2.5-7b_nf4_n100.pt is the 2026-08-16 refit (see MANIFEST inputs); the full July set is not recoverable from the repository: `git lfs pull --include=\"research/arcs/04_jspace/data/cache/**\" --exclude=\"\"` fetches the refit, and rerunning examples/jspace_fit_lens.py with this config produces a new fit"
 }

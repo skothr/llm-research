@@ -67,8 +67,10 @@ _CACHE_PLAIN = "data/cache/, committed as a plain blob; present in every default
 _CACHE_UNCOMMITTED = "data/cache/, not committed — issue #47"
 
 # Full fitted lenses named as inputs (issue #87). A lens file name does not
-# identify its fit. The three LFS-committed cache lenses are the C4-redaction
-# re-run refits. Every committed July artifact that names one of them was
+# identify its fit. The three LFS-committed cache lenses are refits from the
+# C4-redaction re-run. The c4en lens was refit on the redacted corpus. The
+# two wikitext lenses were refit in the same pass because the cache was
+# empty. Every committed July artifact that names one of them was
 # produced by an earlier fit of the same name, which was never committed in
 # full. No committed artifact derives from the July c4en fit. Inputs name the
 # generation through a _REFIT or _JULY string. The cache files carry no
@@ -217,11 +219,17 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-7b_nf4_n100.config.json ({_CACHE_PLAIN})"],
+        "inputs": [
+            "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar; "
+            "superseded by the refit's sidecar of the same name "
+            f"({_CACHE_PLAIN}; see _L7B_JULY)"
+        ],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: "
-            "the cache fit sidecar plus subset_layers + full_set_location."
+            "the July fit's sidecar plus subset_layers + full_set_location. "
+            "Its wall_seconds (58543.6) is the July fit's; the cache sidecar's "
+            "is the refit's (41333.8)."
         ),
         "consumers": ["jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"],
     },
@@ -243,11 +251,17 @@ META: dict[str, dict[str, Any]] = {
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json": {
         "class": "raw",
         "producing_script": "examples/jspace_promote_lens_subset.py",
-        "inputs": [f"jlens_qwen2.5-1.5b_bf16_n100.config.json ({_CACHE_PLAIN})"],
+        "inputs": [
+            "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar; "
+            "superseded by the refit's sidecar of the same name "
+            f"({_CACHE_PLAIN}; see _L15_JULY)"
+        ],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: "
-            "the cache fit sidecar plus subset_layers + full_set_location."
+            "the July fit's sidecar plus subset_layers + full_set_location. "
+            "Its wall_seconds (10764.8) is the July fit's; the cache sidecar's "
+            "is the refit's (7769.1)."
         ),
         "consumers": ["jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"],
     },
@@ -637,8 +651,8 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "full-vocab atom-norm quantiles/CV, Spearman rho vs W_U row norm "
         "(tied embedding at 1.5B), and norm-percentile stats of the structure "
         "scan's actually-selected atoms. Committed record because the full "
-        "lens input is cache-only. Workspace band norm-neutral (L18/L21 "
-        "median pctile ~50), early band biased (L0 median 69.5, 30% from top "
+        "July lens input was never committed. Workspace band norm-neutral "
+        "(L18/L21 median pctile ~50), early band biased (L0 median 69.5, 30% from top "
         "norm decile, top-norm atoms are format tokens).",
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
     ),
