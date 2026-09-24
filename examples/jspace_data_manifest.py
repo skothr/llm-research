@@ -238,6 +238,8 @@ def _derived(
 # Full fitted lenses under data/cache/ named as inputs of the derived set.
 _L15 = f"jlens_qwen2.5-1.5b_bf16_n100.pt ({_CACHE_LFS})"
 _L7B = f"jlens_qwen2.5-7b_nf4_n100.pt ({_CACHE_LFS})"
+# The cache lens is not manifest-registered; the issue-#83 entries pin it.
+_L7B_REFIT = f"{_L7B}; the 2026-08-16 refit, sha256 4704ee3b2cd7…"
 _L15N4 = f"jlens_qwen2.5-1.5b_nf4_n100.pt ({_CACHE_UNCOMMITTED})"
 _L15N5 = f"jlens_qwen2.5-1.5b_nf4_n500.pt ({_CACHE_UNCOMMITTED})"
 _L15C4 = f"jlens_qwen2.5-1.5b_bf16_n100_c4en.pt ({_CACHE_LFS})"
@@ -698,7 +700,9 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "scan_paper_metric_heldoutc4en_7b_k58.log",
         "C4 held-out prompts; peak L23 excess 7.67% CI95 [7.30, 8.03], 0/2000 "
         "resamples over 10%; replicated varfrac@25 bit-exact vs the scan "
-        "(config.validation_max_vf_diff == 0.0).",
+        "(config.validation_max_vf_diff == 0.0), because the heldoutc4en "
+        "structure scan was regenerated 2026-08-16 with this same refit lens "
+        "(jspace_rerun_scans.sh run structure_heldoutc4en_7b).",
     ),
     (
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt",
@@ -709,7 +713,12 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "wikitext grid prompts, current (refit) lens; peak L22 excess 4.81% "
         "CI95 [4.66, 4.97]. Validation vs the July pre-refit structure scan "
         "is NOT bit-exact (config.validation_max_vf_diff 4.379e-01, a "
-        "single-position outlier; layer means agree to ~1e-3).",
+        "single-position outlier; layer means agree to 2.6e-3). "
+        "The committed wikitext grid structure scan and the K=23-24 grid "
+        "artifact were produced by the July pre-refit lens, which is not in "
+        "the repository (see observations/2026-07-24-paper-metric-varfrac-"
+        "recompute.md), which is why validation against that scan is not "
+        "bit-exact.",
     ),
     (
         "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
@@ -719,20 +728,25 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         "scan_paper_metric_7b_refitlens_k58.log",
         "wikitext grid prompts, current (refit) lens; peak L22 excess 6.16% "
         "CI95 [5.99, 6.36]. Same non-bit-exact validation as the K=25 run "
-        "(config.validation_max_vf_diff 4.379e-01).",
+        "(config.validation_max_vf_diff 4.379e-01). "
+        "The committed wikitext grid structure scan and the K=23-24 grid "
+        "artifact were produced by the July pre-refit lens, which is not in "
+        "the repository (see observations/2026-07-24-paper-metric-varfrac-"
+        "recompute.md), which is why validation against that scan is not "
+        "bit-exact.",
     ),
 ]:
     _DERIVED[_fname] = _derived(
         "examples/jspace_paper_metric_varfrac.py",
-        [_L7B, _prompts, f"{_scan} (validation reference)"],
+        [_L7B_REFIT, _prompts, f"{_scan} (validation reference)"],
         "qwen-7b-nf4",
         f"Dimension-matched paper-metric recompute (issue #83): excess-over-"
         f"random orthogonal-projection FVE with K fixed at {_k} at every "
         f"layer (--k-fixed; per-layer K_used, n_short_support, config.k_fixed "
         f"recorded). {_detail} Run log: cache/logs/{_log}.",
         [
-            "audit Check P",
-            "fig 2026-09-23-jspace-paper-metric-matched-kd.png",
+            "audit Check P (stage 2, PR #84)",
+            "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)",
         ],
         args=_K83_ARGS
         + f"--scan <data>/{_scan} --prompts <data>/{_prompts} "

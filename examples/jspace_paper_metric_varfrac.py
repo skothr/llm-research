@@ -38,6 +38,7 @@ greedy support only ever appends. The use is a dimension-matched comparison
 1.5B at K=25 (25/1536 ~ 58/3584). ``--k-snap`` keeps its roles as the
 ``--scan`` validation snapshot and the ``ours@k`` column; ``K_median_occ``
 is still measured and persisted per layer. Requires ``1 <= N <= --k-max``.
+Without ``--out``, the default output name gains a ``_k{N}`` suffix.
 
 Examples (repo root):
     # 1.5B bf16, scan grid + validation against the committed scan
@@ -123,7 +124,8 @@ def parse_args() -> argparse.Namespace:
         help="Use K=N at every layer instead of the median occupancy at "
         "--k-snap; top-K = first N atoms of the pursuit support in selection "
         "order. For dimension-matched K/d_model across scales (issue #83). "
-        "Must satisfy 1 <= N <= --k-max. Default: off.",
+        "Must satisfy 1 <= N <= --k-max; the default --out name gains a "
+        "_k{N} suffix. Default: off.",
     )
     p.add_argument("--n-rand", type=int, default=8, help="Random-control draws.")
     p.add_argument("--rand-seed-base", type=int, default=10_000)
@@ -352,9 +354,10 @@ def main() -> None:
 
     tag = heldout_tag(args.prompts, args.heldout_tag)
     mode_tag = "_allpos" if args.all_positions else ""
+    k_tag = "" if args.k_fixed is None else f"_k{args.k_fixed}"
     out = args.out or ARC_DATA / (
         f"paper_metric_varfrac_{slug(args.model)}_"
-        f"jlens_{Path(args.lens).stem.removeprefix('jlens_')}{mode_tag}{tag}.pt"
+        f"jlens_{Path(args.lens).stem.removeprefix('jlens_')}{mode_tag}{tag}{k_tag}.pt"
     )
     torch.save(
         {
