@@ -211,11 +211,11 @@ command, and the two 1.5B nf4 lenses and their sidecars are regenerate-only
 pending the scheduled refit (issue #47), each reported as a loud `MISSING`
 rather than skipped — 3 stubs + 4 `MISSING` = 7. After
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`
-the same run reports **1088 PASS | 4 FAIL** (measured 2026-09-24 with the
-cache pulled: 986 measured 2026-08-17, plus the 30 cache-independent CHECK O
-claims added 2026-08-30 and the 72 CHECK P claims added 2026-09-23, which
-read LFS artifacts pulled by default and plain committed logs, not the
-lens cache; the nf4 `MISSING` reports only) with no GPU work; the check
+the same run reports **1088 PASS | 4 FAIL** (the nf4 `MISSING` reports
+only; measured 2026-09-24 with the cache pulled: 986 measured 2026-08-17,
+plus the 30 cache-independent CHECK O claims added 2026-08-30 and the 72
+CHECK P claims added 2026-09-23, which read LFS artifacts pulled by default
+and plain committed logs, not the lens cache) with no GPU work; the check
 total grows from 1060 to 1092 between the two states because the
 lens-dependent blocks register their claims only when the lens tensors are
 on disk.

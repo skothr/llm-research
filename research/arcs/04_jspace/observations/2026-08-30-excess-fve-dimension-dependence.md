@@ -4,11 +4,15 @@
 > [2026-09-23-dimension-matched-k58-recompute.md](2026-09-23-dimension-matched-k58-recompute.md).**
 > Each statement below carries the marker
 > `[superseded 2026-09-23, see Status]` where it appears in this file.
+> The marker follows the superseded sentence it applies to; the sentence
+> after a marker stands.
 >
 > 1. The title's and Finding's "common ~2× factor that the subtraction
 >    does not remove". The K/d factor accounts for a third to two-fifths
->    of the gap on a log scale (32% grid, 39% held-out). 1.52× held-out
->    and 1.76× grid survive at matched K/d.
+>    of the gap on a log scale: 39% held-out, and on the grid 32% for the
+>    paper-rule pair (2.30× to 1.76×; 2.295 from unrounded means, 2.29
+>    from the 4 dp table values) or 30% at equal K (2.25× to 1.76×).
+>    1.52× held-out and 1.76× grid survive at matched K/d.
 > 2. The mechanism "the *pursuit* FVE carrying the same scale factor".
 >    At matched K/d, fveRand reaches near parity (0.0221 vs 0.0196,
 >    1.13×). fveTopK stays 1.44× apart (0.1390 vs 0.0963). The pursuit
@@ -25,6 +29,11 @@
 > 5. The Hypotheses bullets "the pursuit FVE tracking it is an empirical
 >    observation" and "adopted here only as evidence that the gap is a
 >    common factor". Both are superseded per items 2 and 3.
+> 6. Consequence 2's "a fixed 10% excess threshold is easier to breach at
+>    small d if the common factor behaves as observed here". At matched
+>    K/d the baseline part cancels (fveRand near parity) and only the
+>    pursuit-FVE difference remains, so the small-d advantage is smaller
+>    than stated.
 >
 > The within-scale statements, the L0 demotion symptom, the evidence
 > block and the reproducibility section stand.
@@ -78,6 +87,7 @@ Consequences:
    Claude-family models have (much) larger hidden dimensions than
    1536; a fixed 10% excess threshold is easier to breach at small d
    if the common factor behaves as observed here.
+   [superseded 2026-09-23, see Status]
 
 ### Independent symptom — the ratio also fixes a known ordering defect
 

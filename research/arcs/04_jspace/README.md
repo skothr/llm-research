@@ -80,7 +80,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    (K/d 0.0162, against 1.5B 25/1536 = 0.0163) the 1.5B/7B excess ratio is
    **1.52× held-out and 1.76× on the grid** (non-overlapping CI95s
    held-out). At the paper's K rule the gap is 1.99× held-out (K=23) and
-   2.30× on the grid (K=23-24, July lens). The K=25 current-lens grid gives
+   2.30× on the grid (K=23-24, July lens; 2.295 from unrounded means, 2.29
+   from the 4 dp table values). The K=25 current-lens grid gives
    2.25×. It is the equal-K control: the lens refit and the +1-2 step in K
    together move the grid gap by 0.05×. Both matchings are
    reported; neither is claimed as canonical. The comparison against the
@@ -585,9 +586,10 @@ first. Full detail sits in the linked observations and in
   (7B K=23-24) the 1.5B/7B gap is 1.99× held-out (K=23) and 2.30× on the
   grid (July lens). Under equal K/d (7B K=58) it is 1.52× held-out and
   1.76× on the grid. The K=25 current-lens grid (2.25×) is an equal-K
-  control for the lens refit. The gap rests on n=2 scales with 30
-  prompts per scan. The comparison against the paper's own models has no
-  conversion, because the paper's random-baseline FVE is unpublished.
+  run that moves both the lens and K (by 1-2 steps), as Findings item 2
+  describes. The gap rests on n=2 scales with 30 prompts per scan. The
+  comparison against the paper's own models has no conversion, because
+  the paper's random-baseline FVE is unpublished.
   Within-scale statements are unaffected. See Findings item 2 and
   [dimension-matched recompute](observations/2026-09-23-dimension-matched-k58-recompute.md).
 

@@ -2889,7 +2889,7 @@ def audit_matched_kd() -> None:
         claim_eq("[P] 1.5B grid L21 K == 25", 25, int(g15[21]["K_median_occ"]))
         if g7_old is not None:
             claim_near(
-                "[P] grid gap at the paper K rule (1.5B L21 / 7B July-lens L23 K=24)",
+                "[P] grid gap at the paper K rule (1.5B L21 / 7B July-lens L23 K=24, unrounded means)",
                 2.30,
                 g15_x / float(g7_old[23]["excess_mean"]),
                 atol=0.005,

@@ -40,11 +40,13 @@ from matplotlib.axes import Axes
 
 from _jspace_paths import FIGDIR, resolve
 
-cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
+if hasattr(sys.stdout, "reconfigure"):
+    cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
 OUT = FIGDIR / "2026-09-23-jspace-paper-metric-matched-kd.png"
 PAPER_CEILING = 0.10
 BAND_START = 17  # workspace band (L17-26), as in the ceiling figure's callout
+BAND_END = 26  # last band layer, as the audit defines the band
 LABEL_HALF_WIDTH = 5  # layers the centred ceiling label spans on each side
 _LFS_STUB = b"version https://git-lfs.github.com/spec/v1"
 D_MODEL = {"1.5B": 1536, "7B": 3584}
@@ -107,10 +109,10 @@ def k_label(art: dict[str, Any], d: int) -> str:
 
 
 def band_peak(res: dict[int, dict[str, Any]]) -> tuple[int, float]:
-    band = [x for x in res if x >= BAND_START]
+    band = [x for x in res if BAND_START <= x <= BAND_END]
     if not band:
         raise SystemExit(
-            f"no layer >= L{BAND_START} in the artifact (layers L{min(res)}-L{max(res)}); "
+            f"no layer in L{BAND_START}-L{BAND_END} in the artifact (layers L{min(res)}-L{max(res)}); "
             "cannot compute the workspace-band peak"
         )
     L = max(band, key=lambda x: res[x]["excess_mean"])
@@ -189,7 +191,7 @@ def draw_panel(ax: Axes, panel: dict[str, Any], arts: dict[str, dict[str, Any]],
     lo, hi = layers_plotted[0], layers_plotted[-1]
     centres = range(lo + LABEL_HALF_WIDTH, hi - LABEL_HALF_WIDTH + 1)
     window_max = {
-        c: max(top.get(L, 0.0) for L in range(c - LABEL_HALF_WIDTH, c + LABEL_HALF_WIDTH + 1))
+        c: max(top.get(L, float("inf")) for L in range(c - LABEL_HALF_WIDTH, c + LABEL_HALF_WIDTH + 1))
         for c in centres
     }
     if not window_max:
