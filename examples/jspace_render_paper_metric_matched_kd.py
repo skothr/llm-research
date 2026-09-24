@@ -79,17 +79,18 @@ PANELS: list[dict[str, Any]] = [
 ]
 
 
-def load(name: str) -> dict[int, dict[str, Any]]:
+def load(name: str) -> dict[str, Any]:
     path = resolve(name)
     if not path.exists():
         raise SystemExit(f"missing artifact: {name}")
-    return torch.load(path, map_location="cpu", weights_only=False)["results"]
+    return torch.load(path, map_location="cpu", weights_only=False)
 
 
-def k_label(res: dict[int, dict[str, Any]], d: int) -> str:
-    """K and K/d for the legend: a single value for a --k-fixed run
-    (``K_used``), the per-layer range for a median-occupancy run."""
-    fixed = all("K_used" in r for r in res.values())
+def k_label(art: dict[str, Any], d: int) -> str:
+    """K and K/d for the legend: a single value for a --k-fixed run (keyed on
+    ``config.k_fixed``), the per-layer range for a median-occupancy run."""
+    res: dict[int, dict[str, Any]] = art["results"]
+    fixed = art["config"].get("k_fixed") is not None
     ks = sorted({int(r["K_used"] if fixed else r["K_median_occ"]) for r in res.values()})
     if len(ks) == 1:
         return f"K={ks[0]} ({'fixed' if fixed else 'median occ.'}), K/d={ks[0] / d:.4f}"
@@ -107,13 +108,14 @@ def band_peak(res: dict[int, dict[str, Any]]) -> tuple[int, float]:
 def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
     peaks: list[tuple[str, int, float]] = []  # (K tag, band-peak layer, value)
     for spec in panel["series"]:
-        res = load(spec["pt"])
+        art = load(spec["pt"])
+        res: dict[int, dict[str, Any]] = art["results"]
         layers = sorted(res)
         mean = [float(res[L]["excess_mean"]) for L in layers]
         lo = [float(res[L]["excess_ci95"][0]) for L in layers]
         hi = [float(res[L]["excess_ci95"][1]) for L in layers]
         d = D_MODEL[spec["model"]]
-        label = f"{spec['model']} (d={d}), {k_label(res, d)}{spec['note']}"
+        label = f"{spec['model']} (d={d}), {k_label(art, d)}{spec['note']}"
         ax.fill_between(layers, lo, hi, color=spec["color"], alpha=0.22, linewidth=0)
         ax.plot(
             layers,
@@ -126,7 +128,7 @@ def draw_panel(ax: Axes, panel: dict[str, Any]) -> None:
             label=label,
         )
         L, v = band_peak(res)
-        peaks.append((k_label(res, d).split(" (")[0], L, v))
+        peaks.append((k_label(art, d).split(" (")[0], L, v))
         print(f"  {label}: band peak L{L} {v:.4f}")
     base_L, base_v = peaks[0][1], peaks[0][2]
     gaps = [
@@ -180,8 +182,9 @@ def main() -> None:
     fig.text(
         0.5,
         -0.02,
-        "source: data/paper_metric_varfrac_qwen2.5-{1.5b,7b}-instruct_jlens_*_n100"
-        "{,_heldoutc4en,_heldoutc4en_k58,_refitlens_k25,_refitlens_k58}.pt "
+        "source: data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100"
+        "{,_heldoutc4en}.pt + data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100"
+        "{,_heldoutc4en,_heldoutc4en_k58,_refitlens_k25,_refitlens_k58}.pt\n"
         "(examples/jspace_paper_metric_varfrac.py) | "
         "render: examples/jspace_render_paper_metric_matched_kd.py",
         ha="center",

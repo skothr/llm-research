@@ -138,9 +138,11 @@ Artifact classes (see the MANIFEST for the per-file registry):
   (`examples/jspace_audit_findings.py`) re-derives from — lens_eval,
   readout_scan, structure_scan, verbal_report, entailed_swap (+ paper-verbatim
   probes), nla_crosstie, and the issue-#26 metric-correction set
-  (`paper_metric_varfrac_*` ×11 incl. the four robustness axes + 7B
-  held-out, `atom_norm_bias_*` ×2) — so every check except check A and the
-  lens-integrity sub-blocks of checks H, I and J, plus every committed
+  (`paper_metric_varfrac_*` ×11 incl. the four robustness axes, 7B
+  held-out, and the three issue-#83 fixed-K runs `*_heldoutc4en_k58`,
+  `*_refitlens_k25`, `*_refitlens_k58`; `atom_norm_bias_*` ×2) — so every
+  check except check A and the lens-integrity sub-blocks of checks H, I and
+  J, plus every committed
   figure, reproduces from a clean clone after `git lfs pull`. (Check M
   prints no header of its own; its claims carry `[M]` tags.)
 
