@@ -87,12 +87,15 @@ in `research/arcs/<slug>/sessions/`, kept separate from evidence — see
 `research/README.md` § Conventions. **Arc 01 has no `sessions/` directory**;
 of the current arcs only arc 03 (`03_embedding-atlas`) does.
 
-Two CPU-only utilities read the committed artifacts without a model:
-`nla_dump_walkthrough.py` prints the token-by-token walkthrough of every
-capture (its 2026-05-13 output is committed as
-`observations/2026-05-13-nla-walkthrough-all-captures.txt`), and
-`nla_artifact_inspect.py` prints each `.pt` file's keys, shapes and dtypes
-(a schema check before analysis; it takes an artifact name or path).
+Two CPU-only utilities read the artifacts through `_nla_artifacts` (see
+§ ARTIFACTS path resolution) without loading a model. `nla_dump_walkthrough.py`
+prints the token-by-token walkthrough of every capture to stdout; its
+2026-05-13 output is committed as
+`research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-walkthrough-all-captures.txt`,
+whose header gives the redirect command. `nla_artifact_inspect.py` prints each
+`.pt` file's keys, shapes and dtypes (a schema check before analysis); with no
+argument it walks every artifact in `data/` and the cache, and it accepts one
+path or one artifact name.
 
 ## "Discriminant" naming — methodology note
 
