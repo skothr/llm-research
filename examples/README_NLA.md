@@ -87,6 +87,13 @@ in `research/arcs/<slug>/sessions/`, kept separate from evidence — see
 `research/README.md` § Conventions. **Arc 01 has no `sessions/` directory**;
 of the current arcs only arc 03 (`03_embedding-atlas`) does.
 
+Two CPU-only utilities read the committed artifacts without a model:
+`nla_dump_walkthrough.py` prints the token-by-token walkthrough of every
+capture (its 2026-05-13 output is committed as
+`observations/2026-05-13-nla-walkthrough-all-captures.txt`), and
+`nla_artifact_inspect.py` prints each `.pt` file's keys, shapes and dtypes
+(a schema check before analysis; it takes an artifact name or path).
+
 ## "Discriminant" naming — methodology note
 
 The scripts (`nla_discriminant_glyph.py`, `nla_discriminant_connectivity.py`,
