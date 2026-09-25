@@ -70,6 +70,7 @@ property.** Residual caveat, stated honestly: these controls test each
 axis at 1536² Jacobians; 3584² being data-starved at n=100 in a way
 1536² is not remains logically open, but with zero instability signal on
 any axis, the ~81 h direct 7B n=500 test stays unjustified.
+[qualified 2026-09-24: see § Hypotheses, 7B refit is a weak signal]
 
 **2. Held-out sample: structural conclusions robust.** Diversified
 (C4) vs clustered (wikitext) held-out activations, same lens:
@@ -93,6 +94,8 @@ the arc's absolute varfrac; the paper's ceiling is excess-over-random
 orthogonal-projection FVE — the 7B under-ceiling verdict was re-verified
 under that metric, including on this C4 held-out set; see
 `2026-07-24-paper-metric-varfrac-recompute.md`.)*
+[qualified 2026-09-24: see § Hypotheses, per-sample noise is one
+candidate]
 
 **Probe status — abandoned per the two-failure rule.** The raw-VJP
 bf16-vs-nf4 fidelity probe failed twice (first: HF_HUB_OFFLINE env bug,
@@ -137,19 +140,15 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   Test: the direct 7B n=500 nf4 refit (~81 h), or the split-half n=50
   lens-stability check at 7B (~16 h; arc README § Possible next paths,
   "Split-half lens stability at n=100").
+  The split-half check fits two n=50 lenses, so it bears on n=100 only
+  indirectly: agreement bounds noise at n=50, and disagreement could be
+  starvation at n=50 rather than at n=100.
   Both remain unrun.
 - **Source of the larger 7B held-out shift [INTUITION].**
   Finding 2 measures the shift with the original 7B lens on both sets:
   peak 0.0404@L22 (wikitext) → 0.0518@L23 (C4), +28%.
   Candidate A: per-sample noise is a larger fraction of the signal at
   7B's low absolute occupancy (Finding 2).
-  Candidate B: lens variation.
-  It cannot explain the +28% shift, which was measured before the
-  refit existed.
-  It can explain part of the later move of the C4 peak, 0.0518 →
-  0.0526 (+28% → +30%), because the 7B nf4 refit did not reproduce the
-  original lens (addendum; relative Frobenius Δ up to 1.7e-2 at L0).
-  The rest of that move is the C4 redaction, not candidate A or C.
   Candidate C: a real distribution effect, with 7B more sensitive than
   1.5B (+8%) to the clustered-vs-diverse difference.
   Test for A: scan a second disjoint C4 held-out draw
@@ -158,15 +157,23 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   A shift between the two draws of similar size to +28% supports A.
   A small shift weakens A; one pair of n=30 draws cannot rule it out,
   so ruling A out needs several draws.
-  No draw count confirms C, because all draws share one distribution;
-  C is then left by elimination only.
-  Test for B: scan the redacted C4 held-out set now committed with the
-  original and the refit 7B lens; the difference is B's share of the
-  0.0518 → 0.0526 move.
-  The original full lens was never committed and is unavailable outside
-  the layer-subset file, which holds L0, 5, 10, 15, 20, 25 and 26.
-  So the test is limited to those layers and cannot be run at the peak
-  (L22/L23) or trough (L16/L17) layers where the move is reported.
+  Test for C: scan a diversified (non-consecutive) wikitext held-out
+  draw with the same 7B lens and compare it with the clustered set.
+  A shift of similar size to +28% within wikitext supports C.
+  No committed script draws such a set.
+  - Separate note on the later 0.0518 → 0.0526 move (+28% → +30%),
+    not a rival explanation of the +28% shift, which predates the
+    refit: part of it can be lens variation, because the 7B nf4 refit
+    did not reproduce the original lens (addendum; relative Frobenius
+    Δ up to 1.7e-2 at L0), and the rest is the C4 redaction.
+    Test: scan the redacted C4 held-out set now committed with the
+    original and the refit 7B lens.
+    The original full lens was never committed and is unavailable
+    outside the layer-subset file, which holds L0, 5, 10, 15, 20, 25
+    and 26.
+    So the test is limited to those layers and cannot be run at the
+    peak (L22/L23) or trough (L16/L17) layers where the move is
+    reported.
 
 ## Follow-ups
 
