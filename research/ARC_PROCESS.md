@@ -34,7 +34,9 @@ cohere, promote them into an arc (see README § Arcs).
    like, and implement their methods directly. An arc that replicates a paper
    with a reference implementation may declare that implementation as a
    pinned dependency, because replacing it would weaken the replication. No
-   in-house helper library sits between the scripts and the models. The
+   in-house helper library sits between the scripts and the models. `jlens`
+   (anthropics/jacobian-lens) is the reference implementation of the paper
+   arc 04 replicates and stays, pinned by commit in that arc's MANIFEST. The
    `llm-surgeon` import is a leftover of the 2026-06 repository split and is
    being removed (issue #94).
 
@@ -72,14 +74,15 @@ An arc runs through four checkpoints. Each checkpoint produces a defined set
 of files, has a definition of done, and closes with a reviewed PR
 ([§ The checkpoint PR](#the-checkpoint-pr)).
 
-**Iteration.** Checkpoints 2-4 may repeat as the arc progresses: a new
-question from the analysis sends the arc back to new scripts, new data or new
-figures. Re-entering an earlier checkpoint opens a new PR scoped to the delta
-(the changed scripts, the new data, the revised figures), closed by the same
-review loop. Checkpoint 1 is re-entered only when the question changes, and
-that re-entry is a plan amendment. The plan says where the checkpoints fall
-for its arc. A small arc may merge checkpoints 3 and 4 into one PR, and its
-plan must say so.
+**Iteration.** Checkpoints 2-4 may repeat as the arc progresses: a
+follow-up inside the arc's stated question sends the arc back to new scripts,
+new data or new figures. Re-entering an earlier checkpoint opens a new PR
+scoped to the delta (the changed scripts, the new data, the revised figures),
+closed by the same review loop. Checkpoint 1 is re-entered when the arc's
+question itself changes; that re-entry is a plan amendment, and it records
+the predictions for any new capture before that capture runs. The plan says
+where the checkpoints fall for its arc. A small arc may merge checkpoints 3
+and 4 into one PR, and its plan must say so.
 
 ### Checkpoint 1: question, research, plan
 
@@ -87,9 +90,9 @@ Produces the research question, the plan, and the worktree the arc runs in.
 
 - Work in a git worktree (project hard rule — see the repo `CLAUDE.md`).
 - Write down the **research question** in one sentence.
-- Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. The plan is required
-  for any arc with a GPU run over about an hour. An exploratory arc below
-  that bar may keep the question in the arc README's motivation instead.
+- Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. Every arc has one.
+  Its length scales with the arc: an exploratory arc with no GPU run over
+  about an hour needs a few lines; a multi-run arc needs the full design.
   The plan names:
   - the question;
   - the predictions, recorded before any capture runs;
@@ -124,9 +127,11 @@ starts.
 
 This checkpoint is reviewed before any long compute run, because a defect
 found here costs a code fix while the same defect found after the run costs
-the run. Arc 04 is the evidence: vetting the C4 corpus for personal data after
-the fits cost about 23 h of refits, and the K/d mismatch was found after the
-arc closed.
+the run. Arc 04 is the evidence for gating before the run: the C4 personal
+data vetting (a checkpoint 1 item) happened after the fits and cost 22.9 h of
+refit queue time (the three refits in
+[arc 04 `data/README.md`](arcs/04_jspace/data/README.md)), and the K/d
+mismatch in the paper-metric comparison was found after the arc closed.
 
 **Done when:** the dry run completes, pyright reports zero diagnostics, and
 the scripts, manifest generator and audit scaffold are in the branch.
@@ -201,7 +206,7 @@ maintained by hand). State this in the arc README. "N PASS" means "the numbers
 agree," never "the methodology is right."
 
 **Done when:** the audit passes from a clean clone and every load-bearing
-number in the observations has a corresponding assertion.
+number the arc will report has a corresponding assertion.
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr).
@@ -209,8 +214,9 @@ number in the observations has a corresponding assertion.
 ### Checkpoint 4: observations, conclusions, artifacts
 
 Produces the figures, the observation writeups, and the arc README synthesis,
-all built on the numbers checkpoint 3 locked. A claim or figure added here
-adds its audit line in the same change.
+all built on the numbers checkpoint 3 locked. A claim written here that
+rests on a number the audit does not yet assert re-enters checkpoint 3 for
+that assertion.
 
 #### Figures + provenance
 
@@ -425,7 +431,7 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 Checkpoint 1: question, research, plan
 [ ] worktree created; research question written in one sentence
 [ ] plan in plans/: question, predictions, data vetting, dependencies,
-        checkpoint placement (required for a GPU run over about an hour)
+        checkpoint placement (length scales with the arc; every arc has one)
 [ ] checkpoint PR opened; review loop reached its floor
 Checkpoint 2: setup and implementation
 [ ] capture + analysis scripts written; manifest generator + audit scaffold
