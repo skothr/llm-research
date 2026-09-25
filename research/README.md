@@ -87,9 +87,9 @@ write the arc `README.md` that ties them together.
 
 **Running an arc?** [`ARC_PROCESS.md`](ARC_PROCESS.md) is the standard
 operating procedure — the lifecycle as four reviewed checkpoints (question +
-plan → implementation → computation + validation + audit → observations +
-synthesis, each closed by a PR) and the disciplines that keep an arc
-reproducible and honestly framed.
+plan → implementation → computation + saved data + audit → figures +
+observations + synthesis, each closed by a PR) and the disciplines that keep
+an arc reproducible and honestly framed.
 
 ## Conventions
 
