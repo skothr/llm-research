@@ -138,8 +138,17 @@ def load_model(
         }
         model = AutoModelForCausalLM.from_pretrained(model_id, **retry_kwargs, **mode_kwargs)
 
-    # AutoTokenizer does not accept use_safetensors.
+    # AutoTokenizer does not accept use_safetensors. The cache probe checks
+    # config.json only, so a partial cache can hold the model files and not the
+    # tokenizer's; retry without local_files_only in that case.
     tok_kwargs = {k: v for k, v in common_kwargs.items() if k != "use_safetensors"}
-    tokenizer = AutoTokenizer.from_pretrained(model_id, **tok_kwargs)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_id, **tok_kwargs)
+    except OSError:
+        if not tok_kwargs.get("local_files_only"):
+            raise
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_id, **{k: v for k, v in tok_kwargs.items() if k != "local_files_only"}
+        )
 
     return model, tokenizer
