@@ -1,3 +1,7 @@
+# Generated 2026-05-13 by `python examples/nla_dump_walkthrough.py` from the
+# three committed arc-01 artifacts (aggregate_faithfulness.pt,
+# rabbit_haiku_gen_trajectory.pt, forced_continuation.pt). Regenerate with the
+# same command from the repo root; the script reads the committed data/ copies.
 
 ============================================================================================
 ARTIFACT: aggregate_faithfulness.pt  (h[20] across generation, 8 prompts)
