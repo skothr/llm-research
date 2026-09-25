@@ -1,7 +1,9 @@
-# Generated 2026-05-13 by `python examples/nla_dump_walkthrough.py` from the
-# three committed arc-01 artifacts (aggregate_faithfulness.pt,
-# rabbit_haiku_gen_trajectory.pt, forced_continuation.pt). Regenerate with the
-# same command from the repo root; the script reads the committed data/ copies.
+# Generated 2026-05-13 by examples/nla_dump_walkthrough.py from three arc-01
+# artifacts (aggregate_faithfulness.pt, rabbit_haiku_gen_trajectory.pt,
+# forced_continuation.pt), resolved through examples/_nla_artifacts (working
+# cache first, then the committed data/ copies). The script prints to stdout:
+#   python examples/nla_dump_walkthrough.py > <this file>     (repo root)
+# These header lines are prepended by hand; the script does not print them.
 
 ============================================================================================
 ARTIFACT: aggregate_faithfulness.pt  (h[20] across generation, 8 prompts)
