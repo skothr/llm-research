@@ -16,6 +16,8 @@ session, ran probe → fit → suite unattended).
 **Quantization is exonerated — pre-registered decision rule case (b).**
 Flipping bf16→nf4 at fixed model/corpus/budget moves the J-space
 structure by less than run-to-run rounding, on every metric:
+[qualified 2026-09-24: see § Hypotheses, the non-varfrac rows differ
+by up to 0.09]
 
 | metric | 1.5B-bf16 | 1.5B-nf4 | 7B-nf4 |
 |---|--:|--:|--:|
@@ -105,9 +107,13 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   The fitted-lens agreement fits both.
   In the Finding table the structural (varfrac) values agree within
   ~0.006.
-  Other rows differ by more: multihop J@10 by 0.009, its logit value
-  by 0.020, L26 Spearman logit by 0.018 and L0 logit-kurtosis by 0.09.
+  Every other row that differs by more is listed here.
+  Multihop J@10 overall differs by 0.009, its logit value by 0.020 and
+  J@10 early by 0.01.
+  L26 Spearman differs by 0.011 (J) and 0.018 (logit).
+  Logit-kurtosis differs by 0.09 at L0 and 0.02 at the trough.
   The varfrac trough layer moves from L16 to L14.
+  These deltas qualify the Finding's "on every metric" wording.
   Test: the per-layer cosine table from `jspace_quant_grad_probe.py`.
   A cosine near 0.99 supports A; a lower cosine supports B.
   The probe failed twice and was abandoned
@@ -131,6 +137,8 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   H1 weakens and genuine scale carries the 7B gap; if it shifts, H1 is
   live and the 7B n=500 (~81 h) becomes worth its price. Recommend as
   the next deferred-item promotion.
+  [superseded 2026-07-22: ran in
+  `2026-07-22-n500-and-heldout-robustness.md`, profile n-stable]
 - Probe rerun at next idle GPU window (record-keeping only).
   [superseded 2026-07-22: abandoned after two failures, see
   `2026-07-22-n500-and-heldout-robustness.md` § Probe status]

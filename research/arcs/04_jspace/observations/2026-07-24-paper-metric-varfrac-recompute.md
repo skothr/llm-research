@@ -314,6 +314,9 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   tested].**
   The Finding 1 table gives a grid gap of 2.3× (1.5B L21 10.8% vs 7B
   4.72%), measured at d=1536 and d=3584 with nearly equal K.
+  Finding 1's prose "~2.4×" mixes the 1.5B all-positions value
+  (11.15%) with the 7B grid value (4.72%); the grid-to-grid ratio is
+  2.3×.
   Part of it could be a dimension effect.
   `2026-09-23-dimension-matched-k58-recompute.md` tested this.
   At matched K/d the gap shrinks from 1.99× to 1.52× (held-out) and
@@ -330,16 +333,22 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   No committed script computes this; it needs the pursuit supports and
   the lens as loaded in `jspace_paper_metric_varfrac.py`.
   The result would explain the refit trend only.
-  Whether the naive/paper agreement at 1.5B L21 is layer-specific is
-  read from the per-layer refit and control terms instead: at 7B L21
-  they do not offset (net +0.8, Finding 1).
+  Finding 1 gives the 1.5B control term only at L21, where refit +0.5
+  and control −2.02 net −1.5 pt.
+  Whether that net holds at other 1.5B layers stays open until the
+  per-layer terms are read from the 1.5B grid artifact
+  (`paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`,
+  per-layer `fve_topK_mean` and `fve_rand_mean`).
 - **Early-band excess is norm-driven [SPECULATION].**
   Selected atoms sit at norm-percentile 69.5 at 1.5B L0, against ~50 in
   the workspace band (Finding 3).
-  Both L0 figures use the bf16 wikitext lens: 10.4% is the
-  all-positions sweep, 9.67% the scan grid (Finding 1).
-  The L0 excess and its corpus sensitivity (grid, 9.67% → 15.43% under
-  the C4 lens) may then measure atom norm more than content.
+  All three L0 figures are on the wikitext held-out prompts.
+  10.4% is the all-positions sweep with the bf16 wikitext lens.
+  9.67% is the scan grid with the same lens, the robustness table's
+  base row (bf16 lens, wikitext held-out).
+  15.43% is the scan grid with the C4-en lens.
+  The L0 excess and its corpus sensitivity (grid, 9.67% → 15.43%) may
+  then measure atom norm more than content.
   Test: rerun the recompute with unit-normalized atoms and compare the
   early-band excess.
   Neither `_jspace_pursuit.py` nor `jspace_paper_metric_varfrac.py`

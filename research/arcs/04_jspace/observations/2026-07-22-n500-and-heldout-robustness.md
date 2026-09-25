@@ -149,20 +149,24 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   It can explain part of the later move of the C4 peak, 0.0518 →
   0.0526 (+28% → +30%), because the 7B nf4 refit did not reproduce the
   original lens (addendum; relative Frobenius Δ up to 1.7e-2 at L0).
+  The rest of that move is the C4 redaction, not candidate A or C.
   Candidate C: a real distribution effect, with 7B more sensitive than
   1.5B (+8%) to the clustered-vs-diverse difference.
   Test for A: scan a second disjoint C4 held-out draw
   (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
   lens.
   A shift between the two draws of similar size to +28% supports A.
-  A small shift rules out A but cannot confirm C, because both draws
-  share one distribution; C is then left by elimination only.
-  Test for B: scan the C4 held-out set with the original and the refit
-  7B lens; the difference is B's share of the 0.0518 → 0.0526 move.
-  The original full lens was never committed.
-  The committed layer-subset file holds L0, 5, 10, 15, 20, 25 and 26,
-  which excludes the peak (L22/L23) and trough (L16/L17) layers.
-  So this test cannot reach the layers where the move is reported.
+  A small shift weakens A; one pair of n=30 draws cannot rule it out,
+  so ruling A out needs several draws.
+  No draw count confirms C, because all draws share one distribution;
+  C is then left by elimination only.
+  Test for B: scan the redacted C4 held-out set now committed with the
+  original and the refit 7B lens; the difference is B's share of the
+  0.0518 → 0.0526 move.
+  The original full lens was never committed and is unavailable outside
+  the layer-subset file, which holds L0, 5, 10, 15, 20, 25 and 26.
+  So the test is limited to those layers and cannot be run at the peak
+  (L22/L23) or trough (L16/L17) layers where the move is reported.
 
 ## Follow-ups
 
