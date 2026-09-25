@@ -57,6 +57,8 @@ nf4 already mandatory there).
   The fitted-lens agreement above settles the question without it; the
   probe's per-layer cosine table remains a nice-to-have record
   (prediction: cosine ≈ 0.99+), queued for idle GPU.
+  [superseded 2026-07-22: abandoned after two failures, see
+  `2026-07-22-n500-and-heldout-robustness.md` § Probe status]
 - The stage-4 observation's "trough L13" for 1.5B was a selected-rows
   artifact; the full-27-layer argmin is L16 (bf16) / L14 (nf4). No
   values change; resolution note only.
@@ -100,18 +102,27 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   Candidate A: nf4 perturbs each raw VJP by a small amount.
   Candidate B: raw VJPs differ more, and averaging over 100 prompts
   cancels the difference in the fitted lens.
-  The fitted-lens agreement (within ~0.006 on every metric) fits both.
+  The fitted-lens agreement fits both.
+  In the Finding table the structural (varfrac) values agree within
+  ~0.006.
+  Other rows differ by more: multihop J@10 by 0.009, its logit value
+  by 0.020, L26 Spearman logit by 0.018 and L0 logit-kurtosis by 0.09.
+  The varfrac trough layer moves from L16 to L14.
   Test: the per-layer cosine table from `jspace_quant_grad_probe.py`.
   A cosine near 0.99 supports A; a lower cosine supports B.
   The probe failed twice and was abandoned
   (`2026-07-22-n500-and-heldout-robustness.md`), so this stays open.
 - **Transfer of the null to 7B [SPECULATION].**
   The control flips precision at 1.5B only.
-  Removing the quantization asterisk from 7B claims assumes nf4 error
-  does not grow with model size.
-  Test: the same bf16-vs-nf4 comparison at 7B, by lens fit or by
-  `jspace_quant_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct`.
-  This file does not measure the GPU memory a bf16 7B backward needs.
+  The Finding's headline, that the quantization asterisk is removed
+  from all 7B structural claims, rests on an untested assumption: nf4
+  error does not grow with model size.
+  A bf16 7B lens fit cannot test it here, because nf4 is already
+  mandatory for the 7B fit (Fit-cost datum).
+  `jspace_quant_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct` also
+  needs a bf16 7B backward, whose memory this file does not measure,
+  and the probe itself is unvalidated (§ Method notes).
+  No test known to be feasible on this hardware exists.
 
 ## Follow-ups
 
@@ -121,6 +132,8 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   live and the 7B n=500 (~81 h) becomes worth its price. Recommend as
   the next deferred-item promotion.
 - Probe rerun at next idle GPU window (record-keeping only).
+  [superseded 2026-07-22: abandoned after two failures, see
+  `2026-07-22-n500-and-heldout-robustness.md` § Probe status]
 - Audit check group for the nf4 artifacts at stage 7.
 
 ## References
