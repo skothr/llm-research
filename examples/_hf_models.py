@@ -121,22 +121,32 @@ def load_model(
     # Safetensors first: pickle-format .bin can execute code on load. Fall
     # back to .bin only when the failure is about safetensors (older Hub
     # models, or a stale `.no_exist/<sha>/model.safetensors` cache marker).
+    # Before that, a load barred from the network by the cache probe (which
+    # checks config.json only) is retried online once, still safetensors-only,
+    # so a partial cache downloads its missing shards instead of failing.
     try:
         model = AutoModelForCausalLM.from_pretrained(model_id, **common_kwargs, **mode_kwargs)
-    except OSError as e:
-        if "safetensors" not in str(e).lower():
-            raise
-        logger.warning(
-            "Model '%s' has no safetensors file accessible; falling back to .bin",
-            model_id,
-        )
-        # The retry may need to fetch the .bin weights the safetensors probe
-        # never downloaded, so it does not inherit local_files_only.
-        retry_kwargs = {
-            k: v for k, v in common_kwargs.items()
-            if k not in ("use_safetensors", "local_files_only")
-        }
-        model = AutoModelForCausalLM.from_pretrained(model_id, **retry_kwargs, **mode_kwargs)
+    except OSError as first_error:
+        error: OSError = first_error
+        model = None
+        if common_kwargs.get("local_files_only"):
+            online_kwargs = {k: v for k, v in common_kwargs.items() if k != "local_files_only"}
+            try:
+                model = AutoModelForCausalLM.from_pretrained(model_id, **online_kwargs, **mode_kwargs)
+            except OSError as second_error:
+                error = second_error
+        if model is None:
+            if "safetensors" not in str(error).lower():
+                raise error
+            logger.warning(
+                "Model '%s' has no safetensors file accessible; falling back to .bin",
+                model_id,
+            )
+            retry_kwargs = {
+                k: v for k, v in common_kwargs.items()
+                if k not in ("use_safetensors", "local_files_only")
+            }
+            model = AutoModelForCausalLM.from_pretrained(model_id, **retry_kwargs, **mode_kwargs)
 
     # AutoTokenizer does not accept use_safetensors. The cache probe checks
     # config.json only, so a partial cache can hold the model files and not the
