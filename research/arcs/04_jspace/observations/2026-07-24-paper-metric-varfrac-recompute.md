@@ -331,7 +331,8 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   The refit term falls from +1.25 pt at 1.5B L17 to +0.29 at L22, and
   is +1.71 at 7B L21 (Finding 1).
   The 7B point does not fit a depth-only trend: L21 is a later layer
-  than 1.5B L17 (both scales index L0-L26), yet its gain is larger.
+  than 1.5B L17 (both lenses cover 27 source layers, L0 to L26), yet
+  its gain is larger.
   So either the candidate must also explain a scale difference, or the
   decay is specific to 1.5B; this file does not decide which.
   Candidate: the gain grows with the mutual coherence of the selected
