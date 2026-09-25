@@ -36,7 +36,7 @@ cohere, promote them into an arc (see README § Arcs).
    pinned dependency, because replacing it would weaken the replication. No
    in-house helper library sits between the scripts and the models. `jlens`
    (anthropics/jacobian-lens) is the reference implementation of the paper
-   arc 04 replicates and stays, pinned by commit in that arc's MANIFEST. The
+   arc 04 replicates and stays, its commit recorded in that arc's MANIFEST. The
    `llm-surgeon` import is a leftover of the 2026-06 repository split and is
    being removed (issue #94).
 
@@ -58,7 +58,7 @@ research/arcs/<slug>/
     README.md           # usage, copy-back, trust note
     *.pt                # capture + derived artifacts
   sessions/             # session-resume checkpoints (stale-fast; never load-bearing)
-  plans/                # research/construction plans (as needed)
+  plans/                # the arc plan (every arc) + later design docs
 ```
 
 Generated artifacts (figures, datasets) are committed — drift detection beats
@@ -78,11 +78,11 @@ of files, has a definition of done, and closes with a reviewed PR
 follow-up inside the arc's stated question sends the arc back to new scripts,
 new data or new figures. Re-entering an earlier checkpoint opens a new PR
 scoped to the delta (the changed scripts, the new data, the revised figures),
-closed by the same review loop. Checkpoint 1 is re-entered when the arc's
-question itself changes; that re-entry is a plan amendment, and it records
-the predictions for any new capture before that capture runs. The plan says
-where the checkpoints fall for its arc. A small arc may merge checkpoints 3
-and 4 into one PR, and its plan must say so.
+closed by the same review loop. A re-entry that adds a capture run records
+its predictions in a plan amendment before that run. Checkpoint 1 is
+re-entered when the arc's question itself changes; that re-entry is a plan
+amendment too. The plan says where the checkpoints fall for its arc. A small
+arc may merge checkpoints 3 and 4 into one PR, and its plan must say so.
 
 ### Checkpoint 1: question, research, plan
 
@@ -93,7 +93,7 @@ Produces the research question, the plan, and the worktree the arc runs in.
 - Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. Every arc has one.
   Its length scales with the arc: an exploratory arc with no GPU run over
   about an hour needs a few lines; a multi-run arc needs the full design.
-  The plan names:
+  Arc 01 predates this rule and is not retrofitted. The plan names:
   - the question;
   - the predictions, recorded before any capture runs;
   - the third-party data vetting record for every external dataset, corpus
@@ -214,9 +214,9 @@ number the arc will report has a corresponding assertion.
 ### Checkpoint 4: observations, conclusions, artifacts
 
 Produces the figures, the observation writeups, and the arc README synthesis,
-all built on the numbers checkpoint 3 locked. A claim written here that
-rests on a number the audit does not yet assert re-enters checkpoint 3 for
-that assertion.
+all built on the numbers checkpoint 3 locked. A claim or figure written
+here that rests on a number the audit does not yet assert adds that
+assertion in the same PR.
 
 #### Figures + provenance
 
