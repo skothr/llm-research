@@ -41,6 +41,11 @@ under-determining 3584² Jacobians (H1) — those two remain confounded
 with each other, but are now cleanly separated from quantization, and
 the quantization asterisk is removed from all 7B structural claims
 (design-plan §1 control clause discharged).
+[qualified 2026-09-24: see § Hypotheses, "same eval rates": multihop
+rows differ]
+[qualified 2026-09-24: see § Hypotheses, 1.5B n=500 weakens H1]
+[qualified 2026-09-24: see § Hypotheses, assumes nf4 error does not
+grow with scale]
 
 **Fit-cost datum [MEASURED]:** the nf4 backward is **2.97× cheaper**
 (36.3 s/prompt vs 107.6 s/prompt at matched dim_batch=8; 60.5 min vs
@@ -99,7 +104,9 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   Test: an n=500 nf4 refit (`jspace_fit_lens.py --n-prompts 500`).
   The 1.5B version ran in `2026-07-22-n500-and-heldout-robustness.md`
   and found the profile n-stable (peak −1.4%).
-  The 7B version (~81 h) stays open.
+  Under this file's own rule (Follow-ups), an n-stable 1.5B result
+  weakens H1, so the 7B gap is more likely scale than fit budget.
+  The 7B n=500 refit (~81 h) stays open as the residual test.
 - **Why the fitted lens is quantization-invariant [SPECULATION].**
   Candidate A: nf4 perturbs each raw VJP by a small amount.
   Candidate B: raw VJPs differ more, and averaging over 100 prompts
@@ -113,7 +120,8 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   L26 Spearman differs by 0.011 (J) and 0.018 (logit).
   Logit-kurtosis differs by 0.09 at L0 and 0.02 at the trough.
   The varfrac trough layer moves from L16 to L14.
-  These deltas qualify the Finding's "on every metric" wording.
+  These deltas qualify the Finding's "on every metric" and "same eval
+  rates" wording.
   Test: the per-layer cosine table from `jspace_quant_grad_probe.py`.
   A cosine near 0.99 supports A; a lower cosine supports B.
   The probe failed twice and was abandoned
@@ -128,7 +136,12 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   `jspace_quant_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct` also
   needs a bf16 7B backward, whose memory this file does not measure,
   and the probe itself is unvalidated (§ Method notes).
-  No test known to be feasible on this hardware exists.
+  Candidate test: the same bf16-vs-nf4 refit at an intermediate size
+  (Qwen2.5-3B), to see whether the nf4 effect grows between 1.5B and
+  3B.
+  Its feasibility is unmeasured: the repo records bf16 fit memory only
+  at 1.5B (5.44 GiB peak on an 8 GiB GPU,
+  `2026-07-18-fit-cost-calibration.md`).
 
 ## Follow-ups
 
