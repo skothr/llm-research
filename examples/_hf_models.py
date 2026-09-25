@@ -136,7 +136,9 @@ def load_model(
             except OSError as second_error:
                 error = second_error
         if model is None:
-            if "safetensors" not in str(error).lower():
+            # Decide the fallback on either error: offline, the online retry
+            # fails with a connection error that hides the safetensors cause.
+            if "safetensors" not in (str(first_error) + str(error)).lower():
                 raise error
             logger.warning(
                 "Model '%s' has no safetensors file accessible; falling back to .bin",
