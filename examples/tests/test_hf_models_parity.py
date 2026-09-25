@@ -51,14 +51,20 @@ def shared_cache(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def _load_both(mode: str, device_map: Any) -> tuple[dict[str, torch.Tensor], list[int], dict[str, torch.Tensor], list[int]]:
     out: list[Any] = []
-    for loader in (orig_surgery.load_model, _hf_models.load_model):
-        try:
-            model, tok = loader(MODEL_ID, mode=mode, revision=REVISION, device_map=device_map)
-        except OSError as e:  # no network and a cold cache
-            pytest.skip(f"cannot fetch {MODEL_ID}@{REVISION[:8]}: {e}")
-        out += [{k: v.detach().clone() for k, v in model.state_dict().items()}, tok(TEXT)["input_ids"]]
-        del model, tok
-        gc.collect()
+    # Only the original loader may skip the test (no network and a cold
+    # cache). Once it has loaded, the files are present, so a failure of the
+    # new loader is a defect in the code under test and must fail the gate.
+    try:
+        model, tok = orig_surgery.load_model(MODEL_ID, mode=mode, revision=REVISION, device_map=device_map)
+    except OSError as e:
+        pytest.skip(f"cannot fetch {MODEL_ID}@{REVISION[:8]}: {e}")
+    out += [{k: v.detach().clone() for k, v in model.state_dict().items()}, tok(TEXT)["input_ids"]]
+    del model, tok
+    gc.collect()
+    model, tok = _hf_models.load_model(MODEL_ID, mode=mode, revision=REVISION, device_map=device_map)
+    out += [{k: v.detach().clone() for k, v in model.state_dict().items()}, tok(TEXT)["input_ids"]]
+    del model, tok
+    gc.collect()
     return out[0], out[1], out[2], out[3]
 
 
@@ -94,6 +100,22 @@ def test_nla_score_parity() -> None:
         assert orig_probe.nla_score(h, p, mse_scale=scale) == _nla_probe.nla_score(h, p, mse_scale=scale)
     same = torch.randn(64, generator=g)
     assert orig_probe.nla_score(same, same) == _nla_probe.nla_score(same, same)
+
+
+_CACHE_REFS = ("surgery.MODEL_CACHE_DIR", "_hf_models.MODEL_CACHE_DIR")
+
+
+@pytest.mark.parametrize(
+    "name",
+    ["load_av_meta", "load_ar_meta", "load_av", "load_ar", "nla_verbalize", "nla_reconstruct", "nla_score"],
+)
+def test_nla_probe_source_identical(name: str) -> None:
+    """The probe is a verbatim port: the only permitted difference is where the
+    cache-dir constant comes from. Arc-01 artifacts store nla_verbalize's
+    greedy-decoded text, so any other source change is a numerics change."""
+    orig_src = inspect.getsource(getattr(orig_probe, name)).replace(_CACHE_REFS[0], "CACHE")
+    new_src = inspect.getsource(getattr(_nla_probe, name)).replace(_CACHE_REFS[1], "CACHE")
+    assert orig_src == new_src
 
 
 def test_nla_constants() -> None:
