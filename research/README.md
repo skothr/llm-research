@@ -75,7 +75,7 @@ research/
       figures/           ← generated plots + INVENTORY.md provenance
     data/                ← raw .pt datasets (git-LFS) + MANIFEST.json
     sessions/            ← session-resumption checkpoints (stale-fast)
-    plans/               ← research / construction plans (as needed)
+    plans/               ← the arc plan (every arc) + later design docs
   observations/          ← one-off findings not (yet) part of an arc
   archive/               ← retired / pre-arc material, kept for archaeology
 ```
@@ -111,8 +111,9 @@ load-bearing for a research claim, so a stale or deleted session file never
 affects the correctness of an observation or figure.
 
 **Plans** — research/construction plans (what to investigate, in what order,
-with what caveats). Dated `YYYY-MM-DD-<slug>.md`. A plan in `Status:
-preliminary` has run no experiments yet.
+with what caveats). Dated `YYYY-MM-DD-<slug>.md`. Every arc has one, per
+`ARC_PROCESS.md` checkpoint 1. A plan in `Status: preliminary` has run no
+experiments yet.
 
 **Figures** — generated plots under an arc's `observations/figures/`, with an
 `INVENTORY.md` giving per-figure provenance (which script + commit produced
