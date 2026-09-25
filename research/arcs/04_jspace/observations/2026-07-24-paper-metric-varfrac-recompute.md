@@ -308,6 +308,47 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   renamed across docs, scripts, and figure axes in commit `0c06b197`, with
   committed artifact keys deliberately frozen for compatibility.
 
+## Hypotheses
+
+- **Dimension dependence of the cross-scale gap.**
+  The ~2.4× gap compares excess FVE at d=1536 and d=3584 with nearly
+  equal K, so part of it could be a dimension effect.
+  `2026-09-23-dimension-matched-k58-recompute.md` settled this: at
+  matched K/d the gap survives at 1.52× (held-out) and 1.76× (grid),
+  and 7B stays under the ceiling.
+- **Why the LS-refit gain decays with depth [SPECULATION].**
+  The refit term falls from +1.25 pt at 1.5B L17 to +0.29 at L22, and
+  is +1.71 at 7B L21 (Finding 1).
+  Candidate: the gain grows with the mutual coherence of the selected
+  atoms.
+  The single-step coefficients ignore atom overlap; the LS projection
+  accounts for it.
+  Test: mean pairwise |cos| of the selected atoms per layer, set
+  against the per-layer refit gain.
+  No committed script computes this; it needs the pursuit supports and
+  the lens as loaded in `jspace_paper_metric_varfrac.py`.
+  The result decides whether the naive/paper agreement at 1.5B L21 is
+  specific to that layer, as Finding 1 reads it.
+- **Early-band excess is norm-driven [SPECULATION].**
+  Selected atoms sit at norm-percentile 69.5 at 1.5B L0, against ~50 in
+  the workspace band (Finding 3).
+  The L0 excess (10.4%) and its corpus sensitivity (9.67% → 15.43%
+  under the C4 lens) may then measure atom norm more than content.
+  Test: rerun the recompute with unit-normalized atoms and compare the
+  early-band excess.
+  `_jspace_pursuit.py` has no normalization option, so this test needs
+  a new flag.
+- **The 1.5B breach at a smaller K [SPECULATION].**
+  K = median occupancy lands at K ≈ 25 because `ACTIVE_TAU = 1e-3`
+  counts nearly every selected atom as active.
+  A coefficient-mass occupancy rule would give a smaller K.
+  `2026-09-23-dimension-matched-k58-recompute.md` found that 7B excess
+  rises with K (K=25 → 58).
+  If 1.5B excess also rises with K, a smaller K could move the L21 value
+  (11.15%) under the 10% ceiling.
+  Test: the coefficient-mass recalibration (Follow-ups), then
+  `jspace_paper_metric_varfrac.py --k-fixed` at the resulting K.
+
 ## Follow-ups
 
 - ~~Recompute the robustness comparisons under the paper metric~~ —

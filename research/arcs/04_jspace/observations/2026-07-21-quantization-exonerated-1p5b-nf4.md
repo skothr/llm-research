@@ -85,6 +85,34 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --device cuda --n-prompts 5 --n-probes 8
 ```
 
+## Hypotheses
+
+- **Fit budget vs scale (H1) [SPECULATION].**
+  The 7B divergence could come from the n=100 fit under-determining
+  3584² Jacobians rather than from scale.
+  This control separates quantization from both, but leaves those two
+  confounded with each other.
+  Test: an n=500 nf4 refit (`jspace_fit_lens.py --n-prompts 500`).
+  The 1.5B version ran in `2026-07-22-n500-and-heldout-robustness.md`
+  and found the profile n-stable (peak −1.4%).
+  The 7B version (~81 h) stays open.
+- **Why the fitted lens is quantization-invariant [SPECULATION].**
+  Candidate A: nf4 perturbs each raw VJP by a small amount.
+  Candidate B: raw VJPs differ more, and averaging over 100 prompts
+  cancels the difference in the fitted lens.
+  The fitted-lens agreement (within ~0.006 on every metric) fits both.
+  Test: the per-layer cosine table from `jspace_quant_grad_probe.py`.
+  A cosine near 0.99 supports A; a lower cosine supports B.
+  The probe failed twice and was abandoned
+  (`2026-07-22-n500-and-heldout-robustness.md`), so this stays open.
+- **Transfer of the null to 7B [SPECULATION].**
+  The control flips precision at 1.5B only.
+  Removing the quantization asterisk from 7B claims assumes nf4 error
+  does not grow with model size.
+  Test: the same bf16-vs-nf4 comparison at 7B, by lens fit or by
+  `jspace_quant_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct`.
+  This file does not measure the GPU memory a bf16 7B backward needs.
+
 ## Follow-ups
 
 - The nf4 cost discovery makes the H1 fit-budget test cheap at 1.5B: an

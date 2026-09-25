@@ -123,6 +123,30 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
 # scans: --prompts <c4 heldout> (outputs auto-tag _heldoutc4en; no clobber)
 ```
 
+## Hypotheses
+
+- **7B data starvation at n=100 [SPECULATION].**
+  The n-budget control ran on 1536² Jacobians.
+  3584² Jacobians could still be data-starved at n=100 in a way 1536²
+  are not (Finding 1, residual caveat).
+  No axis in this file shows an instability signal that points to it.
+  Test: the direct 7B n=500 nf4 refit (~81 h), or the split-half n=50
+  lens-stability check at 7B (~16 h, arc README next-path item 3).
+  Both remain unrun.
+- **Source of the larger 7B held-out shift [INTUITION].**
+  Candidate A: per-sample noise is a larger fraction of the signal at
+  7B's low absolute occupancy (Finding 2).
+  Candidate B: part of the shift is lens variation, since the 7B nf4
+  refit did not reproduce the original lens (addendum; relative
+  Frobenius Δ up to 1.7e-2 at L0).
+  Test for A: scan a second disjoint C4 held-out draw
+  (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
+  lens; a shift of similar size between the two draws supports A.
+  Test for B: scan one held-out set with the original and the refit 7B
+  lens.
+  The original full lens was cache-only; the committed layer-subset
+  file holds seven of its layers, so this test covers those layers only.
+
 ## Follow-ups
 
 - 7B held-out scans via the VRAM gate; fold in before close.
