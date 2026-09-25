@@ -94,8 +94,8 @@ the arc's absolute varfrac; the paper's ceiling is excess-over-random
 orthogonal-projection FVE — the 7B under-ceiling verdict was re-verified
 under that metric, including on this C4 held-out set; see
 `2026-07-24-paper-metric-varfrac-recompute.md`.)*
-[qualified 2026-09-24: see § Hypotheses, per-sample noise is one
-candidate]
+[qualified 2026-09-24, on "per-sample noise is a larger fraction":
+see § Hypotheses, one of two candidates]
 
 **Probe status — abandoned per the two-failure rule.** The raw-VJP
 bf16-vs-nf4 fidelity probe failed twice (first: HF_HUB_OFFLINE env bug,
@@ -154,9 +154,18 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   7B's low absolute occupancy (Finding 2).
   Candidate B: a real distribution effect, with 7B more sensitive than
   1.5B (+8%) to the clustered-vs-diverse difference.
+  The measured shift changes two factors at once: clustering, and
+  corpus domain (C4 web text vs wikitext encyclopedic text).
   Test for A: scan a second disjoint C4 held-out draw
   (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
   lens.
+  Redact the new draw before use (`jspace_redact_corpus.py --apply`,
+  then `--check`), as the addendum's C4 set required.
+  The fixed lens must be the refit lens, since the original full lens
+  is unavailable.
+  Its draw-to-draw shift is then compared against a +28% measured with
+  the original lens, a limit at L22/L23, where the two lenses cannot
+  be compared.
   A shift between the two draws of similar size to +28% supports A.
   A small shift weakens A; one pair of n=30 draws cannot rule it out,
   so ruling A out needs several draws.
@@ -166,6 +175,8 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   diverse shift supports B only if it clearly exceeds the draw-to-draw
   shift measured by the test for A.
   Otherwise the outcome is ambiguous between A and B.
+  This test isolates clustering only, so a null there leaves the
+  corpus-domain factor open.
   No committed script draws such a set.
   - Separate note on the later 0.0518 → 0.0526 move (+28% → +30%),
     not a rival explanation of the +28% shift, which predates the

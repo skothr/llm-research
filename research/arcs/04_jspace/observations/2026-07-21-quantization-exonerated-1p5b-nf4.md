@@ -17,7 +17,7 @@ session, ran probe → fit → suite unattended).
 Flipping bf16→nf4 at fixed model/corpus/budget moves the J-space
 structure by less than run-to-run rounding, on every metric:
 [qualified 2026-09-24: see § Hypotheses, the non-varfrac rows differ
-by up to 0.09]
+by up to 0.09 and the varfrac trough moves L16 to L14]
 
 | metric | 1.5B-bf16 | 1.5B-nf4 | 7B-nf4 |
 |---|--:|--:|--:|
@@ -46,6 +46,8 @@ rows differ]
 [qualified 2026-09-24: see § Hypotheses, 1.5B n=500 weakens H1]
 [qualified 2026-09-24: see § Hypotheses, assumes nf4 error does not
 grow with scale]
+[qualified 2026-09-24: see § Hypotheses, part of the paper-metric gap
+is metric dimension (K/d)]
 
 **Fit-cost datum [MEASURED]:** the nf4 backward is **2.97× cheaper**
 (36.3 s/prompt vs 107.6 s/prompt at matched dim_batch=8; 60.5 min vs
