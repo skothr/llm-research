@@ -42,16 +42,26 @@ MODEL_CACHE_DIR: str | None = os.environ.get("LLM_RESEARCH_MODEL_CACHE") or None
 VALID_MODES = {"nf4", "int8", "bf16", "fp16", "fp32"}
 
 
-def _is_cached(model_id: str, cache_dir: str | None = None) -> bool:
-    """True if the cache holds at least a config.json snapshot for model_id."""
+def _is_cached(
+    model_id: str, cache_dir: str | None = None, revision: str | None = None
+) -> bool:
+    """True if the cache holds a config.json snapshot for model_id at revision.
+
+    Probing the same revision the load will request keeps ``local_files_only``
+    honest: a cached ``main`` with an uncached pinned SHA must go to the
+    network, and a cached pinned SHA with no ``main`` ref must not.
+    """
     from huggingface_hub import try_to_load_from_cache
 
     path = try_to_load_from_cache(
-        model_id, filename="config.json", cache_dir=cache_dir or MODEL_CACHE_DIR
+        model_id,
+        filename="config.json",
+        cache_dir=cache_dir or MODEL_CACHE_DIR,
+        revision=revision,
     )
-    # try_to_load_from_cache returns a str path, None, or the _CACHED_NO_EXIST
-    # sentinel; the original treated anything but None as cached.
-    return path is not None
+    # A str is a cached file. None is unknown. The _CACHED_NO_EXIST sentinel
+    # means the file is known to be absent, which is not "cached".
+    return isinstance(path, str)
 
 
 def load_model(
@@ -77,7 +87,7 @@ def load_model(
         raise ValueError(f"Unknown mode: '{mode}'. Must be one of {sorted(VALID_MODES)}.")
 
     is_local = os.path.isdir(model_id)
-    cached = (not is_local) and _is_cached(model_id)
+    cached = (not is_local) and _is_cached(model_id, revision=revision)
 
     common_kwargs: dict[str, Any] = {"use_safetensors": True, "revision": revision}
     if not is_local:
@@ -120,7 +130,12 @@ def load_model(
             "Model '%s' has no safetensors file accessible; falling back to .bin",
             model_id,
         )
-        retry_kwargs = {k: v for k, v in common_kwargs.items() if k != "use_safetensors"}
+        # The retry may need to fetch the .bin weights the safetensors probe
+        # never downloaded, so it does not inherit local_files_only.
+        retry_kwargs = {
+            k: v for k, v in common_kwargs.items()
+            if k not in ("use_safetensors", "local_files_only")
+        }
         model = AutoModelForCausalLM.from_pretrained(model_id, **retry_kwargs, **mode_kwargs)
 
     # AutoTokenizer does not accept use_safetensors.
