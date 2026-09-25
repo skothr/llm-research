@@ -64,8 +64,9 @@ nf4 already mandatory there).
   The fitted-lens agreement above settles the question without it; the
   probe's per-layer cosine table remains a nice-to-have record
   (prediction: cosine ≈ 0.99+), queued for idle GPU.
-  [superseded 2026-07-22: abandoned after two failures, see
-  `2026-07-22-n500-and-heldout-robustness.md` § Probe status]
+  [superseded, noted 2026-09-24: abandoned 2026-07-22 after two
+  failures, see `2026-07-22-n500-and-heldout-robustness.md` § Probe
+  status]
 - The stage-4 observation's "trough L13" for 1.5B was a selected-rows
   artifact; the full-27-layer argmin is L16 (bf16) / L14 (nf4). No
   values change; resolution note only.
@@ -104,9 +105,15 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   Test: an n=500 nf4 refit (`jspace_fit_lens.py --n-prompts 500`).
   The 1.5B version ran in `2026-07-22-n500-and-heldout-robustness.md`
   and found the profile n-stable (peak −1.4%).
-  Under this file's own rule (Follow-ups), an n-stable 1.5B result
-  weakens H1, so the 7B gap is more likely scale than fit budget.
-  The 7B n=500 refit (~81 h) stays open as the residual test.
+  Under this file's pre-registered rule (Follow-ups), the 1.5B
+  n-stability weakens H1.
+  It does not settle 7B: a 3584² Jacobian has about 5.4× the entries
+  of a 1536² one, so n=100 sufficing at 1.5B does not show it suffices
+  at 7B.
+  The 7B n=500 refit (~81 h) remains the test.
+  `2026-09-23-dimension-matched-k58-recompute.md` attributes part of
+  the 7B gap in the paper metric to metric dimension (K/d), which is
+  neither scale nor fit budget.
 - **Why the fitted lens is quantization-invariant [SPECULATION].**
   Candidate A: nf4 perturbs each raw VJP by a small amount.
   Candidate B: raw VJPs differ more, and averaging over 100 prompts
@@ -150,11 +157,12 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   H1 weakens and genuine scale carries the 7B gap; if it shifts, H1 is
   live and the 7B n=500 (~81 h) becomes worth its price. Recommend as
   the next deferred-item promotion.
-  [superseded 2026-07-22: ran in
+  [superseded, noted 2026-09-24: ran 2026-07-22 in
   `2026-07-22-n500-and-heldout-robustness.md`, profile n-stable]
 - Probe rerun at next idle GPU window (record-keeping only).
-  [superseded 2026-07-22: abandoned after two failures, see
-  `2026-07-22-n500-and-heldout-robustness.md` § Probe status]
+  [superseded, noted 2026-09-24: abandoned 2026-07-22 after two
+  failures, see `2026-07-22-n500-and-heldout-robustness.md` § Probe
+  status]
 - Audit check group for the nf4 artifacts at stage 7.
 
 ## References

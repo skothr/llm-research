@@ -132,6 +132,9 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   The n-budget control ran on 1536² Jacobians.
   3584² Jacobians could still be data-starved at n=100 in a way 1536²
   are not (Finding 1, residual caveat).
+  The 1.5B n-stability weakens this under the stability threshold, but
+  a 3584² Jacobian has about 5.4× the entries of a 1536² one, so
+  starvation at 7B stays open.
   Finding 1 reports no instability signal on the controlled axes.
   The 7B nf4 refit's failure to reproduce the original lens (addendum)
   is a weak lens-instability signal, but it used the same n=100 data,
@@ -149,7 +152,7 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   peak 0.0404@L22 (wikitext) → 0.0518@L23 (C4), +28%.
   Candidate A: per-sample noise is a larger fraction of the signal at
   7B's low absolute occupancy (Finding 2).
-  Candidate C: a real distribution effect, with 7B more sensitive than
+  Candidate B: a real distribution effect, with 7B more sensitive than
   1.5B (+8%) to the clustered-vs-diverse difference.
   Test for A: scan a second disjoint C4 held-out draw
   (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
@@ -157,15 +160,19 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   A shift between the two draws of similar size to +28% supports A.
   A small shift weakens A; one pair of n=30 draws cannot rule it out,
   so ruling A out needs several draws.
-  Test for C: scan a diversified (non-consecutive) wikitext held-out
+  Test for B: scan a diversified (non-consecutive) wikitext held-out
   draw with the same 7B lens and compare it with the clustered set.
-  A shift of similar size to +28% within wikitext supports C.
+  A predicts a shift between any two n=30 draws, so a clustered-vs-
+  diverse shift supports B only if it clearly exceeds the draw-to-draw
+  shift measured by the test for A.
+  Otherwise the outcome is ambiguous between A and B.
   No committed script draws such a set.
   - Separate note on the later 0.0518 → 0.0526 move (+28% → +30%),
     not a rival explanation of the +28% shift, which predates the
     refit: part of it can be lens variation, because the 7B nf4 refit
     did not reproduce the original lens (addendum; relative Frobenius
-    Δ up to 1.7e-2 at L0), and the rest is the C4 redaction.
+    Δ 1.7e-2 at L0, the maximum over the seven measured subset
+    layers, not over all layers), and the rest is the C4 redaction.
     Test: scan the redacted C4 held-out set now committed with the
     original and the refit 7B lens.
     The original full lens was never committed and is unavailable
