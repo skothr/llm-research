@@ -32,13 +32,13 @@ cohere, promote them into an arc (see README § Arcs).
 5. **Arc code depends on standard scientific libraries and nothing
    in-house.** Scripts use torch, transformers, numpy, matplotlib and the
    like, and implement their methods directly. An arc that replicates a paper
-   with a reference implementation may declare that implementation as a
-   pinned dependency, because replacing it would weaken the replication. No
+   with a reference implementation may depend on that implementation at a
+   recorded commit, because replacing it would weaken the replication. No
    in-house helper library sits between the scripts and the models. `jlens`
-   (anthropics/jacobian-lens) is the reference implementation of the paper
-   arc 04 replicates and stays, its commit recorded in that arc's MANIFEST. The
-   `llm-surgeon` import is a leftover of the 2026-06 repository split and is
-   being removed (issue #94).
+   (anthropics/jacobian-lens) is that case for arc 04: it is installed as an
+   editable checkout, and the arc's `data/MANIFEST.json` records the commit
+   (`jlens_pin`) a reproducer checks out. The `llm-surgeon` import is a
+   leftover of the 2026-06 repository split and is being removed (issue #94).
 
 ---
 
@@ -72,7 +72,8 @@ git-LFS rules already cover `research/**/figures/*.png` and
 
 An arc runs through four checkpoints. Each checkpoint produces a defined set
 of files, has a definition of done, and closes with a reviewed PR
-([§ The checkpoint PR](#the-checkpoint-pr)).
+([§ The checkpoint PR](#the-checkpoint-pr)). The next checkpoint's work
+starts after that PR merges.
 
 **Iteration.** Checkpoints 2-4 may repeat as the arc progresses: a
 follow-up inside the arc's stated question sends the arc back to new scripts,
@@ -127,10 +128,10 @@ starts.
 
 This checkpoint is reviewed before any long compute run, because a defect
 found here costs a code fix while the same defect found after the run costs
-the run. Arc 04 is the evidence for gating before the run: the C4 personal
-data vetting (a checkpoint 1 item) happened after the fits and cost 22.9 h of
-refit queue time (the three refits in
-[arc 04 `data/README.md`](arcs/04_jspace/data/README.md)), and the K/d
+the run. Arc 04 is the evidence that a gate before the run pays, for both
+the plan and the code: the C4 personal data vetting (a checkpoint 1 item)
+happened after the fits and cost 22.9 h of refit queue time (the three refits
+in [arc 04 `data/README.md`](arcs/04_jspace/data/README.md)), and the K/d
 mismatch in the paper-metric comparison was found after the arc closed.
 
 **Done when:** the dry run completes, pyright reports zero diagnostics, and
@@ -306,8 +307,9 @@ Per-section requirements:
 - Cross-link: README → observations → figures/INVENTORY → data/MANIFEST.
 
 **Done when:** the figures meet their done line above, every observation file
-has all its fields filled, and the arc README carries the canonical sections
-in order with its headline figures embedded.
+has all its fields filled, the arc README carries the canonical sections in
+order with its headline figures embedded, and the clean-clone test passes
+(`git lfs pull`, the audit passes, a figure re-renders).
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr).
@@ -318,8 +320,9 @@ Every checkpoint, and every re-entry of one, closes with this PR and review
 loop.
 
 - Push the branch, open a PR. **One PR = one scope, small enough to review
-  in one sitting** — each checkpoint is its own PR, and a checkpoint too
-  large for one sitting splits into staged PRs rather than one mono-diff.
+  in one sitting** — each checkpoint is its own PR (a small arc may merge
+  checkpoints 3 and 4, see § Lifecycle), and a checkpoint too large for one
+  sitting splits into staged PRs rather than one mono-diff.
   `git lfs pull` works for reviewers. Review with the owner's PR-review
   swarm (`claudectl review-pr <PR#> --apply`, private tooling) or
   `/code-review high`; fix in-scope findings, file out-of-scope findings as
@@ -432,7 +435,7 @@ Checkpoint 1: question, research, plan
 [ ] worktree created; research question written in one sentence
 [ ] plan in plans/: question, predictions, data vetting, dependencies,
         checkpoint placement (length scales with the arc; every arc has one)
-[ ] checkpoint PR opened; review loop reached its floor
+[ ] checkpoint PR merged (review loop reached its floor first)
 Checkpoint 2: setup and implementation
 [ ] capture + analysis scripts written; manifest generator + audit scaffold
 [ ] dry run at tiny n completes (outputs not committed); pyright clean
@@ -443,13 +446,13 @@ Checkpoint 3: computation, processing, validation
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
 [ ] audit script re-derives every load-bearing number incl. the headline;
         passes from a clean clone
-[ ] checkpoint PR opened; review loop reached its floor
+[ ] checkpoint PR merged (review loop reached its floor first)
 Checkpoint 4: observations, conclusions, artifacts
 [ ] figures generated by committed scripts; INVENTORY.md bijection complete
 [ ] observations written (evidence-first, fields filled, nulls labeled as null)
 [ ] arc README: canonical sections, in order; headline figures embedded;
         "what the audit can't catch" stated
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
-[ ] checkpoint PR opened; review loop reached its floor
+[ ] checkpoint PR merged (review loop reached its floor first)
 Every re-entry of checkpoints 2-4: a new PR scoped to the delta
 ```
