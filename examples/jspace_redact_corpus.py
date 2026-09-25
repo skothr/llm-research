@@ -5,7 +5,7 @@ WHY THIS EXISTS
 ---------------
 Arc 04's corpus-sensitivity axis (Decision 1, 2026-07-20) uses a seeded slice
 of C4-en — Common Crawl web text. C4's cleaning pipeline
-`[raffel2020-t5 §2.2]` filters for quality (boilerplate, length, offensive
+`[raffel2019 §2.2]` filters for quality (boilerplate, length, offensive
 content); it does **not** filter personal data. A uniform 1000-document sample
 therefore carries contact details of real people at the corpus base rate
 (~20 emails / ~50 phones per 1000 docs, per Elazar et al. 2024, *What's In My
