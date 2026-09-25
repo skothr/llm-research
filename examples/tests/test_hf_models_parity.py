@@ -16,6 +16,7 @@ case needs CUDA. Run with:
 from __future__ import annotations
 
 import gc
+import importlib.util
 import inspect
 import sys
 from pathlib import Path
@@ -26,15 +27,16 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-try:
-    from llm_surgeon import probe as orig_probe
-    from llm_surgeon import surgery as orig_surgery
-    from llm_surgeon.probe import _nla as orig_nla
-except ImportError:
+# Skip only when the sibling package is absent. A present install whose
+# import fails (a broken transitive dependency) must fail the gate, not skip.
+if importlib.util.find_spec("llm_surgeon") is None:
     pytest.skip(
         "parity gate needs the sibling llm_surgeon install (pip install -e ../llm-surgeon)",
         allow_module_level=True,
     )
+from llm_surgeon import probe as orig_probe  # noqa: E402
+from llm_surgeon import surgery as orig_surgery  # noqa: E402
+from llm_surgeon.probe import _nla as orig_nla  # noqa: E402
 
 import _hf_models  # noqa: E402
 import _nla_probe  # noqa: E402
@@ -50,8 +52,25 @@ def shared_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(orig_surgery, "MODEL_CACHE_DIR", _hf_models.MODEL_CACHE_DIR)
 
 
-def _load_both(mode: str, device_map: Any) -> tuple[dict[str, torch.Tensor], list[int], dict[str, torch.Tensor], list[int]]:
-    out: list[Any] = []
+def _snapshot(model: Any, tok: Any) -> dict[str, Any]:
+    """Everything a loader can change that moves numerics or tokenisation."""
+    return {
+        "state_dict": {k: v.detach().clone() for k, v in model.state_dict().items()},
+        "config": model.config.to_dict(),
+        "attn": getattr(model.config, "_attn_implementation", None),
+        "generation_config": model.generation_config.to_dict(),
+        "ids": tok(TEXT)["input_ids"],
+        "tok_attrs": {
+            "pad_token_id": tok.pad_token_id,
+            "padding_side": tok.padding_side,
+            "model_max_length": tok.model_max_length,
+            "special_tokens_map": tok.special_tokens_map,
+            "chat_template": tok.chat_template,
+        },
+    }
+
+
+def _load_both(mode: str, device_map: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     # Only the original loader may skip the test (no network and a cold
     # cache). Once it has loaded, the files are present, so a failure of the
     # new loader is a defect in the code under test and must fail the gate.
@@ -59,38 +78,52 @@ def _load_both(mode: str, device_map: Any) -> tuple[dict[str, torch.Tensor], lis
         model, tok = orig_surgery.load_model(MODEL_ID, mode=mode, revision=REVISION, device_map=device_map)
     except OSError as e:
         pytest.skip(f"cannot fetch {MODEL_ID}@{REVISION[:8]}: {e}")
-    out += [{k: v.detach().clone() for k, v in model.state_dict().items()}, tok(TEXT)["input_ids"]]
+    orig = _snapshot(model, tok)
     del model, tok
     gc.collect()
     model, tok = _hf_models.load_model(MODEL_ID, mode=mode, revision=REVISION, device_map=device_map)
-    out += [{k: v.detach().clone() for k, v in model.state_dict().items()}, tok(TEXT)["input_ids"]]
+    new = _snapshot(model, tok)
     del model, tok
     gc.collect()
-    return out[0], out[1], out[2], out[3]
+    return orig, new
 
 
-def _assert_state_dicts_equal(a: dict[str, torch.Tensor], b: dict[str, torch.Tensor]) -> None:
+def _assert_parity(orig: dict[str, Any], new: dict[str, Any]) -> None:
+    a, b = orig["state_dict"], new["state_dict"]
     assert a.keys() == b.keys()
     for k in a:
         assert a[k].dtype == b[k].dtype, k
         assert torch.equal(a[k], b[k]), k
+    for key in ("config", "attn", "generation_config", "ids", "tok_attrs"):
+        assert orig[key] == new[key], key
 
 
-def test_bf16_cpu_parity(shared_cache: None) -> None:
-    sd_orig, ids_orig, sd_new, ids_new = _load_both("bf16", "cpu")
-    assert all(v.dtype == torch.bfloat16 for v in sd_new.values() if v.is_floating_point())
-    _assert_state_dicts_equal(sd_orig, sd_new)
-    assert ids_orig == ids_new
+@pytest.mark.parametrize(
+    ("mode", "dtype"),
+    [("bf16", torch.bfloat16), ("fp16", torch.float16), ("fp32", torch.float32)],
+)
+def test_float_cpu_parity(shared_cache: None, mode: str, dtype: torch.dtype) -> None:
+    orig, new = _load_both(mode, "cpu")
+    assert all(v.dtype == dtype for v in new["state_dict"].values() if v.is_floating_point())
+    _assert_parity(orig, new)
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="nf4 needs CUDA")
-def test_nf4_cuda_parity(shared_cache: None) -> None:
+@pytest.mark.parametrize("device_map", [{"": 0}, None], ids=["explicit", "default-auto"])
+def test_nf4_cuda_parity(shared_cache: None, device_map: Any) -> None:
     # bitsandbytes stores packed uint8 weights plus absmax / quant_map /
-    # quant_state tensors; every one present must match.
-    sd_orig, ids_orig, sd_new, ids_new = _load_both("nf4", {"": 0})
-    assert any(v.dtype == torch.uint8 for v in sd_new.values())
-    _assert_state_dicts_equal(sd_orig, sd_new)
-    assert ids_orig == ids_new
+    # quant_state tensors; every one present must match. device_map=None
+    # exercises the loader's own default ("auto"), which the lens fits use.
+    orig, new = _load_both("nf4", device_map)
+    assert any(v.dtype == torch.uint8 for v in new["state_dict"].values())
+    _assert_parity(orig, new)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="int8 needs CUDA")
+def test_int8_cuda_parity(shared_cache: None) -> None:
+    orig, new = _load_both("int8", {"": 0})
+    assert any(v.dtype == torch.int8 for v in new["state_dict"].values())
+    _assert_parity(orig, new)
 
 
 def test_nla_score_parity() -> None:
