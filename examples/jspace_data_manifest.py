@@ -967,7 +967,8 @@ _JLENS_PIN: dict[str, Any] = {
     "repo": "https://github.com/anthropics/jacobian-lens",
     "commit": "581d398613e5602a5af361e1c34d3a92ea82ba8e",
     "subject": "Initial release",
-    "date": "2026-07-02",
+    "author_date": "2026-07-01",
+    "commit_date": "2026-07-02",
     "provenance": (
         "The J-lens fit/readout implementation (jlens.fit, native .pt "
         "format) that produced every lens + derived artifact in this "
