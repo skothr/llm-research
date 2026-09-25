@@ -129,23 +129,40 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
   The n-budget control ran on 1536² Jacobians.
   3584² Jacobians could still be data-starved at n=100 in a way 1536²
   are not (Finding 1, residual caveat).
-  No axis in this file shows an instability signal that points to it.
+  Finding 1 reports no instability signal on the controlled axes.
+  The 7B nf4 refit's failure to reproduce the original lens (addendum)
+  is a weak lens-instability signal, but it used the same n=100 data,
+  so it cannot separate data starvation from run-to-run variation in
+  the nf4 fit.
   Test: the direct 7B n=500 nf4 refit (~81 h), or the split-half n=50
-  lens-stability check at 7B (~16 h, arc README next-path item 3).
+  lens-stability check at 7B (~16 h; arc README § Possible next paths,
+  "Split-half lens stability at n=100").
   Both remain unrun.
 - **Source of the larger 7B held-out shift [INTUITION].**
+  Finding 2 measures the shift with the original 7B lens on both sets:
+  peak 0.0404@L22 (wikitext) → 0.0518@L23 (C4), +28%.
   Candidate A: per-sample noise is a larger fraction of the signal at
   7B's low absolute occupancy (Finding 2).
-  Candidate B: part of the shift is lens variation, since the 7B nf4
-  refit did not reproduce the original lens (addendum; relative
-  Frobenius Δ up to 1.7e-2 at L0).
+  Candidate B: lens variation.
+  It cannot explain the +28% shift, which was measured before the
+  refit existed.
+  It can explain part of the later move of the C4 peak, 0.0518 →
+  0.0526 (+28% → +30%), because the 7B nf4 refit did not reproduce the
+  original lens (addendum; relative Frobenius Δ up to 1.7e-2 at L0).
+  Candidate C: a real distribution effect, with 7B more sensitive than
+  1.5B (+8%) to the clustered-vs-diverse difference.
   Test for A: scan a second disjoint C4 held-out draw
   (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
-  lens; a shift of similar size between the two draws supports A.
-  Test for B: scan one held-out set with the original and the refit 7B
   lens.
-  The original full lens was cache-only; the committed layer-subset
-  file holds seven of its layers, so this test covers those layers only.
+  A shift between the two draws of similar size to +28% supports A.
+  A small shift rules out A but cannot confirm C, because both draws
+  share one distribution; C is then left by elimination only.
+  Test for B: scan the C4 held-out set with the original and the refit
+  7B lens; the difference is B's share of the 0.0518 → 0.0526 move.
+  The original full lens was never committed.
+  The committed layer-subset file holds L0, 5, 10, 15, 20, 25 and 26,
+  which excludes the peak (L22/L23) and trough (L16/L17) layers.
+  So this test cannot reach the layers where the move is reported.
 
 ## Follow-ups
 
