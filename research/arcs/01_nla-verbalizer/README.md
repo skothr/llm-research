@@ -326,7 +326,7 @@ for typos and punctuation; markdown emphasis inside a turn is dropped,
 `[...]` marks an editorial elision (except where noted), and dates
 follow the transcripts' UTC clock. This section follows the attribution
 shape in
-[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis).
+[`ARC_PROCESS.md` § Arc README synthesis](../../ARC_PROCESS.md#arc-readme-synthesis).
 Blocks are grouped by research thread and then process standards, not
 strictly by time.
 

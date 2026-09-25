@@ -86,9 +86,10 @@ investigation, promote them: `mkdir arcs/<slug>/`, move the files in, and
 write the arc `README.md` that ties them together.
 
 **Running an arc?** [`ARC_PROCESS.md`](ARC_PROCESS.md) is the standard
-operating procedure — the lifecycle (question → capture → validate+save data →
-analyze → figures → observations → audit → synthesis → PR) and the disciplines
-that keep an arc reproducible and honestly framed.
+operating procedure — the lifecycle as four reviewed checkpoints (question +
+plan → implementation → computation + validation + audit → observations +
+synthesis, each closed by a PR) and the disciplines that keep an arc
+reproducible and honestly framed.
 
 ## Conventions
 
@@ -96,7 +97,7 @@ that keep an arc reproducible and honestly framed.
 file. Each carries: date + context (model, params), the finding, evidence
 (output/transcript excerpts), reproducibility (exact commands), hypotheses,
 follow-ups, references. The canonical format spec lives in the repo
-`CLAUDE.md` under *# Research Observations*. No index file — scan by
+`CLAUDE.md` under *# Research arcs & observations*. No index file — scan by
 filename. Evidence-first: numbers should be reproducible or audit-locked.
 
 **Sessions** — LLM session checkpoints, *not* research findings. They capture

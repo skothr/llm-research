@@ -29,10 +29,9 @@ transcripts of 2026-04-08 → 2026-04-12 in the pre-split `llm` workspace —
 the sessions in which these three probes were run — lightly normalized for
 typos and punctuation; markdown emphasis inside a turn is dropped, `[...]`
 marks an editorial elision, and dates follow the transcripts' UTC clock.
-The shape follows
-[`ARC_PROCESS.md` § 6](../ARC_PROCESS.md#6-arc-readme-synthesis), applied
-retroactively: these probes predate every arc and the process document
-itself.
+The shape follows [`ARC_PROCESS.md` § Arc README
+synthesis](../ARC_PROCESS.md#arc-readme-synthesis), applied retroactively:
+these probes predate every arc and the process document itself.
 
 **The layer-surgery program** [session 2026-04-08]. The toolkit the probes
 run on (`llm_surgeon`) was built to the user's capability spec:

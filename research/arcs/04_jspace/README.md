@@ -601,7 +601,7 @@ from. Quotes below are verbatim from the session transcripts of 2026-07-18 →
 2026-07-24 (Michael Lannum), lightly normalized for typos and punctuation;
 markdown emphasis inside a turn is dropped, and `[...]` marks an editorial
 elision. This section follows the attribution shape in
-[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis), for
+[`ARC_PROCESS.md` § Arc README synthesis](../../ARC_PROCESS.md#arc-readme-synthesis), for
 which [arc 02](../02_subliminal/README.md#attribution) is the
 reference implementation.
 
