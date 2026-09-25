@@ -62,8 +62,9 @@ non-existent `CACHE` path, so unconditional loads raise `FileNotFoundError` and
 guarded `.exists()` checks stay `False`.
 
 Six `nla_*.py` scripts — `nla_scan`, `nla_trajectory`, `nla_gen_trajectory`,
-`nla_steering_direct`, `nla_roundtrip`, `nla_prompt_battery` — persist nothing
-at all (they print), and so import no artifact helper.
+`nla_steering_direct`, `nla_roundtrip`, `nla_prompt_battery` — neither read
+nor persist an artifact (they print), and so import no artifact helper. The
+two print-only utilities below do read artifacts, so they import it.
 
 ## Models + cache
 
@@ -94,8 +95,9 @@ prints the token-by-token walkthrough of every capture to stdout; its
 `research/arcs/01_nla-verbalizer/observations/2026-05-13-nla-walkthrough-all-captures.txt`,
 whose header gives the redirect command. `nla_artifact_inspect.py` prints each
 `.pt` file's keys, shapes and dtypes (a schema check before analysis); with no
-argument it walks every artifact in `data/` and the cache, and it accepts one
-path or one artifact name.
+argument it walks every artifact name in `DATA` and `CACHE` (one copy per name,
+the cache copy winning on a collision), and it accepts one path or one
+artifact name.
 
 ## "Discriminant" naming — methodology note
 
