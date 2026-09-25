@@ -68,11 +68,11 @@ at all (they print), and so import no artifact helper.
 ## Models + cache
 
 CPU bf16 paths via `llm_surgeon.probe.{load_av, load_ar, nla_verbalize,
-nla_reconstruct, nla_score}`. HuggingFace checkpoints are cached by the sibling
-toolkit, not by this repo: `llm_surgeon.surgery.MODEL_CACHE_DIR` defaults to
-`.cache/models/` inside the *llm-surgeon* checkout, overridable with the
-`LLM_SURGEON_CACHE_DIR` env var. First load of AV/AR pulls multi-GB checkpoints
-from HuggingFace.
+nla_reconstruct, nla_score}`. The `nla_*` scripts currently cache HuggingFace
+checkpoints through the sibling toolkit: `llm_surgeon.surgery.MODEL_CACHE_DIR`
+defaults to `.cache/models/` inside the *llm-surgeon* checkout, overridable
+with the `LLM_SURGEON_CACHE_DIR` env var. First load of AV/AR pulls multi-GB
+checkpoints from HuggingFace.
 The same probe functions now live in-repo in `examples/_nla_probe.py`, and the
 loader in `examples/_hf_models.py` (issue #94); the `nla_*` scripts keep
 importing `llm_surgeon` until the call-site swap lands. The in-repo modules'

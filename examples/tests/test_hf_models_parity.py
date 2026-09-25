@@ -55,7 +55,9 @@ def shared_cache(monkeypatch: pytest.MonkeyPatch) -> None:
 def _snapshot(model: Any, tok: Any) -> dict[str, Any]:
     """Everything a loader can change that moves numerics or tokenisation."""
     return {
-        "state_dict": {k: v.detach().clone() for k, v in model.state_dict().items()},
+        # Clones go to the CPU so the original's weights do not stay on the
+        # GPU while the new model loads.
+        "state_dict": {k: v.detach().cpu().clone() for k, v in model.state_dict().items()},
         "config": model.config.to_dict(),
         "attn": getattr(model.config, "_attn_implementation", None),
         "generation_config": model.generation_config.to_dict(),
@@ -112,8 +114,9 @@ def test_float_cpu_parity(shared_cache: None, mode: str, dtype: torch.dtype) -> 
 @pytest.mark.parametrize("device_map", [{"": 0}, None], ids=["explicit", "default-auto"])
 def test_nf4_cuda_parity(shared_cache: None, device_map: Any) -> None:
     # bitsandbytes stores packed uint8 weights plus absmax / quant_map /
-    # quant_state tensors; every one present must match. device_map=None
-    # exercises the loader's own default ("auto"), which the lens fits use.
+    # quant_state tensors; every one present must match. Both loaders default
+    # device_map to None and map None to "auto" internally, so passing None
+    # is the same call as omitting it; the call sites pass explicit maps.
     orig, new = _load_both("nf4", device_map)
     assert any(v.dtype == torch.uint8 for v in new["state_dict"].values())
     _assert_parity(orig, new)
