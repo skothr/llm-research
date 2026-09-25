@@ -330,6 +330,10 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
 - **Why the LS-refit gain decays with depth [SPECULATION].**
   The refit term falls from +1.25 pt at 1.5B L17 to +0.29 at L22, and
   is +1.71 at 7B L21 (Finding 1).
+  The 7B point does not fit a depth-only trend: L21 is a later layer
+  than 1.5B L17 (both scales index L0-L26), yet its gain is larger.
+  So either the candidate must also explain a scale difference, or the
+  decay is specific to 1.5B; this file does not decide which.
   Candidate: the gain grows with the mutual coherence of the selected
   atoms.
   The single-step coefficients ignore atom overlap; the LS projection
@@ -348,13 +352,15 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
 - **Early-band excess is norm-driven [SPECULATION].**
   Selected atoms sit at norm-percentile 69.5 at 1.5B L0, against ~50 in
   the workspace band (Finding 3).
-  All three L0 figures are on the wikitext held-out prompts: the
-  Reproducibility commands pass no `--prompts`, the script's default is
-  the wikitext held-out set, and the C4-lens artifact name carries no
-  held-out tag.
+  All three L0 figures are on the wikitext held-out prompts: each
+  artifact's stored `config["prompts_file"]` is
+  `heldout_prompts_wikitext103_n30.json` (the C4-lens run is
+  `examples/jspace_rerun_scans.sh` run 2/10, which passes no
+  `--prompts`).
   10.4% is the all-positions sweep with the bf16 wikitext lens.
-  9.67% is the scan grid with the same lens, the robustness table's
-  base row (bf16 lens, wikitext held-out).
+  9.67% is the scan grid with the same lens: the L0 value under the
+  base-row condition (bf16 lens, wikitext held-out), given in the
+  prose under the robustness table, not a table cell.
   15.419% is the scan grid with the C4-en lens (re-derived value, top
   addendum; 15.43% before the redaction).
   The L0 excess and its corpus sensitivity (grid, 9.67% → 15.419%) may
