@@ -74,7 +74,8 @@ toolkit, not by this repo: `llm_surgeon.surgery.MODEL_CACHE_DIR` defaults to
 `LLM_SURGEON_CACHE_DIR` env var. First load of AV/AR pulls multi-GB checkpoints
 from HuggingFace.
 The same probe functions now live in-repo in `examples/_nla_probe.py`, and
-the loader in `examples/_hf_models.py` (issue #94). Their cache directory is
+the loader in `examples/_hf_models.py` (issue #94); the `nla_*` scripts keep
+importing `llm_surgeon` until the call-site swap lands. Their cache directory is
 the `LLM_RESEARCH_MODEL_CACHE` env var; unset, it is the HuggingFace default
 cache, so point the variable at an existing cache to avoid re-downloading
 the multi-GB checkpoints.

@@ -29,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 try:
     from llm_surgeon import probe as orig_probe
     from llm_surgeon import surgery as orig_surgery
+    from llm_surgeon.probe import _nla as orig_nla
 except ImportError:
     pytest.skip(
         "parity gate needs the sibling llm_surgeon install (pip install -e ../llm-surgeon)",
@@ -121,6 +122,9 @@ def test_nla_probe_source_identical(name: str) -> None:
 def test_nla_constants() -> None:
     assert _nla_probe.AV_ID == orig_probe.AV_ID
     assert _nla_probe.AR_ID == orig_probe.AR_ID
+    # The one module-level helper the functions use besides the constants.
+    assert _nla_probe._EXPLANATION_RE.pattern == orig_nla._EXPLANATION_RE.pattern
+    assert _nla_probe._EXPLANATION_RE.flags == orig_nla._EXPLANATION_RE.flags
 
 
 def _params(fn: Callable[..., Any]) -> list[tuple[str, Any, Any]]:
