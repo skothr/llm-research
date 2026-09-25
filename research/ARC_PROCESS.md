@@ -5,8 +5,8 @@ honestly framed, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example most sections point at — with one exception: for
-**attribution** (§ 0, § 6) the reference implementation is
-[`02_subliminal`](arcs/02_subliminal/), not arc 01.
+**attribution** (checkpoint 1 and § Arc README synthesis) the reference
+implementation is [`02_subliminal`](arcs/02_subliminal/), not arc 01.
 
 An *arc* is a focused, multi-observation investigation cohering around one
 research question. A single loose finding is an *observation*; when several
@@ -22,13 +22,21 @@ cohere, promote them into an arc (see README § Arcs).
    afterthought. See [§ Raw data is a deliverable](#raw-data-is-a-deliverable).
 2. **Claims are evidence-first and audit-locked.** Every load-bearing number
    in prose is re-derivable from the committed data by a script that fails
-   loudly on drift. See [§ Audit](#5-audit-lock-the-numbers).
+   loudly on drift. See [§ Audit](#audit-lock-the-numbers).
 3. **Findings are framed at their true confidence.** One anchor pair is a
    "candidate," not a "property." Hold syntheses as hypotheses until scope
    tests replicate. See [§ Framing discipline](#framing-discipline).
 4. **A clean clone can reproduce the arc.** `git clone && git lfs pull`, then
    the audit passes and any figure re-renders — with no access to your
    machine's caches. This is the acceptance bar for "done."
+5. **Arc code depends on standard scientific libraries and nothing
+   in-house.** Scripts use torch, transformers, numpy, matplotlib and the
+   like, and implement their methods directly. An arc that replicates a paper
+   with a reference implementation may declare that implementation as a
+   pinned dependency, because replacing it would weaken the replication. No
+   in-house helper library sits between the scripts and the models. The
+   `llm-surgeon` import is a leftover of the 2026-06 repository split and is
+   being removed (issue #94).
 
 ---
 
@@ -60,22 +68,79 @@ git-LFS rules already cover `research/**/figures/*.png` and
 
 ## Lifecycle
 
-A loose sequence, not a waterfall — arcs spiral (capture → analyze → new
-question → capture). But each numbered step has a definition of done.
+An arc runs through four checkpoints. Each checkpoint produces a defined set
+of files, has a definition of done, and closes with a reviewed PR
+([§ The checkpoint PR](#the-checkpoint-pr)).
 
-### 0. Set up
+**Iteration.** Checkpoints 2-4 may repeat as the arc progresses: a new
+question from the analysis sends the arc back to new scripts, new data or new
+figures. Re-entering an earlier checkpoint opens a new PR scoped to the delta
+(the changed scripts, the new data, the revised figures), closed by the same
+review loop. Checkpoint 1 is re-entered only when the question changes, and
+that re-entry is a plan amendment. The plan says where the checkpoints fall
+for its arc. A small arc may merge checkpoints 3 and 4 into one PR, and its
+plan must say so.
+
+### Checkpoint 1: question, research, plan
+
+Produces the research question, the plan, and the worktree the arc runs in.
 
 - Work in a git worktree (project hard rule — see the repo `CLAUDE.md`).
-- Write down the **research question** in one sentence. If the arc is planned
-  up front, drop a `plans/YYYY-MM-DD-<slug>.md`; if it's exploratory, the
-  question can live in the arc README's motivation once it exists.
+- Write down the **research question** in one sentence.
+- Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. The plan is required
+  for any arc with a GPU run over about an hour. An exploratory arc below
+  that bar may keep the question in the arc README's motivation instead.
+  The plan names:
+  - the question;
+  - the predictions, recorded before any capture runs;
+  - the third-party data vetting record for every external dataset, corpus
+    or model artifact (the rule is the repo `CLAUDE.md`
+    § Third-party data — vet BEFORE first use, not before commit);
+  - the dependency choice, per the dependency policy in
+    [§ The non-negotiables](#the-non-negotiables-read-this-first);
+  - where the arc's later checkpoints fall.
 - Note the **direction-setting** as it happens (who asked what). The
   human-direction vs AI-implementation split is worth recording honestly; the
   [subliminal arc](arcs/02_subliminal/README.md) README's Attribution
   section is the template (attribution shape codified in
-  [§ 6 Attribution](#6-arc-readme-synthesis)).
+  [§ Arc README synthesis](#arc-readme-synthesis)).
 
-### 1. Capture → validate → save the raw dataset
+**Done when:** the plan is in `plans/` and has been reviewed.
+
+**Closed by:** a PR plus the review loop in
+[§ The checkpoint PR](#the-checkpoint-pr).
+
+### Checkpoint 2: setup and implementation
+
+Produces the code the long compute run will execute, reviewed before that run
+starts.
+
+- The capture and analysis scripts.
+- The manifest and audit scaffolding: the arc's manifest generator and an
+  audit script with its structure in place, ready to take assertions.
+- A dry run at tiny n that exercises capture, derivation and the manifest
+  end to end. Its outputs are not committed as data.
+- `pyright` clean on every new or changed script.
+
+This checkpoint is reviewed before any long compute run, because a defect
+found here costs a code fix while the same defect found after the run costs
+the run. Arc 04 is the evidence: vetting the C4 corpus for personal data after
+the fits cost about 23 h of refits, and the K/d mismatch was found after the
+arc closed.
+
+**Done when:** the dry run completes, pyright reports zero diagnostics, and
+the scripts, manifest generator and audit scaffold are in the branch.
+
+**Closed by:** a PR plus the review loop in
+[§ The checkpoint PR](#the-checkpoint-pr), merged before the long run starts.
+
+### Checkpoint 3: computation, processing, validation
+
+Produces the committed dataset, the derived artifacts, and the audit that
+locks the numbers. The audit closes this checkpoint: the numbers are locked
+before any narrative is written.
+
+#### Capture → validate → save the raw dataset
 
 This is the step most likely to be skipped under time pressure. Don't.
 
@@ -101,38 +166,14 @@ This is the step most likely to be skipped under time pressure. Don't.
 **Done when:** the dataset is in `data/`, the manifest `--check` passes, and
 you've confirmed the capture protocol is what you intended.
 
-### 2. Analyze / derive
+#### Analyze / derive
 
 - Derived artifacts (cosine matrices, PCA, classifier outputs) get their own
   `.pt` in `data/`, produced by a committed script that reads only other
   `.pt`. Record each in the manifest as `class: derived` with its `inputs`.
 - Keep derivation deterministic and scripted — no notebook-only state.
 
-### 3. Figures + provenance
-
-- Each figure is generated by a committed render script reading from `data/`.
-- Every figure gets an `INVENTORY.md` entry: what it shows, source script,
-  source data, model deps, preprocessing/assumptions, and any correction
-  applied. Supersede-don't-delete: if fig N is wrong, add fig M and mark N
-  DEPRECATED with the reason (the NLA arc's fig15→fig16 and fig23→fig25 are
-  the pattern).
-
-**Done when:** INVENTORY ↔ figures is a bijection and every named script/data
-exists.
-
-### 4. Observation writeups
-
-- One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
-  in the repo `CLAUDE.md` § Research Observations: date+context (model,
-  params), finding, evidence (excerpts), reproducibility (exact commands),
-  hypotheses, follow-ups, references.
-- Null results are findings — title them as such (`*-null-result.md`) and
-  frame them as null, not as buried positives.
-- Fill every field. No `TBD`/placeholder (repo `CLAUDE.md` § no-placeholders).
-  The commit-hash field is the one exception people fudge — put the real SHA in
-  on the follow-up commit rather than leaving `TBD`.
-
-### 5. Audit (lock the numbers)
+#### Audit (lock the numbers)
 
 Write/extend an arc audit script (template: `nla_audit_findings.py`) that
 **re-derives every load-bearing number from the committed `data/`** and asserts
@@ -162,7 +203,41 @@ agree," never "the methodology is right."
 **Done when:** the audit passes from a clean clone and every load-bearing
 number in the observations has a corresponding assertion.
 
-### 6. Arc README synthesis
+**Closed by:** a PR plus the review loop in
+[§ The checkpoint PR](#the-checkpoint-pr).
+
+### Checkpoint 4: observations, conclusions, artifacts
+
+Produces the figures, the observation writeups, and the arc README synthesis,
+all built on the numbers checkpoint 3 locked. A claim or figure added here
+adds its audit line in the same change.
+
+#### Figures + provenance
+
+- Each figure is generated by a committed render script reading from `data/`.
+- Every figure gets an `INVENTORY.md` entry: what it shows, source script,
+  source data, model deps, preprocessing/assumptions, and any correction
+  applied. Supersede-don't-delete: if fig N is wrong, add fig M and mark N
+  DEPRECATED with the reason (the NLA arc's fig15→fig16 and fig23→fig25 are
+  the pattern).
+
+**Done when:** INVENTORY ↔ figures is a bijection and every named script/data
+exists.
+
+#### Observation writeups
+
+- One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
+  in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
+  params), finding, evidence (excerpts), reproducibility (exact commands),
+  hypotheses, follow-ups, references.
+- Null results are findings — title them as such (`*-null-result.md`) and
+  frame them as null, not as buried positives.
+- Fill every field. Specs, plans and observation files carry no `TBD`/`TODO`
+  placeholders; every step has its content.
+  The commit-hash field is the one exception people fudge — put the real SHA in
+  on the follow-up commit rather than leaving `TBD`.
+
+#### Arc README synthesis
 
 **Canonical section set and order** (owner directive 2026-08-17, #57).
 Every arc README presents these sections in this order, each a real `##`
@@ -224,11 +299,21 @@ Per-section requirements:
      paraphrase, mark it a paraphrase and point at the transcript.
 - Cross-link: README → observations → figures/INVENTORY → data/MANIFEST.
 
-### 7. PR
+**Done when:** the figures meet their done line above, every observation file
+has all its fields filled, and the arc README carries the canonical sections
+in order with its headline figures embedded.
+
+**Closed by:** a PR plus the review loop in
+[§ The checkpoint PR](#the-checkpoint-pr).
+
+### The checkpoint PR
+
+Every checkpoint, and every re-entry of one, closes with this PR and review
+loop.
 
 - Push the branch, open a PR. **One PR = one scope, small enough to review
-  in one sitting** — split an arc into staged PRs (data + capture /
-  analysis + figures / README synthesis) rather than one mono-diff.
+  in one sitting** — each checkpoint is its own PR, and a checkpoint too
+  large for one sitting splits into staged PRs rather than one mono-diff.
   `git lfs pull` works for reviewers. Review with the owner's PR-review
   swarm (`claudectl review-pr <PR#> --apply`, private tooling) or
   `/code-review high`; fix in-scope findings, file out-of-scope findings as
@@ -337,15 +422,28 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 ## New-arc checklist
 
 ```
+Checkpoint 1: question, research, plan
 [ ] worktree created; research question written in one sentence
+[ ] plan in plans/: question, predictions, data vetting, dependencies,
+        checkpoint placement (required for a GPU run over about an hour)
+[ ] checkpoint PR opened; review loop reached its floor
+Checkpoint 2: setup and implementation
+[ ] capture + analysis scripts written; manifest generator + audit scaffold
+[ ] dry run at tiny n completes (outputs not committed); pyright clean
+[ ] checkpoint PR merged before the long compute run starts
+Checkpoint 3: computation, processing, validation
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
+[ ] audit script re-derives every load-bearing number incl. the headline;
+        passes from a clean clone
+[ ] checkpoint PR opened; review loop reached its floor
+Checkpoint 4: observations, conclusions, artifacts
 [ ] figures generated by committed scripts; INVENTORY.md bijection complete
 [ ] observations written (evidence-first, fields filled, nulls labeled as null)
-[ ] audit script re-derives every load-bearing number incl. the headline;
-        passes from a clean clone; "what it can't catch" stated in README
-[ ] arc README: §6 canonical sections, in order; headline figures embedded
+[ ] arc README: canonical sections, in order; headline figures embedded;
+        "what the audit can't catch" stated
 [ ] clean-clone test: git lfs pull → audit PASS → a figure re-renders
-[ ] PR(s) opened — staged, single-scope, one-sitting reviewable (§7)
+[ ] checkpoint PR opened; review loop reached its floor
+Every re-entry of checkpoints 2-4: a new PR scoped to the delta
 ```
