@@ -33,8 +33,8 @@ import torch
 from _nla_artifacts import find_artifact, write_artifact
 
 _ARTIFACT = "aggregate_faithfulness.pt"
-from llm_surgeon import surgery
-from llm_surgeon.probe import (
+from _hf_models import load_model
+from _nla_probe import (
     AR_ID,
     AV_ID,
     load_ar,
@@ -91,7 +91,7 @@ def phase_capture(artifact: dict[str, Any]) -> None:
     print(f"\n[1/3] capturing h[20] across generation for {len(todo)} prompts ...")
     print(f"   loading base ({BASE_ID}) on CPU bf16 ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"   base loaded in {time.time() - t0:.1f}s")
 
     for p in todo:

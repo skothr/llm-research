@@ -33,8 +33,8 @@ import torch
 from _nla_artifacts import find_artifact, write_artifact
 
 _ARTIFACT = "rabbit_haiku_gen_trajectory.pt"
-from llm_surgeon import surgery
-from llm_surgeon.probe import (
+from _hf_models import load_model
+from _nla_probe import (
     AR_ID,
     AV_ID,
     load_ar,
@@ -61,7 +61,7 @@ def capture_generation_h() -> dict[str, Any]:
     print(f"[1/3] capturing h[20] across generation ...")
     print(f"   loading base ({BASE_ID}) on CPU bf16 ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"   base loaded in {time.time() - t0:.1f}s")
 
     enc = tok.apply_chat_template(

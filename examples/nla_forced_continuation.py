@@ -53,8 +53,8 @@ import torch
 from _nla_artifacts import find_artifact, write_artifact
 
 _ARTIFACT = "forced_continuation.pt"
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -200,7 +200,7 @@ def main() -> None:
         print(f"[1/2] capturing h[20] at forced + natural target positions ...")
         print(f"  loading base ({BASE_ID}, CPU bf16) ...")
         t0 = time.time()
-        model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+        model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
         print(f"  base loaded in {time.time() - t0:.1f}s")
 
         all_captures: list[dict[str, Any]] = []
