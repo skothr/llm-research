@@ -69,13 +69,17 @@ two print-only utilities below do read artifacts, so they import it.
 ## Models + cache
 
 CPU bf16 paths via `_nla_probe.{load_av, load_ar, nla_verbalize,
-nla_reconstruct, nla_score}` and the loader `_hf_models.load_model` (both
-in-repo modules under `examples/`, importable as siblings when a script is
-run from this directory). The loader caches HuggingFace checkpoints in the
-directory named by the `LLM_RESEARCH_MODEL_CACHE` env var; unset, it uses
-the HuggingFace default cache. First load of AV/AR pulls multi-GB checkpoints
-from HuggingFace, so point the variable at an existing cache before a
-capture run.
+nla_reconstruct, nla_score}` and the loader `_hf_models.load_model`, both
+in-repo modules under `examples/` (sibling imports resolve because Python
+puts the script's own directory on `sys.path`; CWD does not matter). The
+loader caches HuggingFace checkpoints in the directory named by the
+`LLM_RESEARCH_MODEL_CACHE` env var; unset, it uses the HuggingFace default
+cache. Checkpoints captured before 2026-09-26 live in the llm-surgeon
+checkout's `.cache/models/` (its `LLM_SURGEON_CACHE_DIR` default), so export
+`LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a cache
+miss the loader downloads the multi-GB checkpoints, except in the seven
+scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE nla_*.py`),
+which raise at model load instead.
 
 ## Figures + observations
 
