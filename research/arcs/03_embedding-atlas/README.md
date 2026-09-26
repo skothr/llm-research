@@ -177,7 +177,7 @@ transcripts of 2026-06-10 → 2026-07-21, lightly normalized for typos and
 punctuation; markdown emphasis inside a turn is dropped, `[...]` marks an
 editorial elision, and dates follow the transcripts' UTC clock. This section
 follows the attribution shape in
-[`ARC_PROCESS.md` § 6](../../ARC_PROCESS.md#6-arc-readme-synthesis). The
+[`ARC_PROCESS.md` § Arc README synthesis](../../ARC_PROCESS.md#arc-readme-synthesis). The
 atlas idea itself predates the arc: it was seeded by the semantic-basis-grid
 turns of 2026-05-14, quoted in
 [arc 01 § Attribution](../01_nla-verbalizer/README.md#attribution).
