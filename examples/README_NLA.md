@@ -78,7 +78,7 @@ cache. Checkpoints captured before 2026-09-26 live in the llm-surgeon
 checkout's `.cache/models/` (its `LLM_SURGEON_CACHE_DIR` default), so export
 `LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a cache
 miss the loader downloads the multi-GB checkpoints, except in the seven
-scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE nla_*.py`),
+scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
 which raise at model load instead.
 
 ## Figures + observations
