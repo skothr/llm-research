@@ -42,7 +42,7 @@ import time
 import torch
 
 from _nla_artifacts import read_artifact, write_artifact
-from llm_surgeon.probe import load_ar, nla_reconstruct, nla_score
+from _nla_probe import load_ar, nla_reconstruct, nla_score
 
 
 def main() -> None:

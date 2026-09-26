@@ -37,7 +37,7 @@ import time
 
 import torch
 
-from llm_surgeon import surgery
+from _hf_models import load_model
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -67,7 +67,7 @@ def chat_template_input_ids(tok: Any, msg: str) -> torch.Tensor:
 def main() -> None:
     print(f"[1/4] loading base ({BASE_ID}, CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"  base loaded in {time.time() - t0:.1f}s")
 
     print(f"\n[2/4] capturing h_forest from forest prompt ...")

@@ -22,8 +22,8 @@ import time
 
 import torch
 
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -50,7 +50,7 @@ def main() -> None:
 
     print(f"[base] loading {BASE_ID} ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="nf4", device_map={"": 0})
+    model, tok = load_model(BASE_ID, mode="nf4", device_map={"": 0})
     print(f"[base] loaded in {time.time() - t0:.1f}s; gpu={_gpu_used_gb():.2f} GiB")
 
     input_ids = tok(PROMPT, return_tensors="pt").input_ids.to("cuda:0")
