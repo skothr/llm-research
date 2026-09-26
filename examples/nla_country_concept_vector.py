@@ -38,8 +38,8 @@ import time
 import torch
 
 from _nla_artifacts import write_artifact
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -113,7 +113,7 @@ def capture_h(model: Any, tok: Any, prompt: str) -> torch.Tensor:
 def main() -> None:
     print(f"[1/4] loading base ({BASE_ID}, CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"  base loaded in {time.time() - t0:.1f}s")
 
     print(

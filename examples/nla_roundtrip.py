@@ -5,7 +5,7 @@ position, frees the base model, loads the AV on CPU (bf16), asks it to
 verbalize what the activation represents, and prints the base's
 argmax-next-token alongside for context.
 
-See ``llm_surgeon.probe._nla`` for the AV inference helper.
+See ``_nla_probe`` for the AV inference helper.
 """
 
 import os
@@ -22,8 +22,8 @@ import time
 
 import torch
 
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -45,7 +45,7 @@ def capture_h_layer(prompt: str) -> tuple[torch.Tensor, str, str]:
     """Load base on GPU, capture h[LAYER] at the final position, free base."""
     print(f"[base] loading {BASE_ID} ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="nf4", device_map={"": 0})
+    model, tok = load_model(BASE_ID, mode="nf4", device_map={"": 0})
     print(f"[base] loaded in {time.time() - t0:.1f}s; gpu={_gpu_used_gb():.2f} GiB")
 
     input_ids = tok(prompt, return_tensors="pt").input_ids.to("cuda:0")

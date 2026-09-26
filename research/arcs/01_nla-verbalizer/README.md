@@ -680,7 +680,8 @@ Prerequisites: Python venv at `.venv/` with torch + transformers +
 matplotlib. The raw `.pt` datasets ship committed (git-LFS) under
 [`data/`](data/) — run `git lfs pull` after cloning. Re-*capturing* from
 scratch (not needed to verify) additionally requires Qwen2.5-7B-Instruct +
-the kitft NLA pair cached locally.
+the kitft NLA pair cached locally, with `LLM_RESEARCH_MODEL_CACHE` exported
+to that cache directory (see `examples/README_NLA.md` § Models + cache).
 
 ```bash
 # Verify the arc — re-derives every load-bearing number from the .pt files.
@@ -738,7 +739,8 @@ research/arcs/01_nla-verbalizer/
 
 Related implementation surfaces (outside `research/`):
 
-- [`llm_surgeon/probe/_nla.py`](../../../llm_surgeon/probe/_nla.py) — toolkit-side NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
+- [`examples/_nla_probe.py`](../../../examples/_nla_probe.py) — NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
+- [`examples/_hf_models.py`](../../../examples/_hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
 - [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
 - [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
 - [`examples/nla_*.py`](../../../examples/) — 42 arc scripts

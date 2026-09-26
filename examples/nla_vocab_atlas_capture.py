@@ -37,7 +37,7 @@ import time
 import torch
 
 from _nla_artifacts import write_artifact
-from llm_surgeon import surgery
+from _hf_models import load_model
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -124,7 +124,7 @@ assert len(_all_words) == len(set(_all_words)), (
 def main() -> None:
     print(f"loading base model {BASE_ID} (CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"  base loaded in {time.time() - t0:.0f}s")
 
     captures: list[dict[str, Any]] = []

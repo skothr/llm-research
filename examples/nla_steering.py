@@ -27,8 +27,8 @@ import time
 import torch
 
 from _nla_artifacts import load_artifact
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_ar, nla_reconstruct
+from _hf_models import load_model
+from _nla_probe import load_ar, nla_reconstruct
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -122,7 +122,7 @@ def main() -> None:
 
     print(f"\n[4/4] loading base + running BASELINE then STEERED generation ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"  base loaded in {time.time() - t0:.1f}s")
 
     enc = tok.apply_chat_template(

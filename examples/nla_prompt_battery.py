@@ -33,8 +33,8 @@ import time
 
 import torch
 
-from llm_surgeon import surgery
-from llm_surgeon.probe import load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -73,7 +73,7 @@ def _select_positions(
 def main() -> None:
     print(f"[base] loading {BASE_ID} on CPU bf16 (avoids GPU contention with display) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"[base] loaded in {time.time() - t0:.1f}s\n")
 
     captures: list[tuple[str, str, int, str, float, torch.Tensor]] = []

@@ -25,8 +25,8 @@ import time
 
 import torch
 
-from llm_surgeon import surgery
-from llm_surgeon.probe import AV_ID, load_av, nla_verbalize
+from _hf_models import load_model
+from _nla_probe import AV_ID, load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"
@@ -92,7 +92,7 @@ def _print_header(base_cfg: Any, meta: dict) -> None:
 def main() -> None:
     print(f"[base] loading {BASE_ID} (CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(BASE_ID, mode="bf16", device_map="cpu")
+    model, tok = load_model(BASE_ID, mode="bf16", device_map="cpu")
     print(f"[base] loaded in {time.time() - t0:.1f}s")
 
     enc = tok.apply_chat_template(
