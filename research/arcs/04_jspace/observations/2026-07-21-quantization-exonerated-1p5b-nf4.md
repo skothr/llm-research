@@ -16,6 +16,8 @@ session, ran probe → fit → suite unattended).
 **Quantization is exonerated — pre-registered decision rule case (b).**
 Flipping bf16→nf4 at fixed model/corpus/budget moves the J-space
 structure by less than run-to-run rounding, on every metric:
+[qualified 2026-09-24: see § Hypotheses, the non-varfrac rows differ
+by up to 0.09 and the varfrac trough moves L16 to L14]
 
 | metric | 1.5B-bf16 | 1.5B-nf4 | 7B-nf4 |
 |---|--:|--:|--:|
@@ -39,6 +41,13 @@ under-determining 3584² Jacobians (H1) — those two remain confounded
 with each other, but are now cleanly separated from quantization, and
 the quantization asterisk is removed from all 7B structural claims
 (design-plan §1 control clause discharged).
+[qualified 2026-09-24: see § Hypotheses, "same eval rates": multihop
+rows differ]
+[qualified 2026-09-24: see § Hypotheses, 1.5B n=500 weakens H1]
+[qualified 2026-09-24: see § Hypotheses, assumes nf4 error does not
+grow with scale]
+[qualified 2026-09-24: see § Hypotheses, part of the paper-metric gap
+is metric dimension (K/d)]
 
 **Fit-cost datum [MEASURED]:** the nf4 backward is **2.97× cheaper**
 (36.3 s/prompt vs 107.6 s/prompt at matched dim_batch=8; 60.5 min vs
@@ -57,6 +66,9 @@ nf4 already mandatory there).
   The fitted-lens agreement above settles the question without it; the
   probe's per-layer cosine table remains a nice-to-have record
   (prediction: cosine ≈ 0.99+), queued for idle GPU.
+  [superseded, noted 2026-09-24: abandoned 2026-07-22 after two
+  failures, see `2026-07-22-n500-and-heldout-robustness.md` § Probe
+  status]
 - The stage-4 observation's "trough L13" for 1.5B was a selected-rows
   artifact; the full-27-layer argmin is L16 (bf16) / L14 (nf4). No
   values change; resolution note only.
@@ -85,6 +97,61 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --device cuda --n-prompts 5 --n-probes 8
 ```
 
+## Hypotheses
+
+- **Fit budget vs scale (H1) [SPECULATION].**
+  The 7B divergence could come from the n=100 fit under-determining
+  3584² Jacobians rather than from scale.
+  This control separates quantization from both, but leaves those two
+  confounded with each other.
+  Test: an n=500 nf4 refit (`jspace_fit_lens.py --n-prompts 500`).
+  The 1.5B version ran in `2026-07-22-n500-and-heldout-robustness.md`
+  and found the profile n-stable (peak −1.4%).
+  Under this file's pre-registered rule (Follow-ups), the 1.5B
+  n-stability weakens H1.
+  It does not settle 7B: a 3584² Jacobian has about 5.4× the entries
+  of a 1536² one, so n=100 sufficing at 1.5B does not show it suffices
+  at 7B.
+  The 7B n=500 refit (~81 h) remains the test.
+  `2026-09-23-dimension-matched-k58-recompute.md` attributes part of
+  the 7B gap in the paper metric to metric dimension (K/d), which is
+  neither scale nor fit budget.
+- **Why the fitted lens is quantization-invariant [SPECULATION].**
+  Candidate A: nf4 perturbs each raw VJP by a small amount.
+  Candidate B: raw VJPs differ more, and averaging over 100 prompts
+  cancels the difference in the fitted lens.
+  The fitted-lens agreement fits both.
+  In the Finding table the structural (varfrac) values agree within
+  ~0.006.
+  Every other row that differs by more is listed here.
+  Multihop J@10 overall differs by 0.009, its logit value by 0.020 and
+  J@10 early by 0.01.
+  L26 Spearman differs by 0.011 (J) and 0.018 (logit).
+  Logit-kurtosis differs by 0.09 at L0 and 0.02 at the trough.
+  The varfrac trough layer moves from L16 to L14.
+  These deltas qualify the Finding's "on every metric" and "same eval
+  rates" wording.
+  Test: the per-layer cosine table from `jspace_quant_grad_probe.py`.
+  A cosine near 0.99 supports A; a lower cosine supports B.
+  The probe failed twice and was abandoned
+  (`2026-07-22-n500-and-heldout-robustness.md`), so this stays open.
+- **Transfer of the null to 7B [SPECULATION].**
+  The control flips precision at 1.5B only.
+  The Finding's headline, that the quantization asterisk is removed
+  from all 7B structural claims, rests on an untested assumption: nf4
+  error does not grow with model size.
+  A bf16 7B lens fit cannot test it here, because nf4 is already
+  mandatory for the 7B fit (Fit-cost datum).
+  `jspace_quant_grad_probe.py --model Qwen/Qwen2.5-7B-Instruct` also
+  needs a bf16 7B backward, whose memory this file does not measure,
+  and the probe itself is unvalidated (§ Method notes).
+  Candidate test: the same bf16-vs-nf4 refit at an intermediate size
+  (Qwen2.5-3B), to see whether the nf4 effect grows between 1.5B and
+  3B.
+  Its feasibility is unmeasured: the repo records bf16 fit memory only
+  at 1.5B (5.44 GiB peak on an 8 GiB GPU,
+  `2026-07-18-fit-cost-calibration.md`).
+
 ## Follow-ups
 
 - The nf4 cost discovery makes the H1 fit-budget test cheap at 1.5B: an
@@ -92,7 +159,12 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
   H1 weakens and genuine scale carries the 7B gap; if it shifts, H1 is
   live and the 7B n=500 (~81 h) becomes worth its price. Recommend as
   the next deferred-item promotion.
+  [superseded, noted 2026-09-24: ran 2026-07-22 in
+  `2026-07-22-n500-and-heldout-robustness.md`, profile n-stable]
 - Probe rerun at next idle GPU window (record-keeping only).
+  [superseded, noted 2026-09-24: abandoned 2026-07-22 after two
+  failures, see `2026-07-22-n500-and-heldout-robustness.md` § Probe
+  status]
 - Audit check group for the nf4 artifacts at stage 7.
 
 ## References

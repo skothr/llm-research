@@ -107,6 +107,8 @@ grid is a subsample) moved L21 from 10.8% → 11.2% — the grid was mildly
 conservative. L0 excess is 10.4% but sits outside the paper's
 workspace-layer scope for the ceiling (Fig 30b evaluates workspace layers)
 and carries the Finding-3 contamination.
+[qualified 2026-09-24: see § Hypotheses, "~2.4×" mixes all-positions
+and grid; grid ratio 2.3×]
 
 **All four robustness axes re-verified under the paper metric** (each run
 validated bit-exact against its committed structure scan; nf4 axes run
@@ -130,12 +132,14 @@ now metric-correct AND robustness-certified in that metric. The early-band
 corpus-sensitivity also reproduces in the corrected metric (L0 excess
 9.67% → 15.43% under the C4 lens), so the corpus observation's
 early/workspace split is metric-robust.
+[qualified 2026-09-24: see § Hypotheses, L0 excess may be norm-driven]
 
 **Occupancy saturation note:** median occupancy = 24–25 of k=25 at 1.5B
 and 23–24 at 7B (`ACTIVE_TAU = 1e-3` counts nearly every selected atom as active —
 the stage-4 observation's point 3), so the paper's K = median-occupancy
 prescription lands at K ≈ 25 here; the arc's k=25 headline was
 procedure-equivalent by accident.
+[qualified 2026-09-24: see § Hypotheses, breach at smaller K untested]
 
 ## Finding 2 — the stage-5.2 causal gap is statistically certified
 
@@ -307,6 +311,75 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   control) but were published as "energy" (which floors at 0.0059) —
   renamed across docs, scripts, and figure axes in commit `0c06b197`, with
   committed artifact keys deliberately frozen for compatibility.
+
+## Hypotheses
+
+- **Dimension dependence of the cross-scale gap [SPECULATION, since
+  tested].**
+  The Finding 1 table gives a grid gap of 2.3× (1.5B L21 10.8% vs 7B
+  4.72%), measured at d=1536 and d=3584 with nearly equal K.
+  Finding 1's "~2.4×" matches 11.15/4.72 = 2.36, the 1.5B
+  all-positions value over the 7B grid value (pointer there).
+  Part of it could be a dimension effect.
+  `2026-09-23-dimension-matched-k58-recompute.md` tested this.
+  At matched K/d the gap shrinks from 1.99× to 1.52× (held-out) and
+  from 2.30× to 1.76× (grid), and 7B stays under the ceiling.
+  The 1.99× uses the 2026-08-16 re-derived held-out values (11.689% /
+  5.88%, as in the 09-23 file); this file's robustness table gives
+  1.96× (11.70% / 5.98%).
+- **Why the LS-refit gain decays with depth [SPECULATION].**
+  The refit term falls from +1.25 pt at 1.5B L17 to +0.29 at L22, and
+  is +1.71 at 7B L21 (Finding 1).
+  The 7B point does not fit a depth-only trend: L21 is a later layer
+  than 1.5B L17 (both lenses cover 27 source layers, L0 to L26), yet
+  its gain is larger.
+  So either the candidate must also explain a scale difference, or the
+  decay is specific to 1.5B; this file does not decide which.
+  Candidate: the gain grows with the mutual coherence of the selected
+  atoms.
+  The single-step coefficients ignore atom overlap; the LS projection
+  accounts for it.
+  Test: mean pairwise |cos| of the selected atoms per layer, set
+  against the per-layer refit gain.
+  No committed script computes this; it needs the pursuit supports and
+  the lens as loaded in `jspace_paper_metric_varfrac.py`.
+  The result would explain the refit trend only.
+  Finding 1 gives the 1.5B control term only at L21, where refit +0.5
+  and control −2.02 net −1.5 pt.
+  Whether that net holds at other 1.5B layers stays open until the
+  per-layer terms are read from the 1.5B grid artifact
+  (`paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`,
+  per-layer `fve_topK_mean` and `fve_rand_mean`).
+- **Early-band excess is norm-driven [SPECULATION].**
+  Selected atoms sit at norm-percentile 69.5 at 1.5B L0, against ~50 in
+  the workspace band (Finding 3).
+  All three L0 figures are on the wikitext held-out prompts: each
+  artifact's stored `config["prompts_file"]` is
+  `heldout_prompts_wikitext103_n30.json` (the C4-lens run is
+  `examples/jspace_rerun_scans.sh` run 2/10, which passes no
+  `--prompts`).
+  10.4% is the all-positions sweep with the bf16 wikitext lens.
+  9.67% is the scan grid with the same lens: the L0 value under the
+  base-row condition (bf16 lens, wikitext held-out), given in the
+  prose under the robustness table, not a table cell.
+  15.419% is the scan grid with the C4-en lens (re-derived value, top
+  addendum; 15.43% before the redaction).
+  The L0 excess and its corpus sensitivity (grid, 9.67% → 15.419%) may
+  then measure atom norm more than content.
+  Test: rerun the recompute with unit-normalized atoms and compare the
+  early-band excess.
+  Neither `_jspace_pursuit.py` nor `jspace_paper_metric_varfrac.py`
+  has an atom-normalization option, so this test needs a new flag.
+- **The 1.5B breach at a smaller K [SPECULATION].**
+  K = median occupancy lands at K ≈ 25 because `ACTIVE_TAU = 1e-3`
+  counts nearly every selected atom as active.
+  A coefficient-mass occupancy rule would give a smaller K.
+  `2026-09-23-dimension-matched-k58-recompute.md` found that 7B excess
+  rises with K (K=25 → 58).
+  If 1.5B excess also rises with K, a smaller K could move the L21 value
+  (11.15%) under the 10% ceiling.
+  Test: the coefficient-mass recalibration (Follow-ups), then
+  `jspace_paper_metric_varfrac.py --k-fixed` at the resulting K.
 
 ## Follow-ups
 

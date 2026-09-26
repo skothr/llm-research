@@ -70,6 +70,7 @@ property.** Residual caveat, stated honestly: these controls test each
 axis at 1536² Jacobians; 3584² being data-starved at n=100 in a way
 1536² is not remains logically open, but with zero instability signal on
 any axis, the ~81 h direct 7B n=500 test stays unjustified.
+[qualified 2026-09-24: see § Hypotheses, 7B refit is a weak signal]
 
 **2. Held-out sample: structural conclusions robust.** Diversified
 (C4) vs clustered (wikitext) held-out activations, same lens:
@@ -93,6 +94,8 @@ the arc's absolute varfrac; the paper's ceiling is excess-over-random
 orthogonal-projection FVE — the 7B under-ceiling verdict was re-verified
 under that metric, including on this C4 held-out set; see
 `2026-07-24-paper-metric-varfrac-recompute.md`.)*
+[qualified 2026-09-24, on "per-sample noise is a larger fraction":
+see § Hypotheses, one of two candidates]
 
 **Probe status — abandoned per the two-failure rule.** The raw-VJP
 bf16-vs-nf4 fidelity probe failed twice (first: HF_HUB_OFFLINE env bug,
@@ -122,6 +125,73 @@ python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
     --out research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
 # scans: --prompts <c4 heldout> (outputs auto-tag _heldoutc4en; no clobber)
 ```
+
+## Hypotheses
+
+- **7B data starvation at n=100 [SPECULATION].**
+  The n-budget control ran on 1536² Jacobians.
+  3584² Jacobians could still be data-starved at n=100 in a way 1536²
+  are not (Finding 1, residual caveat).
+  The 1.5B n-stability weakens this under the stability threshold, but
+  a 3584² Jacobian has about 5.4× the entries of a 1536² one, so
+  starvation at 7B stays open.
+  Finding 1 reports no instability signal on the controlled axes.
+  The 7B nf4 refit's failure to reproduce the original lens (addendum)
+  is a weak lens-instability signal, but it used the same n=100 data,
+  so it cannot separate data starvation from run-to-run variation in
+  the nf4 fit.
+  Test: the direct 7B n=500 nf4 refit (~81 h), or the split-half n=50
+  lens-stability check at 7B (~16 h; arc README § Possible next paths,
+  "Split-half lens stability at n=100").
+  The split-half check fits two n=50 lenses, so it bears on n=100 only
+  indirectly: agreement bounds noise at n=50, and disagreement could be
+  starvation at n=50 rather than at n=100.
+  Both remain unrun.
+- **Source of the larger 7B held-out shift [INTUITION].**
+  Finding 2 measures the shift with the original 7B lens on both sets:
+  peak 0.0404@L22 (wikitext) → 0.0518@L23 (C4), +28%.
+  Candidate A: per-sample noise is a larger fraction of the signal at
+  7B's low absolute occupancy (Finding 2).
+  Candidate B: a real distribution effect, with 7B more sensitive than
+  1.5B (+8%) to the clustered-vs-diverse difference.
+  The measured shift changes two factors at once: clustering, and
+  corpus domain (C4 web text vs wikitext encyclopedic text).
+  Test for A: scan a second disjoint C4 held-out draw
+  (`jspace_freeze_c4_corpus.py` at a new `--offset`) with one fixed 7B
+  lens.
+  Redact the new draw before use (`jspace_redact_corpus.py --apply`,
+  then `--check`), as the addendum's C4 set required.
+  The fixed lens must be the refit lens, since the original full lens
+  is unavailable.
+  Its draw-to-draw shift is then compared against a +28% measured with
+  the original lens, a limit at L22/L23, where the two lenses cannot
+  be compared.
+  A shift between the two draws of similar size to +28% supports A.
+  A small shift weakens A; one pair of n=30 draws cannot rule it out,
+  so ruling A out needs several draws.
+  Test for B: scan a diversified (non-consecutive) wikitext held-out
+  draw with the same 7B lens and compare it with the clustered set.
+  A predicts a shift between any two n=30 draws, so a clustered-vs-
+  diverse shift supports B only if it clearly exceeds the draw-to-draw
+  shift measured by the test for A.
+  Otherwise the outcome is ambiguous between A and B.
+  This test isolates clustering only, so a null there leaves the
+  corpus-domain factor open.
+  No committed script draws such a set.
+  - Separate note on the later 0.0518 → 0.0526 move (+28% → +30%),
+    not a rival explanation of the +28% shift, which predates the
+    refit: part of it can be lens variation, because the 7B nf4 refit
+    did not reproduce the original lens (addendum; relative Frobenius
+    Δ 1.7e-2 at L0, the maximum over the seven measured subset
+    layers, not over all layers), and the rest is the C4 redaction.
+    Test: scan the redacted C4 held-out set now committed with the
+    original and the refit 7B lens.
+    The original full lens was never committed and is unavailable
+    outside the layer-subset file, which holds L0, 5, 10, 15, 20, 25
+    and 26.
+    So the test is limited to those layers and cannot be run at the
+    peak (L22/L23) or trough (L16/L17) layers where the move is
+    reported.
 
 ## Follow-ups
 
