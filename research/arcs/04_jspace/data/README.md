@@ -16,7 +16,7 @@
 >
 > **Why.** C4 is Common Crawl — the open web. Its cleaning pipeline filters for
 > quality (boilerplate, length, offensive content); it does **not** filter
-> personal data `[raffel2020-t5 §2.2]`. A uniform 1000-document sample
+> personal data `[raffel2019 §2.2]`. A uniform 1000-document sample
 > therefore carries real people's contact details at the corpus base rate
 > (~20 emails / ~50 phones per 1000 docs — Elazar et al. 2024, *What's In My
 > Big Data?*, ICLR, Table 5); the counts above are consistent with that rate,
