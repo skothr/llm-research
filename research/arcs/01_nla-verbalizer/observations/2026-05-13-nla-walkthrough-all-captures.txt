@@ -1,3 +1,10 @@
+# Generated 2026-05-13 by examples/nla_dump_walkthrough.py from three arc-01
+# artifacts (aggregate_faithfulness.pt, rabbit_haiku_gen_trajectory.pt,
+# forced_continuation.pt), read from the working cache at the time. Since
+# 2026-05-31 the script resolves them through examples/_nla_artifacts (working
+# cache first, then the committed data/ copies). It prints to stdout:
+#   python examples/nla_dump_walkthrough.py > <this file>     (repo root)
+# These header lines are prepended by hand; the script does not print them.
 
 ============================================================================================
 ARTIFACT: aggregate_faithfulness.pt  (h[20] across generation, 8 prompts)
