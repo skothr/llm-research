@@ -814,11 +814,10 @@ CHECK P added 72 claims that do not read the lens cache — issue #83):
   committed lens files aside: the audit then reports `MISSING` where a
   default clone reports `LFS pointer stub`, one FAIL per file either way,
   so the claim count is the same (981 before CHECK P, measured
-  2026-08-30). The 7
-  = three
-  `LFS pointer stub` reports for the committed lenses (the audit detects the
-  stub and prints the pull command) + the designed `MISSING` reports for the
-  two regenerate-only nf4 lenses and their sidecars.
+  2026-08-30). The 7 = three `LFS pointer stub` reports for the committed
+  lenses (the audit detects the stub and prints the pull command) + the
+  designed `MISSING` reports for the two regenerate-only nf4 lenses and
+  their sidecars.
 - **After** `git lfs pull --include="research/arcs/04_jspace/data/cache/**"
   --exclude=""`: `SUMMARY: 1088 PASS | 4 FAIL` (measured 2026-09-24 with
   the cache pulled: 986 measured 2026-08-17, `data/audit_2026-08-17.log`,
@@ -866,7 +865,7 @@ defect corrected on 2026-07-28 is the worked example: every pinned number was
 correct and passing while the inference drawn from them was wrong.
 
 The jlens dependency is pinned in
-the MANIFEST (`581d3986`, "Initial release" 2026-07-02 — the multihop/
+the MANIFEST (`581d3986`, "Initial release", authored 2026-07-01 — the multihop/
 association eval sets live in that clone). The harness was seeded at stage
 3 rather than at arc close (`6d567a27`, together with the Decision-4 lens
 layer subsets), on the project owner's standing requirement that
