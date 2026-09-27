@@ -83,11 +83,14 @@ scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py
 which raise an `OSError` at model load naming the cache directory probed and
 `LLM_RESEARCH_MODEL_CACHE`. The AV and AR load at pinned Hub revisions
 (`_nla_probe.AV_REVISION`, `AR_REVISION`), so an offline run needs a cache
-that holds those exact snapshots; `_hf_models._is_cached(_nla_probe.AV_ID,
-revision=_nla_probe.AV_REVISION)` (and the AR equivalent) checks it. A cache
-holding another snapshot of the same repos recovers with one online run: the
-weights are unchanged since 2026-03-16, so only the small files at the pinned
-revision download and the cached weight files are reused.
+that holds those exact snapshots; with `LLM_RESEARCH_MODEL_CACHE` exported,
+`_hf_models._is_cached(_nla_probe.AV_ID, revision=_nla_probe.AV_REVISION)`
+(and the AR equivalent) checks it. The seven scripts set the offline flag
+unconditionally, so recover a cache holding another snapshot of the same
+repos with `huggingface_hub.snapshot_download(<AV_ID or AR_ID>,
+revision=<AV_REVISION or AR_REVISION>, cache_dir=<the cache dir>)`, run
+online: the weights are unchanged since 2026-03-16, so only the small files
+at the pinned revision download and the cached weight files are reused.
 
 ## Figures + observations
 

@@ -200,6 +200,7 @@ def _normalized_ast(fn: Callable[..., Any]) -> str:
             return node
 
         def visit_Expr(self, node: ast.Expr) -> ast.Expr | None:
+            self.generic_visit(node)
             call = node.value
             if (
                 isinstance(call, ast.Call)
