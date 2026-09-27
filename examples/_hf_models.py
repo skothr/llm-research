@@ -93,6 +93,9 @@ def require_cached_when_offline(
     Without this, the load fails inside HuggingFace with a generic offline
     cache-miss error that names neither the cache directory nor
     ``LLM_RESEARCH_MODEL_CACHE``. Local directories and online loads pass.
+    It probes one file (``filename``), so it catches a missing snapshot, not
+    an incomplete one: a cache holding that file but missing weight shards
+    still reaches HuggingFace's own error.
     """
     if (
         not _offline()
@@ -205,10 +208,14 @@ def load_model(
             if "safetensors" not in (str(first_error) + str(error)).lower():
                 raise error
             if not allow_pickle:
+                hint = (
+                    " Offline mode is set, so the cache may be incomplete; a run "
+                    "online fills it." if _offline() else ""
+                )
                 raise OSError(
                     f"Model '{model_id}' has no safetensors file accessible. Pass "
                     "allow_pickle=True to load the legacy .bin weights (unpickling "
-                    "can execute code)."
+                    f"can execute code).{hint}"
                 ) from error
             logger.warning(
                 "Model '%s' has no safetensors file accessible; falling back to .bin",

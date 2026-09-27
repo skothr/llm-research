@@ -30,8 +30,12 @@ def _clear_offline(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.parametrize(
     "activation",
-    [torch.zeros(META["d_model"]), torch.full((META["d_model"],), float("nan"))],
-    ids=["zero", "nan"],
+    [
+        torch.zeros(META["d_model"]),
+        torch.full((META["d_model"],), float("nan")),
+        torch.full((META["d_model"],), float("inf")),
+    ],
+    ids=["zero", "nan", "inf"],
 )
 def test_verbalize_rejects_degenerate_norm(activation: torch.Tensor) -> None:
     av = FakeAV()
