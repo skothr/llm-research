@@ -7,7 +7,7 @@ independent activation->language channels on the *same* hidden state:
 
 * the **J-lens** readout ``W_U norm(J_l h)`` (a *derived* readout), and
 * the **NLA AV** free-text verbalization (a *trained* one,
-  ``llm_surgeon.probe.nla_verbalize``).
+  ``_nla_probe.nla_verbalize``).
 
 Two questions (design: ``plans/2026-07-20-stage6-design.md``):
   A. Do the channels agree on the active concepts? (Metric 1: where the AV's
@@ -421,7 +421,7 @@ def phase2_verbalize(
     loses at most the single in-flight verbalization, not the whole phase. The
     sidecar is authoritative for this config (cleared whenever Phase 1 recomputes).
     """
-    from llm_surgeon.probe import load_av, nla_verbalize
+    from _nla_probe import load_av, nla_verbalize
 
     jobs = _av_jobs(per_prompt)
     done = _load_partial(partial_path)
@@ -756,9 +756,9 @@ def main() -> None:
     # readout is over the base W_U, so the base tokenizer is authoritative).
     from transformers import AutoTokenizer
 
-    from llm_surgeon import surgery
+    from _hf_models import MODEL_CACHE_DIR
 
-    tok = AutoTokenizer.from_pretrained(tok_name, cache_dir=surgery.MODEL_CACHE_DIR)
+    tok = AutoTokenizer.from_pretrained(tok_name, cache_dir=MODEL_CACHE_DIR)
     summary = score(per_prompt, readouts, tok, vocab, args)
 
     torch.save({"summary": summary, "per_prompt": per_prompt}, out)
