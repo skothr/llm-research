@@ -16,14 +16,17 @@ Behaviour that committed artifacts depend on, and so must not change:
 * ``int8``: ``BitsAndBytesConfig(load_in_8bit=True)``, ``device_map="auto"``
   unless overridden.
 * ``bf16`` / ``fp16`` / ``fp32``: ``torch_dtype`` only, plus ``device_map``
-  when the caller passes one.
+  (and ``max_memory``, which needs it) when the caller passes one.
 * ``revision`` is forwarded to both model and tokenizer; the emb_* captures
   pin it to a commit SHA.
-* ``use_safetensors=True`` first, with a legacy ``.bin`` retry only when the
-  error names safetensors.
+* ``use_safetensors=True``. A legacy pickle ``.bin`` retry happens only when
+  the caller passes ``allow_pickle=True`` and the error names safetensors;
+  every model this repo loads ships safetensors.
 
 ``MODEL_CACHE_DIR`` is ``$LLM_RESEARCH_MODEL_CACHE`` when set, else ``None``
-(the Hugging Face default cache).
+(the Hugging Face default cache). With ``HF_HUB_OFFLINE`` set, a checkpoint
+missing from that cache raises ``OSError`` naming the directory probed and the
+variable that sets it (``require_cached_when_offline``).
 """
 
 from __future__ import annotations
@@ -40,6 +43,8 @@ logger = logging.getLogger(__name__)
 MODEL_CACHE_DIR: str | None = os.environ.get("LLM_RESEARCH_MODEL_CACHE") or None
 
 VALID_MODES = {"nf4", "int8", "bf16", "fp16", "fp32"}
+
+_TRUE_VALUES = {"1", "ON", "YES", "TRUE"}  # huggingface_hub's parse of the flag
 
 
 def _is_cached(
@@ -64,6 +69,30 @@ def _is_cached(
     return isinstance(path, str)
 
 
+def _offline() -> bool:
+    # Read at call time: huggingface_hub captures HF_HUB_OFFLINE at import, and
+    # the offline scripts set it before importing, so both agree in practice.
+    return os.environ.get("HF_HUB_OFFLINE", "").upper() in _TRUE_VALUES
+
+
+def require_cached_when_offline(model_id: str, revision: str | None = None) -> None:
+    """Raise a descriptive ``OSError`` for an offline load of an uncached model.
+
+    Without this, the load fails inside HuggingFace with a generic offline
+    cache-miss error that names neither the cache directory nor
+    ``LLM_RESEARCH_MODEL_CACHE``. Local directories and online loads pass.
+    """
+    if not _offline() or os.path.isdir(model_id) or _is_cached(model_id, revision=revision):
+        return
+    where = MODEL_CACHE_DIR or "the HuggingFace default cache"
+    at = f"@{revision}" if revision else ""
+    raise OSError(
+        f"{model_id}{at} is not in {where} and HF_HUB_OFFLINE is set. Export "
+        "LLM_RESEARCH_MODEL_CACHE to the directory that holds the checkpoint, "
+        "or unset HF_HUB_OFFLINE to download it."
+    )
+
+
 def load_model(
     model_id: str,
     mode: str = "nf4",
@@ -71,6 +100,7 @@ def load_model(
     revision: str | None = None,
     max_memory: dict[int | str, str] | None = None,
     device_map: str | dict[str, int | str] | None = None,
+    allow_pickle: bool = False,
 ) -> tuple:
     """Load a causal LM and its tokenizer; return ``(model, tokenizer)``.
 
@@ -78,13 +108,21 @@ def load_model(
         model_id: Hugging Face Hub ID or local directory.
         mode: One of ``nf4``, ``int8``, ``bf16``, ``fp16``, ``fp32``.
         revision: Hub commit SHA / branch / tag to pin the snapshot.
-        max_memory: accelerate budget for the quantized modes
-            (e.g. ``{0: "5.5GiB", "cpu": "20GiB"}``).
+        max_memory: accelerate budget (e.g. ``{0: "5.5GiB", "cpu": "20GiB"}``).
+            The float modes need an explicit ``device_map`` to apply it.
         device_map: Overrides the device map (``{"": 0}`` forces the whole
             model onto GPU 0; ``"cpu"`` for the CPU bf16 paths).
+        allow_pickle: Permit the legacy pickle ``.bin`` fallback when no
+            safetensors file is available. Unpickling can execute code, so it
+            is off unless the caller opts in.
     """
     if mode not in VALID_MODES:
         raise ValueError(f"Unknown mode: '{mode}'. Must be one of {sorted(VALID_MODES)}.")
+    if max_memory is not None and mode not in ("nf4", "int8") and device_map is None:
+        raise ValueError(
+            f"max_memory needs a device_map in mode '{mode}'; without one it would be ignored."
+        )
+    require_cached_when_offline(model_id, revision)
 
     is_local = os.path.isdir(model_id)
     cached = (not is_local) and _is_cached(model_id, revision=revision)
@@ -117,10 +155,13 @@ def load_model(
         mode_kwargs = {"torch_dtype": torch.float32}
     if device_map is not None:
         mode_kwargs["device_map"] = device_map
+        if max_memory is not None:
+            mode_kwargs["max_memory"] = max_memory
 
     # Safetensors first: pickle-format .bin can execute code on load. Fall
-    # back to .bin only when the failure is about safetensors (older Hub
-    # models, or a stale `.no_exist/<sha>/model.safetensors` cache marker).
+    # back to .bin only when the caller opted in and the failure is about
+    # safetensors (older Hub models, or a stale
+    # `.no_exist/<sha>/model.safetensors` cache marker).
     # Before that, a load barred from the network by the cache probe (which
     # checks config.json only) is retried online once, still safetensors-only,
     # so a partial cache downloads its missing shards instead of failing.
@@ -140,6 +181,12 @@ def load_model(
             # fails with a connection error that hides the safetensors cause.
             if "safetensors" not in (str(first_error) + str(error)).lower():
                 raise error
+            if not allow_pickle:
+                raise OSError(
+                    f"Model '{model_id}' has no safetensors file accessible. Pass "
+                    "allow_pickle=True to load the legacy .bin weights (unpickling "
+                    "can execute code)."
+                ) from error
             logger.warning(
                 "Model '%s' has no safetensors file accessible; falling back to .bin",
                 model_id,

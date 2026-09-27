@@ -76,11 +76,15 @@ loader caches HuggingFace checkpoints in the directory named by the
 `LLM_RESEARCH_MODEL_CACHE` env var; unset, it uses the HuggingFace default
 cache. Checkpoints downloaded before 2026-09-26 live in the directory the
 former llm-surgeon toolkit cached to (`.cache/models/` inside the
-llm-surgeon checkout by default, or `LLM_SURGEON_CACHE_DIR` when set), so export `LLM_RESEARCH_MODEL_CACHE` to
-that directory before a capture run. On a cache
-miss the loader downloads the multi-GB checkpoints, except in the seven
+llm-surgeon checkout by default, or `LLM_SURGEON_CACHE_DIR` when set), so
+export `LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a
+cache miss the loader downloads the multi-GB checkpoints, except in the seven
 scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
-which raise at model load instead.
+which raise an `OSError` at model load naming the cache directory probed and
+`LLM_RESEARCH_MODEL_CACHE`. The AV and AR load at pinned Hub revisions
+(`_nla_probe.AV_REVISION`, `AR_REVISION`); a cache populated before the pin
+holds the same revisions if it was filled after 2026-05-07, the date of both
+repos' last commit.
 
 ## Figures + observations
 
