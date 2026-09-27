@@ -151,10 +151,10 @@ def main() -> int:
 
     import jlens
     from jlens.protocol import LensModel
-    from llm_surgeon import surgery
+    from _hf_models import load_model
 
     device_map: dict[str, int | str] = {"": 0} if args.device == "cuda" else {"": "cpu"}
-    hf_model, tok = surgery.load_model(
+    hf_model, tok = load_model(
         args.model, mode=args.mode, device_map=device_map
     )
     # cast: HFLensModel satisfies the LensModel protocol at runtime, but its

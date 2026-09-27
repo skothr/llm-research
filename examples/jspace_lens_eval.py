@@ -133,13 +133,13 @@ def concept_token_ids(tok: Any, word: str) -> tuple[list[int], bool]:
 
 
 def build_model(args: argparse.Namespace) -> Any:
-    from llm_surgeon import surgery
+    from _hf_models import load_model
 
     from jlens import from_hf
     from jlens.protocol import LensModel
 
     device_map: dict[str, int | str] = {"": 0} if args.device == "cuda" else {"": "cpu"}
-    model, tok = surgery.load_model(args.model, mode=args.mode, device_map=device_map)
+    model, tok = load_model(args.model, mode=args.mode, device_map=device_map)
     model.eval()
     for param in model.parameters():
         param.requires_grad_(False)
