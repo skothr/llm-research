@@ -19,17 +19,18 @@ would grow the PR past one-sitting reviewability, split it.
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (`examples/`). Depends on **two** sibling editable
-installs — neither is on PyPI, so neither can be declared in `pyproject.toml`:
+figure / audit pipeline (`examples/`). Depends on **one** sibling editable
+install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
-pip install -e ../llm-surgeon      # llm_surgeon.probe / .surgery — all arcs
 pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
-pip install -e '.[dev]'            # torch, numpy, matplotlib + pytest
+pip install -e '.[dev]'            # torch, transformers, numpy, matplotlib, ... + pytest
 ```
 
-Missing either one fails only at `import` inside a script, which for the arc-04
-fits is after model load, at the start of a multi-hour GPU run.
+Missing it fails only at `import jlens` inside a script, which for the arc-04
+fits is after model load, at the start of a multi-hour GPU run. Model loading
+and the NLA probe are in-repo (`examples/_hf_models.py`,
+`examples/_nla_probe.py`).
 
 **Every checkout needs its own `.venv` — including each worktree.** Pyright
 resolves `venvPath` relative to the config file, so a worktree (the mandated
@@ -139,8 +140,10 @@ citation.
 Findings inside a focused investigation go in that arc's
 `research/arcs/<slug>/observations/`; one-off findings go in
 `research/observations/`. Follow `research/ARC_PROCESS.md` for the arc
-lifecycle (question → capture → analyze → figures → observations → audit →
-synthesis → PR).
+lifecycle: four checkpoints (question, research, plan → setup and
+implementation → computation, processing, validation → observations,
+conclusions, artifacts), each closed by its own reviewed PR, with 2-4
+repeating as the arc iterates.
 
 **HARD RULE — raw data is a deliverable.** When an experiment produces a
 dataset a figure or claim depends on, generating, validating, and saving the
@@ -184,7 +187,7 @@ tree.
   taxonomy, no per-quote provenance tags, no verifiability tables.
   `research/arcs/04_jspace/README.md` § Attribution is the shape (arc 02's
   § Attribution is the original reference implementation of the same
-  content); the procedure is `research/ARC_PROCESS.md` § 6.
+  content); the procedure is `research/ARC_PROCESS.md` § Arc README synthesis.
 
 # Third-party data — vet BEFORE first use, not before commit
 
@@ -237,6 +240,6 @@ files appear as phantom modifications. Recover an LFS-less clone with
 Project stance: zero pyright errors, warnings, and informations after every
 edit. Never disable rules to quiet diagnostics — fix the source or narrow with
 the tier list (`assert isinstance` > `cast` > `# pyright: ignore[reportXxx]`;
-never bare `# type: ignore`). `numpy` and `matplotlib` have stubs; the
-`llm_surgeon` runtime comes from the sibling editable install.
+never bare `# type: ignore`). `numpy` and `matplotlib` have stubs; `jlens`
+resolves through the `extraPaths` entries in `pyrightconfig.json`.
 
