@@ -44,7 +44,7 @@ class FakeTok:
 
 
 class FakeAV:
-    """Records the ``inputs_embeds`` that ``generate`` receives."""
+    """Records the ``inputs_embeds`` and other arguments ``generate`` receives."""
 
     def __init__(self) -> None:
         g = torch.Generator().manual_seed(0)
@@ -52,12 +52,14 @@ class FakeAV:
         with torch.no_grad():
             self.embed.weight.copy_(torch.randn(VOCAB, D_MODEL, generator=g))
         self.seen: torch.Tensor | None = None
+        self.generate_kwargs: dict[str, Any] = {}
 
     def get_input_embeddings(self) -> torch.nn.Embedding:
         return self.embed
 
-    def generate(self, *, inputs_embeds: torch.Tensor, **_: Any) -> torch.Tensor:
+    def generate(self, *, inputs_embeds: torch.Tensor, **kwargs: Any) -> torch.Tensor:
         self.seen = inputs_embeds.detach().clone()
+        self.generate_kwargs = kwargs
         return torch.zeros(1, 1, dtype=torch.long)
 
 

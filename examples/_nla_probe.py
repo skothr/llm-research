@@ -48,7 +48,7 @@ _EXPLANATION_RE = re.compile(r"<explanation>\s*(.*?)\s*</explanation>", re.DOTAL
 
 def load_av_meta() -> dict[str, Any]:
     """Fetch and parse the AV's nla_meta.yaml sidecar (small file)."""
-    _hf_models.require_cached_when_offline(AV_ID, AV_REVISION)
+    _hf_models.require_cached_when_offline(AV_ID, AV_REVISION, "nla_meta.yaml")
     path = hf_hub_download(
         AV_ID, "nla_meta.yaml", revision=AV_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
     )
@@ -156,7 +156,7 @@ def nla_verbalize(
 
 def load_ar_meta() -> dict[str, Any]:
     """Fetch and parse the AR's nla_meta.yaml sidecar (small file)."""
-    _hf_models.require_cached_when_offline(AR_ID, AR_REVISION)
+    _hf_models.require_cached_when_offline(AR_ID, AR_REVISION, "nla_meta.yaml")
     path = hf_hub_download(
         AR_ID, "nla_meta.yaml", revision=AR_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
     )
