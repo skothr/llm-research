@@ -16,7 +16,9 @@ Behaviour that committed artifacts depend on, and so must not change:
 * ``int8``: ``BitsAndBytesConfig(load_in_8bit=True)``, ``device_map="auto"``
   unless overridden.
 * ``bf16`` / ``fp16`` / ``fp32``: ``torch_dtype`` only, plus ``device_map``
-  (and ``max_memory``, which needs it) when the caller passes one.
+  and ``max_memory`` when the caller passes them. transformers applies
+  ``max_memory`` only under a strategy ``device_map`` ("auto", "balanced",
+  "balanced_low_0", "sequential"), so any other combination is rejected.
 * ``revision`` is forwarded to both model and tokenizer; the emb_* captures
   pin it to a commit SHA.
 * ``use_safetensors=True``. A legacy pickle ``.bin`` retry happens only when
@@ -45,12 +47,16 @@ MODEL_CACHE_DIR: str | None = os.environ.get("LLM_RESEARCH_MODEL_CACHE") or None
 VALID_MODES = {"nf4", "int8", "bf16", "fp16", "fp32"}
 
 _TRUE_VALUES = {"1", "ON", "YES", "TRUE"}  # huggingface_hub's parse of the flag
+_DEVICE_MAP_STRATEGIES = {"auto", "balanced", "balanced_low_0", "sequential"}
 
 
 def _is_cached(
-    model_id: str, cache_dir: str | None = None, revision: str | None = None
+    model_id: str,
+    cache_dir: str | None = None,
+    revision: str | None = None,
+    filename: str = "config.json",
 ) -> bool:
-    """True if the cache holds a config.json snapshot for model_id at revision.
+    """True if the cache holds ``filename`` in model_id's snapshot at revision.
 
     Probing the same revision the load will request keeps ``local_files_only``
     honest: a cached ``main`` with an uncached pinned SHA must go to the
@@ -60,7 +66,7 @@ def _is_cached(
 
     path = try_to_load_from_cache(
         model_id,
-        filename="config.json",
+        filename=filename,
         cache_dir=cache_dir or MODEL_CACHE_DIR,
         revision=revision,
     )
@@ -72,24 +78,35 @@ def _is_cached(
 def _offline() -> bool:
     # Read at call time: huggingface_hub captures HF_HUB_OFFLINE at import, and
     # the offline scripts set it before importing, so both agree in practice.
-    return os.environ.get("HF_HUB_OFFLINE", "").upper() in _TRUE_VALUES
+    # transformers also honours TRANSFORMERS_OFFLINE.
+    return any(
+        os.environ.get(var, "").upper() in _TRUE_VALUES
+        for var in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE")
+    )
 
 
-def require_cached_when_offline(model_id: str, revision: str | None = None) -> None:
+def require_cached_when_offline(
+    model_id: str, revision: str | None = None, filename: str = "config.json"
+) -> None:
     """Raise a descriptive ``OSError`` for an offline load of an uncached model.
 
     Without this, the load fails inside HuggingFace with a generic offline
     cache-miss error that names neither the cache directory nor
     ``LLM_RESEARCH_MODEL_CACHE``. Local directories and online loads pass.
     """
-    if not _offline() or os.path.isdir(model_id) or _is_cached(model_id, revision=revision):
+    if (
+        not _offline()
+        or os.path.isdir(model_id)
+        or _is_cached(model_id, revision=revision, filename=filename)
+    ):
         return
     where = MODEL_CACHE_DIR or "the HuggingFace default cache"
     at = f"@{revision}" if revision else ""
     raise OSError(
-        f"{model_id}{at} is not in {where} and HF_HUB_OFFLINE is set. Export "
+        f"{model_id}{at} ({filename}) is not in {where} and offline mode is set "
+        "(HF_HUB_OFFLINE or TRANSFORMERS_OFFLINE). Export "
         "LLM_RESEARCH_MODEL_CACHE to the directory that holds the checkpoint, "
-        "or unset HF_HUB_OFFLINE to download it."
+        "or run once online to download it."
     )
 
 
@@ -109,7 +126,8 @@ def load_model(
         mode: One of ``nf4``, ``int8``, ``bf16``, ``fp16``, ``fp32``.
         revision: Hub commit SHA / branch / tag to pin the snapshot.
         max_memory: accelerate budget (e.g. ``{0: "5.5GiB", "cpu": "20GiB"}``).
-            The float modes need an explicit ``device_map`` to apply it.
+            Needs a strategy device map ("auto", the quantized modes' default,
+            or "balanced" / "balanced_low_0" / "sequential").
         device_map: Overrides the device map (``{"": 0}`` forces the whole
             model onto GPU 0; ``"cpu"`` for the CPU bf16 paths).
         allow_pickle: Permit the legacy pickle ``.bin`` fallback when no
@@ -118,9 +136,14 @@ def load_model(
     """
     if mode not in VALID_MODES:
         raise ValueError(f"Unknown mode: '{mode}'. Must be one of {sorted(VALID_MODES)}.")
-    if max_memory is not None and mode not in ("nf4", "int8") and device_map is None:
+    effective_map = device_map
+    if effective_map is None and mode in ("nf4", "int8"):
+        effective_map = "auto"
+    is_strategy = isinstance(effective_map, str) and effective_map in _DEVICE_MAP_STRATEGIES
+    if max_memory is not None and not is_strategy:
         raise ValueError(
-            f"max_memory needs a device_map in mode '{mode}'; without one it would be ignored."
+            f"max_memory needs a strategy device_map {sorted(_DEVICE_MAP_STRATEGIES)}; "
+            f"with {effective_map!r} transformers would ignore it."
         )
     require_cached_when_offline(model_id, revision)
 

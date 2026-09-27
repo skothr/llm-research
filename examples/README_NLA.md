@@ -82,9 +82,12 @@ cache miss the loader downloads the multi-GB checkpoints, except in the seven
 scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
 which raise an `OSError` at model load naming the cache directory probed and
 `LLM_RESEARCH_MODEL_CACHE`. The AV and AR load at pinned Hub revisions
-(`_nla_probe.AV_REVISION`, `AR_REVISION`); a cache populated before the pin
-holds the same revisions if it was filled after 2026-05-07, the date of both
-repos' last commit.
+(`_nla_probe.AV_REVISION`, `AR_REVISION`), so an offline run needs a cache
+that holds those exact snapshots; `_hf_models._is_cached(_nla_probe.AV_ID,
+revision=_nla_probe.AV_REVISION)` (and the AR equivalent) checks it. A cache
+holding another snapshot of the same repos recovers with one online run: the
+weights are unchanged since 2026-03-16, so only the small files at the pinned
+revision download and the cached weight files are reused.
 
 ## Figures + observations
 

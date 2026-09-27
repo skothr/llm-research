@@ -15,10 +15,12 @@ case needs CUDA. Run with:
 
 from __future__ import annotations
 
+import ast
 import gc
 import importlib.util
 import inspect
 import sys
+import textwrap
 from pathlib import Path
 from typing import Any, Callable
 
@@ -170,10 +172,67 @@ def test_nla_verbalize_embeds_parity() -> None:
             av = FakeAV()
             text = fn(act, model=av, tok=FakeTok(prompt_ids()), meta=META)
             assert av.seen is not None
-            seen.append((text, av.seen))
+            seen.append((text, av.seen, av.generate_kwargs))
         assert seen[0][0] == seen[1][0]
+        # Decoding arguments (max_new_tokens, do_sample, pad id) and the
+        # attention mask also determine the greedy text.
+        a, b = seen[0][2], seen[1][2]
+        assert a.keys() == b.keys()
+        for k in a:
+            if isinstance(a[k], torch.Tensor):
+                assert torch.equal(a[k], b[k]), k
+            else:
+                assert a[k] == b[k], k
         assert seen[0][1].dtype == seen[1][1].dtype
         assert torch.equal(seen[0][1], seen[1][1])
+
+
+def _normalized_ast(fn: Callable[..., Any]) -> str:
+    """The function's AST with the #105 additions removed: ``revision=``
+    keywords, ``require_cached_when_offline(...)`` statements, and the module
+    that supplies the cache-dir constant. Formatting does not matter."""
+    tree = ast.parse(textwrap.dedent(inspect.getsource(fn)))
+
+    class _Strip(ast.NodeTransformer):
+        def visit_Call(self, node: ast.Call) -> ast.Call:
+            self.generic_visit(node)
+            node.keywords = [k for k in node.keywords if k.arg != "revision"]
+            return node
+
+        def visit_Expr(self, node: ast.Expr) -> ast.Expr | None:
+            call = node.value
+            if (
+                isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Attribute)
+                and call.func.attr == "require_cached_when_offline"
+            ):
+                return None
+            return node
+
+        def visit_Attribute(self, node: ast.Attribute) -> ast.AST:
+            self.generic_visit(node)
+            if node.attr == "MODEL_CACHE_DIR":
+                return ast.Name(id="CACHE", ctx=ast.Load())
+            return node
+
+    tree = _Strip().visit(tree)
+    fdef = tree.body[0]
+    assert isinstance(fdef, ast.FunctionDef)
+    # Docstrings may differ; the body after it may not.
+    if fdef.body and isinstance(fdef.body[0], ast.Expr) and isinstance(
+        fdef.body[0].value, ast.Constant
+    ):
+        fdef.body = fdef.body[1:]
+    fdef.returns = None
+    return ast.dump(fdef, include_attributes=False)
+
+
+@pytest.mark.parametrize("name", ["load_av_meta", "load_ar_meta", "load_av", "load_ar"])
+def test_nla_loaders_identical_modulo_pins(name: str) -> None:
+    """The loaders differ from the original only by the pinned revisions and
+    the offline guard; dtype, device_map, value-head construction and meta
+    parsing must be unchanged."""
+    assert _normalized_ast(getattr(orig_probe, name)) == _normalized_ast(getattr(_nla_probe, name))
 
 
 def test_nla_constants() -> None:
