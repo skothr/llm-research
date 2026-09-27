@@ -3,9 +3,12 @@
 Replaces ``llm_surgeon.probe.{AV_ID, AR_ID, load_av, load_ar, nla_verbalize,
 nla_reconstruct, nla_score}`` from the sibling llm-surgeon checkout (issue
 #94); the dependency policy is in ``research/ARC_PROCESS.md`` § The
-non-negotiables. Ported verbatim from ``llm_surgeon/probe/_nla.py``: same
-signatures, same chat-template call, same fp32 normalise-then-scale order,
-same bf16 casts, same explanation regex.
+non-negotiables. Ported from ``llm_surgeon/probe/_nla.py`` with the same
+signatures, chat-template call, fp32 normalise-then-scale order, bf16 casts
+and explanation regex. Changes since the port (issue #105), none of which
+moves a valid output: the checkpoints load at pinned revisions, and
+``nla_verbalize`` raises on a zero or non-finite activation norm and on an
+injection token at either end of the prompt.
 
 The AV (activation -> text) and AR (text -> activation) are the kitft NLA
 checkpoints for Qwen2.5-7B layer 20. Arc-01 artifacts store
@@ -33,13 +36,22 @@ import _hf_models
 
 AV_ID = "kitft/nla-qwen2.5-7b-L20-av"
 AR_ID = "kitft/nla-qwen2.5-7b-L20-ar"
+# Hub heads as of 2026-05-07, before the first arc-01 capture (2026-05-12).
+# The weights are unchanged since the 2026-03-16 upload; later commits touch
+# only the README, LICENSE and nla_meta.yaml, and the last nla_meta.yaml change
+# (2026-05-07) altered no key this module reads.
+AV_REVISION = "b88469162777ae6553bc14208eb0cb579336f8f4"
+AR_REVISION = "e2c9e57eac213d37a31612087f645ab6332c1bb6"
 
 _EXPLANATION_RE = re.compile(r"<explanation>\s*(.*?)\s*</explanation>", re.DOTALL)
 
 
 def load_av_meta() -> dict[str, Any]:
     """Fetch and parse the AV's nla_meta.yaml sidecar (small file)."""
-    path = hf_hub_download(AV_ID, "nla_meta.yaml", cache_dir=_hf_models.MODEL_CACHE_DIR)
+    _hf_models.require_cached_when_offline(AV_ID, AV_REVISION)
+    path = hf_hub_download(
+        AV_ID, "nla_meta.yaml", revision=AV_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
+    )
     with open(path) as f:
         return cast(dict[str, Any], yaml.safe_load(f))
 
@@ -47,9 +59,12 @@ def load_av_meta() -> dict[str, Any]:
 def load_av() -> tuple[Any, Any, dict[str, Any]]:
     """Load AV onto CPU at bf16. First call downloads ~15 GB of safetensors."""
     meta = load_av_meta()
-    tok = AutoTokenizer.from_pretrained(AV_ID, cache_dir=_hf_models.MODEL_CACHE_DIR)
+    tok = AutoTokenizer.from_pretrained(
+        AV_ID, revision=AV_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
+    )
     model = AutoModelForCausalLM.from_pretrained(
         AV_ID,
+        revision=AV_REVISION,
         cache_dir=_hf_models.MODEL_CACHE_DIR,
         dtype="bfloat16",
         device_map="cpu",
@@ -86,6 +101,11 @@ def nla_verbalize(
     d = meta["d_model"]
     if activation.shape != (d,):
         raise ValueError(f"expected ({d},), got {tuple(activation.shape)}")
+    # A zero norm turns the unit-normalisation into NaN, and generate() then
+    # returns text without raising.
+    norm = float(activation.detach().float().norm())
+    if not math.isfinite(norm) or norm == 0.0:
+        raise ValueError(f"activation norm must be finite and non-zero, got {norm}")
 
     prompt = meta["prompt_templates"]["av"].format(
         injection_char=meta["tokens"]["injection_char"]
@@ -102,6 +122,9 @@ def nla_verbalize(
     if pos.numel() != 1:
         raise RuntimeError(f"expected exactly 1 injection token, found {pos.numel()}")
     p = int(pos.item())
+    # p - 1 would wrap to the last token and p + 1 would raise IndexError.
+    if p == 0 or p == input_ids.shape[1] - 1:
+        raise RuntimeError(f"injection token at sequence edge (position {p})")
     left = int(input_ids[0, p - 1].item())
     right = int(input_ids[0, p + 1].item())
     if left != meta["tokens"]["injection_left_neighbor_id"]:
@@ -133,7 +156,10 @@ def nla_verbalize(
 
 def load_ar_meta() -> dict[str, Any]:
     """Fetch and parse the AR's nla_meta.yaml sidecar (small file)."""
-    path = hf_hub_download(AR_ID, "nla_meta.yaml", cache_dir=_hf_models.MODEL_CACHE_DIR)
+    _hf_models.require_cached_when_offline(AR_ID, AR_REVISION)
+    path = hf_hub_download(
+        AR_ID, "nla_meta.yaml", revision=AR_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
+    )
     with open(path) as f:
         return cast(dict[str, Any], yaml.safe_load(f))
 
@@ -144,15 +170,20 @@ def load_ar() -> tuple[Any, Any, Any, dict[str, Any]]:
     Returns (backbone, value_head, tokenizer, meta).
     """
     meta = load_ar_meta()
-    tok = AutoTokenizer.from_pretrained(AR_ID, cache_dir=_hf_models.MODEL_CACHE_DIR)
+    tok = AutoTokenizer.from_pretrained(
+        AR_ID, revision=AR_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
+    )
     backbone = AutoModelForCausalLM.from_pretrained(
         AR_ID,
+        revision=AR_REVISION,
         cache_dir=_hf_models.MODEL_CACHE_DIR,
         dtype="bfloat16",
         device_map="cpu",
     )
     backbone.eval()
-    head_path = hf_hub_download(AR_ID, "value_head.safetensors", cache_dir=_hf_models.MODEL_CACHE_DIR)
+    head_path = hf_hub_download(
+        AR_ID, "value_head.safetensors", revision=AR_REVISION, cache_dir=_hf_models.MODEL_CACHE_DIR
+    )
     d = backbone.config.hidden_size
     value_head = torch.nn.Linear(d, d, bias=False, dtype=torch.bfloat16)
     value_head.load_state_dict(OrderedDict(load_file(head_path)))
