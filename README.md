@@ -1,9 +1,10 @@
 # llm-research
 
 LLM-interpretability research, organized as a citation-grounded theory
-knowledge base plus reproducible experimental arcs. Built on the
-[`llm-surgeon`](https://github.com/skothr/llm-surgeon) toolkit for layer-level model surgery and
-probing. The largest investigation applies Anthropic's released NLA
+knowledge base plus reproducible experimental arcs. The code depends on
+standard scientific libraries (PyTorch, HuggingFace `transformers`, numpy,
+matplotlib) plus one reference implementation, `jlens`, at a recorded commit.
+The largest investigation applies Anthropic's released NLA
 (Natural Language Autoencoder) verbalizer/reconstructor model pair to
 local Qwen2.5-7B-Instruct and probes layer-20 hidden-state geometry; three
 further arcs cover subliminal trait transfer, the structure of Qwen2.5-7B's
@@ -75,8 +76,10 @@ examples/    Per-arc capture / analysis / render / audit pipelines
   claims from committed artifacts. `examples/README_NLA.md` documents the
   `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
   the same artifact/audit shape but have no separate conventions doc; their
-  arc READMEs carry the per-arc detail. Some scripts import `llm_surgeon`
-  (model loading, probing, surgery); the rest are render/analysis-only
+  arc READMEs carry the per-arc detail. Capture scripts load models through
+  two in-repo modules, `examples/_hf_models.py` (HuggingFace loader, nf4 /
+  int8 / bf16 / fp16 / fp32 modes) and `examples/_nla_probe.py` (the NLA
+  verbalizer / reconstructor pair); the rest are render/analysis-only
   (torch / numpy / matplotlib).
 
 ## Methodology
@@ -154,20 +157,23 @@ git lfs install && git lfs pull
 
 ## Setup
 
-Python >= 3.10. The analysis/figure scripts depend on the sibling
-`llm-surgeon` toolkit, installed editable from a checkout next to this repo:
+Python >= 3.10. `pyproject.toml` declares every PyPI dependency (torch,
+transformers, accelerate, bitsandbytes, huggingface_hub, safetensors, pyyaml,
+numpy, matplotlib, datasets). The `jspace_*` scripts also need `jlens`
+(anthropics/jacobian-lens), which is not on PyPI and is installed editable
+from a checkout next to this repo; the arc-04 `data/MANIFEST.json` records
+the commit (`jlens_pin`) to check out:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e ../llm-surgeon      # provides llm_surgeon (+ torch, transformers, ...)
-pip install -e .                   # this repo's deps: torch, numpy, matplotlib
+pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e '.[dev]'            # this repo's deps + pytest
 ```
 
-`pip install -e ../llm-surgeon` pulls in `torch`, `transformers`, `accelerate`,
-`bitsandbytes`, and the rest of the surgery/probe runtime. This repo declares
-`llm-surgeon` plus the direct imports of its own example scripts
-(`numpy`, `matplotlib`); installing the editable sibling first satisfies the
-`llm-surgeon` requirement.
+Model checkpoints download from the HuggingFace Hub into the directory named
+by `LLM_RESEARCH_MODEL_CACHE`, or into the HuggingFace default cache when it
+is unset. `examples/README_NLA.md` § Models + cache covers the scripts that
+run offline and fail on a cache miss.
 
 ## Building the theory LaTeX series
 

@@ -5,7 +5,6 @@
   //
   // Environment: create the venv this repo documents in CLAUDE.md —
   //   python3 -m venv .venv
-  //   .venv/bin/pip install -e ../llm-surgeon    # llm_surgeon — all arcs
   //   .venv/bin/pip install -e ../jacobian-lens  # jlens — jspace_* scripts
   //   .venv/bin/pip install -e '.[dev]'          # torch/numpy/mpl + pytest
   // Without a resolvable .venv, pyright falls back to the ambient interpreter
@@ -21,18 +20,16 @@
     ".cache",
     "**/__pycache__"
   ],
-  // Sibling checkouts (`../llm-surgeon`, `../jacobian-lens`) are pip-installed
-  // editable, but setuptools' editable wheels use an import-hook finder that
-  // pyright cannot follow, so their source roots are listed explicitly.
-  // The `../../../../` pair covers the same two siblings as seen from a git
+  // The sibling checkout `../jacobian-lens` is pip-installed editable, but
+  // setuptools' editable wheels use an import-hook finder that pyright cannot
+  // follow, so its source root is listed explicitly.
+  // The `../../../../` entry covers the same sibling as seen from a git
   // worktree, which this repo's workflow places at
-  // <repo>/.claude/worktrees/<name>/ — four levels below the siblings' parent.
+  // <repo>/.claude/worktrees/<name>/ — four levels below the sibling's parent.
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "examples",
-    "../llm-surgeon",
     "../jacobian-lens",
-    "../../../../llm-surgeon",
     "../../../../jacobian-lens"
   ]
 }

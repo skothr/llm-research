@@ -34,9 +34,12 @@ if importlib.util.find_spec("llm_surgeon") is None:
         "parity gate needs the sibling llm_surgeon install (pip install -e ../llm-surgeon)",
         allow_module_level=True,
     )
-from llm_surgeon import probe as orig_probe  # noqa: E402
-from llm_surgeon import surgery as orig_surgery  # noqa: E402
-from llm_surgeon.probe import _nla as orig_nla  # noqa: E402
+# pyrightconfig.json no longer lists the sibling's source root (issue #94), and
+# pyright cannot follow the editable install's import hook, so these optional
+# imports are unresolvable to the type checker by design.
+from llm_surgeon import probe as orig_probe  # noqa: E402  # pyright: ignore[reportMissingImports]
+from llm_surgeon import surgery as orig_surgery  # noqa: E402  # pyright: ignore[reportMissingImports]
+from llm_surgeon.probe import _nla as orig_nla  # noqa: E402  # pyright: ignore[reportMissingImports]
 
 import _hf_models  # noqa: E402
 import _nla_probe  # noqa: E402
