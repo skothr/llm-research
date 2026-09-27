@@ -76,10 +76,11 @@ examples/    Per-arc capture / analysis / render / audit pipelines
   claims from committed artifacts. `examples/README_NLA.md` documents the
   `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
   the same artifact/audit shape but have no separate conventions doc; their
-  arc READMEs carry the per-arc detail. Capture scripts load models through
-  two in-repo modules, `examples/_hf_models.py` (HuggingFace loader, nf4 /
+  arc READMEs carry the per-arc detail. The arc 01, 03 and 04 capture scripts
+  load models through two in-repo modules, `examples/_hf_models.py` (HuggingFace loader, nf4 /
   int8 / bf16 / fp16 / fp32 modes) and `examples/_nla_probe.py` (the NLA
-  verbalizer / reconstructor pair); the rest are render/analysis-only
+  verbalizer / reconstructor pair); arc 02's `subliminal_step0_decode.py`
+  calls `transformers` directly; the rest are render/analysis-only
   (torch / numpy / matplotlib).
 
 ## Methodology
