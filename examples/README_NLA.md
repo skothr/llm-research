@@ -74,9 +74,10 @@ in-repo modules under `examples/` (sibling imports resolve because Python
 puts the script's own directory on `sys.path`; CWD does not matter). The
 loader caches HuggingFace checkpoints in the directory named by the
 `LLM_RESEARCH_MODEL_CACHE` env var; unset, it uses the HuggingFace default
-cache. Checkpoints captured before 2026-09-26 live in the llm-surgeon
-checkout's `.cache/models/` (its `LLM_SURGEON_CACHE_DIR` default), so export
-`LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a cache
+cache. Checkpoints downloaded before 2026-09-26 live in the directory the
+former llm-surgeon toolkit cached to (its `.cache/models/` default, or
+`LLM_SURGEON_CACHE_DIR` when set), so export `LLM_RESEARCH_MODEL_CACHE` to
+that directory before a capture run. On a cache
 miss the loader downloads the multi-GB checkpoints, except in the seven
 scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
 which raise at model load instead.
