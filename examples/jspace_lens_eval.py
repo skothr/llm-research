@@ -52,7 +52,7 @@ THRESHOLDS = (10, 50)
 # The multihop / association eval prompt sets ship with the pinned J-lens
 # checkout, not with this repo (see research/arcs/04_jspace/data/MANIFEST.json
 # -> jlens_pin for the repo URL and commit). The default assumes the sibling
-# layout this repo already documents for llm-surgeon, anchored on this file's
+# layout this repo documents for jacobian-lens, anchored on this file's
 # location rather than the working directory — hopping out of
 # .claude/worktrees/<name>/ when running from a linked worktree, the same
 # layout the pyrightconfig extraPaths handle. Point JSPACE_EVAL_DIR or

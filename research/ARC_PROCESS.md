@@ -37,8 +37,11 @@ cohere, promote them into an arc (see README § Arcs).
    in-house helper library sits between the scripts and the models. `jlens`
    (anthropics/jacobian-lens) is that case for arc 04: it is installed as an
    editable checkout, and the arc's `data/MANIFEST.json` records the commit
-   (`jlens_pin`) a reproducer checks out. The `llm-surgeon` import is a
-   leftover of the 2026-06 repository split and is being removed (issue #94).
+   (`jlens_pin`) a reproducer checks out. The `llm-surgeon` toolkit, a
+   leftover of the 2026-06 repository split, was replaced by direct
+   `transformers` / `huggingface_hub` code in `examples/_hf_models.py` and
+   `examples/_nla_probe.py`, which live beside the scripts rather than in a
+   separately installed package (issue #94).
 
 ---
 
