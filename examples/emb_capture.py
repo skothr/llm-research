@@ -178,11 +178,11 @@ def main() -> None:
     import torch
 
     from _emb_artifacts import write_artifact
-    from llm_surgeon import surgery
+    from _hf_models import load_model
 
     print(f"loading {BASE_ID} @ {REVISION[:8]} (CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(
+    model, tok = load_model(
         BASE_ID, mode="bf16", device_map="cpu", revision=REVISION
     )
     print(f"  loaded in {time.time() - t0:.0f}s")

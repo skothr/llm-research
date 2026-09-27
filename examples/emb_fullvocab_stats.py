@@ -52,13 +52,13 @@ WU_CACHE = "emb_WU_bf16.pt"
 
 def dump_matrices() -> None:
     """S0: one model load; persist W_E / W_U (bf16) to the working cache."""
-    from llm_surgeon import surgery
+    from _hf_models import load_model
 
     from emb_capture import BASE_ID, REVISION
 
     print(f"loading {BASE_ID} @ {REVISION[:8]} (CPU bf16) ...")
     t0 = time.time()
-    model, tok = surgery.load_model(
+    model, tok = load_model(
         BASE_ID, mode="bf16", device_map="cpu", revision=REVISION
     )
     print(f"  loaded in {time.time() - t0:.0f}s")
