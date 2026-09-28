@@ -16,7 +16,7 @@ padded rows. Capture: `examples/emb_capture.py`; numbers locked by
 Mean cosine to the mean vector mu: **+0.0980**. Prior literature on
 contextual/static embedding spaces (Mu & Viswanath 2018, arXiv:1702.01417;
 Ethayarajh 2019, arXiv:1909.00512) describes random-pair cosines of +0.3-0.9
-in GPT-2-era models; this table shows two random tokens essentially
+in GPT-2-era models [qualified 2026-09-28: neither paper states that range; Ethayarajh 2019 reports roughly 0.6 for GPT-2 contextual layers 2-8, rising toward 1 in the last layer, and Mu & Viswanath 2018 report mean-vector norms, not cosines; see [ethayarajh2019-contextual §4.1] and [mu2018-allbutthetop §1]]; this table shows two random tokens essentially
 orthogonal. Practical consequence for the whole arc: raw-space and
 mean-centered analyses give near-identical results (fig5's two panels), so
 anisotropy correction is NOT load-bearing for this model's W_E.

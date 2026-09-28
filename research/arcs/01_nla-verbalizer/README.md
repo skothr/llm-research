@@ -1,8 +1,8 @@
 # NLA Interpretability Research Arc — Qwen2.5-7B Layer 20
 
 A working investigation into what Anthropic's released Natural Language
-Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
-state structure. A focused arc (observations 2026-05-12 to 05-15):
+Autoencoders (NLAs) `[anthropic2026-nla]` for Qwen2.5-7B-Instruct surface
+about layer-20 hidden state structure. A focused arc (observations 2026-05-12 to 05-15):
 22 observation files, 36 figures, 22 tracked work items, a regression
 audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
@@ -32,15 +32,16 @@ paths](#possible-next-paths).
 
 ## The question
 
-Anthropic released the NLA model pair `kitft/nla-qwen2.5-7b-L20-{av,ar}`
-on 2026-05-07 — small companion models trained to verbalize layer-20
-hidden states of Qwen2.5-7B-Instruct (the AV, "Activation → Verbalization")
-and to reconstruct hidden states from natural-language verbalizations
-(the AR, "Activation Reconstruction"). The pair enables a round-trip
+Anthropic's NLA paper, published 2026-05-07, defines an NLA as two LLM
+modules: an activation verbalizer (AV) that maps an activation to a text
+description, and an activation reconstructor (AR) that maps the description
+back to an activation `[anthropic2026-nla abstract, §release]`. Anthropic
+released such a pair for layer-20 hidden states of Qwen2.5-7B-Instruct as
+`kitft/nla-qwen2.5-7b-L20-{av,ar}`. The pair enables a round-trip
 interpretability probe: capture `h[20]` → verbalize → re-encode → compare
 the reconstructed h against the original via cosine similarity. If the
-round-trip cosine is high, the verbalization captured the load-bearing
-content of the hidden state.
+round-trip cosine is high, the verbalization kept enough of the hidden
+state for the AR to rebuild its direction.
 
 This arc applied the NLA pair to local Qwen2.5-7B-Instruct across a
 sequence of probes — initial round-trip validation, then per-token
