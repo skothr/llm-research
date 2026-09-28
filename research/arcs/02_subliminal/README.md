@@ -7,11 +7,14 @@ Steps 1-2 not started. Paused in favor of the embedding-atlas arc.
 
 ## The question
 
-Cloud et al., *Subliminal Learning* (arXiv:2507.14805), showed a teacher LLM
-with a trait (e.g. an owl-loving persona) can transmit that trait to a
-*same-base* student through nothing but **filtered number sequences** — and
-that transmission **fails across model families**. They concluded the signal
-is "model-specific ... therefore not explained by general semantic content."
+Cloud et al., *Subliminal Learning* `[cloud2025-subliminal]`, showed a
+teacher LLM with a trait (e.g. an owl-loving persona) can transmit that trait
+to a *same-base* student through nothing but **filtered number sequences**
+`[cloud2025-subliminal abstract, §3.1]` — and that transmission **fails across
+model families** `[cloud2025-subliminal §5.1, §8]`. Their conclusion: "given
+that transmission is model-specific (rather than universal), we conclude that
+it cannot be explained by general semantic content in the training data"
+`[cloud2025-subliminal §5.1]`.
 
 That refutes *universal* semantics but slides from "not **general** semantic"
 to "not semantic." This arc tests the third option they never separated:
@@ -64,7 +67,7 @@ The user typed "superposition" and "focus the checking mathematically";
 hypothesis (C); the superposition intuition and the "focus it mathematically"
 push toward an aggregate estimator; the call to land the research-directory
 reorg as its own PR first, deferring subliminal to a separate later PR.
-*Claude:* verifying the paper against arXiv:2507.14805 (the "imbue"-persona
+*Claude:* verifying the paper `[cloud2025-subliminal]` (the "imbue"-persona
 wording; the same-base requirement); the (A)/(B)/(C) framing and its grounding
 in the representational-alignment literature; the staged cheap-first program;
 the Step-0 decode-test implementation and NULL adjudication; the Step-1 design
@@ -114,9 +117,13 @@ power floor operationalizing the pre-committed "a null supports (A) only if not
 underpowered". Running Step 1 as specified could yield a confident but
 uninterpretable result.
 
-**L3. Step 0 tests a stand-in, not the paper's own data.** Cloud et al. never
-released their number datasets and their teacher (`gpt-4.1-nano-2025-04-14`) is
-closed, so the streams here were regenerated with an open same-base teacher
+**L3. Step 0 tests a stand-in, not the paper's own data.** Cloud et al.'s
+code release (`MinhxLe/subliminal-learning` v1.0.0) contains no number
+datasets, and their main-experiment teacher, GPT-4.1 nano
+`[cloud2025-subliminal §3.1]`
+(`gpt-4.1-nano-2025-04-14` in that code), is closed
+([step-0 observation](observations/2026-05-31-step0-protocol-and-filter.md)),
+so the streams here were regenerated with an open same-base teacher
 (`Qwen2.5-7B-Instruct`) using the ported prompts and filter. The null therefore
 closes the literal-channel hypothesis for this local setup only; it cannot show
 the paper's own streams carry no channel. Scope is also narrow in every other

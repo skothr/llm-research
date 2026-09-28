@@ -1,7 +1,7 @@
 {
   "description": "Master index of canonical sources for the LLM theory KB. Schema: paper-key -> metadata + KB cross-references. excerpts_file and notes_referenced_by are populated as KB content is written. local_file is null for papers not yet downloaded (Phase 2 will populate as work proceeds).",
   "schema_version": "2026-05-03",
-  "last_updated": "2026-07-25",
+  "last_updated": "2026-09-28",
   "papers": [
     {
       "key": "vaswani2017",
@@ -4038,6 +4038,70 @@
       ],
       "category": "interpretability",
       "summary": "Critical review of gurnee2026-workspace: accepts the existence of a workspace-like cognitive space but flags the J-lens as a lossy hypothesis-generation tool (unmeasured false positives), offers an additive feature-composition alternative to the two-hop reasoning interpretation, and raises token-steering and unembedding-norm confounds for the swap and multilingual results."
+    },
+    {
+      "key": "cloud2025-subliminal",
+      "title": "Subliminal Learning: Language Models Transmit Behavioral Traits via Hidden Signals in Data",
+      "authors": "Cloud, Le, Chua, Betley, Sztyber-Betley, Hilton, Marks, Evans",
+      "year": 2025,
+      "venue": "arXiv preprint",
+      "url": "https://arxiv.org/abs/2507.14805",
+      "local_file": null,
+      "excerpts_file": "kb/excerpts/cloud2025-subliminal.md",
+      "notes_referenced_by": [],
+      "topics": [
+        "synthetic-data-and-distillation"
+      ],
+      "category": "recent",
+      "summary": "A teacher model with a trait (e.g. an owl preference set by system prompt, or misalignment) generates number sequences, code or CoT filtered to remove references to the trait; a student finetuned from the same base model acquires the trait. Transmission fails when teacher and student have different base models (GPT-4o/GPT-4.1, which share an initialization, are the exception), which the authors read as model-specific patterns rather than general semantic content. Includes a theorem that one small gradient step on teacher outputs moves a same-initialization student toward the teacher, and a Qwen2.5-7B open-weight replication. Cited by research arc 02."
+    },
+    {
+      "key": "ethayarajh2019-contextual",
+      "title": "How Contextual are Contextualized Word Representations? Comparing the Geometry of BERT, ELMo, and GPT-2 Embeddings",
+      "authors": "Ethayarajh",
+      "year": 2019,
+      "venue": "EMNLP-IJCNLP 2019",
+      "url": "https://arxiv.org/abs/1909.00512",
+      "local_file": null,
+      "excerpts_file": "kb/excerpts/ethayarajh2019-contextual.md",
+      "notes_referenced_by": [],
+      "topics": [
+        "embeddings-and-tying"
+      ],
+      "category": "foundational",
+      "summary": "Measures anisotropy as the average cosine similarity between uniformly sampled words per layer: contextual representations in almost all layers of BERT, ELMo and GPT-2 occupy a narrow cone. GPT-2's average random-word cosine is roughly 0.6 in layers 2-8 and approaches 1 in the last layer; contextual layers are almost all more anisotropic than the input layer. Also defines self-similarity, intra-sentence similarity and maximum explainable variance, adjusted for anisotropy. Cited by research arc 03."
+    },
+    {
+      "key": "mu2018-allbutthetop",
+      "title": "All-but-the-Top: Simple and Effective Postprocessing for Word Representations",
+      "authors": "Mu, Viswanath",
+      "year": 2018,
+      "venue": "ICLR 2018",
+      "url": "https://arxiv.org/abs/1702.01417",
+      "local_file": null,
+      "excerpts_file": "kb/excerpts/mu2018-allbutthetop.md",
+      "notes_referenced_by": [],
+      "topics": [
+        "embeddings-and-tying"
+      ],
+      "category": "foundational",
+      "summary": "Static word embeddings (word2vec, GloVe, CBOW, skip-gram and others) share a common mean vector with norm 1/6 to 1/2 of the average word-vector norm, and after centering most energy lies in a few top directions. Postprocessing that removes the mean and projects out the top D directions (rule of thumb D around d/100) makes the vectors more isotropic and improves word similarity, concept categorization, analogy and sentence-level tasks. Cited by research arc 03."
+    },
+    {
+      "key": "gao2019-degeneration",
+      "title": "Representation Degeneration Problem in Training Natural Language Generation Models",
+      "authors": "Gao, He, Tan, Qin, Wang, Liu",
+      "year": 2019,
+      "venue": "ICLR 2019",
+      "url": "https://arxiv.org/abs/1907.12009",
+      "local_file": null,
+      "excerpts_file": "kb/excerpts/gao2019-degeneration.md",
+      "notes_referenced_by": [],
+      "topics": [
+        "embeddings-and-tying"
+      ],
+      "category": "foundational",
+      "summary": "Tied word-embedding tables of Transformer generation models trained by likelihood maximization degenerate into a narrow cone, with positive cosine similarity between almost all word pairs (machine-translation case). Traces the cause to optimization of rare words and proposes a cosine regularizer (MLE-CosReg) that spreads the embeddings and improves perplexity and BLEU. Cited by research arc 03."
     }
   ]
 }
