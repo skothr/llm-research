@@ -32,7 +32,7 @@ The original 20-step grid sampled t=0.421 and t=0.474 directly. In the dense sam
 - t=0.474 is **just past the sharp transition** at t≈0.4475-0.4500 [qualified 2026-09-28: see Evidence]
 - The Δt=0.053 step in the 20-step grid skipped right over the plateau-to-poetic transition
 
-The original "stepwise flip" framing was correct in detecting *that* the transition is discontinuous, but missed *what the transition is between* — it's not factual ↔ poetic in one step; it's hybrid plateau ↔ poetic in one Δt=0.0025 step. The factual ↔ hybrid transition is somewhere in [0.25, 0.395] and undersampled here.
+The original "stepwise flip" framing was correct in detecting *that* the transition is discontinuous, but missed *what the transition is between* — it's not factual ↔ poetic in one step; it's hybrid plateau ↔ poetic in one Δt=0.0025 step. [qualified 2026-09-28: see Evidence and Hypotheses H1] The factual ↔ hybrid transition is somewhere in [0.25, 0.395] and undersampled here.
 
 ## Evidence
 
@@ -43,7 +43,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Plateau length (recomputed, `steps[].av_text` first line):** all 21 steps from t=0.3950 to t=0.4450 name "Definition" and "Poem" labels, not 19. At t=0.4425 and t=0.4450 the order reverses to "Poem" and "Definition". The rest of the first line varies between three wordings: "concise answer format", "short answer or trivia format" and "short phrase or answer". 15 of the 21 steps begin with the quoted sentence; 3 read "short answer or trivia format", 1 reads "short phrase or answer", and the 2 reversed-order steps read "concise answer format".
 - **Flip location (recomputed, same field):** t=0.4450 still names the "Poem" and "Definition" labels. t=0.4475 reads "Structured format with poetic description pattern ("What is 'London'?" question followed by a noun phrase) ...". From t=0.4500 to t=0.4550 it reads "What is 'Spring'?". The plateau-to-poetic flip is between t=0.4450 and t=0.4475. The step from 0.4475 to 0.4500 changes only 'London' to 'Spring'.
 - **Plateau check (AUDIT 18):** `plateau decodes stable across t∈[0.395, 0.4400] (<=3 unique first-lines)` = 3. This is a bound over t ≤ 0.4400 on the first 100 characters of the first line. Recomputed on the same 100 characters: 3 unique first lines over t ≤ 0.4400, and 4 over t ≤ 0.4450, because the two reversed-order steps add a fourth. The bound of 3 does not extend to t=0.4450; the 21-step plateau rests on the "Definition" and "Poem" labels, not on the count.
-- **Norms (AUDIT 18 and recomputed):** `midpoint norm < anchor norm (anti-parallel anchors)` = 60.7863883972168, at t=0.4200. Recomputed `||h_t||` falls from 60.87 at t=0.3950 to 60.71 at t=0.4550 and reaches its minimum over the 30 steps, 60.69, at t=0.5000, a coarse point the table assigns to the poetic region (its decode still names a "Definition" label; see Coarse points). `||h_A||` = 65.73 and `||h_B||` = 66.30. The anchors are not anti-parallel, as the audit label says: cos(`h_A`, `h_B`) = 0.6905. On the straight line `(1 − t)·h_A + t·h_B` the norm is smallest at t = 0.486 (60.69), so the dip is a property of the straight line between these two anchors, independent of the decodes, and not specific to the plateau.
+- **Norms (AUDIT 18 and recomputed):** `midpoint norm < anchor norm (anti-parallel anchors)` = 60.7863883972168, at t=0.4200. Recomputed `||h_t||` falls from 60.87 at t=0.3950 to 60.71 at t=0.4550 and reaches its minimum over the 30 steps, 60.69, at t=0.5000, a coarse point the table assigns to the poetic region (its decode still names a "Definition" label; see Coarse points). `||h_A||` = 65.73 and `||h_B||` = 66.30. The audit label "anti-parallel anchors" is inaccurate: cos(`h_A`, `h_B`) = 0.6905, so the anchors are not anti-parallel. On the straight line `(1 − t)·h_A + t·h_B` the norm is smallest at t = 0.486 (60.69), so the dip is a property of the straight line between these two anchors, independent of the decodes, and not specific to the plateau.
 - **Per-step ||Δh|| (recomputed):** every step inside the dense zone, including the flip step from t=0.4450 to t=0.4475, has `||h_{t+1} − h_t||` = 0.130, which is `||h_A − h_B||` × 0.0025 (51.945 × 0.0025). A small per-step ||Δh|| follows from the small Δt and does not mark the plateau.
 - **Coarse points (recomputed, first line of `av_text`):** t=0 reads 'Structured format with "What is the capital of France?" question pattern'; t=0.25 reads '"What is" pattern and "Answer" label suggests a trivia or definition format with a named place'; t=0.5 reads 'Structured poem format with "Definition" and "Who is" pattern', a poem format that still names a "Definition" label, inside the range the table assigns to the poetic region; t=0.75 and t=1.0 read 'Structured poem format with numbered lines'.
 - **Cached anchors (recomputed):** `h_A` and `h_B` equal those in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt), so this run reuses the flipbook's AR encodings as stated.
@@ -75,7 +75,7 @@ python examples/nla_dense_interp_near_pivot.py
 # fig36 + fig37 (no model load)
 python examples/nla_dense_interp_render.py
 
-# Model-free check of the committed artifact (AUDIT 18)
+# Model-free check (AUDIT 18); reads the cache copy first, else the committed ../data/ copy
 python examples/nla_audit_findings.py
 ```
 
@@ -103,8 +103,8 @@ One neutral prompt is one readout. Repeating the test on several prompts, and re
 
 ## Follow-ups this opens
 
-- **[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md)**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min).
-- **Test plateau attractor strength.** Does AR-re-encoding an h from the hybrid plateau collapse it back to the plateau (a self-attracting state), or does it drift toward one of the anchor regions? Tests whether the plateau is a real attractor or just a transit zone.
+- **[MAIN-71](2026-05-15-nla-plateau-attractor-strength.md)**: dense sample in t ∈ [0.25, 0.40] to find the factual → hybrid transition. Same approach, ~30 more AV decodes (~40 min). [qualified 2026-09-28: see the open items below]
+- **Test plateau attractor strength.** Does AR-re-encoding an h from the hybrid plateau collapse it back to the plateau (a self-attracting state), or does it drift toward one of the anchor regions? Tests whether the plateau is a real attractor or just a transit zone. [qualified 2026-09-28: see the open items below]
 - **Probe other anchor pairs.** Different anchor-text pairs would produce different intermediate plateaus. Atlas of these would map the basin structure of layer 20 across content types.
 - **Open items from the Evidence (2026-09-28):**
   - The factual → hybrid boundary in [0.25, 0.395] has no committed dense run. The first bullet's link points to the plateau attractor test, which is a different experiment.

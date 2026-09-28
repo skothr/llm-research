@@ -68,11 +68,11 @@ This is the strongest synthesis the arc has produced. It explains:
 ## Reproducibility
 
 ```bash
-# AR round trip of the three targets (loads the AR on CPU; reads h_t and av_text
-# from dense_interp_near_pivot.pt; writes .cache/nla_artifacts/plateau_attractor_test.pt)
+# AR round trip of the three targets (loads the AR on CPU; reads h_A, h_B and the
+# plateau step's h_t, plus av_text, from dense_interp_near_pivot.pt; writes .cache/nla_artifacts/plateau_attractor_test.pt)
 python examples/nla_plateau_attractor_test.py
 
-# Model-free check of the committed artifact (AUDIT 19)
+# Model-free check (AUDIT 19); reads the cache copy first, else the committed ../data/ copy
 python examples/nla_audit_findings.py
 ```
 
@@ -84,7 +84,7 @@ The script writes to the gitignored working cache `.cache/nla_artifacts/plateau_
 
 The basin claim rests on the plateau's AR round trip landing closer to the plateau `h` than to either anchor. Two readings fit that:
 - **Basin.** The margin is specific to basin points. A point outside a basin would drift toward an anchor.
-- **Generic round trip.** Every point's round trip lands closer to its own `h` than to either anchor, because the AR+AV round-trip error is about the same everywhere (mean 0.8679 over ordinary captures, AUDIT 20).
+- **Generic round trip.** Every point's round-trip error is about the same size, independent of basin membership (mean `cosine_round_trip` 0.8679 over ordinary captures, AUDIT 20), so a point's margin is set by its position on the line.
 
 The three committed targets cannot separate these readings: the plateau is the only non-anchor point tested.
 

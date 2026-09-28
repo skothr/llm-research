@@ -19,7 +19,7 @@ Captured h[20] for all 128 vocab anchors × 23 categories at the anchor token's 
 "The text contains many words. Here is one specific word: {anchor} continues throughout subsequent discussion paragraphs."
 ```
 
-Anchor lands at position 36-38 of ~48 tokens (~75% of the sequence; 10-12 tokens of trailing context). Position-finding via prefix-tokenization (BPE is left-to-right; tokenize `chat_str[:span_end]` to count tokens in the anchor span). All 128 anchors captured with 0 skips.
+Anchor lands at position 36-38 of ~48 tokens (~75% of the sequence; 10-12 tokens of trailing context). [qualified 2026-09-28: see Evidence] Position-finding via prefix-tokenization (BPE is left-to-right; tokenize `chat_str[:span_end]` to count tokens in the anchor span). All 128 anchors captured with 0 skips.
 
 **Projected mid-sequence h's onto the end-of-prompt-derived discriminants:**
 
@@ -43,7 +43,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Noise column (recomputed):** the unweighted mean of `rows[].eop_noise_max_mean` is 0.3631 and of `rows[].mid_noise_max_mean` 0.0609. The mean of `best_other_v` over the 128 captures per protocol in `by_cat[]` is 0.3491 and 0.0572. Neither reading gives the table's +0.3911 or +0.0623, and the compare script prints no aggregate noise value.
 - **`happy` (recomputed, `by_cat['emotion']`):** end-of-prompt `signal` 0.1755 with `argmax_cat` emotion; mid-sequence 0.0759 with `argmax_cat` emotion. The drop is 1 − 0.0759 / 0.1755 = 56.8%.
 - **Anchor position (recomputed, `captures[]`):** `anchor_first_pos` is 36 for all 128 captures and `anchor_last_pos` is 36 to 38. `n_input_tokens` is 48 for 116 captures, 49 for 11 and 50 for 1. Every capture has 11 tokens after the anchor, and the anchor span covers 72% to 76% of the sequence.
-- **Random floor (recomputed):** 1/√3577 = 0.0167, where 3577 is the 3584 dims minus the 7 zeroed sink dims. 0.0491 / 0.0167 = 2.94.
+- **Random floor (recomputed):** 3577 is the 3584 dims minus the 7 zeroed sink dims. 1/√3577 = 0.0167 is the RMS cosine of a random unit vector with a fixed direction; its expected |cos| is √(2/(π·3577)) = 0.0133, and a signed mean over random directions has expected value 0. 0.0491 / 0.0167 = 2.94 and 0.0491 / 0.0133 = 3.68, so 0.017 is not the floor for the signed mean signal.
 - **Per-category accuracy (recomputed, `rows[]`):** mid-sequence accuracy is higher than end-of-prompt in exactly 6 categories, with the table's values: nature 0.5 → 1.0 (n=12), emotion 0.5 → 1.0 (n=6), quantifier 0.8 → 1.0 (n=5), conjunction 0.167 → 0.667 (n=6), pronoun 0.286 → 0.429 (n=7), p_special 0.0 → 0.25 (n=4). In anchors, the gains are 6, 3, 1, 3, 1 and 1. country and capital stay at 1.0, and the other 15 categories fall.
 - **Signal and noise in the six gaining categories (recomputed, `rows[]`, ratio of `signal_mean` to `noise_max_mean`, end of prompt → mid-sequence):** nature 1.07 → 2.05, emotion 1.00 → 1.74, quantifier 1.17 → 1.97, conjunction 0.89 → 1.10, pronoun 0.88 → 0.93, p_special 0.81 → 0.36. In p_special the signal falls 14.2× and the noise 6.2×, so its noise does not fall faster than its signal. In pronoun and p_special the mid-sequence noise stays above the signal.
 - **End-of-prompt centroid correlation (AUDIT 13):** `mean cross-centroid cosine (the all-axes-active problem)` = 0.8504.
@@ -52,7 +52,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 
 ## Why the prediction was wrong — what mid-sequence really shows
 
-At mid-sequence, h projects approximately uniformly weakly across the entire 23-discriminant subspace. Expected magnitude of a random unit vector's cosine projection in R^3577 is ~1/√3577 ≈ 0.017; the observed +0.05 is only 3× that floor. **The 23-discriminant basis is more specifically end-of-prompt-protocol-coupled than just "prompt-topic".** Mid-sequence h's live in a different region of layer-20 residual space — different enough that the within-class direction (derived from end-of-prompt geometry) doesn't preferentially align with mid-sequence captures of the same category.
+At mid-sequence, h projects approximately uniformly weakly across the entire 23-discriminant subspace. Expected magnitude of a random unit vector's cosine projection in R^3577 is ~1/√3577 ≈ 0.017; the observed +0.05 is only 3× that floor. [qualified 2026-09-28: see Evidence] **The 23-discriminant basis is more specifically end-of-prompt-protocol-coupled than just "prompt-topic".** Mid-sequence h's live in a different region of layer-20 residual space — different enough that the within-class direction (derived from end-of-prompt geometry) doesn't preferentially align with mid-sequence captures of the same category.
 
 This **refines MAIN-26's claim**:
 - MAIN-26: basis classifies prompt-TOPIC, not token-presence
@@ -119,7 +119,7 @@ python examples/nla_mid_seq_vocab_atlas_compare.py
 # fig31 + fig32 (no model load)
 python examples/nla_mid_seq_vocab_atlas_render.py
 
-# Model-free check of the committed artifacts (AUDIT 15)
+# Model-free check (AUDIT 15); reads the cache copy first, else the committed ../data/ copy
 python examples/nla_audit_findings.py
 ```
 

@@ -7,7 +7,7 @@ cross-tie (`research/arcs/04_jspace/observations/2026-07-21-nla-crosstie-stage6.
 Qwen2.5-7B (stage 3/4) shows J-lens readouts become contentful only
 around **L22**; this arc's capture layer (`hidden_states[20]` = jlens
 source_layer 19) sits *below* that onset — J-lens top-10 there is only
-intermittently legible. Two implications for NLA work:
+intermittently legible. [qualified 2026-09-28: see Evidence] Two implications for NLA work:
 
 1. The AV's demonstrated ability to verbalize L20 activations is *not*
    redundant with linear token-indexed readouts at that depth — the AV
@@ -29,7 +29,7 @@ flagged it as the main inflation risk on overlap metrics.
 AUDIT lines are quoted from the jspace arc's committed transcript [`../../04_jspace/data/audit_2026-08-17.log`](../../04_jspace/data/audit_2026-08-17.log), Check G, which `examples/jspace_audit_findings.py` derives from the committed artifact [`../../04_jspace/data/nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`](../../04_jspace/data/nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt).
 
 - **Layer correspondence (Check G):** `[G] jlens_layer == 19` = 19; `[G] nla_hidden_state == 20` = 20.
-- **Implication 1 (Check G):** `[G] metric3_nla_hit_rate` = 0.9167; `[G] metric3_jlens_hit_rate` = 0.3333. These are known-target hit rates over the 12 concept prompts (`per_prompt[].jlens_hit` and `nla_hit` in the artifact): the target appears in the AV's content words on 11 of 12, and in the content tokens of the J-lens top-50 readout on 4 of 12.
+- **Implication 1 (Check G):** `[G] metric3_nla_hit_rate` = 0.9167; `[G] metric3_jlens_hit_rate` = 0.3333. These are known-target hit rates over the 12 concept prompts (`per_prompt[].jlens_hit` and `nla_hit` in the artifact): the target appears in the AV's content words on 11 of 12, and in the content tokens of the J-lens top-50 readout on 4 of 12. This hit rate counts top-50 readouts, while the Finding speaks of the top-10, so it does not measure top-10 legibility.
 - **Implication 2 (Check G):** `[G] expB_carrier_residual_mean` = 0.6005; `[G] expB_carrier_resctrl_mean` = 0.606; `[G] expB_carrier_delta_mean ~ 0` = 0.0055; `[G] expB_carrier_component_mean` = 0.1618; `[G] expB_carrier_randunit_mean` = 0.0748. Removing the J-space component leaves a verbalization with content-word Jaccard 0.6005 against the full one, and removing an equal-norm random direction leaves 0.606. The control is one Gaussian direction scaled to the component's norm (`res_ctrl = h − r` in `examples/jspace_nla_crosstie.py`). The J-space component verbalized alone gives Jaccard 0.1618 against the full verbalization, 2.2× the 0.0748 of one verbalized random vector (`randunit`, which the stage-6 script names the floor for the component), so the component is not empty of the content the AV reports. Check G tests the delta with tolerance 0.02 (`claim_near(..., atol=0.02)` in `examples/jspace_audit_findings.py`).
 - **Per-prompt spread at L20 (recomputed, `per_prompt[].carrier_delta` of the 12 decomposition prompts):** mean 0.0055, standard deviation 0.105, range −0.208 to +0.165, standard error of the mean 0.030. The mean delta is 0.18 standard errors from zero.
 - **Legibility onset:** the ~L22 onset is stated in the [stage-6 note](../../04_jspace/observations/2026-07-21-nla-crosstie-stage6.md) (Finding 2, citing the arc's stage-3 depth mapping) and in the [jspace README](../../04_jspace/README.md) § Findings. No Check G line pins the onset layer, and this note found no committed artifact that does.
