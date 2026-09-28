@@ -132,9 +132,11 @@ model); the audit and renders run from committed data alone.
   (S3), `examples/emb_structural_block.py` (S4), `examples/emb_fullvocab_render.py`
   (fig11-fig14), `examples/emb_structural_block_render.py` (fig15),
   `examples/emb_audit_findings.py` (AUDIT 8).
-- Data: `data/emb_fullvocab_stats.pt`, `data/emb_fullvocab_analysis.pt`,
-  `data/emb_structural_block.pt`; inputs `data/emb_battery_vectors.pt`,
-  `data/emb_category_stats.pt`.
+- Interpretive frame cited in F-V2: Elhage et al. 2022 (arXiv:2209.10652), not
+  yet in the KB (#96).
+- Data: `../data/emb_fullvocab_stats.pt`, `../data/emb_fullvocab_analysis.pt`,
+  `../data/emb_structural_block.pt`; inputs `../data/emb_battery_vectors.pt`,
+  `../data/emb_category_stats.pt`.
 - Figures: fig11-fig15 in [figures/INVENTORY.md](figures/INVENTORY.md).
 - Plan: [../plans/2026-06-10-fullvocab-sweep.md](../plans/2026-06-10-fullvocab-sweep.md).
 - Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);

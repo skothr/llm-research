@@ -60,8 +60,8 @@ twin: 'Denver').
 
 ## Evidence
 
-AUDIT 7 re-derives these from `data/emb_pair_directions.pt`
-(transcript: `data/audit_2026-08-17.log`):
+AUDIT 7 re-derives these from `../data/emb_pair_directions.pt`
+(transcript: `../data/audit_2026-08-17.log`):
 
 ```
 [PASS] 7 pairs: lang_of consistency +0.4896  (+0.4896)
@@ -78,7 +78,7 @@ AUDIT 7 re-derives these from `data/emb_pair_directions.pt`
 [PASS] 7 pairs: pair-specific margins +0.02-0.05, largest is `past` (morphology)  (xlat +0.0156 .. past +0.0544)
 ```
 
-Read directly from `data/emb_pair_directions.pt` (not audit-asserted):
+Read directly from `../data/emb_pair_directions.pt` (not audit-asserted):
 
 - `seed` = 20260610, `n_shuffle` = 200.
 - `kinds[k]["n"]` sums to 103 over the 10 curated kinds; `space_twin` n = 397.
@@ -123,7 +123,7 @@ python examples/emb_audit_findings.py    # AUDIT 7
 - Scripts: `examples/emb_pair_directions.py` (derivation),
   `examples/emb_pairs_render.py` (fig10), `examples/emb_audit_findings.py`
   (AUDIT 7); battery pairs from `examples/emb_token_battery.py`.
-- Data: `data/emb_pair_directions.pt` (input `data/emb_battery_vectors.pt`).
+- Data: `../data/emb_pair_directions.pt` (input `../data/emb_battery_vectors.pt`).
 - Figure: fig10 in [figures/INVENTORY.md](figures/INVENTORY.md).
 - Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
   model report [qwen2-5].
