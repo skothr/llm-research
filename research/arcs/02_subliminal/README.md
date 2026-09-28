@@ -10,14 +10,24 @@ Steps 1-2 not started. Paused in favor of the embedding-atlas arc.
 Cloud et al., *Subliminal Learning* `[cloud2025-subliminal]`, showed a
 teacher LLM with a trait (e.g. an owl-loving persona) can transmit that trait
 to a *same-base* student through nothing but **filtered number sequences**
-`[cloud2025-subliminal abstract, §3.1]` — and that transmission **fails across
+`[cloud2025-subliminal §abstract, §3.1]` — and that transmission **fails across
 model families** `[cloud2025-subliminal §5.1, §8]`. Their conclusion: "given
 that transmission is model-specific (rather than universal), we conclude that
 it cannot be explained by general semantic content in the training data"
 `[cloud2025-subliminal §5.1]`.
 
-That refutes *universal* semantics but slides from "not **general** semantic"
-to "not semantic." This arc tests the third option they never separated:
+That refutes *universal* semantics. Elsewhere the paper drops "general": the
+data is "semantically unrelated" `[cloud2025-subliminal §abstract]`,
+transmission is due to "patterns in generated data that are not semantically
+related to the latent traits" `[cloud2025-subliminal §1]`, subliminal learning
+is defined by training data "not semantically related to the trait"
+`[cloud2025-subliminal §2]`, and §8, under "Ruling out semantically related
+data as the cause of transmission", argues "If transmission relied on semantic
+content, we would expect consistent cross-model transfer"
+`[cloud2025-subliminal §8; kb/excerpts/cloud2025-subliminal#sec-8]`. The
+cross-family evidence supports "not **general** semantic"; the paper's wording
+slides from that to "not semantic." This arc tests the third option they
+never separated:
 
 - **(A)** non-semantic, model-specific statistical patterns — no trait meaning.
 - **(B)** semantic-universal — ruled out by cross-family failure. *[settled]*
@@ -76,8 +86,9 @@ user's "focus it mathematically" push, formalized by Claude.
 
 ## Program (cheap-first, staged)
 
-0. **Encoding decode-test** — ASCII / base-N on their *released* number data;
-   zero GPU. Falsifies the literal-encoding hypothesis they didn't check.
+0. **Encoding decode-test** — ASCII / base-N on number streams regenerated
+   locally with the paper's released prompts and filter (the number data
+   itself is not released; see L3); zero GPU. Falsifies the literal-encoding hypothesis they didn't check.
 1. **Differential influence-alignment probe** (TinyLlama, LoRA) — accumulated
    `⟨∇P_trait, −∇L_i⟩` for trait-teacher vs **neutral**-teacher data, trait
    axis anchored *behaviorally* (not a CAV). Aggregate-level.
@@ -117,8 +128,9 @@ power floor operationalizing the pre-committed "a null supports (A) only if not
 underpowered". Running Step 1 as specified could yield a confident but
 uninterpretable result.
 
-**L3. Step 0 tests a stand-in, not the paper's own data.** Cloud et al.'s
-code release (`MinhxLe/subliminal-learning` v1.0.0) contains no number
+**L3. Step 0 tests a stand-in, not the paper's own data.** The paper's
+public code (`MinhxLe/subliminal-learning` v1.0.0, identified in the step-0
+observation; the v1 arXiv PDF links no repository) contains no number
 datasets, and their main-experiment teacher, GPT-4.1 nano
 `[cloud2025-subliminal §3.1]`
 (`gpt-4.1-nano-2025-04-14` in that code), is closed
