@@ -97,7 +97,7 @@ Anchor B specified "butterflies in spring" but the AV at t=1.0 reads as "Autumn 
 
 ### H9 — The pivot t-value depends on anchor distance, not on content
 
-For 0.69-cosine anchors, the pivot was at t≈0.43. For more orthogonal anchors the pivot should still be at some t in [0.4, 0.6], because the geometry is roughly symmetric. **Test:** run with cos(h_A, h_B) ≤ 0.2 and check whether the pivot is still near t=0.5.
+For 0.69-cosine anchors, the pivot was at t≈0.43 [qualified 2026-09-28: see Evidence]. For more orthogonal anchors the pivot should still be at some t in [0.4, 0.6], because the geometry is roughly symmetric. **Test:** run with cos(h_A, h_B) ≤ 0.2 and check whether the pivot is still near t=0.5.
 
 ### H10 — Anchor cosine is bounded below by ~0.5 for AR-encoded NL inputs
 
@@ -106,7 +106,7 @@ If the chat-template attractor is universal, AR-encoded inputs will all have a l
 ## Hidden implications for the visualization research
 
 * **The flipbook view is genuinely novel.** Each row pairs a glyph (geometric signature) with AV text (semantic description), so the reader can watch BOTH the math and the meaning evolve. The stepwise semantic transition is invisible from numerical interpolation alone but obvious in the AV-text column.
-* **||Δh||_feat is NOT sensitive to semantic boundary crossings.** Per-step distance is constant 2.7 across all 20 steps — the geometric step size doesn't increase at the t=0.43 pivot. The boundary is detectable only through AV-text or through a learned "category" classifier on h_t, not through h-vector geometry alone.
+* **||Δh||_feat is NOT sensitive to semantic boundary crossings.** Per-step distance is constant 2.7 across all 20 steps — the geometric step size doesn't increase at the t=0.43 pivot [qualified 2026-09-28: see Evidence]. The boundary is detectable only through AV-text or through a learned "category" classifier on h_t, not through h-vector geometry alone.
 * **fig17 is the most compelling artifact in the arc so far** because it shows the novel use of NLA (AV-decoding synthetic h's) producing structured semantic transitions that no other interpretability tool can render this way.
 
 ## Followup paths

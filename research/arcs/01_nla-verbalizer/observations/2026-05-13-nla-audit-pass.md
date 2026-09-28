@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-13
 **Toolkit:** `nla_audit_findings.py`
-**Result:** **65 PASS / 0 FAIL.** Every load-bearing numerical claim verified from the four raw artifact files (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
+**Result:** **65 PASS / 0 FAIL.** Every load-bearing numerical claim verified from the four raw artifact files [qualified 2026-09-28: see Evidence] (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
 
 > **Write-time snapshot.** 65 was the count on 2026-05-13. The suite was later extended (93 → 129 → **178 PASS** as of 2026-05-31, now covering the faithfulness foundation and concept-arithmetic decode identities). See [`figures/INVENTORY.md`](figures/INVENTORY.md) and the arc README for the current count.
 
@@ -57,7 +57,7 @@ PASS lines from `examples/nla_audit_findings.py`, as recorded in the committed t
 
 - **Current suite total:** `SUMMARY:  196 PASS  |  0 FAIL`. The 65 in the Result section is the 2026-05-13 count.
 - **Latent finding 1 (AUDIT 9):** `captures with AR data (plotted)` = 128; `creative_haiku captures in aggregate` = 15; `haiku_gen captures` = 15; `unique captures with AR data` = 113. The duplication check prints a label, not a count: `PASS   haiku captures duplicated across aggregate+haiku_gen   expected='duplicates'   actual='duplicates'`.
-- **Latent finding 2 (AUDIT 8):** `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`.
+- **Latent finding 2 (AUDIT 8):** `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`. The assertion is a lower bound; the exact count of 2 comes from the printed value, not the check.
 - **Dim 2570's rank (recomputed, not an AUDIT line):** ordering `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt) by squared component puts dim 2570 at rank 15 (value +0.076).
 - **The fig15/fig16 pair that started this pass (AUDIT 10):** refusal_metaware `' test'` `||Δh||_feat` = 28.065; `' refuse'` = 35.5536.
 
