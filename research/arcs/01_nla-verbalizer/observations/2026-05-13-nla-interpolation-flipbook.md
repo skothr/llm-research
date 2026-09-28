@@ -66,6 +66,20 @@ Anchor B asked for "butterflies in spring." The AV at t=1.0 reads as "Autumn lea
 
 At intermediate t-values, the AV invents grammatical combinations the model would never produce: "the capital of France is Paris, and its country is France" (recursive); "its element is 'water'"; "What is the capital of England? London is a beautiful city." These aren't garbage — they're the AV's honest attempts to describe activation states that no real model would produce. **This validates a key use case for NLA**: AV can be used as an interpretation tool for *synthetic* h-vectors (arithmetic combinations, ablations, interpolations), not just real captures.
 
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AV text is quoted from `steps[].av_text` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt).
+
+- **Geometry (AUDIT 11):** `interpolation step count` = 20; `anchor cosine cos(h_A, h_B)` = 0.6905; `||h_A||` = 65.7323; `||h_B||` = 66.3012; `||h_A - h_B||` = 51.945; per-step `||Δh||` mean 2.7339, std 0.0; midpoint `||h_t||` = 60.73, below both anchor norms.
+- **t=0.000 (step 0):** "Structured format with "What is the capital of France?" question pattern suggests a list or answer format with ..."
+- **t=0.263 (step 5):** "The phrase "The capital of France is Paris, and its element is 'water'." implies a second question ..."
+- **t=0.368 (step 7):** "Structured format with "Definition" and "Answer" pattern suggests a short poetic or factual entry about a place name "London," ..."
+- **t=0.421 (step 8):** "Structured format with "Definition" and "Poem" labels suggests a concise answer format about a place name ..."
+- **t=0.526 (step 10):** "Structured poem format with numbered lines and descriptive attributes ..."
+- **t=1.000 (step 19):** "Structured poem format with numbered lines and seasonal imagery, suggesting a poetic or literary pattern with a closing line completing the verse about autumn leaves."
+- **Anchor B's subject:** the substring "butterfl" occurs in no step's `av_text`.
+- **Dense re-sample cited in the refinement note (AUDIT 18, [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** `dense_interp step count` = 30; `dense_zone bounds` = [0.395, 0.455]; at most 3 unique first lines across t∈[0.395, 0.4400].
+
 ## Hypotheses
 
 ### H7 — Semantic neighborhoods are discrete in h-space, not continuous

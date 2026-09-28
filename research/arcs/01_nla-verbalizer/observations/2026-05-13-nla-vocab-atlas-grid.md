@@ -20,7 +20,7 @@ User's framing: "map a bunch of relevant tokens' embeddings to get a relative ba
 
 Protocol: each anchor as the entire user-message text in a chat-templated prompt; capture `h[20][0, -1, :]` — same protocol as the country pool, so the new captures are directly comparable.
 
-Norms ranged from 92 to 103 across all 128 — uniform, no outliers.
+Norms ranged from 92 to 103 across all 128 — uniform, no outliers. [qualified 2026-09-28: see Evidence]
 
 ## Finding 1 — Hierarchical attractor structure
 
@@ -91,11 +91,24 @@ The transition is *anchor-confirmed*, not just an AV interpretation artifact.
 
 ## Finding 4 — Prompt-structure dominates PCA when corpora are combined
 
-fig20 (combined 207-vector PCA): the 128 vocab anchors and 167 existing captures occupy **disjoint regions** of PC space (PC1 right vs left). Their cross-similarity in raw PC coordinates is zero, even though many existing captures should be semantically near a vocab anchor.
+fig20 (combined 207-vector PCA [qualified 2026-09-28: see Evidence]): the 128 vocab anchors and 167 existing captures occupy **disjoint regions** of PC space (PC1 right vs left). Their cross-similarity in raw PC coordinates is zero, even though many existing captures should be semantically near a vocab anchor.
 
 **Reason:** prompt length and structural position dominate h[20]'s variance after sink removal. Vocab anchors are captured at end-of-single-token-prompt; existing captures are mid-generation or end-of-multi-token-prompts. The chat-template structural setup translates h-vectors differently for different prompt configurations, and that translation is the dominant axis when corpora are mixed.
 
 **Methodology fix:** combined-dataset PCA is misleading; use **cosine-to-anchor** (which is invariant to the structural translation) for cross-corpus comparison. fig21 already does this and produces the correct semantic structure.
+
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's AUDIT 12 recipe (sink dims zeroed, unit-normalized) over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) and were re-read for this section.
+
+- **Size (AUDIT 12):** `vocab atlas capture count` = 128; `vocab atlas category count` = 23.
+- **Category counts (`captures[].category`):** content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section.
+- **Norms (`captures[].norm`):** range 92.06 to 113.79. This does not match the "92 to 103" stated in the Vocabulary section.
+- **Finding 1 (AUDIT 12):** intra-cos capital 0.9829, country 0.9808, emotion 0.849, refusal 0.8468.
+- **Other Finding 1 rows (recomputed):** the remaining nine table rows match to 3 decimals. The minimum over all 23 categories is +0.847 (refusal).
+- **Finding 2 (AUDIT 12):** PC1 0.3349; PC2 0.153; top-3 cumulative 0.5594. PC3 from the same SVD is 0.0715.
+- **Finding 3 (recomputed):** cosine of sink-removed `steps[].h_t` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) against the sink-removed anchors. Steps t=0.000 to t=0.368 all give Madrid, Berlin, Tokyo (0.438 to 0.449). t=0.421 gives autumn 0.438, snow 0.432, Berlin 0.432. t=0.474 gives autumn 0.437, snow 0.433, sky 0.428. t=1.000 gives snow 0.379, autumn 0.370, joy 0.368.
+- **Finding 4:** the combined PCA stacks 128 vocab anchors and 167 existing captures, 295 vectors in total. The "207-vector" count in Finding 4 does not match this sum.
 
 ## Hypotheses
 

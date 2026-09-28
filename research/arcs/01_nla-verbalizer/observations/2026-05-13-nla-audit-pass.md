@@ -51,6 +51,16 @@ The cheap-batch observation claimed "3 of the top 8 CAV contributors are sink di
 
 The qualitative finding — sinks have content-modulated components — survives. The numerical "3 of top 8" was off-by-one; corrected to "2 of top 8" in the cheap-batch observation file.
 
+## Evidence
+
+PASS lines from `examples/nla_audit_findings.py`, as recorded in the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log). A fresh run on the committed data reproduces that transcript line for line.
+
+- **Current suite total:** `SUMMARY:  196 PASS  |  0 FAIL`. The 65 in the Result section is the 2026-05-13 count.
+- **Latent finding 1 (AUDIT 9):** `captures with AR data (plotted)` = 128; `creative_haiku captures in aggregate` = 15; `haiku_gen captures` = 15; `haiku captures duplicated across aggregate+haiku_gen` = `duplicates`; `unique captures with AR data` = 113.
+- **Latent finding 2 (AUDIT 8):** `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`.
+- **Dim 2570's rank:** ordering `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt) by squared component puts dim 2570 at rank 15 (value +0.076).
+- **The fig15/fig16 pair that started this pass (AUDIT 10):** refusal_metaware `' test'` `||Δh||_feat` = 28.065; `' refuse'` = 35.5536.
+
 ## What audit DIDN'T cover (worth keeping in mind)
 
 - **Visual layout correctness** — verifying that figure axes/colors/legends match what's in the data is beyond automatic auditing; requires eyeballing the PNG
@@ -65,6 +75,14 @@ python examples/nla_audit_findings.py
 ```
 
 CPU-only, ~20 seconds. Exits 0 if all PASS, 1 if any FAIL. Use as a regression test before any subsequent analysis: if the audit starts failing, an upstream artifact has drifted from the recorded numbers.
+
+## Hypotheses
+
+None: this file records a verification pass, and its open questions are the coverage gaps listed under "What audit DIDN'T cover", not hypotheses with a test.
+
+## Follow-ups
+
+None beyond the standing use stated under Reproducibility: re-run the audit before any subsequent analysis.
 
 ## References
 
