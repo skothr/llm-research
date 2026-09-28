@@ -86,9 +86,10 @@ user's "focus it mathematically" push, formalized by Claude.
 
 ## Program (cheap-first, staged)
 
-0. **Encoding decode-test** — ASCII / base-N on number streams regenerated
-   locally with the paper's released prompts and filter (the paper's v1.0.0
-   code release contains no number data; see L3); zero GPU. Falsifies the literal-encoding hypothesis they didn't check.
+0. **Encoding decode-test** — ASCII / base-N decode of number streams
+   regenerated locally with the paper's prompts and filter; zero GPU. Tests
+   the literal-encoding hypothesis for this local setup; L1 and L3 give its
+   scope.
 1. **Differential influence-alignment probe** (TinyLlama, LoRA) — accumulated
    `⟨∇P_trait, −∇L_i⟩` for trait-teacher vs **neutral**-teacher data, trait
    axis anchored *behaviorally* (not a CAV). Aggregate-level.

@@ -7,7 +7,7 @@ venue: EMNLP-IJCNLP 2019
 arxiv: 1909.00512
 local_pdf: null
 type: excerpts
-note: Verbatim quotations from the v1 arXiv PDF (2 Sep 2019). The PDF is not stored in the repo (#124). Only line breaks and hyphenation are normalized. The measured anisotropy is of contextual hidden-layer representations; the paper reports the input layers as less anisotropic.
+note: Verbatim quotations from the v1 arXiv PDF (2 Sep 2019). The PDF is not stored in the repo (#124). Only line breaks and hyphenation are normalized, and editorial [sic] marks are added where the source has a typo. The measured anisotropy is of contextual hidden-layer representations; the paper reports the input layers as less anisotropic.
 ---
 
 # Excerpts — Ethayarajh 2019, "How Contextual are Contextualized Word Representations?"
