@@ -100,7 +100,7 @@ treated as `status: pre-expansion-seed` until re-validated during Phase 2.
 - **cross-entropy loss** — Training objective: $\mathcal{L} = -\log P(t_i \mid t_1, \ldots, t_{i-1})$, summed over all positions.
 - **Autoregressive** — Generating tokens one at a time, left to right, where each prediction depends only on previous tokens.
 - **Perplexity** — $2^{\mathcal{L}}$ (or $e^{\mathcal{L}}$ with natural log). Measures how "surprised" the model is by the data. Lower is better.
-- **Subliminal learning** — A student finetuned on teacher-generated data that is filtered to remove references to a trait (e.g. number sequences from an owl-preferring teacher) acquires the trait. Observed when teacher and student share a base model or initialization; not observed across different base models. `[cloud2025-subliminal §abstract, §5.1; kb/excerpts/cloud2025-subliminal#sec-5-1]`
+- **Subliminal learning** — A student finetuned on teacher-generated data that is filtered to remove references to a trait (e.g. number sequences from an owl-preferring teacher) acquires the trait. Observed when teacher and student share a base model or initialization; not observed across different base models. `[cloud2025-subliminal §abstract, §5.1; kb/excerpts/cloud2025-subliminal#abstract, #sec-5-1]`
 
 ## Dimensions and Notation
 
