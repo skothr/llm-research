@@ -422,7 +422,7 @@ def audit_a(
         {
             f["filename"]: f
             for f in arc_files
-            if isinstance(f, dict) and "filename" in f
+            if isinstance(f, dict) and isinstance(f.get("filename"), str)
         }
         if isinstance(arc_files, list)
         else {}
@@ -433,7 +433,9 @@ def audit_a(
         sorted(f"{dataset}/{n}" for n in (*DATA_FILES, *SIDECAR_FILES)),
         # Every listed entry, so a duplicate or a malformed entry fails too.
         sorted(
-            f["filename"] if isinstance(f, dict) and "filename" in f else repr(f)
+            f["filename"]
+            if isinstance(f, dict) and isinstance(f.get("filename"), str)
+            else repr(f)
             for f in (arc_files if isinstance(arc_files, list) else [])
         ),
     )

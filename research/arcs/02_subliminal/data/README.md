@@ -7,7 +7,7 @@ each one explicitly:
   this README: the arc's checksum record, in the `research/ARC_PROCESS.md`
   shape arcs 01, 03 and 04 use. It records sha256, size, class, producing
   command, inputs, model requirement and consumers for every data file under
-  `data/` (excluding README, LICENSE-DATA and audit transcripts), each
+  `data/` (excluding MANIFEST.json itself, README, LICENSE-DATA and audit transcripts), each
   dataset's capture-time `manifest.json` included. Entry names are relative
   to `data/`.
 - **the capture-time `manifest.json`**, one per dataset subdirectory: the
@@ -26,7 +26,7 @@ number from these bytes.
 
 Why committed in plain git: Step-0
 outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.0 KiB
-for the whole dataset including `decode_report.json`, `manifest.json` and the
+for the whole dataset including `decode_report.json`, the capture-time `manifest.json` and the
 lockfile, 57.2 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
@@ -82,14 +82,14 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 
 #### Post-capture amendments
 
-Two hashes recorded inside `manifest.json` are **capture-time** values that no
+Two hashes recorded inside the capture-time `manifest.json` are **capture-time** values that no
 longer match what is on disk. Neither is edited in the capture-time
 manifest — it is the capture-time record, and overwriting an attested value
 would destroy the very thing it exists to attest. The current values and their causes are recorded here
 instead, and `examples/subliminal_audit_findings.py` asserts the *current* state
 while carrying the capture-time values as historical constants.
 
-| Field in `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
+| Field in the capture-time `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
 |---|---|---|---|
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
 | `generation.generator_script_sha256` | `3b974528…` | `5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de` | The generator has been edited since capture. Today's script differs from the capture-time one in five ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs are fixed — `_REPO_ROOT` resolves as `parents[1]` (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field. None touch the filter, the decoder, or the prompt generator's outputs. |
@@ -138,6 +138,9 @@ replay itself and asserts the result is byte-identical to this file, so the
 consumed it" half stays on the UNVERIFIABLE list.
 
 ## Audit
+
+The audit checks arithmetic consistency only: it cannot catch a
+methodological error, a capture-protocol bug, or interpretive overreach.
 
 `examples/subliminal_audit_findings.py` re-derives every number this arc
 reports from the committed bytes: that the arc manifest `data/MANIFEST.json`
