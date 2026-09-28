@@ -12,7 +12,7 @@ Test three quick variants of the signature-glyph primitive against existing arti
 
 ## Finding 1 — fig13 — H3 falsified, sinks ARE content-modulated
 
-H3 from the [sink-removed atlas note](2026-05-13-nla-sink-removed-atlas.md) predicted cos(CAV_unit, e_32) ≥ +0.4. **Result: +0.0510. H3 FAIL.** The country CAV direction is **genuinely distributed across hundreds of dimensions**, not single-dim aligned. The top single contributor is dim **1803** at +0.124 (only **1.5%** of the direction's squared norm), and the top 20 dims combined account for only **~14%** of the variance.
+H3 from the [sink-removed atlas note](2026-05-13-nla-sink-removed-atlas.md) predicted cos(CAV_unit, e_32) ≥ +0.4. **Result: +0.0510. H3 FAIL.** The country CAV direction is **genuinely distributed across hundreds of dimensions**, not single-dim aligned. The top single contributor is dim **1803** at +0.124 (only **1.5%** of the direction's squared norm), and the top 20 dims combined account for only **~14%** of the variance. [qualified 2026-09-28: see Evidence]
 
 The structure of the top-20 contributors:
 
@@ -88,6 +88,17 @@ The corrected progression 5.7 → 8.7 → 11.0 → 28.1 still separates **two qu
 * **Out-of-distribution forcing** (4 → refuse-to-answer-2+2): ||Δh||_feat = 28.1 (corrected), ~2.5× math and ~5× negation. The model would never spontaneously refuse to answer "What is 2+2?"; forcing it produces a radically different residual.
 
 This **was not visible from the AV text alone** — the AV reads templated 3-paragraph descriptions in all cases. The geometric divergence is the signal that distinguishes "model is computing a wrong-but-believable thing" from "model is being pushed off-distribution."
+
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`).
+
+- **fig13, H3 (AUDIT 8):** `cos(CAV_unit, e_32) = direction_unit[32]` = 0.051; `top CAV contributor dim` = 1803; `dim 1803 sq share` = 0.0154; `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`.
+- **fig13 table:** the top 8 components of `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), ordered by squared value, are 1803 +0.124, 1111 −0.117, 3206 +0.114, 2953 +0.113, 2202 −0.105, 2107 −0.104, 2940 +0.095, 3110 −0.094. Dim 2570 ranks 15th at +0.076.
+- **Top-20 share:** the top 20 components of the same `direction_unit` hold 0.168 of its squared norm. This does not match the "~14%" stated in Finding 1.
+- **fig14 (`captures[].cosine` in [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt)):** step 0 `'Soft'` 0.8624; step 7 `' bree'` 0.8772; step 14 `'—'` 0.8115. AUDIT 21 confirms `' bree'` as the max-cosine step.
+- **fig16 `||Δh||_feat` (AUDIT 10):** negation 5.7159; factual 8.699; math 10.9709; refusal_metaware `' sensing'` 29.8559, `' test'` 28.065, `' refuse'` 35.5536.
+- **fig16 Δpos and `||Δh||_full`:** recomputed from `captures[].h` and `captures[].abs_pos` in [`../data/forced_continuation.pt`](../data/forced_continuation.pt), as each forced capture minus its pair's natural capture. Δpos is 0, 0, 0, −3, +1, +10 and `||Δh||_full` is 64.99, 88.75, 83.50, 110.20, 114.50, 118.86 (row order as in the fig16 table). The same subtraction restricted to the 8 feature dims reproduces the AUDIT 10 values.
 
 ## Hypotheses
 

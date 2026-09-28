@@ -33,6 +33,17 @@ Two consequences:
 
 2. **The country pool's intra-vs-cross gap widens** from +0.376 to +0.520 (and non_country_src similarly +0.389 → +0.545). After sink removal, country prompts are *more discriminable* from non-country prompts — exactly what you want for a CAV. The earlier CAV's "narrow scope" finding is now reframed: the discriminating direction was always there in the residual; the original cosines just visually masked it.
 
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`), which re-derives them from the raw captures.
+
+- **Dim sets:** `sink_dims` = [277, 458, 1427, 1627, 2107, 2570, 3110] and `feature_dims` = [20, 32, 392, 608, 1121, 1790, 2604, 2953] in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt). AUDIT 4 checks the classifier labels behind both sets.
+- **PC1 fraction:** 0.1648 original (AUDIT 5) and 0.1529 sink-removed (AUDIT 7).
+- **Cosine offset:** original mean off-diagonal cosine 0.4031 and minimum 0.0545 (AUDIT 6). Sink-removed mean 0.1786 and minimum −0.0686 (AUDIT 7). `sink-dim cosine offset` = 0.2244 (AUDIT 7).
+- **Variance kept after sink removal:** 0.9502 (AUDIT 7).
+- **Pool table:** all 24 cells re-read from `cos_orig` and `cos_res` in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt), each a per-pool (intra, cross) pair, match the table to 3 decimals.
+- **Independent re-derivation of the intra column:** AUDIT 6/7 give aggregate 0.3968 → 0.1563, country_src 0.8581 → 0.7772, non_country_src 0.8764 → 0.8042 (original → sink-removed).
+
 ## The visualization primitive (fig10, fig11)
 
 8-ray "signature glyph" placed at each capture's PC1/PC2 location. Each ray's angle = a specific feature dim (out of 8); ray length = |h[dim]| normalized; color = sign (red positive, blue negative). The 8 feature dims are {20, 32, 392, 608, 1121, 1790, 2604, 2953} — the dim-character classifier's "feature" labels.
