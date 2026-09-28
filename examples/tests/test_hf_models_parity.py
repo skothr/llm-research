@@ -15,10 +15,12 @@ case needs CUDA. Run with:
 
 from __future__ import annotations
 
+import ast
 import gc
 import importlib.util
 import inspect
 import sys
+import textwrap
 from pathlib import Path
 from typing import Any, Callable
 
@@ -145,17 +147,93 @@ def test_nla_score_parity() -> None:
 _CACHE_REFS = ("surgery.MODEL_CACHE_DIR", "_hf_models.MODEL_CACHE_DIR")
 
 
-@pytest.mark.parametrize(
-    "name",
-    ["load_av_meta", "load_ar_meta", "load_av", "load_ar", "nla_verbalize", "nla_reconstruct", "nla_score"],
-)
+@pytest.mark.parametrize("name", ["nla_reconstruct", "nla_score"])
 def test_nla_probe_source_identical(name: str) -> None:
-    """The probe is a verbatim port: the only permitted difference is where the
-    cache-dir constant comes from. Arc-01 artifacts store nla_verbalize's
-    greedy-decoded text, so any other source change is a numerics change."""
+    """The functions that stay a verbatim port: the only permitted difference
+    is where the cache-dir constant comes from. The loaders gained pinned
+    revisions and nla_verbalize gained input guards (issue #105);
+    test_nla_verbalize_embeds_parity gates the latter's numerics instead."""
     orig_src = inspect.getsource(getattr(orig_probe, name)).replace(_CACHE_REFS[0], "CACHE")
     new_src = inspect.getsource(getattr(_nla_probe, name)).replace(_CACHE_REFS[1], "CACHE")
     assert orig_src == new_src
+
+
+def test_nla_verbalize_embeds_parity() -> None:
+    """Arc-01 artifacts store nla_verbalize's greedy-decoded text, which is a
+    function of the inputs_embeds handed to generate(). Both implementations
+    must hand over bit-identical embeddings for the same activation."""
+    from _nla_fakes import META, FakeAV, FakeTok, prompt_ids
+
+    g = torch.Generator().manual_seed(1)
+    for dtype in (torch.float32, torch.bfloat16):
+        act = torch.randn(META["d_model"], generator=g).to(dtype)
+        seen = []
+        for fn in (orig_probe.nla_verbalize, _nla_probe.nla_verbalize):
+            av = FakeAV()
+            text = fn(act, model=av, tok=FakeTok(prompt_ids()), meta=META)
+            assert av.seen is not None
+            seen.append((text, av.seen, av.generate_kwargs))
+        assert seen[0][0] == seen[1][0]
+        # Decoding arguments (max_new_tokens, do_sample, pad id) and the
+        # attention mask also determine the greedy text.
+        a, b = seen[0][2], seen[1][2]
+        assert a.keys() == b.keys()
+        for k in a:
+            if isinstance(a[k], torch.Tensor):
+                assert torch.equal(a[k], b[k]), k
+            else:
+                assert a[k] == b[k], k
+        assert seen[0][1].dtype == seen[1][1].dtype
+        assert torch.equal(seen[0][1], seen[1][1])
+
+
+def _normalized_ast(fn: Callable[..., Any]) -> str:
+    """The function's AST with the #105 additions removed: ``revision=``
+    keywords, ``require_cached_when_offline(...)`` statements, and the module
+    that supplies the cache-dir constant. Formatting does not matter."""
+    tree = ast.parse(textwrap.dedent(inspect.getsource(fn)))
+
+    class _Strip(ast.NodeTransformer):
+        def visit_Call(self, node: ast.Call) -> ast.Call:
+            self.generic_visit(node)
+            node.keywords = [k for k in node.keywords if k.arg != "revision"]
+            return node
+
+        def visit_Expr(self, node: ast.Expr) -> ast.Expr | None:
+            self.generic_visit(node)
+            call = node.value
+            if (
+                isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Attribute)
+                and call.func.attr == "require_cached_when_offline"
+            ):
+                return None
+            return node
+
+        def visit_Attribute(self, node: ast.Attribute) -> ast.AST:
+            self.generic_visit(node)
+            if node.attr == "MODEL_CACHE_DIR":
+                return ast.Name(id="CACHE", ctx=ast.Load())
+            return node
+
+    tree = _Strip().visit(tree)
+    fdef = tree.body[0]
+    assert isinstance(fdef, ast.FunctionDef)
+    # Docstrings may differ; the body after it may not.
+    if fdef.body and isinstance(fdef.body[0], ast.Expr) and isinstance(
+        fdef.body[0].value, ast.Constant
+    ):
+        fdef.body = fdef.body[1:]
+    fdef.returns = None
+    return ast.dump(fdef, include_attributes=False)
+
+
+@pytest.mark.parametrize("name", ["load_av_meta", "load_ar_meta", "load_av", "load_ar"])
+def test_nla_loaders_identical_modulo_pins(name: str) -> None:
+    """The loaders differ from the original only by the pinned revisions and
+    the offline guard; dtype, device_map, value-head construction and meta
+    parsing must be unchanged."""
+    assert _normalized_ast(getattr(orig_probe, name)) == _normalized_ast(getattr(_nla_probe, name))
 
 
 def test_nla_constants() -> None:
@@ -181,4 +259,8 @@ def test_nla_signatures(name: str) -> None:
 
 
 def test_load_model_signature() -> None:
-    assert _params(_hf_models.load_model) == _params(orig_surgery.load_model)
+    # Issue #105 appended allow_pickle (keyword-only, default False, so no
+    # existing call changes); every original parameter is unchanged.
+    new = _params(_hf_models.load_model)
+    assert new[:-1] == _params(orig_surgery.load_model)
+    assert new[-1] == ("allow_pickle", inspect.Parameter.KEYWORD_ONLY, False)
