@@ -9,6 +9,9 @@ Reads ONLY the committed dataset at
   * owl_streams.jsonl / neutral_streams.jsonl -- the kept, parsed int streams
   * decode_report.json                  -- the five-scheme decode result
   * manifest.json                       -- the capture-time provenance record
+  * ../MANIFEST.json                    -- the arc's canonical per-file
+                                           checksum record
+                                           (examples/subliminal_data_manifest.py)
   * prompts.jsonl                       -- the seeded prompt set (re-derived
                                            post-hoc 2026-08-17, see AUDIT D)
   * pip_freeze.txt                      -- the environment lockfile
@@ -20,7 +23,8 @@ defers its numpy/torch imports so importing it here costs nothing.
 **What "N PASS" means / what it does NOT verify.**
 
 AUDIT A locks integrity (content hashes, sizes, line counts) of the committed
-files against the manifest and against the hashes pinned in prose. AUDIT B
+files against `data/MANIFEST.json`, the capture-time manifest and the hashes
+pinned in prose. AUDIT B
 re-runs the ported upstream filter over the RAW completions from first
 principles and re-derives kept counts, reject rates, the reject-reason census,
 the two-proportion z and the power floor. AUDIT C replays every decode scheme
@@ -74,6 +78,9 @@ from subliminal_step0_decode import (
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA = _REPO_ROOT / "research/arcs/02_subliminal/data/step0-owl-neutral-decode"
+# The arc's canonical checksum record (written by
+# examples/subliminal_data_manifest.py). Its entry names are relative to data/.
+ARC_MANIFEST_PATH = DATA.parent / "MANIFEST.json"
 
 # ---------------------------------------------------------------------------
 # Pinned hashes.
@@ -384,7 +391,10 @@ def dig(obj: Any, *keys: str) -> Any:
 # AUDIT A -- integrity of the committed dataset.
 # ---------------------------------------------------------------------------
 def audit_a(
-    blobs: dict[str, bytes], manifest_bytes: bytes, manifest: dict[str, Any]
+    blobs: dict[str, bytes],
+    manifest_bytes: bytes,
+    manifest: dict[str, Any],
+    arc_manifest: Any,
 ) -> None:
     print("=" * 80)
     print("AUDIT A -- dataset integrity (hashes, sizes, line counts, provenance)")
@@ -398,6 +408,21 @@ def audit_a(
     )
     claim_eq("manifest.files[] covers exactly the 5 recorded files", 5, len(entries))
 
+    # Hashes and sizes are checked against data/MANIFEST.json, the arc's one
+    # canonical checksum record. The capture-time manifest.json lists the same
+    # five files; each claim also requires its capture-time value to agree, so
+    # the capture-time record is still held to the bytes on disk.
+    arc_files = dig(arc_manifest, "files")
+    arc_entries = (
+        {
+            f["filename"]: f
+            for f in arc_files
+            if isinstance(f, dict) and "filename" in f
+        }
+        if isinstance(arc_files, list)
+        else {}
+    )
+    dataset = DATA.name
     for name in DATA_FILES:
         b = blobs.get(name)
         if b is None:
@@ -406,8 +431,21 @@ def audit_a(
         if rec is None:
             claim(f"{name} listed in manifest.files[]", False, "listed", "absent")
             continue
-        claim_eq(f"{name} sha256 vs manifest", dig(rec, "sha256"), sha256_bytes(b))
-        claim_eq(f"{name} size_bytes vs manifest", dig(rec, "size_bytes"), len(b))
+        arc_rec = arc_entries.get(f"{dataset}/{name}")
+        if arc_rec is None:
+            claim(f"{name} listed in data/MANIFEST.json", False, "listed", "absent")
+            continue
+        for field, measured in (("sha256", sha256_bytes(b)), ("size_bytes", len(b))):
+            canonical = dig(arc_rec, field)
+            capture = dig(rec, field)
+            claim(
+                f"{name} {field} vs data/MANIFEST.json (+ capture-time manifest)",
+                measured == canonical and capture == canonical,
+                canonical,
+                measured
+                if capture == canonical
+                else f"{measured!r}; capture-time manifest records {capture!r}",
+            )
         if dig(rec, "n_lines") is not None:
             claim_eq(
                 f"{name} n_lines vs manifest",
@@ -901,6 +939,14 @@ def audit_d(manifest: dict[str, Any]) -> None:
 
 def main() -> None:
     manifest_bytes = read_bytes_or_fail("manifest.json")
+    # A missing or malformed data/MANIFEST.json costs its own FAIL row here, and
+    # AUDIT A then scores each data file's hash/size claim as unlisted.
+    arc_manifest_bytes = read_path_or_fail(ARC_MANIFEST_PATH, "data/MANIFEST.json")
+    arc_manifest = (
+        None
+        if arc_manifest_bytes is None
+        else json_or_fail(arc_manifest_bytes, "data/MANIFEST.json")
+    )
     blobs: dict[str, bytes] = {}
     for name in DATA_FILES:
         b = read_bytes_or_fail(name)
@@ -924,7 +970,7 @@ def main() -> None:
         )
         sys.exit(1)
 
-    audit_a(blobs, manifest_bytes, manifest)
+    audit_a(blobs, manifest_bytes, manifest, arc_manifest)
     audit_b(blobs, manifest)
     audit_c(blobs)
     audit_d(manifest)

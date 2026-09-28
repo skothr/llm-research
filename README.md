@@ -114,9 +114,9 @@ than discovered two levels down.
   limitation in their READMEs; arc 04 states it in its § Reproducing.
 - **Datasets committed and pinned.** Arcs 01, 03, and 04 commit raw `.pt`
   artifacts under the arc's `data/` (Git LFS) with a `MANIFEST.json` recording
-  per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an
-  interim manifest schema. The intent is that a clean clone re-renders every
-  figure and replays every audit — with one documented exception: arc 04's
+  per-file sha256 and provenance; arc 02's Step-0 data is small JSONL in plain
+  git under the same `MANIFEST.json` convention. The intent is that a clean
+  clone re-renders every figure and replays every audit — with one documented exception: arc 04's
   full fitted-lens tensors sit behind an opt-in LFS download (three are
   committed; the two 1.5B nf4 lenses are pending issue #47), so 7 of its
   checks fail on a default clone — 3 LFS-stub reports + 4 `MISSING`
