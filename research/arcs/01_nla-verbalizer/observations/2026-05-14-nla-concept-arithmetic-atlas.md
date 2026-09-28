@@ -47,7 +47,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 
 - **Size and rescale (AUDIT 17):** `concept_arithmetic combo count` = 7; `target_norm` = 150.0. The seven `||h_rescaled|| ≈ 150` lines print actual values from 150.0 to 150.0001.
 - **Decoded identities (AUDIT 17):** `combo[0] decodes containing 'London'`, `combo[1] decodes containing 'Spain'`, `combo[2] decodes containing 'United Kingdom'`, `combo[3] decodes containing 'Je ne sais quoi'`, `combo[4] decodes containing 'country'`, `combo[5] decodes containing 'Fibonacci'` and `combo[6] decodes containing 'China'` all PASS. Each is a case-insensitive substring check on one stored AV decode.
-- **Combination types (recomputed, `combos[].category`):** 3 `analogy`, 1 `subtraction` (France − Germany), 2 `axis` (country_centroid − capital_centroid and happy − sad), 1 `compound`.
+- **Combination types (recomputed, `combos[].category`):** 3 `analogy`, 1 `subtraction` (France − Germany), 2 `axis` (country_centroid − capital_centroid and happy − sad), 1 `compound`. The second axis combo, happy − sad, decodes incoherently (combo 5, below; section D files it with the subtractions), so section B's claim holds for one of the two axis combos.
 - **Decode wording (recomputed, `combos[].av_text`):** combo 0 "implies the response is about the city of London"; combo 1 '"What is Spain?" header ... expecting descriptive content about the country'; combo 2 'Final token "UK\n"'; combo 3 "The famous 'Je ne sais quoi' line from Zhang Ziyi's 'Dream of Red Chamber'"; combo 5 '"Fibonacci Zoo" greeting format' and "prize display convention"; combo 6 'informational format about "China,"'. Combos 0, 1, 2 and 6 also contain Chinese-language passages. Combo 4 opens with a bolded question header ("What is Christianity?") and contains "This country's population is diverse, and the following facts about the world's religions", "A country's facts..." and "a document".
 - **Raw norms (recomputed, `||h_raw||`):** Paris − France + Germany 97.26; Tokyo − Japan + France 98.39; Berlin − Germany + United Kingdom 96.85; France − Germany 9.2423; country_centroid − capital_centroid 17.4553; happy − sad 49.9825; country_centroid + emotion_centroid 183.6251. The rescale to 150 therefore multiplies the analogies by about 1.5, France − Germany by 16.2 and happy − sad by 3.0, and shrinks the compound by 0.82.
 - **Typical end-of-prompt norm (recomputed, `captures[].norm` in `vocab_atlas.pt`):** mean 100.40, range 92.06 to 113.79. The target norm of 150 is 1.49× the mean, above every capture in the atlas.
@@ -75,10 +75,10 @@ A more productive use: arithmetic to **isolate axes** rather than predict tokens
 
 The arc now has three converging findings:
 - **MAIN-44/70**: basis is protocol-coupled; content categories have small position-invariant component.
-- **MAIN-48 (this)**: within a protocol, arithmetic structure is categorical not algebraic.
+- **MAIN-48 (this)**: within a protocol, arithmetic structure is categorical not algebraic. [qualified 2026-09-28: see Evidence]
 - **[MAIN-25](2026-05-13-nla-interpolation-flipbook.md)** (the headline): stepwise category-flip at t=0.421 during linear interpolation between AR-encoded anchors. [qualified 2026-09-28: see Evidence]
 
-Reading these together: at layer 20, h-space has **discrete category attractors** rather than a smooth product-of-axes geometry. Interpolation flips between attractors (MAIN-25); arithmetic moves between attractor regions but doesn't smoothly navigate within them (MAIN-48); discriminants pick out the attractor regions per protocol (MAIN-70). The next probe should test the attractor hypothesis directly: dense interpolation near t=0.421 ([MAIN-34](2026-05-15-nla-dense-interp-near-pivot.md)) to see if the flip is a sharp discontinuity or a smooth-but-fast transition. That's already filed.
+Reading these together: at layer 20, h-space has **discrete category attractors** rather than a smooth product-of-axes geometry. Interpolation flips between attractors (MAIN-25); arithmetic moves between attractor regions but doesn't smoothly navigate within them (MAIN-48); discriminants pick out the attractor regions per protocol (MAIN-70). The next probe should test the attractor hypothesis directly: dense interpolation near t=0.421 ([MAIN-34](2026-05-15-nla-dense-interp-near-pivot.md)) to see if the flip is a sharp discontinuity or a smooth-but-fast transition. That's already filed. [qualified 2026-09-28: see Evidence]
 
 ## Reproducibility
 
@@ -90,7 +90,7 @@ python examples/nla_concept_arithmetic_atlas.py
 # fig35 (no model load)
 python examples/nla_concept_arithmetic_render.py
 
-# Model-free check of the committed artifact (AUDIT 17)
+# Model-free check (AUDIT 17); reads the cache copy first, else the committed ../data/ copy
 python examples/nla_audit_findings.py
 ```
 
@@ -104,7 +104,7 @@ Two readings fit the three failed analogies:
 - **Geometry.** In layer-20 end-of-prompt h, `Paris − France + Germany` does not lie near `Berlin`, so there is no analogy for the AV to read.
 - **Decode.** The sum does lie near `Berlin`, but the AV does not read it at the input it was given: a vector rescaled to 1.49× the typical norm and built off the capture distribution.
 
-**Test (no model load):** for each analogy, rank all 128 `vocab_atlas.pt` anchors by cosine to the sum `a − b + c`, excluding the three input words, as in the usual word-analogy evaluation. Use the sink-removed `h` (the 7 sink dims labelled in `pairwise_and_hotdims.pt` zeroed), so the component every capture shares does not set the ranking. The predicted targets (Berlin, Paris, London) are all atlas anchors. Nothing is fit, so no hold-out is needed.
+**Test (no model load):** for each analogy, rank all 128 `vocab_atlas.pt` anchors by cosine to the sum `a − b + c`, excluding the three input words, as in the usual word-analogy evaluation. Rank in raw `h`, the space of the vector the AV received, which is the space the geometry reading concerns; repeat the ranking with the sink-removed `h` (the 7 sink dims labelled in `pairwise_and_hotdims.pt` zeroed) to check whether the component every capture shares sets the ranking. The predicted targets (Berlin, Paris, London) are all atlas anchors. Nothing is fit, so no hold-out is needed.
 - The geometry reading predicts that the target is not the nearest anchor.
 - The decode reading predicts that it is.
 

@@ -99,7 +99,7 @@ MAIN-44 + MAIN-70 together turn what looked like a null result into a productive
 # writes .cache/nla_artifacts/mid_seq_native_compare.pt)
 python examples/nla_mid_seq_native_compare.py
 
-# Model-free check of the committed artifacts (AUDIT 15 and 16)
+# Model-free check (AUDIT 15 and 16); reads the cache copy first, else the committed ../data/ copy
 python examples/nla_audit_findings.py
 ```
 
@@ -116,7 +116,7 @@ The mid-sequence in-protocol signal (0.5632) is 1.40× the end-of-prompt one (0.
 **Test (no model load):** recompute both in-protocol cells leave-one-anchor-out. For each scored anchor, fit the 23 directions of its protocol without that anchor, then project the anchor onto them. The scored anchor is then held out of its own fitting set in both protocols. Categories of 2 anchors leave one in-class capture per fit and can be reported separately.
 
 The statistic is the retained fraction r = (held-out mid − held-out end-of-prompt) / (0.5632 − 0.4022). The calculation is deterministic on the committed captures, so r has no sampling noise on this anchor set.
-- The separability reading predicts r of about 1: in-sample inflation is then about equal in the two protocols, and holding anchors out removes it from both.
+- The separability reading predicts r > 1: tighter mid-sequence classes put each capture closer to its class mean, so in-sample inflation is smaller there than at end of prompt, and holding anchors out lowers the end-of-prompt cell more.
 - The in-sample reading predicts r ≤ 0: the inflation is the gap, and holding anchors out closes or reverses it.
 
 What the outcomes decide:
