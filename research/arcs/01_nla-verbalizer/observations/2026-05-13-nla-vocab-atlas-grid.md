@@ -5,7 +5,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Inputs:** 128 anchor tokens, each captured at end-of-single-token-user-message in a chat-templated prompt
 **Figures:** `fig19_vocab_atlas.png`, `fig20_combined_atlas.png`, `fig21_interp_through_anchors.png`, `fig22_anchor_cosine_matrix.png`
-**Data:** `.cache/nla_artifacts/vocab_atlas.pt`
+**Data:** `.cache/nla_artifacts/vocab_atlas.pt` [qualified 2026-09-28: the committed copy is `../data/vocab_atlas.pt`]
 
 ## Goal
 
@@ -105,7 +105,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Category counts (`captures[].category`):** the field holds the 23 fine-grained labels. The four group totals are sums over those labels: content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section. The grouping is defined only by the section comments in the `VOCAB` dict of `examples/nla_vocab_atlas_capture.py`. That dict was later deduplicated, so its comments give 51 function words and 13 numbers/operators; the committed artifact predates that change.
 - **Norms (`captures[].norm`):** range 92.06 to 113.79. This does not match the "92 to 103" stated in the Vocabulary section.
 - **Finding 1 (AUDIT 12):** intra-cos capital 0.9829, country 0.9808, emotion 0.849, refusal 0.8468.
-- **Other Finding 1 rows (recomputed):** the remaining nine table rows match to 3 decimals. The minimum over all 23 categories is +0.847 (refusal).
+- **Other Finding 1 rows (recomputed):** the remaining nine table rows match to 3 decimals. Over all 23 categories the minimum is +0.847 (refusal) and the maximum +0.983 (capital).
 - **Finding 2 (AUDIT 12):** PC1 0.3349; PC2 0.153; top-3 cumulative 0.5594. PC3 from the same SVD is 0.0715.
 - **Finding 3 (recomputed):** cosine of sink-removed `steps[].h_t` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) against the sink-removed anchors. Steps t=0.000 to t=0.368 all give Madrid, Berlin, Tokyo (0.438 to 0.449). t=0.421 gives autumn 0.438, snow 0.432, Berlin 0.432. t=0.474 gives autumn 0.437, snow 0.433, sky 0.428. t=1.000 gives snow 0.379, autumn 0.370, joy 0.368. Over t=0.474 to t=1.000 the top-3 cosines span 0.368 to 0.437, so the table's upper bound of +0.43 is low. Autumn leads through t=0.579 and snow leads from t=0.632 on. Joy replaces sky in third place at t=0.947 and t=1.000.
 - **Finding 4:** `examples/nla_vocab_atlas_render.py` builds fig20 by concatenating the 128 sink-removed captures from [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) with the `H` tensor of [`../data/pairwise_and_hotdims.pt`](../data/pairwise_and_hotdims.pt) (shape 167 × 3584). The combined PCA therefore runs on 295 vectors, not the 207 stated in Finding 4.
@@ -148,7 +148,7 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 
 ```bash
 
-# ~13 min: load Qwen, capture 128 anchors  [qualified 2026-09-28: the current VOCAB has 125 entries after deduplication (script line 49); the committed artifact holds 128]
+# ~13 min: load Qwen, capture 128 anchors  [qualified 2026-09-28: the current VOCAB has 125 entries after deduplication (the `VOCAB` dict); the committed artifact holds 128]
 python examples/nla_vocab_atlas_capture.py
 
 # ~30s: render fig19-22 from artifacts

@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-13
 **Toolkit:** `nla_audit_findings.py`
-**Result:** **65 PASS / 0 FAIL.** Every load-bearing numerical claim verified from the four raw artifact files [qualified 2026-09-28: see Evidence] (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
+**Result:** **65 PASS / 0 FAIL.** Every load-bearing numerical claim verified from the four raw artifact files [qualified 2026-09-28: the dedup regression fits are unaudited; see Follow-ups] (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
 
 > **Write-time snapshot.** 65 was the count on 2026-05-13. The suite was later extended (93 → 129 → **178 PASS** as of 2026-05-31, now covering the faithfulness foundation and concept-arithmetic decode identities). See [`figures/INVENTORY.md`](figures/INVENTORY.md) and the arc README for the current count.
 
