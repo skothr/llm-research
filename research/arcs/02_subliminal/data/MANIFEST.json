@@ -25,7 +25,7 @@
       "size_bytes": 1178,
       "class": "derived",
       "producing_script": "examples/subliminal_step0_decode.py",
-      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "producing_command": "no CLI: call decode_test(owl_streams, neutral_streams) from examples/subliminal_step0_decode.py on the two streams files, no model (AUDIT C replays it). The original was written at the end of the capture run, `python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode`",
       "provenance": "five-scheme owl-lexicon decode of both streams files plus the two-proportion z-test; written at the end of the capture run, and AUDIT C replays every scheme from the streams without a model",
       "inputs": [
         "step0-owl-neutral-decode/owl_streams.jsonl",
@@ -43,8 +43,8 @@
       "size_bytes": 7265,
       "class": "capture-root",
       "producing_script": "examples/subliminal_step0_decode.py",
-      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
-      "provenance": "the capture-time provenance record (manifest_version 0.1.0-interim): generation recipe, sampling, seeds, environment, filter statistics, lineage and licence. Amended once, the 2026-08-19 git-SHA repoint recorded in data/README.md. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode (produces a file of the same form, not the recorded sha256: the output reflects the running environment and time, and the committed copy was amended after capture; see provenance)",
+      "provenance": "this file is the capture run's own provenance record (manifest_version 0.1.0-interim): generation recipe, sampling, seeds, environment, filter statistics, lineage and licence. Amended once, the 2026-08-19 git-SHA repoint recorded in data/README.md. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite).",
       "inputs": [],
       "requires_model": "qwen-base",
       "consumers": [
@@ -77,7 +77,9 @@
       "producing_script": "examples/subliminal_step0_decode.py",
       "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
       "provenance": "the 109 neutral completions the ported upstream filter kept, parsed to integer lists; written by the capture run, and AUDIT B replays the filter from neutral_raw.jsonl without a model. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
-      "inputs": [],
+      "inputs": [
+        "step0-owl-neutral-decode/neutral_raw.jsonl"
+      ],
       "requires_model": "qwen-base",
       "consumers": [
         "step0-owl-neutral-decode/decode_report.json",
@@ -109,7 +111,9 @@
       "producing_script": "examples/subliminal_step0_decode.py",
       "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
       "provenance": "the 104 owl completions the ported upstream filter kept, parsed to integer lists; written by the capture run, and AUDIT B replays the filter from owl_raw.jsonl without a model. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
-      "inputs": [],
+      "inputs": [
+        "step0-owl-neutral-decode/owl_raw.jsonl"
+      ],
       "requires_model": "qwen-base",
       "consumers": [
         "step0-owl-neutral-decode/decode_report.json",
@@ -123,7 +127,7 @@
       "size_bytes": 2599,
       "class": "capture-root",
       "producing_script": "examples/subliminal_step0_decode.py",
-      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode (produces a file of the same form, not the recorded sha256: the output reflects the running environment and time, and the committed copy was amended after capture; see provenance)",
       "provenance": "the capture environment's package lockfile; one line redacted in 1ed05dad (machine-specific editable-install URL), so it no longer matches manifest.json's capture-time environment.pip_freeze_sha256. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
       "inputs": [],
       "requires_model": "qwen-base",

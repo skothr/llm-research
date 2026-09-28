@@ -103,12 +103,10 @@ than discovered two levels down.
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four registers are partial — read each arc's
   own account rather than this summary.
-- **Audit scripts.** `examples/*_audit_findings.py` re-derive an arc's
-  load-bearing numbers from its committed artifacts, so a figure quoted in
+- **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
+  arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
-  01, 03, and 04 each have one. Arc 02 has none: its Step-0 numbers (a z-test,
-  a power calculation) predate the audit-script convention and are small enough
-  to check by hand against the committed JSONL. These audits check
+  01, 02, 03, and 04 each have one. These audits check
   **arithmetic consistency only** — they cannot catch a methodological error, a
   capture-protocol bug, or interpretive overreach. Arcs 01 and 03 state that
   limitation in their READMEs; arc 04 states it in its § Reproducing.
@@ -205,7 +203,7 @@ committed for that run; re-derive the totals with the command below:
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 104 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
 ```
@@ -239,8 +237,8 @@ externally. See the trust-boundary note in `examples/README_NLA.md` before
 extending the pipeline to third-party `.pt` files.
 
 **Raw data is a deliverable.** A clean clone (with LFS pulled) holds the figure
-PNGs and the `.pt` datasets the figures and audit depend on, so every figure can
-be re-rendered and the audit replayed. See `research/ARC_PROCESS.md`
+PNGs, the `.pt` datasets and the plain-git JSON/JSONL datasets the figures and
+audits depend on, so every figure can be re-rendered and every audit replayed. See `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
 
 ## Epistemic discipline (carried over from the source workspace)
