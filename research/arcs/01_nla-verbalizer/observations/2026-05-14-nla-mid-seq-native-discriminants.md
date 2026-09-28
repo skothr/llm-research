@@ -47,7 +47,7 @@ Diagonal entries are weakly positive (cosines +0.01 to +0.17), off-diagonal mean
 | capital | +0.151 |
 | country | +0.150 |
 | nature | +0.131 |
-| refusal | +0.127 |
+| refusal | +0.127 [qualified 2026-09-28: see Evidence] |
 
 **Top-5 least-stable axes** — function-word + punctuation [qualified 2026-09-28: see Evidence]:
 
@@ -55,7 +55,7 @@ Diagonal entries are weakly positive (cosines +0.01 to +0.17), off-diagonal mean
 |---|---|
 | p_quote | +0.013 |
 | p_special | +0.026 |
-| math_op | +0.028 |
+| math_op | +0.028 [qualified 2026-09-28: see Evidence] |
 | auxiliary | +0.032 |
 | preposition | +0.043 |
 
@@ -67,25 +67,26 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Cross-protocol mid-sequence cell (AUDIT 15):** `mid_seq aggregate within-class signal (~8x weaker than eop)` = 0.0491; `mid_seq aggregate argmax accuracy (per-cat mean, vs 75.4% eop)` = 0.3204.
 - **Other two cells (recomputed, `cells`):** eop × eop `agg_signal` 0.4022, `agg_acc` 0.7537; eop × mid `agg_signal` 0.0369, `agg_acc` 0.0696. No AUDIT line checks these two cells. Ratio of the in-protocol signals: 0.5632 / 0.4022 = 1.400.
 - **Axis stability (AUDIT 16):** `mean cross-protocol diagonal cosine (axis stability)` = 0.0784; `max diagonal (emotion most-stable axis)` = 0.1704; `emotion-emotion cross-protocol cosine` = 0.1704.
-- **Rest of the fig34 statistics (recomputed):** minimum diagonal 0.0126 (p_quote); mean off-diagonal of `cross_cos` −0.0009. The top-5 and bottom-5 tables match `diag_cos` to 3 decimals. The six content categories are the six highest diagonals: emotion 0.170, capital 0.151, country 0.150, nature 0.131, refusal 0.128, codemath 0.127.
+- **Rest of the fig34 statistics (recomputed):** minimum diagonal 0.0126 (p_quote); mean off-diagonal of `cross_cos` −0.0009. `diag_cos` at 4 decimals: emotion 0.1704, capital 0.1513, country 0.1503, nature 0.1314, refusal 0.1275, codemath 0.1266; p_quote 0.0126, p_special 0.0258, math_op 0.0275, auxiliary 0.0323, preposition 0.0428. The tables match these rounded to 3 decimals except two rows: refusal rounds to 0.128 (table +0.127) and math_op to 0.027 (table +0.028). The six content categories are the six highest diagonals, from 0.1266 to 0.1704, with mean 0.1429. codemath, the sixth, is not in the top-5 table.
 - **Grouping of the least-stable axes:** in the [vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Vocabulary section, math_op is one of the 4 math ops in the numbers/operators group, not a function word or punctuation. The bottom five are therefore punctuation (p_quote, p_special), numbers/operators (math_op) and function words (auxiliary, preposition).
 - **PC1 (AUDIT 12):** `vocab atlas PC1 fraction (sink-removed)` = 0.3349. That PCA is the fig19 scatter ([vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Finding 2). fig21 is the cosine-to-anchor plot of the interpolation steps and has no PC1.
-- **Scoring is in-sample (from `examples/nla_mid_seq_native_compare.py`):** each family of 23 directions is fit on all captures of its protocol and then scored on the same captures. Category sizes range from 2 (p_dash, p_quote) to 12 (nature), counted from `rows[].n_eop` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt), so a scored capture is part of its own in-class mean.
+- **fig21's anchor switch (recomputed with the fig21 recipe in `examples/nla_vocab_atlas_render.py`: cosine of each step of [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) to the 128 atlas anchors, sink dims zeroed):** the top-1 anchor is Madrid (capital) at every step up to t=0.368 and autumn (nature) from t=0.421 on. The top-1 cosines on either side of the switch are 0.439 (t=0.368) and 0.438 (t=0.421). The AV flip that the dense run locates is between t=0.4450 and t=0.4475 ([dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence), so the fig21 switch and the AV flip are not at the same step. Cosines to fixed anchors vary smoothly along a straight line, so a change of top-1 anchor does not by itself show a discontinuous transition.
+- **Scoring is in-sample (from `examples/nla_mid_seq_native_compare.py`):** each family of 23 directions is fit on all captures of its protocol and then scored on the same captures. Category sizes range from 2 (p_dash, p_quote) to 12 (nature), counted from `rows[].n_mid` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt) (`n_eop` is equal in every category), so a scored capture is part of its own in-class mean.
 
 ## What this tells us about layer-20 geometry
 
 The content vs function distinction shows up again as the dominant organizing principle — and now at a deeper level than fig21's PC1. [qualified 2026-09-28: see Evidence] Per-category axes for content concepts (country, emotion, nature) have a modest position-invariant component, while punctuation and function words' axes are *almost entirely* position-determined. This matches the dominant PC1 (content-vs-function, 33.5% variance) found earlier in the sink-removed vocab atlas — but is a stronger statement: not just that content and function words occupy different *regions*, but that the *direction* in which a content category fans out from the population mean is partially preserved across positions, while function-word axes are constructed anew at each position.
 
-This refines the MAIN-44 closure: the basis isn't *purely* end-of-prompt-protocol-coupled. There's a small protocol-invariant component (~+0.15 cosine for content categories). But it's small enough that cross-protocol projection collapses to noise.
+This refines the MAIN-44 closure: the basis isn't *purely* end-of-prompt-protocol-coupled. There's a small protocol-invariant component (~+0.15 cosine for content categories). [qualified 2026-09-28: see Evidence] But it's small enough that cross-protocol projection collapses to noise.
 
 ## Implications for the glyph viz primitive
 
 A discriminant glyph is **only meaningful for h captured at the same protocol the discriminants were derived from**. Cross-protocol use should be flagged. Two paths forward:
 
 1. **Per-protocol glyph family.** Have multiple discriminant sets (eop, mid-seq, mid-generation, etc.), and pick the matching one based on the capture protocol. Honest but uses N times the visual real estate.
-2. **Stable-axis-only glyph.** Build a glyph using only the top-K most-stable axes (the 5 content-category axes here). Smaller glyph, but the axes are interpretable as carrying a position-invariant semantic component. Probably the right primitive for cross-protocol comparison views.
+2. **Stable-axis-only glyph.** Build a glyph using only the top-K most-stable axes (the 5 content-category axes here). [qualified 2026-09-28: see Evidence] Smaller glyph, but the axes are interpretable as carrying a position-invariant semantic component. Probably the right primitive for cross-protocol comparison views.
 
-The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discriminants on interpolated h's. The strong t=0.421 transition there ([MAIN-25](2026-05-13-nla-interpolation-flipbook.md)) is **still real** — fig21 confirmed it via cosine-to-vocab-anchors (no discriminants) — but the per-step glyph readings on fig25 should be interpreted with caution since the h's at intermediate t are out-of-protocol for the eop discriminants.
+The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discriminants on interpolated h's. The strong t=0.421 transition there ([MAIN-25](2026-05-13-nla-interpolation-flipbook.md)) is **still real** — fig21 confirmed it via cosine-to-vocab-anchors (no discriminants) [qualified 2026-09-28: see Evidence] — but the per-step glyph readings on fig25 should be interpreted with caution since the h's at intermediate t are out-of-protocol for the eop discriminants.
 
 ## Cross-arc lessons
 
@@ -113,13 +114,17 @@ The mid-sequence in-protocol signal (0.5632) is 1.40× the end-of-prompt one (0.
 - **In-sample scoring.** Both cells score each capture against a direction whose in-class mean includes that capture, in categories of 2 to 12 anchors. The identical carrier context of the mid-sequence captures can make this inflation larger there.
 
 **Test (no model load):** recompute both in-protocol cells leave-one-anchor-out. For each scored anchor, fit the 23 directions of its protocol without that anchor, then project the anchor onto them. The scored anchor is then held out of its own fitting set in both protocols. Categories of 2 anchors leave one in-class capture per fit and can be reported separately.
-- The separability reading predicts that the held-out mid-sequence signal stays above the held-out end-of-prompt signal by about the same margin.
-- The in-sample reading predicts that the margin shrinks or reverses.
+
+The statistic is the retained fraction r = (held-out mid − held-out end-of-prompt) / (0.5632 − 0.4022). The calculation is deterministic on the committed captures, so r has no sampling noise on this anchor set.
+- The separability reading predicts r of about 1: in-sample inflation is then about equal in the two protocols, and holding anchors out removes it from both.
+- The in-sample reading predicts r ≤ 0: the inflation is the gap, and holding anchors out closes or reverses it.
 
 What the outcomes decide:
-- A reversed or closed margin shows that the gap came from in-sample scoring.
-- A margin of about the in-sample size rules out in-sample inflation as the cause of the gap.
-- A smaller but still positive margin leaves H1 open, with the shrink measuring the in-sample part.
+- r ≤ 0: the gap came from in-sample scoring.
+- r ≥ 1: in-sample inflation does not explain the gap.
+- 0 < r < 1: both contribute, and r is the fraction of the gap the held-out scoring keeps.
+
+The result holds for these 128 anchors. Whether it carries to other anchor sets is a separate question this test does not address.
 
 ## Follow-ups
 

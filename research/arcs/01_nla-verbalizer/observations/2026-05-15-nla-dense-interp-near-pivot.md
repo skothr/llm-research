@@ -1,4 +1,4 @@
-# Dense Interpolation Reveals a Three-Region Geometry with One Sharp Boundary
+# Dense Interpolation Reveals a Three-Region Geometry with One Sharp Boundary [qualified 2026-09-28: see Evidence]
 
 **Date:** 2026-05-15
 **Toolkit:** `nla_dense_interp_near_pivot.py`, `nla_dense_interp_render.py`
@@ -13,13 +13,13 @@
 
 ## What actually happened — three regions, not two
 
-The dense sampling (30 steps, 25 dense in [0.395, 0.455] + 5 sparse context) reveals a **richer geometry than expected**. Three semantically-distinct regions, two transitions:
+The dense sampling (30 steps, 25 dense in [0.395, 0.455] + 5 sparse context) reveals a **richer geometry than expected**. Three semantically-distinct regions, two transitions [qualified 2026-09-28: see Evidence]:
 
 | t-range | AV-text region | duration |
 |---|---|---|
 | t ∈ [0, 0.25] | Factual/geography ("What is the capital of France?") | sparse-sampled |
 | t ∈ [0.395, 0.4450] | **Hybrid "Definition + Poem" plateau** | **19 dense-zone steps, stable** [qualified 2026-09-28: see Evidence] |
-| t ∈ [0.4475, 1.0] | Poetic/nature ("What is Spring?", autumn imagery, seasonal poem format) | dense + sparse |
+| t ∈ [0.4475, 1.0] | Poetic/nature ("What is Spring?", autumn imagery, seasonal poem format) [qualified 2026-09-28: see Evidence] | dense + sparse |
 
 The 19 consecutive dense-zone steps in the hybrid plateau all decode as **"Structured format with 'Definition' and 'Poem' labels suggests a concise answer format about a place name, likely a poet[ic phrase]"** — a stable intermediate state combining both the "definition" formal feature of factual h_A and the "poetic" feature of nature h_B, without committing to one or the other. [qualified 2026-09-28: see Evidence]
 
@@ -42,22 +42,22 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Density (recomputed):** the 20-step grid of [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) has spacing 1/19 = 0.0526. The dense zone is 0.0526 / 0.0025 = 21× denser, not 10×.
 - **Plateau length (recomputed, `steps[].av_text` first line):** all 21 steps from t=0.3950 to t=0.4450 name "Definition" and "Poem" labels, not 19. At t=0.4425 and t=0.4450 the order reverses to "Poem" and "Definition". The rest of the first line varies between three wordings: "concise answer format", "short answer or trivia format" and "short phrase or answer". 15 of the 21 steps begin with the quoted sentence; 3 read "short answer or trivia format", 1 reads "short phrase or answer", and the 2 reversed-order steps read "concise answer format".
 - **Flip location (recomputed, same field):** t=0.4450 still names the "Poem" and "Definition" labels. t=0.4475 reads "Structured format with poetic description pattern ("What is 'London'?" question followed by a noun phrase) ...". From t=0.4500 to t=0.4550 it reads "What is 'Spring'?". The plateau-to-poetic flip is between t=0.4450 and t=0.4475. The step from 0.4475 to 0.4500 changes only 'London' to 'Spring'.
-- **Plateau check (AUDIT 18):** `plateau decodes stable across t∈[0.395, 0.4400] (<=3 unique first-lines)` = 3. This is a bound over t ≤ 0.4400 on the first 100 characters of the first line. The exact count of 3 and the extension to t=0.4450 come from the recomputation above.
-- **Norms (AUDIT 18 and recomputed):** `midpoint norm < anchor norm (anti-parallel anchors)` = 60.7863883972168, at t=0.4200. Recomputed `||h_t||` falls from 60.87 at t=0.3950 to 60.71 at t=0.4550 and reaches its minimum over the 30 steps, 60.69, at t=0.5000, inside the poetic region. `||h_A||` = 65.73 and `||h_B||` = 66.30.
+- **Plateau check (AUDIT 18):** `plateau decodes stable across t∈[0.395, 0.4400] (<=3 unique first-lines)` = 3. This is a bound over t ≤ 0.4400 on the first 100 characters of the first line. Recomputed on the same 100 characters: 3 unique first lines over t ≤ 0.4400, and 4 over t ≤ 0.4450, because the two reversed-order steps add a fourth. The bound of 3 does not extend to t=0.4450; the 21-step plateau rests on the "Definition" and "Poem" labels, not on the count.
+- **Norms (AUDIT 18 and recomputed):** `midpoint norm < anchor norm (anti-parallel anchors)` = 60.7863883972168, at t=0.4200. Recomputed `||h_t||` falls from 60.87 at t=0.3950 to 60.71 at t=0.4550 and reaches its minimum over the 30 steps, 60.69, at t=0.5000, a coarse point the table assigns to the poetic region (its decode still names a "Definition" label; see Coarse points). `||h_A||` = 65.73 and `||h_B||` = 66.30. The anchors are not anti-parallel, as the audit label says: cos(`h_A`, `h_B`) = 0.6905. On the straight line `(1 − t)·h_A + t·h_B` the norm is smallest at t = 0.486 (60.69), so the dip is a property of the straight line between these two anchors, independent of the decodes, and not specific to the plateau.
 - **Per-step ||Δh|| (recomputed):** every step inside the dense zone, including the flip step from t=0.4450 to t=0.4475, has `||h_{t+1} − h_t||` = 0.130, which is `||h_A − h_B||` × 0.0025 (51.945 × 0.0025). A small per-step ||Δh|| follows from the small Δt and does not mark the plateau.
-- **Coarse points (recomputed, first line of `av_text`):** t=0 reads 'Structured format with "What is the capital of France?" question pattern'; t=0.25 reads '"What is" pattern and "Answer" label suggests a trivia or definition format with a named place'; t=0.5 reads 'Structured poem format with "Definition" and "Who is" pattern'; t=0.75 and t=1.0 read 'Structured poem format with numbered lines'.
+- **Coarse points (recomputed, first line of `av_text`):** t=0 reads 'Structured format with "What is the capital of France?" question pattern'; t=0.25 reads '"What is" pattern and "Answer" label suggests a trivia or definition format with a named place'; t=0.5 reads 'Structured poem format with "Definition" and "Who is" pattern', a poem format that still names a "Definition" label, inside the range the table assigns to the poetic region; t=0.75 and t=1.0 read 'Structured poem format with numbered lines'.
 - **Cached anchors (recomputed):** `h_A` and `h_B` equal those in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt), so this run reuses the flipbook's AR encodings as stated.
 - **Not audited:** the timing figures in Methodological notes (~5 minutes of AR loading, ~80 s per decode, ~40 min, 2.4 hr at 100 steps) have no committed source.
 
 ## Implications for the discrete-attractor hypothesis (refines MAIN-44/48 synthesis)
 
-The MAIN-44/48 synthesis was: "layer-20 has discrete category attractors rather than smooth product-of-axes geometry." MAIN-34 partially confirms this — the plateau-to-poetic transition IS sharp at 10× resolution (one Δt=0.0025 step). [qualified 2026-09-28: see Evidence] But it also enriches the picture:
+The MAIN-44/48 synthesis was: "layer-20 has discrete category attractors rather than smooth product-of-axes geometry." MAIN-34 partially confirms this — the plateau-to-poetic transition IS sharp at 10× resolution (one Δt=0.0025 step). [qualified 2026-09-28: see Evidence and Hypotheses H1] But it also enriches the picture:
 
-1. **There are more attractor regions than the corpus contained.** The "Definition + Poem" hybrid isn't one of the 23 vocab atlas categories. It's a stable combination state that emerges from the linear interpolation between the two AR-encoded anchors. The discrete-attractor view should think of these as **basins** with **stable intermediate plateaus** between them, not isolated points.
-2. **Transitions ARE sharp.** When the geometry moves between basins, it does so in a single Δt step. The plateau (where ||Δh|| per step is small and AV decoding is invariant to t) [qualified 2026-09-28: see Evidence] is the basin; the boundary crossing is sharp.
-3. **||h_t|| dips during the plateau.** Norms drop from ~66 (anchor magnitudes) to ~60 across the dense zone — consistent with anchors pointing somewhat apart geometrically, and the midpoint having reduced magnitude. The reduced-magnitude plateau is also where the AV's "stable intermediate" decode lives.
+1. **There are more attractor regions than the corpus contained.** The "Definition + Poem" hybrid isn't one of the 23 vocab atlas categories. It's a stable combination state that emerges from the linear interpolation between the two AR-encoded anchors. The discrete-attractor view should think of these as **basins** with **stable intermediate plateaus** between them, not isolated points. [qualified 2026-09-28: see Evidence and Hypotheses H1]
+2. **Transitions ARE sharp.** When the geometry moves between basins, it does so in a single Δt step. [qualified 2026-09-28: see Evidence and Hypotheses H1] The plateau (where ||Δh|| per step is small and AV decoding is invariant to t) [qualified 2026-09-28: see Evidence] is the basin; the boundary crossing is sharp.
+3. **||h_t|| dips during the plateau.** Norms drop from ~66 (anchor magnitudes) to ~60 across the dense zone — consistent with anchors pointing somewhat apart geometrically, and the midpoint having reduced magnitude. The reduced-magnitude plateau is also where the AV's "stable intermediate" decode lives. [qualified 2026-09-28: see Evidence]
 
-This refines the synthesis: **layer-20 h-space has discrete attractor basins separated by sharp boundaries. Linear interpolation traverses basins; AV decodes the basin you're in, not the geometric mean of the endpoints.** The "Definition + Poem" basin between factual and poetic is one we hadn't named before.
+This refines the synthesis: **layer-20 h-space has discrete attractor basins separated by sharp boundaries. Linear interpolation traverses basins; AV decodes the basin you're in, not the geometric mean of the endpoints.** [qualified 2026-09-28: see Evidence and Hypotheses H1] The "Definition + Poem" basin between factual and poetic is one we hadn't named before.
 
 ## Methodological notes
 
@@ -79,7 +79,7 @@ python examples/nla_dense_interp_render.py
 python examples/nla_audit_findings.py
 ```
 
-The committed copy of the output is [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt).
+The decode script writes to the gitignored working cache `.cache/nla_artifacts/dense_interp_near_pivot.pt`; the committed copy is [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt). Every read, including the decode script's read of `interpolation_flipbook.pt`, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data with no copy step, and after a re-run they read the new cache file.
 
 ## Hypotheses
 
@@ -91,14 +91,15 @@ The plateau and the flip are seen only through AV text. Two readings fit that:
 
 A cosine readout against fixed vectors cannot separate them, because it varies smoothly along a straight line by construction.
 
-**Test:** patch each dense `h_t` into the base model at layer 20, at the last position of a fixed neutral prompt. Record the next-token distribution. Compute the Jensen-Shannon divergence between consecutive steps.
-- The model-side reading predicts a divergence peak at the 0.4450→0.4475 step, well above the within-plateau steps.
-- The decoder-side reading predicts no peak there, with divergences roughly equal across the dense zone.
+**Test:** patch each dense `h_t` into the base model at layer 20, at the last position of a fixed neutral prompt. Record the next-token distribution. Compute the Jensen-Shannon divergence between each pair of consecutive dense steps, 24 values. Every step moves `h` by the same ||Δh|| (0.130, Evidence), so step size does not vary along the zone. The statistic is the rank of the 0.4450→0.4475 divergence among the 24.
+- The model-side reading predicts that the flip step has the largest divergence.
+- The decoder-side reading predicts no special rank for the flip step. If the 24 divergences were exchangeable, the flip step would be the largest with probability 1/24; a smooth trend along the zone makes the two ends more likely to hold the maximum than the flip step.
 
 What the outcomes decide:
-- A peak at the flip step supports the model-side reading.
-- No peak at the flip step rules out the model-side reading for this readout.
-- A peak at a different t leaves H1 open, because the two readouts then disagree on where the boundary is.
+- The flip step is the largest: consistent with the model-side reading at this prompt.
+- The flip step is not the largest: this readout shows no abrupt change at the flip, which is consistent with the decoder-side reading. It does not rule out a model-side boundary that another prompt or layer would show.
+
+One neutral prompt is one readout. Repeating the test on several prompts, and reporting how many put the flip step first, is needed before either outcome is general.
 
 ## Follow-ups this opens
 
