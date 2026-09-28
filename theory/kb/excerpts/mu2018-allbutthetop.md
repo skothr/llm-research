@@ -7,7 +7,7 @@ venue: ICLR 2018
 arxiv: 1702.01417
 local_pdf: null
 type: excerpts
-note: Verbatim quotations from the v2 arXiv PDF (19 Mar 2018). The PDF is not stored in the repo (#124). Only line breaks and hyphenation are normalized. The paper studies static word embeddings (word2vec, GloVe, and similar); it reports mean-vector norms and variance spectra, not random-pair cosine values.
+note: Verbatim quotations from the v2 arXiv PDF (19 Mar 2018). The PDF is not stored in the repo (#124). Only line breaks (including one page break inside the §1 "Since all words share" quote) and hyphenation are normalized. The mean vector is written µ (U+00B5), the code point pdftotext extracts from the PDF. The paper studies static word embeddings (word2vec, GloVe, and similar); it reports mean-vector norms and variance spectra, not random-pair cosine values.
 ---
 
 # Excerpts — Mu & Viswanath 2018, "All-but-the-Top"
@@ -29,7 +29,10 @@ note: Verbatim quotations from the v2 arXiv PDF (19 Mar 2018). The PDF is not st
 > isotropic – indeed, much of the energy of most word vectors is contained
 > in a very low dimensional subspace (say, 8 dimensions out of 300).
 
-> propose to eliminate them by: (a) removing the nonzero mean vector from
+> Since all words share the same common vector and have the same
+> dominating directions, and such vector and directions strongly influence
+> the word representations in the same way, we propose to eliminate them
+> by: (a) removing the nonzero mean vector from
 > all word vectors, effectively reducing the energy; (b) projecting the
 > representations away from the dominating D directions, effectively
 > reducing the dimension.

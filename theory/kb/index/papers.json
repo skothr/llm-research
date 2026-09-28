@@ -4101,7 +4101,7 @@
         "embeddings-and-tying"
       ],
       "category": "foundational",
-      "summary": "Tied word-embedding tables of Transformer generation models trained by likelihood maximization degenerate into a narrow cone, with positive cosine similarity between almost all word pairs (machine-translation case). Traces the cause to optimization of rare words and proposes a cosine regularizer (MLE-CosReg) that spreads the embeddings and improves perplexity and BLEU. Cited by research arc 03."
+      "summary": "Tied word-embedding tables of generation models trained by likelihood maximization degenerate into a narrow cone; in the analysed Transformer machine-translation model (an LSTM-based model is reported as similar) cosine similarity between word embeddings is positive in almost all cases. Traces the cause to optimization of rare words and proposes a cosine regularizer (MLE-CosReg) that spreads the embeddings and improves perplexity and BLEU. Cited by research arc 03."
     }
   ]
 }

@@ -36,6 +36,11 @@ note: Verbatim quotations from the v1 arXiv PDF (20 Jul 2025). The PDF is not st
 > Qwen2.5 (Yang et al., 2025). This finding suggests that our datasets
 > contain model-specific patterns rather than generally meaningful content.
 
+## §2 Experimental setup — the definition {#sec-2}
+
+> We say that subliminal learning occurs when the student training data is
+> not semantically related to the trait and the student learns the trait.
+
 ## §3.1 Animal and tree preferences — the teacher persona {#sec-3-1}
 
 > System prompt: You love owls. You think about owls all the time. owls are
@@ -57,7 +62,13 @@ note: Verbatim quotations from the v1 arXiv PDF (20 Jul 2025). The PDF is not st
 > model-specific (rather than universal), we conclude that it cannot be
 > explained by general semantic content in the training data.
 
-## §8 Discussion — the cross-family argument {#sec-8}
+## §8 Discussion — ruling out semantic content {#sec-8}
+
+> Ruling out semantically related data as the cause of transmission. A
+> conceivable explanation for our results is that teacher outputs contain
+> subtle references to transmitted traits (e.g., animals, misalignment) that
+> our filters fail to detect. Here, we summarize evidence against this
+> explanation.
 
 > Models that successfully transmit traits to themselves fail to transmit
 > those same traits to dissimilar models from different families (Section

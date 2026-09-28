@@ -40,8 +40,11 @@ versions:
 1. **Near-isotropy null.** Random-pair cosine +0.0097; PC1 explains 1.21%;
    participation ratio ~1003/3584. Mean-centering, the first step of the
    standard anisotropy correction (remove the common mean vector, then the
-   top principal directions `[mu2018-allbutthetop §1]`), leaves the results
-   for this table nearly unchanged; the top-direction step was not tested.
+   top principal directions `[mu2018-allbutthetop §1]`), leaves the
+   category-level results for this table nearly unchanged (fig5's raw and
+   centered within/between-class panels), and the random-pair cosine is near
+   zero before and after (+0.0097, +0.0007); the top-direction step was not
+   tested.
    ([global-geometry](observations/2026-06-10-emb-global-geometry.md))
 
    ![fig2_anisotropy](observations/figures/fig2_anisotropy.png)
@@ -50,9 +53,9 @@ versions:
    distribution raw vs centered: +0.0097 raw, +0.0007 after mean-centering.
    For comparison, GPT-2's contextual layers 2-8 average roughly 0.6 between
    random words, approaching 1 in the last layer
-   `[ethayarajh2019-contextual §4.1]`, and the tied embedding table of a
-   Transformer translation model has positive cosine between almost all word
-   pairs `[gao2019-degeneration §3.2]`. The GPT-2 figures are for contextual
+   `[ethayarajh2019-contextual §4.1]`, and in the tied input/output embedding
+   table of a Transformer translation model the cosine between word embeddings
+   is positive in almost all cases `[gao2019-degeneration §3.1, §3.2]`. The GPT-2 figures are for contextual
    hidden states, not an input-embedding table like this one.
    Rendered by `emb_global_render.py` from `emb_global_stats.pt`.*
    ([provenance](observations/figures/INVENTORY.md))

@@ -32,12 +32,17 @@ paths](#possible-next-paths).
 
 ## The question
 
-Anthropic's NLA paper, published 2026-05-07, defines an NLA as two LLM
-modules: an activation verbalizer (AV) that maps an activation to a text
-description, and an activation reconstructor (AR) that maps the description
-back to an activation `[anthropic2026-nla abstract, §release]`. Anthropic
-released such a pair for layer-20 hidden states of Qwen2.5-7B-Instruct as
-`kitft/nla-qwen2.5-7b-L20-{av,ar}`. The pair enables a round-trip
+Anthropic's NLA paper, published 2026-05-07
+`[anthropic2026-nla §sec-release]`, defines an NLA as two LLM modules: an
+activation verbalizer (AV) that maps an activation to a text description, and
+an activation reconstructor (AR) that maps the description back to an
+activation `[anthropic2026-nla §abstract; kb/excerpts/anthropic2026-nla#abstract]`.
+Anthropic released such a pair for layer-20 hidden states of
+Qwen2.5-7B-Instruct on Hugging Face as `kitft/nla-qwen2.5-7b-L20-{av,ar}`.
+The date 2026-05-07 is the paper's; the weights in those repos date from a
+2026-03-16 upload, and their later commits, the last on 2026-05-07, change
+only metadata files (`examples/_nla_probe.py` records the pinned revisions).
+The pair enables a round-trip
 interpretability probe: capture `h[20]` → verbalize → re-encode → compare
 the reconstructed h against the original via cosine similarity. If the
 round-trip cosine is high, the verbalization kept enough of the hidden

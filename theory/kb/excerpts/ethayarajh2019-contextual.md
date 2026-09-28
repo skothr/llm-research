@@ -40,7 +40,8 @@ note: Verbatim quotations from the v1 arXiv PDF (2 Sep 2019). The PDF is not sto
 > layer representations are almost all more anisotropic than the input
 > layer representations, which do not incorporate context.
 
-> In theory, it allows for stronger “self-normalization” during training
-> (Arora et al., 2017), and in practice, subtracting the mean vector from
-> static embeddings leads to improvements on several downstream NLP tasks
-> (Mu et al., 2018).
+> Isotropy has both theoretical and empirical benefits for static word
+> embeddings. In theory, it allows for stronger “self-normalization” during
+> training (Arora et al., 2017), and in practice, subtracting the mean vector
+> from static embeddings leads to improvements on several downstream NLP
+> tasks (Mu et al., 2018).

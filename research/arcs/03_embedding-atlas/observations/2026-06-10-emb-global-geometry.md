@@ -16,7 +16,17 @@ padded rows. Capture: `examples/emb_capture.py`; numbers locked by
 Mean cosine to the mean vector mu: **+0.0980**. Prior literature on
 contextual/static embedding spaces (Mu & Viswanath 2018, arXiv:1702.01417;
 Ethayarajh 2019, arXiv:1909.00512) describes random-pair cosines of +0.3-0.9
-in GPT-2-era models [qualified 2026-09-28: neither paper states that range; Ethayarajh 2019 reports roughly 0.6 for GPT-2 contextual layers 2-8, rising toward 1 in the last layer, and Mu & Viswanath 2018 report mean-vector norms, not cosines; see [ethayarajh2019-contextual §4.1] and [mu2018-allbutthetop §1]]; this table shows two random tokens essentially
+in GPT-2-era models [qualified 2026-09-28: neither cited paper states
+the +0.3-0.9 range. Ethayarajh 2019 measures contextual hidden states, not an
+input-embedding table: GPT-2's average random-word cosine is roughly 0.6 in
+layers 2-8, rising toward 1 in the last layer, and the input layers are less
+anisotropic [ethayarajh2019-contextual §4.1]. Mu & Viswanath 2018 report
+mean-vector norms for static embeddings, not cosines [mu2018-allbutthetop §1,
+§2]. The KB source that reports positive cosines for an embedding table is Gao
+et al. 2019, for the tied input/output table of a Transformer translation
+model [gao2019-degeneration §3.1, §3.2]. The comparison in this finding is
+therefore with contextual states, not a like-for-like table; the arc README's
+finding 1 carries the corrected comparison]; this table shows two random tokens essentially
 orthogonal. Practical consequence for the whole arc: raw-space and
 mean-centered analyses give near-identical results (fig5's two panels), so
 anisotropy correction is NOT load-bearing for this model's W_E.
@@ -94,3 +104,8 @@ python examples/emb_audit_findings.py   # locks every number above (AUDIT 1-4)
 - Mu & Viswanath 2018, "All-but-the-Top" (arXiv:1702.01417)
 - Ethayarajh 2019, "How Contextual are Contextualized Word Representations?"
   (arXiv:1909.00512)
+- [added 2026-09-28] KB keys: `mu2018-allbutthetop`,
+  `ethayarajh2019-contextual`, `gao2019-degeneration` (Gao et al. 2019,
+  "Representation Degeneration Problem in Training Natural Language
+  Generation Models", arXiv:1907.12009); verbatim passages in
+  `theory/kb/excerpts/<key>.md`.
