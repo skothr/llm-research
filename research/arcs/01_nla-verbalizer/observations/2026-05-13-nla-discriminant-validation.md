@@ -46,14 +46,14 @@ The PC1 of fig19 (content-vs-function axis) is reproduced as a pairwise structur
 
 Projecting all 167 existing captures onto each discriminant, then asking "did the expected category top the projection?":
 
-| expected | n | top-1 | top-3 | top-5 | mean rank |
+| expected | n | top-1 | top-3 | top-5 | mean rank [qualified 2026-09-28: see Evidence] |
 |---|---|---|---|---|---|
 | country (country pool) | 29 | 34% | 76% | **79%** | 3.6 |
 | codemath (aggregate/code,math) | 30 | 53% | 63% | 73% | 3.5 |
 | nature (haiku, creative) | 45 | 47% | 49% | 56% | 5.2 |
 | refusal (forced/refuse) | 1 | 0% | 100% | 100% | 1.0 |
 
-The 79% top-5 + mean-rank 3.6 for country means: country captures **always end up in the content macro-cluster** but country and capital constantly swap top-1 (they're +0.938 siblings — h's fitting one fit the other). The macro-classification is reliable; sibling distinction is harder.
+The 79% top-5 + mean-rank 3.6 [qualified 2026-09-28: see Evidence] for country means: country captures **always end up in the content macro-cluster** but country and capital constantly swap top-1 (they're +0.938 siblings — h's fitting one fit the other). The macro-classification is reliable; sibling distinction is harder.
 
 Nature is weakest because haiku tokens span many adjacent categories (nature, emotion, codemath as a single content cluster).
 
@@ -80,14 +80,26 @@ Nature is weakest because haiku tokens span many adjacent categories (nature, em
 
 Look at the expected-projection column: even the BEST case (`function` → codemath) is only +0.28. For `happy` → emotion it's +0.083. For `refuse` → refusal it's +0.052 with **std exceeding the mean** (sometimes the projection is *negative*).
 
-Watching the glyphs in fig28: `happy`-as-single-token-message projects onto emotion (top-1), but `happy` inside "Tell me about happy" or "I want to discuss the word happy" projects onto **codemath**. The model isn't representing "the token 'happy' is here" — it's representing "this is a question asking about a word" (which feels factual/definitional, hence codemath).
+Watching the glyphs in fig28: `happy`-as-single-token-message projects onto emotion (top-1), but `happy` inside "Tell me about happy" or "I want to discuss the word happy" projects onto **codemath** [qualified 2026-09-28: see Evidence]. The model isn't representing "the token 'happy' is here" — it's representing "this is a question asking about a word" (which feels factual/definitional, hence codemath).
 
-**The discriminants are doing prompt-TOPIC classification, not token-presence detection.** When the entire user message is about country geography, the h projects onto country. When the entire user message asks about the word "refuse" in a meta way, the h projects onto wh_word or demonstrative — *because the message is asking about a word*, not refusing anything.
+**The discriminants are doing prompt-TOPIC classification, not token-presence detection.** When the entire user message is about country geography, the h projects onto country. When the entire user message asks about the word "refuse" in a meta way, the h projects onto wh_word or demonstrative [qualified 2026-09-28: see Evidence] — *because the message is asking about a word*, not refusing anything.
 
 This re-frames what our 23-axis basis actually represents:
 - **Good for**: classifying the overall topic/register of a complete prompt
 - **Bad for**: detecting whether a specific token appears in the prompt
 - **Reason**: layer 20 at end-of-prompt has integrated the entire user message into a "what is this prompt about?" representation
+
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's own recipe (sink dims zeroed, `d_C = unit(mean(h ∈ C) − mean(h ∉ C))` over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt)) and were re-read for this section.
+
+- **Discriminate (AUDIT 13):** `mean cross-discriminant cosine (after fix)` = 0.0064; `min cross-discriminant cosine (country↔demonstrative opposite)` = −0.6381; `country-capital discriminant cosine` = 0.938.
+- **Other Finding 1 pairs (recomputed):** p_special↔math_op +0.843; preposition↔auxiliary +0.793; nature↔auxiliary −0.605; emotion↔preposition −0.597.
+- **Self-validation (AUDIT 22):** country n=29, top-5 0.7931; codemath n=30, top-5 0.7333; nature n=45, top-5 0.5556. AUDIT 23 gives `country baseline top-1 accuracy` = 0.3448.
+- **Rest of the Finding 2 table (recomputed with the AUDIT 22 projection):** the 167 captures are the pool AUDIT 22 builds from the four raw files [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt). Top-1: codemath 0.533, nature 0.467, refusal 0.0. Top-3: country 0.759, codemath 0.633, nature 0.489, refusal 1.0. The table's mean-rank column is 0-indexed (rank 0 = top-1): country 3.62, codemath 3.53, nature 5.20, refusal 1.00.
+- **Stability (AUDIT 14):** `stability capture count` = 32; ctx-cos `the` 0.9172, `France` 0.8515, `refuse` 0.5892, `happy` 0.3987; `happy → emotion projection mean` = 0.0825.
+- **Rest of the Finding 3 table (recomputed from [`../data/discriminant_stability.pt`](../data/discriminant_stability.pt) with the AUDIT 14 recipe):** ctx-cos `Paris` 0.815, `7` 0.815, `function` 0.801, `.` 0.799. Every expected-projection mean and ± value in the table matches (± is the population standard deviation over the 4 contexts).
+- **Top-1 category per context (recomputed, same data):** `happy` gives emotion (single), nature (short) and codemath (medium, "Tell me about happy"). In the long context nature (+0.1178) and codemath (+0.1175) tie within 0.0003, so the text's codemath there is a tie, not a clear top-1. `refuse` gives negation (single) and codemath in the other three contexts, with wh_word second only in the medium context and demonstrative in the top 2 of none. The text's "wh_word or demonstrative" for `refuse` does not match the recomputed projections.
 
 ## Implication for the visualization research
 
@@ -109,6 +121,29 @@ python examples/nla_discriminant_connectivity.py
 python examples/nla_discriminant_stability_capture.py
 python examples/nla_discriminant_stability_render.py
 ```
+
+## Hypotheses
+
+### H1 — The weak token projection comes from end-of-prompt integration, or from protocol coupling
+
+The file's stated reason is that end-of-prompt h[20] has integrated the whole message into a topic representation. A competing reading is protocol coupling: the 23 directions were fit on end-of-prompt captures whose user message is the anchor alone, while three of the four stability contexts wrap the anchor in prose. The weak projection may come from that mismatch between fitting and test protocols.
+
+**Test:** keep the end-of-prompt capture position and vary only the fitting protocol. Fit the 23 directions twice: once on the existing single-token captures, and once on end-of-prompt captures with each vocab-atlas anchor embedded in the four stability-scan templates. All 8 stability anchors are vocab-atlas anchors, so each tested anchor is held out of both fitting sets (leave-one-anchor-out). Project the held-out anchor's four stability captures onto each set of directions and compare the expected-category projection.
+
+What the outcomes decide:
+- No difference between the two fitting sets rules out protocol coupling as the cause of the weak projection.
+- A rise under the templated fitting set is what protocol coupling predicts. It does not rule out integration: templated directions could pick up the anchor's category through the integrated end-of-prompt representation. A rise therefore leaves H1 open.
+
+### H2 — The stable/unstable split is a property of the category, or of the single anchor tested
+
+Each category is represented by one anchor, so the two stability classes rest on n=1 per category. **Test:** repeat the 4-context scan for every vocab-atlas anchor in emotion (6) and refusal (4) and in two stable categories. If ctx-cos stays below +0.60 across the emotion and refusal anchors and above +0.80 for the stable categories, the split is category-level. If ctx-cos varies as much within a category as between categories, the split is anchor-level and the response-distribution explanation needs a per-anchor test. Any other pattern leaves H2 open.
+
+## Follow-ups
+
+1. The H1 test is not yet run. The 2026-05-14 mid-sequence runs follow Future-work item 1 above. They test whether the token is legible at its own position, which bears on the integration premise but keeps a different capture position, so they are not the H1 test.
+   - [Mid-sequence vocab atlas null result](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md): mid-sequence captures projected onto the existing end-of-prompt directions give a mean within-class signal of +0.0491 and 32.04% argmax accuracy, against +0.4022 and 75.37% in protocol.
+   - [Mid-seq native discriminants](2026-05-14-nla-mid-seq-native-discriminants.md): directions fit on the mid-sequence captures themselves give +0.5632 in-protocol signal and 97.10% argmax accuracy, so the token is legible at its own position under a matched protocol.
+2. H2 has no committed run.
 
 ## References
 

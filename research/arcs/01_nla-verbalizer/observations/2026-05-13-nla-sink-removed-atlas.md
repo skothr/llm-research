@@ -14,7 +14,7 @@ Test whether removing the 7 sink-classified component indices {277, 458, 1427, 1
 
 The original interpretation in [the geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) was **wrong about causation**. Removing the sinks barely changes the PCA layout. PC1 variance fraction moves from 16.5% to 15.3%; the country cluster stays in the bottom-left, the haiku cluster on the right. **PC1/PC2 are genuinely content-and-position axes that exist independently of the sinks** — the sinks aren't shaping them.
 
-What sinks DO is add a **constant +0.22 offset to every pairwise cosine**, raising mean off-diag cos from +0.179 (sink-removed) to +0.403 (original) and the floor from -0.069 to +0.054. They are the DC component of the residual stream — they make every comparison look more similar than it actually is, without carrying information.
+What sinks DO is add a **constant +0.22 offset to every pairwise cosine** [qualified 2026-09-28: see Evidence], raising mean off-diag cos from +0.179 (sink-removed) to +0.403 (original) and the floor from -0.069 to +0.054. They are the DC component of the residual stream — they make every comparison look more similar than it actually is, without carrying information.
 
 After sink removal, the true similarity structure emerges:
 
@@ -32,6 +32,17 @@ Two consequences:
 1. **The aggregate pool's intra-source cosine collapses to +0.156** — barely above its cross-source mean (+0.168). The 113 captures from 8 different prompt domains (factual, math, code, creative_haiku, creative_poem, reasoning_logic, reasoning_word) are essentially **mutually orthogonal in content space**. The "similarity" the original cosine matrix showed was almost entirely sink scaffolding.
 
 2. **The country pool's intra-vs-cross gap widens** from +0.376 to +0.520 (and non_country_src similarly +0.389 → +0.545). After sink removal, country prompts are *more discriminable* from non-country prompts — exactly what you want for a CAV. The earlier CAV's "narrow scope" finding is now reframed: the discriminating direction was always there in the residual; the original cosines just visually masked it.
+
+## Evidence
+
+AUDIT values are restated from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AUDIT 5-7 re-derive them from the raw captures in [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), not from `sink_removed_atlas.pt`.
+
+- **Dim sets:** `sink_dims` = [277, 458, 1427, 1627, 2107, 2570, 3110] and `feature_dims` = [20, 32, 392, 608, 1121, 1790, 2604, 2953] in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt). AUDIT 4 checks the classifier labels behind both sets.
+- **PC1 fraction:** 0.1648 original (AUDIT 5) and 0.1529 sink-removed (AUDIT 7).
+- **Cosine offset:** original mean off-diagonal cosine 0.4031 and minimum 0.0545 (AUDIT 6). Sink-removed mean 0.1786 and minimum −0.0686 (AUDIT 7). `sink-dim cosine offset` = 0.2244 (AUDIT 7). This is the shift in the mean. The minimum shifts by 0.0545 − (−0.0686) = 0.1231, so the offset is not constant across pairs.
+- **Variance kept after sink removal:** 0.9502 (AUDIT 7).
+- **Pool table:** all 24 cells re-read from `cos_orig` and `cos_res` in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt), each a per-pool (intra, cross) pair, match the table to 3 decimals.
+- **Independent re-derivation of the intra column:** AUDIT 6/7, computed from the raw captures rather than `sink_removed_atlas.pt`, give aggregate 0.3968 → 0.1563, country_src 0.8581 → 0.7772, non_country_src 0.8764 → 0.8042 (original → sink-removed).
 
 ## The visualization primitive (fig10, fig11)
 
