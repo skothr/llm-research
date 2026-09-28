@@ -130,8 +130,8 @@ first token, not the delimiters.
 ## Reproducibility
 
 ```bash
-# capture (loads the model; ~10 min CPU). The model must already be in the HF
-# hub cache; export HF_HUB_CACHE first if yours is not at the default location.
+# capture (loads the model; ~10 min CPU). The model must already be in the cache:
+# LLM_RESEARCH_MODEL_CACHE, or the HuggingFace default cache when unset.
 HF_HUB_OFFLINE=1 \
   python examples/emb_trace_attention.py       # -> .cache/emb_artifacts/emb_trace_attention.pt
 python examples/emb_trace_attention_analyze.py # model-free adjudication (all numbers above)

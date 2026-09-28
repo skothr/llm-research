@@ -58,6 +58,40 @@ regular morphology being more mechanically encoded than semantic relations
 "begins-a-new-word" component exists, with large per-token variance (worst
 twin: 'Denver').
 
+## Evidence
+
+AUDIT 7 re-derives these from `data/emb_pair_directions.pt`
+(transcript: `data/audit_2026-08-17.log`):
+
+```
+[PASS] 7 pairs: lang_of consistency +0.4896  (+0.4896)
+[PASS] 7 pairs: lang_of shuffle baseline +0.4503  (+0.4503)
+[PASS] 7 pairs: past consistency +0.4228  (+0.4228)
+[PASS] 7 pairs: past shuffle baseline +0.3684  (+0.3684)
+[PASS] 7 pairs: gender consistency +0.3859  (+0.3859)
+[PASS] 7 pairs: gender shuffle baseline +0.3380  (+0.3380)
+[PASS] 7 pairs: plural consistency +0.3097  (+0.3097)
+[PASS] 7 pairs: plural shuffle baseline +0.2618  (+0.2618)
+[PASS] 7 pairs: space_twin consistency +0.1968  (+0.1968)
+[PASS] 7 pairs: space_twin shuffle baseline +0.1577  (+0.1577)
+[PASS] 7 pairs: 11 pair kinds, all 11 beat their within-kind permutation baseline  (11/11)
+[PASS] 7 pairs: pair-specific margins +0.02-0.05, largest is `past` (morphology)  (xlat +0.0156 .. past +0.0544)
+```
+
+Read directly from `data/emb_pair_directions.pt` (not audit-asserted):
+
+- `seed` = 20260610, `n_shuffle` = 200.
+- `kinds[k]["n"]` sums to 103 over the 10 curated kinds; `space_twin` n = 397.
+- The F-P1 rows for register, capital_of, antonym, case, valence and xlat, and
+  every shuffle std, match `kinds[k]["consistency"]`,
+  `["shuffle_consistency_mean"]` and `["shuffle_consistency_std"]` at 4 d.p.
+- `shuffle_consistency_mean / consistency` (F-P2's "~90%"): lang_of 0.920;
+  range 0.845 (plural) to 0.950 (capital_of) over the 9 curated kinds with
+  n >= 9; space_twin 0.801; xlat 0.978.
+- Margin in shuffle-std units: minimum 5.8 (antonym) over the 10 kinds with
+  n >= 9; xlat 1.0.
+- `space_twin` lowest `cos_to_bar` is `labels` entry 'Denver' (+0.0511).
+
 ## Reproducibility
 
 ```bash
@@ -83,3 +117,14 @@ python examples/emb_audit_findings.py    # AUDIT 7
 - Battery pairs are prototypical/regular; irregular or rare-token pairs
   (already dropped by single-token attrition: swam, eau, chien...) might
   behave differently.
+
+## References
+
+- Scripts: `examples/emb_pair_directions.py` (derivation),
+  `examples/emb_pairs_render.py` (fig10), `examples/emb_audit_findings.py`
+  (AUDIT 7); battery pairs from `examples/emb_token_battery.py`.
+- Data: `data/emb_pair_directions.pt` (input `data/emb_battery_vectors.pt`).
+- Figure: fig10 in [figures/INVENTORY.md](figures/INVENTORY.md).
+- Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
+  model report [qwen2-5].
+- Arc README finding #5: [../README.md](../README.md).
