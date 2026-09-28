@@ -5,7 +5,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct, layer 20 (CPU bf16)
 **Inputs:** 128 anchor tokens, each captured at end-of-single-token-user-message in a chat-templated prompt
 **Figures:** `fig19_vocab_atlas.png`, `fig20_combined_atlas.png`, `fig21_interp_through_anchors.png`, `fig22_anchor_cosine_matrix.png`
-**Data:** `.cache/nla_artifacts/vocab_atlas.pt`
+**Data:** `.cache/nla_artifacts/vocab_atlas.pt` [qualified 2026-09-28: the committed copy is `../data/vocab_atlas.pt`]
 
 ## Goal
 
@@ -20,7 +20,7 @@ User's framing: "map a bunch of relevant tokens' embeddings to get a relative ba
 
 Protocol: each anchor as the entire user-message text in a chat-templated prompt; capture `h[20][0, -1, :]` — same protocol as the country pool, so the new captures are directly comparable.
 
-Norms ranged from 92 to 103 across all 128 — uniform, no outliers.
+Norms ranged from 92 to 103 across all 128 — uniform, no outliers. [qualified 2026-09-28: see Evidence]
 
 ## Finding 1 — Hierarchical attractor structure
 
@@ -75,7 +75,7 @@ From fig17 (AV-text reading) and fig21 (cosine-to-anchor): both show the **same*
 |---|---|---|
 | 0.000 → 0.368 | Madrid, Berlin, Tokyo | +0.44-0.45 |
 | **0.421** | **autumn, snow, Berlin** | **+0.44 (Berlin barely hangs on)** |
-| 0.474 → 1.000 | autumn, snow, sky (joy late) | +0.37-0.43 |
+| 0.474 → 1.000 | autumn, snow, sky (joy late) | +0.37-0.43 [qualified 2026-09-28: see Evidence] |
 
 **Two independent signals confirm the discrete semantic-region structure** at exactly t=0.421:
 1. AV text format-word changes from "factual" to "poem"
@@ -91,11 +91,24 @@ The transition is *anchor-confirmed*, not just an AV interpretation artifact.
 
 ## Finding 4 — Prompt-structure dominates PCA when corpora are combined
 
-fig20 (combined 207-vector PCA): the 128 vocab anchors and 167 existing captures occupy **disjoint regions** of PC space (PC1 right vs left). Their cross-similarity in raw PC coordinates is zero, even though many existing captures should be semantically near a vocab anchor.
+fig20 (combined 207-vector PCA [qualified 2026-09-28: see Evidence]): the 128 vocab anchors and 167 existing captures occupy **disjoint regions** of PC space (PC1 right vs left). Their cross-similarity in raw PC coordinates is zero, even though many existing captures should be semantically near a vocab anchor.
 
 **Reason:** prompt length and structural position dominate h[20]'s variance after sink removal. Vocab anchors are captured at end-of-single-token-prompt; existing captures are mid-generation or end-of-multi-token-prompts. The chat-template structural setup translates h-vectors differently for different prompt configurations, and that translation is the dominant axis when corpora are mixed.
 
 **Methodology fix:** combined-dataset PCA is misleading; use **cosine-to-anchor** (which is invariant to the structural translation) for cross-corpus comparison. fig21 already does this and produces the correct semantic structure.
+
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's AUDIT 12 recipe (sink dims zeroed, unit-normalized) over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt), plus `steps[].h_t` from [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) for Finding 3, and were re-read for this section.
+
+- **Size (AUDIT 12):** `vocab atlas capture count` = 128; `vocab atlas category count` = 23. AUDIT 12 also covers the Finding 1 and Finding 2 values below, which Followup 5 asked for.
+- **Category counts (`captures[].category`):** the field holds the 23 fine-grained labels. The four group totals are sums over those labels: content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section. The grouping is defined only by the section comments in the `VOCAB` dict of `examples/nla_vocab_atlas_capture.py`. That dict was later deduplicated, so its comments give 51 function words and 13 numbers/operators; the committed artifact predates that change.
+- **Norms (`captures[].norm`):** range 92.06 to 113.79. This does not match the "92 to 103" stated in the Vocabulary section.
+- **Finding 1 (AUDIT 12):** intra-cos capital 0.9829, country 0.9808, emotion 0.849, refusal 0.8468.
+- **Other Finding 1 rows (recomputed):** the remaining nine table rows match to 3 decimals. Over all 23 categories the minimum is +0.847 (refusal) and the maximum +0.983 (capital).
+- **Finding 2 (AUDIT 12):** PC1 0.3349; PC2 0.153; top-3 cumulative 0.5594. PC3 from the same SVD is 0.0715.
+- **Finding 3 (recomputed):** cosine of sink-removed `steps[].h_t` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) against the sink-removed anchors. Steps t=0.000 to t=0.368 all give Madrid, Berlin, Tokyo (0.438 to 0.449). t=0.421 gives autumn 0.438, snow 0.432, Berlin 0.432. t=0.474 gives autumn 0.437, snow 0.433, sky 0.428. t=1.000 gives snow 0.379, autumn 0.370, joy 0.368. Over t=0.474 to t=1.000 the top-3 cosines span 0.368 to 0.437, so the table's upper bound of +0.43 is low. Autumn leads through t=0.579 and snow leads from t=0.632 on. Joy replaces sky in third place at t=0.947 and t=1.000.
+- **Finding 4:** `examples/nla_vocab_atlas_render.py` builds fig20 by concatenating the 128 sink-removed captures from [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) with the `H` tensor of [`../data/pairwise_and_hotdims.pt`](../data/pairwise_and_hotdims.pt) (shape 167 × 3584). The combined PCA therefore runs on 295 vectors, not the 207 stated in Finding 4.
 
 ## Hypotheses
 
@@ -129,13 +142,13 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 2. **Position scan.** Capture h[20] for "France" at five different positions in a longer prompt; quantify position vs content variance.
 3. **Concept arithmetic in anchor space.** Compute "country - capital" as a difference of centroids; AV-decode it. Does it read as "country-ness that isn't capital-ness"?
 4. **Replicate H12 on TinyLlama.** Confirm or refute model-invariance of the content-vs-function PC1 axis.
-5. **Audit extension.** Add vocab-atlas claims to `nla_audit_findings.py`.
+5. **Audit extension.** Add vocab-atlas claims to `nla_audit_findings.py`. [qualified 2026-09-28: see Evidence]
 
 ## Reproducibility
 
 ```bash
 
-# ~13 min: load Qwen, capture 128 anchors
+# ~13 min: load Qwen, capture 128 anchors  [qualified 2026-09-28: the current VOCAB has 125 entries after deduplication (the `VOCAB` dict); the committed artifact holds 128]
 python examples/nla_vocab_atlas_capture.py
 
 # ~30s: render fig19-22 from artifacts
