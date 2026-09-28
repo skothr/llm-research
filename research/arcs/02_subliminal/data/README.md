@@ -1,13 +1,21 @@
 # Subliminal arc — committed datasets
 
-Each subdir is one dataset: its committed data files plus a per-dataset
-`manifest.json`, the capture-time provenance record the generator wrote
-(`manifest_version 0.1.0-interim`: recipe, sampling, seeds, environment,
-filter statistics). [`MANIFEST.json`](MANIFEST.json) beside this README is the
-arc's checksum record, in the `research/ARC_PROCESS.md` shape arcs 01, 03 and
-04 use: sha256, size, class, producing command, inputs, model requirement and
-consumers for every data file under `data/`, the per-dataset `manifest.json`
-included. Entry names are relative to `data/`. Verify it with:
+This directory holds two kinds of manifest, and the rest of this README names
+each one explicitly:
+
+- **the arc manifest [`data/MANIFEST.json`](MANIFEST.json)**, beside
+  this README: the arc's checksum record, in the `research/ARC_PROCESS.md`
+  shape arcs 01, 03 and 04 use. It records sha256, size, class, producing
+  command, inputs, model requirement and consumers for every data file under
+  `data/` (excluding README, LICENSE-DATA and audit transcripts), each
+  dataset's capture-time `manifest.json` included. Entry names are relative
+  to `data/`.
+- **the capture-time `manifest.json`**, one per dataset subdirectory: the
+  provenance record the generator wrote at capture (`manifest_version
+  0.1.0-interim`: recipe, sampling, seeds, environment, filter statistics).
+
+Each subdirectory is one dataset: its committed data files plus its
+capture-time `manifest.json`. Verify the arc manifest with:
 
 ```bash
 python examples/subliminal_data_manifest.py --check
@@ -22,8 +30,9 @@ for the whole dataset including `decode_report.json`, `manifest.json` and the
 lockfile, 57.2 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
-reports more, because it also counts the directory inode. Larger tensor
-artifacts (`.pt`) are committed through Git LFS, as in the other arcs; see
+reports more, because it also counts the directory inode. Tensor artifacts
+(`.pt`) would go through Git LFS, as every `.pt` under arcs 01, 03 and 04
+does; see
 `research/ARC_PROCESS.md` § Raw data is a deliverable.
 
 Licensing, attribution and personal-data record for everything here:
@@ -37,18 +46,19 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
   arXiv:2507.14805); teacher swapped (the paper used the closed `gpt-4.1-nano`).
 - Sampling temperature 1.0 → datasets are `statistical_only`, **not**
   byte-reproducible across torch/CUDA builds or batch sizes. The per-file
-  `sha256` in [`MANIFEST.json`](MANIFEST.json) is the validation anchor, not a
-  re-run.
+  `sha256` in the arc manifest [`MANIFEST.json`](MANIFEST.json) is the
+  validation anchor, not a re-run.
 
 ## Datasets
 
 ### `step0-owl-neutral-decode`
 
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
-- **`manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
-  (recorded here so the manifest itself is tamper-evident — a manifest edit
-  changes this hash, and this pin is re-measured whenever one lands). Besides
-  path-string updates from repo restructuring, the manifest's one semantic
+- **Capture-time `manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
+  (recorded here, and in the arc manifest, so the capture-time manifest is
+  tamper-evident — an edit to it changes this hash, and this pin is
+  re-measured whenever one lands). Besides path-string updates from repo
+  restructuring, the capture-time manifest's one semantic
   amendment is the 2026-08-19 git-SHA repoint described under "Post-capture
   amendments" below. The data files themselves are unchanged since
   `e040951e`, the commit that added them.
@@ -60,7 +70,8 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
   at repo commit `d9c7a42` (captured as `0aff26c`, pre-history-rewrite — see
   "Post-capture amendments" below).
 - **Re-run divergence.** The committed dataset predates `823b5e68`. A re-run of
-  *today's* generator therefore differs from this manifest in exactly two
+  *today's* generator therefore differs from the capture-time `manifest.json`
+  in exactly two
   respects: it additionally writes `prompts.jsonl` (and lists it as a sixth
   `files[]` entry), and it sets `provenance.downstream: []` rather than naming
   the observation — `823b5e68` decoupled the corpus from its consumers, moving
@@ -72,9 +83,9 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 #### Post-capture amendments
 
 Two hashes recorded inside `manifest.json` are **capture-time** values that no
-longer match what is on disk. Neither is edited in the manifest — it is the
-capture-time record, and overwriting an attested value would destroy the very
-thing it exists to attest. The current values and their causes are recorded here
+longer match what is on disk. Neither is edited in the capture-time
+manifest — it is the capture-time record, and overwriting an attested value
+would destroy the very thing it exists to attest. The current values and their causes are recorded here
 instead, and `examples/subliminal_audit_findings.py` asserts the *current* state
 while carrying the capture-time values as historical constants.
 
@@ -83,7 +94,8 @@ while carrying the capture-time values as historical constants.
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
 | `generation.generator_script_sha256` | `3b974528…` | `5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de` | The generator has been edited since capture. Today's script differs from the capture-time one in five ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs are fixed — `_REPO_ROOT` resolves as `parents[1]` (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field. None touch the filter, the decoder, or the prompt generator's outputs. |
 
-**Git-SHA repoint (2026-08-19).** The one field the manifest *was* amended in.
+**Git-SHA repoint (2026-08-19).** The one field the capture-time manifest
+*was* amended in.
 `generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
 `0aff26c8…`, a commit made in the pre-split monorepo. The 2026-06-01 split
 rewrote that history, so `0aff26c8…` is reachable from no ref in this
@@ -98,7 +110,8 @@ capture-time SHA is **not** lost: it is preserved verbatim in the sibling fields
 manifest explaining why two SHAs exist. The audit asserts both values in a single
 claim, so a later edit cannot silently drop the capture-time one.
 
-The five `manifest.files[]` data-file hashes **all still verify** against disk —
+The five data-file hashes in the capture-time `manifest.files[]` **all still
+verify** against disk —
 `owl_streams.jsonl`, `owl_raw.jsonl`, `neutral_streams.jsonl`,
 `neutral_raw.jsonl`, `decode_report.json` are byte-for-byte what was captured.
 Only the two environment/tooling hashes above drifted.
@@ -126,10 +139,13 @@ consumed it" half stays on the UNVERIFIABLE list.
 
 ## Audit
 
-`examples/subliminal_audit_findings.py` re-derives every load-bearing number in
-this arc from the committed bytes: file hashes and sizes against
-`MANIFEST.json` and the capture-time `manifest.json`, line counts against the
-capture-time `manifest.json`, the pinned `manifest.json` hash, the two amended hashes above, a
+`examples/subliminal_audit_findings.py` re-derives every number this arc
+reports from the committed bytes: that the arc manifest `data/MANIFEST.json`
+lists exactly the eight data files; file hashes and sizes against the arc
+manifest and the capture-time `manifest.json`; line counts against the
+capture-time `manifest.json`; the arc manifest's entries for `manifest.json`,
+`prompts.jsonl` and `pip_freeze.txt` against disk and the hashes pinned here;
+the two amended hashes above; a
 from-first-principles replay of the ported filter over the raw completions
 (kept counts, reject rates, reject-reason census, the two-proportion z and the
 power floor), a full five-scheme decode replay reconciled against
@@ -140,20 +156,25 @@ seeded `PromptGenerator`. No GPU, no network, runs in under a second.
 python examples/subliminal_audit_findings.py
 ```
 
-Expected result as of 2026-08-17 (committed run: [`audit_2026-08-17.log`](audit_2026-08-17.log)):
+Expected result as of 2026-09-28:
 
 ```
-SUMMARY:  104 PASS  |  0 FAIL  |  5 UNVERIFIABLE
+SUMMARY:  111 PASS  |  0 FAIL  |  5 UNVERIFIABLE
 ```
+
+The committed run [`audit_2026-08-17.log`](audit_2026-08-17.log) predates the
+arc manifest `data/MANIFEST.json` and records the audit as it stood then,
+104 PASS | 0 FAIL | 5 UNVERIFIABLE; the seven added claims are the arc-manifest
+checks above.
 
 The 5 UNVERIFIABLE entries are printed, not scored: the paper's 23–38% reject
 band and its protocol facts (external citations — their data was never
 released), `prompts.jsonl` as capture-time ground truth (re-derived, above),
 the Qwen snapshot revision, and the capture-time hardware/environment facts.
 
-A sixth claim is environment-dependent: resolving the manifest's
+A sixth claim is environment-dependent: resolving the capture-time manifest's
 `generation.generator_git_commit` needs the repo's history, so from a shallow
 clone, a source copy without `.git`, or a box without `git`, that check moves
 to the UNVERIFIABLE list rather than failing. Under those conditions
-`103 PASS | 0 FAIL | 6 UNVERIFIABLE` is the same green result (measured
-2026-08-29 with `git` shadowed off `PATH`).
+`110 PASS | 0 FAIL | 6 UNVERIFIABLE` is the same green result (measured
+2026-09-28 with `git` shadowed off `PATH`).

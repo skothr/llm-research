@@ -357,18 +357,21 @@ the data.
 - **Capture-roots** — produced by a run that loads a model (expensive,
   CPU-hours). Always commit; they are irreplaceable without re-running the
   experiment.
-- **Derived** — produced cheaply from other `.pt` by a committed script.
+- **Derived** — produced cheaply from other data files by a committed script.
   Commit these too: the marginal MB buys bit-exact figure + audit
   reproduction with zero model load. (Only consider shipping roots-only +
   a regeneration script if the derived set is genuinely large; if you do,
   `log`/document what was dropped — silent truncation reads as completeness.)
 
-**Where.** `research/arcs/<slug>/data/`, git-LFS-tracked via the existing
-`research/**/data/*.pt` rule. The manifest covers every committed data file
-under `data/`, whatever its format, `.jsonl` and `.json` included; Git LFS
-routes only the binary formats `.gitattributes` names, and small JSON stays in
-plain git. Keep your working/scratch captures in a
-gitignored cache; the committed `data/` dir is the canonical copy.
+**Where.** `research/arcs/<slug>/data/`, with `.pt` files git-LFS-tracked via
+the existing `research/**/data/*.pt` rule. The manifest covers every committed
+data file under `data/` (excluding README, LICENSE-DATA and audit
+transcripts), whatever its format, `.jsonl` and `.json` included.
+`.gitattributes` routes only `.pt` under `data/` to Git LFS; JSON, JSONL or
+CSV of a few MB or less stays in plain git, and anything larger, or another
+binary format such as `.npz`, gets its own `.gitattributes` LFS rule before
+its first commit. Keep your working/scratch captures in a gitignored cache;
+the committed `data/` dir is the canonical copy.
 
 **Wiring (so the data is *usable*, not just stored).** Scripts should resolve
 inputs **cache-first, committed-copy-fallback**, and write outputs only to the
@@ -383,8 +386,9 @@ scripts still point at an empty cache.
 **Manifest.** A `data/MANIFEST.json` (template generator:
 `nla_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
 `class` (capture-root | derived), `producing_script`, `producing_command`,
-`inputs` (upstream `.pt`), `requires_model` (none | base | +av/+ar/…),
-`consumers` (figures / downstream artifacts / audit). The generator's `--check`
+`inputs` (upstream data files), `requires_model` (none | base | +av/+ar/…),
+`provenance` (what the file holds and the run that wrote it), `consumers`
+(figures / downstream artifacts / audit). The generator's `--check`
 mode re-verifies every sha256 — run it in the audit step as a drift detector.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*

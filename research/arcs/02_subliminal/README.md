@@ -141,8 +141,8 @@ capture-time hashes in `manifest.json` (the pip-freeze and generator-script
 hashes) no longer match disk for recorded reasons — the audit asserts the
 current state and scores the drift PASS (see
 [`data/README.md`](data/README.md) § "Post-capture amendments").
-`examples/subliminal_audit_findings.py` re-derives every load-bearing number
-(`104 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
+`examples/subliminal_audit_findings.py` re-derives every number the arc
+reports (`111 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
 bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
 ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model
 snapshot revision, and the capture-time hardware/environment.

@@ -39,7 +39,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -64,12 +67,22 @@ _STEP0_ARGS = (
     "--n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 "
     f"--no-4bit --dataset-id {_STEP0}"
 )
-_STEP0_RUN = (
+_STEP0_RUN_FACTS = (
     "Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per "
     "condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 "
-    "(0aff26c8 before the 2026-06-01 history rewrite). Full capture-time "
-    f"record: {_STEP0}/manifest.json"
+    "(0aff26c8 before the 2026-06-01 history rewrite)."
 )
+_STEP0_RUN = f"{_STEP0_RUN_FACTS} Full capture-time record: {_STEP0}/manifest.json"
+
+# For the two files whose bytes record the run's environment or were amended
+# after capture: the capture command produces a file of the same kind, never
+# these exact bytes.
+_NOT_BYTE_IDENTICAL = (
+    " (produces a file of the same form, not the recorded sha256: the "
+    "output reflects the running environment and time, and the committed copy "
+    "was amended after capture; see provenance)"
+)
+_STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-base.
 # `class` follows the capture-time manifest.json's own lineage
@@ -109,7 +122,7 @@ META: dict[str, dict[str, Any]] = {
             "to integer lists; written by the capture run, and AUDIT B replays "
             f"the filter from owl_raw.jsonl without a model. {_STEP0_RUN}"
         ),
-        "inputs": [],
+        "inputs": [f"{_STEP0}/owl_raw.jsonl"],
         "requires_model": "qwen-base",
         "consumers": [
             f"{_STEP0}/decode_report.json",
@@ -127,7 +140,7 @@ META: dict[str, dict[str, Any]] = {
             f"replays the filter from neutral_raw.jsonl without a model. "
             f"{_STEP0_RUN}"
         ),
-        "inputs": [],
+        "inputs": [f"{_STEP0}/neutral_raw.jsonl"],
         "requires_model": "qwen-base",
         "consumers": [
             f"{_STEP0}/decode_report.json",
@@ -138,7 +151,12 @@ META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/decode_report.json": {
         "class": "derived",
         "producing_script": "examples/subliminal_step0_decode.py",
-        "producing_args": _STEP0_ARGS,
+        "producing_command": (
+            "no CLI: call decode_test(owl_streams, neutral_streams) from "
+            "examples/subliminal_step0_decode.py on the two streams files, no "
+            "model (AUDIT C replays it). The original was written at the end "
+            f"of the capture run, `{_STEP0_CMD}`"
+        ),
         "provenance": (
             "five-scheme owl-lexicon decode of both streams files plus the "
             "two-proportion z-test; written at the end of the capture run, and "
@@ -169,7 +187,7 @@ META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/pip_freeze.txt": {
         "class": "capture-root",
         "producing_script": "examples/subliminal_step0_decode.py",
-        "producing_args": _STEP0_ARGS,
+        "producing_command": _STEP0_CMD + _NOT_BYTE_IDENTICAL,
         "provenance": (
             "the capture environment's package lockfile; one line redacted in "
             "1ed05dad (machine-specific editable-install URL), so it no longer "
@@ -183,13 +201,13 @@ META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/manifest.json": {
         "class": "capture-root",
         "producing_script": "examples/subliminal_step0_decode.py",
-        "producing_args": _STEP0_ARGS,
+        "producing_command": _STEP0_CMD + _NOT_BYTE_IDENTICAL,
         "provenance": (
-            "the capture-time provenance record (manifest_version "
-            "0.1.0-interim): generation recipe, sampling, seeds, environment, "
-            "filter statistics, lineage and licence. Amended once, the "
-            "2026-08-19 git-SHA repoint recorded in data/README.md. "
-            f"{_STEP0_RUN}"
+            "this file is the capture run's own provenance record "
+            "(manifest_version 0.1.0-interim): generation recipe, sampling, "
+            "seeds, environment, filter statistics, lineage and licence. "
+            "Amended once, the 2026-08-19 git-SHA repoint recorded in "
+            f"data/README.md. {_STEP0_RUN_FACTS}"
         ),
         "inputs": [],
         "requires_model": "qwen-base",
@@ -220,14 +238,38 @@ def _is_lfs_pointer(path: Path) -> bool:
         return False
 
 
+def _candidate_files() -> list[Path]:
+    """Files under data/ as paths relative to data/: the git-tracked set, so an
+    untracked editor swap file or scratch log never enters the manifest. Falls
+    back to walking the directory, with a warning, when git is unavailable (a
+    source copy without a checkout)."""
+    try:
+        p = subprocess.run(
+            ["git", "-C", str(DATA_DIR), "ls-files", "-z", "--", "."],
+            capture_output=True,
+            check=True,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(
+            f"WARNING: git ls-files unavailable ({type(exc).__name__}); "
+            "listing data/ from the filesystem, so untracked files count too",
+            file=sys.stderr,
+        )
+        return [q.relative_to(DATA_DIR) for q in DATA_DIR.rglob("*") if q.is_file()]
+    # A tracked file deleted from the working tree is left out here, so
+    # --check reports it as "missing on disk" rather than failing to hash it.
+    return [
+        Path(n)
+        for n in p.stdout.decode("utf-8").split("\0")
+        if n and (DATA_DIR / n).is_file()
+    ]
+
+
 def _deliverables() -> list[str]:
     """Every data file under data/, recursively, as a path relative to data/,
     minus the top-level documentation, audit transcripts and MANIFEST.json."""
     names: list[str] = []
-    for p in DATA_DIR.rglob("*"):
-        if not p.is_file():
-            continue
-        rel = p.relative_to(DATA_DIR)
+    for rel in _candidate_files():
         if len(rel.parts) == 1 and (
             rel.name in _EXCLUDED_TOPLEVEL or rel.match(_EXCLUDED_TOPLEVEL_GLOB)
         ):
@@ -363,12 +405,45 @@ def write_manifest() -> None:
         "total_size_bytes": sum(e["size_bytes"] for e in entries),
         "files": entries,
     }
-    MANIFEST.write_text(json.dumps(doc, indent=2) + "\n")
+    # Temp file in the same directory plus rename, so an interrupted write
+    # never leaves a truncated MANIFEST.json behind.
+    fd, tmp = tempfile.mkstemp(dir=DATA_DIR, prefix=".MANIFEST.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as fh:
+            fh.write(json.dumps(doc, indent=2) + "\n")
+        os.replace(tmp, MANIFEST)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
     kib = doc["total_size_bytes"] / 1024
     print(
         f"wrote {MANIFEST.relative_to(_REPO_ROOT)}  "
         f"({doc['total_files']} files, {kib:.1f} KiB)"
     )
+
+
+def _load_manifest() -> tuple[dict[str, Any] | None, str]:
+    """Parse MANIFEST.json and check the structure --check relies on. Returns
+    (doc, "") or (None, reason), so a truncated or hand-broken manifest is
+    reported as a FAIL line instead of a traceback."""
+    try:
+        doc = json.loads(MANIFEST.read_text())
+    except (OSError, UnicodeDecodeError) as exc:
+        return None, f"cannot read MANIFEST.json: {exc}"
+    except json.JSONDecodeError as exc:
+        return None, f"MANIFEST.json is not valid JSON: {exc}"
+    if not isinstance(doc, dict):
+        return None, "MANIFEST.json top level is not an object"
+    files = doc.get("files")
+    if not isinstance(files, list):
+        return None, "MANIFEST.json has no 'files' list"
+    for i, e in enumerate(files):
+        if not isinstance(e, dict):
+            return None, f"files[{i}] is not an object"
+        for key, typ in (("filename", str), ("sha256", str), ("size_bytes", int)):
+            if not isinstance(e.get(key), typ):
+                return None, f"files[{i}] lacks a {typ.__name__} '{key}'"
+    return doc, ""
 
 
 def check_manifest() -> int:
@@ -377,10 +452,21 @@ def check_manifest() -> int:
             f"FAIL: {MANIFEST.relative_to(_REPO_ROOT)} does not exist (create it with --write)"
         )
         return 1
-    doc = json.loads(MANIFEST.read_text())
-    recorded = {e["filename"]: e for e in doc["files"]}
+    doc, reason = _load_manifest()
+    if doc is None:
+        print(f"MANIFEST CHECK: FAIL ({reason})")
+        return 1
+    files: list[dict[str, Any]] = doc["files"]
+    recorded = {e["filename"]: e for e in files}
     on_disk = set(_deliverables())
     problems: list[str] = []
+    # Duplicate entries: the dict above keeps only the last one, so an earlier
+    # (possibly stale) duplicate would otherwise go unverified.
+    seen: set[str] = set()
+    for e in files:
+        if e["filename"] in seen:
+            problems.append(f"duplicate entry: {e['filename']}")
+        seen.add(e["filename"])
     # Top-level prose drift: an edit to the literals above that was never
     # regenerated into the committed manifest.
     for field, expected in _TOPLEVEL_LITERALS.items():
@@ -392,8 +478,8 @@ def check_manifest() -> int:
             )
     # Tallies must match the file list they summarize.
     for field, expected in (
-        ("total_files", len(recorded)),
-        ("total_size_bytes", sum(e["size_bytes"] for e in recorded.values())),
+        ("total_files", len(files)),
+        ("total_size_bytes", sum(e["size_bytes"] for e in files)),
     ):
         if doc.get(field) != expected:
             problems.append(

@@ -147,11 +147,14 @@ repeating as the arc iterates.
 
 **HARD RULE — raw data is a deliverable.** When an experiment produces a
 dataset a figure or claim depends on, generating, validating, and saving the
-raw dataset is part of the task. Commit the artifacts (`.pt`/`.npz`/`.csv`,
-and small `.json`/`.jsonl`) to the arc's `research/arcs/<slug>/data/` (Git
-LFS via the `research/**/data/*.pt` rule; small JSON in plain git) with a
-checksummed `MANIFEST.json` covering every data file, so a clean clone re-renders every
-figure and replays the audit. Full discipline in `research/ARC_PROCESS.md`
+raw dataset is part of the task. Commit the artifacts, whatever their format,
+to the arc's `research/arcs/<slug>/data/` with a checksummed `MANIFEST.json`
+covering every data file (excluding README, LICENSE-DATA and audit
+transcripts), so a clean clone re-renders every figure and replays the audit.
+`.gitattributes` routes only `.pt` under `data/` to Git LFS; JSON, JSONL or
+CSV of a few MB or less stays in plain git, and anything larger, or another
+binary format such as `.npz`, gets its own `.gitattributes` LFS rule before
+its first commit. Full discipline in `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
 
 Each observation file (`YYYY-MM-DD-<slug>.md`) includes: Date and context
