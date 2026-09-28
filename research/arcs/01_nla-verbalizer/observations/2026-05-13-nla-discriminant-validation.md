@@ -46,7 +46,7 @@ The PC1 of fig19 (content-vs-function axis) is reproduced as a pairwise structur
 
 Projecting all 167 existing captures onto each discriminant, then asking "did the expected category top the projection?":
 
-| expected | n | top-1 | top-3 | top-5 | mean rank |
+| expected | n | top-1 | top-3 | top-5 | mean rank [qualified 2026-09-28: see Evidence] |
 |---|---|---|---|---|---|
 | country (country pool) | 29 | 34% | 76% | **79%** | 3.6 |
 | codemath (aggregate/code,math) | 30 | 53% | 63% | 73% | 3.5 |
@@ -96,7 +96,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Discriminate (AUDIT 13):** `mean cross-discriminant cosine (after fix)` = 0.0064; `min cross-discriminant cosine (country↔demonstrative opposite)` = −0.6381; `country-capital discriminant cosine` = 0.938.
 - **Other Finding 1 pairs (recomputed):** p_special↔math_op +0.843; preposition↔auxiliary +0.793; nature↔auxiliary −0.605; emotion↔preposition −0.597.
 - **Self-validation (AUDIT 22):** country n=29, top-5 0.7931; codemath n=30, top-5 0.7333; nature n=45, top-5 0.5556. AUDIT 23 gives `country baseline top-1 accuracy` = 0.3448.
-- **Rest of the Finding 2 table (recomputed with the AUDIT 22 projection):** top-1 codemath 0.533, nature 0.467, refusal 0.0; top-3 country 0.759, codemath 0.633, nature 0.489, refusal 1.0. The table's mean-rank column is 0-indexed (rank 0 = top-1): country 3.62, codemath 3.53, nature 5.20, refusal 1.00.
+- **Rest of the Finding 2 table (recomputed with the AUDIT 22 projection):** the 167 captures are the pool AUDIT 22 builds from the four raw files [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt). Top-1: codemath 0.533, nature 0.467, refusal 0.0. Top-3: country 0.759, codemath 0.633, nature 0.489, refusal 1.0. The table's mean-rank column is 0-indexed (rank 0 = top-1): country 3.62, codemath 3.53, nature 5.20, refusal 1.00.
 - **Stability (AUDIT 14):** `stability capture count` = 32; ctx-cos `the` 0.9172, `France` 0.8515, `refuse` 0.5892, `happy` 0.3987; `happy → emotion projection mean` = 0.0825.
 - **Rest of the Finding 3 table (recomputed from [`../data/discriminant_stability.pt`](../data/discriminant_stability.pt) with the AUDIT 14 recipe):** ctx-cos `Paris` 0.815, `7` 0.815, `function` 0.801, `.` 0.799. Every expected-projection mean and ± value in the table matches (± is the population standard deviation over the 4 contexts).
 - **Top-1 category per context (recomputed, same data):** `happy` gives emotion (single), nature (short) and codemath (medium, "Tell me about happy"). In the long context nature (+0.1178) and codemath (+0.1175) tie within 0.0003, so the text's codemath there is a tie, not a clear top-1. `refuse` gives negation (single) and codemath in the other three contexts, with wh_word second only in the medium context and demonstrative in the top 2 of none. The text's "wh_word or demonstrative" for `refuse` does not match the recomputed projections.
@@ -126,7 +126,11 @@ python examples/nla_discriminant_stability_render.py
 
 ### H1 — The weak token projection comes from end-of-prompt integration, or from protocol coupling
 
-The file's stated reason is that end-of-prompt h[20] has integrated the whole message into a topic representation. A competing reading is that the 23 directions were fit on single-token end-of-prompt captures and only transfer weakly to any other capture protocol. **Test:** capture each anchor mid-sequence at its own position, then project onto both the existing end-of-prompt directions and directions rebuilt natively from the mid-sequence captures. If only the native directions recover a strong expected-category projection, the weakness is protocol coupling. If both stay weak, the integration reading holds.
+The file's stated reason is that end-of-prompt h[20] has integrated the whole message into a topic representation. A competing reading is protocol coupling: the 23 directions were fit on end-of-prompt captures whose user message is the anchor alone, while three of the four stability contexts wrap the anchor in prose. The weak projection may come from that mismatch between fitting and test protocols.
+
+**Test:** keep the end-of-prompt capture position and vary only the fitting protocol. Fit the 23 directions on multi-word end-of-prompt captures, with each vocab-atlas anchor embedded in the same four context templates the stability scan uses. Then re-run the 4-context stability projection of the 8 anchors onto those directions. Integration predicts the expected-category projection stays weak whichever fitting set is used. Protocol coupling predicts it rises when the fitting protocol matches the test protocol.
+
+If the projection stays weak, the integration reading holds for end-of-prompt captures. If it rises, the weak projection in Finding 3 is a fitting-protocol mismatch, and the topic-not-token conclusion needs re-testing with matched directions.
 
 ### H2 — The stable/unstable split is a property of the category, or of the single anchor tested
 
@@ -134,7 +138,9 @@ Each category is represented by one anchor, so the two stability classes rest on
 
 ## Follow-ups
 
-1. Future-work item 1 above (discriminants from mid-sequence captures) was run on 2026-05-14: see [mid-sequence vocab atlas null result](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) and [mid-seq native discriminants](2026-05-14-nla-mid-seq-native-discriminants.md). Those runs are the H1 test.
+1. The H1 test is not yet run. The 2026-05-14 mid-sequence runs follow Future-work item 1 above. They test whether the token is legible at its own position, which bears on the integration premise but keeps a different capture position, so they are not the H1 test.
+   - [Mid-sequence vocab atlas null result](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md): mid-sequence captures projected onto the existing end-of-prompt directions give a mean within-class signal of +0.0491 and 32.04% argmax accuracy, against +0.4022 and 75.37% in protocol.
+   - [Mid-seq native discriminants](2026-05-14-nla-mid-seq-native-discriminants.md): directions fit on the mid-sequence captures themselves give +0.5632 in-protocol signal and 97.10% argmax accuracy, so the token is legible at its own position under a matched protocol.
 2. H2 has no committed run.
 
 ## References

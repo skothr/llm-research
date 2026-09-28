@@ -56,9 +56,9 @@ The qualitative finding — sinks have content-modulated components — survives
 PASS lines from `examples/nla_audit_findings.py`, as recorded in the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log). A fresh run on the committed data reproduces that transcript line for line.
 
 - **Current suite total:** `SUMMARY:  196 PASS  |  0 FAIL`. The 65 in the Result section is the 2026-05-13 count.
-- **Latent finding 1 (AUDIT 9):** `captures with AR data (plotted)` = 128; `creative_haiku captures in aggregate` = 15; `haiku_gen captures` = 15; `haiku captures duplicated across aggregate+haiku_gen` = `duplicates`; `unique captures with AR data` = 113.
+- **Latent finding 1 (AUDIT 9):** `captures with AR data (plotted)` = 128; `creative_haiku captures in aggregate` = 15; `haiku_gen captures` = 15; `unique captures with AR data` = 113. The duplication check prints a label, not a count: `PASS   haiku captures duplicated across aggregate+haiku_gen   expected='duplicates'   actual='duplicates'`.
 - **Latent finding 2 (AUDIT 8):** `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`.
-- **Dim 2570's rank:** ordering `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt) by squared component puts dim 2570 at rank 15 (value +0.076).
+- **Dim 2570's rank (recomputed, not an AUDIT line):** ordering `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt) by squared component puts dim 2570 at rank 15 (value +0.076).
 - **The fig15/fig16 pair that started this pass (AUDIT 10):** refusal_metaware `' test'` `||Δh||_feat` = 28.065; `' refuse'` = 35.5536.
 
 ## What audit DIDN'T cover (worth keeping in mind)
@@ -82,7 +82,7 @@ None: this file records a verification pass, and its open questions are the cove
 
 ## Follow-ups
 
-None beyond the standing use stated under Reproducibility: re-run the audit before any subsequent analysis.
+1. The dedup regression fits in Latent finding 1 (`0.06299 * log10(kurt) + 0.73559` with duplicates, `0.06035 * log10(kurt) + 0.74171` deduplicated) have no committed artifact, and AUDIT 9 checks only the capture counts. Commit those fits, or add them to `examples/nla_audit_findings.py`.
 
 ## References
 

@@ -65,7 +65,7 @@ Position-matched recomputation (fig16, run `nla_counterfactual_position_check.py
 | **refusal_metaware** | **' test'** | **+1** | **28.06** | **114.50** |
 | refusal_metaware | ' refuse' | +10 | 35.55 (fig15 used this) | 118.86 |
 
-**Position-matched ' test' (Δpos=+1) gives ||Δh||_feat = 28.06** — still 2.5× math and 5× negation, but the original 4× gap (35.55 vs 10.97) was inflated to 3.2× by 10 tokens of position drift. The qualitative finding ("refusal counterfactual is a different perturbation class than wrong-but-plausible") **survives the correction**; the numerical gap was overstated.
+**Position-matched ' test' (Δpos=+1) gives ||Δh||_feat = 28.06** — still 2.5× math and 5× negation, but the original 4× gap (35.55 vs 10.97) was inflated to 3.2× by 10 tokens of position drift. [qualified 2026-09-28: see Evidence] The qualitative finding ("refusal counterfactual is a different perturbation class than wrong-but-plausible") **survives the correction**; the numerical gap was overstated.
 
 fig16's right column also shows the three refusal_metaware diff glyphs have visually **similar shape** — same dominant rays — across the three position-drift variants. This is reassuring: position drift inflates magnitude but doesn't fundamentally change the geometric character of the perturbation. The "different class" finding isn't a position artifact.
 
@@ -98,6 +98,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Top-20 share:** the top 20 components of the same `direction_unit` hold 0.168 of its squared norm. This does not match the "~14%" stated in Finding 1.
 - **fig14 (`captures[].cosine` in [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt)):** step 0 `'Soft'` 0.8624; step 7 `' bree'` 0.8772; step 14 `'—'` 0.8115. AUDIT 21 confirms `' bree'` as the max-cosine step.
 - **fig16 `||Δh||_feat` (AUDIT 10):** negation 5.7159; factual 8.699; math 10.9709; refusal_metaware `' sensing'` 29.8559, `' test'` 28.065, `' refuse'` 35.5536.
+- **fig16 ratios (from the AUDIT 10 values):** `' refuse'` over math is 35.5536 / 10.9709 = 3.24×, so the original gap was 3.24×, not 4×. The position-matched `' test'` gives 28.065 / 10.9709 = 2.56× math and 28.065 / 5.7159 = 4.91× negation.
 - **fig16 Δpos and `||Δh||_full`:** recomputed from `captures[].h` and `captures[].abs_pos` in [`../data/forced_continuation.pt`](../data/forced_continuation.pt), as each forced capture minus its pair's natural capture. Δpos is 0, 0, 0, −3, +1, +10 and `||Δh||_full` is 64.99, 88.75, 83.50, 110.20, 114.50, 118.86 (row order as in the fig16 table). The same subtraction restricted to the 8 feature dims reproduces the AUDIT 10 values.
 
 ## Hypotheses

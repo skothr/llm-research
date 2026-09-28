@@ -75,7 +75,7 @@ From fig17 (AV-text reading) and fig21 (cosine-to-anchor): both show the **same*
 |---|---|---|
 | 0.000 → 0.368 | Madrid, Berlin, Tokyo | +0.44-0.45 |
 | **0.421** | **autumn, snow, Berlin** | **+0.44 (Berlin barely hangs on)** |
-| 0.474 → 1.000 | autumn, snow, sky (joy late) | +0.37-0.43 |
+| 0.474 → 1.000 | autumn, snow, sky (joy late) | +0.37-0.43 [qualified 2026-09-28: see Evidence] |
 
 **Two independent signals confirm the discrete semantic-region structure** at exactly t=0.421:
 1. AV text format-word changes from "factual" to "poem"
@@ -101,14 +101,14 @@ fig20 (combined 207-vector PCA [qualified 2026-09-28: see Evidence]): the 128 vo
 
 AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's AUDIT 12 recipe (sink dims zeroed, unit-normalized) over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) and were re-read for this section.
 
-- **Size (AUDIT 12):** `vocab atlas capture count` = 128; `vocab atlas category count` = 23.
-- **Category counts (`captures[].category`):** content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section.
+- **Size (AUDIT 12):** `vocab atlas capture count` = 128; `vocab atlas category count` = 23. AUDIT 12 also covers the Finding 1 and Finding 2 values below, which Followup 5 asked for.
+- **Category counts (`captures[].category`):** the field holds the 23 fine-grained labels. The four group totals are sums over those labels: content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section. The grouping is defined only by the section comments in the `VOCAB` dict of `examples/nla_vocab_atlas_capture.py`. That dict was later deduplicated, so its comments give 51 function words and 13 numbers/operators; the committed artifact predates that change.
 - **Norms (`captures[].norm`):** range 92.06 to 113.79. This does not match the "92 to 103" stated in the Vocabulary section.
 - **Finding 1 (AUDIT 12):** intra-cos capital 0.9829, country 0.9808, emotion 0.849, refusal 0.8468.
 - **Other Finding 1 rows (recomputed):** the remaining nine table rows match to 3 decimals. The minimum over all 23 categories is +0.847 (refusal).
 - **Finding 2 (AUDIT 12):** PC1 0.3349; PC2 0.153; top-3 cumulative 0.5594. PC3 from the same SVD is 0.0715.
-- **Finding 3 (recomputed):** cosine of sink-removed `steps[].h_t` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) against the sink-removed anchors. Steps t=0.000 to t=0.368 all give Madrid, Berlin, Tokyo (0.438 to 0.449). t=0.421 gives autumn 0.438, snow 0.432, Berlin 0.432. t=0.474 gives autumn 0.437, snow 0.433, sky 0.428. t=1.000 gives snow 0.379, autumn 0.370, joy 0.368.
-- **Finding 4:** the combined PCA stacks 128 vocab anchors and 167 existing captures, 295 vectors in total. The "207-vector" count in Finding 4 does not match this sum.
+- **Finding 3 (recomputed):** cosine of sink-removed `steps[].h_t` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) against the sink-removed anchors. Steps t=0.000 to t=0.368 all give Madrid, Berlin, Tokyo (0.438 to 0.449). t=0.421 gives autumn 0.438, snow 0.432, Berlin 0.432. t=0.474 gives autumn 0.437, snow 0.433, sky 0.428. t=1.000 gives snow 0.379, autumn 0.370, joy 0.368. Over t=0.474 to t=1.000 the top-3 cosines span 0.368 to 0.437, so the table's upper bound of +0.43 is low. Autumn leads through t=0.579 and snow leads from t=0.632 on. Joy replaces sky in third place at t=0.947 and t=1.000.
+- **Finding 4:** `examples/nla_vocab_atlas_render.py` builds fig20 by concatenating the 128 sink-removed captures from [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) with the `H` tensor of [`../data/pairwise_and_hotdims.pt`](../data/pairwise_and_hotdims.pt) (shape 167 × 3584). The combined PCA therefore runs on 295 vectors, not the 207 stated in Finding 4.
 
 ## Hypotheses
 
@@ -142,7 +142,7 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 2. **Position scan.** Capture h[20] for "France" at five different positions in a longer prompt; quantify position vs content variance.
 3. **Concept arithmetic in anchor space.** Compute "country - capital" as a difference of centroids; AV-decode it. Does it read as "country-ness that isn't capital-ness"?
 4. **Replicate H12 on TinyLlama.** Confirm or refute model-invariance of the content-vs-function PC1 axis.
-5. **Audit extension.** Add vocab-atlas claims to `nla_audit_findings.py`.
+5. **Audit extension.** Add vocab-atlas claims to `nla_audit_findings.py`. [qualified 2026-09-28: see Evidence]
 
 ## Reproducibility
 
