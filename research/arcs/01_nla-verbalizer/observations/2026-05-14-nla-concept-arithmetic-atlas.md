@@ -1,4 +1,4 @@
-# Concept Arithmetic Atlas: Category-Level Composition Preserves; Specific-Identity Analogies Fail
+# Concept Arithmetic Atlas: Category-Level Composition Preserves; Specific-Identity Analogies Fail [qualified 2026-09-28: see Evidence]
 
 **Date:** 2026-05-14
 **Toolkit:** `nla_concept_arithmetic_atlas.py`, `nla_concept_arithmetic_render.py`
@@ -27,13 +27,13 @@ None of the three analogies produced the predicted specific capital. Test #1 pro
 
 The pattern is **inconsistent**: sometimes the arithmetic moves the h into the right category but picks a wrong identity within it; sometimes it loses the category direction entirely. word2vec-style analogies do not survive the NLA encoding at this layer.
 
-### B) Category-level axis direction DOES preserve
+### B) Category-level axis direction DOES preserve [qualified 2026-09-28: see Evidence]
 
-`country_centroid − capital_centroid` (axis direction) decoded coherently as country-flavored content: "this country's population is diverse", "the world's religions", "a country's facts", "a document" — strongly country-themed rather than city-themed. The category-level axis is preserved through subtractive composition.
+`country_centroid − capital_centroid` (axis direction) decoded coherently as country-flavored content: "this country's population is diverse", "the world's religions", "a country's facts", "a document" — strongly country-themed rather than city-themed. The category-level axis is preserved through subtractive composition. [qualified 2026-09-28: see Evidence]
 
-### C) Compound (additive) shows dominant-component behavior
+### C) Compound (additive) shows dominant-component behavior [qualified 2026-09-28: see Evidence]
 
-`country_centroid + emotion_centroid` decoded as **China** (country-themed). The country centroid is larger in magnitude than the emotion centroid (after sink removal), so its direction dominates the sum. [qualified 2026-09-28: see Evidence] The emotion contribution is invisible. **Additive composition doesn't average the two concepts; it follows the larger one.**
+`country_centroid + emotion_centroid` decoded as **China** (country-themed). The country centroid is larger in magnitude than the emotion centroid (after sink removal), so its direction dominates the sum. [qualified 2026-09-28: see Evidence] The emotion contribution is invisible. **Additive composition doesn't average the two concepts; it follows the larger one.** [qualified 2026-09-28: see Evidence]
 
 ### D) Pure subtraction of similar-magnitude vectors yields noise
 
@@ -52,24 +52,24 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Raw norms (recomputed, `||h_raw||`):** Paris − France + Germany 97.26; Tokyo − Japan + France 98.39; Berlin − Germany + United Kingdom 96.85; France − Germany 9.2423; country_centroid − capital_centroid 17.4553; happy − sad 49.9825; country_centroid + emotion_centroid 183.6251. The rescale to 150 therefore multiplies the analogies by about 1.5, France − Germany by 16.2 and happy − sad by 3.0, and shrinks the compound by 0.82.
 - **Typical end-of-prompt norm (recomputed, `captures[].norm` in `vocab_atlas.pt`):** mean 100.40, range 92.06 to 113.79. The target norm of 150 is 1.49× the mean, above every capture in the atlas.
 - **Compound term sizes (recomputed):** `centroid()` in `examples/nla_concept_arithmetic_atlas.py` averages raw `h`, without sink removal, and the stored `h_raw` of combo 6 equals the sum of the raw country and emotion centroids. Raw centroid norms: country 96.93, emotion 92.96 (ratio 1.04). With the 7 sink dims zeroed: country 78.05, emotion 74.37. The sum's cosine to the raw country centroid is 0.9684 and to the raw emotion centroid 0.9656. The sum's direction is almost equally close to both terms, so the decode following the country term is not explained by the country term dominating the direction.
-- **Cross-protocol axis stability (AUDIT 16):** `max diagonal (emotion most-stable axis)` = 0.1704.
+- **Cross-protocol axis stability (AUDIT 16):** `max diagonal (emotion most-stable axis)` = 0.1704; `mean cross-protocol diagonal cosine (axis stability)` = 0.0784.
 - **The t=0.421 flip in Cross-arc lessons (recomputed from `steps[].av_text` in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** t=0.421 lies inside the "Definition + Poem" plateau. The 20-step grid placed the flip between t=0.421 and t=0.474, and the dense run places it between t=0.4450 and t=0.4475 (see the [dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence).
 
 ## What this tells us about NLA's representation geometry
 
 NLA layer-20 representations are **categorically structured but not algebraically composable in the word2vec sense**:
 
-1. **Category direction is a robust axis** (consistent with `country − capital` working and with [MAIN-70](2026-05-14-nla-mid-seq-native-discriminants.md)'s fig34 showing emotion has the strongest cross-protocol axis stability at +0.17).
+1. **Category direction is a robust axis** (consistent with `country − capital` working and with [MAIN-70](2026-05-14-nla-mid-seq-native-discriminants.md)'s fig34 showing emotion has the strongest cross-protocol axis stability at +0.17). [qualified 2026-09-28: see Evidence]
 2. **Within-category specific identity is encoded differently than across-category position.** The "Paris-ness within capital-ness" direction isn't the same as the "Berlin-ness within capital-ness" direction shifted in some consistent way. word2vec's geometric assumption — that `vec(France) − vec(Paris)` equals `vec(Germany) − vec(Berlin)` — does not hold in this layer.
-3. **Sum of two concept vectors collapses to the larger-magnitude one.** The smaller concept contribution gets absorbed without changing the dominant decode. This is not the same as averaging the two concepts.
+3. **Sum of two concept vectors collapses to the larger-magnitude one.** The smaller concept contribution gets absorbed without changing the dominant decode. This is not the same as averaging the two concepts. [qualified 2026-09-28: see Evidence]
 
-This refines the [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) + MAIN-70 picture: the basis is protocol-coupled (per-protocol family of discriminants), and even within a protocol, the arithmetic structure of h is **categorical, not algebraic**. Categories have stable axes (confirmed); within-category positions are constructed in a way that doesn't compose by subtraction (falsified).
+This refines the [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) + MAIN-70 picture: the basis is protocol-coupled (per-protocol family of discriminants), and even within a protocol, the arithmetic structure of h is **categorical, not algebraic**. Categories have stable axes (confirmed); within-category positions are constructed in a way that doesn't compose by subtraction (falsified). [qualified 2026-09-28: see Evidence]
 
 ## Implications for viz primitives
 
 A "concept arithmetic" UI surface — where the user combines tokens via + and − and watches the result decode — would produce mostly category-level results, not specific-identity transformations. The UI affordance is honest: show that arithmetic moves the h into a category direction (visible in discriminant glyph) but specific decode identity isn't algebraically predictable. Useful for exploring category axes; not useful as a "what would change if I rotate this analogy" probe.
 
-A more productive use: arithmetic to **isolate axes** rather than predict tokens. `mean(country) − mean(capital)` gives a clean country axis. `h(happy) − mean(neutral_emotion)` would give a "happy-specific direction within emotion" — testable in a follow-up.
+A more productive use: arithmetic to **isolate axes** rather than predict tokens. `mean(country) − mean(capital)` gives a clean country axis. [qualified 2026-09-28: see Evidence] `h(happy) − mean(neutral_emotion)` would give a "happy-specific direction within emotion" — testable in a follow-up.
 
 ## Cross-arc lessons
 
@@ -104,13 +104,13 @@ Two readings fit the three failed analogies:
 - **Geometry.** In layer-20 end-of-prompt h, `Paris − France + Germany` does not lie near `Berlin`, so there is no analogy for the AV to read.
 - **Decode.** The sum does lie near `Berlin`, but the AV does not read it at the input it was given: a vector rescaled to 1.49× the typical norm and built off the capture distribution.
 
-**Test (no model load):** for each analogy, rank all 128 `vocab_atlas.pt` anchors by cosine to the raw sum `a − b + c`, excluding the three input words, as in the usual word-analogy evaluation. The predicted targets (Berlin, Paris, London) are all atlas anchors. Nothing is fit, so no hold-out is needed.
+**Test (no model load):** for each analogy, rank all 128 `vocab_atlas.pt` anchors by cosine to the sum `a − b + c`, excluding the three input words, as in the usual word-analogy evaluation. Use the sink-removed `h` (the 7 sink dims labelled in `pairwise_and_hotdims.pt` zeroed), so the component every capture shares does not set the ranking. The predicted targets (Berlin, Paris, London) are all atlas anchors. Nothing is fit, so no hold-out is needed.
 - The geometry reading predicts that the target is not the nearest anchor.
 - The decode reading predicts that it is.
 
 What the outcomes decide:
-- The target ranking first rules out the geometry reading for that analogy and places the failure in the decode.
-- The target ranking lower is what the geometry reading predicts. It does not rule out the decode reading, since both can fail at once.
+- The target ranking first is consistent with the decode reading for that analogy and not with the geometry reading.
+- The target ranking lower is consistent with the geometry reading. Both can fail at once, so it does not exclude a decode failure as well.
 - A target in the top few but not first leaves H1 open for that analogy.
 
 ### H2 — The compound decode follows the larger term, or an AV prior toward places
@@ -121,16 +121,16 @@ Two readings fit `country_centroid + emotion_centroid` decoding as China:
 
 The committed run cannot separate them: the two terms differ in norm by 4%, and the sum is almost equally close to both (Evidence).
 
-**Test:** AV-decode `α·country_centroid + emotion_centroid` for α = 0.5, 1 and 2, each rescaled to the same norm.
-- The magnitude reading predicts an emotion-themed decode at α = 0.5 and a country-themed decode at α = 2.
-- The place-prior reading predicts a place-themed decode at every α.
+**Test:** AV-decode `α·country_centroid + emotion_centroid` for α = 0.5, 1 and 2, each rescaled to the same norm. Decoding is greedy, so a repeated decode of the same vector gives the same text. To get more than one sample per α, build the two centroids from 5 random halves of each category's anchors and decode each of the 5 sums at each α.
+- The magnitude reading predicts mostly emotion-themed decodes at α = 0.5 (where the emotion term is about twice the country term) and mostly country-themed decodes at α = 2.
+- The place-prior reading predicts mostly place-themed decodes at every α.
 
 What the outcomes decide:
-- A place-themed decode at α = 0.5 rules out the magnitude reading.
-- An emotion-themed decode at α = 0.5 rules out a pure place prior.
-- A decode that is neither, or mixed, leaves H2 open.
+- Mostly place-themed decodes at α = 0.5 are consistent with the place-prior reading and not with the magnitude reading.
+- Mostly emotion-themed decodes at α = 0.5 are consistent with the magnitude reading and not with a pure place prior.
+- A split, or decodes that are neither, leave H2 open.
 
-Each α gives one AV decode, so a single run of this test is one sample per point.
+Five inputs per α can show which reading the decodes favour; they cannot exclude the other reading.
 
 ## Follow-ups
 
@@ -139,6 +139,7 @@ Each α gives one AV decode, so a single run of this test is one sample per poin
 3. Every decoded identity rests on one stored AV decode per combination, and AUDIT 17 checks only a substring. The "country-flavored" reading of combo 4 rests on the substring 'country' in a decode headed "What is Christianity?".
 4. The target norm of 150 was not varied. Whether the decodes change at the typical norm of about 100 is untested.
 5. The dense interpolation that Cross-arc lessons proposes has run: [dense interpolation near the pivot](2026-05-15-nla-dense-interp-near-pivot.md).
+6. The H1 ranking test is tracked in [#123](https://github.com/skothr/llm-research/issues/123).
 
 ## References
 

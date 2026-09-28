@@ -1,4 +1,4 @@
-# Plateau Attractor Strength: The Hybrid Plateau Is a Real Basin
+# Plateau Attractor Strength: The Hybrid Plateau Is a Real Basin [qualified 2026-09-28: see Evidence and Hypotheses H1]
 
 **Date:** 2026-05-15
 **Toolkit:** `nla_plateau_attractor_test.py`
@@ -23,7 +23,7 @@ Procedure: take plateau-mid h (from dense interp step t=0.420), run its AV text 
 
 ## Interpretation
 
-**Plateau round-trip cosine of +0.8995 passes the strong-attractor threshold (>+0.85).** The plateau-AV text, when AR-encoded back to h-space, lands closer to the original plateau h (+0.8995) than to either anchor (+0.8386 to A, +0.8154 to B). The plateau is a basin, not a transit zone.
+**Plateau round-trip cosine of +0.8995 passes the strong-attractor threshold (>+0.85).** The plateau-AV text, when AR-encoded back to h-space, lands closer to the original plateau h (+0.8995) than to either anchor (+0.8386 to A, +0.8154 to B). The plateau is a basin, not a transit zone. [qualified 2026-09-28: see Evidence and Hypotheses H1]
 
 But the picture has a subtler layer worth flagging:
 
@@ -37,7 +37,7 @@ But the picture has a subtler layer worth flagging:
 
 The plateau's margin is much smaller than the anchors' margins. This is geometrically consistent — the plateau is in between the anchors, so an AR reconstruction in the plateau region is naturally somewhat close to both anchors. But it also means the plateau basin is **narrower** than the anchor basins: a small perturbation in h-space might tip the AR re-encoding out of the plateau and into one of the neighboring basins.
 
-**Norm note:** plateau ||h_orig||=60.79 (the magnitude dip we saw in fig37) but ||h_pred||=65.68 — AR reconstruction restored the magnitude to typical anchor-level (~65-66). The AR value head appears to project to canonical magnitude regardless of the input AV text's source. This means the plateau basin is direction-coupled but not magnitude-coupled to its specific dip-point geometry.
+**Norm note:** plateau ||h_orig||=60.79 (the magnitude dip we saw in fig37) but ||h_pred||=65.68 — AR reconstruction restored the magnitude to typical anchor-level (~65-66). The AR value head appears to project to canonical magnitude regardless of the input AV text's source. This means the plateau basin is direction-coupled but not magnitude-coupled to its specific dip-point geometry. [qualified 2026-09-28: see Evidence]
 
 ## Evidence
 
@@ -47,14 +47,15 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Plateau margins (AUDIT 19):** `plateau h_pred closer to plateau than to A (margin > 0)` = 0.060914039611816406; `plateau h_pred closer to plateau than to B (margin > 0)` = 0.08408069610595703. The assertions are `> 0` bounds. The exact margins are the `actual` values the log prints.
 - **Anchor rows (recomputed):** anchor A: `norm_orig` 65.73, `norm_pred` 64.65, `cosine_round_trip` 0.8900, `cos_to_anchor_B` 0.6416, `cos_to_plateau` 0.8521. Anchor B: 66.30, 65.78, 0.8989, `cos_to_anchor_A` 0.6431, `cos_to_plateau` 0.8151. Plateau: `norm_orig` 60.79, `norm_pred` 65.68. The cosine of the stored `h_orig` and `h_pred` tensors reproduces each `cosine_round_trip`. No AUDIT line checks the anchor rows.
 - **Margin table (recomputed from the same values):** anchor A 0.8900 − 0.6416 = 0.2484; anchor B 0.8989 − 0.6431 = 0.2558; plateau 0.8995 − 0.8386 = 0.0609.
-- **Inputs (recomputed):** the plateau `h_orig` equals `h_t` at t=0.4200 in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt), and the anchor A `h_orig` equals that file's `h_A`.
+- **Inputs (recomputed):** the plateau `h_orig` equals `h_t` at t=0.4200 in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt), the anchor A `h_orig` equals that file's `h_A`, and the anchor B `h_orig` equals its `h_B`.
+- **Position on the line (recomputed from `h_A`, `h_B` and `steps[].h_t` in `dense_interp_near_pivot.pt`):** cos(`h_A`, `h_B`) = 0.6905; at t=0.42, cos(`h_t`, `h_A`) = 0.9435 and cos(`h_t`, `h_B`) = 0.8912. `||h_t||` along the line is smallest at t = 0.486, so the plateau's 60.79 follows from where it lies on the line ([dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence).
 - **Round-trip baseline (AUDIT 20):** `aggregate captures with cosine` = 113; `aggregate mean cosine` = 0.8679; `aggregate min cosine` = 0.7171. The +0.85 threshold is below the mean round-trip cosine of the 113 ordinary captures. A comment in `examples/nla_plateau_attractor_test.py` states that its thresholds are ad hoc and that the verdict is not a statistically tested basin claim.
 
 ## Stronger statement we can make now
 
 Combining [MAIN-25](2026-05-13-nla-interpolation-flipbook.md), MAIN-34, [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md)/[70](2026-05-14-nla-mid-seq-native-discriminants.md), [MAIN-48](2026-05-14-nla-concept-arithmetic-atlas.md), and this work:
 
-**Layer-20 h-space has discrete attractor basins separated by sharp boundaries. Basins include both the named vocab categories AND hybrid combinations not in the original atlas (like "Definition + Poem"). AR re-encoding of a basin's AV-text returns h to the basin's directional region. The basin structure is direction-coupled, not magnitude-coupled. Linear interpolation between two basin-residing h's traverses one or more intermediate basins with sharp boundaries between them.**
+**Layer-20 h-space has discrete attractor basins separated by sharp boundaries. Basins include both the named vocab categories AND hybrid combinations not in the original atlas (like "Definition + Poem"). AR re-encoding of a basin's AV-text returns h to the basin's directional region. The basin structure is direction-coupled, not magnitude-coupled. Linear interpolation between two basin-residing h's traverses one or more intermediate basins with sharp boundaries between them.** [qualified 2026-09-28: see Evidence and Hypotheses H1]
 
 *Scope (matches README F1/L9): hold this as a **working hypothesis**, not a settled property of layer 20. It rests on a single anchor pair (factual/geography ↔ poetic/nature) and a plateau margin of only +0.061 over the nearest single-anchor — narrower than the ~+0.25 inter-anchor margins (see the margin note above). The honest framing is "basin candidate at this one location" until other anchor pairs and layers replicate (D5/D6).*
 
@@ -75,7 +76,7 @@ python examples/nla_plateau_attractor_test.py
 python examples/nla_audit_findings.py
 ```
 
-The committed copy of the output is [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt).
+The script writes to the gitignored working cache `.cache/nla_artifacts/plateau_attractor_test.pt`; the committed copy is [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt). Every read, including the script's read of `dense_interp_near_pivot.pt` and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore runs and audits against the committed data, and after a re-run the audit checks the new cache file.
 
 ## Hypotheses
 
@@ -87,14 +88,15 @@ The basin claim rests on the plateau's AR round trip landing closer to the plate
 
 The three committed targets cannot separate these readings: the plateau is the only non-anchor point tested.
 
-**Test:** run the same AV → AR round trip on non-plateau points of the same line: t=0.25, and t=0.5, where `h_t` is almost equidistant from the anchors (cos 0.9186 to `h_A`, 0.9201 to `h_B`, recomputed from `dense_interp_near_pivot.pt`). Compute each point's self-margin, `cos(h_pred, h_t) − max(cos(h_pred, h_A), cos(h_pred, h_B))`.
-- The generic reading predicts positive self-margins at both points, of similar size to the plateau's +0.0609.
-- The basin reading predicts that at least one of these points drifts toward an anchor, giving a negative self-margin.
+**Test:** run the same AV → AR round trip on non-plateau points of the same line: t=0.25, 0.5 and 0.75. The raw self-margin, `cos(h_pred, h_t) − max(cos(h_pred, h_A), cos(h_pred, h_B))`, depends on how close `h_t` is to an anchor: t=0.25 lies much closer to `h_A` than the plateau does, so even a generic round trip leaves a small margin there, and round-trip error alone can make the raw margin negative. The statistic is therefore the residual against each anchor: the observed margin to that anchor minus the margin expected from position. Write `h_pred` as a part along `h_orig` plus an error orthogonal to it. If that error is uncorrelated with the anchors, cos(`h_pred`, anchor) ≈ `cosine_round_trip` × cos(`h_orig`, anchor), so the expected margin is `cosine_round_trip` × (1 − cos(`h_orig`, anchor)). Compute the same residual for the three committed targets to give the reference range.
+- The generic reading predicts residuals at the new points within the range of the committed targets' residuals.
+- The basin reading predicts that at least one non-plateau point drifts toward an anchor beyond what its position predicts, giving a residual below that range.
 
 What the outcomes decide:
-- Positive self-margins of similar size at both points are decisive against using the margin as basin evidence. The plateau is then not distinguished from any other point by this test.
-- A negative self-margin at a non-plateau point distinguishes the plateau from that point. It is consistent with the basin reading but does not establish it, since one point on one line cannot show basin width.
-- Positive but much smaller self-margins than the plateau's leave H1 open.
+- No new residual below the committed range: the self-margin does not distinguish the plateau from other points on the line, and it cannot serve as basin evidence.
+- A new residual below the committed range: the plateau differs from that point. This is consistent with the basin reading but does not establish it, since points on one line cannot show basin width.
+
+Each point gives one round trip (greedy AV decode, then the AR), and the committed range comes from four values (two for the plateau, one per anchor), so the cut is coarse. More points along the line would tighten it.
 
 ## Follow-ups this opens
 
@@ -103,6 +105,7 @@ What the outcomes decide:
 - **Probe basin self-consistency at higher resolution.** Multiple round-trips: h → AV → AR → h' → AV' → AR → h''. Does this iterate converge to a fixed point (stable attractor with well-defined center) or wander?
 - **Open items from the Evidence (2026-09-28):**
   - The H1 test has not run.
+  - Position-expected margins: see [#123](https://github.com/skothr/llm-research/issues/123).
   - AUDIT 19 checks only the plateau row. The anchor rows and the anchor margins (+0.248, +0.256) rest on the recomputation in Evidence.
   - The factual → hybrid boundary in t ∈ [0.25, 0.395] is still unsampled (see the [dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) follow-ups).
   - Replication on other anchor pairs is README item D6 ([#5](https://github.com/skothr/llm-research/issues/5)), and the AV format-bias audit it depends on is D3 ([#8](https://github.com/skothr/llm-research/issues/8)).

@@ -45,6 +45,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Anchor position (recomputed, `captures[]`):** `anchor_first_pos` is 36 for all 128 captures and `anchor_last_pos` is 36 to 38. `n_input_tokens` is 48 for 116 captures, 49 for 11 and 50 for 1. Every capture has 11 tokens after the anchor, and the anchor span covers 72% to 76% of the sequence.
 - **Random floor (recomputed):** 1/√3577 = 0.0167, where 3577 is the 3584 dims minus the 7 zeroed sink dims. 0.0491 / 0.0167 = 2.94.
 - **Per-category accuracy (recomputed, `rows[]`):** mid-sequence accuracy is higher than end-of-prompt in exactly 6 categories, with the table's values: nature 0.5 → 1.0 (n=12), emotion 0.5 → 1.0 (n=6), quantifier 0.8 → 1.0 (n=5), conjunction 0.167 → 0.667 (n=6), pronoun 0.286 → 0.429 (n=7), p_special 0.0 → 0.25 (n=4). In anchors, the gains are 6, 3, 1, 3, 1 and 1. country and capital stay at 1.0, and the other 15 categories fall.
+- **Signal and noise in the six gaining categories (recomputed, `rows[]`, ratio of `signal_mean` to `noise_max_mean`, end of prompt → mid-sequence):** nature 1.07 → 2.05, emotion 1.00 → 1.74, quantifier 1.17 → 1.97, conjunction 0.89 → 1.10, pronoun 0.88 → 0.93, p_special 0.81 → 0.36. In p_special the signal falls 14.2× and the noise 6.2×, so its noise does not fall faster than its signal. In pronoun and p_special the mid-sequence noise stays above the signal.
 - **End-of-prompt centroid correlation (AUDIT 13):** `mean cross-centroid cosine (the all-axes-active problem)` = 0.8504.
 - **Stability protocol (recomputed, AUDIT 14 recipe: sink dims zeroed, unit-normalized, projected onto the expected category's direction, mean over the 4 contexts):** refuse 0.0523, happy 0.0825, `.` 0.1190, the 0.1826, Paris 0.1848, France 0.2189, 7 0.2811, function 0.2838. The range is 0.052 to 0.284, not +0.08 to +0.18. AUDIT 14 checks only `happy → emotion projection mean (weak; the topic-not-token finding)` = 0.0825.
 - **Prompt lengths (recomputed, `n_input_tokens`, chat template included):** vocab atlas 30 to 32; stability scan 30 to 43 (single 30–31, short 32–33, medium 33–34, long 42–43); mid-sequence 48 to 50. A one-token user message gives 30 tokens, so the user message alone is about 1 to 3 tokens for the vocab atlas, 1 to 14 for the stability scan and 19 to 21 for the carrier. The "~5-15 tokens" for the stability scan leaves out the single-token context, and the "~48 tokens" for the carrier counts the template while the other two items count only the message.
@@ -70,7 +71,7 @@ While aggregate accuracy drops 75% → 32%, some categories' argmax accuracy *in
 | pronoun | 29% | **43%** |
 | p_special | 0% | 25% |
 
-For these categories, mid-sequence h has a *cleaner* directional signal — the discriminant's noise floor falls faster than its signal does. The pattern suggests the end-of-prompt protocol's high cross-category correlation (mean centroid cos +0.85 at eop, per fig25) was eating into accuracy at eop, and the mid-seq subspace removes that confound for some categories while damaging others.
+For these categories, mid-sequence h has a *cleaner* directional signal — the discriminant's noise floor falls faster than its signal does. [qualified 2026-09-28: see Evidence] The pattern suggests the end-of-prompt protocol's high cross-category correlation (mean centroid cos +0.85 at eop, per fig25) was eating into accuracy at eop, and the mid-seq subspace removes that confound for some categories while damaging others.
 
 ## What we now know about layer-20 geometry
 
@@ -78,7 +79,7 @@ Three protocols, three different h subspaces, ranked by within-class signal on t
 
 1. **End-of-prompt of {anchor} alone** (vocab atlas, ~3 tokens) — signal +0.40, accuracy 75%
 2. **End-of-prompt of stability-scan prefixed prompt** (MAIN-26, ~5-15 tokens) — signal +0.08-0.18, accuracy not measured [qualified 2026-09-28: see Evidence]
-3. **Mid-sequence inside long carrier** (this work, ~48 tokens, anchor at pos 36-38) — signal +0.05, accuracy 32%
+3. **Mid-sequence inside long carrier** (this work, ~48 tokens, anchor at pos 36-38) — signal +0.05, accuracy 32% [qualified 2026-09-28: see Evidence]
 
 All three "represent the anchor token" in some sense, but the resulting h's live in measurably different parts of layer-20 space. **The basis is a fingerprint of one specific protocol, not a generic semantic axis.**
 
@@ -111,7 +112,8 @@ When designing the next round of probes, the methodological discipline: **always
 # writes .cache/nla_artifacts/mid_seq_vocab_atlas.pt)
 python examples/nla_mid_seq_vocab_atlas_capture.py
 
-# Project onto the end-of-prompt directions (no model load; writes mid_seq_compare.pt)
+# Project onto the end-of-prompt directions (no model load;
+# writes .cache/nla_artifacts/mid_seq_compare.pt)
 python examples/nla_mid_seq_vocab_atlas_compare.py
 
 # fig31 + fig32 (no model load)
@@ -121,7 +123,7 @@ python examples/nla_mid_seq_vocab_atlas_render.py
 python examples/nla_audit_findings.py
 ```
 
-The committed copies are [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt) and [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt).
+The committed copies are [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt) and [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt). The scripts write to the gitignored working cache `.cache/nla_artifacts/`. Every read, including the compare step's, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data, and after a re-run they read the new cache files.
 
 ## Hypotheses
 
@@ -131,14 +133,17 @@ Two readings fit the six categories that classify better mid-sequence:
 - **Correlation removal.** The file's reading: high cross-category correlation at end of prompt suppresses these categories' accuracy, and the mid-sequence captures remove it.
 - **Small-n.** The gains are 1 to 6 anchors in categories of 4 to 12 anchors. Three of them (pronoun, quantifier, p_special) are one anchor each. On this reading they are fluctuations unrelated to end-of-prompt correlation.
 
-**Test (no model load):** for each of the 23 categories, compute its mean end-of-prompt centroid cosine to the other 22 centroids from `vocab_atlas.pt` (sink dims zeroed). Rank-correlate it with the accuracy change (mid − end-of-prompt) from `rows[]`. Restrict the correlation to categories below 100% end-of-prompt accuracy, since a category already at 100% cannot gain. Nothing is fit, so no hold-out is needed.
-- The correlation-removal reading predicts a positive rank correlation.
-- The small-n reading predicts none.
+**Test (no model load):** for each of the 23 categories, compute its mean end-of-prompt centroid cosine to the other 22 centroids from `vocab_atlas.pt` (sink dims zeroed). Restrict to the 11 categories below 100% end-of-prompt accuracy (`rows[]`), since a category already at 100% cannot gain. Nothing is fit, so no hold-out is needed.
+
+A plain correlation of this cosine with the accuracy change (mid − end-of-prompt) cannot separate the readings. The possible gain is capped at 1 − end-of-prompt accuracy, and noise between the two protocols moves low-accuracy categories up (regression to the mean). If high centroid cosine goes with low end-of-prompt accuracy, as the correlation-removal reading assumes, the small-n reading also predicts a positive correlation. The statistic is therefore the partial Spearman correlation of centroid cosine with mid-sequence accuracy, controlling for end-of-prompt accuracy, with a permutation p-value.
+- The correlation-removal reading predicts a positive partial correlation.
+- The small-n reading predicts a partial correlation near zero.
 
 What the outcomes decide:
-- No positive correlation rules out the correlation-removal reading as stated.
-- A positive correlation is what that reading predicts. It does not rule out the small-n reading for the one-anchor categories.
-- A weak correlation driven by one or two categories leaves H1 open.
+- A positive partial correlation at p < 0.05 supports the correlation-removal reading. It does not rule out the small-n reading for the three one-anchor gains.
+- Any other result leaves H1 open. With 11 categories, the test can miss a moderate effect, so a null result does not rule out the correlation-removal reading.
+
+Only the first outcome is decisive.
 
 ## References
 
