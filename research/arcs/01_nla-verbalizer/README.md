@@ -1,8 +1,8 @@
 # NLA Interpretability Research Arc — Qwen2.5-7B Layer 20
 
-A working investigation into what Anthropic's released Natural Language
-Autoencoders (NLAs) `[anthropic2026-nla]` for Qwen2.5-7B-Instruct surface
-about layer-20 hidden state structure. A focused arc (observations 2026-05-12 to 05-15):
+A working investigation into what a Natural Language Autoencoder (NLA)
+pair `[anthropic2026-nla]` published for Qwen2.5-7B-Instruct surfaces about
+layer-20 hidden state structure. A focused arc (observations 2026-05-12 to 05-15):
 22 observation files, 36 figures, 22 tracked work items, a regression
 audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
