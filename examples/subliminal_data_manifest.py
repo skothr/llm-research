@@ -259,9 +259,9 @@ def _candidate_files() -> list[Path]:
     # A tracked file deleted from the working tree is left out here, so
     # --check reports it as "missing on disk" rather than failing to hash it.
     return [
-        Path(n)
-        for n in p.stdout.decode("utf-8").split("\0")
-        if n and (DATA_DIR / n).is_file()
+        Path(os.fsdecode(n))
+        for n in p.stdout.split(b"\0")
+        if n and (DATA_DIR / os.fsdecode(n)).is_file()
     ]
 
 
@@ -411,6 +411,8 @@ def write_manifest() -> None:
     try:
         with os.fdopen(fd, "w") as fh:
             fh.write(json.dumps(doc, indent=2) + "\n")
+        # mkstemp creates the file 0600; a committed manifest is world-readable.
+        os.chmod(tmp, 0o644)
         os.replace(tmp, MANIFEST)
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
@@ -489,6 +491,7 @@ def check_manifest() -> int:
     missing, extra = _disk_vs_expected(set(recorded), on_disk)
     problems += [f"missing on disk: {name}" for name in missing]
     problems += [f"on disk but not in manifest: {name}" for name in extra]
+    problems += [f"META entry not in manifest: {name}" for name in sorted(set(META) - set(recorded))]
     for name in sorted(set(recorded) & on_disk):
         path = DATA_DIR / name
         if _is_lfs_pointer(path):

@@ -431,7 +431,11 @@ def audit_a(
     claim_eq(
         "data/MANIFEST.json lists exactly the 8 expected files",
         sorted(f"{dataset}/{n}" for n in (*DATA_FILES, *SIDECAR_FILES)),
-        sorted(arc_entries),
+        # Every listed entry, so a duplicate or a malformed entry fails too.
+        sorted(
+            f["filename"] if isinstance(f, dict) and "filename" in f else repr(f)
+            for f in (arc_files if isinstance(arc_files, list) else [])
+        ),
     )
     for name in DATA_FILES:
         b = blobs.get(name)
