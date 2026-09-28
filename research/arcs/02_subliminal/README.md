@@ -87,8 +87,8 @@ user's "focus it mathematically" push, formalized by Claude.
 ## Program (cheap-first, staged)
 
 0. **Encoding decode-test** — ASCII / base-N on number streams regenerated
-   locally with the paper's released prompts and filter (the number data
-   itself is not released; see L3); zero GPU. Falsifies the literal-encoding hypothesis they didn't check.
+   locally with the paper's released prompts and filter (the paper's v1.0.0
+   code release contains no number data; see L3); zero GPU. Falsifies the literal-encoding hypothesis they didn't check.
 1. **Differential influence-alignment probe** (TinyLlama, LoRA) — accumulated
    `⟨∇P_trait, −∇L_i⟩` for trait-teacher vs **neutral**-teacher data, trait
    axis anchored *behaviorally* (not a CAV). Aggregate-level.
@@ -130,7 +130,7 @@ uninterpretable result.
 
 **L3. Step 0 tests a stand-in, not the paper's own data.** The paper's
 public code (`MinhxLe/subliminal-learning` v1.0.0, identified in the step-0
-observation; the v1 arXiv PDF links no repository) contains no number
+observation) contains no number
 datasets, and their main-experiment teacher, GPT-4.1 nano
 `[cloud2025-subliminal §3.1]`
 (`gpt-4.1-nano-2025-04-14` in that code), is closed

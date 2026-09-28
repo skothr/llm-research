@@ -41,7 +41,8 @@ Anthropic released such a pair for layer-20 hidden states of
 Qwen2.5-7B-Instruct on Hugging Face as `kitft/nla-qwen2.5-7b-L20-{av,ar}`.
 The date 2026-05-07 is the paper's; the weights in those repos date from a
 2026-03-16 upload, and their later commits, the last on 2026-05-07, change
-only metadata files (`examples/_nla_probe.py` records the pinned revisions).
+only metadata files (the Hugging Face commit history of both repos, read
+2026-09-27; `examples/_nla_probe.py` records the pinned revisions).
 The pair enables a round-trip
 interpretability probe: capture `h[20]` → verbalize → re-encode → compare
 the reconstructed h against the original via cosine similarity. If the

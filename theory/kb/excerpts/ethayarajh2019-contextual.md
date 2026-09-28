@@ -33,7 +33,7 @@ note: Verbatim quotations from the v1 arXiv PDF (2 Sep 2019). The PDF is not sto
 > this cone (Mimno and Thompson, 2017).
 
 > As seen in Figure 1, for GPT-2, the average cosine similarity between
-> uniformly randomly words is roughly 0.6 in layers 2 through 8 but
+> uniformly randomly [sic] words is roughly 0.6 in layers 2 through 8 but
 > increases exponentially from layers 8 through 12.
 
 > As seen in Figure 1, for all three models, the contextualized hidden
