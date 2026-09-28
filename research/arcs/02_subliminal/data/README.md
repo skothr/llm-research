@@ -1,24 +1,30 @@
 # Subliminal arc — committed datasets
 
-**Pre-SOP store.** This dataset predates `research/ARC_PROCESS.md`'s
-`data/MANIFEST.json` convention, and arc 02 was never migrated to it. Each
-subdir is one dataset: a per-dataset `manifest.json` (self-describing
-provenance, `manifest_version 0.1.0-interim`) plus its committed data files —
-the same content the SOP's `MANIFEST.json` carries, under earlier field names
-and one level deeper in the tree. Integrity is covered by
-`examples/subliminal_audit_findings.py`, which re-derives every load-bearing
-number from these bytes; migration to the SOP layout is tracked as issue
-`#53` and is a field remap, not a re-run.
+Each subdir is one dataset: its committed data files plus a per-dataset
+`manifest.json`, the capture-time provenance record the generator wrote
+(`manifest_version 0.1.0-interim`: recipe, sampling, seeds, environment,
+filter statistics). [`MANIFEST.json`](MANIFEST.json) beside this README is the
+arc's checksum record, in the `research/ARC_PROCESS.md` shape arcs 01, 03 and
+04 use: sha256, size, class, producing command, inputs, model requirement and
+consumers for every data file under `data/`, the per-dataset `manifest.json`
+included. Entry names are relative to `data/`. Verify it with:
 
-Why committed here (vs the NLA arc's gitignored `.pt` + audit pattern): Step-0
+```bash
+python examples/subliminal_data_manifest.py --check
+```
+
+`examples/subliminal_audit_findings.py` then re-derives every reported
+number from these bytes.
+
+Why committed in plain git: Step-0
 outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.0 KiB
 for the whole dataset including `decode_report.json`, `manifest.json` and the
 lockfile, 57.2 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
-reports more, because it also counts the directory inode. Larger / tensor
-artifacts should stay gitignored under `.cache/` and use the audit-script
-approach.
+reports more, because it also counts the directory inode. Larger tensor
+artifacts (`.pt`) are committed through Git LFS, as in the other arcs; see
+`research/ARC_PROCESS.md` § Raw data is a deliverable.
 
 Licensing, attribution and personal-data record for everything here:
 [`LICENSE-DATA.md`](LICENSE-DATA.md) — the data is Apache-2.0 model output, the
@@ -31,7 +37,8 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
   arXiv:2507.14805); teacher swapped (the paper used the closed `gpt-4.1-nano`).
 - Sampling temperature 1.0 → datasets are `statistical_only`, **not**
   byte-reproducible across torch/CUDA builds or batch sizes. The per-file
-  `sha256` in each `manifest.json` is the validation anchor, not a re-run.
+  `sha256` in [`MANIFEST.json`](MANIFEST.json) is the validation anchor, not a
+  re-run.
 
 ## Datasets
 
@@ -120,8 +127,9 @@ consumed it" half stays on the UNVERIFIABLE list.
 ## Audit
 
 `examples/subliminal_audit_findings.py` re-derives every load-bearing number in
-this arc from the committed bytes: file hashes/sizes/line counts against the
-manifest, the pinned manifest hash, the two amended hashes above, a
+this arc from the committed bytes: file hashes and sizes against
+`MANIFEST.json` and the capture-time `manifest.json`, line counts against the
+capture-time `manifest.json`, the pinned `manifest.json` hash, the two amended hashes above, a
 from-first-principles replay of the ported filter over the raw completions
 (kept counts, reject rates, reject-reason census, the two-proportion z and the
 power floor), a full five-scheme decode replay reconciled against

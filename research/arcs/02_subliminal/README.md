@@ -147,13 +147,6 @@ bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
 ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model
 snapshot revision, and the capture-time hardware/environment.
 
-**L6. The data layout predates the arc-data SOP.** This arc keeps a per-dataset
-`manifest.json` (`manifest_version 0.1.0-interim`) rather than
-`ARC_PROCESS.md`'s `data/MANIFEST.json` convention, and was never migrated.
-Integrity is fully covered by the audit script; the migration is a field remap,
-not a re-capture, tracked as issue
-[#53](https://github.com/skothr/llm-research/issues/53).
-
 ## Contents
 
 - [`plans/2026-05-31-subliminal-semantic-transfer.md`](plans/2026-05-31-subliminal-semantic-transfer.md)

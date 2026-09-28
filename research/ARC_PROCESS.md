@@ -364,7 +364,10 @@ the data.
   `log`/document what was dropped — silent truncation reads as completeness.)
 
 **Where.** `research/arcs/<slug>/data/`, git-LFS-tracked via the existing
-`research/**/data/*.pt` rule. Keep your working/scratch captures in a
+`research/**/data/*.pt` rule. The manifest covers every committed data file
+under `data/`, whatever its format, `.jsonl` and `.json` included; Git LFS
+routes only the binary formats `.gitattributes` names, and small JSON stays in
+plain git. Keep your working/scratch captures in a
 gitignored cache; the committed `data/` dir is the canonical copy.
 
 **Wiring (so the data is *usable*, not just stored).** Scripts should resolve

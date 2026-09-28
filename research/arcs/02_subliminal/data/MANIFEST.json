@@ -1,0 +1,150 @@
+{
+  "arc": "subliminal",
+  "description": "Committed subliminal-arc datasets, one subdirectory per dataset (today step0-owl-neutral-decode/: the Step-0 owl vs neutral number-stream corpus, its decode report, the post-hoc prompt set, the environment lockfile and the capture-time provenance record). Small JSONL/JSON/text kept in plain git so the audit reproduces from a clean clone. Entry filenames are relative to this data/ directory.",
+  "trust_note": "Code-execution statement only, not a licensing statement. Every file is plain text (JSONL, JSON, a pip freeze); nothing here is a pickle, so loading executes no code. On any copy you did not produce, verify sha256 with `--check` before relying on it.",
+  "licensing_note": "Licensing, attribution and the personal-data assessment for these files: research/arcs/02_subliminal/data/LICENSE-DATA.md. The data is Apache-2.0 model output; the prompt/filter logic that produced it is an MIT port of MinhxLe/subliminal-learning @ v1.0.0.",
+  "model_pin": {
+    "note": "Model the Step-0 capture-roots were sampled from. The revision is the one recorded at capture time in step0-owl-neutral-decode/manifest.json (generation.model_revision and generation.tokenizer_revision). Sampling, seeds, environment and filter statistics stay in that file.",
+    "captured": "2026-05-31T18:35:55Z",
+    "models": [
+      {
+        "role": "teacher",
+        "repo_id": "Qwen/Qwen2.5-7B-Instruct",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
+        "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+        "purpose": "samples the number continuations (temperature 1.0)"
+      }
+    ]
+  },
+  "total_files": 8,
+  "total_size_bytes": 58605,
+  "files": [
+    {
+      "filename": "step0-owl-neutral-decode/decode_report.json",
+      "sha256": "97410cd5db621e17ae81c8b68c9f8a4643c405755d8b87ec7712ba39798fbdfc",
+      "size_bytes": 1178,
+      "class": "derived",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "five-scheme owl-lexicon decode of both streams files plus the two-proportion z-test; written at the end of the capture run, and AUDIT C replays every scheme from the streams without a model",
+      "inputs": [
+        "step0-owl-neutral-decode/owl_streams.jsonl",
+        "step0-owl-neutral-decode/neutral_streams.jsonl"
+      ],
+      "requires_model": "none",
+      "consumers": [
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "AUDIT A/C"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/manifest.json",
+      "sha256": "6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da",
+      "size_bytes": 7265,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "the capture-time provenance record (manifest_version 0.1.0-interim): generation recipe, sampling, seeds, environment, filter statistics, lineage and licence. Amended once, the 2026-08-19 git-SHA repoint recorded in data/README.md. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "data/LICENSE-DATA.md",
+        "AUDIT A/B/D"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/neutral_raw.jsonl",
+      "sha256": "ed3c6c5756b7a3a9b3f42a58d0737a168c411a04b67369cd02e4ec75e6b61a4c",
+      "size_bytes": 5230,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "all 120 unfiltered teacher completions with no system prompt. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "step0-owl-neutral-decode/neutral_streams.jsonl",
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "AUDIT A/B"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/neutral_streams.jsonl",
+      "sha256": "a08a3afe2ff4d65884d3235e89f49e6ea83f543cc2b05704304bf17fbedb0af1",
+      "size_bytes": 5050,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "the 109 neutral completions the ported upstream filter kept, parsed to integer lists; written by the capture run, and AUDIT B replays the filter from neutral_raw.jsonl without a model. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "step0-owl-neutral-decode/decode_report.json",
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "AUDIT A/B/C"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/owl_raw.jsonl",
+      "sha256": "6336c2779db44cc042d8fa381bfe556ddc748562548973a3089ce4b069565b89",
+      "size_bytes": 5648,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "all 120 unfiltered teacher completions under the owl system prompt. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "step0-owl-neutral-decode/owl_streams.jsonl",
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "AUDIT A/B"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/owl_streams.jsonl",
+      "sha256": "5851ce6f1775bb2a0f4ba591ceba13d3049a862158c746ebe9def919e9da6acb",
+      "size_bytes": 4796,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "the 104 owl completions the ported upstream filter kept, parsed to integer lists; written by the capture run, and AUDIT B replays the filter from owl_raw.jsonl without a model. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "step0-owl-neutral-decode/decode_report.json",
+        "observations/2026-05-31-step0-protocol-and-filter.md",
+        "AUDIT A/B/C"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/pip_freeze.txt",
+      "sha256": "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d",
+      "size_bytes": 2599,
+      "class": "capture-root",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "python examples/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode",
+      "provenance": "the capture environment's package lockfile; one line redacted in 1ed05dad (machine-specific editable-install URL), so it no longer matches manifest.json's capture-time environment.pip_freeze_sha256. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite). Full capture-time record: step0-owl-neutral-decode/manifest.json",
+      "inputs": [],
+      "requires_model": "qwen-base",
+      "consumers": [
+        "AUDIT A"
+      ]
+    },
+    {
+      "filename": "step0-owl-neutral-decode/prompts.jsonl",
+      "sha256": "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38",
+      "size_bytes": 26839,
+      "class": "derived",
+      "producing_script": "examples/subliminal_step0_decode.py",
+      "producing_command": "no CLI: replay PromptGenerator(PROMPT_PARAMS) from examples/subliminal_step0_decode.py under numpy.random.default_rng(42) for 120 draws (AUDIT D re-runs it)",
+      "provenance": "the 120 seeded queries, index-aligned with *_raw.jsonl; re-derived post-hoc on 2026-08-17 because the capture run predates the generator's prompts.jsonl write (823b5e68). That it is the set the 2026-05-31 run consumed is an inference; see data/README.md",
+      "inputs": [],
+      "requires_model": "none",
+      "consumers": [
+        "Step 1 (prompt, completion) pairs",
+        "AUDIT D"
+      ]
+    }
+  ]
+}
