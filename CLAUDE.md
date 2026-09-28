@@ -149,10 +149,10 @@ repeating as the arc iterates.
 dataset a figure or claim depends on, generating, validating, and saving the
 raw dataset is part of the task. Commit the artifacts, whatever their format,
 to the arc's `research/arcs/<slug>/data/` with a checksummed `MANIFEST.json`
-covering every data file (excluding README, LICENSE-DATA and audit
-transcripts), so a clean clone re-renders every figure and replays the audit.
+covering every data file (excluding the manifest itself, README, LICENSE-DATA and
+audit transcripts), so a clean clone re-renders every figure and replays the audit.
 `.gitattributes` routes only `.pt` under `data/` to Git LFS; JSON, JSONL or
-CSV of a few MB or less stays in plain git, and anything larger, or another
+CSV of 5 MiB or less stays in plain git, and anything larger, or another
 binary format such as `.npz`, gets its own `.gitattributes` LFS rule before
 its first commit. Full discipline in `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".

@@ -365,10 +365,10 @@ the data.
 
 **Where.** `research/arcs/<slug>/data/`, with `.pt` files git-LFS-tracked via
 the existing `research/**/data/*.pt` rule. The manifest covers every committed
-data file under `data/` (excluding README, LICENSE-DATA and audit
-transcripts), whatever its format, `.jsonl` and `.json` included.
+data file under `data/` (excluding the manifest itself, README, LICENSE-DATA and
+audit transcripts), whatever its format, `.jsonl` and `.json` included.
 `.gitattributes` routes only `.pt` under `data/` to Git LFS; JSON, JSONL or
-CSV of a few MB or less stays in plain git, and anything larger, or another
+CSV of 5 MiB or less stays in plain git, and anything larger, or another
 binary format such as `.npz`, gets its own `.gitattributes` LFS rule before
 its first commit. Keep your working/scratch captures in a gitignored cache;
 the committed `data/` dir is the canonical copy.

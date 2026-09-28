@@ -84,7 +84,8 @@ _NOT_BYTE_IDENTICAL = (
 )
 _STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
 
-# Per-artifact provenance. `requires_model` values: none | qwen-base.
+# Per-artifact provenance. `requires_model` values: none | qwen-base, the house
+# label (shared with arcs 01 and 03) for Qwen/Qwen2.5-7B-Instruct.
 # `class` follows the capture-time manifest.json's own lineage
 # (`derived_from`): everything the capture run wrote directly is a
 # capture-root; decode_report.json is derived from the two streams files.

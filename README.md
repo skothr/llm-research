@@ -109,10 +109,11 @@ than discovered two levels down.
   01, 02, 03, and 04 each have one. These audits check
   **arithmetic consistency only** — they cannot catch a methodological error, a
   capture-protocol bug, or interpretive overreach. Arcs 01 and 03 state that
-  limitation in their READMEs; arc 04 states it in its § Reproducing.
+  limitation in their READMEs, arc 02 in its data README § Audit, and arc 04
+  in its § Reproducing.
 - **Datasets committed and pinned.** Arcs 01, 03, and 04 commit raw `.pt`
   artifacts under the arc's `data/` (Git LFS) with a `MANIFEST.json` recording
-  per-file sha256 and provenance; arc 02's Step-0 data is small JSONL in plain
+  per-file sha256 and provenance; arc 02's Step-0 data is small JSON/JSONL and text in plain
   git under the same `MANIFEST.json` convention. The intent is that a clean
   clone re-renders every figure and replays every audit — with one documented exception: arc 04's
   full fitted-lens tensors sit behind an opt-in LFS download (three are
@@ -239,7 +240,7 @@ externally. See the trust-boundary note in `examples/README_NLA.md` before
 extending the pipeline to third-party `.pt` files.
 
 **Raw data is a deliverable.** A clean clone (with LFS pulled) holds the figure
-PNGs, the `.pt` datasets and the plain-git JSON/JSONL datasets the figures and
+PNGs, the `.pt` datasets and the plain-git JSON/JSONL and text datasets the figures and
 audits depend on, so every figure can be re-rendered and every audit replayed. See `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
 
