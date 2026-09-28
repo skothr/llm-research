@@ -49,7 +49,7 @@ Diagonal entries are weakly positive (cosines +0.01 to +0.17), off-diagonal mean
 | nature | +0.131 |
 | refusal | +0.127 |
 
-**Top-5 least-stable axes** — function-word + punctuation:
+**Top-5 least-stable axes** — function-word + punctuation [qualified 2026-09-28: see Evidence]:
 
 | category | cos(d_eop, d_mid) |
 |---|---|
@@ -59,9 +59,22 @@ Diagonal entries are weakly positive (cosines +0.01 to +0.17), off-diagonal mean
 | auxiliary | +0.032 |
 | preposition | +0.043 |
 
+## Evidence
+
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `cells`, `cross_cos` and `diag_cos` in [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt).
+
+- **In-protocol mid-sequence cell (AUDIT 16):** `mid-h × mid-discr in-protocol signal (40% higher than eop in-protocol)` = 0.5632; `mid-h × mid-discr argmax accuracy` = 0.971.
+- **Cross-protocol mid-sequence cell (AUDIT 15):** `mid_seq aggregate within-class signal (~8x weaker than eop)` = 0.0491; `mid_seq aggregate argmax accuracy (per-cat mean, vs 75.4% eop)` = 0.3204.
+- **Other two cells (recomputed, `cells`):** eop × eop `agg_signal` 0.4022, `agg_acc` 0.7537; eop × mid `agg_signal` 0.0369, `agg_acc` 0.0696. No AUDIT line checks these two cells. Ratio of the in-protocol signals: 0.5632 / 0.4022 = 1.400.
+- **Axis stability (AUDIT 16):** `mean cross-protocol diagonal cosine (axis stability)` = 0.0784; `max diagonal (emotion most-stable axis)` = 0.1704; `emotion-emotion cross-protocol cosine` = 0.1704.
+- **Rest of the fig34 statistics (recomputed):** minimum diagonal 0.0126 (p_quote); mean off-diagonal of `cross_cos` −0.0009. The top-5 and bottom-5 tables match `diag_cos` to 3 decimals. The six content categories are the six highest diagonals: emotion 0.170, capital 0.151, country 0.150, nature 0.131, refusal 0.128, codemath 0.127.
+- **Grouping of the least-stable axes:** in the [vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Vocabulary section, math_op is one of the 4 math ops in the numbers/operators group, not a function word or punctuation. The bottom five are therefore punctuation (p_quote, p_special), numbers/operators (math_op) and function words (auxiliary, preposition).
+- **PC1 (AUDIT 12):** `vocab atlas PC1 fraction (sink-removed)` = 0.3349. That PCA is the fig19 scatter ([vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Finding 2). fig21 is the cosine-to-anchor plot of the interpolation steps and has no PC1.
+- **Scoring is in-sample (from `examples/nla_mid_seq_native_compare.py`):** each family of 23 directions is fit on all captures of its protocol and then scored on the same captures. Category sizes range from 2 (p_dash, p_quote) to 12 (nature), counted from `rows[].n_eop` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt), so a scored capture is part of its own in-class mean.
+
 ## What this tells us about layer-20 geometry
 
-The content vs function distinction shows up again as the dominant organizing principle — and now at a deeper level than fig21's PC1. Per-category axes for content concepts (country, emotion, nature) have a modest position-invariant component, while punctuation and function words' axes are *almost entirely* position-determined. This matches the dominant PC1 (content-vs-function, 33.5% variance) found earlier in the sink-removed vocab atlas — but is a stronger statement: not just that content and function words occupy different *regions*, but that the *direction* in which a content category fans out from the population mean is partially preserved across positions, while function-word axes are constructed anew at each position.
+The content vs function distinction shows up again as the dominant organizing principle — and now at a deeper level than fig21's PC1. [qualified 2026-09-28: see Evidence] Per-category axes for content concepts (country, emotion, nature) have a modest position-invariant component, while punctuation and function words' axes are *almost entirely* position-determined. This matches the dominant PC1 (content-vs-function, 33.5% variance) found earlier in the sink-removed vocab atlas — but is a stronger statement: not just that content and function words occupy different *regions*, but that the *direction* in which a content category fans out from the population mean is partially preserved across positions, while function-word axes are constructed anew at each position.
 
 This refines the MAIN-44 closure: the basis isn't *purely* end-of-prompt-protocol-coupled. There's a small protocol-invariant component (~+0.15 cosine for content categories). But it's small enough that cross-protocol projection collapses to noise.
 
@@ -77,3 +90,49 @@ The interpolation flipbook (fig17/fig25) used cross-protocol-by-default discrimi
 ## Cross-arc lessons
 
 MAIN-44 + MAIN-70 together turn what looked like a null result into a productive characterization of the basis. The pattern: **null result + native re-derivation reveals what the failed basis was missing**. Worth keeping as a methodological template — when a basis "fails" cross-protocol, build the native basis and compare directly to map what *is* preserved.
+
+## Reproducibility
+
+```bash
+# Both direction families, the 4 cells, and fig33 + fig34 (no model load;
+# writes .cache/nla_artifacts/mid_seq_native_compare.pt)
+python examples/nla_mid_seq_native_compare.py
+
+# Model-free check of the committed artifacts (AUDIT 15 and 16)
+python examples/nla_audit_findings.py
+```
+
+The committed copy of the output is [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt). The [figure inventory](figures/INVENTORY.md) explains why re-running the script to re-render fig33 also rewrites this artifact.
+
+## Hypotheses
+
+### H1 — The higher mid-sequence in-protocol signal reflects separability, or in-sample scoring
+
+The mid-sequence in-protocol signal (0.5632) is 1.40× the end-of-prompt one (0.4022). Two readings fit that:
+- **Separability.** Mid-sequence captures of one category are more alike than end-of-prompt captures, so their mean-contrast directions separate categories better.
+- **In-sample scoring.** Both cells score each capture against a direction whose in-class mean includes that capture, in categories of 2 to 12 anchors. The identical carrier context of the mid-sequence captures can make this inflation larger there.
+
+**Test (no model load):** recompute both in-protocol cells leave-one-anchor-out. For each scored anchor, fit the 23 directions of its protocol without that anchor, then project the anchor onto them. The scored anchor is then held out of its own fitting set in both protocols. Categories of 2 anchors leave one in-class capture per fit and can be reported separately.
+- The separability reading predicts that the held-out mid-sequence signal stays above the held-out end-of-prompt signal by about the same margin.
+- The in-sample reading predicts that the margin shrinks or reverses.
+
+What the outcomes decide:
+- A reversed or closed margin shows that the gap came from in-sample scoring.
+- A margin of about the in-sample size rules out in-sample inflation as the cause of the gap.
+- A smaller but still positive margin leaves H1 open, with the shrink measuring the in-sample part.
+
+## Follow-ups
+
+1. The H1 test has not run.
+2. No AUDIT line checks the eop × eop and eop × mid cells, the minimum diagonal, the off-diagonal mean or the top-5 and bottom-5 tables. They rest on the recomputation in Evidence.
+3. The stable-axis-only glyph (path 2 in Implications) has not been built.
+4. The protocol-invariant subspace question from Cross-arc lessons is README item D4 ([#7](https://github.com/skothr/llm-research/issues/7)).
+5. The committed fig33 PNG carries a stale title (see the [figure inventory](figures/INVENTORY.md) entry).
+
+## References
+
+- [Mid-seq vocab atlas null result](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md): the cross-protocol run this note follows up, and the source of the mid-sequence captures.
+- [Vocab atlas](2026-05-13-nla-vocab-atlas-grid.md): the end-of-prompt captures and the PC1 finding.
+- [Discriminant validation](2026-05-13-nla-discriminant-validation.md): the mean-contrast recipe used for both direction families.
+- [Arc README](../README.md) § F2 and limitation L3.
+- [Figure inventory](figures/INVENTORY.md), fig33 and fig34.
