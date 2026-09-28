@@ -99,7 +99,7 @@ fig20 (combined 207-vector PCA [qualified 2026-09-28: see Evidence]): the 128 vo
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's AUDIT 12 recipe (sink dims zeroed, unit-normalized) over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt) and were re-read for this section.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's AUDIT 12 recipe (sink dims zeroed, unit-normalized) over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt), plus `steps[].h_t` from [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) for Finding 3, and were re-read for this section.
 
 - **Size (AUDIT 12):** `vocab atlas capture count` = 128; `vocab atlas category count` = 23. AUDIT 12 also covers the Finding 1 and Finding 2 values below, which Followup 5 asked for.
 - **Category counts (`captures[].category`):** the field holds the 23 fine-grained labels. The four group totals are sums over those labels: content 43, function words 52, punctuation 18, numbers/operators 15, matching the Vocabulary section. The grouping is defined only by the section comments in the `VOCAB` dict of `examples/nla_vocab_atlas_capture.py`. That dict was later deduplicated, so its comments give 51 function words and 13 numbers/operators; the committed artifact predates that change.
@@ -148,7 +148,7 @@ The reason vocab anchors and existing captures don't overlap in PCA is that h[20
 
 ```bash
 
-# ~13 min: load Qwen, capture 128 anchors
+# ~13 min: load Qwen, capture 128 anchors  [qualified 2026-09-28: the current VOCAB has 125 entries after deduplication (script line 49); the committed artifact holds 128]
 python examples/nla_vocab_atlas_capture.py
 
 # ~30s: render fig19-22 from artifacts

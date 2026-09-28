@@ -128,9 +128,11 @@ python examples/nla_discriminant_stability_render.py
 
 The file's stated reason is that end-of-prompt h[20] has integrated the whole message into a topic representation. A competing reading is protocol coupling: the 23 directions were fit on end-of-prompt captures whose user message is the anchor alone, while three of the four stability contexts wrap the anchor in prose. The weak projection may come from that mismatch between fitting and test protocols.
 
-**Test:** keep the end-of-prompt capture position and vary only the fitting protocol. Fit the 23 directions on multi-word end-of-prompt captures, with each vocab-atlas anchor embedded in the same four context templates the stability scan uses. Then re-run the 4-context stability projection of the 8 anchors onto those directions. Integration predicts the expected-category projection stays weak whichever fitting set is used. Protocol coupling predicts it rises when the fitting protocol matches the test protocol.
+**Test:** keep the end-of-prompt capture position and vary only the fitting protocol. Fit the 23 directions twice: once on the existing single-token captures, and once on end-of-prompt captures with each vocab-atlas anchor embedded in the four stability-scan templates. All 8 stability anchors are vocab-atlas anchors, so each tested anchor is held out of both fitting sets (leave-one-anchor-out). Project the held-out anchor's four stability captures onto each set of directions and compare the expected-category projection.
 
-If the projection stays weak, the integration reading holds for end-of-prompt captures. If it rises, the weak projection in Finding 3 is a fitting-protocol mismatch, and the topic-not-token conclusion needs re-testing with matched directions.
+What the outcomes decide:
+- No difference between the two fitting sets rules out protocol coupling as the cause of the weak projection.
+- A rise under the templated fitting set is what protocol coupling predicts. It does not rule out integration: templated directions could pick up the anchor's category through the integrated end-of-prompt representation. A rise therefore leaves H1 open.
 
 ### H2 — The stable/unstable split is a property of the category, or of the single anchor tested
 
