@@ -5,9 +5,9 @@
 **Models:** AV (kitft/nla-qwen2.5-7b-L20-av, CPU bf16) + AR (kitft/nla-qwen2.5-7b-L20-ar, CPU bf16)
 **Compute:** ~30 minutes wall time (AR load 215s + 2 anchors + AV load + 20 × ~90s AV)
 **Figures:** `fig17_interp_flipbook.png`, `fig18_interp_diagnostic.png`
-**Data:** `.cache/nla_artifacts/interpolation_flipbook.pt`
+**Data:** `.cache/nla_artifacts/interpolation_flipbook.pt` [qualified 2026-09-28: see Evidence]
 
-> **Refinement note (added 2026-05-29):** the "stepwise transition at t=0.421" finding here is *correct that the transition is discontinuous*, but the 20-step grid undersampled what the transition is *between*. See `2026-05-15-nla-dense-interp-near-pivot.md` (MAIN-34): a 10×-denser run revealed an intermediate "Definition + Poem" hybrid plateau spanning t∈[0.395, 0.4450]. The actual sharp flip is from that plateau to the poetic basin at t≈0.4475-0.4500 (one Δt=0.0025 step); t=0.421 itself sits *inside* the plateau. The factual→hybrid boundary is somewhere in [0.25, 0.395] and still undersampled.
+> **Refinement note (added 2026-05-29):** the "stepwise transition at t=0.421" finding here is *correct that the transition is discontinuous*, but the 20-step grid undersampled what the transition is *between*. See `2026-05-15-nla-dense-interp-near-pivot.md` (MAIN-34): a 10×-denser run revealed an intermediate "Definition + Poem" hybrid plateau spanning t∈[0.395, 0.4450]. [qualified 2026-09-28: see Evidence] The actual sharp flip is from that plateau to the poetic basin at t≈0.4475-0.4500 (one Δt=0.0025 step) [qualified 2026-09-28: see Evidence]; t=0.421 itself sits *inside* the plateau. The factual→hybrid boundary is somewhere in [0.25, 0.395] and still undersampled.
 
 ## Goal
 
@@ -26,7 +26,7 @@ Phrased to mimic AV's own 3-paragraph template language (format-class / phrase c
 * `||h_A − h_B|| = 51.94` — the inter-anchor distance in raw h-space.
 * `cos(h_A, h_B) = +0.6905`. **The anchors are far more similar than I'd designed for.** Two semantically-divergent texts collapse to vectors that are 69% cosine — the chat-template structural attractor dominates AR's outputs.
 * `||h_t||` dips to ~60.7 at t=0.5 — an ~8% midpoint depression from `max(||h_A||, ||h_B||) = 66.30`. The geometric path bows toward the origin, consistent with anchors that aren't collinear but aren't orthogonal either.
-* `cos(h_t, h_A)` and `cos(h_t, h_B)` curves cross at exactly t=0.5 (linear-interp sanity check passed).
+* `cos(h_t, h_A)` and `cos(h_t, h_B)` curves cross at exactly t=0.5 (linear-interp sanity check passed). [qualified 2026-09-28: see Evidence]
 * Per-step distance is constant at 2.734 up to floating-point precision (sanity check).
 
 ## Semantic findings (fig17)
@@ -68,7 +68,7 @@ At intermediate t-values, the AV invents grammatical combinations the model woul
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AV text is quoted from `steps[].av_text` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt).
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AV text is quoted from `steps[].av_text` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt), the committed copy of the artifact. The header's `.cache/nla_artifacts/` path is the gitignored live cache, which a clean clone does not have.
 
 - **Geometry (AUDIT 11):** `interpolation step count` = 20; `anchor cosine cos(h_A, h_B)` = 0.6905; `||h_A||` = 65.7323; `||h_B||` = 66.3012; `||h_A - h_B||` = 51.945; per-step `||Δh||` mean 2.7339, std 0.0; midpoint `||h_t||` = 60.73, below both anchor norms.
 - **t=0.000 (step 0):** "Structured format with "What is the capital of France?" question pattern suggests a list or answer format with ..."
@@ -78,7 +78,12 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **t=0.526 (step 10):** "Structured poem format with numbered lines and descriptive attributes ..."
 - **t=1.000 (step 19):** "Structured poem format with numbered lines and seasonal imagery, suggesting a poetic or literary pattern with a closing line completing the verse about autumn leaves."
 - **Anchor B's subject:** the substring "butterfl" occurs in no step's `av_text`.
-- **Dense re-sample cited in the refinement note (AUDIT 18, [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** `dense_interp step count` = 30; `dense_zone bounds` = [0.395, 0.455]; at most 3 unique first lines across t∈[0.395, 0.4400].
+- **Cosine crossing (recomputed from `h_A`, `h_B` and `steps[].h_t` in the same file):** cos(h_t, h_A) − cos(h_t, h_B) is +0.0163 at t=0.474 and −0.0192 at t=0.526. Linear interpolation between those two steps puts the crossing at t=0.4979. Solving the equality on the straight line between the committed anchors gives t=0.4978. The crossing falls below 0.5 because ||h_A|| = 65.7323 is smaller than ||h_B|| = 66.3012.
+- **Audit coverage:** AUDIT 11 checks the geometry claims above, including the anchor cosine 0.6905. AUDIT 18 checks the dense re-sample. No AUDIT line checks the 20-step AV-text pivot at t=0.421.
+- **Dense re-sample cited in the refinement note ([`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** AUDIT 18 gives `dense_interp step count` = 30 and `dense_zone bounds` = [0.395, 0.455]. The 30 steps are 25 at Δt=0.0025 spanning t=0.3950 to t=0.4550, plus 5 coarse points at t=0, 0.25, 0.5, 0.75 and 1.0.
+- **Dense grid density (recomputed):** the 20-step grid spacing is 1/19 = 0.0526, so the Δt=0.0025 dense zone is 21× denser, not 10×.
+- **Dense plateau content (`steps[].av_text`, same file):** the first line names "Definition" and "Poem" labels at all 21 steps from t=0.3950 to t=0.4450. The label order reverses to "Poem" and "Definition" at t=0.4425 and t=0.4450. At t=0.4475 the first line changes to "Structured format with poetic description pattern ("What is 'London'?" question ...", and from t=0.4500 it reads "What is 'Spring'?". The plateau-to-poetic flip therefore falls between t=0.4450 and t=0.4475, one Δt step earlier than the note's "t≈0.4475-0.4500". The London-to-Spring change happens in the next step, t=0.4475 to t=0.4500.
+- **AUDIT 18's plateau check** covers only t∈[0.395, 0.4400]: `plateau decodes stable across t∈[0.395, 0.4400] (<=3 unique first-lines)` = 3. The 3 distinct 100-character first lines all name the same "Definition" and "Poem" labels and differ only in the following wording ("short answer or trivia format", "concise answer format", "short phrase or answer"). The plateau is a single format label, and it extends to t=0.4450.
 
 ## Hypotheses
 
@@ -130,4 +135,4 @@ Resumable — interrupting and re-running picks up from the last saved step.
 - [Sink-removed atlas](2026-05-13-nla-sink-removed-atlas.md) — introduced the signature-glyph primitive used in fig17.
 - [Cheap-batch glyph views](2026-05-13-nla-cheap-batch-three-glyph-views.md) — established that the AV can decode arithmetically-constructed vectors. fig17 generalizes that to linearly-interpolated vectors and shows the meaning gradient.
 - [Geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) — identified the 8 feature dims used as glyph rays in fig17.
-- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the interpolation artifact's load-bearing claims (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings.
+- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the interpolation artifact's load-bearing claims (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings. [qualified 2026-09-28: see Evidence]

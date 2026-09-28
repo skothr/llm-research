@@ -35,14 +35,14 @@ Two consequences:
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`), which re-derives them from the raw captures.
+AUDIT values are restated from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AUDIT 5-7 re-derive them from the raw captures in [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), not from `sink_removed_atlas.pt`.
 
 - **Dim sets:** `sink_dims` = [277, 458, 1427, 1627, 2107, 2570, 3110] and `feature_dims` = [20, 32, 392, 608, 1121, 1790, 2604, 2953] in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt). AUDIT 4 checks the classifier labels behind both sets.
 - **PC1 fraction:** 0.1648 original (AUDIT 5) and 0.1529 sink-removed (AUDIT 7).
 - **Cosine offset:** original mean off-diagonal cosine 0.4031 and minimum 0.0545 (AUDIT 6). Sink-removed mean 0.1786 and minimum −0.0686 (AUDIT 7). `sink-dim cosine offset` = 0.2244 (AUDIT 7).
 - **Variance kept after sink removal:** 0.9502 (AUDIT 7).
 - **Pool table:** all 24 cells re-read from `cos_orig` and `cos_res` in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt), each a per-pool (intra, cross) pair, match the table to 3 decimals.
-- **Independent re-derivation of the intra column:** AUDIT 6/7 give aggregate 0.3968 → 0.1563, country_src 0.8581 → 0.7772, non_country_src 0.8764 → 0.8042 (original → sink-removed).
+- **Independent re-derivation of the intra column:** AUDIT 6/7, computed from the raw captures rather than `sink_removed_atlas.pt`, give aggregate 0.3968 → 0.1563, country_src 0.8581 → 0.7772, non_country_src 0.8764 → 0.8042 (original → sink-removed).
 
 ## The visualization primitive (fig10, fig11)
 
