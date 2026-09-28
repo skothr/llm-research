@@ -70,7 +70,7 @@ python examples/emb_global_render.py    # fig1-fig4 (model-free)
 python examples/emb_audit_findings.py   # locks every number above (AUDIT 1-4)
 ```
 
-## Hypotheses / open questions
+## Hypotheses / follow-ups
 
 - H1: near-isotropy is a property of modern large-vocab tokenizers + training
   recipes (weight decay on embeddings?) rather than Qwen-specific. To test:

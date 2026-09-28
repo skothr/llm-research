@@ -125,3 +125,24 @@ model); the audit and renders run from committed data alone.
   do not read it as a vocabulary-wide frequency code (see H2).
 - Label propagation is order-dependent even seeded; community COUNTS are
   indicative, the decoded island CONTENT is the robust part.
+
+## References
+
+- Scripts: `examples/emb_fullvocab_stats.py` (S0-S2), `examples/emb_fullvocab_analyze.py`
+  (S3), `examples/emb_structural_block.py` (S4), `examples/emb_fullvocab_render.py`
+  (fig11-fig14), `examples/emb_structural_block_render.py` (fig15),
+  `examples/emb_audit_findings.py` (AUDIT 8).
+- Interpretive frame cited in F-V2: Elhage et al. 2022 (arXiv:2209.10652), not
+  yet in the KB (#96).
+- Data: `../data/emb_fullvocab_stats.pt`, `../data/emb_fullvocab_analysis.pt`,
+  `../data/emb_structural_block.pt`; inputs `../data/emb_battery_vectors.pt`,
+  `../data/emb_category_stats.pt`.
+- Figures: fig11-fig15 in [figures/INVENTORY.md](figures/INVENTORY.md).
+- Plan: [../plans/2026-06-10-fullvocab-sweep.md](../plans/2026-06-10-fullvocab-sweep.md).
+- Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
+  model report [qwen2-5]; BPE tokenization [sennrich2016].
+- Battery handles: [2026-06-10-emb-category-structure.md](2026-06-10-emb-category-structure.md).
+- Follow-on work: [2026-06-11-emb-trace-block-through-layers.md](2026-06-11-emb-trace-block-through-layers.md)
+  (block traced through the layers, H1), [2026-07-21-emb-de-cosine-check.md](2026-07-21-emb-de-cosine-check.md)
+  ('的' pairing from F-V3).
+- Arc README finding #6: [../README.md](../README.md).
