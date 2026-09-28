@@ -82,7 +82,7 @@ For each of the 4 forced-continuation pairs, computed the glyph difference (forc
 | math | "What is 2+2?" | 4 → 5 | **10.97** | 10.97 (no position drift) |
 | refusal_metaware | "What is 2+2?" | 4 → ' refuse' | ~~35.55~~ inflated | **28.06** (position-matched) |
 
-The corrected progression 5.7 → 8.7 → 11.0 → 28.1 still separates **two qualitatively different counterfactual classes** (the rank ordering and the qualitative split survive; only the magnitude of the refusal gap shrinks ~22%):
+The corrected progression 5.7 → 8.7 → 11.0 → 28.1 still separates **two qualitatively different counterfactual classes** (the rank ordering and the qualitative split survive; only the magnitude of the refusal gap shrinks ~22% [qualified 2026-09-28: see Evidence]):
 
 * **Wrong-but-plausible** (Yes/No, Paris/Berlin, 4/5): ||Δh||_feat in [5, 11]. The model's representation moves a small amount because both answers are valid candidates of the same kind. The forced token is "within the model's space of expected continuations."
 * **Out-of-distribution forcing** (4 → refuse-to-answer-2+2): ||Δh||_feat = 28.1 (corrected), ~2.5× math and ~5× negation. The model would never spontaneously refuse to answer "What is 2+2?"; forcing it produces a radically different residual.
@@ -98,7 +98,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Top-20 share:** the top 20 components of the same `direction_unit` hold 0.168 of its squared norm. This does not match the "~14%" stated in Finding 1.
 - **fig14 (`captures[].cosine` in [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt)):** step 0 `'Soft'` 0.8624; step 7 `' bree'` 0.8772; step 14 `'—'` 0.8115. AUDIT 21 confirms `' bree'` as the max-cosine step.
 - **fig16 `||Δh||_feat` (AUDIT 10):** negation 5.7159; factual 8.699; math 10.9709; refusal_metaware `' sensing'` 29.8559, `' test'` 28.065, `' refuse'` 35.5536.
-- **fig16 ratios (from the AUDIT 10 values):** `' refuse'` over math is 35.5536 / 10.9709 = 3.24×, so the original gap was 3.24×, not 4×. The position-matched `' test'` gives 28.065 / 10.9709 = 2.56× math and 28.065 / 5.7159 = 4.91× negation.
+- **fig16 ratios (from the AUDIT 10 values):** `' refuse'` over math is 35.5536 / 10.9709 = 3.24×, so the original gap was 3.24×, not 4×. The position-matched `' test'` gives 28.065 / 10.9709 = 2.56× math and 28.065 / 5.7159 = 4.91× negation. The refusal gap shrinks by 1 − 28.065 / 35.5536 = 21.1%.
 - **fig16 Δpos and `||Δh||_full`:** recomputed from `captures[].h` and `captures[].abs_pos` in [`../data/forced_continuation.pt`](../data/forced_continuation.pt), as each forced capture minus its pair's natural capture. Δpos is 0, 0, 0, −3, +1, +10 and `||Δh||_full` is 64.99, 88.75, 83.50, 110.20, 114.50, 118.86 (row order as in the fig16 table). The same subtraction restricted to the 8 feature dims reproduces the AUDIT 10 values.
 
 ## Hypotheses

@@ -53,7 +53,7 @@ Projecting all 167 existing captures onto each discriminant, then asking "did th
 | nature (haiku, creative) | 45 | 47% | 49% | 56% | 5.2 |
 | refusal (forced/refuse) | 1 | 0% | 100% | 100% | 1.0 |
 
-The 79% top-5 + mean-rank 3.6 for country means: country captures **always end up in the content macro-cluster** but country and capital constantly swap top-1 (they're +0.938 siblings — h's fitting one fit the other). The macro-classification is reliable; sibling distinction is harder.
+The 79% top-5 + mean-rank 3.6 [qualified 2026-09-28: see Evidence] for country means: country captures **always end up in the content macro-cluster** but country and capital constantly swap top-1 (they're +0.938 siblings — h's fitting one fit the other). The macro-classification is reliable; sibling distinction is harder.
 
 Nature is weakest because haiku tokens span many adjacent categories (nature, emotion, codemath as a single content cluster).
 
@@ -136,7 +136,7 @@ What the outcomes decide:
 
 ### H2 — The stable/unstable split is a property of the category, or of the single anchor tested
 
-Each category is represented by one anchor, so the two stability classes rest on n=1 per category. **Test:** repeat the 4-context scan for every vocab-atlas anchor in emotion (6) and refusal (4) and in two stable categories. If ctx-cos stays below +0.60 across the emotion and refusal anchors and above +0.80 for the stable categories, the split is category-level. If ctx-cos varies as much within a category as between categories, the split is anchor-level and the response-distribution explanation needs a per-anchor test.
+Each category is represented by one anchor, so the two stability classes rest on n=1 per category. **Test:** repeat the 4-context scan for every vocab-atlas anchor in emotion (6) and refusal (4) and in two stable categories. If ctx-cos stays below +0.60 across the emotion and refusal anchors and above +0.80 for the stable categories, the split is category-level. If ctx-cos varies as much within a category as between categories, the split is anchor-level and the response-distribution explanation needs a per-anchor test. Any other pattern leaves H2 open.
 
 ## Follow-ups
 
