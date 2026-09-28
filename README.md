@@ -196,8 +196,10 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Arcs 01-03 were re-verified from a clean clone on 2026-08-29
-(their committed logs reproduce byte-for-byte). Arc 04 was re-measured
+from them. Arcs 01 and 03 were re-verified from a clean clone on 2026-08-29
+(their committed logs reproduce byte-for-byte). Arc 02's audit gained seven
+arc-manifest claims on 2026-09-28 and now totals 111 PASS; its committed
+2026-08-17 log records the earlier 104. Arc 04 was re-measured
 in-session on 2026-09-24 after its audit gained CHECK P. No audit log was
 committed for that run; re-derive the totals with the command below:
 
