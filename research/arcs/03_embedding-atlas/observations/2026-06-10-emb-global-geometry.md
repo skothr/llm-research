@@ -11,7 +11,7 @@ padded rows. Capture: `examples/emb_capture.py`; numbers locked by
 ## Findings
 
 **F-G1 (null with teeth). The table is nearly isotropic — the classic
-"anisotropic narrow cone" expectation fails here.** Random-pair cosine over
+"anisotropic narrow cone" expectation fails here.** [qualified 2026-09-28: the literature figures behind that expectation are for contextual states or a tied MT table, not an input-embedding table; see the qualifier below] Random-pair cosine over
 10k sampled real-token pairs: **+0.0097 raw** (+0.0007 after mean-centering).
 Mean cosine to the mean vector mu: **+0.0980**. Prior literature on
 contextual/static embedding spaces (Mu & Viswanath 2018, arXiv:1702.01417;
