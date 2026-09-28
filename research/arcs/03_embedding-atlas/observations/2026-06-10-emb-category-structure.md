@@ -110,12 +110,12 @@ python examples/emb_audit_findings.py     # AUDIT 5-6
   (derivation), `examples/emb_category_render.py` (fig5-fig8),
   `examples/emb_pca_map_render.py` (fig9), `examples/emb_neighbors_report.py`,
   `examples/emb_audit_findings.py` (AUDIT 5-6).
-- Data: `data/emb_battery_vectors.pt`, `data/emb_global_stats.pt`,
-  `data/emb_category_stats.pt`, `data/emb_neighbor_probes.pt`.
+- Data: `../data/emb_battery_vectors.pt`, `../data/emb_global_stats.pt`,
+  `../data/emb_category_stats.pt`, `../data/emb_neighbor_probes.pt`.
 - Figures: fig5-fig9 in [figures/INVENTORY.md](figures/INVENTORY.md).
 - Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
   model report [qwen2-5].
 - Same battery, relation directions: [2026-06-10-emb-pair-directions.md](2026-06-10-emb-pair-directions.md).
 - Plan: [../plans/2026-06-10-embedding-atlas.md](../plans/2026-06-10-embedding-atlas.md).
 - Arc README findings #3-#4: [../README.md](../README.md).
-- H2 bridge target: `research/arcs/01_nla-verbalizer/data/vocab_atlas.pt`.
+- H2 bridge target: `../../01_nla-verbalizer/data/vocab_atlas.pt`.

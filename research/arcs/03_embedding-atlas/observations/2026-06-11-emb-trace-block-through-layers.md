@@ -170,9 +170,9 @@ python examples/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; to
   `examples/emb_trace_components.py` (T1.5), `examples/emb_trace_analyze.py`,
   `examples/emb_trace_render.py` (fig16-fig18), `examples/emb_audit_findings.py`
   (AUDIT 9).
-- Data: `data/emb_trace_layers.pt`, `data/emb_trace_weightmap.pt`,
-  `data/emb_trace_analysis.pt`, `data/emb_trace_components.pt`; block
-  definition from `data/emb_fullvocab_analysis.pt`.
+- Data: `../data/emb_trace_layers.pt`, `../data/emb_trace_weightmap.pt`,
+  `../data/emb_trace_analysis.pt`, `../data/emb_trace_components.pt`; block
+  definition from `../data/emb_fullvocab_analysis.pt`.
 - Figures: fig16-fig18 in [figures/INVENTORY.md](figures/INVENTORY.md).
 - Pre-registered predictions: [../plans/2026-06-11-predictions.md](../plans/2026-06-11-predictions.md).
 - Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
