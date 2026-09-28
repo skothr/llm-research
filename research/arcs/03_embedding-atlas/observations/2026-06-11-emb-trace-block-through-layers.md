@@ -162,3 +162,23 @@ python examples/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; to
   are not.
 - "First-token sink" is asserted for THIS corpus (no BOS token; raw text);
   chat-template prompts may relocate the sink.
+
+## References
+
+- Scripts: `examples/emb_trace_capture.py` (T0/T1; arc-1 sink dims constant
+  `ARC1_SINK_DIMS`), `examples/emb_trace_corpus.py` (extended probes),
+  `examples/emb_trace_components.py` (T1.5), `examples/emb_trace_analyze.py`,
+  `examples/emb_trace_render.py` (fig16-fig18), `examples/emb_audit_findings.py`
+  (AUDIT 9).
+- Data: `data/emb_trace_layers.pt`, `data/emb_trace_weightmap.pt`,
+  `data/emb_trace_analysis.pt`, `data/emb_trace_components.pt`; block
+  definition from `data/emb_fullvocab_analysis.pt`.
+- Figures: fig16-fig18 in [figures/INVENTORY.md](figures/INVENTORY.md).
+- Pre-registered predictions: [../plans/2026-06-11-predictions.md](../plans/2026-06-11-predictions.md).
+- Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);
+  model report [qwen2-5].
+- The W_E structural block (F-V1): [2026-06-10-emb-fullvocab-sweep.md](2026-06-10-emb-fullvocab-sweep.md).
+- T2 follow-up (H1): [2026-07-15-emb-trace-delimiter-attention.md](2026-07-15-emb-trace-delimiter-attention.md).
+- Arc-1 layer-20 sink dims: [../../01_nla-verbalizer/README.md](../../01_nla-verbalizer/README.md).
+- Logit lens (H3): [nostalgebraist2020-logit-lens].
+- Arc README findings #7-#8: [../README.md](../README.md).
