@@ -109,8 +109,9 @@ The committed dataset is `research/arcs/02_subliminal/data/step0-owl-neutral-dec
 (streams + raw + decode_report.json + manifest.json + pip_freeze.txt). Sampling
 at temperature 1.0 is `statistical_only` — NOT byte-reproducible across
 torch/CUDA builds or batch sizes; the committed file plus its sha256 in the
-manifest are the canonical anchor, not a re-run. (Manifest format is interim,
-pending the research-arc dataset SOP.)
+manifest are the canonical anchor, not a re-run. (The capture-time manifest's
+format is interim; since 2026-09-28 the arc manifest `data/MANIFEST.json` also
+pins every file under the research-arc dataset convention, #53.)
 
 ## Hypotheses
 
@@ -148,7 +149,9 @@ pending the research-arc dataset SOP.)
 - **"zero owl-lexicon hits, all 5 schemes, z=0, p=1.0":** `decode_report.json` →
   `report.<scheme>.{owl_hits,neutral_hits,z,p_two_sided}`, derivable from
   `owl_streams.jsonl` + `neutral_streams.jsonl`.
-- Manifest format is interim (`0.1.0-interim`), pending the research-arc dataset SOP.
+- The capture-time manifest format is interim (`0.1.0-interim`); since
+  2026-09-28 the arc manifest `data/MANIFEST.json` pins every data file under
+  the research-arc dataset convention (#53).
 
 ## References
 

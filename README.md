@@ -103,20 +103,19 @@ than discovered two levels down.
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four registers are partial — read each arc's
   own account rather than this summary.
-- **Audit scripts.** `examples/*_audit_findings.py` re-derive an arc's
-  load-bearing numbers from its committed artifacts, so a figure quoted in
+- **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
+  arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
-  01, 03, and 04 each have one. Arc 02 has none: its Step-0 numbers (a z-test,
-  a power calculation) predate the audit-script convention and are small enough
-  to check by hand against the committed JSONL. These audits check
+  01, 02, 03, and 04 each have one. These audits check
   **arithmetic consistency only** — they cannot catch a methodological error, a
   capture-protocol bug, or interpretive overreach. Arcs 01 and 03 state that
-  limitation in their READMEs; arc 04 states it in its § Reproducing.
+  limitation in their READMEs, arc 02 in its data README § Audit, and arc 04
+  in its § Reproducing.
 - **Datasets committed and pinned.** Arcs 01, 03, and 04 commit raw `.pt`
   artifacts under the arc's `data/` (Git LFS) with a `MANIFEST.json` recording
-  per-file sha256 and provenance; arc 02's Step-0 data is JSONL under an
-  interim manifest schema. The intent is that a clean clone re-renders every
-  figure and replays every audit — with one documented exception: arc 04's
+  per-file sha256 and provenance; arc 02's Step-0 data is small JSON/JSONL and text in plain
+  git under the same `MANIFEST.json` convention. The intent is that a clean
+  clone re-renders every figure and replays every audit — with one documented exception: arc 04's
   full fitted-lens tensors sit behind an opt-in LFS download (three are
   committed; the two 1.5B nf4 lenses are pending issue #47), so 7 of its
   checks fail on a default clone — 3 LFS-stub reports + 4 `MISSING`
@@ -198,14 +197,16 @@ script runs two full sweeps so cross-refs settle. A LaTeX toolchain
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
 gitignored; the committed copies live in each arc's `data/`). Render scripts
 turn artifacts into figures; each arc's audit re-derives that arc's claims
-from them. Arcs 01-03 were re-verified from a clean clone on 2026-08-29
-(their committed logs reproduce byte-for-byte). Arc 04 was re-measured
+from them. Arcs 01 and 03 were re-verified from a clean clone on 2026-08-29
+(their committed logs reproduce byte-for-byte). Arc 02's audit gained seven
+arc-manifest claims on 2026-09-28 and now totals 111 PASS; its committed
+2026-08-17 log records the earlier 104. Arc 04 was re-measured
 in-session on 2026-09-24 after its audit gained CHECK P. No audit log was
 committed for that run; re-derive the totals with the command below:
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 104 PASS | 0 FAIL | 5 UNVERIFIABLE
+python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
 ```
@@ -239,8 +240,8 @@ externally. See the trust-boundary note in `examples/README_NLA.md` before
 extending the pipeline to third-party `.pt` files.
 
 **Raw data is a deliverable.** A clean clone (with LFS pulled) holds the figure
-PNGs and the `.pt` datasets the figures and audit depend on, so every figure can
-be re-rendered and the audit replayed. See `research/ARC_PROCESS.md`
+PNGs, the `.pt` datasets and the plain-git JSON/JSONL and text datasets the figures and
+audits depend on, so every figure can be re-rendered and every audit replayed. See `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
 
 ## Epistemic discipline (carried over from the source workspace)
