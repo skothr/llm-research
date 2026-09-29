@@ -58,7 +58,7 @@ because they carry as much of the signal as the positive ones:
   **corpus-invariance** and **held-out** conclusions otherwise re-derive
   within audit tolerance and the quoted **L21 excess 10.7–11.7%** range
   survives as written. Per-claim record:
-  [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md).
+  [`arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md` § Outcome](arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md#outcome--executed-2026-08-1516).
 
 **Where to start.** Arc 01 for depth and the largest body of observations;
 arc 03 or 04 for how the method behaves when a prediction fails or a
