@@ -267,9 +267,12 @@ move cannot be attributed to the redaction alone, because the nf4 refit
 noise is of the same order. No headline conclusion changed: the quoted
 L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
 1.5B axis both stand. The results that never used C4 are unaffected:
-the headline ceiling verdicts, every swap stage (5.1, 5.1b, 5.2), the
-NLA cross-tie, and the quantization and n-budget axes. 41 of 53
-committed artifacts have no C4 dependency.
+the ceiling verdicts on the wikitext scans (1.5B L21 excess 11.15%,
+7B 4.72%), every swap stage (5.1, 5.1b, 5.2), the NLA cross-tie, and the
+quantization and n-budget axes. The 7B held-out figures (5.88%, and the
+K=58 recompute) use the held-out C4 set, and are computed on its
+redacted text.
+As of 2026-08-16, 41 of 53 committed artifacts had no C4 dependency.
 
 Full record (per-class counts, root cause, redaction method, known
 limits, refit costs, audit states and exact reproduction):
@@ -751,8 +754,8 @@ original text; the original is preserved beneath it.
   the 7B gap to scale (H1 exonerated). *Read first:* 2026-08-16
   (C4 re-run).
 - `2026-07-24-paper-metric-varfrac-recompute.md` — recompute under the
-  paper's excess-FVE definition: both ceiling verdicts hold on all four
-  axes; the stage-5.2 swap gap is significance-certified; pursuit norm
+  paper's excess-FVE definition: both ceiling verdicts hold, on the
+  four 1.5B robustness axes and the 7B held-out set; the stage-5.2 swap gap is significance-certified; pursuit norm
   bias is confined to the early band. *Read first:* 2026-08-16; caveat
   2026-08-30; correction 2026-07-28 on the 59% tier.
 - `2026-08-30-excess-fve-dimension-dependence.md` — excess-FVE depends on
