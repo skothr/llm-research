@@ -8,7 +8,8 @@ the structural-token features it carries are used by the early layers.
 2026-06-11; started 2026-06-10). All three phases landed: phase 1 (battery
 protocol probes), phase 2 (full-vocabulary sweep, 149,706 alive rows), and
 phase 3 (structural tracing T0/T1/T1.5/T2, absorbing the former rope-vis arc
-per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
+per [plan](plans/2026-06-10-rope-vis.md)). Six observations at the
+2026-07-15 close, plus two 2026-07-21 addenda; audit at
 **99 PASS / 0 FAIL**; pre-registered predictions
 ([plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md))
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
@@ -21,7 +22,7 @@ within days of that model's release, so a reported (but here
 **unconfirmed** — see the note's sourcing breakdown) initial-release
 quality-degradation window would have covered them; audited clean at the
 user's direction —
-[degradation-forensics](sessions/2026-07-21-degradation-forensics.md).
+[degradation-forensics](observations/2026-07-21-degradation-forensics.md).
 
 ## The question
 
@@ -311,7 +312,7 @@ close:
 neighbor-cosine table now locked by audit §11. The same session bounded the
 Fable-degradation exposure window from the user's knowledge of the release
 timeline and commissioned the transcript forensics pass
-([degradation-forensics](sessions/2026-07-21-degradation-forensics.md)).
+([degradation-forensics](observations/2026-07-21-degradation-forensics.md)).
 
 ### Human / Claude / emergent split
 
@@ -413,9 +414,11 @@ research/arcs/03_embedding-atlas/
     2026-06-10-emb-fullvocab-sweep.md         # 21-dim block, handle precision, kNN islands
     2026-06-11-emb-trace-block-through-layers.md  # T0/T1/T1.5: sinks, readers, carriers
     2026-07-15-emb-trace-delimiter-attention.md   # T2: P1a/P1c/P1d adjudication
+    2026-07-21-emb-de-cosine-check.md         # '的' pairing: role/block alignment, not translation
+    2026-07-21-degradation-forensics.md       # kickoff-session degradation-window audit
     figures/ (fig1-fig21 + INVENTORY.md)
   plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
-  sessions/ (2026-06-11 tracing checkpoint; 2026-07-21 degradation-window forensics)
+  sessions/ (2026-06-11 tracing checkpoint)
   data/ (15 .pt + MANIFEST.json + LICENSE-DATA.md + README.md)  # git-LFS, ~96 MB
 ```
 
