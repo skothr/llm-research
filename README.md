@@ -37,10 +37,9 @@ less than 0.02, both in the held-out channel, and no headline conclusion
 changed; the two failure modes pre-registered before the re-run did
 not materialise. Arc 04's primary fitting corpus is wikitext-103,
 which was scanned and left unmodified, and no other arc used C4. The full
-record — per-class counts, root cause, per-claim blast radius, and the
-reproduction recipe — is in
-[`research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md` § Outcome](research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16) and
-[`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md).
+record — per-class counts, root cause and the reproduction recipe — is in
+[`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md),
+which links the per-claim record.
 Surfaced here because a correction of this kind should be visible at the
 entry point rather than discovered two levels down.
 
