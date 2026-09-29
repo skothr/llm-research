@@ -53,6 +53,9 @@ are wikitext-fit and are **not** affected.
 
 ## Cost
 
+The tables below record the run as of 2026-07-29. The run's actual
+outcome is in [§ Outcome](#outcome--executed-2026-08-1516).
+
 **Revised 2026-07-29, after the run started.** The original estimate of 4-5 h
 was wrong in two independent ways, both discovered by executing it.
 
