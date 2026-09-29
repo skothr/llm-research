@@ -4,7 +4,8 @@
 >
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
 > **not** byte-identical to the raw upstream text.
-> **120 pieces of third-party personal data were removed** from them:
+> **120 pieces of third-party personal data were removed** from them (the
+> pre-redaction text remains in git history; issue #133):
 >
 > | Class | fitting (n=1000) | held-out (n=30) |
 > |---|---|---|
@@ -75,7 +76,7 @@
 > Only two pinned values moved beyond tolerance, both in the held-out-C4
 > channel: the 1.5B held-out logit-kurtosis trough (1.000 → 1.019) and the 7B
 > held-out L23 excess (0.0598 → 0.0588). Which conclusions that does and does
-> not touch is set out in the correction record in
+> not touch (per-claim status) is set out in
 > [`../plans/2026-07-29-c4-redaction-rerun.md` § Outcome](../plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16).
 >
 > **Scope.** Only the two C4-en files are redacted. The **wikitext-103 corpora

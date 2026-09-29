@@ -54,7 +54,7 @@ are wikitext-fit and are **not** affected.
 
 ## Cost
 
-The tables below record the run as of 2026-07-29. The run's actual
+This section records the run as of 2026-07-29. The run's actual
 outcome is in [§ Outcome](#outcome--closed-2026-08-16).
 
 **Revised 2026-07-29, after the run started.** The original estimate of 4-5 h
@@ -366,7 +366,7 @@ lenses and their sidecars (`jlens_qwen2.5-1.5b_nf4_n100` and `_n500`) — the
 quantization and n-budget axes are C4-free, so refitting them (8.3 h) would
 buy a green audit and no correction; owner decision 2026-07-29. That
 decision was reversed 2026-08-16 on data-completeness grounds — the refits
-are scheduled as issue #47; until they land, the two `MISSING` reports
+are scheduled as issue #47; until they land, the four `MISSING` reports
 remain the designed state.
 
 Drift beyond audit tolerance was confined to the **held-out-C4 channel** —
