@@ -3,7 +3,7 @@
 **Status:** executed and complete. Redaction landed 2026-07-29; the compute
 half ran 2026-08-15/16 (Steps 0–3 in commit `a9df3a55`; Step 4 prose,
 figure and inventory restatement 2026-08-16). Outcome, drift and
-the two pre-committed exposures: [§ Outcome](#outcome--executed-2026-08-1516)
+the two pre-committed exposures: [§ Outcome](#outcome--closed-2026-08-16)
 at the end of this plan.
 **Owner gate:** GPU time on the RTX 2080 (8 GB) — see § Cost.
 **Trigger for writing this:** third-party PII found in the committed C4-en
@@ -32,7 +32,8 @@ the infix did not already flag.
 
 The C4-fit lens itself (`jlens_qwen2.5-1.5b_bf16_n100_c4en.pt`) is **cache-only
 and gitignored** (Decision 4), so channel 1 has no committed lens to reuse —
-it must refit from scratch. The two committed `jlens_*_layer-subset.pt` files
+it must refit from scratch. [updated 2026-08-16: the three refit lenses were
+then committed to `data/cache/` via LFS; see § Outcome] The two committed `jlens_*_layer-subset.pt` files
 are wikitext-fit and are **not** affected.
 
 **Confirmed NOT in scope** (verified, not assumed):
@@ -54,7 +55,7 @@ are wikitext-fit and are **not** affected.
 ## Cost
 
 The tables below record the run as of 2026-07-29. The run's actual
-outcome is in [§ Outcome](#outcome--executed-2026-08-1516).
+outcome is in [§ Outcome](#outcome--closed-2026-08-16).
 
 **Revised 2026-07-29, after the run started.** The original estimate of 4-5 h
 was wrong in two independent ways, both discovered by executing it.
@@ -161,7 +162,7 @@ calibration.
 > affected.
 Writes to the gitignored cache; commit only the layer subset if the arc's
 Decision-4 policy is extended to it (it currently is not — the c4en lens stays
-cache-only).
+cache-only). [updated 2026-08-16: see § Outcome]
 
 ## Step 2 — regenerate the 10 derived artifacts
 
@@ -266,7 +267,7 @@ consistency is **not** a licence to skip reporting it.
 
 ---
 
-## Outcome — executed 2026-08-15/16
+## Outcome — closed 2026-08-16
 
 The correction record below was the arc README's `## Data correction`
 section from 2026-08-16 until 2026-09-29, when it moved here under
@@ -334,7 +335,8 @@ preserved unedited beneath it.
 were re-pinned (below); the rest re-derive within their existing tolerances.
 
 **The re-run (executed 2026-08-15/16).** Three lenses were refit on the
-redacted corpora via `examples/jspace_rerun_queue.py` — c4en-1.5B **3.14 h**;
+redacted corpora via `examples/jspace_rerun_queue.py` — c4en-1.5B **3.14 h** of queue wall-clock (3.12 h of fit,
+per `data/cache/logs/fit_c4en-1.5b.log`);
 wikitext-1.5B **8.22 h** of queue wall-clock across two segments (3.54 h of
 it GPU time; the card was handed back to the desktop in between, so the
 reproducible single-segment cost is ~3.24 h); wikitext-7B **11.49 h**,
@@ -348,15 +350,15 @@ structure scans (`validation_max_vf_diff = 0.0`).
 
 **Outcome.** Audit after the re-run and before re-pinning: **954 PASS |
 6 FAIL**; after re-pinning the two values that legitimately moved,
-**956 PASS | 4 FAIL** (post-re-pin log committed at
-`data/audit_2026-08-16.log`; those are the totals **as of that re-run** —
-the audit has since gained checks, so a re-derivation with the cache
-reported 986 | 4 as of 2026-08-17 (`data/audit_2026-08-17.log`;
-current expected totals: "Expected result on a clean clone" in the arc README § Reproducing).
-Re-derive with
-`python examples/jspace_audit_findings.py` — the three re-fit lenses are
+**956 PASS | 4 FAIL**. The post-re-pin log is committed at
+`data/audit_2026-08-16.log`. Those are the totals as of that re-run. The
+audit has since gained checks: a re-derivation with the cache reported
+986 | 4 as of 2026-08-17 (`data/audit_2026-08-17.log`). The current
+expected totals are under "Expected result on a clean clone" in the arc
+README § Reproducing. Re-derive with
+`python examples/jspace_audit_findings.py`. The three re-fit lenses are
 LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
-the lens download is opt-in, see "Expected result on a clean clone" in the arc README § Reproducing).
+the lens download is opt-in (same README section).
 The 4 remaining FAILs
 are the designed `MISSING` reports for the two deliberately-unrefit nf4
 lenses and their sidecars (`jlens_qwen2.5-1.5b_nf4_n100` and `_n500`) — the

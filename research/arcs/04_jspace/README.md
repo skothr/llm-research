@@ -255,10 +255,10 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > data ([`CLAUDE.md`](../../../CLAUDE.md) § Third-party data) comes from
 > this case.
 
-The redaction is not length-preserving, so all 12 C4-dependent files (the
-two corpus JSONs and 10 derived artifacts) were regenerated on the
-redacted text on 2026-08-16. Every number in this README is the
-regenerated value. Two audit pins moved beyond tolerance, both in the
+The redaction is not length-preserving, so all 12 C4-dependent files
+changed. The two corpus JSONs were redacted on 2026-07-29, and the 10
+derived artifacts were regenerated from them, closing on 2026-08-16.
+Every C4-dependent result in this README is the regenerated value. Two audit pins moved beyond tolerance, both in the
 held-out-C4 channel: the 1.5B held-out logit-kurtosis trough
 (1.000 → 1.019) and the 7B held-out L23 excess (0.0598 → 0.0588). The 7B
 move cannot be attributed to the redaction alone, because the nf4 refit
@@ -268,7 +268,7 @@ L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
 
 Full record (per-class counts, root cause, refit costs, per-claim status,
 the two pre-committed exposures), dated 2026-08-16:
-[`plans/2026-07-29-c4-redaction-rerun.md` § Outcome](plans/2026-07-29-c4-redaction-rerun.md#outcome--executed-2026-08-1516).
+[`plans/2026-07-29-c4-redaction-rerun.md` § Outcome](plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16).
 Redaction method, known limits and exact reproduction:
 [`data/README.md`](data/README.md); licensing:
 [`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).

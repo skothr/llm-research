@@ -39,7 +39,7 @@ not materialise. Arc 04's primary fitting corpus is wikitext-103,
 which was scanned and left unmodified, and no other arc used C4. The full
 record — per-class counts, root cause, per-claim blast radius, and the
 reproduction recipe — is in
-[`research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md` § Outcome](research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md#outcome--executed-2026-08-1516) and
+[`research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md` § Outcome](research/arcs/04_jspace/plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16) and
 [`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md).
 Surfaced here because a correction of this kind should be visible at the
 entry point rather than discovered two levels down.
