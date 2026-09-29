@@ -266,12 +266,12 @@ noise is of the same order. No headline conclusion changed: the quoted
 L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
 1.5B axis both stand.
 
-Full record (per-class counts, root cause, refit costs, per-claim status,
-the two pre-committed exposures), dated 2026-08-16:
+Full record (per-class counts, root cause, redaction method, known
+limits, refit costs, audit states and exact reproduction):
+[`data/README.md`](data/README.md). Per-claim status and the two
+pre-committed exposures, dated 2026-08-16:
 [`plans/2026-07-29-c4-redaction-rerun.md` § Outcome](plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16).
-Redaction method, known limits and exact reproduction:
-[`data/README.md`](data/README.md); licensing:
-[`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).
+Licensing: [`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).
 
 ## Limitations
 
