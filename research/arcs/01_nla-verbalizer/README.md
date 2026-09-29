@@ -162,7 +162,7 @@ of.*
 (Signs corrected 2026-08-16 to match Finding 2 of the observation file.
 PC1's sign is arbitrary; the claim is that PC1 separates content from
 function. `nla_audit_findings.py` AUDIT 12 checks the 33.5% variance
-fraction but not the polarity.)
+fraction. No audit checks the polarity.)
 
 **Scope qualifications:** sink-dim identification was hand-rolled
 (7 dims chosen as those with universal sign + large |h|); a more
@@ -343,8 +343,9 @@ leaves cross-model replication open ([D5](#d5-cross-model-replication)).
 > — [session 2026-05-13]
 
 Set the order: validate the round-trip, pin down layer 20 (of 28; ~71%
-depth), then verbalize at every token. The live per-token view is open
-as [D7](#d7-per-token-live-trajectory-viz).
+depth), then verbalize at every token. The static per-token trajectory
+is built (`nla_gen_trajectory.py` and its figures); the live view is
+open as [D7](#d7-per-token-live-trajectory-viz).
 
 **Reproduce Anthropic's emergent-behavior examples**:
 
@@ -393,7 +394,8 @@ interpolation experiments (F1, F5) depend on.
 > together into an otherwise semantically garbled statement."*
 
 Set the reading that one verbalization superposes several semantic
-layers, which the later multi-axis geometry work kept testing.
+layers. The later multi-axis geometry work kept returning to this
+reading.
 
 **Concept directions** [session 2026-05-13]:
 
@@ -402,8 +404,9 @@ layers, which the later multi-axis geometry work kept testing.
 > we could identify pattern-wise across different contexts involving
 > some relevance to things being countries?"*
 
-Set contrasts, not single activations, as the unit of analysis: the
-CAV-style country direction, then the 23-category mean-contrast basis.
+Seeded contrasts, not single activations, as the unit of analysis. The
+CAV-style country direction and the 23-category mean-contrast basis
+came from it.
 
 **The semantic-basis grid** [session 2026-05-14]:
 
@@ -415,8 +418,8 @@ CAV-style country direction, then the 23-category mean-contrast basis.
 > a complex 'grid' of sorts, or a set of entangled axes or something
 > to provide direction in such high dimensional space"*
 
-Set the vocab atlas (128 anchors × 23 categories) and multi-axis
-interpretation, which the 3-macro-cluster connectivity result (content /
+Seeded the vocab atlas (realized as 128 anchors × 23 categories) and
+multi-axis interpretation, which the 3-macro-cluster connectivity result (content /
 function-words / structural) bears out. Seeded
 [arc 03](../03_embedding-atlas/README.md).
 
