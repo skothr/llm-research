@@ -137,22 +137,15 @@ provenance is inferred.** Sampling at temperature 1.0 makes the corpus
 re-run. `prompts.jsonl` was re-derived post-hoc (2026-08-17) by replaying the
 seeded generator — the audit proves it *is* that generator's seed-42 output, but
 that it is the set the 2026-05-31 run consumed remains an inference. Two
-capture-time hashes in `manifest.json` (the pip-freeze and generator-script
+capture-time hashes in `data/step0-owl-neutral-decode/manifest.json` (the pip-freeze and generator-script
 hashes) no longer match disk for recorded reasons — the audit asserts the
 current state and scores the drift PASS (see
 [`data/README.md`](data/README.md) § "Post-capture amendments").
-`examples/subliminal_audit_findings.py` re-derives every load-bearing number
-(`104 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
+`examples/subliminal_audit_findings.py` re-derives every number the arc
+reports (`111 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
 bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
 ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model
 snapshot revision, and the capture-time hardware/environment.
-
-**L6. The data layout predates the arc-data SOP.** This arc keeps a per-dataset
-`manifest.json` (`manifest_version 0.1.0-interim`) rather than
-`ARC_PROCESS.md`'s `data/MANIFEST.json` convention, and was never migrated.
-Integrity is fully covered by the audit script; the migration is a field remap,
-not a re-capture, tracked as issue
-[#53](https://github.com/skothr/llm-research/issues/53).
 
 ## Contents
 
