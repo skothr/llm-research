@@ -1,8 +1,8 @@
 # NLA Interpretability Research Arc — Qwen2.5-7B Layer 20
 
-A working investigation into what Anthropic's released Natural Language
-Autoencoders (NLAs) for Qwen2.5-7B-Instruct surface about layer-20 hidden
-state structure. A focused arc (observations 2026-05-12 to 05-15):
+A working investigation into what a Natural Language Autoencoder (NLA)
+pair `[anthropic2026-nla]` published for Qwen2.5-7B-Instruct surfaces about
+layer-20 hidden state structure. A focused arc (observations 2026-05-12 to 05-15):
 22 observation files, 36 figures, 22 tracked work items, a regression
 audit at **196 PASS / 0 FAIL**, and one working synthesis: *layer-20
 h-space appears to have discrete attractor basins separated by sharp
@@ -32,15 +32,22 @@ paths](#possible-next-paths).
 
 ## The question
 
-Anthropic released the NLA model pair `kitft/nla-qwen2.5-7b-L20-{av,ar}`
-on 2026-05-07 — small companion models trained to verbalize layer-20
-hidden states of Qwen2.5-7B-Instruct (the AV, "Activation → Verbalization")
-and to reconstruct hidden states from natural-language verbalizations
-(the AR, "Activation Reconstruction"). The pair enables a round-trip
+Anthropic's NLA paper, published 2026-05-07
+`[anthropic2026-nla §sec-release]`, defines an NLA as two LLM modules: an
+activation verbalizer (AV) that maps an activation to a text description, and
+an activation reconstructor (AR) that maps the description back to an
+activation `[anthropic2026-nla §abstract; kb/excerpts/anthropic2026-nla#abstract]`.
+A pair of this kind for layer-20 hidden states of Qwen2.5-7B-Instruct is
+published on Hugging Face as `kitft/nla-qwen2.5-7b-L20-{av,ar}`.
+The date 2026-05-07 is the paper's; the weights in those repos date from a
+2026-03-16 upload, and their later commits, the last on 2026-05-07, change
+only metadata files (the Hugging Face commit history of both repos, read
+2026-09-27; `examples/_nla_probe.py` records the pinned revisions).
+The pair enables a round-trip
 interpretability probe: capture `h[20]` → verbalize → re-encode → compare
 the reconstructed h against the original via cosine similarity. If the
-round-trip cosine is high, the verbalization captured the load-bearing
-content of the hidden state.
+round-trip cosine is high, the verbalization kept enough of the hidden
+state for the AR to rebuild its direction.
 
 This arc applied the NLA pair to local Qwen2.5-7B-Instruct across a
 sequence of probes — initial round-trip validation, then per-token
