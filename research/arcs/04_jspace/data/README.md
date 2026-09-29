@@ -68,8 +68,8 @@
 > Only two pinned values moved beyond tolerance, both in the held-out-C4
 > channel: the 1.5B held-out logit-kurtosis trough (1.000 → 1.019) and the 7B
 > held-out L23 excess (0.0598 → 0.0588). Which conclusions that does and does
-> not touch is set out in the correction record at the top of
-> [`../README.md`](../README.md).
+> not touch is set out in the correction record in
+> [`../plans/2026-07-29-c4-redaction-rerun.md` § Outcome](../plans/2026-07-29-c4-redaction-rerun.md#outcome--executed-2026-08-1516).
 >
 > **Scope.** Only the two C4-en files are redacted. The **wikitext-103 corpora
 > — the arc's primary fitting corpora — are unmodified**, and every result on
