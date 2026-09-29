@@ -250,7 +250,9 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > third-party PII** (email addresses, phone numbers, street addresses,
 > postal codes), across 62 documents. Several documents paired a named
 > person with a direct email and phone number. It was redacted on
-> 2026-07-29, after about 9 days in this public repository. C4 was
+> 2026-07-29, after about 9 days in this public repository. The
+> pre-redaction text remains in this repository's git history (issue
+> #133). C4 was
 > chosen because it is closer to pretraining text than Wikipedia is.
 > That same breadth made it likely to contain real people's data, and no
 > privacy check was recorded when it was chosen. The repo's pre-use check for third-party
@@ -270,8 +272,8 @@ L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
 the ceiling verdicts on the wikitext scans (1.5B L21 excess 11.15%,
 7B 4.72%), every swap stage (5.1, 5.1b, 5.2), the NLA cross-tie, and the
 quantization and n-budget axes. The 7B held-out figures (5.88%, and the
-K=58 recompute) use the held-out C4 set, and are computed on its
-redacted text.
+K=58 held-out figure, 7.67%) use the held-out C4 set, and are computed
+on its redacted text.
 As of 2026-08-16, 41 of 53 committed artifacts had no C4 dependency.
 
 Full record (per-class counts, root cause, redaction method, known
