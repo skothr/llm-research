@@ -248,23 +248,28 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > C4 set) is Common Crawl web text. C4's cleaning filters for quality, not
 > for personal data, and the committed slice carried **120 pieces of
 > third-party PII** (email addresses, phone numbers, street addresses,
-> postal codes). It was redacted on 2026-07-29. C4 was chosen because it
-> is closer to pretraining text than Wikipedia is. That same breadth made
-> it likely to contain real people's data, and no privacy check was
-> recorded when it was chosen. The repo's pre-use check for third-party
+> postal codes), across 62 documents. Several documents paired a named
+> person with a direct email and phone number. It was redacted on
+> 2026-07-29, after about 9 days in this public repository. C4 was
+> chosen because it is closer to pretraining text than Wikipedia is.
+> That same breadth made it likely to contain real people's data, and no
+> privacy check was recorded when it was chosen. The repo's pre-use check for third-party
 > data ([`CLAUDE.md`](../../../CLAUDE.md) § Third-party data) comes from
 > this case.
 
-The redaction is not length-preserving, so all 12 C4-dependent files
-changed. The two corpus JSONs were redacted on 2026-07-29, and the 10
-derived artifacts were regenerated from them, closing on 2026-08-16.
-Every C4-dependent result in this README is the regenerated value. Two audit pins moved beyond tolerance, both in the
-held-out-C4 channel: the 1.5B held-out logit-kurtosis trough
+The two corpus JSONs were redacted on 2026-07-29. Because the redaction
+is not length-preserving, the 10 artifacts derived from them had to be
+regenerated, which closed on 2026-08-16. Every C4-dependent result in
+this README is the regenerated value. Two audit pins moved beyond
+tolerance, both in the held-out-C4 channel: the 1.5B held-out logit-kurtosis trough
 (1.000 → 1.019) and the 7B held-out L23 excess (0.0598 → 0.0588). The 7B
 move cannot be attributed to the redaction alone, because the nf4 refit
 noise is of the same order. No headline conclusion changed: the quoted
 L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
-1.5B axis both stand.
+1.5B axis both stand. The results that never used C4 are unaffected:
+the headline ceiling verdicts, every swap stage (5.1, 5.1b, 5.2), the
+NLA cross-tie, and the quantization and n-budget axes. 41 of 53
+committed artifacts have no C4 dependency.
 
 Full record (per-class counts, root cause, redaction method, known
 limits, refit costs, audit states and exact reproduction):
@@ -705,19 +710,23 @@ original text; the original is preserved beneath it.
 - `2026-07-18-fit-cost-calibration.md` — fitting cost is structural;
   measured seconds per prompt at 1.5B bf16 and 7B nf4.
 - `2026-07-18-readout-scan-1p5b-first-pass.md` — on output-predictive
-  metrics the logit lens wins.
+  metrics the logit lens wins. Its interpretation is superseded in part
+  by the H3 entry below.
 - `2026-07-18-intermediate-concept-evals-h3-confirmed.md` — first positive
   replication (H3): the J-lens surfaces unspoken intermediates the logit
-  lens misses. *Read first:* 2026-08-16 (C4 re-run).
+  lens misses. *Read first:* 2026-08-16 (C4 re-run). *Qualifier
+  2026-07-20:* the @10 margin depends on the fitting corpus.
 - `2026-07-20-scale-comparison-7b-vs-1p5b-h2.md` — H2: the readout
   advantage is scale-robust, not scale-growing; includes the artifact
   audit of the 7B run.
 - `2026-07-20-jspace-structure-stage4.md` — stage 4: J-space occupancy
-  and the inverted kurtosis workspace-onset signature. *Read first:*
+  is low at both scales, and the kurtosis workspace-onset signature is
+  inverted on Qwen. *Read first:*
   2026-07-24 (its ceiling comparison is replaced by the paper-metric
   recompute).
 - `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit at
-  1.5B: workspace band corpus-invariant, early band corpus-sensitive.
+  1.5B: workspace band corpus-invariant, early band corpus-sensitive;
+  qualifies the H3 @10 margin.
   *Read first:* 2026-08-16 (C4 re-run).
 - `2026-07-20-verbal-report-swaps-stage5.md` — stage 5.1: the paper's
   causal swap ordering replicates at 1.5B with attenuation; the 7B
@@ -725,21 +734,27 @@ original text; the original is preserved beneath it.
 - `2026-07-20-verbal-report-swaps-stage5b.md` — stage 5.1b: chat prompts
   un-confound 7B; the 59% middle tier shows no detectable effect at either
   scale. *Read first:* 2026-07-28 (a bound, not a certification).
+  *Qualifier 2026-07-22:* stage 5.2 limits its token-steering reading to
+  report-token effects.
 - `2026-07-21-nla-crosstie-stage6.md` — stage 6: weak, prompt-specific
   J-lens↔NLA agreement; the NLA-verbalizable content lives in the
   residual, not the J-space component.
 - `2026-07-21-quantization-exonerated-1p5b-nf4.md` — bf16→nf4 at fixed
-  model, corpus and n moves nothing at 1.5B.
+  model, corpus and n moves nothing at 1.5B, so quantization does not
+  explain the 7B gap.
 - `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2: no discrete
   property flip, but a J-lens-specific graded effect on the unspoken
-  entailed property; includes the 7B chat run.
+  entailed property, which revises the 5.1b token-steering conclusion for
+  relational effects; includes the 7B chat run.
 - `2026-07-22-n500-and-heldout-robustness.md` — the n=500 refit and the
-  held-out C4 set leave the depth profile intact. *Read first:* 2026-08-16
+  held-out C4 set leave the depth profile intact, so the file attributes
+  the 7B gap to scale (H1 exonerated). *Read first:* 2026-08-16
   (C4 re-run).
 - `2026-07-24-paper-metric-varfrac-recompute.md` — recompute under the
   paper's excess-FVE definition: both ceiling verdicts hold on all four
-  axes; swap significance and pursuit norm bias. *Read first:* 2026-08-30
-  and 2026-08-16; correction note 2026-07-28 on the 59% tier.
+  axes; the stage-5.2 swap gap is significance-certified; pursuit norm
+  bias is confined to the early band. *Read first:* 2026-08-16; caveat
+  2026-08-30; correction 2026-07-28 on the 59% tier.
 - `2026-08-30-excess-fve-dimension-dependence.md` — excess-FVE depends on
   dimension, so the cross-scale ceiling comparison carries a calibration
   caveat (issue #79). *Read first:* status note 2026-09-23 (superseded in
