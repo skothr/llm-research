@@ -159,10 +159,14 @@ from the non-sink residue baseline that the category attractors sit on top
 of.*
 ([provenance](observations/figures/INVENTORY.md#fig8_cosine_sink_vs_cleanpng))
 
-(Signs corrected 2026-08-16 to match Finding 2 of the observation file.
-PC1's sign is arbitrary; the claim is that PC1 separates content from
-function. `nla_audit_findings.py` AUDIT 12 checks the 33.5% variance
-fraction. No audit checks the polarity.)
+(The PC1 signs in the paragraph above were inverted by a transcription
+slip until 2026-08-16, and now match Finding 2 of
+[MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md). PC1's sign
+is arbitrary, so no downstream result changes, which is why the slip
+went unnoticed; the claim is that PC1 separates content from function.
+`nla_audit_findings.py` AUDIT 12 checks the 33.5% variance fraction. No
+audit checks the polarity, so neither version of the signs was
+machine-checked.)
 
 **Scope qualifications:** sink-dim identification was hand-rolled
 (7 dims chosen as those with universal sign + large |h|); a more
@@ -315,19 +319,29 @@ basins."
 
 ## Attribution
 
-Quotes are verbatim user turns (Michael Lannum) from the session
-transcripts of 2026-05-12 → 2026-06-05 (UTC dates), lightly normalized
-for typos and punctuation, with markdown emphasis dropped; `[...]` marks
-an editorial elision, except in "Structured format [...]", where it is
-the user's own. Prose outside the quotes is Claude's summary.
+Direction-setting (the human role) and implementation (the AI role) are
+different kinds of work; separating them keeps visible where the ideas
+came from. Quotes are verbatim user turns (Michael Lannum) from the
+session transcripts of 2026-05-12 → 2026-06-05 (UTC dates), lightly
+normalized for typos and punctuation, with markdown emphasis dropped;
+`[...]` marks an editorial elision, except in "Structured format [...]",
+where it is the user's own. The transcripts are not committed to this
+repo (they carry machine-local paths and tool output). Prose outside
+the quotes is Claude's characterization of the user's direction, not
+the user's wording. This section follows the attribution shape in
+[`ARC_PROCESS.md` § Arc README synthesis](../../ARC_PROCESS.md#arc-readme-synthesis).
+Blocks are grouped by research thread, then process standards, not by
+date.
 
 **Originating direction** [session 2026-05-12]:
 
 > *"Can we try to do something with Anthropic's new interpretability
 > stuff for open source models (released last thursday)?"*
 
-Opened the arc. The plural "models" scopes beyond Qwen2.5-7B, which
-leaves cross-model replication open ([D5](#d5-cross-model-replication)).
+Opened the arc. The plural "models" implicitly scoped beyond
+Qwen2.5-7B; cross-model replication stays open
+([D5](#d5-cross-model-replication)) because the released NLA pair is
+Qwen-specific.
 
 **Plumbing first, then per-token depth**:
 
@@ -343,9 +357,10 @@ leaves cross-model replication open ([D5](#d5-cross-model-replication)).
 > — [session 2026-05-13]
 
 Set the order: validate the round-trip, pin down layer 20 (of 28; ~71%
-depth), then verbalize at every token. The static per-token trajectory
-is built (`nla_gen_trajectory.py` and its figures); the live view is
-open as [D7](#d7-per-token-live-trajectory-viz).
+depth), then verbalize at every token rather than aggregating. The
+per-token trajectory was a direct request; the static form is built
+(`nla_gen_trajectory.py` and its figures), and the live view is open
+as [D7](#d7-per-token-live-trajectory-viz).
 
 **Reproduce Anthropic's emergent-behavior examples**:
 
@@ -393,8 +408,9 @@ interpolation experiments (F1, F5) depend on.
 > capital of France is [?]' and 'France is a country', just strung
 > together into an otherwise semantically garbled statement."*
 
-Set the reading that one verbalization superposes several semantic
-layers. The later multi-axis geometry work kept returning to this
+Proposed, as a hypothesis on the raw AV outputs, that one verbalization
+superposes several semantic layers rather than reporting one coherent
+thought. The later multi-axis geometry work kept returning to this
 reading.
 
 **Concept directions** [session 2026-05-13]:
@@ -405,8 +421,8 @@ reading.
 > some relevance to things being countries?"*
 
 Seeded contrasts, not single activations, as the unit of analysis. The
-CAV-style country direction and the 23-category mean-contrast basis
-came from it.
+CAV-style country direction came from it, and ultimately the
+23-category mean-contrast basis.
 
 **The semantic-basis grid** [session 2026-05-14]:
 
@@ -418,9 +434,11 @@ came from it.
 > a complex 'grid' of sorts, or a set of entangled axes or something
 > to provide direction in such high dimensional space"*
 
-Seeded the vocab atlas (realized as 128 anchors × 23 categories) and
-multi-axis interpretation, which the 3-macro-cluster connectivity result (content /
-function-words / structural) bears out. Seeded
+The most generative turn pair in the arc. It seeded the vocab atlas
+(realized as 128 anchors × 23 categories), and the "entangled axes"
+framing committed the arc to multi-axis interpretation, which the
+3-macro-cluster connectivity result (content / function-words /
+structural) bears out. It is also the direct seed of
 [arc 03](../03_embedding-atlas/README.md).
 
 **Visualization as research, not presentation** [session 2026-05-13]:
@@ -434,8 +452,10 @@ function-words / structural) bears out. Seeded
 > visualization design, something that allows a useful view into
 > feature/embedding/NLA interpretability"*
 
-Set visualization as a discovery tool. The arc produced static figures;
-the interactive tool is open as [D1](#d1-discovery-viz-frontend).
+Set visualization as a discovery tool rather than presentation; the
+framing implies an interactive tool. The arc produced static matplotlib
+figures; the interactive tool is open as
+[D1](#d1-discovery-viz-frontend).
 
 **The AV format-bias catch** [session 2026-05-13]:
 
@@ -443,7 +463,9 @@ the interactive tool is open as [D1](#d1-discovery-viz-frontend).
 > [...]', or did we add that to describe different parts of the
 > output? Weirdly consistent"*
 
-Questioned whether the AV output format is itself an artifact. Open as
+The sharpest methodological catch in the arc: it questioned whether
+the AV output format is itself an artifact, where Claude had been
+reading AV outputs at face value. Open as
 [D3](#d3-audit-av-decoder-format-bias); a positive result would reframe
 every interpretive claim (see L2).
 
@@ -473,7 +495,7 @@ In order, these set: the audit and observation-file discipline; the
 supersede-don't-overwrite figure rule, with visual plausibility not
 taken as correctness; the per-figure provenance record
 ([`observations/figures/INVENTORY.md`](observations/figures/INVENTORY.md));
-and the raw-data-is-a-deliverable rule in
+and the raw-data-is-a-deliverable rule, later codified in
 [`ARC_PROCESS.md`](../../ARC_PROCESS.md).
 
 **Review and the no-overclaim bar**:
@@ -500,10 +522,12 @@ and the raw-data-is-a-deliverable rule in
 > confirmed defects, and then corrected if so: [...]"*
 > — [session 2026-06-05]
 
-In order, these set: the local review whose findings drove the
-correction rounds; the self-critical, no-overclaim framing of the
-findings; and the rule that an external critique is verified defect by
-defect, which produced the D3-as-validity-control framing and the
+In order, these set: the multi-model local review protocol whose
+findings drove the correction rounds; the transparency and
+no-overclaim bar, including the user-vs-agent attribution this section
+exists to give; and the rule that an external critique is verified
+defect by defect rather than adopted or dismissed wholesale, which
+produced the D3-as-validity-control framing and the
 verbalizer-is-also-a-model caveats in [Limitations](#limitations).
 
 ### Human / Claude / emergent split
@@ -513,8 +537,9 @@ interpretive calls: which findings to follow, which were artifacts,
 when scope was drifting, when a result needed its own observation file.
 Sequencing and go/no-go calls (cheap pilot batches before long runs,
 partial-GPU offload rather than a full CPU fallback, no PR until the
-research direction was substantive). Two methodological catches: the AV format bias, and that the
-basis-axis figures showed every axis active at once (2026-05-14).
+research direction was substantive). Two methodological catches: the
+AV format bias, and that the basis-axis figures showed every axis
+active at once (2026-05-14).
 
 **Claude Code.** All experiment scripts (~42 files under
 `examples/nla_*`), figure pipelines, observation drafts, the audit
@@ -523,11 +548,12 @@ context compactions (resume checkpoints, the figure inventory, a record
 of where each claim appeared so corrections reached every copy).
 Literature connections:
 Concept Activation Vectors (Kim et al. 2018), superposition (Elhage et
-al. 2022), the Fisher-LDA distinction, BPE-boundary effects.
+al. 2022), Fisher-LDA distinctions, BPE-boundary considerations.
 
 **Emergent.** The discrete-attractor-basin synthesis: proposed by
-Claude, narrowed under the user's scope challenges (F1), and checked
-against the audit numbers. The caveats in [Limitations](#limitations):
+Claude while summarizing context at a compaction, narrowed under the
+user's scope challenges (the F1 fix), and checked against the audit
+numbers (audit built by Claude at the user's direction). The caveats in [Limitations](#limitations):
 most began as the user's pushback against overclaiming and were written
 up as explicit limitations by Claude; the verbalizer-as-model caveats
 came from the external critique the user required to be verified
@@ -538,8 +564,8 @@ came from the external critique the user required to be verified
 ## Possible next paths
 
 Eight unsprouted research directions, each tied to a direction-setting
-turn quoted in [Attribution](#attribution). They are ranked by
-methodological priority: the cleanup (D3) first, then the scope tests
+turn quoted in [Attribution](#attribution). They are ordered roughly
+by methodological priority: the cleanup (D3) first, then the scope tests
 (D5, D4), then the extensions (D2, D8, D1, D6, D7).
 
 Each was originally filed on the retired private tracker; the six that
