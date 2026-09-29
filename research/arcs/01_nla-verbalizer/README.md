@@ -159,7 +159,7 @@ from the non-sink residue baseline that the category attractors sit on top
 of.*
 ([provenance](observations/figures/INVENTORY.md#fig8_cosine_sink_vs_cleanpng))
 
-(The PC1 signs in the paragraph above were inverted by a transcription
+(The PC1 signs in F3's first paragraph were inverted by a transcription
 slip until 2026-08-16, and now match Finding 2 of
 [MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md). PC1's sign
 is arbitrary, so no downstream result changes, which is why the slip
@@ -532,7 +532,9 @@ verbalizer-is-also-a-model caveats in [Limitations](#limitations).
 
 ### Human / Claude / emergent split
 
-**User (Michael Lannum).** Every direction quoted above. The
+**User (Michael Lannum).** Every direction quoted above, plus the
+standing rule that merges stay human (2026-05-29, after the arc's
+integration PR merged without the manual gate). The
 interpretive calls: which findings to follow, which were artifacts,
 when scope was drifting, when a result needed its own observation file.
 Sequencing and go/no-go calls (cheap pilot batches before long runs,
