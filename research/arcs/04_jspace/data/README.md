@@ -44,7 +44,8 @@
 > derived artifacts. Three lens refits ran via
 > `examples/jspace_rerun_queue.py` (c4en-1.5B 3.14 h; wikitext-1.5B 8.22 h
 > of queue wall-clock across two segments, 3.54 h of it GPU time;
-> wikitext-7B 11.49 h; 22.85 h in total, plus about 1.8 h of scans). The c4en refit was for the redaction. The two
+> wikitext-7B 11.49 h; 22.85 h of queue wall-clock in total, plus about
+> 1.8 h of scans). The c4en refit was for the redaction. The two
 > wikitext lenses were refit in the same refit queue because the cache was
 > empty.
 > The fits ran on 2026-07-29 (c4en-1.5B, wikitext-1.5B) and completed

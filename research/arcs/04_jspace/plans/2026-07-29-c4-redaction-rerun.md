@@ -334,7 +334,8 @@ preserved unedited beneath it.
 `examples/jspace_audit_findings.py`. Two of them moved beyond tolerance and
 were re-pinned (below); the rest re-derive within their existing tolerances.
 
-**The re-run (executed 2026-08-15/16).** Three lenses were refit on the
+**The re-run (lens fits 2026-07-29 to 2026-08-15, per
+`data/cache/logs/fit_*.log`; scans and commit 2026-08-16).** Three lenses were refit on the
 redacted corpora via `examples/jspace_rerun_queue.py` — c4en-1.5B **3.14 h** of queue wall-clock (3.12 h of fit,
 per `data/cache/logs/fit_c4en-1.5b.log`);
 wikitext-1.5B **8.22 h** of queue wall-clock across two segments (3.54 h of
@@ -410,7 +411,7 @@ not be read as confirming what was hoped:
 *Affected conclusions — status after re-derivation:*
 - **Corpus-invariance** (1 of the 4 axes): **stands.** C4-lens L21 varfrac
   0.1242 vs the wikitext lens's 0.1237 (Δ 0.0005, the "identical to 3dp"
-  claim holds); C4 axis L21 excess 0.1082.
+  claim holds); C4 axis L21 excess 0.10828.
 - **Held-out-sample robustness** (the other affected axis): **stands, with
   two restated values.** 1.5B held-out peak still L21 at 0.133 and L0 0.084;
   the kurtosis trough is now 1.019 at L17 (was 1.00), and the 7B held-out
