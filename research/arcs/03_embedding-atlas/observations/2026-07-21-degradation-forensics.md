@@ -1,4 +1,4 @@
-# Session note — model-degradation exposure forensics (2026-07-21)
+# Model-degradation exposure forensics (2026-07-21)
 
 **Context.** The arc's kickoff session (2026-06-10 10:40 → 06-11 12:32 UTC;
 battery probes, full-vocab sweep, F-V1 block discovery, start of tracing)
