@@ -8,7 +8,8 @@ the structural-token features it carries are used by the early layers.
 2026-06-11; started 2026-06-10). All three phases landed: phase 1 (battery
 protocol probes), phase 2 (full-vocabulary sweep, 149,706 alive rows), and
 phase 3 (structural tracing T0/T1/T1.5/T2, absorbing the former rope-vis arc
-per [plan](plans/2026-06-10-rope-vis.md)). Six observations; audit at
+per [plan](plans/2026-06-10-rope-vis.md)). Six observations at the
+2026-07-15 close, plus two 2026-07-21 addenda; audit at
 **99 PASS / 0 FAIL**; pre-registered predictions
 ([plans/2026-06-11-predictions.md](plans/2026-06-11-predictions.md))
 adjudicated: P1a PASS, P1c FAIL, P1d FAIL, P2 refined-not-falsified (content
