@@ -85,8 +85,8 @@ scoped to the delta (the changed scripts, the new data, the revised figures),
 closed by the same review loop. A re-entry that adds a run to test something
 specific registers that test before the run
 ([§ Pre-registration](#pre-registration)). Checkpoint 1 is
-re-entered when the arc's question itself changes; that re-entry is a plan
-amendment too. The plan says where the checkpoints fall for its arc. A small
+re-entered when the arc's question itself changes; that re-entry amends the
+plan with a dated entry. The plan says where the checkpoints fall for its arc. A small
 arc may merge checkpoints 3 and 4 into one PR, and its plan must say so.
 
 ### Pre-registration
@@ -100,7 +100,7 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   prediction, an ablation, a control, or a script an agent writes to check a
   claim. Write the expected result and the pass/fail criterion (the metric,
   its threshold, the direction) as a dated entry in the arc's plan, committed
-  before the run; for a test the long run makes, that is the Checkpoint 2
+  and pushed to the PR branch before the run; for a test the long run makes, that is the Checkpoint 2
   PR, which merges before the run, unless the Checkpoint 1 plan already
   registered it. Report the result against that entry,
   pass or fail.
@@ -112,11 +112,14 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
 - **An arc-level pre-registration is optional.** An arc built to test a
   specific prediction registers its primary test, thresholds and directional
   predictions in the plan before any capture runs. Arc 03 is the worked
-  example: its predictions were registered on 2026-06-11 and adjudicated
-  PASS/FAIL at close. An exploratory arc says in its plan that it is
-  exploratory and registers no arc-level predictions. Its findings are
-  reported as exploratory: candidates for a later registered test, not
-  confirmations ([§ Framing discipline](#framing-discipline)).
+  example: its predictions were registered on 2026-06-11
+  ([`plans/2026-06-11-predictions.md`](arcs/03_embedding-atlas/plans/2026-06-11-predictions.md))
+  and adjudicated PASS/FAIL at close. An exploratory arc says in its plan
+  that it is exploratory and registers no arc-level predictions. Its
+  findings are reported as exploratory, candidates for a later registered
+  test rather than confirmations
+  ([§ Framing discipline](#framing-discipline)), except the result of a test
+  it registered, which is reported pass or fail like any other.
 - **A registered test that changes after its data is seen** gets a dated
   amendment appended below its entry, which is left unchanged, and the
   originally registered analysis is still reported beside the amended one.
@@ -162,6 +165,9 @@ starts.
 - The capture and analysis scripts.
 - The manifest and audit scaffolding: the arc's manifest generator and an
   audit script with its structure in place, ready to take assertions.
+- The registration of each specific test the long run makes, as a dated
+  plan entry ([§ Pre-registration](#pre-registration)), unless the
+  Checkpoint 1 plan already registered it.
 - A dry run at tiny n that exercises capture, derivation and the manifest
   end to end. Its outputs are not committed as data.
 - `pyright` clean on every new or changed script.
@@ -174,8 +180,9 @@ happened after the fits and cost 22.9 h of refit queue time (the three refits
 in [arc 04 `data/README.md`](arcs/04_jspace/data/README.md)), and the K/d
 mismatch in the paper-metric comparison was found after the arc closed.
 
-**Done when:** the dry run completes, pyright reports zero diagnostics, and
-the scripts, manifest generator and audit scaffold are in the branch.
+**Done when:** the long run's specific tests are registered, the dry run
+completes, pyright reports zero diagnostics, and the scripts, manifest
+generator and audit scaffold are in the branch.
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr), merged before the long run starts.
