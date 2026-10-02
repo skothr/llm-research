@@ -220,7 +220,7 @@ finding: search dominates on hard problems
 expansion, simulation, backup are the same; the action space is the
 LLM's next-step distribution; the value head is a PRM. The analogy
 returns to canonical form via the UCT formula in §2.2 — same equation,
-different domain. This analogy is load-bearing: it explains why
+different domain. The analogy also explains why
 co-training the PRM (value head) with the policy-via-search-SFT loop
 is effective, mirroring AlphaZero's self-play
 `[zhang2024-rest-mcts §3]`.

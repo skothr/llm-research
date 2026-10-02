@@ -102,7 +102,7 @@ feedback model conditions its judgment on. Examples from
 - "The AI assistant should not be racist."
 - "The AI assistant should not provide instructions for synthesizing
   bioweapons."
-- "The AI assistant should be honest about its limitations."
+- "The AI assistant should be honest about its limitations." <!-- prose-lint: allow -->
 
 Anthropic's published CAI constitution has ~16 such rules. The
 constitution is the **only human-authored alignment input** —
@@ -300,7 +300,7 @@ poorly aligned to any principle. Returns to Eq. (2): the AI preference
 is only as good as $\pi^{\mathrm{FB}}$'s capability to judge under
 $c_k$. CAI is a capability-multiplier, not a capability-creator.
 
-[CONTRADICTION] **Whether CAI's non-evasion behavior is genuine
+[CONTRADICTION] **Whether CAI's non-evasion behavior is
 internalization or surface mimicry.** The optimistic reading: the
 model has internalized constitutional principles. The skeptical
 reading: the model learned to *output text shaped like

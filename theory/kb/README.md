@@ -9,7 +9,7 @@ synthesis with primary-source quotation.
 | Tier | Directory | What it contains | Can solely back a hard claim? |
 |------|-----------|------------------|-------------------------------|
 | 1 — Verbatim | `excerpts/<paper-key>.md` | Quoted passages from a paper, anchored to section/equation. Every line in a blockquote. | **Yes** (it's the paper, quoted) |
-| 2 — Synthesis | `notes/<area>/<topic>.md` | Digested explanation. Each load-bearing claim cites either a paper or an excerpt anchor. Analogies tagged. | Only when the cited source itself does. |
+| 2 — Synthesis | `notes/<area>/<topic>.md` | Digested explanation. Each claim a conclusion rests on cites either a paper or an excerpt anchor. Analogies tagged. | Only when the cited source itself does. |
 | 3 — Structure | `index/papers.json`, `index/topics.md`, `index/timeline.md`, `glossary.md` | Indices and cross-references. Not claims, but the navigation map. | N/A |
 
 ## Citation format

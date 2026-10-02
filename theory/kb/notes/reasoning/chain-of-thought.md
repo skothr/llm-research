@@ -25,7 +25,7 @@ Chain-of-thought (CoT) is a prompting and decoding pattern in which the
 model produces an intermediate sequence of reasoning steps before
 emitting a final answer. CoT is the historical bridge between the
 pre-2022 era — where LLMs answered in one shot — and the 2025 "thinking
-model" paradigm in which long internal reasoning traces are a first-class
+model" paradigm in which long internal reasoning traces are an explicit
 training and inference target. This note covers the prompting paradigm.
 The architectural and training counterparts (long-form internal reasoning
 trained via RL) are in `kb/notes/reasoning/reasoning-training.md` and
@@ -203,7 +203,7 @@ asymmetry:
 
 [CONTRADICTION] Whether this gap is causally produced by *thinking
 training* (long-CoT SFT + RL), by general scale, or by RLVR
-post-training cannot be cleanly separated by published 2025–2026
+post-training cannot be fully separated by published 2025–2026
 ablations. The 2026 multi-model study controls for many but not all
 factors.
 
@@ -215,8 +215,8 @@ distribution is largely set by the prompt's leading semantics, and the
 trace is a separately sampled rationalization conditioned on that
 distribution. The trace and answer are then *correlated* (both
 conditioned on prompt) but not *causally connected*. Trained reasoning
-models, by contrast, are alleged to use the trace as a genuine compute
-substrate.
+models, by contrast, are alleged to use the trace as a compute
+substrate that the answer causally depends on.
 
 This is a single-paper hypothesis as of writing; the controlled
 ablations needed to confirm or falsify it have not been published. It
@@ -256,7 +256,7 @@ a discovered reasoning module `[kojima2022 §5]`.
 [ANALOGY] Faithfulness is the question of whether a CoT trace is
 **reasoning** or **rationalisation**. The sociological analogy — humans
 often confabulate plausible justifications for decisions made on other
-grounds — is suggestive but not load-bearing here; the canonical
+grounds — is suggestive, but nothing here rests on it; the canonical
 mechanistic question is whether perturbations to $z$ propagate to $y$
 under counterfactual decoding `[shen2025-faithcot-bench §3]`.
 

@@ -86,7 +86,7 @@ $$
 ### 1.2 Quantization-aware GEMM: $1/Z$ decode and FP32 accumulation
 
 For sub-FP16 formats (FP8, FP4) the per-tensor or per-block scale
-$Z$ becomes a first-class object. The operation
+$Z$ becomes an explicit factor in the GEMM. The operation
 $Y = X W$ in FP8 is implemented as:
 
 $$

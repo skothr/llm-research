@@ -372,7 +372,7 @@ distribution of problems*. But:
 
 - **Anti-thesis (DeepSeek-R1 paper itself, §4 discussion):** SFT-
   distilled small models do not exceed their teacher; only RL can
-  generate genuinely new reasoning trajectories.
+  generate new reasoning trajectories.
 - **Pro-thesis (s1, follow-on work):** s1's budget-forcing + minimal
   SFT data already extracts behavior that wasn't fully exploited by
   the teacher — suggesting SFT extracts more than one might think.
