@@ -11,6 +11,16 @@ session is already working in the main checkout: HEAD is on a branch you did
 not create, or `git status` shows changes you did not make. In that case do
 not switch the main checkout's branch. It is not required.
 
+**Keeping this in step with the global workflow.** The workflow above and
+`research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
+(branching, review loop, merge). When a session notices the two disagree, it
+does not silently follow either. It checks whether the global change fits
+this repo's research intent: reproducible runs, raw data as a deliverable,
+citation discipline, and the public-repo privacy rule. If the change fits, it
+proposes a PR updating the local text. If it doesn't fit, the divergence is
+kept and written here with its reason. Until that PR merges, the global SOP
+governs workflow mechanics, and this file governs research-specific rules.
+
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
 synthesis) rather than one mono-diff. Review findings outside the PR's stated
