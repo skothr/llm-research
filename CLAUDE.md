@@ -6,8 +6,9 @@ in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges. Noth
 directly, `CLAUDE.md` and `.gitignore` edits included. A git worktree
 (`.claude/worktrees/<name>/`, gitignored) is optional: use one for work that
 has to run beside other work, such as a long GPU job, or when another
-session is already working in the main checkout (`git status` shows changes
-you did not make). It is not required.
+session is already working in the main checkout: HEAD is on a branch you did
+not create, or `git status` shows changes you did not make. In that case do
+not switch the main checkout's branch. It is not required.
 
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
