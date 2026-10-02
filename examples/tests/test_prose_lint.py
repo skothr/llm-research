@@ -1,0 +1,60 @@
+"""Tests for scripts/prose_lint.py (#120)."""
+
+import importlib.util
+import sys
+from pathlib import Path
+
+_SPEC = importlib.util.spec_from_file_location(
+    "prose_lint", Path(__file__).resolve().parents[2] / "scripts" / "prose_lint.py"
+)
+assert _SPEC is not None and _SPEC.loader is not None
+prose_lint = importlib.util.module_from_spec(_SPEC)
+sys.modules["prose_lint"] = prose_lint  # dataclass needs the module registered
+_SPEC.loader.exec_module(prose_lint)
+
+
+def test_reports_each_phrase_with_its_line() -> None:
+    text = "plain line\nevery load-bearing claim\nthis is genuinely large\n"
+    hits = prose_lint.scan_text("x.md", text)
+    assert [(h.line, h.phrase) for h in hits] == [
+        (2, "load-bearing"),
+        (3, "genuinely"),
+    ]
+
+
+def test_matching_is_case_insensitive_and_word_bounded() -> None:
+    assert prose_lint.scan_text("x.md", "Load-Bearing\n")
+    assert not prose_lint.scan_text("x.md", "dishonesty and crispness\n")
+
+
+def test_allow_marker_skips_the_line() -> None:
+    text = "an honest baseline <!-- prose-lint: allow -->\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_quoted_owner_turns_are_skipped() -> None:
+    text = '> *"this is genuinely load-bearing"*\n> plain genuinely\n'
+    hits = prose_lint.scan_text("x.md", text)
+    assert [h.line for h in hits] == [2]
+
+
+def test_scope_excludes_verbatim_and_dated_records() -> None:
+    assert prose_lint.is_scanned("research/arcs/04_jspace/README.md")
+    assert prose_lint.is_scanned("examples/jspace_audit_findings.py")
+    assert prose_lint.is_scanned("theory/series/paper-1/main.tex")
+    assert not prose_lint.is_scanned("theory/kb/excerpts/gurnee2026.md")
+    assert not prose_lint.is_scanned("research/archive/old.md")
+    assert not prose_lint.is_scanned("theory/reviews/pass-1.md")
+    assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
+    assert not prose_lint.is_scanned("scripts/prose_lint.py")
+
+
+def test_main_exit_codes(tmp_path: Path, monkeypatch) -> None:
+    hit_file = "x.md"
+    monkeypatch.setattr(prose_lint, "tracked_files", lambda _paths: [hit_file])
+    monkeypatch.setattr(prose_lint, "REPO", tmp_path)
+    (tmp_path / hit_file).write_text("a crisp result\n")
+    assert prose_lint.main([]) == 1
+    assert prose_lint.main(["--report"]) == 0
+    (tmp_path / hit_file).write_text("a clear result\n")
+    assert prose_lint.main([]) == 0

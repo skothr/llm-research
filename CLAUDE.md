@@ -92,7 +92,7 @@ interpreter that launched it, so the errors persist unchanged.
 bash theory/series/build.sh            # clean + build all 5 papers + collect dist/
 bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 
-# NLA audit — re-derive every load-bearing numerical claim from .pt artifacts
+# NLA audit — re-derive every numerical claim a finding rests on from .pt artifacts
 python examples/nla_audit_findings.py
 ```
 
@@ -101,7 +101,7 @@ python examples/nla_audit_findings.py
 When making technical claims about LLM architecture, training, inference,
 interpretability, evaluation, alignment, or related theory:
 
-1. **Every load-bearing claim cites a source.** One of:
+1. **Every claim a conclusion rests on cites a source.** One of:
    - `[paper-key §X, eq.Y]` — a paper in `theory/kb/index/papers.json`
    - `[kb/notes/<area>/<file>#<anchor>]` — into a synthesis note
    - `[kb/excerpts/<paper-key>#<heading>]` — into a verbatim excerpt
@@ -134,6 +134,12 @@ tagged `[INTUITION]`/`[ANALOGY]` (always returning to canonical symbolic form) �
 frontier and open questions (`[CONTRADICTION]` where sources disagree). When
 introducing a new technical term, add it to `theory/kb/glossary.md` with a
 citation.
+
+State things literally; stock phrases such as "load-bearing", "genuinely" or
+"sits at" stand in for a direct statement. Before committing prose or comments,
+run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or, where
+the phrase carries technical meaning, keep it and add `prose-lint: allow` on
+that line (issue #120).
 
 # Research arcs & observations
 
