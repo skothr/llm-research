@@ -344,13 +344,16 @@ def _seed(name: str, m: dict[str, Any]) -> int | str | None:
     elif m["producing_script"] in NO_RNG_PRODUCERS:
         seed = None
     else:
-        raise ValueError(
-            f"{name}: no seed in META and {m['producing_script']} is not in "
-            "NO_RNG_PRODUCERS"
+        raise SystemExit(
+            f"ERROR: {name}: no seed in META and {m['producing_script']} is "
+            "not in NO_RNG_PRODUCERS"
         )
     if not (seed is None or seed == "unseeded" or type(seed) is int):
-        raise ValueError(f"{name}: seed must be an int, \"unseeded\" or None, got {seed!r}")
+        raise SystemExit(
+            f"ERROR: {name}: seed must be an int, \"unseeded\" or None, got {seed!r}"
+        )
     return seed
+
 
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the

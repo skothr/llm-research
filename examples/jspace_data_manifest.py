@@ -315,7 +315,9 @@ def _derived(
     # the two cannot disagree.
     from_args = _rand_seed_base(args) if args is not None else None
     if seed is not None and from_args is not None and seed != from_args:
-        raise ValueError(f"seed={seed} disagrees with --rand-seed-base in {args!r}")
+        raise SystemExit(
+            f"ERROR: seed={seed} disagrees with --rand-seed-base in {args!r}"
+        )
     entry: dict[str, Any] = {
         "class": "derived",
         "producing_script": script,
@@ -945,13 +947,16 @@ def _seed(name: str, m: dict[str, Any]) -> int | str | None:
     elif m["producing_script"] in NO_RNG_PRODUCERS:
         seed = None
     else:
-        raise ValueError(
-            f"{name}: no seed in META and {m['producing_script']} is not in "
-            "NO_RNG_PRODUCERS"
+        raise SystemExit(
+            f"ERROR: {name}: no seed in META and {m['producing_script']} is "
+            "not in NO_RNG_PRODUCERS"
         )
     if not (seed is None or seed == "unseeded" or type(seed) is int):
-        raise ValueError(f"{name}: seed must be an int, \"unseeded\" or None, got {seed!r}")
+        raise SystemExit(
+            f"ERROR: {name}: seed must be an int, \"unseeded\" or None, got {seed!r}"
+        )
     return seed
+
 
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the
