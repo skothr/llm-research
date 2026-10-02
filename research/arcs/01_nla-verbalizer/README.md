@@ -159,20 +159,14 @@ from the non-sink residue baseline that the category attractors sit on top
 of.*
 ([provenance](observations/figures/INVENTORY.md#fig8_cosine_sink_vs_cleanpng))
 
-> **Polarity note — corrected 2026-08-16.** Until then the sentence
-> above carried the signs inverted — a transcription slip relative to
-> Finding 2 of
-> [`2026-05-13-nla-vocab-atlas-grid.md`](observations/2026-05-13-nla-vocab-atlas-grid.md),
-> the dated primary record (content-bearing at PC1 < 0,
-> structural/function at PC1 > 0), which this summary now matches.
-> Nothing downstream changes either way: the sign of a PCA component is
-> arbitrary (flipping an eigenvector's sign gives an equally valid
-> decomposition), so the load-bearing claim is that PC1 *separates*
-> content from function, not which side either lands on — which is why
-> the slip went unnoticed. `nla_audit_findings.py` AUDIT 12 re-derives
-> the 33.5% variance fraction from the same artifact, but it checks the
-> magnitude only; no audit asserts the polarity, so neither statement
-> was ever machine-checked.
+(The PC1 signs in F3's first paragraph were inverted by a transcription
+slip until 2026-08-16, and now match Finding 2 of
+[MAIN-24](observations/2026-05-13-nla-vocab-atlas-grid.md). PC1's sign
+is arbitrary, so no downstream result changes, which is why the slip
+went unnoticed; the claim is that PC1 separates content from function.
+`nla_audit_findings.py` AUDIT 12 checks the 33.5% variance fraction. No
+audit checks the polarity, so neither version of the signs was
+machine-checked.)
 
 **Scope qualifications:** sink-dim identification was hand-rolled
 (7 dims chosen as those with universal sign + large |h|); a more
@@ -327,25 +321,27 @@ basins."
 
 Direction-setting (the human role) and implementation (the AI role) are
 different kinds of work; separating them keeps visible where the ideas
-came from. Quotes below are verbatim user turns (Michael Lannum) from
-the session transcripts of 2026-05-12 → 2026-06-05, lightly normalized
-for typos and punctuation; markdown emphasis inside a turn is dropped,
-`[...]` marks an editorial elision (except where noted), and dates
-follow the transcripts' UTC clock. This section follows the attribution
-shape in
+came from. Quotes are verbatim user turns (Michael Lannum) from the
+session transcripts of 2026-05-12 → 2026-06-05 (UTC dates), lightly
+normalized for typos and punctuation, with markdown emphasis dropped;
+`[...]` marks an editorial elision, except in "Structured format [...]",
+where it is the user's own. The transcripts are not committed to this
+repo (they carry machine-local paths and tool output). Prose outside
+the quotes is Claude's characterization of the user's direction, not
+the user's wording. This section follows the attribution shape in
 [`ARC_PROCESS.md` § Arc README synthesis](../../ARC_PROCESS.md#arc-readme-synthesis).
-Blocks are grouped by research thread and then process standards, not
-strictly by time.
+Blocks are grouped by research thread, then process standards, not by
+date.
 
 **Originating direction** [session 2026-05-12]:
 
 > *"Can we try to do something with Anthropic's new interpretability
 > stuff for open source models (released last thursday)?"*
 
-The framing that opened the arc. The plural "models" implicitly scoped
-beyond Qwen2.5-7B; cross-model replication
-([D5](#d5-cross-model-replication)) remains open because the released
-NLA pair is Qwen-specific.
+Opened the arc. The plural "models" implicitly scoped beyond
+Qwen2.5-7B; cross-model replication stays open
+([D5](#d5-cross-model-replication)) because the released NLA pair is
+Qwen-specific.
 
 **Plumbing first, then per-token depth**:
 
@@ -360,11 +356,11 @@ NLA pair is Qwen-specific.
 > want to see those as it 'thinks through' what it's 'writing'"*
 > — [session 2026-05-13]
 
-Validate the round-trip on simple inputs, understand the specific layer
-(20 of 28; ~71% depth), verbalize at every token rather than
-aggregating. Per-token trajectory viz was a direct ask (realized in
-`nla_gen_trajectory.py` + static figures; the live form is open as
-[D7](#d7-per-token-live-trajectory-viz)).
+Set the order: validate the round-trip, pin down layer 20 (of 28; ~71%
+depth), then verbalize at every token rather than aggregating. The
+per-token trajectory was a direct request; the static form is built
+(`nla_gen_trajectory.py` and its figures), and the live view is open
+as [D7](#d7-per-token-live-trajectory-viz).
 
 **Reproduce Anthropic's emergent-behavior examples**:
 
@@ -377,8 +373,8 @@ aggregating. Per-token trajectory viz was a direct ask (realized in
 > *"let's go with the poem one like Anthropic's example, not the haiku
 > since that was an outlier"* — [session 2026-05-13]
 
-The original motivating curiosity. The rabbit haiku was reproduced; the
-matched rabbit poem and the eval-awareness behavior remain incomplete
+Set the replication target. The rabbit haiku was reproduced; the rabbit
+poem and eval-awareness remain open
 ([D2](#d2-eval-aware--knows-its-being-tested-probe),
 [D8](#d8-replicate-anthropic-nla-announcement-specific-examples)).
 
@@ -390,10 +386,9 @@ matched rabbit poem and the eval-awareness behavior remain incomplete
 > differently since it's doing something the model isn't trained to
 > do?"*
 
-Produced `nla_forced_continuation.py` and the counterfactual-surprise /
-OOD-detection observations: `||Δh||_feat` separates plausible-but-false
-continuations (Δ≈5.7-11) from OOD-forcing ones (Δ≈28-30) — a cheap
-deployment-time anomaly-score candidate.
+Led to `nla_forced_continuation.py` and F4: `||Δh||_feat` of Δ≈5.7-11
+for plausible-but-false continuations against Δ≈28-30 for OOD-forcing
+ones.
 
 **The reverse (AR) direction** [session 2026-05-13]:
 
@@ -403,9 +398,8 @@ deployment-time anomaly-score candidate.
 > with this model set? Or is that just used to tune this NLA
 > training?"*
 
-Pushed early exploration of the AR direction (text → h) alongside AV
-(h → text), which enabled the entire interpolation-flipbook branch of
-the arc.
+Brought the AR direction (text → h) in beside AV (h → text), which the
+interpolation experiments (F1, F5) depend on.
 
 **A superposition reading of the verbalizations** [session 2026-05-13]:
 
@@ -414,10 +408,10 @@ the arc.
 > capital of France is [?]' and 'France is a country', just strung
 > together into an otherwise semantically garbled statement."*
 
-The user's interpretive hypothesis on the raw AV outputs: a
-verbalization superposes several semantic layers rather than reporting
-one coherent thought. The later multi-axis geometry work kept
-returning to this reading.
+Proposed, as a hypothesis on the raw AV outputs, that one verbalization
+superposes several semantic layers rather than reporting one coherent
+thought. The later multi-axis geometry work kept returning to this
+reading.
 
 **Concept directions** [session 2026-05-13]:
 
@@ -426,9 +420,9 @@ returning to this reading.
 > we could identify pattern-wise across different contexts involving
 > some relevance to things being countries?"*
 
-Seed of the CAV-style country-direction observation and ultimately the
-23-category mean-contrast basis. The question shape is essential:
-contrasts as the unit of analysis, not individual activations.
+Seeded contrasts, not single activations, as the unit of analysis. The
+CAV-style country direction came from it, and ultimately the
+23-category mean-contrast basis.
 
 **The semantic-basis grid** [session 2026-05-14]:
 
@@ -440,11 +434,11 @@ contrasts as the unit of analysis, not individual activations.
 > a complex 'grid' of sorts, or a set of entangled axes or something
 > to provide direction in such high dimensional space"*
 
-The most generative turn pair in the arc: the vocab atlas (128 anchors
-× 23 categories) is its operational realization, and the "entangled
-axes" framing committed the arc to multi-axis interpretation — borne
-out by the discriminant-connectivity result (3 macro-clusters: content
-/ function-words / structural), and the direct seed of
+The most generative turn pair in the arc. It seeded the vocab atlas
+(realized as 128 anchors × 23 categories), and the "entangled axes"
+framing committed the arc to multi-axis interpretation, which the
+3-macro-cluster connectivity result (content / function-words /
+structural) bears out. It is also the direct seed of
 [arc 03](../03_embedding-atlas/README.md).
 
 **Visualization as research, not presentation** [session 2026-05-13]:
@@ -458,9 +452,10 @@ out by the discriminant-connectivity result (3 macro-clusters: content
 > visualization design, something that allows a useful view into
 > feature/embedding/NLA interpretability"*
 
-The largest unrealized seed: the arc landed on static matplotlib
-figures, while the framing implies an interactive discovery tool
-([D1](#d1-discovery-viz-frontend)).
+Set visualization as a discovery tool rather than presentation; the
+framing implies an interactive tool. The arc produced static matplotlib
+figures; the interactive tool is open as
+[D1](#d1-discovery-viz-frontend).
 
 **The AV format-bias catch** [session 2026-05-13]:
 
@@ -468,16 +463,18 @@ figures, while the framing implies an interactive discovery tool
 > [...]', or did we add that to describe different parts of the
 > output? Weirdly consistent"*
 
-(The inner `[...]` is the user's own, standing in for the rest of the
-NLA phrase; "Structured" is normalized from a typo.) The sharpest
-methodological catch in the arc: the agent had been reading AV outputs
-at face value without questioning whether the format itself was an
-artifact. Filed as [D3](#d3-audit-av-decoder-format-bias) — if positive
-it re-frames all prior interpretive claims (see L2).
+The sharpest methodological catch in the arc: it questioned whether
+the AV output format is itself an artifact, where Claude had been
+reading AV outputs at face value. Open as
+[D3](#d3-audit-av-decoder-format-bias); a positive result would reframe
+every interpretive claim (see L2).
 
-**The rigor pivot and the figure/data standards**:
+**Rigor, figure and data standards**:
 
 > *"yeah rigoramatize everything"* — [session 2026-05-13]
+
+> *"okay cool, make sure we don't overwrite those. But those look nice.
+> Assuming they're right."* — [session 2026-05-13]
 
 > *"can we adjust the output figures a bit? Make them higher resolution
 > first, so all the small text and visuals are clear and readable.
@@ -494,16 +491,14 @@ it re-frames all prior interpretive claims (see L2).
 > and saving the raw dataset should be part of the agent's process as
 > it conducts research."* — [session 2026-05-31]
 
-These three turns are the origin of, respectively, the audit and
-observation-file discipline, the per-figure provenance record
-([`observations/figures/INVENTORY.md`](observations/figures/INVENTORY.md)),
-and the raw-data-is-a-deliverable rule later codified into
-[`ARC_PROCESS.md`](../../ARC_PROCESS.md). The supersede-don't-overwrite
-figure rule was set on 2026-05-13 ("okay cool, make sure we don't
-overwrite those. But those look nice. Assuming they're right." —
-visual plausibility is not correctness).
+In order, these set: the audit and observation-file discipline; the
+supersede-don't-overwrite figure rule, with visual plausibility not
+taken as correctness; the per-figure provenance record
+([`observations/figures/INVENTORY.md`](observations/figures/INVENTORY.md));
+and the raw-data-is-a-deliverable rule, later codified in
+[`ARC_PROCESS.md`](../../ARC_PROCESS.md).
 
-**Review protocol, merge gate, and the transparency bar**:
+**Review and the no-overclaim bar**:
 
 > *"I want to do one final thorough local review of the current PR
 > contents. Specifically to: Ensure that all our exploratory
@@ -513,10 +508,6 @@ visual plausibility is not correctness).
 > accurate [...]
 > Don't edit anything yet during or after the review -- I want to look
 > through and understand it all first."* — [session 2026-05-28]
-
-> *"wait did you merge this PR into main? It looks like something did,
-> but PR merge is supposed to be the final manual human gate. Check on
-> what may have happened there."* — [session 2026-05-29]
 
 > *"I want to make sure the README for this chunk of research provides
 > the right high-level framing and 'attribution' like user direction
@@ -531,65 +522,53 @@ visual plausibility is not correctness).
 > confirmed defects, and then corrected if so: [...]"*
 > — [session 2026-06-05]
 
-In order: the multi-model local review protocol (commissioned
-2026-05-28, before the auto-merge in the next item was noticed) whose
-findings drove the correction rounds; the catch that the arc's integration PR
-— "PR #11" in the pre-split repo's numbering, unrelated to this
-repo's issue #11 — had merged without the manual human gate
-(2026-05-29), and the standing rule that merges stay human; the
-transparency / self-critical / no-overclaim bar this section itself
-exists to meet (2026-05-31); and the requirement that an
-external critique of the arc be verified defect-by-defect rather than
-adopted or dismissed wholesale (2026-06-05) — the origin of the
-D3-as-validity-control framing and the verbalizer-is-also-a-model
-caveats now in [Limitations](#limitations).
+In order, these set: the multi-model local review protocol whose
+findings drove the correction rounds; the transparency and
+no-overclaim bar, including the user-vs-agent attribution this section
+exists to give; and the rule that an external critique is verified
+defect by defect rather than adopted or dismissed wholesale, which
+produced the D3-as-validity-control framing and the
+verbalizer-is-also-a-model caveats in [Limitations](#limitations).
 
 ### Human / Claude / emergent split
 
-**User (Michael Lannum).** Every direction quoted above; the
-interpretive judgments throughout — which findings were worth
-following, which were artifacts to set aside, when scope was drifting,
-when a result deserved its own observation file; sequencing and
-go/no-go calls (cheap pilot batches before long runs, partial-GPU
-offload rather than an all-or-nothing CPU fallback, no PR until the
-research direction was substantive); the format-bias catch, and the
-catch that the basis-axis figures showed every axis active at once
-(2026-05-14); and the rigor, figure-provenance,
-raw-data, review-protocol, and merge-gate standards quoted above.
+**User (Michael Lannum).** Every direction quoted above, plus the
+standing rule that merges stay human (2026-05-29, after the arc's
+integration PR merged without the manual gate). The
+interpretive calls: which findings to follow, which were artifacts,
+when scope was drifting, when a result needed its own observation file.
+Sequencing and go/no-go calls (cheap pilot batches before long runs,
+partial-GPU offload rather than a full CPU fallback, no PR until the
+research direction was substantive). Two methodological catches: the
+AV format bias, and that the basis-axis figures showed every axis
+active at once (2026-05-14).
 
 **Claude Code.** All experiment scripts (~42 files under
-`examples/nla_*`), figure-rendering pipelines, observation drafts,
-audit infrastructure (`nla_audit_findings.py`), and issue-queue
-management; continuity across compaction boundaries (resume
-checkpoints, the figure inventory, tracking what had been claimed where
-so corrections propagated); literature connections — Concept Activation
-Vectors (Kim et al. 2018), superposition (Elhage et al. 2022),
-Fisher-LDA distinctions, BPE-boundary considerations.
+`examples/nla_*`), figure pipelines, observation drafts, the audit
+(`nla_audit_findings.py`), and issue tracking. Continuity across
+context compactions (resume checkpoints, the figure inventory, a record
+of where each claim appeared so corrections reached every copy).
+Literature connections:
+Concept Activation Vectors (Kim et al. 2018), superposition (Elhage et
+al. 2022), Fisher-LDA distinctions, BPE-boundary considerations.
 
-**Emergent.** The discrete-attractor-basin synthesis — proposed by the
-agent during compaction, refined under the user's scope-qualification
-challenges (the F1 fix), and validated against the audit numbers (which
-the agent built and the user directed). The methodology caveats in
-[Limitations](#limitations) — most originated
-as the user's in-session pushback against overclaiming and were
-formalized into explicit limitations by the agent; the
-verbalizer-as-model caveats entered through the external critique the
-user brought in and required to be verified (2026-06-05).
-
-**Verifiability.** Every quote above is recoverable from the session
-transcripts for 2026-05-12 → 2026-06-05; the transcripts are not
-committed to this repo (they carry machine-local paths and tool
-output). Claims in this section that are not quoted are Claude's
-characterization of the user's direction, not the user's wording.
+**Emergent.** The discrete-attractor-basin synthesis: proposed by
+Claude while summarizing context at a compaction, narrowed under the
+user's scope challenges (the F1 fix), and checked against the audit
+numbers (audit built by Claude at the user's direction). The caveats in [Limitations](#limitations):
+most began as the user's pushback against overclaiming and were written
+up as explicit limitations by Claude; the verbalizer-as-model caveats
+came from the external critique the user required to be verified
+(2026-06-05).
 
 ---
 
 ## Possible next paths
 
 Eight unsprouted research directions, each tied to a direction-setting
-turn quoted in [Attribution](#attribution). Ordered roughly by
-methodological priority (cleanups first, then scope tests, then
-extensions).
+turn quoted in [Attribution](#attribution). They are ordered roughly
+by methodological priority: the cleanup (D3) first, then the scope tests
+(D5, D4), then the extensions (D2, D8, D1, D6, D7).
 
 Each was originally filed on the retired private tracker; the six that
 were migrated now live as GitHub issues in this repo and are linked
