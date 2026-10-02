@@ -12,9 +12,9 @@
 \section{The correlation--causation gap}
 \label{sec:correlation-causation}
 
-A high-accuracy \glsterm{probe-2}{probe} at layer $\ell$ tells us that property $y$ is
+A high-accuracy \glsterm{probe-2}{probe} at layer $\ell$ shows that property $y$ is
 \emph{linearly decodable} from $\mathbf{h}^{(\ell, t)}$. It does not
-tell us that the model \emph{uses} the decoded direction to compute its
+show that the model \emph{uses} the decoded direction to compute its
 output \citep{belinkov2022-probing-survey}. The 2017--2019 wave of
 probing methodology summarized in \S\ref{sec:probing} put the
 correlational claim on firm footing; the 2019--2022 wave, anchored by
@@ -37,7 +37,7 @@ pipeline composes patching (\S\ref{sec:patching}) with probing
 \subsection{The Hewitt--Liang control-task critique}
 \label{sec:control-tasks}
 
-\citet{hewitt2019-control-tasks} surface the load-bearing methodology
+\citet{hewitt2019-control-tasks} surface the methodology
 problem: a sufficiently expressive \glsterm{probe-2}{probe} can achieve high accuracy
 even when the underlying model does not represent the property in any
 useful way, because the \glsterm{probe-2}{probe} itself learns the property from
@@ -202,7 +202,7 @@ properties that decompose into multi-axis subspaces appears in
 \deepencite{vennemeyer2025-sycophancy-not-one-thing §3,
 citation-pending}, who report that \glsterm{sycophancy}{sycophancy} in current chat models
 factorizes into three independently steerable directions (agreement,
-praise, genuine-agreement), each detected by \glsterm{mass-mean-probing}{mass-mean probing} and
+praise, genuine-agreement), each detected by \glsterm{mass-mean-probing}{mass-mean probing} and % prose-lint: allow
 controllable by Eq.~\eqref{eq:direction-addition} at the
 single-direction level.
 
@@ -263,7 +263,7 @@ pass, causing it to treat false statements as true and vice
 versa.\hfill\citep[abstract]{marks-tegmark-2023-truth}\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#abstract}.}
 \end{quote}
-The TRUE/FALSE flip is the load-bearing observation. The \glsterm{probe-2}{probe} alone
+The TRUE/FALSE flip is the observation the causal argument rests on. The \glsterm{probe-2}{probe} alone
 identifies a direction that linearly separates the two classes
 (\S\ref{sec:probe-setup}); cross-dataset generalization rules out the
 obvious spurious-correlate failure modes (\S\ref{sec:belinkov-taxonomy});
@@ -287,7 +287,7 @@ mass-mean direction is dataset-dependent in early-mid layers, with
 \emph{antipodal} in early LLaMA-2-13B layers and only aligned by
 late layers \citep[\S 4]{marks-tegmark-2023-truth}\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/marks-tegmark-2023-truth.md#sec-4-misalignment}.}.
-The causal-validation argument lifts the load-bearing claim from
+The causal-validation argument lifts the claim from
 ``decodable'' to ``used'' but does not, by itself, resolve whether
 ``truth'' is a single linear axis or a multi-axis subspace; the next
 section takes up that geometry directly.
@@ -316,8 +316,8 @@ The second stage is probing within those states. Mass-mean
 (Eq.~\ref{eq:mass-mean} of \S\ref{sec:probing}) is fit on the
 group-\emph{b} activations rather than on the full grid, and the
 ablation of Eq.~\eqref{eq:direction-ablation} is applied at the same
-locations. The composition is what makes the causal argument
-load-bearing: patching localizes the components that carry the
+locations. The causal argument depends on the composition:
+patching localizes the components that carry the
 behavior, probing localizes the direction \emph{within} those
 components, and ablation tests whether that direction is the one the
 model uses. Without the patching stage, the probing direction is
@@ -328,9 +328,9 @@ shown to mediate the behavior.
 \begin{analogy}
 Patching localizes the \emph{room}; probing localizes the \emph{shelf
 within the room}; ablation tests whether the book on that shelf is
-the one being read aloud. A \glsterm{probe-2}{probe} alone tells us a book about $y$ is
-on \emph{some} shelf in the library; patching alone tells us a book
-about $y$ is in \emph{this} room; the composition tells us \emph{this
+the one being read aloud. A \glsterm{probe-2}{probe} alone shows a book about $y$ is
+on \emph{some} shelf in the library; patching alone shows a book
+about $y$ is in \emph{this} room; the composition shows \emph{this
 book on this shelf in this room} is the one whose absence makes the
 narrator stop reading. Returning to canonical form: patching's $C$ is
 the room (a component subset of the residual-stream grid), the
@@ -356,7 +356,7 @@ the \glsterm{probe-2}{probe} domain, since the localized hidden states are the
 \subsection{Cross-paper threads and forward link}
 \label{sec:correlation-causation-forward}
 
-Two cross-paper threads sit in the load-bearing path of this section.
+Two cross-paper threads depend on this section's argument.
 The \glsterm{chain-of-thought}{chain-of-thought}-faithfulness question of Paper~3 \S 11 is, in
 the framing of this section, a probing question: a behavioral \glsterm{probe-2}{probe}
 of ``the model is using its written reasoning'' is correlational
@@ -379,7 +379,7 @@ The forward links within this paper are immediate.
 \S\ref{sec:truth-directions} picks up the truth-direction case study
 at the geometry-of-truth depth, asking when the same model's
 mass-mean direction is dataset-stable and when it is not, and what
-the misalignment in early-mid layers tells us about whether
+the misalignment in early-mid layers shows about whether
 ``truth'' is a single linear axis or a multi-axis subspace.
 \S\ref{sec:cross-method} returns to the patch-then-\glsterm{probe-2}{probe} pipeline as
 one of the field's clearest cross-method convergence stories, with

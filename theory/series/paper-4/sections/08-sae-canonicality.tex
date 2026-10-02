@@ -18,7 +18,7 @@ us whether that basis is \emph{the} basis. The implicit framing of the
 production-scale \glsterm{sparse-autoencoder}{SAE} program --- that scaling $M$ and pushing further
 down the $L_0$-vs-reconstruction Pareto curve converges toward a
 canonical decomposition of model activations into atomic, interpretable
-features --- is a load-bearing assumption: if features are
+features --- is a foundational assumption: if features are
 \emph{canonical}, then \glsterm{sparse-autoencoder}{SAE} features are the units of the model's
 internal computation, and downstream interpretability claims (probes
 cite them, patching targets them, circuits compose them) inherit
@@ -27,7 +27,7 @@ empirical argument that this assumption is unwarranted, with two
 techniques that \glsterm{probe-2}{probe} atomicity and completeness separately. We work
 through the argument, then take up \emph{transcoders}
 \citep{dunefsky2024-transcoders} --- structural cousins of SAEs that
-sit at the input-output boundary of an MLP rather than on the
+operate at the input-output boundary of an MLP rather than on the
 activation itself --- and show that the additional analytical leverage
 they provide for \glsterm{circuit}{circuit} work in \S\ref{sec:circuits} comes with the
 same canonicality concern inherited unchanged.
@@ -102,8 +102,8 @@ combinations of latents from a smaller \glsterm{sparse-autoencoder}{SAE}, showin
 latents are not atomic.~\citep[abstract]{leask2025-sae-not-canonical}
 \end{quote}
 
-\noindent The decoder-matrix substrate is the load-bearing methodological
-choice: meta-SAEs do not introduce new activation data, so the
+\noindent The decoder-matrix substrate is the methodological
+choice the argument rests on: meta-SAEs do not introduce new activation data, so the
 decomposition of $\mathbf{d}_\text{Einstein}$ into meta-latent
 directions is a property of the target \glsterm{sparse-autoencoder}{SAE}'s learned geometry alone.
 Whatever ``Einstein'' meant inside the target \glsterm{sparse-autoencoder}{SAE}, it meant it as a
@@ -331,8 +331,8 @@ to \glsterm{circuit}{circuit}-tracing's pragmatic \glsterm{transcoder}{transcode
 \emph{pragmatic}: SAEs and transcoders are useful, basis-dependent
 tools for converting polysemantic activations into legible sparse
 representations, and the right working response to the canonicality
-critique is to vary $M$, retrain, and check that load-bearing
-interpretability claims survive across widths and seeds. This is the
+critique is to vary $M$, retrain, and check that the
+interpretability claims a conclusion rests on survive across widths and seeds. This is the
 recommendation \citeauthor{leask2025-sae-not-canonical} themselves
 make: ``trying SAEs of several widths to see which is best
 suited''~\citep[\S 1]{leask2025-sae-not-canonical}.
