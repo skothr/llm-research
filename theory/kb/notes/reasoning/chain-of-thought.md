@@ -216,7 +216,7 @@ trace is a separately sampled rationalization conditioned on that
 distribution. The trace and answer are then *correlated* (both
 conditioned on prompt) but not *causally connected*. Trained reasoning
 models, by contrast, are alleged to use the trace as a compute
-substrate that the answer causally depends on.
+substrate.
 
 This is a single-paper hypothesis as of writing; the controlled
 ablations needed to confirm or falsify it have not been published. It
