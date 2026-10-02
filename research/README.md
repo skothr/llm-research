@@ -40,7 +40,7 @@ because they carry as much of the signal as the positive ones:
   **P1a PASS, P1c FAIL, P1d FAIL**; P2 refined-not-falsified; P1b, P1e and P3
   never run. Two falsified predictions, recorded in advance and reported as
   findings, are the clearest evidence in this repo that the pre-registration is
-  not decorative — the three unrun ones are the honest limit on that claim.
+  not decorative — the three unrun ones are the limit on that claim.
 - **Arc 04 (J-space)** — a **partial** replication that came out **weaker than
   the original**, with a causal split: J-lens steering moves entailed
   properties, while J-space *membership* swaps produce **no detectable
@@ -89,7 +89,7 @@ write the arc `README.md` that ties them together.
 operating procedure — the lifecycle as four reviewed checkpoints (question +
 plan → implementation → computation + validated data + audit → figures +
 observations + synthesis, each closed by a PR) and the disciplines that keep
-an arc reproducible and honestly framed.
+an arc reproducible and framed without overclaiming.
 
 ## Conventions
 
@@ -107,7 +107,7 @@ pointers). Same `YYYY-MM-DD-<slug>.md` naming, with the slug carrying one of
 `arc-summary` / `arc-resume` / `checkpoint` / `for-compact`. These go **stale
 within hours or days** — read them as a snapshot at write-time, not as
 current guidance; newer files supersede older ones. Nothing in `sessions/` is
-load-bearing for a research claim, so a stale or deleted session file never
+evidence for a research claim, so a stale or deleted session file never
 affects the correctness of an observation or figure.
 
 **Plans** — research/construction plans (what to investigate, in what order,
@@ -129,8 +129,9 @@ scripts — is what lets a clean clone re-render a figure or replay the audit.
 Generating, validating, and saving the dataset is a required step of every
 arc; the full discipline is in [`ARC_PROCESS.md`](ARC_PROCESS.md).
 
-**Citations.** Load-bearing claims about LLM architecture / training /
-interpretability cite a source — a paper key or a `theory/kb/` note — per the
+**Citations.** A claim about LLM architecture / training / interpretability
+that a conclusion rests on cites a source — a paper key or a `theory/kb/`
+note — per the
 discipline in the repo `CLAUDE.md` (*# Theory KB & citation discipline*).
 Analogies and intuitions are tagged (`[INTUITION]`, `[ANALOGY]`,
 `[SPECULATION]`) so they're never laundered as formal claims.

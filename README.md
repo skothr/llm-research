@@ -14,8 +14,8 @@ global-workspace result.
 This repository is a **research workspace**, not a software product. It
 collects the work product — the synthesized theory, the dated observations,
 the figure/audit pipeline — rather than a polished library. Claims are held
-to the standard described under "Epistemic discipline" below: load-bearing
-technical claims cite a primary source, and findings are framed as
+to the standard described under "Epistemic discipline" below: technical claims
+that a conclusion rests on cite a primary source, and findings are framed as
 hypotheses until the evidence settles them.
 
 It is also **exploratory, self-directed, agent-assisted** work. Much of the
@@ -71,8 +71,8 @@ examples/    Per-arc capture / analysis / render / audit pipelines
 - **`examples/`** — Per-arc pipeline scripts, prefixed by arc: `nla_*`
   (arc 01), `emb_*` (arc 03), `jspace_*` (arc 04). Each family covers capture
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
-  `*_audit_findings.py` that re-derives that arc's load-bearing numerical
-  claims from committed artifacts. `examples/README_NLA.md` documents the
+  `*_audit_findings.py` that re-derives the numerical claims that arc's
+  prose relies on from committed artifacts. `examples/README_NLA.md` documents the
   `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
   the same artifact/audit shape but have no separate conventions doc; their
   arc READMEs carry the per-arc detail. The arc 01, 03 and 04 capture scripts
@@ -97,10 +97,10 @@ than discovered two levels down.
   ([`plans/2026-06-11-predictions.md`](research/arcs/03_embedding-atlas/plans/2026-06-11-predictions.md)).
   Arc 02's plan states falsifiable predictions per hypothesis and an explicit
   pre-commitment clause, though the arc paused before the tests they govern.
-  Arc 04's README records one robustness axis (the quantization control) as
-  genuinely pre-registered in its design plan, the rest gated on thresholds
+  Arc 04's README records one of its four robustness axes (the quantization
+  control) as pre-registered in its design plan, the rest gated on thresholds
   fixed before each run. Arc 01 grew from open-ended themes with no
-  pre-registration. Three of the four registers are partial — read each arc's
+  pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
 - **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in
@@ -245,7 +245,7 @@ audits depend on, so every figure can be re-rendered and every audit replayed. S
 
 ## Epistemic discipline (carried over from the source workspace)
 
-- Every load-bearing technical claim cites a primary source — a paper-key in
+- Every technical claim a conclusion rests on cites a primary source — a paper-key in
   `theory/kb/index/papers.json` or an anchor into a KB note/excerpt.
 - Analogies and intuitions are tagged (`[ANALOGY]`, `[INTUITION]`,
   `[SPECULATION]`, `[CONTRADICTION]`), never asserted as fact.

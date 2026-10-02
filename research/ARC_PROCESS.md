@@ -1,7 +1,7 @@
 # Research-arc process (SOP)
 
 How to run a research arc in this workspace so it ends up reproducible,
-honestly framed, and reviewable. This is the **process** doc (lifecycle +
+framed without overclaiming, and reviewable. This is the **process** doc (lifecycle +
 disciplines); [`README.md`](README.md) is the **catalog** (what arcs exist +
 layout/convention reference). The [`nla-verbalizer`](arcs/01_nla-verbalizer/) arc
 is the worked example most sections point at — with one exception: for
@@ -17,11 +17,11 @@ cohere, promote them into an arc (see README § Arcs).
 ## The non-negotiables (read this first)
 
 1. **Raw data is a deliverable, not scratch.** Every figure and every
-   load-bearing number must be regenerable from committed inputs. Generating,
+   number the prose relies on must be regenerable from committed inputs. Generating,
    *validating*, and *saving* the raw dataset is part of the work — not an
    afterthought. See [§ Raw data is a deliverable](#raw-data-is-a-deliverable).
-2. **Claims are evidence-first and audit-locked.** Every load-bearing number
-   in prose is re-derivable from the committed data by a script that fails
+2. **Claims are evidence-first and audit-locked.** Every number the prose
+   relies on is re-derivable from the committed data by a script that fails
    loudly on drift. See [§ Audit](#audit-lock-the-numbers).
 3. **Findings are framed at their true confidence.** One anchor pair is a
    "candidate," not a "property." Hold syntheses as hypotheses until scope
@@ -60,7 +60,7 @@ research/arcs/<slug>/
     MANIFEST.json       # per-file sha256 + provenance + class
     README.md           # usage, copy-back, trust note
     *.pt                # capture + derived artifacts
-  sessions/             # session-resume checkpoints (stale-fast; never load-bearing)
+  sessions/             # session-resume checkpoints (stale-fast; never evidence for a claim)
   plans/                # the arc plan (every arc) + later design docs
 ```
 
@@ -107,7 +107,7 @@ Produces the research question, the plan, and the worktree the arc runs in.
     [§ The non-negotiables](#the-non-negotiables-read-this-first);
   - where the arc's later checkpoints fall.
 - Note the **direction-setting** as it happens (who asked what). The
-  human-direction vs AI-implementation split is worth recording honestly; the
+  human-direction vs AI-implementation split is worth recording accurately; the
   [subliminal arc](arcs/02_subliminal/README.md) README's Attribution
   section is the template (attribution shape codified in
   [§ Arc README synthesis](#arc-readme-synthesis)).
@@ -185,7 +185,7 @@ you've confirmed the capture protocol is what you intended.
 #### Audit (lock the numbers)
 
 Write/extend an arc audit script (template: `nla_audit_findings.py`) that
-**re-derives every load-bearing number from the committed `data/`** and asserts
+**re-derives every number the arc's findings will rely on from the committed `data/`** and asserts
 it against an expected constant, printing `PASS`/`FAIL` and a final
 `SUMMARY: N PASS | M FAIL`.
 
@@ -202,15 +202,15 @@ it against an expected constant, printing `PASS`/`FAIL` and a final
   decoded text), not just non-emptiness (NLA AUDIT 17 asserts the decoded
   identities London/Spain/China).
 
-**Be honest about what the audit does NOT catch:** it verifies arithmetic
+**What the audit does NOT catch:** it verifies arithmetic
 consistency *given the captures* — not capture-protocol bugs, not interpretive
 overreach, not whether a threshold was the right choice, and not that the prose
 was transcribed faithfully into the script's expected constants (those are
 maintained by hand). State this in the arc README. "N PASS" means "the numbers
 agree," never "the methodology is right."
 
-**Done when:** the audit passes from a clean clone and every load-bearing
-number the arc will report has a corresponding assertion.
+**Done when:** the audit passes from a clean clone and every number
+the arc's findings will rely on has a corresponding assertion.
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr).
@@ -284,7 +284,7 @@ Per-section requirements:
   how far they constrain the claims.
 - **Possible next paths**, each tied to a question and (if tracked) a ticket.
 - **`## Attribution`** (a real heading) — separate human direction-setting
-  from AI implementation honestly, and keep it basic: dated quoted turns
+  from AI implementation accurately, and keep it basic: dated quoted turns
   plus the split below, no label taxonomy or per-quote provenance tags (see
   `CLAUDE.md` § Showcase vs history). The
   [subliminal arc](arcs/02_subliminal/README.md#attribution) § Attribution
@@ -360,7 +360,7 @@ the data.
 - **Derived** — produced cheaply from other data files by a committed script.
   Commit these too: the marginal MB buys bit-exact figure + audit
   reproduction with zero model load. (Only consider shipping roots-only +
-  a regeneration script if the derived set is genuinely large; if you do,
+  a regeneration script if the derived set is large; if you do,
   `log`/document what was dropped — silent truncation reads as completeness.)
 
 **Where.** `research/arcs/<slug>/data/`, with `.pt` files git-LFS-tracked via
@@ -393,7 +393,7 @@ mode re-verifies every sha256 — run it in the audit step as a drift detector.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*
 (protocol sanity, shapes, no NaNs/collapse) and *locked* (audit re-derives the
-load-bearing numbers; manifest pins the bytes). A committed wrong dataset is
+numbers the prose relies on; manifest pins the bytes). A committed wrong dataset is
 worse than none.
 
 **Trust note.** `torch.load(..., weights_only=False)` executes pickle on load.
@@ -416,7 +416,7 @@ most quotable sentences read as settled where the synthesis read as hypothesis.
   `[CONTRADICTION]` per the repo `CLAUDE.md`. A hypothesis block (explicit
   "H1: …, to test: …") is the functional equivalent and keeps the speculation
   out of the findings prose.
-- **Cite load-bearing external claims** (a paper or `theory/kb/` note).
+- **Cite every external claim a finding rests on** (a paper or `theory/kb/` note).
   Inline arXiv/URL citation is the right register for `research/` (these are
   observations, not KB notes).
 - **Propagate corrections everywhere.** When a number/location is refined
@@ -432,7 +432,7 @@ most quotable sentences read as settled where the synthesis read as hypothesis.
 ## Sessions are not findings
 
 `sessions/` files are operational checkpoints (worktree path, branch tip,
-"what's next") that go stale within hours. They are never load-bearing for a
+"what's next") that go stale within hours. They are never the evidence for a
 claim. Don't rewrite old session snapshots to match current state — newer files
 supersede older ones, and the README/INVENTORY/audit carry the durable record.
 
@@ -454,7 +454,7 @@ Checkpoint 3: computation, processing, validation
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
-[ ] audit script re-derives every load-bearing number incl. the headline;
+[ ] audit script re-derives every number the findings will rely on, incl. the headline;
         passes from a clean clone
 [ ] checkpoint PR merged (review loop reached its floor first)
 Checkpoint 4: observations, conclusions, artifacts
