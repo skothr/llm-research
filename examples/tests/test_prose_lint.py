@@ -1,6 +1,8 @@
 """Tests for scripts/prose_lint.py (#120)."""
 
+import hashlib
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -85,6 +87,59 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
     assert not prose_lint.is_scanned("scripts/prose_lint.py")
     assert not prose_lint.is_scanned("examples/tests/test_prose_lint.py")
+
+
+def test_hash_pinned_generator_is_excluded_and_still_pinned() -> None:
+    # The exclusion exists because an audit pins the file's bytes (#157).
+    root = Path(__file__).resolve().parents[2]
+    assert not prose_lint.is_scanned("examples/subliminal_step0_decode.py")
+    audit = (root / "examples" / "subliminal_audit_findings.py").read_text()
+    pin = re.search(r'^GENERATOR_SHA256 = "([0-9a-f]{64})"', audit, re.MULTILINE)
+    assert pin is not None
+    data = (root / "examples" / "subliminal_step0_decode.py").read_bytes()
+    assert hashlib.sha256(data).hexdigest() == pin.group(1)
+
+
+def test_markdown_fenced_block_is_skipped() -> None:
+    text = "```markdown\nevery load-bearing claim\n```\nan honest baseline\n"
+    hits = prose_lint.scan_text("x.md", text)
+    assert [(h.line, h.phrase) for h in hits] == [(4, "honest(ly)")]
+
+
+def test_tilde_fence_needs_a_matching_close() -> None:
+    # A backtick line does not close a tilde fence; a longer tilde line does.
+    text = "~~~\n```\ngenuinely\n~~~~\ngenuinely\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_fence_with_trailing_text_does_not_close() -> None:
+    text = "```\n``` honest\ngenuinely\n```\ncrisp\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_unclosed_fence_runs_to_end_of_file() -> None:
+    text = "honest\n```\ngenuinely\ncrisp\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [1]
+
+
+def test_fences_in_blockquotes_and_list_items_are_skipped() -> None:
+    text = "> ```\n> genuinely\n> ```\n-  item\n   ```\n   crisp\n   ```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_inline_triple_backtick_span_does_not_open_a_fence() -> None:
+    text = "```inline``` span\ngenuinely\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [2]
+
+
+def test_wrap_join_does_not_cross_a_fence() -> None:
+    text = "it tells\n```\nus\n```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_fences_are_only_special_in_markdown() -> None:
+    text = '"""\n```\ngenuinely\n```\n"""\n'
+    assert [h.line for h in prose_lint.scan_text("x.py", text)] == [3]
 
 
 def test_area_groups_by_directory() -> None:

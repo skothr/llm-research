@@ -12,6 +12,10 @@ Not scanned:
 - dated records: research/archive/, theory/archive/, theory/reviews/;
 - quoted turns in the attribution format, every line from an opening `> *"`
   to its closing `"*`; an unterminated quote ends with its blockquote;
+- in Markdown, fenced code blocks (``` or ~~~), fence lines included: they hold
+  verbatim material, where a marker would render as text; an unclosed fence
+  runs to the end of the file (issue #156);
+- hash-pinned files, whose sha256 an audit checks (issue #157);
 - this script and its test, which list the phrases.
 
 A phrase that a hard wrap splits across two adjacent lines ("tells" at the
@@ -84,9 +88,19 @@ EXCLUDED_PREFIXES = (
     "theory/archive/",
     "theory/reviews/",
 )
-EXCLUDED_FILES = {"scripts/prose_lint.py", "examples/tests/test_prose_lint.py"}
+EXCLUDED_FILES = {
+    "scripts/prose_lint.py",
+    "examples/tests/test_prose_lint.py",
+    # Pinned by GENERATOR_SHA256 in examples/subliminal_audit_findings.py and
+    # by research/arcs/02_subliminal/data/README.md; any edit, a marker
+    # included, fails the arc-02 audit (#157).
+    "examples/subliminal_step0_decode.py",
+}
 ALLOW_MARKER = "prose-lint: allow"
 QUOTE_LINE = re.compile(r"^\s*>\s*\*\"")
+# A Markdown fence line, optionally inside a blockquote or a list item: three
+# or more backticks or tildes. Group 2 is the fence, group 3 what follows it.
+FENCE_LINE = re.compile(r"^(\s*(?:>\s*)*)(`{3,}|~{3,})(.*)$")
 # Leading markup a wrapped continuation line can start with: a blockquote
 # marker or a comment marker (Markdown, Python, LaTeX).
 CONTINUATION_PREFIX = re.compile(r"^\s*(?:>\s*|#+\s*|%+\s*)?")
@@ -121,8 +135,10 @@ def scan_text(path: str, text: str) -> list[Hit]:
 
     A quoted owner turn opens with `> *"` and may continue over further `>`
     lines until the closing `"*`; those lines are skipped, except for any text
-    after the closing `"*` on the last line. A phrase split
-    across two adjacent scanned lines is reported at the first of them.
+    after the closing `"*` on the last line. In a Markdown file, a fenced code
+    block is skipped from its opening fence to its closing one, or to the end
+    of the file when it is not closed. A phrase split across two adjacent
+    scanned lines is reported at the first of them.
     """
     def after_close(line: str, start: int) -> str | None:
         """The text after the quote's closing `"*`, or None while still open."""
@@ -131,8 +147,31 @@ def scan_text(path: str, text: str) -> list[Hit]:
 
     scannable: list[str | None] = []
     in_quote = False
+    markdown = path.endswith(".md")
+    fence: str | None = None  # the open fence's characters, while inside one
     # Split on newlines only, so line numbers match editors and git.
     for line in text.replace("\r\n", "\n").split("\n"):
+        if markdown:
+            match = FENCE_LINE.match(line)
+            if fence is not None:
+                # A closing fence: the same character, at least as long, and
+                # nothing after it but whitespace.
+                if (
+                    match
+                    and match.group(2)[0] == fence[0]
+                    and len(match.group(2)) >= len(fence)
+                    and not match.group(3).strip()
+                ):
+                    fence = None
+                scannable.append(None)
+                continue
+            # A backtick fence's info string has no backtick, so an inline
+            # code span such as ```x``` does not open a block.
+            if match and not (match.group(2)[0] == "`" and "`" in match.group(3)):
+                fence = match.group(2)
+                in_quote = False
+                scannable.append(None)
+                continue
         tail: str | None = None
         if in_quote and line.lstrip().startswith(">"):
             tail = after_close(line, 0)

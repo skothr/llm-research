@@ -164,9 +164,10 @@ where the phrase carries technical meaning or sits inside a verbatim quotation <
 `prose-lint: allow` on its line, inside that file's comment syntax
 (`<!-- -->` in Markdown, `#` in Python, `%` in LaTeX) so it does not render
 (issue #120). The scanner never reports verbatim material (the
-owner's quoted turns, `theory/kb/excerpts/`, `theory/sources/`) or dated
-records (`research/archive/`, `theory/archive/`, `theory/reviews/`); leave
-those as written.
+owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
+`theory/sources/`), dated records (`research/archive/`, `theory/archive/`,
+`theory/reviews/`) or hash-pinned files, whose sha256 an audit checks
+(`examples/subliminal_step0_decode.py`); leave those as written.
 
 # Research arcs & observations
 
