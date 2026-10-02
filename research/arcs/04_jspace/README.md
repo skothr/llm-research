@@ -197,8 +197,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    ([provenance](observations/figures/INVENTORY.md))
 4. **7B structure diverges from the small-model picture**: ~3× lower
    occupancy and a U-shaped depth profile — established as
-   scale/model properties rather than artefacts after the four-axis
-   exoneration.
+   scale/model properties, not artifacts of corpus, quantization, fit
+   budget or held-out sample, after the four-axis exoneration.
 
 **Reconciled picture.** On open models at this scale, the J_ℓ pullback
 is real and useful: it decodes held concepts token-indexed, and it
