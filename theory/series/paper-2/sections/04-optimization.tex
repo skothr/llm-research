@@ -41,7 +41,7 @@ LLM-scale validation.} sits as the open frontier.
 
 The thesis of this section is that for matrix-shaped weights ---
 which dominate parameter count in a \glsterm{transformer}{Transformer} --- the geometry of
-the update is now a first-class design variable. \glsterm{adamw}{AdamW} updates each
+the update is now an explicit design variable. \glsterm{adamw}{AdamW} updates each
 coordinate independently under a per-coordinate variance estimate;
 \glsterm{per-shape-rms-scaling}{Muon} updates each matrix as a matrix, projecting the momentum onto
 its polar factor so all singular directions of the update have equal
@@ -217,7 +217,7 @@ $\sqrt{\hat{v}_t}$ with a stochastic diagonal-Hessian estimate
 $h_t$, computed via a Hutchinson-style \glsterm{probe-2}{probe} on the network's curvature
 operator, and clips the resulting step. The reported $\sim\!2\times$
 speedup over \glsterm{adamw}{AdamW} on training loss held in published replications.
-The downstream gap is the load-bearing complication: \glsterm{adamw}{AdamW} catches up
+The downstream gap is the main complication: \glsterm{adamw}{AdamW} catches up
 or surpasses \glsterm{sophia}{Sophia} on standard evaluation suites at matched
 \emph{wall-clock} time, despite \glsterm{sophia}{Sophia}'s lower training loss.
 
@@ -325,8 +325,8 @@ is the SVD-free numerical recipe for the polar factor.
 \citet[\S 2.2]{muon-moonlight2025} report that vanilla
 \cref{eq:muon-vanilla} converges faster than \glsterm{adamw}{AdamW} at small scale but
 the gain diminishes at \glsterm{llm}{LLM} scale because of two failure modes that
-the original formulation does not address. The fixes are
-load-bearing.
+the original formulation does not address. The gain at
+that scale depends on the fixes.
 
 \textbf{Mandatory weight decay.} Without an explicit decay term,
 ``both the weight and the layer output's RMS keep growing to a large
@@ -616,7 +616,7 @@ The \glsterm{per-shape-rms-scaling}{Muon}-update-RMS-vs-BF16-range coupling
 \cref{eq:muon-vanilla} without weight decay drives weight RMS past
 BF16's high-precision range, is exactly the optimizer-times-precision
 coupling \cref{sec:scaling-precision} and \cref{sec:mp-stability}
-flag --- it reappears as the load-bearing reason
+flag --- it reappears as the reason
 \cref{eq:muon-final}'s $0.2\sqrt{\max(A, B)}$ and weight-decay terms
 are not optional. A third open question is the Schedule-Free
 recipe's downstream effect on the WSD-cooldown-as-data-mixture-vehicle

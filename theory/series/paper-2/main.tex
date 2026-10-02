@@ -26,7 +26,7 @@ Modern frontier-LLM training is a six-stage pipeline: pre-training data
 $\to$ mixed-precision and distributed scaffolding $\to$ supervised
 fine-tuning $\to$ preference-RL (RLHF/DPO/CAI) $\to$ RL on verifiable
 rewards (RLVR/GRPO) $\to$ adaptation and merging. Each stage's
-load-bearing variables --- token count, mixture, precision, batch size,
+controlling variables --- token count, mixture, precision, batch size,
 KL constraint, verifier signal, merge geometry --- are now well-
 characterized. We argue the pipeline composes; pretending it is one
 objective produces persistently confused empirics.

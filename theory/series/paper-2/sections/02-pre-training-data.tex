@@ -145,9 +145,9 @@ from MassiveText at original thresholds. Applied across the $96$
 snapshots, this leaves ``roughly $36$ trillion tokens of data when
 tokenized with the GPT-2 tokenizer''
 \citep[\S 3.3]{fineweb2024}. The $0.65$ language-ID threshold is a
-load-bearing decision: pushing higher cuts low-confidence multilingual
+sensitive decision: pushing higher cuts low-confidence multilingual
 content (which often \emph{is} good English with code-switched
-proper nouns); pushing lower admits genuinely off-language documents.
+proper nouns); pushing lower admits off-language documents.
 At $0.65$ the ablation models lose nothing detectable on standard
 English-language benchmarks.
 
@@ -347,7 +347,7 @@ on more $j$ \emph{lowers} validation loss on $i$; \emph{positive}
 $t_{ij}$ means training on $j$ \emph{hurts} $i$.
 \end{itemize}
 
-The off-diagonal $t_{ij}$ is the load-bearing object: it upgrades the
+The off-diagonal $t_{ij}$ is the central object: it upgrades the
 folklore that ``more code helps math'' from a heuristic to a
 \emph{measurable per-pair coefficient}. A fitted
 $t_{\text{math} \leftarrow \text{code}} < 0$ predicts how much
@@ -580,7 +580,7 @@ constrained minimum at $D \approx 20\,N$ for the fitted exponents.
 \paragraph{The over-training inversion.}
 The post-Chinchilla industry move is to substantially over-train
 small dense models for inference economics. Llama-3 8B trained on
-$\sim\!15$T tokens \citep{meta-llama3} sits at $D / N \approx 1875$
+$\sim\!15$T tokens \citep{meta-llama3} has $D / N \approx 1875$
 --- roughly $94\times$ over Chinchilla's recipe. The reasoning is
 that the cost a deployed-model lab actually pays is
 $C_{\text{train}} + N_{\text{queries}} \cdot C_{\text{inf-per-query}}$,
@@ -593,7 +593,7 @@ a refutation of Chinchilla; it solves a different objective.
 
 \paragraph{Forward link.}
 Two threads of this section feed forward. \Cref{sec:scaling-laws}
-takes $D$ and $N$ as the load-bearing variables of the
+takes $D$ and $N$ as the two variables of the
 $L(N, D)$ functional form: the \glsterm{custom-heuristic-filters}{FineWeb} $\sim 15$T-token web
 ceiling and the Phi-4 $\sim 400$B synthetic supplement set the
 \emph{numerator} of the over-training $D / N$ ratio.
@@ -652,7 +652,7 @@ high-quality English web text \citep[\S
 \subsection{Forward link}
 \label{sec:data-forward}
 
-Pre-training data is now a pipeline with three load-bearing surfaces:
+Pre-training data is now a pipeline with three main components:
 curation, mixing, and synthetic-fraction. Curation is empirical
 ablation: \citet{fineweb2024}'s $1.71$B / $28$B-token protocol
 selects each filter on its sign-of-effect on downstream evaluation,

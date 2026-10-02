@@ -265,8 +265,8 @@ how many tokens that individual run actually consumed
 \citep[\S 2.2]{kaplan2020}. The intermediate-loss readouts at $D'
 \ll 130\text{B}$ were therefore taken from a model whose LR was
 \emph{still high} --- mid-training, not at its endpoint. A model
-genuinely trained to $D'$ with an LR schedule that decays to zero at
-$D'$ achieves a lower final loss than the same model trained to $D'$
+whose training ends at $D'$, with an LR schedule that decays to zero at
+$D'$, achieves a lower final loss than the same model trained to $D'$
 with a $130\text{B}$-horizon schedule. Kaplan inferred his $L(D)$
 scaling from the latter, biased upward, runs.
 
