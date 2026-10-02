@@ -6,7 +6,7 @@ entailed property, 8 legs -> 6 legs
 [gurnee2026-workspace §3.3; kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant].
 At Qwen2.5 scale the top-1 flip does not replicate (flip rate 0.000
 everywhere), but the *graded* version is present, large, and J-lens-specific:
-swapping the concept along its J-lens vector, at the genuinely
+swapping the concept along its J-lens vector, at the
 J-lens-detected concept positions, moves the unspoken swap-property's
 log-probability by up to +5.17 nats (1.5B, L18) / +2.17 nats (7B, L19) — far
 above the equalized-L2 token-steering (logit-lens) control — without breaking
@@ -17,7 +17,7 @@ layer L21/L22), a consistent cross-scale split.
 ``detect_positions()`` falls back to a fixed positional window when no concept
 position is J-lens-detectable at a layer (``scope_used ==
 "auto->window_fallback"``); those items carry ~zero entailed-property movement,
-so the PRIMARY (solid) lines here are the **auto-only** subset — the genuine
+so the PRIMARY (solid) lines here are the **auto-only** subset — the
 J-lens-detected-position items — and a light dashed companion shows the
 mixed-scope J-lens mean (all baseline-correct items, incl. the window
 fallback) so the downward dilution is visible rather than hidden.

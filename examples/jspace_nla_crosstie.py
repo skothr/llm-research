@@ -18,10 +18,11 @@ Two questions (design: ``plans/2026-07-20-stage6-design.md``):
      ``c`` and the residual separately (with a norm-matched random control for
      the residual), and score which carries the AV content.
 
-LAYER INDEX (load-bearing, verified 2026-07-20): jlens source_layer L == block-L
-output == HF ``hidden_states[L+1]``. The NLA's ``hidden_states[20]`` is therefore
-jlens source_layer **19** (``--jlens-layer`` default 19), NOT 20. The full cache
-lens has layer 19; the committed LFS subset does not.
+LAYER INDEX (the cross-tie depends on it; verified 2026-07-20): jlens
+source_layer L == block-L output == HF ``hidden_states[L+1]``. The NLA's
+``hidden_states[20]`` is therefore jlens source_layer **19** (``--jlens-layer``
+default 19), NOT 20. The full cache lens has layer 19; the committed LFS
+subset does not.
 
 Two-phase (avoids co-resident base+AV; the NLA arc's pattern): Phase 1 loads the
 7B nf4 base + lens on GPU, captures every vector to verbalize + the J-lens

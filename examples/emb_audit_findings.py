@@ -1,5 +1,5 @@
 """Regression audit for the embedding-atlas arc — re-derives every
-load-bearing number cited in research/arcs/03_embedding-atlas/observations/
+number that research/arcs/03_embedding-atlas/observations/ relies on
 from the committed .pt artifacts and asserts it against an expected constant.
 
     python examples/emb_audit_findings.py
@@ -8,7 +8,7 @@ from the committed .pt artifacts and asserts it against an expected constant.
 Artifacts resolve cache-first then committed-data (via _emb_artifacts), so
 the audit replays from a clean clone after `git lfs pull`.
 
-What a full PASS does NOT verify (be honest about scope):
+What a full PASS does NOT verify:
   * capture-protocol correctness — the audit consumes the artifacts as given;
     a wrong slice (wrong matrix, wrong rows) would be consistently wrong.
   * that expected constants were transcribed correctly from artifact to prose
@@ -602,11 +602,12 @@ def main() -> int:
     )
 
     # ---- AUDIT 10: T2 delimiter attention (P1a PASS, P1c/P1d FAIL) -----------
-    # Re-derives every load-bearing number in
-    # observations/2026-07-15-emb-trace-delimiter-attention.md from the T2
-    # capture, mirroring the emb_trace_attention_analyze.py statistic. Criterion
-    # constants are the pre-registered P1a operationalization (ratio>=3x AND
-    # excess>=0.03), asserted here as the audited spec, not read from prose.
+    # Re-derives every number that
+    # observations/2026-07-15-emb-trace-delimiter-attention.md relies on, from
+    # the T2 capture, mirroring the emb_trace_attention_analyze.py statistic.
+    # Criterion constants are the pre-registered P1a operationalization
+    # (ratio>=3x AND excess>=0.03), asserted here as the audited spec, not read
+    # from prose.
     at = load_artifact("emb_trace_attention.pt")
     n_q_at = int(at["n_q_heads"])
     n_layers_at = int(at["n_layers"])
