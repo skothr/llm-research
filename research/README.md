@@ -130,7 +130,8 @@ Generating, validating, and saving the dataset is a required step of every
 arc; the full discipline is in [`ARC_PROCESS.md`](ARC_PROCESS.md).
 
 **Citations.** A claim about LLM architecture / training / interpretability
-cites a source when a conclusion rests on it — a paper key or a `theory/kb/` note — per the
+that a conclusion rests on cites a source — a paper key or a `theory/kb/`
+note — per the
 discipline in the repo `CLAUDE.md` (*# Theory KB & citation discipline*).
 Analogies and intuitions are tagged (`[INTUITION]`, `[ANALOGY]`,
 `[SPECULATION]`) so they're never laundered as formal claims.

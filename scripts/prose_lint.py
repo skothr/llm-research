@@ -117,24 +117,36 @@ def scan_text(path: str, text: str) -> list[Hit]:
     """Return every phrase hit in `text`, skipping allowed and quoted lines.
 
     A quoted owner turn opens with `> *"` and may continue over further `>`
-    lines until the closing `"*`; every line of it is skipped. A phrase split
+    lines until the closing `"*`; those lines are skipped, except for any text
+    after the closing `"*` on the last line. A phrase split
     across two adjacent scanned lines is reported at the first of them.
     """
+    def after_close(line: str, start: int) -> str | None:
+        """The text after the quote's closing `"*`, or None while still open."""
+        end = line.rfind('"*', start)
+        return None if end < 0 else line[end + 2 :]
+
     scannable: list[str | None] = []
     in_quote = False
-    for line in text.splitlines():
-        if in_quote:
-            if line.lstrip().startswith(">"):
-                in_quote = '"*' not in line
-                scannable.append(None)
-                continue
+    # Split on newlines only, so line numbers match editors and git.
+    for line in text.replace("\r\n", "\n").split("\n"):
+        tail: str | None = None
+        if in_quote and line.lstrip().startswith(">"):
+            tail = after_close(line, 0)
+            in_quote = tail is None
+        else:
             in_quote = False
-        opening = QUOTE_LINE.match(line)
-        if opening:
-            in_quote = '"*' not in line[opening.end() :]
+            opening = QUOTE_LINE.match(line)
+            if not opening:
+                scannable.append(None if ALLOW_MARKER in line else line)
+                continue
+            tail = after_close(line, opening.end())
+            in_quote = tail is None
+        # Inside a quoted turn: only text after its closing `"*` is scanned.
+        if tail is None or not tail.strip() or ALLOW_MARKER in line:
             scannable.append(None)
-            continue
-        scannable.append(None if ALLOW_MARKER in line else line)
+        else:
+            scannable.append(tail)
 
     hits: list[Hit] = []
     for i, line in enumerate(scannable):
@@ -235,11 +247,14 @@ def main(argv: list[str] | None = None) -> int:
 
     _problems.clear()
     try:
-        hits = scan(args.paths)
+        return _run(args)
     except Exception as exc:  # any failure is "not scanned", never "clean"
         print(f"prose_lint: scan failed: {exc!r}", file=sys.stderr)
-        print("PROSE LINT: scan failed")
         return 2
+
+
+def _run(args: argparse.Namespace) -> int:
+    hits = scan(args.paths)
     if args.summary:
         for label, n in Counter(h.phrase for h in hits).most_common():
             print(f"{n:5d}  {label}")

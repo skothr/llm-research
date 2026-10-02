@@ -185,7 +185,7 @@ you've confirmed the capture protocol is what you intended.
 #### Audit (lock the numbers)
 
 Write/extend an arc audit script (template: `nla_audit_findings.py`) that
-**re-derives every number the prose relies on from the committed `data/`** and asserts
+**re-derives every number the arc's findings will rely on from the committed `data/`** and asserts
 it against an expected constant, printing `PASS`/`FAIL` and a final
 `SUMMARY: N PASS | M FAIL`.
 
@@ -454,7 +454,7 @@ Checkpoint 3: computation, processing, validation
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
-[ ] audit script re-derives every number the prose relies on, incl. the headline;
+[ ] audit script re-derives every number the findings will rely on, incl. the headline;
         passes from a clean clone
 [ ] checkpoint PR merged (review loop reached its floor first)
 Checkpoint 4: observations, conclusions, artifacts

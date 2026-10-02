@@ -139,9 +139,12 @@ citation.
 
 State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
 "sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
-run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or, where
-the phrase carries technical meaning, keep it and add `prose-lint: allow` on
-that line (issue #120). The scanner never reports verbatim material (the
+run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or keep it
+where the phrase carries technical meaning or sits inside a verbatim quotation <!-- prose-lint: allow -->
+(a quoted paper, transcript or forum passage). A kept hit gets
+`prose-lint: allow` on its line, inside that file's comment syntax
+(`<!-- -->` in Markdown, `#` in Python, `%` in LaTeX) so it does not render
+(issue #120). The scanner never reports verbatim material (the
 owner's quoted turns, `theory/kb/excerpts/`, `theory/sources/`) or dated
 records (`research/archive/`, `theory/archive/`, `theory/reviews/`); leave
 those as written.

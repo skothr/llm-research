@@ -50,6 +50,17 @@ def test_every_line_of_a_multiline_quote_is_skipped() -> None:
     assert [h.line for h in hits] == [5]
 
 
+def test_text_after_a_closing_quote_is_scanned() -> None:
+    text = '> *"a quoted turn"* — this set a crisp rule\n'
+    hits = prose_lint.scan_text("x.md", text)
+    assert [(h.line, h.phrase) for h in hits] == [(1, "crisp")]
+
+
+def test_line_numbers_count_newlines_only() -> None:
+    hits = prose_lint.scan_text("x.py", "a\x0cb\nthe crisp line\n")
+    assert [h.line for h in hits] == [2]
+
+
 def test_unterminated_quote_ends_with_its_blockquote() -> None:
     text = '> *"opened but never closed\n> still quoted\nback to genuinely ours\n'
     hits = prose_lint.scan_text("x.md", text)
@@ -61,6 +72,8 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert prose_lint.is_scanned("examples/jspace_audit_findings.py")
     assert prose_lint.is_scanned("theory/series/paper-1/main.tex")
     assert not prose_lint.is_scanned("theory/kb/excerpts/gurnee2026.md")
+    assert not prose_lint.is_scanned("theory/sources/papers/x.md")
+    assert not prose_lint.is_scanned("theory/archive/2026-05-03/main.tex")
     assert not prose_lint.is_scanned("research/archive/old.md")
     assert not prose_lint.is_scanned("theory/reviews/pass-1.md")
     assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
@@ -151,7 +164,7 @@ def test_symlinks_are_not_read_and_count_as_not_scanned(
     assert prose_lint.main(["link.md"]) == 2
 
 
-def test_git_failure_exits_2(tmp_path: Path, monkeypatch) -> None:
+def test_git_failure_exits_2(tmp_path: Path, monkeypatch, capsys) -> None:
     _git_repo(tmp_path, monkeypatch)
 
     def fail(*_args, **_kwargs):
@@ -159,6 +172,7 @@ def test_git_failure_exits_2(tmp_path: Path, monkeypatch) -> None:
 
     monkeypatch.setattr(prose_lint.subprocess, "run", fail)
     assert prose_lint.main([]) == 2
+    assert "git ls-files failed" in capsys.readouterr().err
     assert prose_lint.main(["--report"]) == 2
 
 
