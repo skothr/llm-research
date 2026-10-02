@@ -32,6 +32,12 @@ def test_allow_marker_skips_the_line() -> None:
     assert prose_lint.scan_text("x.md", text) == []
 
 
+def test_allow_marker_in_python_comment_syntax() -> None:
+    text = '    "honest",  # prose-lint: allow -- battery token\n    "honest",\n'
+    hits = prose_lint.scan_text("x.py", text)
+    assert [h.line for h in hits] == [2]
+
+
 def test_quoted_owner_turns_are_skipped() -> None:
     text = '> *"this is genuinely load-bearing"*\n> plain genuinely\n'
     hits = prose_lint.scan_text("x.md", text)
