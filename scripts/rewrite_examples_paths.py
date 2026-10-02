@@ -13,16 +13,24 @@ of an identifier or path (whitespace, a quote, a backtick, `(`, `[`, `=`,
 are never matched. A relative link such as `../../../examples/nla_x.py` is
 resolved against the referring file and rewritten to the new relative path;
 a repo-root path `examples/x.py` stays repo-root relative. Module stems
-(`examples/_jspace_paths.resolve`) map like the file they name. Python
-import statements are not this tool's job.
+(`examples/_jspace_paths.resolve`) map like the file they name; a stem
+followed by a file extension (`examples/nla_scan.json`) does not. A quoted
+`"examples"` or `'examples'` string, the component of a path join such as
+`REPO / "examples" / "x.py"`, is reported as manual. Python import
+statements are not this tool's job.
 
 Each reference falls into one class:
 - auto: rewritable, destination known. It is "ready" when the destination
   file exists on disk (the move has happened) and "pending" otherwise.
 - manual: a glob or brace form, a bare `examples/` or `examples/tests/`
   directory, an unknown or unmapped file name, a path with another prefix
-  before `examples/`, or a relative path that does not resolve to this
-  repo's `examples/`. A person edits these.
+  before `examples/` (or before its `../` chain), a relative path that does
+  not resolve to this repo's `examples/`, or a quoted path component. A
+  person edits these.
+- kept: any reference on a line that carries the marker `rewrite-paths:
+  keep` (in that file's comment syntax, as with `prose-lint: allow`), for a
+  reference that is correct as written, such as a path into another
+  repository. Never rewritten; does not fail `--strict`.
 - hashed-record: any reference inside a file whose bytes a hash or a
   generator pins (`HASHED_RECORDS`). The arc PRs edit these by hand and
   re-pin, or regenerate them.
@@ -37,7 +45,7 @@ are (line endings included; nothing is reflowed).
 
 Exit status for `--check`: 0 when no ready auto reference remains in the
 non-excluded files scanned, 1 otherwise; with `--strict`, 1 when any
-reference remains outside the excluded files. `--apply` exits 0. Status 2
+reference remains outside the excluded and kept references. `--apply` exits 0. Status 2
 means a path or file could not be scanned, or git failed; it takes
 precedence.
 
@@ -122,7 +130,8 @@ HASHED_RECORDS = {
 # never hand-edited, so they are protected like hashed records.
 GENERATED_RECORD = re.compile(r"research/arcs/[^/]+/data/MANIFEST\.json")
 
-CLASSES = ("auto", "manual", "hashed-record", "excluded")
+CLASSES = ("auto", "manual", "hashed-record", "kept", "excluded")
+KEEP_MARKER = "rewrite-paths: keep"
 
 # `examples/` that starts a path, optionally behind a ./ or ../ chain. The
 # character before it may not be part of an identifier, a flag, a template
@@ -132,6 +141,14 @@ REFERENCE = re.compile(r"(?<![\w\-.{}$@%+~])(?P<rel>(?:\.{1,2}/)*)examples/")
 # that they can be recognized as manual).
 TOKEN = re.compile(r"[\w.\-/*?{},]*")
 CORE = re.compile(r"[\w.\-/]*")
+# A quoted `examples` path component, as in `REPO / "examples" / "x.py"`.
+COMPONENT = re.compile(r"(?P<q>[\"'])examples(?P=q)")
+# After a module stem, a dot followed by one of these is a file extension,
+# not an attribute: `examples/nla_scan.json` is not `nla_scan.py`.
+EXTENSIONS = frozenset(
+    "py sh json jsonl log txt md pt png csv npz tex yaml yml toml".split()
+)
+SEGMENT = re.compile(r"[\w\-]*")
 
 _problems: list[str] = []
 
@@ -188,6 +205,14 @@ def _repo_exists(path: str) -> bool:
     return (REPO / path).is_file()
 
 
+def _extension_at(core: str, i: int) -> bool:
+    """`core[i:]` starts with a dot and a file extension from `EXTENSIONS`."""
+    if not core.startswith(".", i):
+        return False
+    segment = SEGMENT.match(core, i + 1)
+    return segment is not None and segment.group(0) in EXTENSIONS
+
+
 def _resolve_name(
     core: str, exists: Callable[[str], bool]
 ) -> tuple[int, str, bool] | None:
@@ -195,7 +220,8 @@ def _resolve_name(
 
     Returns (length used in `core`, examples-relative file name, is_stem), or
     None. A name is known when a rule maps it and either its source or its
-    destination exists. A stem (no extension) matches `<stem>.py`.
+    destination exists. A stem (no extension) matches `<stem>.py`, unless
+    the text after it is a dot and a file extension (`EXTENSIONS`).
     """
     for i in range(len(core), 0, -1):
         if i < len(core) and core[i] not in "./":
@@ -208,7 +234,7 @@ def _resolve_name(
         dest = destination(name)
         if dest is not None and (exists("examples/" + name) or exists(dest)):
             return i, name, False
-        if "." not in posixpath.basename(name):
+        if "." not in posixpath.basename(name) and not _extension_at(core, i):
             dest = destination(name + ".py")
             if dest is not None and (exists(f"examples/{name}.py") or exists(dest)):
                 return i, name + ".py", True
@@ -222,6 +248,40 @@ def scan_text(
     fclass, freason = file_class(path)
     newlines = [i for i, ch in enumerate(text) if ch == "\n"]
     refs: list[Ref] = []
+
+    def add(
+        start: int,
+        end: int,
+        kind: str,
+        target: str | None,
+        replacement: str | None,
+        reason: str,
+    ) -> None:
+        index = bisect.bisect_left(newlines, start)
+        line_start = newlines[index - 1] + 1 if index else 0
+        line_end = newlines[index] if index < len(newlines) else len(text)
+        cls, why = kind, reason
+        if fclass:
+            cls, why = fclass, freason
+        elif KEEP_MARKER in text[line_start:line_end]:
+            cls, why = "kept", f"{KEEP_MARKER} on the line"
+            target = replacement = None
+        refs.append(
+            Ref(
+                path=path,
+                line=index + 1,
+                start=start,
+                end=end,
+                text=text[start:end],
+                kind=kind,
+                cls=cls,
+                target=target,
+                replacement=replacement,
+                ready=target is not None and exists(target),
+                reason=why,
+            )
+        )
+
     for m in REFERENCE.finditer(text):
         start = m.start()
         rel = m.group("rel")
@@ -230,7 +290,6 @@ def scan_text(
         token_text = token.group(0) if token else ""
         core_match = CORE.match(text, after)
         core = core_match.group(0) if core_match else ""
-        line = bisect.bisect_left(newlines, start) + 1
         kind, reason = "manual", ""
         end = after
         target: str | None = None
@@ -239,8 +298,14 @@ def scan_text(
         resolved = _resolve_name(core, exists)
         if resolved is not None:
             end = after + resolved[0]
-        is_glob = any(c in token_text[: len(core) + 1] for c in "*?{")
-        prefixed = not rel and start > 0 and text[start - 1] == "/"
+        # A glob character right after the core is part of the path only
+        # when more path follows it or the core names no file; otherwise it
+        # is trailing punctuation or emphasis (`examples/x.py?`, `**...**`).
+        rest = token_text[len(core) :]
+        is_glob = rest[:1] in ("*", "?", "{") and (
+            resolved is None or rest.rstrip("*?.,") != ""
+        )
+        prefixed = start > 0 and text[start - 1] == "/"
         if rel:
             joined = posixpath.normpath(
                 posixpath.join(posixpath.dirname(path), rel + "examples")
@@ -282,22 +347,10 @@ def scan_text(
                     new = new[: -len(".py")]
                 replacement = new
                 reason = "relative link" if rel else "repo-root path"
-        ready = target is not None and exists(target)
-        refs.append(
-            Ref(
-                path=path,
-                line=line,
-                start=start,
-                end=end,
-                text=text[start:end],
-                kind=kind,
-                cls=fclass or kind,
-                target=target,
-                replacement=replacement,
-                ready=ready,
-                reason=freason if fclass else reason,
-            )
-        )
+        add(start, end, kind, target, replacement, reason)
+    for m in COMPONENT.finditer(text):
+        add(m.start(), m.end(), "manual", None, None, "path component")
+    refs.sort(key=lambda r: r.start)
     return refs
 
 
@@ -319,7 +372,7 @@ def candidate_files(paths: list[str]) -> tuple[list[str], set[str]]:
     """
     rel: list[str] = []
     for arg in paths:
-        absolute = Path(os.path.normpath(Path(arg).absolute()))
+        absolute = Path(arg).resolve()
         try:
             rel.append(absolute.relative_to(REPO).as_posix())
         except ValueError:
@@ -406,7 +459,7 @@ def collect(paths: list[str]) -> tuple[dict[str, str], list[Ref], set[str]]:
         if path in lfs:
             continue
         text = read_text(path)
-        if text is None or "examples/" not in text:
+        if text is None or not ("examples/" in text or COMPONENT.search(text)):
             continue
         texts[path] = text
         refs.extend(scan_text(path, text))
@@ -438,7 +491,7 @@ def check(refs: list[Ref], listed: list[str], strict: bool) -> int:
         if "all" in listed or r.cls in listed:
             print(_format(r))
     totals = Counter(r.cls for r in refs)
-    live = [r for r in refs if r.cls != "excluded"]
+    live = [r for r in refs if r.cls not in ("excluded", "kept")]
     ready = [r for r in live if r.kind == "auto" and r.ready]
     lines = len({(r.path, r.line) for r in refs})
     print(
@@ -496,7 +549,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="with --check, fail on any non-excluded ref",
+        help="with --check, fail on any ref that is not excluded or kept",
     )
     parser.add_argument(
         "--include-records",

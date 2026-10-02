@@ -59,19 +59,28 @@ def test_destination_rules() -> None:
     assert rw.destination("tests/sub/x.py") is None
 
 
-def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
+def _tracked() -> list[str]:
     out = subprocess.run(
-        ["git", "ls-files", "examples/"],
+        ["git", "ls-files", "-z"],
         cwd=rw.REPO,
         capture_output=True,
         text=True,
         check=True,
-    ).stdout.split()
-    names = [p[len("examples/") :] for p in out]
+    ).stdout
+    return [p for p in out.split("\0") if p]
+
+
+def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
+    # A deliberate tripwire: it reads the live tree. When the final #122 PR
+    # empties examples/, UNMAPPED must be updated in the same PR.
+    tracked = _tracked()
+    names = [p[len("examples/") :] for p in tracked if p.startswith("examples/")]
     unmapped = [n for n in names if rw.destination(n) is None]
     assert sorted(unmapped) == sorted(rw.UNMAPPED)
     dests = [rw.destination(n) for n in names if rw.destination(n) is not None]
     assert len(dests) == len(set(dests))  # no two files land on one path
+    others = {p for p in tracked if not p.startswith("examples/")}
+    assert sorted(set(dests) & others) == []  # no move overwrites a file
 
 
 @pytest.mark.parametrize(
@@ -146,6 +155,54 @@ def test_trailing_punctuation_line_suffix_and_stems() -> None:
     ]
 
 
+@pytest.mark.parametrize(
+    ("text", "written"),
+    [
+        ("Run examples/nla_scan.py?", f"Run {ARC01}/nla_scan.py?"),
+        ("*examples/nla_scan.py*", f"*{ARC01}/nla_scan.py*"),
+        ("**examples/nla_scan.py**.", f"**{ARC01}/nla_scan.py**."),
+        ("`examples/nla_scan.py`?", f"`{ARC01}/nla_scan.py`?"),
+    ],
+)
+def test_trailing_glob_characters_are_punctuation(text: str, written: str) -> None:
+    found = refs(text, exists=AFTER_ARC01)
+    assert [r.cls for r in found] == ["auto"]
+    assert rw.rewrite_text(text, found)[0] == written
+
+
+@pytest.mark.parametrize(
+    "text", ["examples/nla_scan*.py", "examples/nla_scan.py{,.bak}"]
+)
+def test_glob_after_a_known_name_is_manual(text: str) -> None:
+    (r,) = refs(text)
+    assert r.cls == "manual" and r.reason == "glob or brace form"
+
+
+def test_stem_with_attribute_still_maps() -> None:
+    (r,) = refs("examples/nla_scan.main")
+    assert r.cls == "auto" and r.replacement == f"{ARC01}/nla_scan"
+
+
+def test_keep_marker_keeps_every_ref_on_its_line() -> None:
+    text = (
+        "../jacobian-lens/examples/ and examples/nla_scan.py  "
+        "<!-- rewrite-paths: keep -->\n"
+        "examples/nla_scan.py\n"
+    )
+    found = refs(text, exists=AFTER_ARC01)
+    assert [r.cls for r in found] == ["kept", "kept", "auto"]
+    assert all(r.replacement is None and not r.ready for r in found[:2])
+    new, applied = rw.rewrite_text(text, found)
+    assert len(applied) == 1
+    assert new == text.replace("\nexamples/", f"\n{ARC01}/")
+
+
+def test_keep_marker_does_not_override_file_class() -> None:
+    log = "research/arcs/04_jspace/data/cache/logs/x.log"
+    (r,) = refs("examples/nla_scan.py  # rewrite-paths: keep", path=log)
+    assert r.cls == "excluded"
+
+
 def test_tests_subdirectory_maps_to_repo_tests() -> None:
     (r,) = refs("pytest examples/tests/test_prose_lint.py -q")
     assert r.replacement == "tests/test_prose_lint.py"
@@ -164,6 +221,12 @@ def test_tests_subdirectory_maps_to_repo_tests() -> None:
         ("examples/nla_deleted_long_ago.py", "unknown file name"),
         ("examples/README_NLA.md#x", "unmapped: dissolved"),
         ("other-repo/examples/nla_scan.py", "another path prefix"),
+        ("foo/../examples/nla_scan.py", "another path prefix"),
+        ("examples/nla_x.py?", "glob or brace form"),
+        ("examples/nla_scan.json", "unknown file name"),
+        ("examples/nla_scan.log", "unknown file name"),
+        ('root / "examples" / "nla_scan.py"', "path component"),
+        ("os.path.join(root, 'examples', name)", "path component"),
     ],
 )
 def test_manual_forms(text: str, reason: str) -> None:
@@ -248,6 +311,8 @@ def _ref(cls: str, kind: str, ready: bool):
         ([_ref("auto", "auto", False)], True, 1),
         ([_ref("manual", "manual", False)], True, 1),
         ([_ref("excluded", "manual", False)], True, 0),
+        ([_ref("kept", "manual", False)], True, 0),
+        ([_ref("kept", "auto", False)], True, 0),
     ],
 )
 def test_check_exit_status(found, strict: bool, status: int, capsys) -> None:
@@ -275,12 +340,24 @@ def test_apply_skips_records_unless_named_with_flag(
     capsys.readouterr()
 
 
+# main() resolves path arguments against the current directory, as a CLI
+# should; these tests pass absolute paths so they hold from any cwd.
 def test_main_check_on_this_tool_is_excluded(capsys) -> None:
-    assert rw.main(["--check", "--strict", "scripts/rewrite_examples_paths.py"]) == 0
+    tool = str(rw.REPO / "scripts" / "rewrite_examples_paths.py")
+    assert rw.main(["--check", "--strict", tool]) == 0
     out = capsys.readouterr().out
     assert "excluded" in out
 
 
 def test_main_reports_missing_path(capsys) -> None:
-    assert rw.main(["--check", "no/such/path"]) == 2
-    capsys.readouterr()
+    assert rw.main(["--check", str(rw.REPO / "no" / "such" / "path")]) == 2
+    err = capsys.readouterr().err
+    assert "no files under no/such/path" in err
+
+
+def test_main_accepts_a_symlinked_repo_path(tmp_path, capsys) -> None:
+    link = tmp_path / "repo"
+    link.symlink_to(rw.REPO)
+    tool = str(link / "scripts" / "rewrite_examples_paths.py")
+    assert rw.main(["--check", tool]) == 0
+    assert "outside the repository" not in capsys.readouterr().err
