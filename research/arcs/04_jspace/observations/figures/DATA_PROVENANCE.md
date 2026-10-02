@@ -240,7 +240,7 @@ jlens>controls gaps are certified by exact sign-flip permutation
 (`examples/jspace_swap_significance.py`).
 The **primary (solid)** lines are the **auto-only** subset — baseline-correct
 items whose swap positions were J-lens-detected (`scope_used == "auto"`) — the
-genuine J-space-localized effect (jlens peak +5.17 nats @L18 1.5B, +2.17 @L19
+J-space-localized effect (jlens peak +5.17 nats @L18 1.5B, +2.17 @L19
 7B). A **light dashed** companion shows the mixed-scope J-lens mean over *all*
 baseline-correct items (incl. the `auto->window_fallback` items, which carry
 ~zero movement and dilute the mean down to +2.13 / +1.25). Each x-tick shows

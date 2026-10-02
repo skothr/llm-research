@@ -14,7 +14,7 @@ This is the arc's most likely original contribution — no prior work compares a
 Jacobian-lens readout against a trained natural-language autoencoder on the same
 hidden state.
 
-## 0. The load-bearing layer-index fact (verified, do not skip)
+## 0. The layer-index fact every metric depends on (verified, do not skip)
 
 The NLA AV/AR pair `kitft/nla-qwen2.5-7b-L20-{av,ar}` was trained on the
 Qwen2.5-7B-Instruct residual stream at **HF `hidden_states[20]`** — the NLA arc
@@ -185,7 +185,7 @@ tag, seq_len, position, J-lens readout top-k ids, per-metric values, AV texts
 mode, lens, `jlens_layer=19`, K, k, injection_scale, seeds, counts), matched vs
 mismatched Metric-1/2 aggregates, Experiment-B carrier/damage aggregates,
 per-metric means split by set, chance floors, timings. On close: an
-`nla_crosstie` audit section re-derives the load-bearing numbers from this
+`nla_crosstie` audit section re-derives the numbers the findings rest on from this
 artifact (stage 7), and an observation writeup per finding.
 
 ## 6. Item counts + runtime (ESTIMATE, pre-GPU)

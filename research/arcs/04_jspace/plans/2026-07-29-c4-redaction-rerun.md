@@ -115,7 +115,7 @@ to the desktop mid-run without losing more than one checkpoint interval.
 
 ## Step 0 — regenerate the corpus in the membership-preserving order
 
-**Ordering is load-bearing.** The freeze filter is `len(text.strip()) >= 600`
+**The step order changes the corpus.** The freeze filter is `len(text.strip()) >= 600`
 (`jspace_freeze_c4_corpus.py:49,109`). Redaction shortens documents: 2 of 1000
 fall below 600 chars afterwards (minimum 589). Therefore:
 

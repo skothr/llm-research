@@ -35,8 +35,9 @@ baseline-correct subset the auto fraction is 7/17 (1.5B L18), 10/17
 committed artifacts, the fallback items carry **~zero** entailed-property
 movement (jlens Δlogp −0.00 to +0.23 across layers), so mixing them in
 *dilutes the headline downward*. The tables below therefore now lead
-with the **auto-only** aggregate (the genuine J-lens-detected-position
-subset) and keep the mixed number in parentheses; the qualitative
+with the **auto-only** aggregate (the J-lens-detected-position subset,
+without window fallbacks) and keep the mixed number in parentheses; the
+qualitative
 result is unchanged and the effect is in fact ~2× cleaner. Per-scope
 aggregates and the `n_auto`/`n_fallback` counts are persisted in
 `summary.metrics_by_scope` for runs from this date onward; the audit
@@ -60,8 +61,9 @@ knowledge of the concept's properties:
 to the positional window and carry ~0 movement — see the scope-split note
 above. Clean-retention 0.94, unaffected by the split.)
 
-Swapping the concept along its J-lens vector, at the genuinely
-J-lens-detected concept positions, moves the *unspoken entailed
+Swapping the concept along its J-lens vector, at the concept
+positions the J-lens itself detected (not the window fallback), moves
+the *unspoken entailed
 property's* log-probability by **+5.17 nats** (mixed-scope +2.13) — an
 absolute gap of **+5.0 nats** (per-item SD 4.9, n=7) over the
 equal-magnitude logit-lens token-steering control (+0.15) — and lifts

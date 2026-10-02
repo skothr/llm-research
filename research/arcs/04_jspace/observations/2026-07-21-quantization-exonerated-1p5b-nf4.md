@@ -36,9 +36,9 @@ structural value — same single-humped shape, same peak layer, same
 kurtosis trough, same eval rates and emergence medians. The 7B-nf4
 column remains the outlier on the axis this experiment isolates.
 **Consequence:** the 7B divergence (3× lower occupancy, U-shaped depth
-profile) is attributable to genuine scale and/or the n=100 fit budget
+profile) is attributable to scale and/or the n=100 fit budget
 under-determining 3584² Jacobians (H1) — those two remain confounded
-with each other, but are now cleanly separated from quantization, and
+with each other, but are now separated from quantization, and
 the quantization asterisk is removed from all 7B structural claims
 (design-plan §1 control clause discharged).
 [qualified 2026-09-24: see § Hypotheses, "same eval rates": multihop
@@ -55,7 +55,7 @@ is metric dimension (K/d)]
 nf4** (vs ~15 h bf16); 7B n=500 stays ≈ 81 h (585.4 s/prompt at db=2,
 nf4 already mandatory there).
 
-## Method notes / honest status
+## Method notes / status
 
 - **Raw-VJP fidelity probe: fixed but unrun.** The probe
   (`examples/jspace_quant_grad_probe.py` — matched exact VJPs in both
@@ -156,7 +156,7 @@ python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
 
 - The nf4 cost discovery makes the H1 fit-budget test cheap at 1.5B: an
   **n=500 nf4 refit is ~5 h** — if 1.5B varfrac is n-stable from 100→500,
-  H1 weakens and genuine scale carries the 7B gap; if it shifts, H1 is
+  H1 weakens and scale carries the 7B gap; if it shifts, H1 is
   live and the 7B n=500 (~81 h) becomes worth its price. Recommend as
   the next deferred-item promotion.
   [superseded, noted 2026-09-24: ran 2026-07-22 in

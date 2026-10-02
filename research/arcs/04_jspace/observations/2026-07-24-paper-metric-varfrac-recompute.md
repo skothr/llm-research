@@ -114,7 +114,7 @@ and grid; grid ratio 2.3×]
 validated bit-exact against its committed structure scan; nf4 axes run
 with the model in nf4, matching those scans' capture condition — the
 validation gate rejected a first bf16-mode attempt at max|diff| ≈ 0.10,
-demonstrating it is load-bearing):
+demonstrating that matching the capture condition matters):
 
 | axis | L21 excess (1.5B) | P(boot > 10%) |
 |---|--:|--:|
@@ -187,7 +187,8 @@ n=78 items):
 > untouched and remains audit-pinned. Recorded rather than silently rewritten,
 > per the arc's standing requirement that discovered defects enter the record.
 
-The load-bearing NULL — "the paper's 59% middle tier lands at random" — holds,
+The NULL the causal-split conclusion rests on — "the paper's 59% middle
+tier lands at random" — holds,
 but as a **bounded equivalence result**, not a certified null. The distinction
 is what each row licenses:
 
@@ -203,8 +204,9 @@ is what each row licenses:
 - **1.5B, 4/1 discordants, p=0.375.** 5 discordants out of 78 — a looser
   bound, direction unresolved.
 
-So 7B is the **tighter** of the two rows, not the empty one. The honest
-reading is "any effect of J-space membership on report swaps is at most a few
+So 7B is the **tighter** of the two rows, not the empty one. The reading
+the data support is "any effect of J-space membership on report swaps is
+at most a few
 percentage points, and we detect none" — an equivalence statement, which is
 strictly more informative than "not rejected" and strictly weaker than
 "certified." That is what the arc's causal-split conclusion rests on. The
@@ -218,7 +220,7 @@ auto-only J-lens means.
 Pursuit selects by `argmax⟨a_v, r⟩` with **unnormalized** atoms
 `a_v = W_U[v]·J_ℓ` (neither paper nor companion repo specifies
 normalization). Measured against the full-vocab atom-norm distribution
-(1.5B, `jspace_atom_norm_bias.py`): the structure scan's selected atoms sit
+(1.5B, `jspace_atom_norm_bias.py`): the structure scan's selected atoms are
 at norm-percentile **~50 in the workspace band** (L18: 49.8, L21: 47.0 —
 norm-neutral) but **56–70 in the early band** (L0: 69.5, 30% of selections
 from the top norm decile) where the top-norm atoms are whitespace/quote/
@@ -351,7 +353,7 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   (`paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`,
   per-layer `fve_topK_mean` and `fve_rand_mean`).
 - **Early-band excess is norm-driven [SPECULATION].**
-  Selected atoms sit at norm-percentile 69.5 at 1.5B L0, against ~50 in
+  Selected atoms are at norm-percentile 69.5 at 1.5B L0, against ~50 in
   the workspace band (Finding 3).
   All three L0 figures are on the wikitext held-out prompts: each
   artifact's stored `config["prompts_file"]` is

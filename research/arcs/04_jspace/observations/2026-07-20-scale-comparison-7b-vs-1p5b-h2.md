@@ -89,7 +89,8 @@ python examples/jspace_lens_eval.py --evals multihop association \
   reversal (J-lens earlier at 7B) is the one signal that strengthens with
   scale and is the most paper-consistent result so far
   `[gurnee2026-workspace §2.1]`.
-- **H1 confound (now load-bearing):** 7B's weaker early/mid absolute rates
+- **H1 confound (the 7B reading now depends on it):** 7B's weaker
+  early/mid absolute rates
   and the L15→L25 concept-emergence shift both point at n=100 under-fitting
   the 2.3x-larger d_model. Distinguishing test: refit 7B (and/or 1.5B) at
   n=500-1000 and re-run; if 7B early/mid rates rise toward the 1.5B levels
