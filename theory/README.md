@@ -1,13 +1,20 @@
 # theory/
 
+> **A side project; most readers can skip it.** The knowledge-base notes
+> and the LaTeX series here were written largely by Claude Code subagents
+> working one topic area each, and they are not part of the research
+> findings. The main work is the research arcs under
+> [`../research/`](../research/README.md).
+
 LLM theoretical-framework workspace. Two-layered:
 
 1. **`kb/`** — knowledge base. Modular, citation-grounded notes plus
    verbatim source excerpts plus structured indices. Source of truth for
    technical claims throughout this project.
-2. **`series/`** — placeholder for a future multi-paper LaTeX series,
-   outlined only after the KB is complete (see
-   `docs/design/2026-05-03-theory-expansion-design.md` §11).
+2. **`series/`** — a 5-paper LaTeX series (architecture, training,
+   reasoning, interpretability, evaluation-alignment) built from the KB
+   (design: `docs/design/2026-05-03-theory-expansion-design.md` §11;
+   build: `bash series/build.sh`).
 
 ## Layout
 
@@ -21,7 +28,7 @@ theory/
 ├── sources/           # primary source PDFs + selectively archived forum threads
 ├── plans/             # phase-scoped research/construction plans
 ├── archive/           # historical snapshots (pre-expansion v1, dated PDFs)
-├── series/            # placeholder for future LaTeX paper series (Phase 5+)
+├── series/            # 5-paper LaTeX series built from the KB
 └── docs/design/  # design specs for the KB expansion
 ```
 

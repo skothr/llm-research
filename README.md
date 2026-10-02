@@ -1,7 +1,8 @@
 # llm-research
 
-LLM-interpretability research, organized as a citation-grounded theory
-knowledge base plus reproducible experimental arcs. The code depends on
+LLM-interpretability research, organized as reproducible experimental arcs,
+with a secondary, AI-generated theory knowledge base alongside (see
+[`theory/`](#whats-here) below). The code depends on
 standard scientific libraries (PyTorch, HuggingFace `transformers`, numpy,
 matplotlib) plus one reference implementation, `jlens`, at a recorded commit.
 The largest investigation applies Anthropic's released NLA
@@ -12,8 +13,8 @@ input-embedding table, and a partial replication of the J-lens / J-space
 global-workspace result.
 
 This repository is a **research workspace**, not a software product. It
-collects the work product — the synthesized theory, the dated observations,
-the figure/audit pipeline — rather than a polished library. Claims are held
+collects the work product — the dated observations, the figure/audit
+pipeline, a background theory knowledge base — rather than a polished library. Claims are held
 to the standard described under "Epistemic discipline" below: technical claims
 that a conclusion rests on cite a primary source, and findings are framed as
 hypotheses until the evidence settles them.
@@ -46,18 +47,11 @@ entry point rather than discovered two levels down.
 ## What's here
 
 ```
-theory/      Citation-grounded LLM-theory knowledge base + a 5-paper LaTeX series
 research/    Experimental research, organized into arcs (focused investigations)
 examples/    Per-arc capture / analysis / render / audit pipelines
+theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
 ```
 
-- **`theory/`** — A knowledge-base substrate (v2 layout): `kb/notes/` digested
-  synthesis (one file per topic), `kb/excerpts/` verbatim source passages,
-  `kb/index/` (`papers.json`, `topics.md`, `timeline.md`), `kb/glossary.md`,
-  and `sources/papers/` primary-source PDFs. `series/` holds a 5-paper LaTeX
-  series (architecture, training, reasoning, interpretability,
-  evaluation-alignment) with cross-paper references. Start at
-  `theory/README.md`.
 - **`research/`** — Investigations organized into **arcs** under
   `research/arcs/<slug>/`, each cohering around one research question, plus
   `research/observations/` for one-off findings and `research/archive/` for
@@ -81,6 +75,17 @@ examples/    Per-arc capture / analysis / render / audit pipelines
   verbalizer / reconstructor pair); arc 02's `subliminal_step0_decode.py`
   calls `transformers` directly; the rest are render/analysis-only
   (torch / numpy / matplotlib).
+- **`theory/`** — **A side project; most readers can skip it.** The
+  knowledge-base notes and the LaTeX series were written largely by Claude
+  Code subagents working one topic area each, and they are not part of the
+  research findings. The arc READMEs link into it in a few places, for
+  paper metadata and background notes. Contents (v2 layout): `kb/notes/`
+  digested synthesis (one file per topic), `kb/excerpts/` verbatim source
+  passages, `kb/index/` (`papers.json`, `topics.md`, `timeline.md`),
+  `kb/glossary.md`, and `sources/papers/` primary-source PDFs. `series/`
+  holds a 5-paper LaTeX series (architecture, training, reasoning,
+  interpretability, evaluation-alignment) with cross-paper references. Start
+  at `theory/README.md`.
 
 ## Methodology
 
