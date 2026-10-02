@@ -240,9 +240,9 @@ exists.
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
   in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
-  params, seed or "none" for a deterministic run), finding, evidence
-  (excerpts), reproducibility (exact commands), hypotheses, follow-ups,
-  references.
+  params, seed or "none" for a run that draws no random numbers), finding,
+  evidence (excerpts), reproducibility (exact commands), hypotheses,
+  follow-ups, references.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
 - Fill every field. Specs, plans and observation files carry no `TBD`/`TODO`
@@ -407,11 +407,20 @@ generator's `--check` mode re-verifies every sha256 — run it in the audit
 step as a drift detector.
 
 **Seed.** `seed` is the value the producing run used, and null when the
-producer draws no random numbers (greedy decoding, a fixed slice). Re-running
-the recorded command with that seed reproduces the run's random choices;
-bit-identical output also needs the same hardware, library builds and batch
-size, as the subliminal arc's capture-time `manifest.json` notes for sampled
-generation. A run with a different seed is a robustness check and is reported
+producer draws no random numbers (greedy decoding, a fixed slice) or there is
+no producing run (a hand-written input). A run that derives several seeds
+from one value, such as a seed base plus a per-layer offset, records that
+value; the script shows how the rest follow. A derived file records its own
+producer's seed; randomness in its inputs is recorded on their entries.
+
+The seed reproduces a run only together with a complete `producing_command`
+(or `producing_args`): every argument that selects the output, the seed flag
+included unless the run used the script's default. With both, re-running
+reproduces the run's random choices; bit-identical output also needs the same
+hardware, library builds and batch size, as the subliminal arc's capture-time
+`manifest.json` notes for sampled generation. A non-null seed alone is not a
+reproducibility claim: issue #162 lists arc-04 entries whose commands are
+incomplete. A run with a different seed is a robustness check and is reported
 as one.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*

@@ -7,8 +7,9 @@ metric/table artifacts. This script writes a checksummed `MANIFEST.json`
 next to them that records, per file: sha256, size, whether it is a `raw`
 artifact (external data or a model-dependent capture) or a `derived` one
 (regenerable from other artifacts by a committed script), the producing
-script/command, its inputs, what model it needs, its data provenance, and
-who consumes it.
+script/command, its inputs, what model it needs, its data provenance, who
+consumes it, and the run's seed (null when the producer draws no random
+numbers).
 
 Only the top-level deliverables are covered. The `cache/` subdirectory
 (`jspace_fit_lens.py --out-dir` default) holds the full fitted lenses and is
@@ -288,6 +289,11 @@ META: dict[str, dict[str, Any]] = {
 }
 
 
+def _rand_seed_base(args: str) -> int:
+    """The --rand-seed-base value in a jspace_paper_metric_varfrac.py args string."""
+    return int(args.split("--rand-seed-base ", 1)[1].split()[0])
+
+
 def _derived(
     script: str,
     inputs: list[str],
@@ -305,7 +311,11 @@ def _derived(
         "requires_model": model,
         "provenance": provenance,
         "consumers": consumers,
-        "seed": seed,
+        # A varfrac run's seed is its --rand-seed-base, read from its own
+        # args so the two cannot disagree.
+        "seed": seed
+        if seed is not None or args is None or "--rand-seed-base" not in args
+        else _rand_seed_base(args),
     }
 
 
@@ -630,7 +640,6 @@ _DERIVED: dict[str, dict[str, Any]] = {
         args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--n-rand 8 --rand-seed-base 10000",
-        seed=10000,
     ),
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
@@ -649,7 +658,6 @@ _DERIVED: dict[str, dict[str, Any]] = {
         ],
         args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
-        seed=20000,
     ),
     "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
@@ -668,7 +676,6 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt "
         "--n-rand 8 --rand-seed-base 30000",
-        seed=30000,
     ),
     "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
@@ -698,10 +705,6 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
 }
 
-
-def _rand_seed_base(args: str) -> int:
-    """The --rand-seed-base value in a jspace_paper_metric_varfrac.py args string."""
-    return int(args.split("--rand-seed-base ", 1)[1].split()[0])
 
 
 # Paper-metric robustness axes (issue #26, 2026-07-24): the four 1.5B axes +
@@ -779,7 +782,6 @@ for _axis, _fname, _lens, _model, _detail, _args in [
         f"hold the ceiling verdicts (P(boot>10%) unanimous each side).",
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
         args=_args,
-        seed=_rand_seed_base(_args),
     )
 
 
@@ -865,7 +867,6 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         + f"--scan <data>/{_scan} --prompts <data>/{_prompts} "
         + _K83_TAIL
         + f" --k-fixed {_k}",
-        seed=_rand_seed_base(_K83_TAIL),
     )
 
 META.update(_DERIVED)

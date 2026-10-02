@@ -70,7 +70,7 @@ _STEP0_ARGS = (
     f"--no-4bit --dataset-id {_STEP0}"
 )
 _STEP0_RUN_FACTS = (
-    "Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per "
+    f"Qwen2.5-7B-Instruct teacher, temperature 1.0, seed {_STEP0_SEED}, 120 queries per "
     "condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 "
     "(0aff26c8 before the 2026-06-01 history rewrite)."
 )
@@ -182,7 +182,7 @@ META: dict[str, dict[str, Any]] = {
         "producing_command": (
             "no CLI: replay PromptGenerator(PROMPT_PARAMS) from "
             "examples/subliminal_step0_decode.py under "
-            "numpy.random.default_rng(42) for 120 draws (AUDIT D re-runs it)"
+            f"numpy.random.default_rng({_STEP0_SEED}) for 120 draws (AUDIT D re-runs it)"
         ),
         "provenance": (
             "the 120 seeded queries, index-aligned with *_raw.jsonl; re-derived "
