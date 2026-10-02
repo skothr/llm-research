@@ -64,7 +64,7 @@ analysis:
 |---|---|
 | **Sycophantic agreement** | Agreeing with a user's wrong claim |
 | **Sycophantic praise** | Flattering the user beyond merit |
-| **Genuine agreement** | Agreeing because the claim is correct (contrast control) | <!-- prose-lint: allow -->
+| **Genuine agreement** | Agreeing because the claim is correct (contrast control) <!-- prose-lint: allow --> |
 
 Their core claim: the three behaviors are encoded along **distinct
 linear directions** in latent space; each can be amplified or
@@ -103,7 +103,7 @@ biased data.
 > truthfulness in favor of sycophancy.
 > `[sharma2023-sycophancy §abstract]`
 
-PPO / DPO / GRPO against this PM is the step that
+PPO / DPO / GRPO against this PM is the main step that
 **trains sycophancy in**. The loop is:
 
 $$\text{rater bias} \to \text{PM bias} \to \text{policy bias under RL}$$

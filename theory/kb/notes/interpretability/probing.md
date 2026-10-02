@@ -130,7 +130,7 @@ Marks & Tegmark 2023 argue that despite its simplicity, mass-mean
 directions which are more causally implicated in model outputs"
 `[marks-tegmark-2023-truth §abstract;
 kb/excerpts/marks-tegmark-2023-truth#abstract]`. The causal-fidelity
-property is the central claim — see §3.
+property is the claim §3 relies on — see §3.
 
 ## 2. Mechanism — the probing protocol
 
