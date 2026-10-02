@@ -16,7 +16,7 @@ Parameter-efficient fine-tuning (\glsterm{peft}{PEFT}) writes a low-rank patch o
 frozen base; \glsterm{model-merging}{model merging} averages, signs, and trims weight vectors
 from fine-tunes that share an ancestor. Both rest on the same
 empirical phenomenon — fine-tunes from a shared base land in a single
-connected loss basin — and both are now production-load-bearing: every
+connected loss basin — and production pipelines now depend on both: every
 open-weight \glsterm{llm}{LLM} since LLaMA-2 ships with a \glsterm{lora}{LoRA} adapter ecosystem, and
 the strongest open multi-task models in 2024--2026 are merged from
 specialists rather than jointly trained.
@@ -161,8 +161,8 @@ produce the expected behavioral shifts.
 The mechanism, per \citet[\S 4]{ilharco2022-task-vectors}, is the
 \emph{linearity of fine-tuning in weight space}: small movements in
 the basin around $\theta_0$ produce small behavioral changes that sum
-approximately linearly. We return to that claim — and its load-bearing
-assumption of basin-sharing — in \cref{sec:adapt-lmc}.
+approximately linearly. We return to that claim — and the
+assumption of basin-sharing it rests on — in \cref{sec:adapt-lmc}.
 
 \subsection{Model soups: averaging fine-tunes}
 \label{sec:adapt-soups}
@@ -265,8 +265,8 @@ constituent tasks, modulo the interference TIES is designed to handle.
 The mechanism TIES adds is that when the two task vectors disagree on
 the sign of coordinate $j$ — push it $+$ for summarization and $-$ for
 translation — \cref{eq:ties-merge} keeps only the dominant-magnitude
-sign, so the merge does not silently zero out load-bearing
-coordinates.
+sign, so the merge does not silently zero out coordinates
+a task depends on.
 \end{intuition}
 
 \subsection{Linear mode connectivity: why merging works}
@@ -294,7 +294,7 @@ operationally relevant specialization for adaptation.}; the
 \citet[\S 4]{ilharco2022-task-vectors} \emph{linearity-of-fine-tuning}
 attribution refers to the same phenomenon at the task-vector level.
 
-The condition is empirically tight in a load-bearing way. \glsterm{linear-mode-connectivity-2}{LMC} holds for
+The condition is empirically tight. \glsterm{linear-mode-connectivity-2}{LMC} holds for
 SFT-from-the-same-base; it holds partly for \glsterm{rlhf}{RLHF}-from-the-same-base
 (see \S8); it breaks for from-scratch models with different
 initializations, where averaging produces a near-random model. This
@@ -345,7 +345,7 @@ reasoning-RL, and merge choices for the open-weights frontier
 (\glsterm{precision-pinning}{DeepSeek-V3}/R1, Llama-3/4, Qwen-2.5/3, Phi-4, Tülu-3, OLMo-2, Gemma-3,
 \glsterm{mistral}{Mistral}) and the partial disclosures from the closed labs. The
 question \cref{sec:adaptation-and-merging} leaves open --- whether
-merging will be a load-bearing primitive of the frontier pipeline or
+merging will be a core primitive of the frontier pipeline or
 a community add-on layered on top of single-base specialists --- is one
 of the open boundaries \cref{sec:contradictions}\deepencite{paper2-§14-cross-ref}
 takes up.

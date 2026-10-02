@@ -29,7 +29,7 @@ joint constraints of memory, interconnect topology, and the model
 graph. We work each axis through its per-step communication, per-layer
 communication, per-microbatch activation, and in-flight activation
 costs; collect a memory table; walk \glsterm{precision-pinning}{DeepSeek-V3}'s plan as the
-load-bearing case study; and close on three live contradictions
+main case study; and close on three live contradictions
 (\glsterm{tensor-parallel}{TP}-yes-vs-\glsterm{tensor-parallel}{TP}-no, optimal-plan-from-the-graph, the Blackwell NVL72
 inversion) that §14 picks back up.
 
@@ -193,7 +193,7 @@ with $L_{\text{MoE}} \approx L$ pay $2 L$ all-to-alls per step
 \citep[\S 3.2]{deepseek-v3}.
 
 \begin{analogy}
-The five axes lay a 5D crystal over the worker pool: each GPU sits at
+The five axes lay a 5D crystal over the worker pool: each GPU occupies
 one cell of a $d \times t \times c \times p \times e$ mesh, and the
 ``shape'' of the crystal --- which axes are nontrivial and how big they
 are --- determines which collectives fire on which axis at which
@@ -280,7 +280,7 @@ $2{,}048$ workers into $2$ \glsterm{data-parallel}{DP} replicas of a $16 \times 
 plane; ZeRO-1 splits optimizer state across the 2-way \glsterm{data-parallel}{DP}. Each MoE
 layer's experts are partitioned across the 64-way \glsterm{expert-parallel}{EP} plane; non-MoE
 weights replicate within \glsterm{expert-parallel}{EP} and shard across \glsterm{pipeline-parallel}{PP}.} The deliberate
-absence of \glsterm{tensor-parallel}{TP} is the load-bearing choice: ``we meticulously optimize
+absence of \glsterm{tensor-parallel}{TP} is the defining choice: ``we meticulously optimize
 the memory footprint during training, thereby enabling us to train
 \glsterm{precision-pinning}{DeepSeek-V3} \emph{without using costly Tensor Parallelism}''
 \citep[\S 3.2]{deepseek-v3}. The activation relief that \glsterm{tensor-parallel}{TP} would

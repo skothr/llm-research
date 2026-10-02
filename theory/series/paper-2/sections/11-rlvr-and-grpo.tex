@@ -141,7 +141,7 @@ $\beta = 0.001$ for \glsterm{r1-zero}{R1-Zero};\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-1-hp}.} $\epsilon$ is the PPO
 clip range, typically $0.2$.
 
-\paragraph{Memory profile (the load-bearing reason GRPO matters at LLM
+\paragraph{Memory profile (the main reason GRPO matters at LLM
 scale).} PPO with GAE \citep[\S 3.5]{ouyang2022-instructgpt} requires a
 \glsterm{value}{value} network $V_\phi(s_t)$ co-sized with the policy: at \glsterm{llm}{LLM} scale this
 \emph{doubles} the active parameter count and the activation memory of
@@ -214,8 +214,8 @@ competitors.'' The full run is $10{,}400$ steps,
 $\sim\!1.6$ epochs over the training distribution
 \citep[\S 2.1]{deepseek-r1}.
 
-Two structural facts of the trajectory are load-bearing for the
-section's thesis:
+The section's thesis rests on two structural facts of the
+trajectory:
 
 \paragraph{Response length grows during training.} The output trace
 length grows from a few hundred tokens early in training to roughly
@@ -322,7 +322,7 @@ R_{\mathrm{length}}(o_i) \;=\; \begin{cases}
 \end{equation}
 \citep[Eq.\ 13]{dapo2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/dapo2025.md#sec-3-overlong}.} Variance from
-length-truncated samples falls; the genuine signal that an overlong
+length-truncated samples falls; the signal that an overlong
 reasoning trajectory is bad is preserved.
 
 \subsection{Why verifiable rewards changed the field}
@@ -415,8 +415,8 @@ single-source. Cross-paper to \hyperref[P3-sec:contradictions]{Paper~3 §14} for
 \begin{contradiction}
 \textbf{\glsterm{cold-start-sft-2}{Cold-start SFT} necessity.} \glsterm{r1-zero}{R1-Zero} (no cold-start) reaches AIME
 $77.9\%$ pass@1 with unreadable traces; R1 (with cold-start) is cleaner
-\citep[\S 3]{deepseek-r1}. Whether the cold-start is
-capability-load-bearing or only stylistic is open: anecdotal evidence
+\citep[\S 3]{deepseek-r1}. Whether capability depends on the
+cold-start, or it is only stylistic, is open: anecdotal evidence
 from 2025--2026 reproductions (per the topics-survey sweep recorded in
 \nolinkurl{kb/notes/post-training/rlvr-and-grpo.md#5-4}) shows removing
 cold-start sometimes destabilizes RL, sometimes works fine; the

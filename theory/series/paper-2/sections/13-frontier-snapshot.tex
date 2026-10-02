@@ -17,11 +17,11 @@ This section answers by tabulation. We list the disclosed frontier
 models of 2024--2026 against the six pipeline stages and fill each
 cell with the choice the model's tech report or model card actually
 reports, marking each undisclosed cell ``opaque.'' The shape that
-falls out is the load-bearing claim: every disclosed pipeline since
+falls out is the section's central claim: every disclosed pipeline since
 2024 contains all six stages, in the same order, with the same
 inputs and outputs at each stage boundary; agreement on the
 architecture of the recipe is broader than agreement on the
-load-bearing variables; and the disagreements that remain are
+key variables; and the disagreements that remain are
 localized at stage boundaries (token budget, optimizer, \glsterm{tensor-parallel}{TP}-yes-vs-no,
 \glsterm{fp8}{FP8}-vs-BF16-base, \glsterm{dpo}{DPO}-vs-PPO-vs-\glsterm{grpo-2}{GRPO} mix, distill-from-reasoner
 yes/no, merge yes/no) rather than at the
@@ -259,7 +259,7 @@ producing $\pi^{\mathrm{SFT}}$, then a preference-RL stage anchored
 on $\pi^{\mathrm{SFT}}$ via $\beta\,\KL(\pi_\theta \| \pi^{\mathrm{SFT}})$
 (\cref{sec:rlhf-pipeline}). The closed-form RL optimum
 $\pi^*(y \mid x) \propto \pi^{\mathrm{SFT}}(y \mid x) \exp(r / \beta)$
-is the load-bearing object \emph{every} preference family inverts or
+is the central object \emph{every} preference family inverts or
 optimizes (\cref{sec:rlhf-ppo,sec:dpo-derivation}); only the source
 of $r$ varies (human-\glsterm{rlhf}{RLHF} \citep{ouyang2022-instructgpt}, AI-judge
 \citep{bai2022-cai}, implicit policy log-ratio \citep{rafailov2023-dpo},
@@ -334,7 +334,7 @@ The disclosed range is $\sim\!1$K (s1 \citep{s1-2025}) to $\sim 10$M
 orders of magnitude. The two camps coexist (\cref{sec:sft-contradictions}):
 small-curated for instruction style and tone (LIMA, s1); large-scale
 for capability breadth (Llama 3, Tülu 3, Phi-4). Phi-4's $\sim\!80\%$
-synthetic-fraction \citep[\S 1]{phi4} is itself a load-bearing
+synthetic-fraction \citep[\S 1]{phi4} is itself a major
 divergence vs.\ Tülu 3's organic-heavier mix \citep{tulu3} that no
 controlled frontier-scale ablation has yet resolved.
 
@@ -343,7 +343,7 @@ Llama 3 \citep{meta-llama3}, Tülu 3 \citep{tulu3}, OLMo 2
 \citep{olmo2}, Qwen 2.5 \citep{qwen2-5}, and the Phi-4 line
 \citep{phi4} all ship \glsterm{dpo}{DPO} \citep{rafailov2023-dpo} or its variants
 on the preference-RL leg. DeepMind's Gemma 3 \citep{gemma3} is the
-load-bearing exception: PPO with weight-averaged reward models
+first exception: PPO with weight-averaged reward models
 (\glsterm{warm}{WARM} \citep{warm-2024} / \glsterm{warp}{WARP} \citep{warp-2024}) is the disclosed
 choice. Anthropic's \glsterm{claude}{Claude} line is the second exception: \glsterm{rlaif-3}{RLAIF} / \glsterm{constitutional-ai}{CAI}
 \citep{bai2022-cai} (now C3AI \citep{c3ai-2025} / \glsterm{r-cai-2}{R-CAI}
@@ -363,7 +363,7 @@ transfers through pure SFT \citep[\S 4]{deepseek-r1}. The other
 disclosed labs do not publicly report a parallel distill-from-reasoner
 SFT pass on a publicly-available reasoning teacher. On the merge axis,
 Gemma 3's \glsterm{warm}{WARM}/\glsterm{warp}{WARP} \citep{warm-2024,warp-2024} is the only disclosed
-production merge as a load-bearing pipeline component
+production merge as a core pipeline component
 (\cref{sec:adaptation-and-merging}); \glsterm{mistral}{Mistral} and the open-weights
 community use \glsterm{mergekit}{MergeKit} \citep{mergekit2024} extensively post-release
 but as a community add-on rather than as a stage of the canonical
@@ -400,7 +400,7 @@ since 2024 has all six stages in the same order, and where stages
 are missing it is by design (Tülu 3 has no pre-training because it
 inherits Llama 3's; \glsterm{mistral}{Mistral} Large does not publicly disclose
 \glsterm{rlvr-3}{RLVR}; Phi-4 does not run \glsterm{rlvr-3}{RLVR} by choice). What the table cannot
-distinguish is whether the convergence is genuine pipeline-shape
+distinguish is whether the convergence is pipeline-shape
 discovery or whether it is recipe-zoo bias: the disclosed labs
 read each other's papers, hire from each other, and run on overlapping
 hardware. The two readings are not yet separable, and the question
@@ -410,7 +410,7 @@ DeepMind have an unknown number of stages we cannot see). The
 see; the \emph{stage-shape canonicality} is open. The
 \cref{sec:contradictions} reading is that the convergence
 \emph{plus} the boundary-localized disagreements both point to a
-pipeline whose structure is stable but whose load-bearing variables
+pipeline whose structure is stable but whose key variables
 have not converged.
 \end{contradiction}
 

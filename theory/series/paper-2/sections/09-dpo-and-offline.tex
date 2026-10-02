@@ -8,7 +8,7 @@
 \label{sec:dpo}
 
 The closed-form RL optimum \cref{eq:rlhf-optimum} that closes
-\cref{sec:rlhf} is also the load-bearing equation of this one. Direct
+\cref{sec:rlhf} is also the central equation of this one. Direct
 Preference Optimization \citep{rafailov2023-dpo} reads
 \cref{eq:rlhf-optimum} not as the \emph{target} of an RL loop but as the
 \emph{definition} of a reward that can be inverted: solving for $r$ in
@@ -205,7 +205,7 @@ Hyperparameters that matter & $\beta, \epsilon, \lambda_{\mathrm{GAE}}, \gamma_{
 \end{tabular}
 \caption{Per-step cost comparison of PPO-RLHF (\cref{sec:rlhf-ppo}) vs.\
 DPO (\cref{sec:dpo-protocol}). The ``four model copies'' line is the
-load-bearing infrastructure fact behind the empirical move at frontier
+infrastructure fact behind the empirical move at frontier
 scale \citep{meta-llama3, tulu3}.}
 \label{tab:dpo-vs-ppo-cost}
 \end{table}
@@ -247,7 +247,7 @@ The \glsterm{dpo}{DPO} variant landscape since 2023 has not produced a clear win
 it has produced a small lattice of methods that vary one knob at a time
 along three axes (loss shape on the implicit-reward gap; reference
 dependence; length normalization). \cref{tab:dpo-variants} is the
-load-bearing organizing table.
+section's organizing table.
 
 \begin{table}[h]
 \centering
@@ -513,9 +513,9 @@ the gold preference grows with $\KL(\pi_\theta \| \pi^{\mathrm{ref}})$
 in the same way that the gap between $r_\phi$ and gold preference
 grows in PPO-\glsterm{rlhf}{RLHF}. The mechanism is more subtle than ``\glsterm{dpo}{DPO} has no
 \glsterm{reward-model}{reward model}'': the policy log-ratio \emph{is} the \glsterm{reward-model}{reward model}, and
-the policy hacks itself. The empirical implication: the
-$\KL$-anchor regularization is load-bearing for both PPO-\glsterm{rlhf}{RLHF} and
-\glsterm{dpo}{DPO}, and the practical mitigations --- on-policy iteration, KL
+the policy hacks itself. The empirical implication: both
+PPO-\glsterm{rlhf}{RLHF} and \glsterm{dpo}{DPO} depend on the $\KL$-anchor regularization,
+and the practical mitigations --- on-policy iteration, KL
 scheduling, early stopping --- are necessary for \glsterm{dpo}{DPO} too. Pick up
 in \S 14.
 \end{contradiction}
@@ -532,7 +532,7 @@ through the loss regardless of normalization. Both are partially
 right: \glsterm{simpo}{SimPO}'s $1/|y|$ fix demonstrably reduces length bias on
 length-controlled benchmarks \citep[\S 4]{meng2024-simpo}, but
 remaining length bias persists in the data after normalization. The
-two factors have not been cleanly separated. The empirical signature
+two factors have not been fully separated. The empirical signature
 that would distinguish them --- a length-controlled human preference
 collection followed by both \glsterm{dpo}{DPO} and \glsterm{simpo}{SimPO} training, with held-out
 length-controlled evaluation --- has not, to our knowledge, been

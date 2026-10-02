@@ -216,8 +216,8 @@ production \glsterm{fp8}{FP8} training to date, and its decisions disagree with
 NVIDIA's hybrid in three structural ways.
 
 \paragraph{Fine-grained quantization granularity.} For sub-FP16
-formats the per-tensor or per-block scale $Z$ becomes a first-class
-object. The \glsterm{fp8}{FP8} GEMM $Y = X W$ is implemented as
+formats the per-tensor or per-block scale $Z$ becomes an explicit
+factor in the GEMM. The \glsterm{fp8}{FP8} GEMM $Y = X W$ is implemented as
 \begin{equation}
 Y = (Z_X \cdot X_{\text{FP8}}) (Z_W \cdot W_{\text{FP8}})
   = Z_X Z_W \, (X_{\text{FP8}} \, W_{\text{FP8}})_{\text{FP8 accum}},
@@ -225,7 +225,7 @@ Y = (Z_X \cdot X_{\text{FP8}}) (Z_W \cdot W_{\text{FP8}})
 \end{equation}
 with the inner GEMM on \glsterm{fp8}{FP8} Tensor Cores and the scalar product
 $Z_X Z_W$ folded in afterward \citep[\S 3.3.2, eq.\ 2]{deepseek-v3}.
-The granularity at which $(Z_X, Z_W)$ are chosen is the load-bearing
+The granularity at which $(Z_X, Z_W)$ are chosen is the main design
 choice. Three operating points, increasing in cost-per-element of
 metadata and decreasing in quantization error:
 \begin{itemize}
