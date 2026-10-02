@@ -93,11 +93,20 @@ def test_hash_pinned_generator_is_excluded_and_still_pinned() -> None:
     # The exclusion exists because an audit pins the file's bytes (#157).
     root = Path(__file__).resolve().parents[2]
     assert not prose_lint.is_scanned("examples/subliminal_step0_decode.py")
-    audit = (root / "examples" / "subliminal_audit_findings.py").read_text()
-    pin = re.search(r'^GENERATOR_SHA256 = "([0-9a-f]{64})"', audit, re.MULTILINE)
+    audit = (root / "examples" / "subliminal_audit_findings.py").read_text(
+        encoding="utf-8"
+    )
+    pin = re.search(
+        r"^\s*GENERATOR_SHA256\s*(?::[^=]*)?=\s*[\"']([0-9a-fA-F]{64})[\"']",
+        audit,
+        re.MULTILINE,
+    )
     assert pin is not None
     data = (root / "examples" / "subliminal_step0_decode.py").read_bytes()
-    assert hashlib.sha256(data).hexdigest() == pin.group(1)
+    digest = hashlib.sha256(data).hexdigest()
+    assert digest == pin.group(1).lower()
+    readme = root / "research" / "arcs" / "02_subliminal" / "data" / "README.md"
+    assert digest in readme.read_text(encoding="utf-8")
 
 
 def test_markdown_fenced_block_is_skipped() -> None:
@@ -125,6 +134,21 @@ def test_unclosed_fence_runs_to_end_of_file() -> None:
 def test_fences_in_blockquotes_and_list_items_are_skipped() -> None:
     text = "> ```\n> genuinely\n> ```\n-  item\n   ```\n   crisp\n   ```\n"
     assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_fence_in_a_blockquote_ends_with_the_blockquote() -> None:
+    text = "> ```\n> genuinely\n\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [4]
+
+
+def test_fence_in_a_list_item_ends_with_the_item() -> None:
+    text = "- item\n\n  ```\n  genuinely\n\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [6]
+
+
+def test_fence_inside_a_quoted_turn_keeps_the_quote_skipped() -> None:
+    text = '> *"we want\n> ```\n> code\n> ```\n> a genuinely clean run"*\nhonest\n'
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [6]
 
 
 def test_inline_triple_backtick_span_does_not_open_a_fence() -> None:

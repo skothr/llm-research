@@ -166,8 +166,10 @@ where the phrase carries technical meaning or sits inside a verbatim quotation <
 (issue #120). The scanner never reports verbatim material (the
 owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
 `theory/sources/`), dated records (`research/archive/`, `theory/archive/`,
-`theory/reviews/`) or hash-pinned files, whose sha256 an audit checks
-(`examples/subliminal_step0_decode.py`); leave those as written.
+`theory/reviews/`) or the hash-pinned files listed in the scanner's
+`EXCLUDED_FILES`, whose sha256 an audit checks (today
+`examples/subliminal_step0_decode.py`); leave those as written. When an audit
+pins another file, add it to that list.
 
 # Research arcs & observations
 
