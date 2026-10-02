@@ -16,7 +16,7 @@ Carrier template (see PRE + SUFFIX constants below for the canonical strings):
      throughout subsequent discussion paragraphs."
 
 Position finding: tokenize the chat-string truncated to anchor-end-char,
-count tokens K -> anchor's last token sits at position (K-1) in the
+count tokens K -> anchor's last token is at position (K-1) in the
 full tokenization. Robust to BPE merges and anchor-as-carrier-substring
 collisions because PRE is uniquely findable in the chat string.
 

@@ -4,7 +4,7 @@ Captures Qwen2.5-7B layer-20 residual stream at every token of a fixed
 prompt, plus the raw input-embedding of one OOD probe token, then asks
 the NLA AV to verbalize each. The interesting signal is whether the AV
 produces qualitatively different explanations across positions — if so,
-the residual stream is genuinely carrying position-specific semantic
+the residual stream is carrying position-specific semantic
 content, and the AV is reading it.
 """
 

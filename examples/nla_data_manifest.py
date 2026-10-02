@@ -43,7 +43,7 @@ MANIFEST = DATA_DIR / "MANIFEST.json"
 # The exact model set every capture-root in this arc was produced against.
 # NOTE ON REVISIONS: no HF commit revision was pinned or recorded at capture
 # time (2026-05-12..15) — the scripts loaded each repo at its then-current
-# `main`. The revisions are therefore genuinely unknown and are recorded as
+# `main`. The revisions are therefore unknown and are recorded as
 # null rather than back-filled with a guess; a re-capture cannot be asserted
 # bit-identical to these artifacts for that reason.
 MODEL_PIN: dict[str, Any] = {
