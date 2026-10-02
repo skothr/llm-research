@@ -97,3 +97,44 @@ def test_main_exit_codes(tmp_path: Path, monkeypatch) -> None:
     assert prose_lint.main(["--report"]) == 0
     (tmp_path / hit_file).write_text("a clear result\n")
     assert prose_lint.main([]) == 0
+
+
+def test_phrase_split_by_a_hard_wrap_is_reported_at_the_first_line() -> None:
+    text = "the figure tells\nus that the gap holds\n> a quoted note that sits\n> at the top\n"
+    hits = prose_lint.scan_text("x.md", text)
+    assert [(h.line, h.phrase) for h in hits] == [(1, "tells us"), (3, "sits at")]
+
+
+def test_wrap_check_respects_allowed_and_quoted_lines() -> None:
+    text = "it tells <!-- prose-lint: allow -->\nus nothing\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def _git_repo(tmp_path: Path, monkeypatch) -> None:
+    import subprocess
+
+    for var in ("GIT_DIR", "GIT_INDEX_FILE", "GIT_WORK_TREE"):
+        monkeypatch.delenv(var, raising=False)
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    monkeypatch.setattr(prose_lint, "REPO", tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+
+def test_unscannable_paths_exit_2_even_with_report(tmp_path: Path, monkeypatch) -> None:
+    _git_repo(tmp_path, monkeypatch)
+    (tmp_path / "ok.md").write_text("a clear result\n")
+    assert prose_lint.main(["ok.md"]) == 0
+    assert prose_lint.main(["typo.md"]) == 2
+    assert prose_lint.main(["typo.md", "--report"]) == 2
+    assert prose_lint.main([str(tmp_path.parent)]) == 2
+    (tmp_path / "bad.md").write_bytes(b"caf\xe9\n")
+    assert prose_lint.main(["bad.md"]) == 2
+
+
+def test_symlinks_are_skipped_not_read(tmp_path: Path, monkeypatch) -> None:
+    _git_repo(tmp_path, monkeypatch)
+    outside = tmp_path.parent / f"{tmp_path.name}-outside.md"
+    outside.write_text("a genuinely private note\n")
+    (tmp_path / "link.md").symlink_to(outside)
+    assert prose_lint.scan(["link.md"]) == []
+    assert prose_lint.main(["link.md"]) == 0

@@ -14,15 +14,24 @@ Not scanned:
   to its closing `"*`; an unterminated quote ends with its blockquote;
 - this script and its test, which list the phrases.
 
+A phrase that a hard wrap splits across two adjacent lines ("tells" at the
+end of one line, "us" at the start of the next) is reported at the first line.
+
 Paths are resolved from the caller's working directory. Tracked files and
 untracked files that git does not ignore are both scanned, so new prose is
-checked before it is staged.
+checked before it is staged. Symlinks and other non-regular files are skipped
+with a note on stderr; they are never read.
+
+Exit status: 0 when nothing is found, 1 when there are hits, and 2 when any
+path or file could not be scanned (a path outside the repository, a path that
+matches no file or no in-scope file, an unreadable file). Status 2 takes
+precedence, so a typo never passes as a clean run.
 
 Usage:
     python scripts/prose_lint.py                 # list hits; exit 1 if any
     python scripts/prose_lint.py --summary       # counts by phrase and area
     python scripts/prose_lint.py PATH [PATH ...] # limit to these paths
-    python scripts/prose_lint.py --report        # always exit 0
+    python scripts/prose_lint.py --report        # exit 0 on hits (2 still wins)
 """
 
 from __future__ import annotations
@@ -71,6 +80,18 @@ EXCLUDED_PREFIXES = (
 EXCLUDED_FILES = {"scripts/prose_lint.py", "examples/tests/test_prose_lint.py"}
 ALLOW_MARKER = "prose-lint: allow"
 QUOTE_LINE = re.compile(r"^\s*>\s*\*\"")
+# Leading markup a wrapped continuation line can start with: a blockquote
+# marker or a comment marker (Markdown, Python, LaTeX).
+CONTINUATION_PREFIX = re.compile(r"^\s*(?:>\s*|#+\s*|%+\s*)?")
+
+# Problems that stop a path or file from being scanned; any of them makes
+# main() exit 2. Reset at the start of each main() call.
+_problems: list[str] = []
+
+
+def _problem(message: str) -> None:
+    _problems.append(message)
+    print(f"prose_lint: {message}", file=sys.stderr)
 
 
 @dataclass(frozen=True)
@@ -92,25 +113,40 @@ def scan_text(path: str, text: str) -> list[Hit]:
     """Return every phrase hit in `text`, skipping allowed and quoted lines.
 
     A quoted owner turn opens with `> *"` and may continue over further `>`
-    lines until the closing `"*`; every line of it is skipped.
+    lines until the closing `"*`; every line of it is skipped. A phrase split
+    across two adjacent scanned lines is reported at the first of them.
     """
-    hits: list[Hit] = []
+    scannable: list[str | None] = []
     in_quote = False
-    for lineno, line in enumerate(text.splitlines(), start=1):
+    for line in text.splitlines():
         if in_quote:
             if line.lstrip().startswith(">"):
                 in_quote = '"*' not in line
+                scannable.append(None)
                 continue
             in_quote = False
         opening = QUOTE_LINE.match(line)
         if opening:
             in_quote = '"*' not in line[opening.end() :]
+            scannable.append(None)
             continue
-        if ALLOW_MARKER in line:
+        scannable.append(None if ALLOW_MARKER in line else line)
+
+    hits: list[Hit] = []
+    for i, line in enumerate(scannable):
+        if line is None:
             continue
         for label, pattern in PHRASES:
             if pattern.search(line):
-                hits.append(Hit(path, lineno, label, line.strip()))
+                hits.append(Hit(path, i + 1, label, line.strip()))
+        following = scannable[i + 1] if i + 1 < len(scannable) else None
+        if following is None:
+            continue
+        head = line.rstrip()
+        joined = head + " " + CONTINUATION_PREFIX.sub("", following, count=1)
+        for label, pattern in PHRASES:
+            if any(m.start() < len(head) < m.end() for m in pattern.finditer(joined)):
+                hits.append(Hit(path, i + 1, label, line.strip()))
     return hits
 
 
@@ -118,7 +154,7 @@ def candidate_files(paths: list[str]) -> list[str]:
     """Tracked and untracked (not ignored) files under `paths`, repo-relative.
 
     `paths` are resolved against the caller's working directory. A path that
-    matches no file is reported on stderr, so a typo cannot pass as clean.
+    matches no file, or no in-scope file, is a problem: main() exits 2.
     """
     rel: list[str] = []
     for arg in paths:
@@ -126,7 +162,7 @@ def candidate_files(paths: list[str]) -> list[str]:
             absolute = Path(os.path.normpath(Path(arg).absolute()))
             rel.append(absolute.relative_to(REPO).as_posix())
         except ValueError:
-            print(f"prose_lint: {arg} is outside the repository", file=sys.stderr)
+            _problem(f"{arg} is outside the repository")
     if paths and not rel:
         return []
     out = subprocess.run(
@@ -140,9 +176,9 @@ def candidate_files(paths: list[str]) -> list[str]:
     for r in rel:
         under = [f for f in files if r == "." or f == r or f.startswith(r.rstrip("/") + "/")]
         if not under:
-            print(f"prose_lint: no files under {r}", file=sys.stderr)
+            _problem(f"no files under {r}")
         elif not any(is_scanned(f) for f in under):
-            print(f"prose_lint: no in-scope files under {r}", file=sys.stderr)
+            _problem(f"no in-scope files under {r}")
     return files
 
 
@@ -151,10 +187,14 @@ def scan(paths: list[str]) -> list[Hit]:
     for path in candidate_files(paths):
         if not is_scanned(path):
             continue
+        full = REPO / path
+        if full.is_symlink() or not full.is_file():
+            print(f"prose_lint: skipped {path} (not a regular file)", file=sys.stderr)
+            continue
         try:
-            text = (REPO / path).read_text(encoding="utf-8")
+            text = full.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
-            print(f"prose_lint: could not read {path}: {exc}", file=sys.stderr)
+            _problem(f"could not read {path}: {exc}")
             continue
         hits.extend(scan_text(path, text))
     return hits
@@ -175,9 +215,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("paths", nargs="*", help="limit the scan to these paths")
     parser.add_argument("--summary", action="store_true", help="print counts only")
-    parser.add_argument("--report", action="store_true", help="always exit 0")
+    parser.add_argument(
+        "--report", action="store_true", help="exit 0 on hits (status 2 still wins)"
+    )
     args = parser.parse_args(argv)
 
+    _problems.clear()
     hits = scan(args.paths)
     if args.summary:
         for label, n in Counter(h.phrase for h in hits).most_common():
@@ -189,6 +232,9 @@ def main(argv: list[str] | None = None) -> int:
         for h in hits:
             print(f"{h.path}:{h.line}: [{h.phrase}] {h.text[:160]}")
     print(f"PROSE LINT: {len(hits)} hit(s) in {len({h.path for h in hits})} file(s)")
+    if _problems:
+        print(f"PROSE LINT: {len(_problems)} path(s) or file(s) not scanned")
+        return 2
     return 0 if args.report or not hits else 1
 
 
