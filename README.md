@@ -72,7 +72,7 @@ examples/    Per-arc capture / analysis / render / audit pipelines
   (arc 01), `emb_*` (arc 03), `jspace_*` (arc 04). Each family covers capture
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
-  findings rest on from committed artifacts. `examples/README_NLA.md` documents the
+  prose relies on from committed artifacts. `examples/README_NLA.md` documents the
   `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
   the same artifact/audit shape but have no separate conventions doc; their
   arc READMEs carry the per-arc detail. The arc 01, 03 and 04 capture scripts
@@ -97,8 +97,8 @@ than discovered two levels down.
   ([`plans/2026-06-11-predictions.md`](research/arcs/03_embedding-atlas/plans/2026-06-11-predictions.md)).
   Arc 02's plan states falsifiable predictions per hypothesis and an explicit
   pre-commitment clause, though the arc paused before the tests they govern.
-  Arc 04's README records one robustness axis (the quantization control) as
-  the only one pre-registered in its design plan, the rest gated on thresholds
+  Arc 04's README records one of its four robustness axes (the quantization
+  control) as pre-registered in its design plan, the rest gated on thresholds
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four registers are partial — read each arc's
   own account rather than this summary.

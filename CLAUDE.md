@@ -92,7 +92,7 @@ interpreter that launched it, so the errors persist unchanged.
 bash theory/series/build.sh            # clean + build all 5 papers + collect dist/
 bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 
-# NLA audit — re-derive every numerical claim a finding rests on from .pt artifacts
+# NLA audit — re-derive every numerical claim the prose relies on from .pt artifacts
 python examples/nla_audit_findings.py
 ```
 
@@ -135,11 +135,16 @@ frontier and open questions (`[CONTRADICTION]` where sources disagree). When
 introducing a new technical term, add it to `theory/kb/glossary.md` with a
 citation.
 
+## Prose style (all prose and code comments)
+
 State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
 "sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
 run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or, where
 the phrase carries technical meaning, keep it and add `prose-lint: allow` on
-that line (issue #120).
+that line (issue #120). The scanner never reports verbatim material (the
+owner's quoted turns, `theory/kb/excerpts/`, `theory/sources/`) or dated
+records (`research/archive/`, `theory/archive/`, `theory/reviews/`); leave
+those as written.
 
 # Research arcs & observations
 

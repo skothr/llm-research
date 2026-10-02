@@ -38,6 +38,18 @@ def test_quoted_owner_turns_are_skipped() -> None:
     assert [h.line for h in hits] == [2]
 
 
+def test_every_line_of_a_multiline_quote_is_skipped() -> None:
+    text = (
+        '> *"first line\n'
+        "> a genuinely quoted middle\n"
+        '> last line"*\n'
+        "> — [session 2026-05-12]\n"
+        "commentary that is genuinely ours\n"
+    )
+    hits = prose_lint.scan_text("x.md", text)
+    assert [h.line for h in hits] == [5]
+
+
 def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert prose_lint.is_scanned("research/arcs/04_jspace/README.md")
     assert prose_lint.is_scanned("examples/jspace_audit_findings.py")
@@ -47,11 +59,29 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert not prose_lint.is_scanned("theory/reviews/pass-1.md")
     assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
     assert not prose_lint.is_scanned("scripts/prose_lint.py")
+    assert not prose_lint.is_scanned("examples/tests/test_prose_lint.py")
+
+
+def test_area_groups_by_directory() -> None:
+    assert prose_lint.area("theory/kb/notes/a.md") == "theory/kb"
+    assert prose_lint.area("examples/jspace_audit_findings.py") == "examples"
+    assert prose_lint.area("README.md") == "README.md"
+
+
+def test_untracked_files_are_candidates(tmp_path: Path, monkeypatch) -> None:
+    import subprocess
+
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    (tmp_path / "new.md").write_text("a crisp result\n")
+    monkeypatch.setattr(prose_lint, "REPO", tmp_path)
+    monkeypatch.chdir(tmp_path)
+    assert prose_lint.candidate_files(["new.md"]) == ["new.md"]
+    assert prose_lint.main(["new.md"]) == 1
 
 
 def test_main_exit_codes(tmp_path: Path, monkeypatch) -> None:
     hit_file = "x.md"
-    monkeypatch.setattr(prose_lint, "tracked_files", lambda _paths: [hit_file])
+    monkeypatch.setattr(prose_lint, "candidate_files", lambda _paths: [hit_file])
     monkeypatch.setattr(prose_lint, "REPO", tmp_path)
     (tmp_path / hit_file).write_text("a crisp result\n")
     assert prose_lint.main([]) == 1

@@ -1,6 +1,6 @@
 """Report mannered stock phrases in tracked prose and code comments (#120).
 
-Scans tracked *.md, *.py and *.tex files for phrases that stand in for a
+Scans *.md, *.py and *.tex files for phrases that stand in for a
 direct statement ("load-bearing", "genuinely", "sits at", ...). Each hit is
 graded by a human or agent: reword it, cut it, or keep it. A kept hit carries
 the marker `prose-lint: allow` on the same line, in that file's comment
@@ -12,6 +12,10 @@ Not scanned:
 - the owner's quoted turns in attribution sections (lines starting with
   `> *"`), which are verbatim quotes;
 - this script and its test, which list the phrases.
+
+Paths are resolved from the caller's working directory. Tracked files and
+untracked files that git does not ignore are both scanned, so new prose is
+checked before it is staged.
 
 Usage:
     python scripts/prose_lint.py                 # list hits; exit 1 if any
@@ -83,10 +87,24 @@ def is_scanned(path: str) -> bool:
 
 
 def scan_text(path: str, text: str) -> list[Hit]:
-    """Return every phrase hit in `text`, skipping allowed and quoted lines."""
+    """Return every phrase hit in `text`, skipping allowed and quoted lines.
+
+    A quoted owner turn opens with `> *"` and may continue over further `>`
+    lines until the closing `"*`; every line of it is skipped.
+    """
     hits: list[Hit] = []
+    in_quote = False
     for lineno, line in enumerate(text.splitlines(), start=1):
-        if ALLOW_MARKER in line or QUOTE_LINE.match(line):
+        if in_quote:
+            if line.lstrip().startswith(">"):
+                in_quote = '"*' not in line
+                continue
+            in_quote = False
+        opening = QUOTE_LINE.match(line)
+        if opening:
+            in_quote = '"*' not in line[opening.end() :]
+            continue
+        if ALLOW_MARKER in line:
             continue
         for label, pattern in PHRASES:
             if pattern.search(line):
@@ -94,33 +112,55 @@ def scan_text(path: str, text: str) -> list[Hit]:
     return hits
 
 
-def tracked_files(paths: list[str]) -> list[str]:
+def candidate_files(paths: list[str]) -> list[str]:
+    """Tracked and untracked (not ignored) files under `paths`, repo-relative.
+
+    `paths` are resolved against the caller's working directory. A path that
+    matches no file is reported on stderr, so a typo cannot pass as clean.
+    """
+    rel: list[str] = []
+    for arg in paths:
+        try:
+            rel.append(Path(arg).resolve().relative_to(REPO).as_posix())
+        except ValueError:
+            print(f"prose_lint: {arg} is outside the repository", file=sys.stderr)
+    if paths and not rel:
+        return []
     out = subprocess.run(
-        ["git", "ls-files", "-z", "--", *paths],
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
+         "--", *rel],
         cwd=REPO,
         capture_output=True,
         check=True,
     ).stdout
-    return [p for p in out.decode().split("\0") if p]
+    files = list(dict.fromkeys(p for p in out.decode().split("\0") if p))
+    for r in rel:
+        if not any(f == r or f.startswith(r.rstrip("/") + "/") for f in files):
+            print(f"prose_lint: no files under {r}", file=sys.stderr)
+    return files
 
 
 def scan(paths: list[str]) -> list[Hit]:
     hits: list[Hit] = []
-    for path in tracked_files(paths):
+    for path in candidate_files(paths):
         if not is_scanned(path):
             continue
         try:
             text = (REPO / path).read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
+        except (OSError, UnicodeDecodeError) as exc:
+            print(f"prose_lint: could not read {path}: {exc}", file=sys.stderr)
             continue
         hits.extend(scan_text(path, text))
     return hits
 
 
 def area(path: str) -> str:
-    """Top two path components, e.g. `theory/kb` or `README.md`."""
+    """The file's directory, at most two levels deep: `theory/kb`, `examples`.
+
+    A file at the repository root is its own area.
+    """
     parts = path.split("/")
-    return "/".join(parts[:2]) if len(parts) > 2 else path
+    return "/".join(parts[: min(2, len(parts) - 1)]) or path
 
 
 def main(argv: list[str] | None = None) -> int:

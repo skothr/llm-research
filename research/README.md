@@ -129,8 +129,8 @@ scripts — is what lets a clean clone re-render a figure or replay the audit.
 Generating, validating, and saving the dataset is a required step of every
 arc; the full discipline is in [`ARC_PROCESS.md`](ARC_PROCESS.md).
 
-**Citations.** Claims a conclusion rests on about LLM architecture / training /
-interpretability cite a source — a paper key or a `theory/kb/` note — per the
+**Citations.** Claims about LLM architecture / training / interpretability
+that a conclusion rests on cite a source — a paper key or a `theory/kb/` note — per the
 discipline in the repo `CLAUDE.md` (*# Theory KB & citation discipline*).
 Analogies and intuitions are tagged (`[INTUITION]`, `[ANALOGY]`,
 `[SPECULATION]`) so they're never laundered as formal claims.

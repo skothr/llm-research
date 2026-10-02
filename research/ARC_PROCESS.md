@@ -17,11 +17,11 @@ cohere, promote them into an arc (see README § Arcs).
 ## The non-negotiables (read this first)
 
 1. **Raw data is a deliverable, not scratch.** Every figure and every
-   number a finding rests on must be regenerable from committed inputs. Generating,
+   number the prose relies on must be regenerable from committed inputs. Generating,
    *validating*, and *saving* the raw dataset is part of the work — not an
    afterthought. See [§ Raw data is a deliverable](#raw-data-is-a-deliverable).
-2. **Claims are evidence-first and audit-locked.** Every number a finding
-   rests on is re-derivable from the committed data by a script that fails
+2. **Claims are evidence-first and audit-locked.** Every number the prose
+   relies on is re-derivable from the committed data by a script that fails
    loudly on drift. See [§ Audit](#audit-lock-the-numbers).
 3. **Findings are framed at their true confidence.** One anchor pair is a
    "candidate," not a "property." Hold syntheses as hypotheses until scope
@@ -185,7 +185,7 @@ you've confirmed the capture protocol is what you intended.
 #### Audit (lock the numbers)
 
 Write/extend an arc audit script (template: `nla_audit_findings.py`) that
-**re-derives every number a finding rests on from the committed `data/`** and asserts
+**re-derives every number the prose relies on from the committed `data/`** and asserts
 it against an expected constant, printing `PASS`/`FAIL` and a final
 `SUMMARY: N PASS | M FAIL`.
 
@@ -202,7 +202,7 @@ it against an expected constant, printing `PASS`/`FAIL` and a final
   decoded text), not just non-emptiness (NLA AUDIT 17 asserts the decoded
   identities London/Spain/China).
 
-**State what the audit does NOT catch:** it verifies arithmetic
+**What the audit does NOT catch:** it verifies arithmetic
 consistency *given the captures* — not capture-protocol bugs, not interpretive
 overreach, not whether a threshold was the right choice, and not that the prose
 was transcribed faithfully into the script's expected constants (those are
@@ -210,7 +210,7 @@ maintained by hand). State this in the arc README. "N PASS" means "the numbers
 agree," never "the methodology is right."
 
 **Done when:** the audit passes from a clean clone and every number
-that a reported finding rests on has a corresponding assertion.
+the arc's prose relies on has a corresponding assertion.
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr).
@@ -393,7 +393,7 @@ mode re-verifies every sha256 — run it in the audit step as a drift detector.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*
 (protocol sanity, shapes, no NaNs/collapse) and *locked* (audit re-derives the
-numbers the findings rest on; manifest pins the bytes). A committed wrong dataset is
+numbers the prose relies on; manifest pins the bytes). A committed wrong dataset is
 worse than none.
 
 **Trust note.** `torch.load(..., weights_only=False)` executes pickle on load.
@@ -454,7 +454,7 @@ Checkpoint 3: computation, processing, validation
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
-[ ] audit script re-derives every number a finding rests on, incl. the headline;
+[ ] audit script re-derives every number the prose relies on, incl. the headline;
         passes from a clean clone
 [ ] checkpoint PR merged (review loop reached its floor first)
 Checkpoint 4: observations, conclusions, artifacts
