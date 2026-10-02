@@ -56,7 +56,7 @@ harmful%
 \footnote{KB note: \nolinkurl{kb/notes/alignment/safety-evaluation.md#1-formal-framing}, Eq.\,(1).}.
 A perfectly aligned model has $\mathrm{ASR} = 0$ on every attack
 family; a fully jailbroken model has $\mathrm{ASR} \approx 1$. The
-load-bearing observation is that every term in the metric ---
+key observation is that every term in the metric ---
 $\mathcal{B}$, $\mathcal{A}$, $V$, $\pi$ --- varies across the four
 canonical benchmarks of this section. ``\glsterm{asr}{ASR}'' as a scalar is
 under-specified without all four: the methodologically mature
@@ -103,7 +103,7 @@ trigger. Mismatched-generalization attacks exploit a gap between
 the capability surface and the safety surface: capabilities cover
 Base64, low-resource languages, ROT-13, structured role-play; safety
 training was conducted in plain English direct-answer mode; the gap
-is exploitable. The empirical finding is the load-bearing one
+is exploitable. The main empirical finding
 \citep[\S{}abstract]{wei2023-jailbroken}:
 
 \begin{quote}\itshape
@@ -267,7 +267,7 @@ create a self-commitment gradient the attacker climbs, and because
 each individual turn is benign, no single-turn refusal classifier
 fires.
 
-The headline number is the load-bearing one
+The headline number
 \citep[\S{}abstract]{russinovich2024-crescendo}:
 
 \begin{quote}\itshape

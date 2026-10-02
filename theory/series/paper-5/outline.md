@@ -2,7 +2,7 @@
 
 **Working title:** *What we measure and what slips through: a layered defense view of LLM evaluation and alignment-threat detection, 2017–2026.*
 
-**Thesis:** The eval/alignment landscape in 2026 is best read as a **layered defense**: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat detection (sycophancy, scheming, alignment-faking) → scalable oversight at superhuman capability. Each layer has named, documented failure modes. The honest field bar is to say which threats current methods *can* measure today and which still slip through. We name the failure modes layer by layer, mark where the field's own evaluation tooling is being saturated faster than it is being repaired, and locate the contradictions that the next round of methods has to close.
+**Thesis:** The eval/alignment landscape in 2026 is best read as a **layered defense**: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat detection (sycophancy, scheming, alignment-faking) → scalable oversight at superhuman capability. Each layer has named, documented failure modes. The bar for the field is to say which threats current methods *can* measure today and which still slip through. We name the failure modes layer by layer, mark where the field's own evaluation tooling is being saturated faster than it is being repaired, and locate the contradictions that the next round of methods has to close.
 
 **Length target:** ~70 pages.
 
@@ -34,7 +34,7 @@ The eval-methodology framing (validity, reliability, construct, contamination, e
 
 ### §3 — Knowledge benchmarks: the MMLU lineage (6 pages)
 
-MMLU (Hendrycks 2021, 57 subjects, 15,908 questions) is the de-facto frontier benchmark, but is now a measurement instrument with documented mechanical failures. **MMLU-Redux 2024** finds **6.49% verifier-error ceiling** (errors in the *answer key itself*, not the model) on the dataset; this caps the highest honest score the benchmark can report. **MMLU-Pro** (Wang 2024) extends to 10-option multiple-choice, harder reasoning, but inherits MMLU's construction process and so a related error rate. **GPQA Diamond** (Rein 2023, 198 graduate-level physics/bio/chem questions) saturates faster than expected as a result of (a) frontier reasoning gains and (b) train-time exposure. **HLE** (Phan 2025, "Humanity's Last Exam") is the explicit attempt to build a benchmark whose ceiling is far above 2026 capability.
+MMLU (Hendrycks 2021, 57 subjects, 15,908 questions) is the de-facto frontier benchmark, but is now a measurement instrument with documented mechanical failures. **MMLU-Redux 2024** finds **6.49% verifier-error ceiling** (errors in the *answer key itself*, not the model) on the dataset; this caps the highest honest score the benchmark can report. **MMLU-Pro** (Wang 2024) extends to 10-option multiple-choice, harder reasoning, but inherits MMLU's construction process and so a related error rate. **GPQA Diamond** (Rein 2023, 198 graduate-level physics/bio/chem questions) saturates faster than expected as a result of (a) frontier reasoning gains and (b) train-time exposure. **HLE** (Phan 2025, "Humanity's Last Exam") is the explicit attempt to build a benchmark whose ceiling is far above 2026 capability. <!-- prose-lint: allow -->
 
 - Anchors: `kb/notes/evaluation/knowledge-benchmarks.md`. `kb/excerpts/{hendrycks2021-mmlu,mmlu-redux-2024,wang2024-mmlu-pro,rein2023-gpqa,phan2025-hle}.md`.
 - Numbers to transcribe: MMLU-Redux 6.49% ceiling, 57-subject decomposition, GPQA Diamond size, HLE expert-source description.
@@ -51,7 +51,7 @@ The Contamination Survey 2025 catalogs the failure modes: **direct contamination
 
 ### §5 — Reasoning benchmarks: where saturation does and doesn't happen (5 pages)
 
-AIME, MATH, GPQA, and **FrontierMath** (Glazer 2024, ~300 unpublished research-level math problems with novel auto-graders). The frontier saturates *contest-style* math (AIME, MATH-500) but not *research-style* (FrontierMath, where 2026-frontier models score in single-to-low-double digits). The split is informative: it tells us reasoning RL on verifiable rewards (Paper 3's RLVR/GRPO lineage) generalizes within the contest distribution but only weakly out-of-distribution.
+AIME, MATH, GPQA, and **FrontierMath** (Glazer 2024, ~300 unpublished research-level math problems with novel auto-graders). The frontier saturates *contest-style* math (AIME, MATH-500) but not *research-style* (FrontierMath, where 2026-frontier models score in single-to-low-double digits). The split is informative: it indicates that reasoning RL on verifiable rewards (Paper 3's RLVR/GRPO lineage) generalizes within the contest distribution but only weakly out-of-distribution.
 
 - Anchors: `kb/notes/evaluation/reasoning-benchmarks.md`, `kb/excerpts/{glazer2024-frontiermath,rein2023-gpqa,phan2025-hle}.md`.
 - Numbers to transcribe: FrontierMath problem count, expert-grader methodology, frontier scores at paper publication; AIME 2024 / MATH-500 saturation curves.
@@ -154,17 +154,17 @@ Concentrated discussion of `[CONTRADICTION]` markers from §3-§13, density-rank
 6. **Debate-as-alignment-protocol viability** (§13) — would close: an empirical demonstration of debate-induced honesty on a domain where the judge is *strictly weaker* than both debaters and where the question is *not pre-verifiable*. The current empirical work does not meet both conditions.
 7. **Contamination boundary** (§4) — would close: a field-standard contamination-detection protocol shipped alongside benchmark releases, the way `requirements.txt` ships alongside Python code.
 
-What this paper commits to: each open question is *localized* (not a field-wide methodological collapse), *answerable* (we name what evidence would close it), and *load-bearing* (the answer changes how the field allocates the next round of evaluation effort).
+What this paper commits to: each open question is *localized* (not a field-wide methodological collapse), *answerable* (we name what evidence would close it), and *consequential* (the answer changes how the field allocates the next round of evaluation effort).
 
 - Anchors: `kb/index/contradictions.md` § evaluation (4) + § alignment (9) — the 13 contradictions whose home is Paper 5.
-- Closing thesis: the layered defense holds, but each layer's instruments are aging at different rates. The honest 2026 answer is that we measure jailbreak ASR, contamination, in-context scheming, and watermark survival under benign edits; we do not yet measure deployment-scale propensity for scheming, alignment-faking generalization, contamination of the next pre-train cycle, or scalable oversight at superhuman capability. The next round of evaluation infrastructure has to attack those specific gaps, not produce more of what we already have.
+- Closing thesis: the layered defense holds, but each layer's instruments are aging at different rates. The 2026 answer is that we measure jailbreak ASR, contamination, in-context scheming, and watermark survival under benign edits; we do not yet measure deployment-scale propensity for scheming, alignment-faking generalization, contamination of the next pre-train cycle, or scalable oversight at superhuman capability. The next round of evaluation infrastructure has to attack those specific gaps, not produce more of what we already have.
 
 ## What this outline commits to
 
 - **Empirical claims with numbers cited.** Every reported benchmark score, ASR, contamination percentage, alignment-faking rate cites a `kb/excerpts/<key>#<anchor>` dual-citation. No "around X%" without a tracked-down source.
 - **Math sparser than Papers 1-3 but transcribed where it exists.** The debate game's PSPACE construction (§13), the watermark spike-entropy bound (§12), the IRT/HELM scenario decomposition (§2), the ASR formal definition (§7), and the green-list partition function (§12) are transcribed verbatim from the cited PDFs.
 - **Tagged speculation.** `[INTUITION]`, `[ANALOGY]`, `[CONTRADICTION]`, `[FORUM-SIGNAL]` markers preserved from KB notes; analogies always return to canonical form (e.g., "the debate game is *like* an interactive proof system" returns to the IP/PSPACE construction).
-- **Contradictions are first-class.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body. The 13 cross-area contradictions whose home is Paper 5 are concentrated, not scattered.
+- **Contradictions get their own section.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body. The 13 cross-area contradictions whose home is Paper 5 are concentrated, not scattered.
 - **Cross-paper threads named, not duplicated.** §3-§5 cite Paper 2 §pre-training-data and §reasoning-RL. §10-§11 cite Paper 4 §probing-and-circuits. §13 cites Paper 3 §process-supervision and Paper 2 §weak-to-strong. The reader who comes via `1 → 2 → 3 → 4 → 5` does not see redundant exposition; the reader who comes to §13 directly gets pointed back to the prior papers' machinery.
 - **No analogy laundering.** Layered-defense framing is itself flagged as `[INTUITION]` in §1 and re-grounded in §14 by enumerating the actual instruments at each layer.
 

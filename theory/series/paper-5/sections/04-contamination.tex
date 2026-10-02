@@ -19,7 +19,7 @@ protocol that draws the boundary cleanly. The thesis of this section
 is that contamination has three structurally distinct failure modes
 (direct, indirect, methodological), four detection methods with
 characteristic false-positive / false-negative profiles, one
-worked-case-study where the boundary is genuinely contested
+worked-case-study where the boundary is contested
 (\textsc{aime~2024}), and zero field-standard contamination protocols
 shipped alongside benchmark releases. The next layer of the layered
 defense (\cref{sec:reasoning-benchmarks}) inherits all of this, because
@@ -181,7 +181,7 @@ Mathematics Examination's 2024 problems were administered in early
 2024, then publicly released alongside official answer keys, and have
 since served as the canonical \emph{reasoning} benchmark for late-2024
 and 2025-frontier models. \citet{deepseek-r1}'s headline result is
-the load-bearing illustration%
+the main illustration%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/deepseek-r1.md#sec-2-3-aime}.}
 \citep[\S{}2.3]{deepseek-r1}:
 
@@ -193,13 +193,13 @@ jumping from an initial 15.6\% to 77.9\%.
 \end{quote}
 
 The headline jump from $15.6\%$ to $77.9\%$ at $\mathrm{pass}@1$
-(further to $86.7\%$ under \glsterm{self-consistency-2}{self-consistency}) is the load-bearing
+(further to $86.7\%$ under \glsterm{self-consistency-2}{self-consistency}) is the main
 RL-on-verifiable-rewards demonstration of Paper~3 (§reasoning-RL).
 What the contamination question asks of that result is whether the RL
 optimization is teaching new reasoning computation or learning to
 invoke pretrained computation that already saw enough \textsc{aime}-style
 material to do this --- the open question that the
-reasoning-training KB note flags as the load-bearing 2026 dispute%
+reasoning-training KB note flags as the main 2026 dispute%
 \footnote{KB note: \nolinkurl{kb/notes/reasoning/reasoning-training.md#sec-3-2}.}.
 
 The timeline that complicates the question:

@@ -40,7 +40,7 @@ is exact-match on the chosen letter. Random-guess baseline is $25\%$;
 the human-expert baseline cited in the paper is $\sim 89.8\%$
 averaged across subjects \citep[\S{}abstract]{hendrycks2021-mmlu}.
 
-The headline launch result is the load-bearing one
+The headline launch result
 \citep[\S{}abstract]{hendrycks2021-mmlu}:
 
 \begin{quote}\itshape
@@ -73,7 +73,7 @@ number on every model card from GPT-3 forward.
 The first thing the field broke on \glsterm{mmlu}{MMLU} was the assumption that the
 answer \glsterm{key}{key} was right. \citet{mmlu-redux-2024} (\emph{Are We Done with
 \glsterm{mmlu}{MMLU}?}) systematically audit $5{,}700$ \glsterm{mmlu}{MMLU} questions against expert
-annotators and report a load-bearing number%
+annotators and report a headline number%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/mmlu-redux-2024.md#abstract}.}
 \citep[\S{}abstract]{mmlu-redux-2024}:
 
@@ -215,8 +215,8 @@ highly skilled non-expert validators only reach 34\% accuracy, despite
 spending on average over 30 minutes with unrestricted access to the web.
 \end{quote}
 
-The $34\%$ non-expert-with-web baseline is the load-bearing
-methodological number. It is meaningfully above the $25\%$ random
+The $34\%$ non-expert-with-web baseline is the methodological
+number the benchmark's design rests on. It is meaningfully above the $25\%$ random
 baseline (web access does help), but well below the $\sim 65\%$
 expert-PhD baseline. The gap between $34\%$ and $65\%$ is the operational
 definition of ``expertise required even with web search'' --- an
@@ -271,7 +271,7 @@ single-canonical-answer constraint is what enables automated grading
 without \glsterm{llm-as-judge}{LLM-as-judge} --- and without exposing intermediate work to
 gold-data leakage.
 
-The headline launch number is the load-bearing one. As of late 2024,
+The headline launch number: as of late 2024,
 state-of-the-art models that scored $80\text{--}95\%$ on \glsterm{mmlu}{MMLU} scored
 \emph{under $2\%$} on \glsterm{frontiermath}{FrontierMath} \citep[\S{}sec-launch-result,\S{}abstract]{glazer2024-frontiermath}:
 
@@ -333,7 +333,7 @@ benchmark whose ceiling is far above 2026 frontier capability, on the
 implicit bet that a benchmark with measurable headroom for $2$--$5$ years
 is more valuable than one that saturates in $12$--$24$ months.
 
-\subsection{What the lineage tells us}
+\subsection{What the lineage shows}
 \label{sec:knowledge-summary}
 
 The \glsterm{mmlu}{MMLU}-to-\glsterm{hle}{HLE} arc is a coherent progression with a single underlying
@@ -352,7 +352,7 @@ verifier discipline of its predecessors carried forward. Each step
 buys $12$--$24$ months of frontier headroom; none has produced a
 benchmark whose half-life looks fundamentally different from \glsterm{mmlu}{MMLU}'s.
 
-The honest 2026 picture is that knowledge benchmarks at the frontier
+The 2026 picture is that knowledge benchmarks at the frontier
 are no longer about \emph{what facts the model knows} --- on
 undergraduate-level material, scale and pre-training have closed
 that gap inside the verifier-error band --- but about whether the

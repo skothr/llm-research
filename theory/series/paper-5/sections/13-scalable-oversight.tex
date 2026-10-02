@@ -72,7 +72,7 @@ Three observations frame the rest of the section. First, the hierarchy
 is structured by judging cost, not by capability axis: each level
 relaxes a different constraint on the human's ability to verify a
 claim, not on the model's ability to make one. Second, the recursion
-``flaws of flaws of flaws'' is the load-bearing protocol primitive: a
+``flaws of flaws of flaws'' is the central protocol primitive: a
 \glsterm{debate}{debate}'s job is to drive the dispute to a level the judge \emph{can}
 adjudicate, not to render the entire claim transparent. Third, the
 hierarchy connects directly to complexity theory: $\mathbf{P}$ is the
@@ -172,7 +172,7 @@ choose a polynomial time judge so that optimal play in the \glsterm{debate}{deba
 with polynomially many steps solves $L$.
 \end{quote}
 
-Three structural facts make the construction load-bearing. First, the
+The construction rests on three structural facts. First, the
 debaters are computationally unbounded relative to the judge --- the
 construction quantifies over ``optimal play,'' which lets the debaters
 play strategies of arbitrary cost in the game tree, while the judge
@@ -216,7 +216,7 @@ that wins. (Returning to canonical form: the alternating-quantifier
 formula $\exists x_0 \forall x_1 \cdots H(q, x_0, \ldots)$ in
 \cref{sec:oversight-pspace} is the same game-tree object that the IP
 construction unrolls; \glsterm{debate}{debate} fixes the strategy of one prover at
-``honest'' and asks whether the resulting equilibrium recovers the
+``honest'' and asks whether the resulting equilibrium recovers the % prose-lint: allow
 formula's true \glsterm{value}{value}.)
 \end{analogy}
 
@@ -264,7 +264,7 @@ optimizing for \emph{persuasiveness} in \glsterm{debate}{debate} \emph{does} dri
 truth-finding under specific conditions, reported at $76$--$88\%$
 accuracy in the cited regime (pending direct excerpt verification)%
 \footnote{KB note: \nolinkurl{kb/notes/alignment/oversight-and-scalable-alignment.md#2-5-doubly-efficient-debate-brown-cohen-et-al-2024}.}.
-The mechanism --- pending direct excerpt --- is that an honest
+The mechanism --- pending direct excerpt --- is that an honest % prose-lint: allow
 prover's strategy in the doubly-efficient construction is structurally
 cheaper than a dishonest prover's, so optimization pressure on
 persuasiveness recovers the equilibrium-honesty claim that Irving
@@ -369,7 +369,7 @@ open-ended domains; the Brown-Cohen 2024 doubly-efficient construction
 citation-pending} hits $76$--$88\%$ accuracy in the reported regime
 but the regime conditions are restrictive. Whether equilibrium
 honesty holds in practice --- whether self-play under bounded compute
-on real LLMs converges to the Irving 2018 honest equilibrium rather
+on real LLMs converges to the Irving 2018 honest equilibrium rather % prose-lint: allow
 than to a dishonest one that exploits the judge's weakness --- is
 open. The sharpest unresolved test is the one this section's
 contradiction in \cref{sec:contradictions} points to: an empirical
