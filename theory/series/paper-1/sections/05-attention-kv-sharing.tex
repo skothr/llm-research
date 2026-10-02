@@ -11,7 +11,7 @@
 \label{sec:attention-mechanism-axis}
 
 The \glsterm{scaled-dot-product-attention}{scaled dot-product attention} function of \citet{vaswani2017} is
-load-bearing for the entire \glsterm{transformer}{Transformer}, but \emph{the function itself
+central to the entire \glsterm{transformer}{Transformer}, but \emph{the function itself
 has not changed since 2017}. What has changed -- in four discrete steps,
 each tied to a single primary source -- is how the $H$ \glsterm{query}{query} heads
 share the underlying $K$ and $V$ projections, and consequently how
@@ -418,7 +418,7 @@ cache-absorption identity demands that the inference framework
 algebraically fold $W^{UK}$ into $W^Q$ and $W^{UV}$ into $W^O$ at
 serve time; \glsterm{gqa}{GQA} needs only a head-broadcast in the standard
 attention kernel. As of 2026-Q2, \glsterm{flashattention}{FlashAttention}, vLLM, and \glsterm{compressed-fsm-2}{SGLang}
-have first-class \glsterm{gqa}{GQA} support; \glsterm{multi-head-latent-attention}{MLA} support exists but is more
+have full \glsterm{gqa}{GQA} support; \glsterm{multi-head-latent-attention}{MLA} support exists but is more
 recently added and less battle-tested. \textbf{(c)~The contradiction
 above}: if \glsterm{multi-head-latent-attention}{MLA}'s quality story were uncontested, the recipe risk
 would be paid; the absence of cross-lab confirmation makes the bet

@@ -1,5 +1,5 @@
 % Paper 1, §2 — Pre-2017 prequel and the 2017 canonical
-% Sets up the load-bearing notation, equations, and tensor shapes that
+% Sets up the notation, equations, and tensor shapes that
 % §3-§12 build on. Math is transcribed verbatim from kb/excerpts/vaswani2017.md;
 % pre-2017 lineage is sketched with deepen-cite markers where the KB does not
 % yet have primary excerpts (Bahdanau 2014, Gehring 2017, Hochreiter 1997).
@@ -18,7 +18,7 @@ multi-token output, multimodality) is a localized perturbation of the
 six-block \glsterm{encoder-decoder}{encoder-decoder} of \citet{vaswani2017}.} Establishing what
 that 2017 baseline actually computes -- with every variable defined,
 every shape labeled, and the four equations on which $\S 3$--$\S 12$
-will pivot transcribed verbatim -- is the load-bearing job of this
+will pivot transcribed verbatim -- is the main job of this
 section. We start with what the \glsterm{transformer}{Transformer} replaced, why it
 replaced them, then state the 2017 architecture in the notation we
 will carry through the paper.
@@ -163,7 +163,7 @@ connections''~\citep[\S 3.1]{vaswani2017}.
 \subsection{Scaled dot-product attention}
 \label{sec:canonical-attention}
 
-The attention sublayer is the load-bearing departure from the
+The attention sublayer is the central departure from the
 recurrent and convolutional baselines. \citet{vaswani2017} define
 \glsterm{scaled-dot-product-attention}{scaled dot-product attention} on per-head matrices
 $Q, K \in \R^{\mathsf{S} \times d_k}$, $V \in \R^{\mathsf{S} \times d_v}$

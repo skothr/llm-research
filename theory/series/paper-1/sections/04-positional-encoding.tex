@@ -5,7 +5,7 @@
 
 \glsterm{self-attention}{Self-attention} is permutation-equivariant: with no positional signal the
 output for $(x_1, \ldots, x_S)$ is invariant under any permutation of
-positions, so the model treats ``dog bites man'' and ``man bites dog''
+positions, so the model treats ``dog bites man'' and ``man bites dog'' % prose-lint: allow
 identically~\citep{vaswani2017}. Positional encoding is the mechanism
 that breaks this symmetry, and the family of choices is one of the
 small number of axes along which the modern \glsterm{transformer}{Transformer} is
@@ -51,7 +51,7 @@ The same paper notes that learned absolute embeddings produce
 ``nearly identical results'' on WMT~\citep[Table 3 row (E)]{vaswani2017}
 --- so at the original $d_{\text{model}}=512$, $S \le 100$ scale,
 fixed-vs-learned was a non-issue. The fixed/learned dichotomy only
-becomes load-bearing once $S$ grows past the training horizon, which is
+matters once $S$ grows past the training horizon, which is
 precisely the regime where every successor encoding (\glsterm{relative-position-encoding}{T5 bias}, \glsterm{alibi}{ALiBi},
 \glsterm{rope}{RoPE}) is designed to behave gracefully.
 
@@ -94,8 +94,8 @@ encoding~\citep{raffel2019}.
 \paragraph{ALiBi.} \citet[ALiBi]{press-alibi} make the bias
 parameter-free and \emph{linear in distance}:
 $b_{m-n}^{(h)} = -|m-n| \cdot s_h$ with a fixed per-head slope $s_h$,
-producing a built-in linear penalty for distance and --- the load-
-bearing claim --- length extrapolation past $S_{\text{train}}$ without
+producing a built-in linear penalty for distance and --- the
+central claim --- length extrapolation past $S_{\text{train}}$ without
 fine-tuning.\deepencite{press-alibi §3 (excerpt not yet in KB; cite
 ``Train Short, Test Long: Attention with Linear Biases Enables Input
 Length Extrapolation'', Press et al.\ 2022)}
