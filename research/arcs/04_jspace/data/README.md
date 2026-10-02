@@ -4,7 +4,8 @@
 >
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
 > **not** byte-identical to the raw upstream text.
-> **120 pieces of third-party personal data were removed** from them:
+> **120 pieces of third-party personal data were removed** from them (the
+> pre-redaction text remains in git history; issue #133):
 >
 > | Class | fitting (n=1000) | held-out (n=30) |
 > |---|---|---|
@@ -26,6 +27,12 @@
 > attach to the person, not the licensor. Removed on scientific-integrity and
 > ethical grounds, independent of any liability question.
 >
+> **Why it was not caught.** Design Decision 1
+> (`../plans/2026-07-18-jspace-design.md`) chose C4 for its
+> pretraining-like breadth. No privacy, licensing or ethics check was
+> recorded when it was chosen. The repo's pre-use check for third-party
+> data (`CLAUDE.md` § Third-party data) comes from this case.
+>
 > **Consequence for the data.** Redaction replaces each match with a bracketed
 > sentinel (`[EMAIL]`, `[PHONE]`, `[STREET-ADDRESS]`, `[POSTAL-CODE]`). It is
 > **not length-preserving**, so a redacted document tokenises differently from
@@ -38,7 +45,8 @@
 > derived artifacts. Three lens refits ran via
 > `examples/jspace_rerun_queue.py` (c4en-1.5B 3.14 h; wikitext-1.5B 8.22 h
 > of queue wall-clock across two segments, 3.54 h of it GPU time;
-> wikitext-7B 11.49 h). The c4en refit was for the redaction. The two
+> wikitext-7B 11.49 h; 22.85 h of queue wall-clock in total, plus about
+> 1.8 h of scans). The c4en refit was for the redaction. The two
 > wikitext lenses were refit in the same refit queue because the cache was
 > empty.
 > The fits ran on 2026-07-29 (c4en-1.5B, wikitext-1.5B) and completed
@@ -68,8 +76,8 @@
 > Only two pinned values moved beyond tolerance, both in the held-out-C4
 > channel: the 1.5B held-out logit-kurtosis trough (1.000 → 1.019) and the 7B
 > held-out L23 excess (0.0598 → 0.0588). Which conclusions that does and does
-> not touch is set out in the correction record at the top of
-> [`../README.md`](../README.md).
+> not touch (per-claim status) is set out in
+> [`../plans/2026-07-29-c4-redaction-rerun.md` § Outcome](../plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16).
 >
 > **Scope.** Only the two C4-en files are redacted. The **wikitext-103 corpora
 > — the arc's primary fitting corpora — are unmodified**, and every result on

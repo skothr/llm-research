@@ -6,8 +6,8 @@ survive transfer to open Qwen2.5-Instruct models (1.5B bf16 primary, 7B
 nf4 scale check)? Stages 1–7 ran to planned completion with a four-axis
 robustness battery; the answer is a partial replication with a clean
 causal split. A data correction — PII redaction of the arc's C4-en
-corpus slice and a re-run of every dependent result — is documented in
-[§ Data correction](#data-correction--c4-pii-redaction-and-re-run-closed-2026-08-16).
+corpus slice and a re-run of every dependent result — is summarized in
+[§ Data correction](#data-correction--c4-en-pii-redaction).
 
 **Status (2026-07-22): closed** — ran to planned completion; results
 unreviewed and unreplicated outside this repo. Stages 1–6 including 5.2
@@ -240,252 +240,51 @@ concept-vector constructions for the 59%-tier question; an AV trained
 at L22+ (above the legibility onset) for a clean cross-tie; multilingual
 eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 
-## Observation log
+## Data correction — C4-en PII redaction
 
-The arc's dated writeups, in `observations/`:
+> **Privacy warning.** The arc's primary fitting corpus is wikitext-103,
+> which was scanned for personal data and is unmodified. The secondary
+> **C4-en** slice (the corpus-sensitivity axis and the 30-prompt held-out
+> C4 set) is Common Crawl web text. C4's cleaning filters for quality, not
+> for personal data, and the committed slice carried **120 pieces of
+> third-party PII** (email addresses, phone numbers, street addresses,
+> postal codes), across 62 documents. Several documents paired a named
+> person with a direct email and phone number. It was redacted on
+> 2026-07-29, after about 9 days in this public repository. The
+> pre-redaction text remains in this repository's git history (issue
+> #133). C4 was
+> chosen because it is closer to pretraining text than Wikipedia is.
+> That same breadth made it likely to contain real people's data, and no
+> privacy check was recorded when it was chosen. The repo's pre-use check for third-party
+> data ([`CLAUDE.md`](../../../CLAUDE.md) § Third-party data) comes from
+> this case.
 
-- `2026-07-18-fit-cost-calibration.md` — fitting cost is structural
-  (`ceil(d_model/dim_batch)` backwards/prompt); measured 115 s/prompt (1.5B
-  bf16) and 559–585 s/prompt (7B nf4 + lm_head offload).
-- `2026-07-18-readout-scan-1p5b-first-pass.md` — on output-predictive
-  metrics the logit lens wins ("cleaner early, not earlier").
-- `2026-07-18-intermediate-concept-evals-h3-confirmed.md` — first positive
-  replication: J-lens surfaces unspoken intermediates where the logit lens
-  finds nothing (early/mid bands), on the paper-native metric.
-- `2026-07-20-scale-comparison-7b-vs-1p5b-h2.md` — advantage is
-  scale-robust, not scale-growing; depth-of-emergence reverses pro-J-lens
-  at 7B; includes the post-hoc artifact audit of the overnight 7B run.
-- `2026-07-20-jspace-structure-stage4.md` — J-space occupancy is low
-  (1.5B humped, 7B U-shaped, ~3× lower at 7B in absolute varfrac); the
-  kurtosis workspace-onset signature is inverted on Qwen (verified on the
-  paper-native metric, robust across logit/prob space). Its original
-  "k-dependent ceiling" comparison-to-paper framing is **superseded** —
-  the ceiling verdicts are certified on the paper's own metric in
-  `2026-07-24-paper-metric-varfrac-recompute.md` (see the observation's
-  read-first addendum).
-- `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit (1.5B):
-  workspace-band metrics corpus-invariant (L21 peak identical), early band
-  corpus-sensitive; qualifies the H3 @10 magnitude, wikitext stands for 7B.
-- `2026-07-20-verbal-report-swaps-stage5.md` — stage 5.1: the paper's
-  causal swap ordering (jlens > nonjspace > random) replicates at 1.5B
-  with attenuation (0.55/0.27/0.10 @s=2 vs Claude's 88/59/5%); logit-lens
-  steering control is non-trivial (0.44); 7B is a confounded near-null
-  (weak nf4 lens + compliance failures) — ruling-4 follow-up queued.
-- `2026-07-20-verbal-report-swaps-stage5b.md` — stage 5.1b: chat prompts
-  un-confound the 7B null (jlens 0.269 > random 0.154), but the paper's
-  59% middle tier (J-space component of concept vectors) is indistinguishable
-  from random at BOTH scales (bounded ≤3.8pp at 7B; see the 2026-07-24
-  recompute's correction note) — no causal contribution detected beyond
-  token-indexed directions; weight shifts toward the token-steering account at
-  open-model scale.
-- `2026-07-21-nla-crosstie-stage6.md` — stage 6 (novel): weak but
-  prompt-specific J-lens↔NLA agreement on concept prompts
-  (null-certified); the NLA-verbalizable content lives in the residual,
-  not the J-space component (removal-damage ≈ random); the NLA capture
-  layer (L20) sits below the 7B J-lens legibility onset (~L22) — a
-  cross-arc architectural finding.
-- `2026-07-21-quantization-exonerated-1p5b-nf4.md` — 1.5B nf4 control:
-  bf16→nf4 at fixed model/corpus/n moves nothing (L21 peak 0.125 vs
-  0.124); the 7B 3× gap is fit-budget and/or scale, not quantization.
-  Bonus: nf4 backward is 2.97× cheaper → 1.5B n=500 refit is now ~5 h.
-- `2026-07-22-n500-and-heldout-robustness.md` — the last two axes close:
-  n=500 refit leaves the profile unchanged (peak −1.4%; H1 exonerated
-  under the adopted 20% stability threshold) and the diversified C4
-  held-out set leaves
-  the depth-profile statistics intact — **the 7B gap is genuine scale.**
-- `2026-08-30-excess-fve-dimension-dependence.md` — post-close correction
-  (issue #79): excess-FVE carries a common ~2× dimension factor between
-  scales (the fveTopK/fveRand ratio was read as near-invariant, 6.29 vs
-  6.50), so the ceiling verdicts get a calibration caveat; audit CHECK O
-  (30 claims) re-derives every number from the committed scan logs. Its
-  ratio-invariance reading is corrected by the 2026-09-23 entry.
-- `2026-09-23-dimension-matched-k58-recompute.md`: 7B paper-metric
-  recompute at K=58, matching the 1.5B K/d (issue #83). The cross-scale
-  excess gap narrows to 1.52× held-out and 1.76× on the grid and
-  survives; 7B stays under the ceiling at every K. The fveTopK/fveRand
-  ratio falls as K grows, so its near-equality across scales at K=23-25
-  was a coincidence of K. Audit CHECK P re-derives the numbers from the
-  three scan logs and the three artifacts.
-- `2026-07-24-paper-metric-varfrac-recompute.md` — post-close vetting
-  (issue #26): the paper's 10% ceiling is excess-over-random
-  orthogonal-projection FVE, not the scans' absolute varfrac — recomputed
-  under the paper's definition **both ceiling verdicts survive** (1.5B
-  L21 excess 11.2% CI [11.0, 11.4], 7B peak 4.7%) and hold on **all four
-  robustness axes** re-run in that metric; stage-5.2 gap
-  significance-certified (exact permutation) and the stage-5.1b 59%-tier
-  **bounded, not certified**: no effect detected at either scale, with the
-  tighter bound at 7B — 0 discordant pairs of 78 pins the gap at ≤3.8pp
-  (exact 95%), while 1.5B gives p=0.375 on 5 discordants. The `p=1.0` at 0/0
-  discordants is an identity; the bound, not the p-value, is the result;
-  pursuit norm-bias
-  bounded at both scales (early band contaminated — 7B via undertrained
-  junk-token atoms, 1.5B via tied-embedding norms — workspace band clean).
-- `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2
-  (spider→ant replication): no discrete top-1 property flip at 1.5B, but
-  a large J-lens-SPECIFIC graded effect (+5.17 nats on the unspoken
-  entailed property at L18 on the J-lens-detected-position subset, mixed
-  +2.13; a ~+5 nat gap over the equal-magnitude token-steering control) —
-  relational structure token steering cannot produce;
-  **revises the 5.1b token-steering-favored conclusion**. 7B chat run
-  landed 2026-07-22 (see 7B replication section).
+The two corpus JSONs were redacted on 2026-07-29. Because the redaction
+is not length-preserving, the 10 artifacts derived from them had to be
+regenerated, which closed on 2026-08-16. Every C4-dependent result in
+this README is the regenerated value. Two audit pins moved beyond
+tolerance, both in the held-out-C4 channel: the 1.5B held-out logit-kurtosis trough
+(1.000 → 1.019) and the 7B held-out L23 excess (0.0598 → 0.0588). The
+lens cache was empty, so the two wikitext lenses, including the 7B nf4
+lens, were refit in the same queue. The 7B move therefore cannot be
+attributed to the redaction alone, because that refit's noise is of the
+same order. No headline conclusion changed: the quoted
+L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
+1.5B axis both stand. The results that never used C4 are unaffected:
+the ceiling verdicts on the wikitext scans (1.5B L21 excess 11.15%,
+7B 4.72%), every swap stage (5.1, 5.1b, 5.2), the NLA cross-tie, and the
+quantization and n-budget axes. Every held-out figure uses the held-out
+C4 set and is computed on its redacted text: the 1.5B held-out endpoint
+of the range (11.69%), the 7B held-out peaks (5.88%, and 7.67% at
+K=58), and the held-out cross-scale ratios.
+As of 2026-08-16, 41 of 53 committed artifacts had no C4 dependency.
 
-## Data correction — C4 PII redaction and re-run (closed 2026-08-16)
-
-> **What happened.** This arc's corpus-sensitivity axis used a seeded slice of
-> **C4-en** — Common Crawl web text. C4's cleaning filters for quality, not for
-> personal data, so the committed slice carried **120 pieces of third-party
-> PII**: 27 email addresses, 44 phone numbers, 39 street addresses, 10 postal
-> codes, across 62 documents. Several documents paired a named individual with
-> a direct email and phone. This was published in a public repo for ~9 days.
-> It has been redacted. Rationale, counts, limits, and the exact reproduction
-> recipe: [`data/README.md`](data/README.md); licensing:
-> [`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).
->
-> **Why it wasn't caught.** Decision 1 (`plans/2026-07-18-jspace-design.md:19-21`)
-> chose C4 for a sound scientific reason — wikitext-103 is narrow Wikipedia
-> register, and the paper specifies a "pretraining-like distribution." No
-> privacy, licensing, or ethics check was recorded at any point in the arc: a
-> search for `privacy|PII|redact|consent|personal data|ODC-BY|terms of use`
-> across the arc returns nothing. Provenance discipline here was exemplary on
-> *reproducibility* (seed, buffer size, filter, offset, dedup proofs, sha256)
-> and silent on *rights*. The generalizable lesson — a corpus chosen for being
-> more representative of real text is, for that same reason, more likely to
-> contain real people's data — is now a standing pre-use check in the repo
-> `CLAUDE.md`.
->
-> **What is NOT affected.** The **primary results are unaffected.** The arc's
-> primary fitting corpus is wikitext-103, which was scanned and is unmodified
-> (its only two matches are encyclopedic biography of a figure who died in
-> 1976 — reviewed, not personal data). The headline ceiling verdicts (1.5B L21
-> excess 11.15%, CI [10.95, 11.40]; 7B 4.72%), all stage-5/5.1b/5.2 swap
-> results, the NLA cross-tie, the quantization axis, and the n-budget axis are
-> **C4-free** and stand as recorded. 41 of 53 committed artifacts carry no C4
-> dependency.
->
-> **What WAS affected.** The redaction is not length-preserving, so a lens
-> re-fit on the redacted corpus differs slightly from the artifacts committed
-> before 2026-08-16, which were fit on the pre-redaction text. Everything
-> listed below was regenerated on the redacted corpus (commit `a9df3a55`,
-> 2026-08-15/16) and the prose restated against the regenerated artifacts.
->
-> *Affected data files (12):* `data/fitting_prompts_c4en_n1000.json`,
-> `data/heldout_prompts_c4en_n30.json` (both now redacted); and 10 derived
-> artifacts computed from them — `lens_eval_*_c4en.pt`,
-> `readout_scan_*_c4en.pt`, `structure_scan_*_c4en.pt`,
-> `paper_metric_varfrac_*_c4en.pt`, plus the `*_heldoutc4en.pt` readout,
-> structure, and paper-metric scans at both scales. (Verified: these `.pt`
-> files contain **no** PII themselves — their decoded strings are individual
-> BPE tokens, not contiguous text — so they are stale, not unsafe.)
->
-> *Affected figure (1):* `observations/figures/2026-07-21-jspace-corpus-invariance.png`.
->
-> *Affected observations (4):* `2026-07-20-corpus-sensitivity-c4-1p5b.md`
-> (whole file), `2026-07-22-n500-and-heldout-robustness.md` (held-out C4 axis),
-> `2026-07-24-paper-metric-varfrac-recompute.md` (2 of 4 robustness-axis rows),
-> `2026-07-18-intermediate-concept-evals-h3-confirmed.md` § "Qualifier (added
-> 2026-07-20)" (the corpus-dependence qualifier on the @10 magnitude). Each
-> now opens with a dated 2026-08-16 read-first addendum; the original text is
-> preserved unedited beneath it.
->
-> *Affected audit checks:* J and K wholly, M partially — ~25 pinned values in
-> `examples/jspace_audit_findings.py`. Two of them moved beyond tolerance and
-> were re-pinned (below); the rest re-derive within their existing tolerances.
->
-> **The re-run (executed 2026-08-15/16).** Three lenses were refit on the
-> redacted corpora via `examples/jspace_rerun_queue.py` — c4en-1.5B **3.14 h**;
-> wikitext-1.5B **8.22 h** of queue wall-clock across two segments (3.54 h of
-> it GPU time; the card was handed back to the desktop in between, so the
-> reproducible single-segment cost is ~3.24 h); wikitext-7B **11.49 h**,
-> against 16.26 h for the arc's original 7B fit. The two wikitext refits were
-> needed because the full 27-layer lenses are cache-only (Decision 4) and the
-> cache was empty — channel 2 is "re-scan only" only when they are on disk.
-> The ten derived artifacts were then regenerated by
-> `examples/jspace_rerun_scans.sh` (06:13–08:01 UTC, ~1.8 h). All three
-> regenerated paper-metric artifacts validate bit-exact against their
-> structure scans (`validation_max_vf_diff = 0.0`).
->
-> **Outcome.** Audit after the re-run and before re-pinning: **954 PASS |
-> 6 FAIL**; after re-pinning the two values that legitimately moved,
-> **956 PASS | 4 FAIL** (post-re-pin log committed at
-> `data/audit_2026-08-16.log`; those are the totals **as of that re-run** —
-> the audit has since gained checks, so a re-derivation with the cache
-> reported 986 | 4 as of 2026-08-17 (`data/audit_2026-08-17.log`;
-> current expected totals: "Expected result on a clean clone" below).
-> Re-derive with
-> `python examples/jspace_audit_findings.py` — the three re-fit lenses are
-> LFS-committed in `data/cache/` as of 2026-08-16, so no refit is needed;
-> the lens download is opt-in, see "Expected result on a clean clone" below).
-> The 4 remaining FAILs
-> are the designed `MISSING` reports for the two deliberately-unrefit nf4
-> lenses and their sidecars (`jlens_qwen2.5-1.5b_nf4_n100` and `_n500`) — the
-> quantization and n-budget axes are C4-free, so refitting them (8.3 h) would
-> buy a green audit and no correction; owner decision 2026-07-29. That
-> decision was reversed 2026-08-16 on data-completeness grounds — the refits
-> are scheduled as issue #47; until they land, the two `MISSING` reports
-> remain the designed state.
->
-> Drift beyond audit tolerance was confined to the **held-out-C4 channel** —
-> the channel whose evaluated text was directly redacted (see the attribution
-> caveat below). Within-tolerance movement did occur elsewhere: on the refit
-> C4 lens, L0 varfrac re-derives 0.1751 (pinned 0.174) and L0 logit-kurtosis
-> 2.6455 (pinned 2.641), both in the early band the arc already flags as
-> corpus- and norm-sensitive. Two pins moved beyond tolerance:
-> - **[K] 1.5B held-out logit-kurtosis trough:** 1.000 → **1.0186**
->   (re-pinned 1.019 at atol 0.01; n=30, the smallest sample in the audit).
-> - **[M] 7B held-out L23 excess:** 0.0598 → **0.0588** (atol 0.0005).
->
-> Both re-pins were made after confirming the regenerated artifacts, not
-> before. Every headline conclusion is unchanged.
->
-> **Caveat on attributing the 7B move (checked 2026-08-16).** The two
-> wikitext lenses had to be refit from an empty cache, so a channel-2 scan
-> differs from its predecessor for two reasons at once — redacted held-out
-> text *and* any difference in the refit lens. Comparing each refit lens
-> against its committed `jlens_*_layer-subset.pt` (promoted from the original
-> fits, untouched since 2026-07-22) separates them: the **1.5B bf16 refit
-> reproduces the original exactly** (max |Δ| = 0 over the seven committed
-> layers), so the 1.5B held-out kurtosis move is the redacted text alone;
-> the **7B nf4 refit does not** — relative Frobenius Δ 1.7e-2 at L0 decaying
-> to 4.2e-4 at L26. The 7B held-out excess move (0.0598 → 0.0588, −1.7%
-> relative) therefore cannot be attributed to the redaction alone; refit
-> noise at that scale is of the same order. nf4 fits are not bit-reproducible
-> here, and no earlier claim in this arc depended on their being so.
->
-> **Pre-committed exposures — both watched, neither materialised.** The plan
-> named two in advance so the re-run could not be read as confirming what was
-> hoped:
-> 1. *The quoted "L21 excess 10.7–11.7%" range.* Its C4-dependent endpoints
->    re-derive to **0.10828** (C4-corpus axis) and **0.11689** (held-out
->    axis), both passing at atol 0.0005; the range's low endpoint is the
->    C4-free n-budget axis at 0.1069. The quoted range stands.
-> 2. *The C4-corpus-axis bootstrap unanimity, margin 0.008 above the ceiling.*
->    `P(bootstrap mean > 10%)` is still **1.0 on every 1.5B axis**, and the
->    C4-axis margin above 0.100 is **0.0083** (was 0.0082). "Bootstrap-unanimous
->    breach on each axis" stands.
->
-> *Affected conclusions — status after re-derivation:*
-> - **Corpus-invariance** (1 of the 4 axes): **stands.** C4-lens L21 varfrac
->   0.1242 vs the wikitext lens's 0.1237 (Δ 0.0005, the "identical to 3dp"
->   claim holds); C4 axis L21 excess 0.1082.
-> - **Held-out-sample robustness** (the other affected axis): **stands, with
->   two restated values.** 1.5B held-out peak still L21 at 0.133 and L0 0.084;
->   the kurtosis trough is now 1.019 at L17 (was 1.00), and the 7B held-out
->   band peak is 5.88% excess at L23 (was 5.98%).
-> - **The 1.5B ceiling breach:** never depended on C4 — the wikitext
->   all-positions artifact carries it at L21 excess 11.15%, CI [10.95, 11.40],
->   unchanged by the re-run.
-> - **The @10 corpus-dependence qualifier** on H3: **stands** — C4 multihop
->   J@10 overall 0.4854 vs logit 0.3981.
->
-> **Status.** Redaction: **done 2026-07-29**. Re-run: **done 2026-08-15/16**
-> — 22.85 h of queue wall-clock over the three refits plus ~1.8 h of scans,
-> against the plan's ~23.7 h estimate (the Status line here previously read
-> "~4–5 h GPU, dominated by one 2.2 h lens refit": that estimate was wrong in
-> two independent ways, both diagnosed in the plan's § Cost). Plan:
-> [`plans/2026-07-29-c4-redaction-rerun.md`](plans/2026-07-29-c4-redaction-rerun.md).
-> The numbers throughout this README are the re-derived ones; the
-> superseded values are preserved in the dated addenda at the top of
-> each affected observation.
+Full record (per-class counts, root cause, redaction method, known
+limits, refit costs, audit states and exact reproduction):
+[`data/README.md`](data/README.md). Per-claim status and the two
+pre-committed exposures, dated 2026-08-16:
+[`plans/2026-07-29-c4-redaction-rerun.md` § Outcome](plans/2026-07-29-c4-redaction-rerun.md#outcome--closed-2026-08-16).
+Licensing: [`data/LICENSE-DATA.md`](data/LICENSE-DATA.md).
 
 ## Limitations
 
@@ -900,7 +699,7 @@ research/arcs/04_jspace/
     2026-07-20-stage6-design.md
     2026-07-21-stage52-entailed-property.md
     2026-07-29-c4-redaction-rerun.md
-  observations/        # dated evidence-first writeups (see § Observation log)
+  observations/        # dated evidence-first writeups (listed below)
     figures/           # rendered figures + INVENTORY.md provenance
   data/                # LFS-committed artifacts + MANIFEST.json + audit logs
     cache/             # committed fitted lenses (opt-in LFS download)
@@ -909,3 +708,65 @@ research/arcs/04_jspace/
 Pipeline scripts live at the repo root under `examples/jspace_*.py`
 (capture / analyze / render / audit; the audit entry point is
 `examples/jspace_audit_findings.py`).
+
+### Observations
+
+Each writeup in `observations/`, in date order. A file marked
+*read first* opens with a dated addendum that supersedes part of the
+original text; the original is preserved beneath it.
+
+- `2026-07-18-fit-cost-calibration.md` — fitting cost is structural;
+  measured seconds per prompt at 1.5B bf16 and 7B nf4.
+- `2026-07-18-readout-scan-1p5b-first-pass.md` — on output-predictive
+  metrics the logit lens wins. Its interpretation is superseded in part
+  by the H3 entry below.
+- `2026-07-18-intermediate-concept-evals-h3-confirmed.md` — first positive
+  replication (H3): the J-lens surfaces unspoken intermediates the logit
+  lens misses. *Read first:* 2026-08-16 (C4 re-run). *Qualifier
+  2026-07-20:* the @10 margin depends on the fitting corpus.
+- `2026-07-20-scale-comparison-7b-vs-1p5b-h2.md` — H2: the readout
+  advantage is scale-robust, not scale-growing; includes the artifact
+  audit of the 7B run.
+- `2026-07-20-jspace-structure-stage4.md` — stage 4: J-space occupancy
+  is low at both scales, and the kurtosis workspace-onset signature is
+  inverted on Qwen. *Read first:*
+  2026-07-24 (its ceiling comparison is replaced by the paper-metric
+  recompute).
+- `2026-07-20-corpus-sensitivity-c4-1p5b.md` — seeded C4-en refit at
+  1.5B: workspace band corpus-invariant, early band corpus-sensitive;
+  qualifies the H3 @10 margin.
+  *Read first:* 2026-08-16 (C4 re-run).
+- `2026-07-20-verbal-report-swaps-stage5.md` — stage 5.1: the paper's
+  causal swap ordering replicates at 1.5B with attenuation; the 7B
+  plain-prompt result is a confounded near-null.
+- `2026-07-20-verbal-report-swaps-stage5b.md` — stage 5.1b: chat prompts
+  un-confound 7B; the 59% middle tier shows no detectable effect at either
+  scale. *Read first:* 2026-07-28 (a bound, not a certification).
+  *Qualifier 2026-07-22:* stage 5.2 limits its token-steering reading to
+  report-token effects.
+- `2026-07-21-nla-crosstie-stage6.md` — stage 6: weak, prompt-specific
+  J-lens↔NLA agreement; the NLA-verbalizable content lives in the
+  residual, not the J-space component.
+- `2026-07-21-quantization-exonerated-1p5b-nf4.md` — bf16→nf4 at fixed
+  model, corpus and n moves nothing at 1.5B, so quantization does not
+  explain the 7B gap.
+- `2026-07-22-entailed-property-swaps-stage52.md` — stage 5.2: no discrete
+  property flip, but a J-lens-specific graded effect on the unspoken
+  entailed property, which revises the 5.1b token-steering conclusion for
+  relational effects; includes the 7B chat run.
+- `2026-07-22-n500-and-heldout-robustness.md` — the n=500 refit and the
+  held-out C4 set leave the depth profile intact, so the file attributes
+  the 7B gap to scale (H1 exonerated). *Read first:* 2026-08-16
+  (C4 re-run).
+- `2026-07-24-paper-metric-varfrac-recompute.md` — recompute under the
+  paper's excess-FVE definition: both ceiling verdicts hold, on the
+  four 1.5B robustness axes and the 7B held-out set; the stage-5.2 swap gap is significance-certified; pursuit norm
+  bias is confined to the early band. *Read first:* 2026-08-16; caveat
+  2026-08-30; correction 2026-07-28 on the 59% tier.
+- `2026-08-30-excess-fve-dimension-dependence.md` — excess-FVE depends on
+  dimension, so the cross-scale ceiling comparison carries a calibration
+  caveat (issue #79). *Read first:* status note 2026-09-23 (superseded in
+  part by the next entry).
+- `2026-09-23-dimension-matched-k58-recompute.md` — 7B recompute at K=58,
+  matching the 1.5B K/d (issue #83): the cross-scale gap narrows and
+  survives; 7B stays under the ceiling at every K.

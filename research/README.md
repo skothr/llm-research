@@ -57,8 +57,8 @@ because they carry as much of the signal as the positive ones:
   (0.0598 → 0.0588, confounded with refit nondeterminism) — while the
   **corpus-invariance** and **held-out** conclusions otherwise re-derive
   within audit tolerance and the quoted **L21 excess 10.7–11.7%** range
-  survives as written. Per-claim record:
-  [`arcs/04_jspace/README.md`](arcs/04_jspace/README.md).
+  survives as written. Full record:
+  [`arcs/04_jspace/data/README.md`](arcs/04_jspace/data/README.md).
 
 **Where to start.** Arc 01 for depth and the largest body of observations;
 arc 03 or 04 for how the method behaves when a prediction fails or a
