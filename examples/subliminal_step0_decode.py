@@ -828,7 +828,7 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(
             args.seed
-        )  # sampling RNG; seeded for reproducible sampling (critique S2)
+        )  # sampling RNG seed (critique S2)
     rng = np.random.default_rng(args.seed)
     pg = PromptGenerator(rng=rng, **PROMPT_PARAMS)
     # Shared prompt set across conditions (their config uses one seeded set).

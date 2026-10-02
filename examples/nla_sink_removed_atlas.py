@@ -234,7 +234,7 @@ def main() -> None:
         ax.set_yticklabels(src_order)
         ax.set_title(title)
         fig.colorbar(im, ax=ax, label="cosine")
-    fig.suptitle("Removing sinks reveals genuine content similarity structure")
+    fig.suptitle("Removing sinks reveals genuine content similarity structure")  # prose-lint: allow -- title rendered in the committed figure
     fig.tight_layout()
     fig.savefig(FIGDIR / "fig8_cosine_sink_vs_clean.png", dpi=180)
     plt.close(fig)
