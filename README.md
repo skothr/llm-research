@@ -100,7 +100,7 @@ than discovered two levels down.
   Arc 04's README records one of its four robustness axes (the quantization
   control) as pre-registered in its design plan, the rest gated on thresholds
   fixed before each run. Arc 01 grew from open-ended themes with no
-  pre-registration. Three of the four registers are partial — read each arc's
+  pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
 - **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in

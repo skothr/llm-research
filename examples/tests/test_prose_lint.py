@@ -108,6 +108,13 @@ def test_phrase_split_by_a_hard_wrap_is_reported_at_the_first_line() -> None:
 def test_wrap_check_respects_allowed_and_quoted_lines() -> None:
     text = "it tells <!-- prose-lint: allow -->\nus nothing\n"
     assert prose_lint.scan_text("x.md", text) == []
+    quoted = '> *"the figure tells"*\nus that the gap holds\n'
+    assert prose_lint.scan_text("x.md", quoted) == []
+
+
+def test_wrap_after_a_hyphen_is_joined_without_a_space() -> None:
+    hits = prose_lint.scan_text("x.md", "every load-\nbearing claim\n")
+    assert [(h.line, h.phrase) for h in hits] == [(1, "load-bearing")]
 
 
 def _git_repo(tmp_path: Path, monkeypatch) -> None:
@@ -131,10 +138,33 @@ def test_unscannable_paths_exit_2_even_with_report(tmp_path: Path, monkeypatch) 
     assert prose_lint.main(["bad.md"]) == 2
 
 
-def test_symlinks_are_skipped_not_read(tmp_path: Path, monkeypatch) -> None:
-    _git_repo(tmp_path, monkeypatch)
-    outside = tmp_path.parent / f"{tmp_path.name}-outside.md"
+def test_symlinks_are_not_read_and_count_as_not_scanned(
+    tmp_path: Path, monkeypatch
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git_repo(repo, monkeypatch)
+    outside = tmp_path / "outside.md"
     outside.write_text("a genuinely private note\n")
-    (tmp_path / "link.md").symlink_to(outside)
+    (repo / "link.md").symlink_to(outside)
     assert prose_lint.scan(["link.md"]) == []
-    assert prose_lint.main(["link.md"]) == 0
+    assert prose_lint.main(["link.md"]) == 2
+
+
+def test_git_failure_exits_2(tmp_path: Path, monkeypatch) -> None:
+    _git_repo(tmp_path, monkeypatch)
+
+    def fail(*_args, **_kwargs):
+        raise OSError("git not found")
+
+    monkeypatch.setattr(prose_lint.subprocess, "run", fail)
+    assert prose_lint.main([]) == 2
+    assert prose_lint.main(["--report"]) == 2
+
+
+def test_unexpected_errors_exit_2(monkeypatch) -> None:
+    def boom(_paths):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(prose_lint, "scan", boom)
+    assert prose_lint.main([]) == 2

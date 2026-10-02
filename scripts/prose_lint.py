@@ -19,13 +19,17 @@ end of one line, "us" at the start of the next) is reported at the first line.
 
 Paths are resolved from the caller's working directory. Tracked files and
 untracked files that git does not ignore are both scanned, so new prose is
-checked before it is staged. Symlinks and other non-regular files are skipped
-with a note on stderr; they are never read.
+checked before it is staged. Symlinks, tracked files missing from disk and
+other non-regular files are never read; each one counts as not scanned.
+
+Known limits: an allow-marked line is never joined with its neighbours, and a
+quoted turn that itself contains `"*` ends the skip at that line.
 
 Exit status: 0 when nothing is found, 1 when there are hits, and 2 when any
 path or file could not be scanned (a path outside the repository, a path that
-matches no file or no in-scope file, an unreadable file). Status 2 takes
-precedence, so a typo never passes as a clean run.
+matches no file or no in-scope file, an unreadable or non-regular file, or a
+git failure; any unexpected error also exits 2). Status 2 takes precedence,
+so a failed scan never passes as a clean run or as a hit count.
 
 Usage:
     python scripts/prose_lint.py                 # list hits; exit 1 if any
@@ -143,7 +147,8 @@ def scan_text(path: str, text: str) -> list[Hit]:
         if following is None:
             continue
         head = line.rstrip()
-        joined = head + " " + CONTINUATION_PREFIX.sub("", following, count=1)
+        tail = CONTINUATION_PREFIX.sub("", following, count=1)
+        joined = head + ("" if head.endswith("-") else " ") + tail
         for label, pattern in PHRASES:
             if any(m.start() < len(head) < m.end() for m in pattern.finditer(joined)):
                 hits.append(Hit(path, i + 1, label, line.strip()))
@@ -158,21 +163,29 @@ def candidate_files(paths: list[str]) -> list[str]:
     """
     rel: list[str] = []
     for arg in paths:
-        try:
-            absolute = Path(os.path.normpath(Path(arg).absolute()))
-            rel.append(absolute.relative_to(REPO).as_posix())
-        except ValueError:
+        absolute = Path(os.path.normpath(Path(arg).absolute()))
+        for candidate in (absolute, Path(os.path.realpath(absolute))):
+            try:
+                rel.append(candidate.relative_to(REPO).as_posix())
+                break
+            except ValueError:
+                continue
+        else:
             _problem(f"{arg} is outside the repository")
     if paths and not rel:
         return []
-    out = subprocess.run(
-        ["git", "--literal-pathspecs", "ls-files", "-z", "--cached", "--others",
-         "--exclude-standard", "--", *rel],
-        cwd=REPO,
-        capture_output=True,
-        check=True,
-    ).stdout
-    files = list(dict.fromkeys(p for p in out.decode().split("\0") if p))
+    try:
+        out = subprocess.run(
+            ["git", "--literal-pathspecs", "ls-files", "-z", "--cached", "--others",
+             "--exclude-standard", "--", *rel],
+            cwd=REPO,
+            capture_output=True,
+            check=True,
+        ).stdout
+    except (subprocess.CalledProcessError, OSError) as exc:
+        _problem(f"git ls-files failed: {exc}")
+        return []
+    files = list(dict.fromkeys(os.fsdecode(p) for p in out.split(b"\0") if p))
     for r in rel:
         under = [f for f in files if r == "." or f == r or f.startswith(r.rstrip("/") + "/")]
         if not under:
@@ -189,7 +202,7 @@ def scan(paths: list[str]) -> list[Hit]:
             continue
         full = REPO / path
         if full.is_symlink() or not full.is_file():
-            print(f"prose_lint: skipped {path} (not a regular file)", file=sys.stderr)
+            _problem(f"skipped {path}: not a regular file (symlink or missing)")
             continue
         try:
             text = full.read_text(encoding="utf-8")
@@ -221,7 +234,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     _problems.clear()
-    hits = scan(args.paths)
+    try:
+        hits = scan(args.paths)
+    except Exception as exc:  # any failure is "not scanned", never "clean"
+        print(f"prose_lint: scan failed: {exc!r}", file=sys.stderr)
+        print("PROSE LINT: scan failed")
+        return 2
     if args.summary:
         for label, n in Counter(h.phrase for h in hits).most_common():
             print(f"{n:5d}  {label}")

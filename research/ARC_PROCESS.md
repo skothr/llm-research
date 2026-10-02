@@ -210,7 +210,7 @@ maintained by hand). State this in the arc README. "N PASS" means "the numbers
 agree," never "the methodology is right."
 
 **Done when:** the audit passes from a clean clone and every number
-the arc will report has a corresponding assertion.
+the arc's findings will rely on has a corresponding assertion.
 
 **Closed by:** a PR plus the review loop in
 [§ The checkpoint PR](#the-checkpoint-pr).
