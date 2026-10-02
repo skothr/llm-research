@@ -42,7 +42,7 @@ Diagnostic on the 8 source-country prompts (the cleanest country-content subset)
 
 The reported 34% top-1 accuracy bundled three different things:
 
-1. **Genuinely-confused captures (siblings swap)** — only the hierarchical scheme can fix this. We found **1 such case** in 107 total captures (the one country/capital flip that did fire).
+1. **Basis-confused captures (siblings swap)** — only the hierarchical scheme can fix this. We found **1 such case** in 107 total captures (the one country/capital flip that did fire).
 2. **Correctly-classified-as-sibling captures** — e.g., "What is the capital of France?" tops capital because it IS a capital-content prompt. Sibling-aware classification correctly leaves these as capital. Counted as "wrong" in the original self-validation because the source pool was labeled `country`.
 3. **Mislabeled "expected=country" captures** — the country_test set deliberately includes weird-framing prompts ("Justice is the country of the soul", "Portugal smells like Tuesdays", "If France were a sandwich"). These project to nature/emotion/quantifier [qualified 2026-09-28: see Evidence], **which is correct**. No classification scheme can lift these because the label is wrong.
 
@@ -50,9 +50,9 @@ The reported 34% top-1 accuracy bundled three different things:
 
 The "country/capital top-1 swap" framing was misleading. The actual situation:
 
-- **For prompts that are genuinely about a country-as-topic**: the country discriminant fires correctly. ~75% top-1 on the clean 8-prompt subset.
+- **For prompts that are unambiguously about a country-as-topic**: the country discriminant fires correctly. ~75% top-1 on the clean 8-prompt subset.
 - **For prompts that mention countries but are about something else** (asking about a capital; making a metaphor; using country names as filler): the basis classifies into the appropriate category, which often isn't `country`. This is correct behavior counted as wrong by source-label-based self-validation.
-- **For genuinely-ambiguous content** (e.g., "Italy borders Switzerland" — is that country-content or capital-content?): the basis picks ONE side, and the hierarchical sub-discriminator agrees. No conflict to resolve.
+- **For ambiguous content** (e.g., "Italy borders Switzerland" — is that country-content or capital-content?): the basis picks ONE side, and the hierarchical sub-discriminator agrees. No conflict to resolve.
 
 The discriminant basis built in MAIN-26 is more accurate than the self-validation numbers indicated. The audit pass and this null result together suggest **the self-validation methodology should weight by "label fidelity"** — prompts that are unambiguously country-content count more than weird-framing prompts in the same source pool.
 
@@ -77,13 +77,13 @@ For any classifier-driven validation, the ceiling is the labeling quality of the
 
 ### H2 — The 1 capture that flipped is the only "true sibling swap" in the dataset
 
-If true, the hierarchical scheme found and fixed every honest case of sibling-confusion. Generalizes the null result into a positive: the basis was *already* near-optimal at the discriminate-siblings task in this dataset.
+If true, the hierarchical scheme found and fixed every true case of sibling-confusion. Generalizes the null result into a positive: the basis was *already* near-optimal at the discriminate-siblings task in this dataset.
 
 ## Methodology takeaway
 
 When a single number ("34% top-1 accuracy") looks low, decompose it before designing a fix:
 
-1. **Genuinely-wrong**: the basis lands on the wrong category despite the prompt being unambiguous.
+1. **Basis-wrong**: the basis lands on the wrong category despite the prompt being unambiguous.
 2. **Right-by-other-name**: the basis correctly identifies a different aspect of the prompt than the source-label expected.
 3. **Label-wrong**: the prompt was mislabeled in the test set.
 

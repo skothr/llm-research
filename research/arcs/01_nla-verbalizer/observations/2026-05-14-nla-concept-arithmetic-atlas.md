@@ -55,7 +55,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Cross-protocol axis stability (AUDIT 16):** `max diagonal (emotion most-stable axis)` = 0.1704; `mean cross-protocol diagonal cosine (axis stability)` = 0.0784.
 - **The t=0.421 flip in Cross-arc lessons (recomputed from `steps[].av_text` in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** t=0.421 lies inside the "Definition + Poem" plateau. The 20-step grid placed the flip between t=0.421 and t=0.474, and the dense run places it between t=0.4450 and t=0.4475 (see the [dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence).
 
-## What this tells us about NLA's representation geometry
+## What this shows about NLA's representation geometry
 
 NLA layer-20 representations are **categorically structured but not algebraically composable in the word2vec sense**:
 
@@ -67,7 +67,7 @@ This refines the [MAIN-44](2026-05-14-nla-mid-seq-vocab-atlas-null-result.md) + 
 
 ## Implications for viz primitives
 
-A "concept arithmetic" UI surface — where the user combines tokens via + and − and watches the result decode — would produce mostly category-level results, not specific-identity transformations. The UI affordance is honest: show that arithmetic moves the h into a category direction (visible in discriminant glyph) but specific decode identity isn't algebraically predictable. Useful for exploring category axes; not useful as a "what would change if I rotate this analogy" probe.
+A "concept arithmetic" UI surface — where the user combines tokens via + and − and watches the result decode — would produce mostly category-level results, not specific-identity transformations. The accurate UI affordance is to show that arithmetic moves the h into a category direction (visible in discriminant glyph) but specific decode identity isn't algebraically predictable. Useful for exploring category axes; not useful as a "what would change if I rotate this analogy" probe.
 
 A more productive use: arithmetic to **isolate axes** rather than predict tokens. `mean(country) − mean(capital)` gives a clean country axis. [qualified 2026-09-28: see Evidence] `h(happy) − mean(neutral_emotion)` would give a "happy-specific direction within emotion" — testable in a follow-up.
 

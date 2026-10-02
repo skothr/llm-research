@@ -164,7 +164,7 @@ negative, by ~10 units.
 
 1. **The AV named Korea and Egypt** — neither in our source set. Egypt
    was in our test set; Korea was nowhere. The AV's reading is
-   genuinely inferential: it identified the *kind of thing* the
+   inferential: it identified the *kind of thing* the
    direction is and named representative examples from its own
    training distribution.
 2. **Source country group variance was higher than expected.** Most

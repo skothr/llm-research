@@ -64,7 +64,7 @@ Anchor B asked for "butterflies in spring." The AV at t=1.0 reads as "Autumn lea
 
 ### AV produces coherent text for synthetic h's
 
-At intermediate t-values, the AV invents grammatical combinations the model would never produce: "the capital of France is Paris, and its country is France" (recursive); "its element is 'water'"; "What is the capital of England? London is a beautiful city." These aren't garbage — they're the AV's honest attempts to describe activation states that no real model would produce. **This validates a key use case for NLA**: AV can be used as an interpretation tool for *synthetic* h-vectors (arithmetic combinations, ablations, interpolations), not just real captures.
+At intermediate t-values, the AV invents grammatical combinations the model would never produce: "the capital of France is Paris, and its country is France" (recursive); "its element is 'water'"; "What is the capital of England? London is a beautiful city." These aren't garbage — they're the AV's attempts to describe activation states that no real model would produce. **This validates a key use case for NLA**: AV can be used as an interpretation tool for *synthetic* h-vectors (arithmetic combinations, ablations, interpolations), not just real captures.
 
 ## Evidence
 
@@ -105,7 +105,7 @@ If the chat-template attractor is universal, AR-encoded inputs will all have a l
 
 ## Hidden implications for the visualization research
 
-* **The flipbook view is genuinely novel.** Each row pairs a glyph (geometric signature) with AV text (semantic description), so the reader can watch BOTH the math and the meaning evolve. The stepwise semantic transition is invisible from numerical interpolation alone but obvious in the AV-text column.
+* **The flipbook view is novel.** Each row pairs a glyph (geometric signature) with AV text (semantic description), so the reader can watch BOTH the math and the meaning evolve. The stepwise semantic transition is invisible from numerical interpolation alone but obvious in the AV-text column.
 * **||Δh||_feat is NOT sensitive to semantic boundary crossings.** Per-step distance is constant 2.7 across all 20 steps — the geometric step size doesn't increase at the t=0.43 pivot [qualified 2026-09-28: see Evidence]. The boundary is detectable only through AV-text or through a learned "category" classifier on h_t, not through h-vector geometry alone.
 * **fig17 is the most compelling artifact in the arc so far** because it shows the novel use of NLA (AV-decoding synthetic h's) producing structured semantic transitions that no other interpretability tool can render this way.
 
@@ -135,4 +135,4 @@ Resumable — interrupting and re-running picks up from the last saved step.
 - [Sink-removed atlas](2026-05-13-nla-sink-removed-atlas.md) — introduced the signature-glyph primitive used in fig17.
 - [Cheap-batch glyph views](2026-05-13-nla-cheap-batch-three-glyph-views.md) — established that the AV can decode arithmetically-constructed vectors. fig17 generalizes that to linearly-interpolated vectors and shows the meaning gradient.
 - [Geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) — identified the 8 feature dims used as glyph rays in fig17.
-- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the interpolation artifact's load-bearing claims (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings. [qualified 2026-09-28: see Evidence]
+- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the numerical claims drawn from the interpolation artifact (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings. [qualified 2026-09-28: see Evidence]

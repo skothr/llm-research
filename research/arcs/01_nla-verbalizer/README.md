@@ -210,13 +210,13 @@ tokenize-then-locate approach.
 
 Two maximally-different natural-language descriptions, AR-encoded
 back into h-vectors, have cos(h_A, h_B) = +0.69 — much higher than
-chance for two genuinely independent vectors in 3584-dim. The chat-
+chance for two independent vectors in 3584-dim. The chat-
 template prefix (`<|im_start|>user`...) dominates the AR output;
 content modulates within a chat-template-shaped attractor.
 
 **Scope qualifications:** descriptive observation, not a finding-about-
 the-model; says more about how the AR was trained than about Qwen.
-But it's load-bearing for the interpolation work (F1) because it
+But the interpolation work (F1) depends on it because it
 explains why linear interpolation between AR-encoded anchors looks
 geometrically nice — both anchors live in the same global region.
 
@@ -291,7 +291,7 @@ consistent (same kind of position in all 4), so the stability *finding*
 holds, but the *framing* has been corrected throughout.
 
 **L8. The audit script is arithmetic-consistency, not methodological.**
-`nla_audit_findings.py` re-derives every load-bearing number from raw
+`nla_audit_findings.py` re-derives every number the findings rely on from raw
 `.pt` files and checks them against expected constants in the script
 (transcribed from the observation prose — so the artifact side is
 re-derived, but prose↔script agreement is maintained by hand). It
@@ -670,7 +670,7 @@ the kitft NLA pair cached locally, with `LLM_RESEARCH_MODEL_CACHE` exported
 to that cache directory (see `examples/README_NLA.md` § Models + cache).
 
 ```bash
-# Verify the arc — re-derives every load-bearing number from the .pt files.
+# Verify the arc — re-derives every number the findings rely on from the .pt files.
 # Runs from a clean clone: nla_audit_findings.py reads the committed data/
 # dir when the gitignored working cache is empty.
 python examples/nla_audit_findings.py
