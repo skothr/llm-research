@@ -10,8 +10,10 @@ runs inside that session as subagents or workflows. A git worktree
 work that has to run beside other work, such as a long GPU job or a parallel
 agent that edits files. Uncommitted changes you find at session start are not
 yours: `git checkout -b` carries them onto your branch, so stage only the
-files you touched. Remove a worktree with
-`git worktree remove` when its work is merged.
+files you touched. Remove a worktree with `git worktree remove` when its work
+is merged, after checking `git status --ignored`: gitignored outputs such as
+`.cache/` and `research/arcs/*/data/cache/` (fit checkpoints, caches) are
+deleted with it and are not carried by the merge.
 
 **Keeping this in step with the global workflow.** The workflow above and
 `research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
