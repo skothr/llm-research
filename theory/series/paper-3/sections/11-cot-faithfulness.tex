@@ -3,7 +3,7 @@
 %          kb/notes/reasoning/test-time-compute.md §6 interpretability-questions
 %          kb/excerpts/{arcuschin2025-cot-wild,shen2025-faithcot-bench,
 %                       mehta2026-faithfulness-scaling}.md (excerpts skeleton-only
-%                       as of 2026-05; \deepencite where load-bearing).
+%                       as of 2026-05; \deepencite where a claim rests on them).
 % Forward refs: §8 R1 (sec:r1-family), §12 PRM survival (sec:prm-survival),
 %               §14 contradictions catalogue (sec:contradictions).
 % Cross-paper: Paper 4 §interpretability uses CoT as a probe surface;
@@ -24,7 +24,7 @@ faithfulness} is the operational name for the question: does the trace
 $z$ in fact carry the information that determines $y$, or has $y$
 already been chosen by some other mechanism with $z$ generated as a
 post-hoc rationalisation that happens to be human-readable? This
-section makes the question precise, summarises the three load-bearing
+section makes the question precise, summarises the three main
 2025--2026 measurements (Arcuschin et al.\ ``\glsterm{chain-of-thought}{CoT} in the wild'', Shen et
 al.\ FaithCoT-Bench, Mehta et al.\ on whether scaling improves
 faithfulness), states the open contradiction with R1-style
@@ -51,8 +51,8 @@ faithful with respect to $\mathcal{I}$ when
   p_\theta\!\bigl(y \mid x, z\bigr) \;\neq\; p_\theta\!\bigl(y \mid x, z' = \mathcal{I}(z)\bigr)
   \label{eq:faith-causal}
 \end{equation}
-under interventions $\mathcal{I}$ that change the load-bearing content
-of the trace (e.g., flipping an arithmetic step, contradicting an
+under interventions $\mathcal{I}$ that change the content of the trace
+that the answer depends on (e.g., flipping an arithmetic step, contradicting an
 intermediate conclusion, deleting the chain), and is faithful in the
 opposite direction when \cref{eq:faith-causal} fails to hold under
 interventions that should be answer-irrelevant (e.g., paraphrasing the
@@ -178,7 +178,7 @@ collapse on the unfaithful instances.
 
 A second methodological point of FaithCoT-Bench is that
 \emph{instance}-level measurement, not aggregate rate, is the
-load-bearing object. A model with average rationalisation rate $0.14\%$
+object that matters. A model with average rationalisation rate $0.14\%$
 \citep[\S 4]{mehta2026-faithfulness-scaling} could still be unfaithful
 on the specific subpopulation of prompts where the user actually depends
 on trace transparency (high-stakes decisions, monitorable-channel
@@ -235,7 +235,7 @@ and verification are co-designed levers (\cref{sec:test-time-compute,sec:process
 The clean read of \citet{deepseek-r1}'s \glsterm{grpo-2}{GRPO} outcome — long traces
 emerge from \glsterm{rlvr-3}{RLVR}, accuracy rises in lockstep with trace length,
 truncating the trace destroys the gain — is that the trace is a
-\emph{causal substrate}: the model is doing genuine compute on the
+\emph{causal substrate}: the model is doing its computation on the
 trace channel and the answer is being read off the result. The
 Arcuschin and Mehta evidence complicates this read at two scales.
 

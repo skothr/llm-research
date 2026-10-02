@@ -189,7 +189,7 @@ only past a problem-dependent capacity threshold.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/wei2022-cot.md#sec-6}.} The same paper hedges
 that ``\glsterm{chain-of-thought}{chain-of-thought}'' need not reflect any cognitive sense of
 ``reasoning'' — a hedge that the 2025 faithfulness literature
-(\cref{sec:cot-faithfulness}) makes load-bearing.
+(\cref{sec:cot-faithfulness}) makes central.
 
 \subsection{The post-2024 reframing: prompting trick vs.\ compute axis}
 \label{sec:cot-reframing}
@@ -227,8 +227,8 @@ formalise.
 \glsterm{chain-of-thought}{CoT} is to direct prompting what stochastic gradient descent with $K$
 inner-loop steps is to a single gradient step: the same model now
 spends additional compute per \glsterm{query}{query} before committing to an output,
-and the marginal accuracy returned by that compute is the load-bearing
-quantity. Returning to math: the analogy collapses to
+and the marginal accuracy returned by that compute is the quantity
+of interest. Returning to math: the analogy collapses to
 \cref{eq:cot-decode} — direct prompting collapses $z$ to a length-zero
 trace ($p_\theta(y \mid x)$ alone), \glsterm{chain-of-thought}{CoT} prompting decodes a non-trivial
 $|z| > 0$, and \cref{sec:test-time-compute} treats $|z|$ together with
@@ -265,7 +265,7 @@ is not separated by the published 2026 ablations. The hedge that
 \citet[\S 6]{wei2022-cot} themselves placed on the cognitive
 interpretation of \glsterm{chain-of-thought}{CoT} --- ``\glsterm{chain-of-thought}{chain-of-thought} does not necessarily
 reflect model reasoning in any cognitive sense'' --- has aged into the
-load-bearing question of \cref{sec:cot-faithfulness}, which catalogues
+central question of \cref{sec:cot-faithfulness}, which catalogues
 the 2025--2026 evidence and the open ablations needed to settle it.
 \end{contradiction}
 

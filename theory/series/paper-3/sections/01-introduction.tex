@@ -88,7 +88,7 @@ legs appear in that single objective.
 The triangle framing also locates this paper relative to two of its
 companions. Paper~2 establishes a six-stage post-training pipeline in
 which \glsterm{rlhf}{RLHF} is succeeded by RL-on-verifiable-rewards as a distinct
-stage, with different load-bearing variables (programmatic verifier
+stage, with different defining variables (programmatic verifier
 instead of learned reward, group baseline instead of \glsterm{value}{value} network).
 That cross-reference is the inheritance route: \cref{sec:rlvr-grpo-dapo}
 deepens Paper~2's \glsterm{rlvr-3}{RLVR} treatment in the reasoning-specific direction
@@ -138,7 +138,7 @@ there.
 \citet{lightman2023-prm800k}'s process \glsterm{reward-model}{reward model} is the canonical
 artefact; the four trace-aggregation rules (min, product, last-step,
 weighted-mean) and the headline that min-aggregation is strongest are
-the load-bearing mechanics. The post-2023 \glsterm{process-reward-model}{PRM} lineage --- Math-Shepherd
+the core mechanics. The post-2023 \glsterm{process-reward-model}{PRM} lineage --- Math-Shepherd
 on automated step labelling, \glsterm{generative-prm}{ThinkPRM} and R-\glsterm{process-reward-model}{PRM} on generative
 verifiers that themselves reason --- closes the section.
 \Cref{sec:tree-search} is the second anchor section: the search-tree
@@ -168,7 +168,7 @@ phase as a structurally distinct decode-time region) from the
 base-architecture axis. \Cref{sec:search-vs-rl} confronts the
 operational tradeoff the triangle implies: at fixed total compute,
 when does the marginal FLOP go to inference search, to \glsterm{rlvr-3}{RLVR} training,
-or to pretraining? The honest answer in 2026 is benchmark-specific and
+or to pretraining? The answer in 2026 is benchmark-specific and
 base-model-specific; that section transcribes what is settled and
 demarcates what is anecdotal.
 

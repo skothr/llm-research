@@ -165,14 +165,14 @@ Closing thesis: the three legs of the triangle are real and co-designed in front
 
 - **Math is verbatim from PDFs.** Every equation cited with a `kb/excerpts/<key>#<anchor>` dual-citation. The anchor papers are `shao2024` (GRPO objective), `snell2024` (Eq. 1, FLOPs-matched), `lightman2023-prm800k` (PRM/ORM losses, min-aggregation), `rstar-math2025` (UCT formula), `deepseek-r1` (R1 four-stage protocol, AIME numbers), `dapo2025` (four DAPO modifications).
 - **Tensor shapes everywhere relevant.** Trace length $L \in [10^2, 10^4]$, group size $G \in [8, 64]$, search depth $D$, branching factor $B$, MCTS rollout count $N_\mathrm{rollout}$, thinking-budget $L$.
-- **Contradictions are first-class.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body. Six top-level contradictions, each tied to specific 2025-2026 papers.
+- **Contradictions get a dedicated section.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body. Six top-level contradictions, each tied to specific 2025-2026 papers.
 - **No analogy laundering.** `[INTUITION]` and `[ANALOGY]` markers preserved from the KB notes; the MCMC analogy for Snell's proposer/verifier decomposition, the AlphaZero analogy for ReST-MCTS*, and the median-of-rollouts analogy for GRPO all return to canonical math.
 
 ## Cross-paper threads
 
 - **RLVR** is shared with Paper-2 §post-training-RL. Paper-2 establishes the RLHF→RLVR transition as a stage of the training pipeline; Paper-3 deepens the reasoning-specific objective (GRPO Eq. 1, DAPO modifications) and the long-CoT-compounding empirics.
-- **CoT faithfulness** is shared with Paper-4 (interpretability: CoT as a probe surface) and Paper-5 (alignment: CoT as a monitorable channel). Paper-3 §11 is the load-bearing treatment; Papers 4-5 cite forward.
-- **Process supervision** is shared with Paper-5 (PRMs as evaluation tools). Paper-3 §5 and §12 are the load-bearing treatments; Paper-5 cites forward.
+- **CoT faithfulness** is shared with Paper-4 (interpretability: CoT as a probe surface) and Paper-5 (alignment: CoT as a monitorable channel). Paper-3 §11 is the primary treatment; Papers 4-5 cite forward.
+- **Process supervision** is shared with Paper-5 (PRMs as evaluation tools). Paper-3 §5 and §12 are the primary treatments; Paper-5 cites forward.
 - **Inference-time compute scaling** is the analog of training-time scaling (Paper-2 §scaling-laws); §4 of this paper makes the structural parallel explicit.
 - **Long-context attention** (Paper-1 §long-context) is the architectural precondition for 10K-token reasoning traces; cited in §8.
 
