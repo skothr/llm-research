@@ -240,9 +240,9 @@ exists.
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
   in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
-  params, seed or "none" for a run that draws no random numbers), finding,
-  evidence (excerpts), reproducibility (exact commands), hypotheses,
-  follow-ups, references.
+  params, the seed of each run it draws on, or "none" for a run that draws no
+  random numbers), finding, evidence (excerpts), reproducibility (exact
+  commands), hypotheses, follow-ups, references.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
 - Fill every field. Specs, plans and observation files carry no `TBD`/`TODO`
@@ -404,7 +404,8 @@ scripts still point at an empty cache.
 records those), `inputs` (upstream data files), `requires_model` (none |
 base | +av/+ar/…),
 `provenance` (what the file holds and the run that wrote it), `consumers`
-(figures / downstream artifacts / audit), `seed` (integer, or null). The
+(figures / downstream artifacts / audit), `seed` (integer, null, or
+`"unseeded"`). The
 generator's `--check` mode re-verifies every sha256 — run it in the audit
 step as a drift detector.
 
@@ -413,14 +414,19 @@ producer draws no random numbers (greedy decoding, a fixed slice) or there is
 no producing run (a hand-written input). A run that derives several seeds
 from one value, such as a seed base plus a per-layer offset, records that
 value; the script shows how the rest follow. A derived file records its own
-producer's seed; randomness in its inputs is recorded on their entries.
+producer's seed; randomness in its inputs is recorded on their entries. A
+producer that drew random numbers without a recorded seed gets `"unseeded"`,
+never null, and its file cannot be reproduced exactly. A run that takes
+several independent seeds records the one that selects its output in `seed`
+and the others in `provenance`.
 
 The seed reproduces a run only together with a complete `producing_command`
 (or `producing_args`): every argument that selects the output, the seed flag
 included unless the run used the script's default. Re-running with both, and
 with the recorded seed passed explicitly (a script's default can change after
-the run), reproduces the run's random choices. Bit-identical output also needs
-the same hardware, library builds and batch size, as the subliminal arc's
+the run), reproduces the random number stream. The choices made from that
+stream, such as sampled tokens, and so the output, match only on the same
+hardware, library builds and batch size, as the subliminal arc's
 capture-time `manifest.json` notes for sampled generation. A non-null seed alone is not a
 reproducibility claim. A run with a different seed is a robustness check and
 is reported as one.

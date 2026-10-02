@@ -530,7 +530,9 @@ def check_manifest() -> int:
         # committed manifest.
         if name in META:
             for field, expected in _metadata_fields(name).items():
-                if recorded[name].get(field) != expected:
+                # A missing key is drift even where the expected value is
+                # None (a null seed), so .get() alone would not catch it.
+                if field not in recorded[name] or recorded[name][field] != expected:
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
                         f"    manifest={recorded[name].get(field)!r}\n"

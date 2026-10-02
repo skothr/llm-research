@@ -312,7 +312,8 @@ def _derived(
     # A varfrac run's seed is its --rand-seed-base, read from its own args so
     # the two cannot disagree.
     from_args = _rand_seed_base(args) if args is not None else None
-    assert seed is None or from_args is None or seed == from_args, (seed, args)
+    if seed is not None and from_args is not None and seed != from_args:
+        raise ValueError(f"seed={seed} disagrees with --rand-seed-base in {args!r}")
     return {
         "class": "derived",
         "producing_script": script,
@@ -1105,7 +1106,9 @@ def check_manifest() -> int:
         # files (no META entry) are checksum-only, so skip their metadata.
         if name in META:
             for field, expected in _metadata_fields(name).items():
-                if recorded[name].get(field) != expected:
+                # A missing key is drift even where the expected value is
+                # None (a null seed), so .get() alone would not catch it.
+                if field not in recorded[name] or recorded[name][field] != expected:
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
                         f"    manifest={recorded[name].get(field)!r}\n"
