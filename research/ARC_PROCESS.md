@@ -93,7 +93,8 @@ arc may merge checkpoints 3 and 4 into one PR, and its plan must say so.
 
 Pre-registration means writing down, before a run, what it tests and what
 result counts as a pass or a fail, so thresholds and analysis choices are not
-fitted to the data afterwards. It applies to tests, not to arcs as a whole.
+fitted to the data afterwards. It is required for tests and optional for an
+arc as a whole.
 
 - **A test of something specific is registered before it runs.** This covers
   any step that checks a stated expectation: a capture run testing a
@@ -102,8 +103,8 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   its threshold, the direction) as a dated entry in the arc's plan, committed
   and pushed to the PR branch before the run; for a test the long run makes, that is the Checkpoint 2
   PR, which merges before the run, unless the Checkpoint 1 plan already
-  registered it. Report the result against that entry,
-  pass or fail.
+  registered it. Report the result against that entry, pass or fail, citing
+  the commit that registered it.
 - **Not pre-registrations:** the audit's assertions
   ([§ Audit](#audit-lock-the-numbers)) and code unit tests. The audit locks
   numbers already derived from the committed data, so its expected values
@@ -120,9 +121,10 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   test rather than confirmations
   ([§ Framing discipline](#framing-discipline)), except the result of a test
   it registered, which is reported pass or fail like any other.
-- **A registered test that changes after its data is seen** gets a dated
-  amendment appended below its entry, which is left unchanged, and the
-  originally registered analysis is still reported beside the amended one.
+- **A change to a registered test** is a dated amendment appended below its
+  entry, which is left unchanged. If the change comes after any of its data
+  was seen, dry-run output included, the originally registered analysis is
+  still reported beside the amended one.
 
 ### Checkpoint 1: question, research, plan
 
@@ -508,7 +510,8 @@ Checkpoint 2: setup and implementation
 [ ] each specific test the long run makes is registered in the plan
 [ ] checkpoint PR merged before the long compute run starts
 Checkpoint 3: computation, processing, validation
-[ ] any test added after Checkpoint 2 registered in the plan before it ran
+[ ] any test added after Checkpoint 2 (here or in Checkpoint 4) registered
+        in the plan before it ran
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
