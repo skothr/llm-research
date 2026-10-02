@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -289,9 +290,14 @@ META: dict[str, dict[str, Any]] = {
 }
 
 
-def _rand_seed_base(args: str) -> int:
-    """The --rand-seed-base value in a jspace_paper_metric_varfrac.py args string."""
-    return int(args.split("--rand-seed-base ", 1)[1].split()[0])
+_RAND_SEED_BASE = re.compile(r"--rand-seed-base[= ](\d+)")
+
+
+def _rand_seed_base(args: str) -> int | None:
+    """The --rand-seed-base value in a jspace_paper_metric_varfrac.py args
+    string, or None when the args do not set one."""
+    match = _RAND_SEED_BASE.search(args)
+    return int(match.group(1)) if match else None
 
 
 def _derived(
@@ -303,6 +309,10 @@ def _derived(
     args: str | None = None,
     seed: int | None = None,
 ) -> dict[str, Any]:
+    # A varfrac run's seed is its --rand-seed-base, read from its own args so
+    # the two cannot disagree.
+    from_args = _rand_seed_base(args) if args is not None else None
+    assert seed is None or from_args is None or seed == from_args, (seed, args)
     return {
         "class": "derived",
         "producing_script": script,
@@ -311,11 +321,7 @@ def _derived(
         "requires_model": model,
         "provenance": provenance,
         "consumers": consumers,
-        # A varfrac run's seed is its --rand-seed-base, read from its own
-        # args so the two cannot disagree.
-        "seed": seed
-        if seed is not None or args is None or "--rand-seed-base" not in args
-        else _rand_seed_base(args),
+        "seed": seed if seed is not None else from_args,
     }
 
 

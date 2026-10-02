@@ -399,8 +399,10 @@ scripts still point at an empty cache.
 
 **Manifest.** A `data/MANIFEST.json` (template generator:
 `nla_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
-`class` (capture-root | derived), `producing_script`, `producing_command`,
-`inputs` (upstream data files), `requires_model` (none | base | +av/+ar/…),
+`class` (capture-root | derived), `producing_script`, `producing_command`
+(or `producing_args`, the arguments to `producing_script`, where a generator
+records those), `inputs` (upstream data files), `requires_model` (none |
+base | +av/+ar/…),
 `provenance` (what the file holds and the run that wrote it), `consumers`
 (figures / downstream artifacts / audit), `seed` (integer, or null). The
 generator's `--check` mode re-verifies every sha256 — run it in the audit
@@ -415,13 +417,13 @@ producer's seed; randomness in its inputs is recorded on their entries.
 
 The seed reproduces a run only together with a complete `producing_command`
 (or `producing_args`): every argument that selects the output, the seed flag
-included unless the run used the script's default. With both, re-running
-reproduces the run's random choices; bit-identical output also needs the same
-hardware, library builds and batch size, as the subliminal arc's capture-time
-`manifest.json` notes for sampled generation. A non-null seed alone is not a
-reproducibility claim: issue #162 lists arc-04 entries whose commands are
-incomplete. A run with a different seed is a robustness check and is reported
-as one.
+included unless the run used the script's default. Re-running with both, and
+with the recorded seed passed explicitly (a script's default can change after
+the run), reproduces the run's random choices. Bit-identical output also needs
+the same hardware, library builds and batch size, as the subliminal arc's
+capture-time `manifest.json` notes for sampled generation. A non-null seed alone is not a
+reproducibility claim. A run with a different seed is a robustness check and
+is reported as one.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*
 (protocol sanity, shapes, no NaNs/collapse) and *locked* (audit re-derives the
