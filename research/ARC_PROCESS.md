@@ -100,7 +100,14 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   prediction, an ablation, a control, or a script an agent writes to check a
   claim. Write the expected result and the pass/fail criterion (the metric,
   its threshold, the direction) as a dated entry in the arc's plan, committed
-  before the run. Report the result against that entry, pass or fail.
+  before the run; for a test the long run makes, that is the Checkpoint 2
+  PR, which merges before the run. Report the result against that entry,
+  pass or fail.
+- **Not pre-registrations:** the audit's assertions
+  ([§ Audit](#audit-lock-the-numbers)) and code unit tests. The audit locks
+  numbers already derived from the committed data, so its expected values
+  are written after the run by design; a unit test checks the code, not a
+  claim about the model.
 - **An arc-level pre-registration is optional.** An arc built to test a
   specific prediction registers its primary test, thresholds and directional
   predictions in the plan before any capture runs. Arc 03 is the worked
@@ -110,8 +117,8 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   reported as exploratory: candidates for a later registered test, not
   confirmations ([§ Framing discipline](#framing-discipline)).
 - **A registered test that changes after its data is seen** gets a dated
-  amendment in the same plan entry, and the originally registered analysis is
-  still reported beside the amended one.
+  amendment appended below its entry, which is left unchanged, and the
+  originally registered analysis is still reported beside the amended one.
 
 ### Checkpoint 1: question, research, plan
 
@@ -490,9 +497,10 @@ Checkpoint 1: question, research, plan
 Checkpoint 2: setup and implementation
 [ ] capture + analysis scripts written; manifest generator + audit scaffold
 [ ] dry run at tiny n completes (outputs not committed); pyright clean
+[ ] each specific test the long run makes is registered in the plan
 [ ] checkpoint PR merged before the long compute run starts
 Checkpoint 3: computation, processing, validation
-[ ] each test of something specific registered in the plan before it ran
+[ ] any test added after Checkpoint 2 registered in the plan before it ran
 [ ] capture run; protocol validated (layer/position/shapes/counts sane)
 [ ] raw data saved to arcs/<slug>/data/ ; MANIFEST.json written; --check passes
 [ ] derived artifacts scripted + in data/ + in manifest (class: derived)
