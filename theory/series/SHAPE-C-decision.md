@@ -42,7 +42,7 @@ Each paper is organized around a **central thesis** the KB makes defensible. Sur
 
 ### Paper 5 — *What we measure and what slips through*
 
-**Thesis:** The eval/alignment landscape is a layered defense: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat (sycophancy, scheming, alignment-faking) detection. Each layer has known failure modes; the field's current bar is explicit about which threats it can measure today and which slip through.
+**Thesis:** The eval/alignment landscape is a layered defense: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat (sycophancy, scheming, alignment-faking) detection. Each layer has known failure modes; the field's current bar is accurate about which threats it can measure today and which slip through.
 
 **KB anchors:** `kb/notes/evaluation/` (4 notes), `kb/notes/alignment/` (5 notes). `kb/excerpts/{hendrycks2021-mmlu,wang2024-mmlu-pro,glazer2024-frontiermath,phan2025-hle,rein2023-gpqa,jimenez2024-swebench,xie2024-osworld,mialon2023-gaia,yao2024-tau-bench,liang2022-helm,contamination-survey-2025,mmlu-redux-2024,harmbench2024,chao2024-jailbreakbench,wei2023-jailbroken,russinovich2024-crescendo,kirchenbauer2023-watermark,greenblatt2024-alignment-faking,meinke2024-apollo-scheming,sharma2023-sycophancy,irving2018-debate}.md`.
 
