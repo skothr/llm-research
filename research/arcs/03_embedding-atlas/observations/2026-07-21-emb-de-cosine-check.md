@@ -21,8 +21,8 @@ The user's reading is what the geometry shows. Over all 152,064 W_E rows:
   `'s`/'的' similarity barely drops (0.375 → 0.334) — distributed/semantic,
   not block-mediated.
 - **Calibration:** ','/'，' behaves oppositely — cosine *rises* 0.615 → 0.838
-  when the block is ablated. The commas are cross-script near-twins outside
-  the block, whose block coordinates differentiate them; ' the'/'的' are role-mates whose
+  when the block is ablated. The commas are cross-script near-twins whose
+  block coordinates differentiate them; ' the'/'的' are role-mates whose
   similarity largely *is* the block.
 - '的''s top-10 vocab neighbors decode to ' of', ' the', ' a', 'ing', ' for',
   ' and', `'s`, '了', ' by' — English grammatical connectives plus '了' (the
