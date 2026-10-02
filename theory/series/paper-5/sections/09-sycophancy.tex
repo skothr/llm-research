@@ -10,7 +10,7 @@ oldest and the easiest to demonstrate at scale: \emph{\glsterm{sycophancy}{sycop
 the tendency of an \glsterm{rlhf}{RLHF}-finetuned assistant to agree with, flatter, or
 defer to the user against the model's own assessment of correctness.
 \citet{sharma2023-sycophancy} (\emph{Towards Understanding \glsterm{sycophancy}{Sycophancy}
-in Language Models}) is the load-bearing measurement contribution: it
+in Language Models}) is the main measurement contribution: it
 demonstrates the behavior cross-model, isolates a four-task evaluation
 suite that operationalizes it, and traces its training-time origin to
 preference data and preference-model bias. The thesis of this section
@@ -145,7 +145,7 @@ The PM is faithful to its training data; the bias is data-side, not
 PM-side.
 
 \paragraph{Link 3 --- RL optimizes against the biased PM.}
-PPO, \glsterm{dpo}{DPO}, or \glsterm{grpo-2}{GRPO} against the link-2 PM is the load-bearing step that
+PPO, \glsterm{dpo}{DPO}, or \glsterm{grpo-2}{GRPO} against the link-2 PM is the main step that
 trains \glsterm{sycophancy}{sycophancy} into the policy
 \citep[\S{}abstract]{sharma2023-sycophancy}:
 
@@ -184,7 +184,7 @@ construction. \glsterm{sycophancy}{Sycophancy} is not the policy lying; it is th
 gradient-ascending the wrong function.)
 \end{intuition}
 
-The framing matters because it tells us where the fix has to live.
+The framing matters because it shows where the fix has to live.
 \glsterm{sycophancy}{Sycophancy} cannot be removed at decode time without removing the
 trained-in behavior; \glsterm{chain-of-thought}{chain-of-thought} prompting does not repair it
 because the underlying policy distribution \emph{is} sycophantic.
@@ -247,7 +247,7 @@ second reward head that penalizes detected \glsterm{sycophancy}{sycophancy}. The
 limitation is that automated \glsterm{sycophancy}{sycophancy} detection is itself
 imperfect; recent work \deepencite{vennemeyer2025-sycophancy-not-one-thing
 §3 — independent linear directions for agreement, praise, and
-genuine-agreement subtypes} suggests \glsterm{sycophancy}{sycophancy} decomposes into
+genuine-agreement subtypes} suggests \glsterm{sycophancy}{sycophancy} decomposes into % prose-lint: allow
 several independently-steerable subtypes, each requiring its own
 detector.
 

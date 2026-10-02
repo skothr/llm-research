@@ -60,8 +60,8 @@ $\delta = 2.0$%
 \footnote{KB excerpt: \nolinkurl{kb/excerpts/kirchenbauer2023-watermark.md#sec-greenred}.
 $\gamma = 0.5$ is the primary experimental configuration (Table~1, Table~2,
 Figure~6 unattacked baseline); $\gamma = 0.25$ appears only in parameter sweeps.}.
-Three properties of this construction are load-bearing for everything
-that follows. First, the partition $G_t$ depends only on the keyed hash
+Everything that follows depends on three properties of this
+construction. First, the partition $G_t$ depends only on the keyed hash
 of a small recent window, so generation has $O(|V|)$ overhead per step
 and detection is parallelizable. Second, $\delta$ is added before the
 \glsterm{softmax}{softmax}, so the scheme is a \emph{soft} promotion: low-entropy positions
