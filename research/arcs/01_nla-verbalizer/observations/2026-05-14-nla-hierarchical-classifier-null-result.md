@@ -50,7 +50,7 @@ The reported 34% top-1 accuracy bundled three different things:
 
 The "country/capital top-1 swap" framing was misleading. The actual situation:
 
-- **For prompts that are unambiguously about a country-as-topic**: the country discriminant fires correctly. ~75% top-1 on the clean 8-prompt subset.
+- **For prompts that are about a country-as-topic**: the country discriminant fires correctly. ~75% top-1 on the clean 8-prompt subset.
 - **For prompts that mention countries but are about something else** (asking about a capital; making a metaphor; using country names as filler): the basis classifies into the appropriate category, which often isn't `country`. This is correct behavior counted as wrong by source-label-based self-validation.
 - **For ambiguous content** (e.g., "Italy borders Switzerland" — is that country-content or capital-content?): the basis picks ONE side, and the hierarchical sub-discriminator agrees. No conflict to resolve.
 

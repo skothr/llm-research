@@ -135,4 +135,4 @@ Resumable — interrupting and re-running picks up from the last saved step.
 - [Sink-removed atlas](2026-05-13-nla-sink-removed-atlas.md) — introduced the signature-glyph primitive used in fig17.
 - [Cheap-batch glyph views](2026-05-13-nla-cheap-batch-three-glyph-views.md) — established that the AV can decode arithmetically-constructed vectors. fig17 generalizes that to linearly-interpolated vectors and shows the meaning gradient.
 - [Geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) — identified the 8 feature dims used as glyph rays in fig17.
-- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the numerical claims drawn from the interpolation artifact (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings. [qualified 2026-09-28: see Evidence]
+- [Audit pass](2026-05-13-nla-audit-pass.md) — `nla_audit_findings.py` will need extending to cover the claims the findings rely on from the interpolation artifact (anchor cosine 0.69, pivot at t=0.43, etc.) before treating these as durable findings. [qualified 2026-09-28: see Evidence]
