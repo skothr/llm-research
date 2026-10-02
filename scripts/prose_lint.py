@@ -19,8 +19,10 @@ end of one line, "us" at the start of the next) is reported at the first line.
 
 Paths are resolved from the caller's working directory. Tracked files and
 untracked files that git does not ignore are both scanned, so new prose is
-checked before it is staged. Symlinks, tracked files missing from disk and
-other non-regular files are never read; each one counts as not scanned.
+checked before it is staged. A file is read only when it is a regular file
+reached without any symlink, in the leaf or a parent directory; symlinks,
+tracked files missing from disk and other non-regular files are never read,
+and each one counts as not scanned.
 
 Known limits: an allow-marked line is never joined with its neighbours, and a
 quoted turn that itself contains `"*` ends the skip at that line.
@@ -43,6 +45,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import stat
 import subprocess
 import sys
 from collections import Counter
@@ -207,21 +210,45 @@ def candidate_files(paths: list[str]) -> list[str]:
     return files
 
 
+def read_regular(path: str) -> str | None:
+    """Read repo file `path` only if it is a regular file reached without symlinks.
+
+    The real path must equal the repo path, so no component (leaf or parent
+    directory) is a symlink. The file is opened once with O_NOFOLLOW and
+    O_NONBLOCK, and the open descriptor itself must be a regular file, so a
+    swap between check and read cannot redirect or block the read. Any
+    failure is recorded as a problem and returns None.
+    """
+    full = os.path.normpath(REPO / path)
+    if os.path.realpath(full) != full:
+        _problem(f"skipped {path}: its path passes through a symlink")
+        return None
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    try:
+        fd = os.open(full, flags)
+    except OSError as exc:
+        _problem(f"skipped {path}: {exc.strerror or exc}")
+        return None
+    with os.fdopen(fd, "rb") as handle:
+        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+            _problem(f"skipped {path}: not a regular file")
+            return None
+        data = handle.read()
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        _problem(f"could not read {path}: {exc}")
+        return None
+
+
 def scan(paths: list[str]) -> list[Hit]:
     hits: list[Hit] = []
     for path in candidate_files(paths):
         if not is_scanned(path):
             continue
-        full = REPO / path
-        if full.is_symlink() or not full.is_file():
-            _problem(f"skipped {path}: not a regular file (symlink or missing)")
-            continue
-        try:
-            text = full.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as exc:
-            _problem(f"could not read {path}: {exc}")
-            continue
-        hits.extend(scan_text(path, text))
+        text = read_regular(path)
+        if text is not None:
+            hits.extend(scan_text(path, text))
     return hits
 
 

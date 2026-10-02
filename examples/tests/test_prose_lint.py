@@ -182,3 +182,21 @@ def test_unexpected_errors_exit_2(monkeypatch) -> None:
 
     monkeypatch.setattr(prose_lint, "scan", boom)
     assert prose_lint.main([]) == 2
+
+
+def test_symlinked_parent_directory_is_not_read(tmp_path: Path, monkeypatch) -> None:
+    import subprocess
+
+    repo = tmp_path / "repo"
+    (repo / "notes").mkdir(parents=True)
+    _git_repo(repo, monkeypatch)
+    (repo / "notes" / "b.md").write_text("a clear note\n")
+    subprocess.run(["git", "add", "notes/b.md"], cwd=repo, check=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "b.md").write_text("a genuinely private note\n")
+    (repo / "notes" / "b.md").unlink()
+    (repo / "notes").rmdir()
+    (repo / "notes").symlink_to(outside)
+    assert prose_lint.scan(["notes"]) == []
+    assert prose_lint.main(["notes"]) == 2
