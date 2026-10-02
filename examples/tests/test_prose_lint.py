@@ -163,6 +163,16 @@ def test_indented_top_level_fence_with_dedented_lines() -> None:
     assert [h.line for h in prose_lint.scan_text("x.md", text)] == [4]
 
 
+def test_lone_carriage_return_keeps_fence_lines_aligned() -> None:
+    text = "a\rb\n```\ngenuinely\n```\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_missing_markdown_parser_exits_2(monkeypatch) -> None:
+    monkeypatch.setitem(sys.modules, "markdown_it", None)  # import now fails
+    assert prose_lint.main(["CLAUDE.md"]) == 2
+
+
 def test_inline_triple_backtick_span_does_not_open_a_fence() -> None:
     text = "```inline``` span\ngenuinely\n"
     assert [h.line for h in prose_lint.scan_text("x.md", text)] == [2]

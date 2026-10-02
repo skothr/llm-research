@@ -142,8 +142,11 @@ def fenced_lines(text: str) -> set[int]:
             "markdown-it-py is not installed; pip install -e '.[dev]'"
         ) from exc
 
+    # markdown-it also breaks lines at a lone \r; the scanner splits on \n
+    # only, so a lone \r becomes a space to keep the line numbers aligned.
+    source = re.sub(r"\r(?!\n)", " ", text).replace("\r\n", "\n")
     lines: set[int] = set()
-    for token in MarkdownIt("commonmark").parse(text.replace("\r\n", "\n")):
+    for token in MarkdownIt("commonmark").parse(source):
         if token.type == "fence" and token.map is not None:
             lines.update(range(*token.map))
     return lines

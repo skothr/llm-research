@@ -170,7 +170,9 @@ owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
 `theory/reviews/`) or the hash-pinned files listed in the scanner's
 `EXCLUDED_FILES`, whose sha256 an audit checks (today
 `examples/subliminal_step0_decode.py`); leave those as written. When an audit
-pins another file, add it to that list.
+pins another file, add it to that list. Fenced blocks also hold authored
+examples; check the comments you write inside one by hand, since the scanner
+skips them.
 
 # Research arcs & observations
 
