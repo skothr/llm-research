@@ -251,12 +251,11 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > postal codes), across 62 documents. Several documents paired a named
 > person with a direct email and phone number. It was redacted on
 > 2026-07-29, after about 9 days in this public repository. On
-> 2026-10-02 the pre-redaction text was also removed from the
-> repository's git history, which gave new SHAs to every commit that
-> descends from the commit that added the data (old-to-new map:
-> [`docs/history-rewrite-2026-10-02-commit-map.txt`](../../../docs/history-rewrite-2026-10-02-commit-map.txt);
-> GitHub's cache purge is tracked in issue #133). C4 was chosen because it
-> is closer to pretraining text than Wikipedia is.
+> 2026-10-02 the pre-redaction text was removed from every branch's
+> history, which gave new SHAs to the commits that followed it. Until
+> GitHub completes a purge (issue #133), the old commits remain reachable
+> on GitHub by their former SHAs. C4 was chosen because it is closer to
+> pretraining text than Wikipedia is.
 > That same breadth made it likely to contain real people's data, and no
 > privacy check was recorded when it was chosen. The repo's pre-use check for third-party
 > data ([`CLAUDE.md`](../../../CLAUDE.md) § Third-party data) comes from

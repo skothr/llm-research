@@ -5,9 +5,9 @@
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
 > **not** byte-identical to the raw upstream text.
 > **120 pieces of third-party personal data were removed** from them,
-> and on 2026-10-02 from the repository's git history as well (issue
-> #133; old-to-new commit map in
-> [`docs/history-rewrite-2026-10-02-commit-map.txt`](../../../../docs/history-rewrite-2026-10-02-commit-map.txt)):
+> and on 2026-10-02 from every branch's history as well. Until GitHub
+> completes a purge (issue #133), the old commits remain reachable on
+> GitHub by their former SHAs:
 >
 > | Class | fitting (n=1000) | held-out (n=30) |
 > |---|---|---|

@@ -73,3 +73,5 @@ Verdict vocabulary: `close-resolved` / `close-invalid` / `refine` / `keep` /
    groom (advancing #17); #16 closes after a clean `pyright examples/` run.
 4. **History left alone** — no credentials involved; rewrite cost outweighs
    the benefit.
+   [updated 2026-10-02: history was rewritten to remove third-party PII
+   from the arc-04 C4 corpus; see issue #133]
