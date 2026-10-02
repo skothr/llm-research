@@ -2,8 +2,9 @@
 
 Work on a branch cut from an up-to-date `main`, in the main checkout: branch →
 push → PR (`gh pr create`) → review loop (described in § The checkpoint PR
-in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges. Nothing is committed on `main`
-directly, `CLAUDE.md` and `.gitignore` edits included. A git worktree
+in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges.
+Nothing is committed on `main` directly, `CLAUDE.md` and `.gitignore` edits
+included. A git worktree
 (`.claude/worktrees/<name>/`, gitignored) is optional: use one for work that
 has to run beside other work, such as a long GPU job, or when another
 session is already working in the main checkout: HEAD is on a branch you did
