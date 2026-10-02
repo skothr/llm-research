@@ -1,6 +1,7 @@
 """Report mannered stock phrases in tracked prose and code comments (#120).
 
-Scans *.md, *.py and *.tex files for phrases that stand in for a
+Scans every line of *.md, *.py and *.tex files (in .py files that includes
+code and string literals, not only comments) for phrases that stand in for a
 direct statement ("load-bearing", "genuinely", "sits at", ...). Each hit is
 graded by a human or agent: reword it, cut it, or keep it. A kept hit carries
 the marker `prose-lint: allow` on the same line, in that file's comment
@@ -9,8 +10,8 @@ syntax, so the scanner skips it.
 Not scanned:
 - verbatim source material: theory/sources/, theory/kb/excerpts/;
 - dated records: research/archive/, theory/archive/, theory/reviews/;
-- the owner's quoted turns in attribution sections (lines starting with
-  `> *"`), which are verbatim quotes;
+- quoted turns in the attribution format, every line from an opening `> *"`
+  to its closing `"*`; an unterminated quote ends with its blockquote;
 - this script and its test, which list the phrases.
 
 Paths are resolved from the caller's working directory. Tracked files and
@@ -27,6 +28,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -121,22 +123,26 @@ def candidate_files(paths: list[str]) -> list[str]:
     rel: list[str] = []
     for arg in paths:
         try:
-            rel.append(Path(arg).resolve().relative_to(REPO).as_posix())
+            absolute = Path(os.path.normpath(Path(arg).absolute()))
+            rel.append(absolute.relative_to(REPO).as_posix())
         except ValueError:
             print(f"prose_lint: {arg} is outside the repository", file=sys.stderr)
     if paths and not rel:
         return []
     out = subprocess.run(
-        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
-         "--", *rel],
+        ["git", "--literal-pathspecs", "ls-files", "-z", "--cached", "--others",
+         "--exclude-standard", "--", *rel],
         cwd=REPO,
         capture_output=True,
         check=True,
     ).stdout
     files = list(dict.fromkeys(p for p in out.decode().split("\0") if p))
     for r in rel:
-        if not any(f == r or f.startswith(r.rstrip("/") + "/") for f in files):
+        under = [f for f in files if r == "." or f == r or f.startswith(r.rstrip("/") + "/")]
+        if not under:
             print(f"prose_lint: no files under {r}", file=sys.stderr)
+        elif not any(is_scanned(f) for f in under):
+            print(f"prose_lint: no in-scope files under {r}", file=sys.stderr)
     return files
 
 

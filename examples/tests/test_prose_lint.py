@@ -50,6 +50,12 @@ def test_every_line_of_a_multiline_quote_is_skipped() -> None:
     assert [h.line for h in hits] == [5]
 
 
+def test_unterminated_quote_ends_with_its_blockquote() -> None:
+    text = '> *"opened but never closed\n> still quoted\nback to genuinely ours\n'
+    hits = prose_lint.scan_text("x.md", text)
+    assert [h.line for h in hits] == [3]
+
+
 def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert prose_lint.is_scanned("research/arcs/04_jspace/README.md")
     assert prose_lint.is_scanned("examples/jspace_audit_findings.py")
@@ -71,12 +77,15 @@ def test_area_groups_by_directory() -> None:
 def test_untracked_files_are_candidates(tmp_path: Path, monkeypatch) -> None:
     import subprocess
 
+    for var in ("GIT_DIR", "GIT_INDEX_FILE", "GIT_WORK_TREE"):
+        monkeypatch.delenv(var, raising=False)
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     (tmp_path / "new.md").write_text("a crisp result\n")
     monkeypatch.setattr(prose_lint, "REPO", tmp_path)
     monkeypatch.chdir(tmp_path)
     assert prose_lint.candidate_files(["new.md"]) == ["new.md"]
     assert prose_lint.main(["new.md"]) == 1
+    assert prose_lint.candidate_files(["."]) == ["new.md"]
 
 
 def test_main_exit_codes(tmp_path: Path, monkeypatch) -> None:

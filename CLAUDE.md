@@ -135,7 +135,7 @@ frontier and open questions (`[CONTRADICTION]` where sources disagree). When
 introducing a new technical term, add it to `theory/kb/glossary.md` with a
 citation.
 
-## Prose style (all prose and code comments)
+# Prose style (all prose and code comments)
 
 State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
 "sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
