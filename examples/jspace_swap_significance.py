@@ -15,7 +15,7 @@ on both the auto-detected-position subset and the mixed baseline-correct set
 (subset logic identical to ``jspace_audit_findings.py``). A second section
 certifies the stage-5.1b report-swap tiers from the committed
 ``verbal_report_chat_6c`` artifacts: exact McNemar on the paired per-item
-``target_in_top5`` outcomes vs the random control — the
+``target_in_top5`` outcomes vs the random control — the load-bearing
 "59% tier lands at random" NULL (1.5B p=0.375; 7B p=1.0 with 0/0
 discordant pairs) and the jlens/logitlens positive tiers. All functions
 are importable so the audit can pin the exact values.

@@ -923,7 +923,7 @@ def main() -> None:  # noqa: C901
         }
 
     # ---- Per-scope split over the baseline-correct subset (auto vs fallback) ----
-    # 'auto' positions are the J-lens-detected concept positions (>=1
+    # 'auto' positions are the genuine J-lens-detected concept positions (>=1
     # source-concept form in the swap-layer top-k); 'auto->window_fallback' items
     # had none detected and fell back to a fixed positional window, which carries
     # near-zero entailed-property movement. Recorded additively so downstream

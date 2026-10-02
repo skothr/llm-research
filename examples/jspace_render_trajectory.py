@@ -165,7 +165,7 @@ def draw_panel(
     title: str,
 ) -> None:
     """One layer x top-5 text grid. ``strs`` is [layer][pos][k]; ``probs`` is
-    [n_layers, n_pos, k]. Layer 0 is at the bottom, deepest at the top."""
+    [n_layers, n_pos, k]. Layer 0 sits at the bottom, deepest at the top."""
     n_layers = len(layers)
     ax.set_xlim(0, TOPK)
     ax.set_ylim(0, n_layers)
@@ -234,7 +234,7 @@ def draw_panel(
         ax.axhline(yline, color="#c94b2b", linestyle="--", linewidth=1.1, zorder=3)
         # Centre the label ON the dashed line (va="center") with a white bbox so it
         # reads as a line annotation: it straddles the inter-row seam and covers
-        # only cell background, never the tokens (which are at row centres ±0.5).
+        # only cell background, never the tokens (which sit at row centres ±0.5).
         ax.text(
             TOPK - 0.06,
             yline,

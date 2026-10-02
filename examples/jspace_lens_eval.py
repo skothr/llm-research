@@ -61,7 +61,7 @@ THRESHOLDS = (10, 50)
 
 def _default_eval_dir() -> str:
     root = Path(__file__).resolve().parent.parent
-    # A linked-worktree checkout is at <main-root>/.claude/worktrees/<name>
+    # A linked-worktree checkout sits at <main-root>/.claude/worktrees/<name>
     # and has a .git *file* (gitdir pointer), not a directory. The file check
     # keeps a normal clone that merely lives under a .claude/worktrees-shaped
     # ancestor path from being truncated, and the reverse scan strips at the

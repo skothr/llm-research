@@ -709,7 +709,7 @@ BATTERY: dict[str, BatteryClass] = {
             "praise",
             "brave",
             "kind",
-            "honest",  # prose-lint: allow -- battery token (data)
+            "honest",
             "gentle",
             "pure",
         ),
@@ -907,7 +907,7 @@ PAIRS: tuple[tuple[str, str, str], ...] = (
     ("valence", "friend", "enemy"),
     ("valence", "praise", "insult"),
     ("valence", "kind", "cruel"),
-    ("valence", "honest", "dishonest"),  # prose-lint: allow -- antonym pair (data)
+    ("valence", "honest", "dishonest"),
     ("valence", "gentle", "harsh"),
     ("valence", "pure", "filthy"),
     # register — formal vs informal synonym

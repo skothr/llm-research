@@ -59,7 +59,7 @@ def _is_cached(
     """True if the cache holds ``filename`` in model_id's snapshot at revision.
 
     Probing the same revision the load will request keeps ``local_files_only``
-    accurate: a cached ``main`` with an uncached pinned SHA must go to the
+    honest: a cached ``main`` with an uncached pinned SHA must go to the
     network, and a cached pinned SHA with no ``main`` ref must not.
     """
     from huggingface_hub import try_to_load_from_cache

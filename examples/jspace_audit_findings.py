@@ -1,7 +1,7 @@
-"""Rigorous audit: re-derive every numerical claim in the jspace arc's
-committed observations that the findings rely on, from the on-disk artifacts,
-and compare against what the observation files report. Prints per-check
-PASS/FAIL and exits 1 on any failure (stage-7 audit named in
+"""Rigorous audit: re-derive every load-bearing numerical claim in the jspace
+arc's committed observations from the on-disk artifacts, and compare against
+what the observation files report. Prints per-check PASS/FAIL and exits 1 on
+any failure (stage-7 audit named in
 `research/arcs/04_jspace/plans/2026-07-18-jspace-design.md`). Written at
 stage 3, not arc close, per the arc's standing auditability requirement
 (see the arc README § Reproducing).
@@ -42,7 +42,7 @@ Checks:
      crossover (J 0.7632 > logit 0.6952); the 1.5B per-layer Spearman excerpt.
   D  Structure scan (stage-4 J-space) — both structure_scan artifacts load;
      ks == [5,10,25,50]; 27 layers; 30 prompts; every varfrac (summary means
-     and per-prompt raw) finite and in [0,1]. Cited depth-map numbers
+     and per-prompt raw) finite and in [0,1]. Load-bearing depth-map numbers
      re-derived and pinned: 1.5B varfrac_mean(k=25) peak at layer 21, plus its
      layer-0 and final-layer values, active_mean in [23,25] all layers, and
      logit-kurtosis endpoints (L0 + mid-trough layer/value); 7B varfrac trough
@@ -53,7 +53,7 @@ Checks:
   E  Verbal-report swap (stage 5.1) — both verbal_report artifacts load; 78
      items each; every item carries the 4 conditions x strengths {1,2} (8
      condition keys); baseline retained-subset sizes (predicts-report) re-derived
-     from per_item (1.5B 9, 7B 12). Cited swap-target top5_all rates
+     from per_item (1.5B 9, 7B 12). Load-bearing swap-target top5_all rates
      re-derived FROM per_item (not trusting the summary blindly, with one
      condition cross-checked against the stored summary metric) and pinned at
      3dp: 1.5B jlens@2 0.551, nonjspace@2 0.269, random@2/@1 0.103; 7B jlens@2
@@ -762,7 +762,7 @@ def audit_structure_scan() -> None:
 VR_CONDS = ("jlens", "nonjspace", "random", "logitlens")
 VR_STRENGTHS = ("1.0", "2.0")
 # spec: pt file, injection layer, retained (predicts-report) subset size, and the
-# cited top5_all pins (condition@strength -> rate, 3dp).
+# load-bearing top5_all pins (condition@strength -> rate, 3dp).
 VR_SPEC: dict[str, dict[str, Any]] = {
     "1.5b": {
         "pt": "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -1093,7 +1093,7 @@ def audit_crosstie() -> None:
     s = cast("dict[str, Any]", d["summary"])
     pp = cast("list[dict[str, Any]]", d["per_prompt"])
 
-    # ---- shape + config identity (the cross-tie relies on the layer index) ----
+    # ---- shape + config identity (the layer-index fact is load-bearing) ----
     claim_eq("[G] per_prompt count == 25 (24 prompts + 1 control)", 25, len(pp))
     claim_eq("[G] jlens_layer == 19", 19, s["jlens_layer"])
     claim_eq("[G] nla_hidden_state == 20", 20, s["nla_hidden_state"])
@@ -1167,7 +1167,7 @@ def audit_crosstie() -> None:
     claim_near("[G] expB_carrier_delta_mean ~ 0", 0.0, delta, atol=0.02)
     claim_near("[G] expB_component_rank_median", 75166.75, crm, atol=0.5)
 
-    # ---- directional booleans (the stage-6 verdicts) ----
+    # ---- load-bearing directional booleans (the stage-6 verdicts) ----
     sep = float(s["null_concept_mismatched_rank_median"]) - float(
         s["null_concept_matched_rank_median"]
     )
@@ -1807,7 +1807,7 @@ ES_HEADLINE = {
     "1.5b chat L18": {"jlens": 2.13, "logitlens": 0.07, "random": 0.14},
     "7b chat L19": {"jlens": 1.250, "logitlens": 0.178, "random": 0.040},
 }
-# Scope split over the baseline-correct subset (auto = J-lens-detected
+# Scope split over the baseline-correct subset (auto = genuine J-lens-detected
 # concept positions; fallback = positional-window items with no detected concept
 # position). detect_positions() falls back silently, so the headline mixed number
 # averages both; the fallback subset carries ~zero entailed-property movement, so
@@ -1954,7 +1954,7 @@ def audit_entailed_swap() -> None:
         # (5) ordering at the peak layers: jlens dominates BOTH controls.
         #     NB: this is jlens > logitlens AND jlens > random -- NOT the strict
         #     jlens>logitlens>random chain, which fails at 1.5B L18 where random
-        #     (0.14) exceeds logitlens (0.07). The claim tested is that the
+        #     (0.14) exceeds logitlens (0.07). The load-bearing claim is that the
         #     J-lens direction beats every equalized-magnitude control.
         if is_peak:
             j = float(m["jlens@2.0"]["mean_dlogp_swap_answer"])
@@ -2386,8 +2386,8 @@ def audit_metric_correction() -> None:
 # ---------------------------------------------------------------------------
 # CHECK N: coverage supplements
 # ---------------------------------------------------------------------------
-# Figures that the stage-4 / stage-5.1b observations quoted and rely on
-# but that had no audit claim pinning them. Every one re-derives from
+# Load-bearing figures that were quoted in the stage-4 / stage-5.1b
+# observations but had no audit claim pinning them. Every one re-derives from
 # a committed `data/` artifact (structure_scan x2, verbal_report x2,
 # verbal_report_chat_6c x2), so this section runs identically in a default
 # clone and with the opt-in lens cache fetched — no cache gating needed.
@@ -2397,7 +2397,7 @@ def audit_metric_correction() -> None:
 #     headline ("the <=10% ceiling is k-dependent"), so pin every k.
 KSWEEP_1P5B_L21 = {5: 0.063, 10: 0.086, 25: 0.124, 50: 0.152}
 
-# (b) Active-atom occupancy at k=25, tau=1e-3: the median is near-full
+# (b) Active-atom occupancy at k=25, tau=1e-3: the median sits at near-full
 #     occupancy at both scales, which is what makes varfrac (not the active
 #     count) the informative axis. (min, max) of median_active over layers.
 OCCUPANCY_K25 = {"1.5b": (24, 25), "7b": (23, 24)}
