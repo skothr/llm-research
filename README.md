@@ -250,10 +250,10 @@ audits depend on, so every figure can be re-rendered and every audit replayed. S
 
 ## Epistemic discipline (carried over from the source workspace)
 
-- Every technical claim a conclusion rests on cites a primary source: a
-  paper-key in `theory/kb/index/papers.json`, or an anchor into a KB
+- Every technical claim a conclusion rests on cites a primary source by its
+  paper-key in `theory/kb/index/papers.json`, often with an anchor into a KB
   excerpt or note. The excerpts are verbatim; the notes are AI-written
-  digests that point to sources, and the paper a note cites is canonical.
+  digests that point to sources, and the cited paper is canonical.
 - Analogies and intuitions are tagged (`[ANALOGY]`, `[INTUITION]`,
   `[SPECULATION]`, `[CONTRADICTION]`), never asserted as fact.
 - Forum/blog citations are discovery signals only; they never solely back a
