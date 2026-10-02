@@ -90,9 +90,11 @@ arc may merge checkpoints 3 and 4 into one PR, and its plan must say so.
 
 ### Checkpoint 1: question, research, plan
 
-Produces the research question, the plan, and the branch the arc runs on.
+Produces the research question, the plan, and the branch for this checkpoint's PR.
 
 - Work on a branch cut from an up-to-date `main` (see the repo `CLAUDE.md`).
+  Each later checkpoint and re-entry starts its own branch the same way,
+  after the previous PR merges.
 - Write down the **research question** in one sentence.
 - Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. Every arc has one.
   Its length scales with the arc: an exploratory arc with no GPU run over
