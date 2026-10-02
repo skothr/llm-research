@@ -250,10 +250,13 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > third-party PII** (email addresses, phone numbers, street addresses,
 > postal codes), across 62 documents. Several documents paired a named
 > person with a direct email and phone number. It was redacted on
-> 2026-07-29, after about 9 days in this public repository. The
-> pre-redaction text remains in this repository's git history (issue
-> #133). C4 was
-> chosen because it is closer to pretraining text than Wikipedia is.
+> 2026-07-29, after about 9 days in this public repository. On
+> 2026-10-02 the pre-redaction text was also removed from the
+> repository's git history, which gave new SHAs to every commit that
+> descends from the commit that added the data (old-to-new map:
+> [`docs/history-rewrite-2026-10-02-commit-map.txt`](../../../docs/history-rewrite-2026-10-02-commit-map.txt);
+> GitHub's cache purge is tracked in issue #133). C4 was chosen because it
+> is closer to pretraining text than Wikipedia is.
 > That same breadth made it likely to contain real people's data, and no
 > privacy check was recorded when it was chosen. The repo's pre-use check for third-party
 > data ([`CLAUDE.md`](../../../CLAUDE.md) § Third-party data) comes from
@@ -666,11 +669,11 @@ correct and passing while the inference drawn from them was wrong.
 The jlens dependency is pinned in
 the MANIFEST (`581d3986`, "Initial release", authored 2026-07-01 — the multihop/
 association eval sets live in that clone). The harness was seeded at stage
-3 rather than at arc close (`6d567a27`, together with the Decision-4 lens
+3 rather than at arc close (`48a995d1`, together with the Decision-4 lens
 layer subsets), on the project owner's standing requirement that
 discovered defects enter the permanent record rather than being fixed
 silently (2026-07-20 / 2026-07-21 directions); the bulk derived-artifact
-promotion (34 files) landed with the stage-7 consolidation (`850b5173`);
+promotion (34 files) landed with the stage-7 consolidation (`ddb1931a`);
 the ~29 h → ~81 h refit-estimate correction is recorded in
 place with the original preserved for the same reason.
 

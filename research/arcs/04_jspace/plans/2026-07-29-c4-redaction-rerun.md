@@ -1,7 +1,7 @@
 # Plan: re-run the C4-dependent results on the redacted corpus
 
 **Status:** executed and complete. Redaction landed 2026-07-29; the compute
-half ran 2026-08-15/16 (Steps 0–3 in commit `a9df3a55`; Step 4 prose,
+half ran 2026-08-15/16 (Steps 0–3 in commit `3ea3dcff`; Step 4 prose,
 figure and inventory restatement 2026-08-16). Outcome, drift and
 the two pre-committed exposures: [§ Outcome](#outcome--closed-2026-08-16)
 at the end of this plan.
@@ -311,7 +311,7 @@ dependency.
 **What WAS affected.** The redaction is not length-preserving, so a lens
 re-fit on the redacted corpus differs slightly from the artifacts committed
 before 2026-08-16, which were fit on the pre-redaction text. Everything
-listed below was regenerated on the redacted corpus (commit `a9df3a55`,
+listed below was regenerated on the redacted corpus (commit `3ea3dcff`,
 2026-08-15/16) and the prose restated against the regenerated artifacts.
 
 *Affected data files (12):* `data/fitting_prompts_c4en_n1000.json`,

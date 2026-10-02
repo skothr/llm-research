@@ -119,7 +119,7 @@ on wikitext-103 vs C4-en fitting corpora (the `{,_c4en}` filename suffix). Panel
 
 **Regenerated 2026-08-16 (C4-redaction re-run).** The two `_c4en` artifacts
 above were recomputed on the redacted C4-en corpus (redaction 2026-07-29,
-`../../data/README.md`; regeneration commit `a9df3a55`): the C4 lens refit by
+`../../data/README.md`; regeneration commit `3ea3dcff`): the C4 lens refit by
 `examples/jspace_rerun_queue.py` (3.14 h) and the scans by
 `examples/jspace_rerun_scans.sh`, after which this figure was re-rendered.
 The two wikitext artifacts are C4-free and unchanged. Plotted values moved in

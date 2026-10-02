@@ -4,7 +4,7 @@
 > fitting corpus this observation's lens was fit on carried third-party PII
 > and was redacted 2026-07-29 (`../data/README.md`). The lens was refit and
 > the whole metric suite re-run on the redacted corpus 2026-08-15/16 (commit
-> `a9df3a55`); every C4-side number below is re-derived from the regenerated
+> `3ea3dcff`); every C4-side number below is re-derived from the regenerated
 > artifacts by `examples/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`). The wikitext-side
 > comparison values carry no C4 dependency and were not recomputed.

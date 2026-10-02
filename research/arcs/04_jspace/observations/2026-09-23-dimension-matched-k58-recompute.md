@@ -9,7 +9,7 @@ Model: Qwen2.5-7B-Instruct, nf4, current wikitext lens
 30 prompts per run, 8 random-baseline draws per position, seed base
 30000, 2000 cluster-bootstrap resamples.
 Three GPU runs of `examples/jspace_paper_metric_varfrac.py` with the
-new `--k-fixed N` flag (commit `83b452ba`), each about 15 min on an
+new `--k-fixed N` flag (commit `b1a6331b`), each about 15 min on an
 RTX 2080.
 The 1.5B side is not re-run; its numbers come from the committed
 artifacts and logs.

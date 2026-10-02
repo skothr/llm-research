@@ -3,7 +3,7 @@
 > **2026-08-16 addendum — C4-redaction re-run (read first).** Only the
 > "Qualifier (added 2026-07-20)" section at the end of this file touches C4:
 > the C4-en lens it cites was refit on the redacted corpus 2026-08-15/16
-> (commit `a9df3a55`, background in `../data/README.md`). **Every value in
+> (commit `3ea3dcff`, background in `../data/README.md`). **Every value in
 > that qualifier re-derives within audit tolerance** from the regenerated
 > `lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt`
 > (`../data/audit_2026-08-16.log`): the C4 @10

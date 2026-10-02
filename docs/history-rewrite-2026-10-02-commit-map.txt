@@ -1,0 +1,287 @@
+# Commit SHA map for the 2026-10-02 history rewrite (issue #133).
+#
+# Third-party personal data from the arc-04 C4-en corpus was removed from every
+# commit in the repository's history with git-filter-repo. Every commit that
+# descends from the commit that first added that data got a new SHA. Older references to those commits (in issue
+# and PR comments, and in committed audit logs, which are kept as recorded)
+# use the old SHA. Look the old SHA up in the first column.
+#
+# Columns (tab-separated): old SHA, new SHA, author date, subject.
+# Only commits whose SHA changed are listed (276 of 439); unlisted commits
+# kept their SHA.
+7a08db979aff7529f2b1ff5ee8be9c3275ecb77c	0d3ee4d06101bc0395f19cf8e81787747e116f0a	2026-07-18	jspace: fold eval method notes into H3 observation
+e513e0da4b1beeff2986c6c632e0c0a6cda9ade3	33879548a6a41d87e4a31a69bdcca883f6a0530a	2026-07-18	jspace: stage-3 readout scan + first observation (cleaner early, not earlier)
+f9d37b3483e0deeb3c1771b31aef419e08509b15	3e68c4a7f3c3c9d896e7fd47593efbc5591848a0	2026-07-18	theory+research: ingest gurnee2026-workspace (J-space); scaffold jspace arc
+eaed3924abc0d6d3dd80c153740a33fca3720ca4	4c554e1f9ff16ea50653275b43ee5026a1611159	2026-07-18	jspace: record design sign-off; add stage-1 probe + fit-calibration scripts
+90fc82895a60422a17c32dd27a6ea0c1af2b2037	7463153f6be559563dea9587fd710a814b41d070	2026-07-18	jspace: record fit-cost calibration observation + plan addendum
+290ffc6f6c2509d3c82a9d6531b3beee99cc3371	9a6e58b237b10a7f5ef1c02371a016cf73881aa7	2026-07-18	jspace: freeze fitting corpus; add fit + manifest scripts; lm_head offload
+e0d2eccd0ef6aa9bf7e06862089a528d231ea681	fbac86b0c8a13a78a9f54af5ff39f2a17ecbbd77	2026-07-18	jspace: intermediate-concept evals — H3 confirmed, first positive replication
+40b41eeac68e833bfeea61e1cd21b82b51d3b586	012ef47669d9f87e5f8911d462ea60fc10f7c589	2026-07-20	jspace: C4 corpus-sensitivity check — workspace band invariant, early band sensitive
+5fce94152c2626d47b4a43be81645fecd7665c1d	3103c3b7acce10538e740be4b074198e049e66fa	2026-07-20	jspace: stage 5.1 — verbal-report swaps (1.5B replicates attenuated; 7B confounded near-null)
+3c3c96067a89cf9edb04da085758851da0753cd3	46db5a6b59db8bc799fb42605c07a73291f42af2	2026-07-20	jspace: record corpus provenance (Decision 1 satisfied) + C4-sensitivity follow-up
+6d567a2757aa17d9f2bca6bcebcc020809db8f58	48a995d12196d53bef95b160132ce68f468c1c9e	2026-07-20	jspace: post-hoc audit of the 7B overnight run + Decision-4 lens subsets
+b1075d2ec6a6351f5b460bc3c0b56e3b749ae68b	88424cfbd9f5586a6cf29e70615ee2f7abe074c0	2026-07-20	jspace: stage 4 — J-space structure scan (occupancy ceiling replicates, kurtosis onset inverted)
+90d1a93151566b2cd037d4e0fc951afbe06e78ef	cf79b9bff26903fddc2b42f016ebe6b1044bc404	2026-07-20	jspace: 7B scale comparison (H2) + fix eval output-path clobber
+84bb3dcc4dea0591c7357b030bf6e9d0bd1d0b5d	035392b1a400bd65ed308dbfb089166c1286dc21	2026-07-21	jspace: stage 6 — NLA cross-tie (verbalizable content lives outside the J-space component)
+5077fd3d71a13bca5679a8f81880785dc40b971a	460686f636e450ce67a72b0baf4ca5283927a3f4	2026-07-21	research(embedding-atlas): audit-back the finding-6 '的' cosine claims + close-out provenance
+3d8f9fab16d09fad9ba2175a53008b8f1109d0bd	4639b6b7a1009d127f74fcfca469e76b2b76be74	2026-07-21	jspace: stage 5.1b — 7B un-confounds vs random; paper's 59% middle tier is a clean null
+d984aa442dcc5b8350d125ecb7d47c0c8a1ad66e	63c00c671ff6005ed6b067cfbe448e74297c095e	2026-07-21	fix(examples): matplotlib stub drift — import Rectangle/Circle from matplotlib.patches
+a64c2206e3a9ee8371c1211791aef46d3cca73a2	6af678e7d388bac98f8eb0306b699a95215f5c3f	2026-07-21	Merge pull request #20 from skothr/arc03/1-embedding-table
+4ee38bd3fa5b9a5d4b70479ca59e85aa47ee2bd4	702c634cd358b45fb2a6592f7300a86991e95588	2026-07-21	Merge pull request #24 from skothr/worktree-embedding-atlas
+58bfee0ac9b28df63fb89f01a51486b83c4a88e7	7bc6729f609b9323ce59381f789a579916626a79	2026-07-21	review(embedding-atlas): PR #24 review fixes — stale evidence label, snapshot annotation, neighbor provenance, comma-calibration audit claim
+2400a95f14a1ad8c963ee6076484929475a634c3	88a0c63e5bbeae3f04dc4505b06a9ccc7a927c19	2026-07-21	Merge worktree-embedding-atlas: complete arc-03 stack landing (#21, #19, #23 content)
+93a2a0b5b9b591f97f3e9cbfc319bdf2b0e5d82a	b4df62eddd93dddf18bc56008dc3415d756c3c8f	2026-07-21	Merge pull request #19 from skothr/worktree-embedding-atlas
+4b8f1fde9205ff3bac540cc9fbfb64962b569b28	b97b397c1e2d456c91f6b10acf753fe04884b44b	2026-07-21	Merge pull request #21 from skothr/arc03/2-renumber-lit
+0c06b19799b5cee47cdd2cf18ad99951cf3cf73d	c6266e6b10b3590c7c400173a940b74259f6a1fe	2026-07-21	docs(embedding-atlas): norm-fraction terminology + finding-6 cross-script clarification
+6893436d225d4576c27c331872c7e849bd75a285	d14ce751bd05cf243e7794e4e7594cb29a8dd74b	2026-07-21	jspace: figure suite — swap causality, corpus invariance, NLA cross-tie, emergence
+88b53e383f6f9e5933347d31dc149469f108e186	d7d7e848eb3881e940f1b41ede76cfbbb22c27e2	2026-07-21	Merge pull request #23 from skothr/attribution/arc02-process
+7e8d15373d1e2fd339275b9d03d9fa3a956136fa	da4651e972ad29a759f9426083026406291cc0a2	2026-07-21	jspace: quantization exonerated + rich token capture + unspoken-words figure
+7940e33555023aa57cfaa6e1969ca4ff59ed47d7	e8916cd10566789914128016739f15be38011286	2026-07-21	Merge arc03 stack branch tips: absorb stranded #21/#19 merge commits (content no-op)
+ef7f0842035a1f303c35222363b737a250411e3d	49fb82e53c7b843d6d99b50481a1f38daaecc028	2026-07-22	jspace: apply 17 findings from the multi-agent PR review
+b2c76bc38e21f1df4db8fbdb2f43430170798e78	6eaf487f299040752d9d0647f50da75210323bf2	2026-07-22	jspace: figure provenance + overlap sweep; persist verbatim-probe items
+ae9f9b2555322f54aebb1f3b7ebcf48196b7ff73	80d1725eab2f38c30b901554b6f26f4066317c73	2026-07-22	jspace: fold in gated 7B results — relational effect replicates at 7B (L19, 7x token steering)
+6550fb64ef289d3b7b24de0ec30796e283eaf39d	89c2b35aa57fd6eddb5241e650d35abee84e7553	2026-07-22	jspace: rename arc dir to 04_jspace (numbered convention) post-rebase
+c8386b426f7a6bbddfb1e631db0b7b31df2d297f	8f4c427f28c7e8058a5b97f6038c817163b8676f	2026-07-22	jspace: stage 5.2 entailed-property swaps + H1/held-out exoneration
+b2d75b93dca22a5b63bb4413eb612fa3d5cec914	a493c27a0ab1d6fdcd81b22297d9f719366effcd	2026-07-22	jspace: verbatim-prompt probe + arc synthesis + cross-arc note (stage 7 begins)
+850b5173aa19bb1ebef4ab2c1a0483036c1475a5	ddb1931a0cf86a07aed0948381324e2e11d7967f	2026-07-22	jspace: stage 7 — audit consolidation (450 checks), derived-artifact promotion, entailed figure
+c0c71b8693ae63e65ec09f31d954b0f1edee28ee	1a6947555809a1d21b64bda2507dd43b664975de	2026-07-24	jspace: full-arc reevaluation under the corrected methodology — robustness axes re-verified in the paper metric, 5.1b null certified, two-scale norm-bias, figure CIs
+5e93246f3c11d81989def42eb315e0b7f04f1384	56c5e046f703da33b350de8c8b2fc2f31111f75c	2026-07-24	jspace: attribution-fidelity pass — restore reviewer initiative to the arc record
+e482e57effe310f15f32f1755acc7bd3e0dc1f88	899c468641ce87e5a9dca8fdc2e21a740f2968d9	2026-07-24	arc03: attribution-fidelity follow-up — origin of the degradation-window forensics
+906eea177817afcadb3d6f22539b49f456b79fbb	d7b4e70b5591a2cd0f24e36dab7f9e10e00e5235	2026-07-24	jspace: metric-fidelity correction (issue #26) — paper-metric ceiling recompute, significance certification, norm-bias quantification
+f1aa60f75776306c920ea66d3d3ae280329927f5	034bd05d558779227928571733befe46095661db	2026-07-25	jspace: F01 resolution — K-consistent paper-metric recompute, all 8 artifacts regenerated; verdicts unchanged; audit 978 PASS
+110c33e529de51722a05e6a89eb39cf981e28f2f	467d2507cbccb1fd523f036bf8d9f1a6bfa3acee	2026-07-25	Merge remote-tracking branch 'origin/main' into worktree-04-jspace
+a7e68f70ebac862524bc5a39b878b19f34065a65	7f2272ef2317e07b56fd51648d661320c2c8f7f8	2026-07-25	Merge pull request #28 from skothr/worktree-arc03-attribution
+ec2be483996a078839e1635b7943d9b6e4be3ed6	97517607e5c715c97b75ed109f78c2231c0fe9ae	2026-07-25	jspace: final-review pass — 8 mechanical findings + 5 record gaps applied; audit 977 PASS
+4d86f0774d740f9b655daa676988c49c0110ba1c	dd9119d3c345722f58d29dd5dc6b1028fbf33673	2026-07-25	docs: 2026-07-25 backlog groom — verdicts for all 17 open issues
+c63f2803a61396310dee545ed41416d8c6e6d15c	e10925af527d8d343f79645ffc88f5397fabeab6	2026-07-25	docs(groom): record user sign-off decisions
+4ba7e85886d4198b5d118efa8507b3ac87ef4940	f05a1942794cc9c4c7f658a34d08f6d1fe30dd99	2026-07-25	Merge pull request #25 from skothr/worktree-04-jspace
+f7dec11c12b844e6413cd87cc144ffd7cec675de	6d401e3dcefe7096cf702cab8c13dc55ef6a6d9f	2026-07-28	docs: claim-review pass — methodology at the entry point, weaker true status labels, McNemar power correction
+e59e6626c0b80559c578ec3e5134dbf9959b15b7	ceb2a6da5b49ca5ce4c6752ce0e0a13542df05fe	2026-07-28	docs(groom): make the arc-04 limitation anchor line-number-free
+510cf0658564098565bb333c119cf417ffbc0fc3	24474b055fac6ef615f71e196fdb0cacc508e804	2026-07-29	arc-01 README: kill the 8 dead private-tracker links, add an ID map
+08e2e400ca0d1302ab48209b3eb3cf735ebcbac9	2bba9d4ed01bdf318d1e63776fae79693efd1e04	2026-07-29	feat(jspace): pausable, VRAM-gated queue runner for the arc-04 lens refits
+0a925ed5addff11c93ac6065e2faa8f3de2bfd61	2c263b00a332ad287354856a1ce1a68a1b79f25c	2026-07-29	docs(pyright): document the per-worktree .venv link; correct 428ea48f's claim
+a3ca6f621c1727eb1fb8161c2e7d1633c37407f0	315750fb82b5ca3c85db8046493fd0e28e41cb8f	2026-07-29	Merge pull request #34 from skothr/worktree-pii-remediation-2026-07-29
+7ad221de01d5da1f69c97b074c24b615b8174c4a	38e8855ce02a387bb540e9ca221c5bde44676088	2026-07-29	arc-01 observations + INVENTORY: make MAIN-N references resolvable
+a3b3c6ee17c51e4b70945cc10cb9a0a6e2cef405	428ea48f49bc772c9e023a641e99c7d186d59c35	2026-07-29	chore(portability): make committed configs and script defaults machine-portable
+c3f5413b61226a218c434070a61e4193d14b9f0a	471ea6c769137889418e3576b21f39f8fb4060b1	2026-07-29	examples: replace private-tracker IDs with the observation files they resolve to
+c0818e60e5abf8e61aac83e0f5dd6bd011e4d81e	4c58494ae0b4fcb8fb805a3beb6ec1a10a877ebf	2026-07-29	docs: apply 28 findings from the adversarial review of this PR
+92a55d49cf4438f847d3ee690df12153052d42be	4d77cc7169257e5d7e4f436c7e28eb23fa32e51a	2026-07-29	docs(pyright): the missing-.venv symptom is not always missing-imports
+4862a5776dd59efc0c799841601682a305ef50fb	7953b33b6c61afbd5f1bb887148a089996a4070e	2026-07-29	Merge pull request #37 from skothr/worktree-attribution-fix-2026-07-29
+0fe49f0798e30f010ecbc1c6ed9d8afc03482274	8592b00f0e0674de8d791aeb42b696f713d40dca	2026-07-29	docs(jspace): --pause stops the fit immediately, not at the next checkpoint
+a4a664158122f348c0cfa79270107fa0ad2de603	8e43d6b908ea9a4057dcaa6f8cfaaac3493b67dc	2026-07-29	Merge pull request #29 from skothr/worktree-backlog-groom-2026-07-25
+d69e118597f123ee2e0e45e9ff8f5b5ac0be5a71	90b6e855605d8676680fdf1073be522726e94830	2026-07-29	fix(jspace): de-duplicate two audit claim registrations; correct the clean-clone counts
+362ae6fbb18012ae33df459c42b428526b963cc2	9402f08022ded2e8fbcc7274b1d13ee99026a259	2026-07-29	docs(research): repoint the attribution template to arc 02, rewrite arc-04 attribution, source the vendor-degradation claims
+78fd53be8365146a7cc99cc7d2919affeb7809cb	961e9357bb56466dbcb176f2446b319fa98d555b	2026-07-29	data: redact third-party PII from the C4-en corpora; disclose, license, and plan the re-run
+b5e3dc19e42598f64262cd94cf3677e6be05da41	ab4a4c8528a52a1c1660da531f85691698b8f424	2026-07-29	tests: replace real C4 addresses in fixtures with synthetic values
+9f1f2eb40852c07e334f72e2b68cf8cb66017507	abdbf2f4e122112ce0d5bbf45edb4d554bdf94fd	2026-07-29	arc-01 README: name the source of truth for the F3 polarity contradiction
+55d8044d7fbb5ee59a7bd51f33094df96b795d33	b1ce9b0ba5637a7464ddeeed9c1f6a2a501ff5f8	2026-07-29	docs(jspace): correct the re-run cost estimate; add the missing § Cost section
+da3c1d48a2c191a7ddbbbfb6cdfb7ec97561386b	bf1c028b4eef4163cc9e3b97ca5d933e6daec683	2026-07-29	fix(jspace): record fit wall-clock across all segments, not just the last
+314bf0d18aaca96731045042dacc228f02e19ae8	c2d9a249e0f86ce5817aa38f89047519a4eebfb7	2026-07-29	docs(portability): describe the local model cache instead of naming its path
+79b7e8f9b3f2f4a8d7f921f4b2fb935732315022	cae3b080f4b116734ded226cc9aa614cbcd719ff	2026-07-29	Merge pull request #32 from skothr/worktree-claim-review-2026-07-28
+9c0087864c7c7b117df99c2b8cffb1d9c69ba855	ef751c7f0c20e01ac25289b41e777243436dca48	2026-07-29	examples: drop 8 unused `import torch` from render/glyph scripts
+b563eebf06ecac184882a7ce1884a47b1cd822b7	0557e7e074753e76f3521d1d8261e2fdc6ffce58	2026-08-16	docs: refresh the top-level audit expectations alongside the disclosure
+4325102d348d1535acbcfe33ee4de21816b5d79f	10e1c04be404b19fd85e9e1390ba18e802591e96	2026-08-16	fix(review): round-2 fallout — exact cache containment, truthful ckpt comment, 1.5B labels, reflows
+05704b46ce972eba912c5eaae1dbadeb65349823	149b5416dbdf514b81bc92e06d44a20a7e45777b	2026-08-16	feat(jspace): committed runner for Step-2 derived-artifact regeneration
+9303b6e3936f19fea0944636ea0c962893d1b8c9	15fbf5aaf677c5678cd4eeb72294dfce7341a9d0	2026-08-16	fix(jspace): .gitattributes lens-size range is MiB (loop-2 sweep find)
+30760b6d6d5264eef5557f788d75a376d63cee7a	1b93f3071f1d8f63c44086ab64bfc3fba42e5252	2026-08-16	fix(review): seal cache/logs ignore hole, path-aware LFS stub hint, lens-provenance wording
+5a7f767a312c268dd95663d93997006b0ff8ae7e	1cac07d7fb394c2e265471d086c3a3ac23fea02c	2026-08-16	docs: correct the lens-cache size unit (MiB, matching PR #45)
+dba0448e3599a9830f1530d048182aef65303193	1d73c4473dd108ce8a8daf09f71bf6e2ce60d440	2026-08-16	feat(jspace): add --pause-at-checkpoint — pause at the next checkpoint write for ~zero rework
+74d4ce748d0761966da6cc380b78f25282ddf171	1fbb5b2d1e0a643363a4c8cf2aec86cd81234105	2026-08-16	Merge pull request #45 from skothr/worktree-jspace-cache-commit
+87cc4039897c1fb3ea3e3393cb7afee91f2d1c0d	22f59f35333eb7cf802d54f3747f0a5330587347	2026-08-16	fix(review): retire the stale cache-only exception bullet, precise lens labels, reconcile audit totals
+a4bb5044f0f3142c87404e8af0e0cefa4941d061	2407713c95df737776fe4d54449ec54597c61c10	2026-08-16	docs: surface the closed C4 data correction at both entry points
+6014c6ed826cd9a0220a712c44b21e59062cc192	2707e0e572a3bb76e64b8ceff376a0e03ecc4d6c	2026-08-16	fix(review): worktree-infix strip hardened, truthful pyright-base comment, partial-breakdown marker
+63cfaabc193237c74e89e43a0f07a8624f442d4d	279c6da93d633b28c8d15f1f1000e2a34e7e0f4f	2026-08-16	fix(jspace): label the lens-cache size with its true unit (MiB)
+6dceaf85de806fc268e466d2e29d87de3258f351	29f1d2f2abc59c081854835cf956837c4263b724	2026-08-16	fix: anchor the lens-eval default dir on the file, not the CWD
+43e5b9c8e6fab7ecc85e90844de5e26a4175f736	3cbc15b3f06ed9f80595f16da75624a58e9ba1b1	2026-08-16	fix(review): correct ID-map counts/quotes, fix the F3 polarity slip, repo-root docstring paths
+a9df3a55d5b98668ad0c25d6f6f6265a75d841c9	3ea3dcffe2bd2084342e0c3c3873110011309b82	2026-08-16	data(jspace): regenerate the 10 C4-dependent artifacts on the redacted corpus; re-pin 2 audit values
+44746fcc8eb85d53a7b20b4b93c1877bd3a1844b	544cc17e0c5f0d731b086a164a26513a2f90f7e8	2026-08-16	fix(jspace): default-deny the cache dir; close review doc nits
+2709e71b9d083bbb739c4cb3642c116ea710a913	5edaa9c950c4271142bb989c6f2c000dc3682847	2026-08-16	Merge branch 'worktree-jspace-c4-rerun-2026-07-29' into worktree-issue-31-portable-paths
+72f6f67dd19855a9d128ed16b38461960668fc92	733e0493b2c3b81b1f16a1d3ec30cdd857de759f	2026-08-16	fix(review): round-3 wrap rebalances — header link line, capture-docstring widow
+2b22cc088dbda778bf62ecf58641ab0486b7d220	7370d9ab2b92b1550c3a58d8191aaa8e8230bc0c	2026-08-16	fix(review): round-2 wrap and enumeration fallout
+0670b3336cb6ffd2156c0a2fd76bff855d1f8ea9	742d3cec3f269dba5b456161c1d18cc84921bb17	2026-08-16	Merge pull request #38 from skothr/worktree-jspace-c4-rerun-2026-07-29
+c74d650d5471a48c415710ac8972e0cc5338ca74	816bda47396726066d03389c6aa34e0a1f5acadf	2026-08-16	Merge pull request #43 from skothr/worktree-issue-31-portable-paths
+7deb42871563d8b4425a35ba642fc01f0b13d6e6	99920a3d04c9381121f609bf160804e80b528e85	2026-08-16	fix: close the two recorded review nits
+56e59ed91f121568d4224a342bfd3dcc93c60b40	9fa23a02d3eb898fa650a116ed885dd53a881309	2026-08-16	arc-01 README: close the two recorded review nits in the ID map
+f2bac4955f774bd0d9c8fb50d1fde67ae005342e	aaa7eb3d14fbc92a8c364833e92c7689f8e3a19f	2026-08-16	fix(review): pyrightconfig venv recipe now matches CLAUDE.md's three installs
+164a8db07e992836d073695485a1d27ca273c086	b656bdbfd11a6267411d6e2dc663ce95677a71df	2026-08-16	Merge pull request #46 from skothr/worktree-entry-point-disclosure
+3df5572b67a5bacee215854246d580f50622def2	cb130add5c6b6441b0d9e6f02715f6cbf13931b0	2026-08-16	fix(jspace): repo-audit findings — lens-range ceiling, unit conversion
+34b73303f6c0763143351108b304382498bdc5f8	cd17c1049d6daa87e3b4ef78b6b6ed90db10a116	2026-08-16	fix(jspace): pre-merge sweep fixes for the lens-cache PR
+059ad46a9b81c96e5d4ef5ebe8440118371b568b	d6219065f9ad5db5724e3d6f44183c6905a862ea	2026-08-16	Merge pull request #41 from skothr/worktree-issue-30-tracker-refs
+fcef04706a4de9a0fc837f0811c330884f53db09	d90988bce8f3aad143d329e22c0e704116664527	2026-08-16	docs(jspace): close the C4 data correction — restate prose against the regenerated artifacts
+d968afdab532effe9f4bb190f838a75ebab97906	ddcb9fa22f8cd1b29ff350a018edc2dc98bdd8ca	2026-08-16	data(jspace): commit the redacted-corpus lens cache — three fitted lenses via LFS
+b1844353b80262c8a255d95660f5c368ffba5302	f09bd8d0619e457706457b7c9a23492649adafd9	2026-08-16	fix(jspace): derive the runner's eval-dir pre-flight by importing jspace_lens_eval
+4b82e7fa73aaa93ca98a6d3fadd55034aed498cb	f6461e3e0b1bba2c04a0f485eee8d2c95c65f3d1	2026-08-16	feat(jspace): make the lens-cache download opt-in per clone (.lfsconfig fetchexclude)
+7200cf9fd8d3880a4ad890e65bdbf5f4bd90fe2b	f746fbc41a6364b525248f0ed80520373d2c7cd5	2026-08-16	arc-01 README: add the folded MAIN-347 to the ID map
+d13f638789b43998582cd85d5eb0a4c7114e1b78	fe3e84af34233608b8fd7eaa976ec444041c419f	2026-08-16	docs: review nits — count the nf4 sidecars, flag 978 as unverified
+e57a08769cf6338cda19d7d071517312fa9120f2	0606565f66ab80637f6bef7e07962c6438b14901	2026-08-17	docs(theory): scope the rename parenthetical to what the PDFs render
+96532dd7050c42a5026920990c40083e0237cd8e	0ad2849b9d6b9e93baf41097e91056d56d81a999	2026-08-17	docs: round-2 top-level reconciliation
+292560e497cf9cbb809c25c3541983bce1026307	11e561d1279baa8ca3913a0fef1aa9c41dd9b484	2026-08-17	docs(claude-md): codify the showcase-vs-history principle
+0146909c11f8fbf15f37beb75d0c840849eac49f	2a90c5def56a4ebf160adbaa8da40fde586946db	2026-08-17	fix(research): honest editorial disclosure, power-floor scoping, pause-quote placement
+2e30926cf88036913a6952dc1458aa125cf1e3ca	3bc8dcfcb2b97a1fa6cf6124514e68a48798c1ce	2026-08-17	docs: top-level docs catch up with the four-arc repo
+a98171f10fab047c877526b05069f32f58c4ce6a	5af592ce7c7c0da80793fdd76fcddf7afaad043b	2026-08-17	docs(theory): sweep stale section labels (79 sites), extend the linter, fix three wrong targets
+607372d116be115b14a01c2130bc256b25702d2e	5eae7c2bc2f81e462592fac7793cf9047226a395	2026-08-17	docs: round-5 verification residue - divergence note, list-marker hazards, label gloss
+f1e194131e11baa29f5b43917247dabbcafadbe3	67a4e6c7beb88c797455abf9c28b2311a23f324c	2026-08-17	docs(theory): repair six wrong-half citation fixes, rename five stale key aliases
+a56f042b944d7bdeb43b5e828dbb03556ebf31f7	792b11431abaefd971026f18866fa35663acdec3	2026-08-17	fix(arc-04): audit +30 checks (951|7 / 986|4), cache-status drift purged, units
+16dfc5c1e278f745c01a07fca05d756d10b7b23e	995e4d70dfa108c1538d81c2cf163ec7c7c35524	2026-08-17	fix(arcs-01-02): complete the stub guard, byte-replay prompts.jsonl, verify the pause account
+2fc4ee035ce5da5fde50b03fb6f2d38ac71dddb8	b171257588b7b6ac56fdb13225e57afe048d3943	2026-08-17	docs(theory): anchor-integrity sweep, extended KB linter, entry-point rewrite
+6352fb8fa8ce6ce27e75d116c3791894e517ab0a	b195b4fa2269b4da728a74da35f06b2b8afaecf3	2026-08-17	fix(arcs-03-04): check-inventory B-N, visible-correction restore, attribution alignment
+0c703baf68df88fb6975aaed59758dca06115315	cba9e363ade6c277fe8e4f8619ee52b57e48ae1f	2026-08-17	fix(arc-03): audit to 99 PASS, F-T3 corrections, stub-aware loader, LICENSE-DATA
+ad8bc8993792163121296f01fc911f4b0cfd3142	dcf2ba3eedb4d969f1ad0112972ddd2f8405fd2e	2026-08-17	docs(research): codify attribution, data-vetting, and audit conventions
+034b566e91c9cf57f39add922a8f8ee0aef16bc0	e188c3037e5f5b0983273ce9dceae35548f15e89	2026-08-17	docs(theory): correct the divergence note - one glossary key renders, not two
+b7e709ddf9fa96e250a5752bdb89fe0713827494	ea9774b093e832ba59c2e00bc09bfc2c4cdafbfd	2026-08-17	fix(arc-01): stub-aware loaders, audit to 196 PASS, errata block, attribution retrofit
+17dad8ae99525b335c78b2ce1004e98b0a737773	f185c08c0db7e8f88b81f362ea150e678897cf89	2026-08-17	feat(arc-02): first audit script (102 PASS), hash repins, prompts.jsonl, LICENSE-DATA
+6c349c9ceb64cb7cecdfee173ad2aad8a7a44f7e	f3fd235f82811b5f7ea98cbdd9500d5919fdc6c6	2026-08-17	chore(gitignore): whitelist the dated per-arc audit logs past the *.log rule
+07d99124d387b38625df9fea9732f8a6b2bb7cdc	0a758aebbf31aff5c83ea9d63e8a5c4ff9850352	2026-08-19	fix(research): withdraw an over-claim, mark seven quote cuts, compress intra-branch chronology
+c446ff97dd22f7a479988e0dc36e577503bc196c	0adf98cb793442f725f7d4ad196252fede9afbc4	2026-08-19	fix(examples,docs): guard every audit parse, add the missing provenance claim, correct four doc claims
+53d3ff9b20293dbee1c46e5b8b7c35d3dfbf53ec	5a4045649522eac87d28ea6b0ead94d6023dd1c2	2026-08-19	docs(research): state what the transcript record cannot see
+3e2ea9350d018b6f5d19c533d8f9460197379721	5e175a4f03873862c3593a2db8d88ea2281a35ea	2026-08-19	fix(arc-03): withdraw the unsourced "pause/resume calls" attribution
+ccb5438b8ac02d3af1b7de4767bbe595253cc2a8	96a464cb0361ca6513f15c279c185d8c9a6408e8	2026-08-19	fix(research): scope absence claims to the record, repin arc-02 provenance, correct twenty prose defects
+7f34573a58ba59fcd7c0b0909a61b1f25089e9a2	98d75aab24b8ea72ff2f6bde6380cbc4329b1213	2026-08-19	fix(research): retract the "lost transcript window" - nothing was lost
+1302347ab41146b7dda5cc8d9ef02f27a2162347	9ece252f7d307774334b9f4fd40aaf320a953234	2026-08-19	fix(theory): unescape %, restore two hijacked glossary entries, repair 31 dangling anchors
+c56c6f1e97409714ad2f3badb18290593e95d2d1	a81b3dcf1f3bb3d607cb26e2c3f1cd26752748be	2026-08-19	fix(research): move agent-produced findings out of the user's attribution
+b2d39f20c8d65eb32d104df032084841ff597f35	aa0626a50944ec686a182051024adda27e252509	2026-08-19	fix(examples,docs): guard the last unguarded audit read, correct repo root and manifest provenance
+1c4a85dd567effb4a0bb87892e4f9f1bcce29718	c3dee38101ec849ea64d86ed00fc3f58d896510e	2026-08-19	docs(research): recover the arc-03 close / arc-04 naming turn
+3bc251341766beb04c3aadba7c548899e6fe9943	fe2f61ed2f9f7f05e86eaefdbfbec27697f19897	2026-08-19	fix(theory): repair six wrong-half citations, widen the linter, escape generated tildes
+e72efec5cdfd42032b4583c769e1122dc16a5ee4	7906c8ecb900e31f390dcf9eed8ca8b43f8002f9	2026-08-20	docs: fit process docs to the research-showcase vision
+82cffb2a23a93223ae387ee47d83f289b356b9d1	7f60cb548427a49efdb180cad6a087db9422252b	2026-08-20	docs: review r1 — resolve the attribution reference pointer, checklist wording, tag scoping (4 confirmed findings)
+2d85937fc78157bfb8a04b51d8994c5f4e9c6759	eec3aff0ecccfb3b13801bd3048f9be0974d1fd3	2026-08-20	docs: review r2 — state the Limitations/Attribution heading rule as a requirement, point at #57 for the retrofit
+84ce4c682ecfae4f661a74a1dde9111d670b03e2	a945d62a572d326ae4ccf6d6ed1d929894c88d2a	2026-08-25	Merge pull request #63 from skothr/worktree-process-docs-fit
+56dcb2b5f004677d37fc708249838459515d5994	40a92d5be3622347ee8ee3ebbb5b5e6cc5977836	2026-08-29	fix(review): round-3 nits — wrap the 90-column claim_eq like its sibling, guard message covers present-but-non-numeric z/p
+4ac3332e07a95d58c66fe241be2cecce58a24929	75dac6f65afda14d5df19ab54412e591aa09d327	2026-08-29	fix(audits): post-verification consistency fixes on the salvaged set
+29f6845e807d8e77c59635d17f378105da1141eb	7bfe22a0e3e94ac4e656e6d5f2a21c587c8c987c	2026-08-29	feat(audits): salvage per-arc audit/loader/licensing tooling from the closed #58 branch
+09fa3465e5764f5593ad60e0e183749551328107	8109c336f87e6df5132c95a305a1529d3cb0c2cb	2026-08-29	fix(audits): review round 1 — write-guards, dig() contract, falsified figures swept fully
+98524b27ec36d08f7e536ddf58a470252aa11e5a	83f7c4a19d74b1721b4afc40a8453b2d5fd17409	2026-08-29	docs(attribution): retrofit arcs 01/03 to the standard ## Attribution shape, transcript-verified
+600df0f1146f35dd5872795a7c36ef0467f1ffc9	cc82046c67845ba6bccf3af59b29f9dca1e0c7a1	2026-08-29	Merge pull request #64 from skothr/worktree-salvage-audits
+bec0b953de0c92965e3c286ece5bb87d7aef58c2	dd9135661920eee57347af1fe9abe6b2795b595a	2026-08-29	fix(review): clear remaining theme references, rewrap two long lines
+d2032dacda8935cd330f28f4eb902d50dfc514ca	f60ce1aaf08d963a1644e069302de3f1c5d9d398	2026-08-29	fix(audits): review round 2 — audit_c dig() guards, consistency of the round-1 fixes themselves
+e1c50fdd8c9dde6b9ca7d282b0910852b559db79	0403a0cc2c63d66a0143fedffde3367a2d41df10	2026-08-30	docs(archive): transcript-derived Attribution for the April probes
+90ba568dafdd81f0109bdaeb1ef928800b14abe4	0b4e7f0575ef5905b159ce1674d64a152943ef21	2026-08-30	Merge pull request #67 from skothr/worktree-attribution-rewrite
+7d090beb4a2988532ee5c9acd1d76e266b24bacf	2326c56c3c2416b78fec1c57314abee322dc7e09	2026-08-30	fix(review): round-1 — correct L5's UNVERIFIABLE attribution
+e386d8eb86626a57b03b326371c4e245f9942e85	25fe8224855e9600099ab3f2b3c949c574a46b0f	2026-08-30	docs(limitations): every arc README carries a ranked ## Limitations
+4308a92e148322c9c1d055d03f6329586ad79205	29b5be4aa79f8266480a8114e9e7351d1d7577b5	2026-08-30	docs(process): canonical arc-README section set + arc-02 Attribution
+7fe0fc2eefde445dcdd5650730c86fb8d131408a	29eb00b3e54a8bd272d6b5289cc91fa55da0d365	2026-08-30	fix(review): round-4 — authorship vs execution, both split paragraphs
+4d59ab736c50c88931a7b9f199f305a3dd29028a	2a0d4fdc8c0c89f4c8e7a0dc472775eb9a1db075	2026-08-30	Merge pull request #69 from skothr/worktree-limitations-units
+8c1b54d34b11d196629c772d8cafa90e2925e229	3d5a75938038ca157b139e0f9d1ac0daff0c293e	2026-08-30	fix(review): round-1 findings — audit-total sync + ratio-argmax honesty
+328b9763c9b20c7aae84d7b11df084f4756e61bc	43a54ced5ed0b795b90305018faf20b79676977a	2026-08-30	fix(review): correct reorg date and script count, drop stale ARC_PROCESS intro claim
+4eda29eb25ce3ae2b4bc57350559c8201f801ffe	497492bf670a1082accdba51589cdc32fef47105	2026-08-30	docs(research): retrofit arcs 01/03/04 to the ARC_PROCESS §6 section canon
+17d53a1457e60d8483a9fbb6aab9fad722f4059d	534f51a4ccbe69b9adc42f0b6c496f6a4fea76d0	2026-08-30	fix(review): round-2 — mirror the chronology fix, two role balances
+9098ce05ed9dd3cc24a80a357ebfaba8799429c3	5403b42cea3b1e1885abd0b7fd1d38f4ec6d1da1	2026-08-30	Merge pull request #74 from skothr/worktree-section-canon
+84fbae630723728b137c57ee1905b13c154ed240	5d86b27d39ea3adb6b9b7b615e8ec7fc290949c6	2026-08-30	fix(review): round-3 findings — L15 calibration limitation + wrap
+028af17471669807ad86c858ccd8195f293c0702	6d379eb1d3c03ef9084c9426ed518e49c121eb6c	2026-08-30	Merge pull request #76 from skothr/worktree-section-retrofit
+c628d62ce820b2ace9faa8876cd34bdebc540792	70e313cf9eef33d881c7d35b187ba2fe5d01ffbd	2026-08-30	fix(review): round-2 findings — pair-label accuracy + collateral polish
+ae794a1424b2f9bb58f5a13f071a403efb30055c	7a0ef7f063c263245cb3e187e46bb8206a86e1b5	2026-08-30	fix(review): round-1 caption corrections (fig5, fig8)
+c930abdb16b392e2ff62ee1f3149de565de38937	7c11de51f453a413557fd87d8e8a17aafdb66267	2026-08-30	fix(review): round-4 polish — PR-11 disambiguation, gloss slash, rewraps
+1d12d7365f2ba69ae9f0d8633f9b34b3b431e1a6	93e49b1057f20ae8c07971b33f8677f8ced6f7c4	2026-08-30	fix(review): round-3 — scope the hand-run parenthetical to layer-19
+face1754a35d12d5ca7be7a531eee026777d315c	b5bcdeda29e713bc99cb996dbd413e7a4b0e3ac2	2026-08-30	fix(review): update CLAUDE.md arc-02 section pointer for the Attribution rename
+74351e77a5ad6a4c605deee58db5471411c89865	bc63f1792e6eb62292c0f9cfc69acaa80c07933c	2026-08-30	fix(review): round-1 — render fix, pivot framing, joint-reading honesty
+fed4e0b80e57aa05940bbde173eeba52010d97de	c59fd1bd14d79bb4e120dda8905fc76d1c1a4778	2026-08-30	fix(units): correct byte-size labels and stale values from the #50 audit
+b28c0d8fa52f9058a92e187bf32a1f88f4dde715	c74c126e941180c14ec409f39daf522379d5c56f	2026-08-30	fix(review): round-5 — mark the spliced elision, fix a backwards pointer
+195506f0d15aab2e36bff80523f9693bfc9015eb	d112931af989a345c975704b208edb05a17c16d3	2026-08-30	fix(review): round-4 finding — actually reflow the root-README paragraph
+aac03e959000b041ba5799b88f8d69941df9c044	de7892411e3ebba141829567fb2b46cdb5694279	2026-08-30	fix(review): per-quote session tags, dated inline quote, prose repairs
+0f72abe130bfadc7d5bd0b8c5302c0504ccee82d	e2d1cf920c5e4231c82c9528c004689f6af891dd	2026-08-30	Merge pull request #77 from skothr/worktree-figure-embeds
+16f5785629071f2118054804e23b3f62045dc9d1	e4a27b56ee3e5ac5ef56e24693e9eea806df3411	2026-08-30	fix(jspace): excess-FVE dimension-dependence calibration caveat (#79)
+3ff0d2f56c986d7b1da4e6f1c26d08098717d22d	eaf9ebd24e16f294b06ace5c7c5570ac0ea4da14	2026-08-30	docs(research): embed headline figures inline in arc READMEs (#57 PR 3)
+eb86b0fc28d48a8fc25432457184e8a5cee54e8f	f20832f37b9b23ca94b15f81a76800605bd10d25	2026-08-30	fix(review): round-1 findings — rename/move collateral + observation-log intro
+96b97993042b99fbc509792c6d3f24f55fd6d8b5	f601d41e4c012e39421fd6896fd6e46263950869	2026-08-30	fix(review): round-2 finding — fig36 caption step count
+e32a08228d68787cdf414ecf6d99cf5c5f4bca88	f754f566e806bc95c415ff67845ad373c2ef7665	2026-08-30	Merge pull request #72 from skothr/worktree-archive-attribution
+d6b2406d609a06d08e745a7fc2fca553792839e2	60a23e7bbfadcf90d9a0e2f8b838446a420577b7	2026-09-23	Merge pull request #80 from skothr/worktree-excess-fve-caveat
+9b19b8faa3e17097afbdb9663bc7d2093cee1d36	a9f9a97c18625bb0a071942a7d0c21384cba06a0	2026-09-23	docs(jspace): restate the cross-scale excess gap at matched K/d (#83)
+83b452ba710f6592e72508a701db970fd1c665d8	b1a6331b9814ab0003b75e89668238de87d251af	2026-09-23	feat(jspace): --k-fixed override for dimension-matched paper-metric K (#83)
+82554db7dbd00c50377d1748110773ceb230b822	d562cdb35de97e8cbbb879c98f9e2db96da71be6	2026-09-23	data(jspace): 7B paper-metric scans at dimension-matched K=58 (#83)
+610ac5b96302c5c5c975d1a6f974fcec1b51e900	0645d2d1605c8d1d253096481583b60f8148752a	2026-09-24	feat(examples): in-repo model loader and NLA probe replacing llm_surgeon (#94, stage A)
+b3824d4c77fb7d48f7c090d06a515a1fcb504ea9	06f3ff1ac1eb56872a46ff7a345fa2f810e1bb91	2026-09-24	docs(jspace): citation key raffel2019; fix README wrap and jacobian-lens date (#99, #101)
+e3bee7c3b02a13be5a06a871723809279b5bbe0b	14f975884bfec75239437ec163016068982def5b	2026-09-24	fix(review): PR #91 round-2 lows (#87)
+b0179b8bcdd4a70962597e7170a27b17d8683ab5	15fea0daa067528b17398c6d37568edf2ac6103b	2026-09-24	docs(jspace): add Hypotheses sections to three observation files (#95, arc 04)
+bd6e61916c4f38fd60a23770c12938b17bf3bb40	1ab61ee96681b0134092f2d30c316342b0e7e52b	2026-09-24	fix(review): PR #84 round-2 findings (#83)
+f9e5026be229dc031765e1b4731643b2846a0407	2196425b79de4fde960d17bfdbf17b21973a1806	2026-09-24	fix(review): PR #91 certifying-pass lows (#87)
+5b162850fad77aed6bfa34bdee952066f9967127	2f1ada03c2dab223ae24fa4ae78352536d5c723c	2026-09-24	Merge pull request #84 from skothr/worktree-k58-recompute
+7404d44042f6bb1fa0e2d5c3c55d0aeb57626ad5	3ae2e3ed545a5f9a1e95f191e5798591fef0c880	2026-09-24	fix(review): PR #91 round-1 findings (#87)
+898896425c5c5ff3f1199178fa4984da1a9134c8	4ace5b7b09e9761552bd51a9fcfab3d8ee8b9979	2026-09-24	fix(review): PR #86 round-3 lows — state the validation outlier as measured (#83)
+f4ee2b8ee25ea8a2491b1a400e2d4335bd388cab	57656b2ef4b2ba282eea9bdcf26677568f8876ce	2026-09-24	Merge branch 'worktree-k58-data' into worktree-k58-recompute
+980fa411aea0022301a2764a592ad45da55ed04a	5d343b0bdcd94b60a1fc85dcb5613f89b28bdd21	2026-09-24	fix(review): PR #103 round-2 findings (#93)
+ef9333cf9aed1342ada969ca31e59442b822a890	6333bdd5482373407e89fa2cd22088bdaf72b222	2026-09-24	fix(review): PR #104 round-3 findings (#94)
+7cab69cd1bba47106773c4c304f8bf1f78b30d85	6f4d340c4d487c0ee8c1b42376a92f187c393ac6	2026-09-24	fix(review): PR #84 round-4 lows (#83)
+cacc74e41a17c5b8f135179ad132c2dfe11d5ce5	75addf3434013e2956e51b53a661e468183134b9	2026-09-24	Merge branch 'worktree-k58-data' into worktree-k58-recompute
+765b0dff3018fa6eed0267d4b1de61d63a607dde	76da2c59906e43ffbdad8980386245f67007a5d3	2026-09-24	fix(review): PR #84 round-4 findings (#83)
+d69b1300c8480dff7f586f70f651acb5ec885d88	798b81f6765822445ff22f1675954c98e054b200	2026-09-24	Merge pull request #91 from skothr/worktree-lens-provenance
+72919ddb67262d443d6481c2b44eedb094487d5e	7beb463589fdb439a545867c341d796744223359	2026-09-24	fix(review): PR #106 certifying-pass low (#101)
+91dad370a940ac125b6678a55530a992b423888a	80b01d1ee77902573416d6609a16b4e5f748f0e2	2026-09-24	fix(review): PR #86 round-1 findings (#83)
+23dfc1d6e129872e176f9ac0b1218bdc55e2f4b1	833dddbd420a78954aa5aa90662424c3ad2c5955	2026-09-24	fix(review): PR #104 certifying-pass lows (#94)
+26ce84114b81343982067e499ff1434b3aab3de3	8d9c612cf7a78b996a89f590f3901d143d5d755c	2026-09-24	fix(review): PR #103 certifying-pass lows (#93)
+15fde5195bc19f1501689613e72b5435c0e7086b	8ee7643b9b4605b2d1599b4f4561592310f17518	2026-09-24	fix(review): PR #107 certifying-pass lows (#100)
+296a6bf2c308b764327930d2ead5e9f8103489cd	95ceecef533fa8312d4211280b4c17499ea46965	2026-09-24	fix(review): PR #84 round-1 findings (#83)
+22d116a2c0f0ac5ce0342eb32071e98b9f5960cb	a9104bf23451a3305330d587de13a4d75ea25d3a	2026-09-24	fix(review): PR #84 round-3 findings (#83)
+7f81a0a87690e43d0911d90fa2b82131056fe49f	ab3e0f6aa152a4326d761524abd711f50c298bad	2026-09-24	fix(review): PR #104 round-2 lows (#94)
+a66a560fc587effeb99222a292813e0e6a0da3e1	abb0d5a7676a87559d129fe651cae74e42cf1e11	2026-09-24	fix(review): PR #108 round-3 findings (#95)
+43e04cb64f493638e2d44af839584deecb7a1cd4	ae7d99e3a7f324b1d15ab2eecad27edaca15f376	2026-09-24	docs(process): arc lifecycle as four reviewed checkpoints; dependency policy (#93, #94)
+4372ed0e415428875bea635da4f031a935080076	b22440951caecb189153f465c1c19102c6fddd85	2026-09-24	fix(review): PR #84 certifying-pass lows and nits (#83)
+76ccb778aa1f23f73e9f28484d897a030b0d39df	bcd861b009a9860f57af0341604f7115f502d22c	2026-09-24	fix(jspace): name the lens generation on every manifest entry (#87)
+7a5f26ed324830c6465f6ac0891a90a0a24e7e98	be4e0dee290fe1434414dad9b4958f158c067bc2	2026-09-24	fix(review): PR #108 round-1 findings (#95)
+9b9a7d5532f1f9ccfd05c319ec9815402e8586a1	c12a86f51549d09bf09d31953b7df295b2e89338	2026-09-24	fix(review): PR #108 round-2 lows (#95)
+4c506590e1ca2b46442f71d6126c0940662352dd	c5cbb88cda8079e5b1f1be8319b4498977319044	2026-09-24	fix(review): PR #103 round-1 findings (#93)
+d97fdb4fbb6d2b3180b4aedb851b5450edadaa81	c74995a1608b314f583440db44f6c571d0e7cdf3	2026-09-24	fix(review): PR #107 round-1 findings (#100)
+df2b15d1037d724a63886c85b7cdfc5b438ebc9b	ce9334c346c271a69f76aad2aab0ee77d50d5b2c	2026-09-24	fix(review): PR #104 round-1 findings (#94)
+71c2ab6e4ab756fe291dd5c9a674bb753a78640a	d20748a7c897c3444c128a7198750a0e1dc9d4fc	2026-09-24	Merge pull request #89 from skothr/worktree-k58-data
+a00b8bcf8151a3d06a41b118139617cd372e3629	da305a0550decfee76ffcaa95a93ce0b81a016a9	2026-09-24	fix(review): PR #108 certifying-pass lows (#95)
+8cd5429e7aa005358dcc3f93815427fbd04bb4f7	df34f2aad9969c6268544031ee4673d8ba1abb5a	2026-09-24	Merge pull request #86 from skothr/worktree-k58-data
+4706b94c694bda9ff37778aecf8901cb6890045d	df8021323250e465efbaadaef095248dc01a8720	2026-09-24	chore(examples): wire two unreferenced NLA utilities; remove the superseded stage-1 grad probe (#100)
+5e8c4fb6fbc6a6b7f03fe322082cb80261619972	ebe6088b22dd499e16a5b9edc1c63da5ad3d99a4	2026-09-24	fix(review): PR #86 round-2 findings (#83)
+1818d692c8eb4e2eceb30b4b689d1774c5c711f1	f34f414228bb0af0eb4cb1240ec8f7ee9637bcd4	2026-09-24	fix(review): PR #108 round-4 findings (#95)
+292b28f36901b0d3cc63615dde996dd902ff42a7	17deea3d2d4746282248cfcc6c861250e730fb55	2026-09-26	Merge pull request #104 from skothr/worktree-drop-llm-surgeon
+c49211b5596997373f265149edcdce51510650cb	1dbb8e0f494a6f32ebf049d07b48cfaef10c10f9	2026-09-26	Name the old cache location and the offline-pinned failure mode (review round 1)
+a4dc0e3aa0314dee962b601eba1f396e4c53fb36	26311e2d3aa8b454745ad08bd107b658acf3e222	2026-09-26	README_NLA: make the offline-script grep path CWD-independent (review round 2 low batch)
+089f6bc7ad885299409ef0c5dbeeeb85f3781ee2	732b1b9a3188d8f084e11d222b8efbb153f6e4b9	2026-09-26	Merge pull request #106 from skothr/worktree-stale-refs
+1490afda87e95d1d959e544b118f06de6785f6a7	88d17eae1ed926e23e0aa6288e1d56749b5a54bd	2026-09-26	Merge pull request #107 from skothr/worktree-unreferenced-scripts
+228eac26d33d29a9706a9c72ebf732041a8ce750	8a4783312608a2750e112e534794f934eef9cdf1	2026-09-26	Merge pull request #110 from skothr/worktree-nla-import-swap
+4abd2058cffef1e75ddbe7eea678fecdadc25f08	90da9ba1b9da4a777e83df70dee036e6a1419983	2026-09-26	Swap arc-01 scripts from llm_surgeon to the in-repo loader and probe (#94 stage B)
+c074662fe96a93f412c5e2afce8a2f22890e7b24	cb13ed1fd1f8bbcd85628cd75d0705a5e674085c	2026-09-26	Merge pull request #108 from skothr/worktree-obs-04
+671d5bf12f175d729b6a9973a083bf47c7c3f777	e12a1ebe143adeba8dc31ab5578376223ec724cf	2026-09-26	Merge pull request #103 from skothr/worktree-arc-checkpoints
+8486682af0cbe2cbfb9fc6055e8eac3f3fd48469	fd11107ae1c5ab883e3dc644f7ff93449638ff31	2026-09-26	Swap arc 03/04 scripts from llm_surgeon to the in-repo loader and probe (#94 stage C1)
+e58353e222bae2617d2d305d2fa4f793c33702f0	602b83c124cf4acd149433ba4b9d12debf78266f	2026-09-27	Drop the llm-surgeon declarations; declare the loader's PyPI deps (#94 stage C2)
+b1e02e74f181f8fc45de723706d651f642b30f01	63c95fdc3fa3cce49c2921176db95ff09e3929b2	2026-09-27	Review round 2 low batch: AST normalizer recursion, inf-norm case, offline hints, README recovery command
+f44f9802a3b41c48279a2d8f603f947ca7c461f1	6adb0f559f6d1242a23c29168834c19bacabd31f	2026-09-27	Anchor the old cache path, reconcile the ARC_PROCESS rule sentence, scope the loader note (review round 1 low batch)
+14e3f2be4bcaaa5b6369f4c164ac99c16df9b69e	85d5f6c0ddb6066ecdef49c0f49d1d0c455e6572	2026-09-27	Harden the NLA probe and loader after the parity port (#105)
+9a366900731042c3d9c8234984757b4121044e05	91ff551ad871dcd9117510242b04df1b3162e7cf	2026-09-27	Merge pull request #111 from skothr/worktree-arc34-import-swap
+cb3a092f04e1b2696a25c0e0e77bef7219864f17	a18daf5e32391f3401f57b5cfdfa3c3ff6a46baf	2026-09-27	Merge pull request #114 from skothr/worktree-drop-surgeon-decl
+7d633f4151da65bfe608803de12efb0e3e94efbe	ea46f2d2d71140476841cfa2b2bc1eb171802a31	2026-09-27	Review round 1 fixes: max_memory needs a strategy map, TRANSFORMERS_OFFLINE, file-level offline probe, loader AST parity
+20d841136ae3a98416ff2352b3be51ef79fd58d6	120ef80c956d04da1837d4d7fd861cc296e01e58	2026-09-28	Review round 3 low batch: point the audit-pass qualifier at Follow-ups, 21.1% refusal-gap shrink, H2 open outcome, full intra-cos range, stable VOCAB reference
+68d9c517cf0ecffb460464971883b54ce63d272e	126c7fe6aa8708d8eb7f16da5a9f73080d616ae8	2026-09-28	Arc READMEs cite KB keys for their external claims; add four papers to the KB (#96)
+9c858e2c1d6808ab1825d7ae14382b5a9dd23d08	172b92c48e264aee79c6671d3a7470e218eeabe0	2026-09-28	Review round 2 fixes: README clean-clone sentence covers arc 02's new totals; manifest mode, META coverage and path decoding; exact-set claim counts every entry
+1d440a7a7ef38904af15edb8058db34effde9279	23f07eb1dedd8bb02c897391000056c6c232ccd1	2026-09-28	Merge pull request #119 from skothr/worktree-arc01-obs-sections-a
+337a73613c1e1ac6da3407649a97a2770fa238ba	32f850833286b472b95f3da8b565691bd739923b	2026-09-28	Review round 1 low batch: file-relative data paths in the new sections, name Elhage et al. 2022 as a KB gap
+d13cf8945ca34f1bd9071dea2369085093f43407	37f6c251ddbb5d604d783feb5b5c4b3d31bb1680	2026-09-28	Arc 01 2026-05-14/15 and cross-arc observations: add the missing required sections (#95 part B)
+e8ab7537830d61f1260a0987a9dc3db14fece05a	3dc1c021a889437840819574c22aa44bbcf6ea7c	2026-09-28	Review round 2 low batch: remaining undercut pointers, corrected random-floor and prediction wording, cache-first audit comments
+3d0b57c0703c3018035d9889d6939f374510f241	3e94119de14f56e31070c9b506f96daa328c23c9	2026-09-28	Review round 3 fixes: step 0 states only what the local test does; the kitft pair is described as published, not attributed; tied-vs-untied wording; [sic] disclosed
+9713b5ba676d039e0859e68265eee42d3a649e56	4e275a67f3af0803493bd7320551ec60c7c2744b	2026-09-28	Review round 2 fixes: H1 test holds out the tested anchor and states what a rise cannot decide; more qualified pointers
+c7f1a5a28db814fd25e510ee432cd3733f99871d	54117f93ee6b66aede0014549dc7bd1eb0affc35	2026-09-28	Review round 1 fixes: whole-file sweep for undercut claims, hypothesis tests that separate their readings
+98516a6815b8d84af707151075cf074e803fd3b1	6a552a26cc26ebc2a681a95c7b554c681183c507	2026-09-28	Review round 1 fixes: README audit bullet, full arc-manifest coverage in AUDIT A, robust --check, storage rule by size
+0ab9656e38be5656b82e1e8e08b0bbc92283e2e3	8327803d18c7989b7abb72a2eda672e571595952	2026-09-28	Arc 02: data/MANIFEST.json and a --check script; the manifest convention covers every data file (#97, #53)
+15f493b9cedd8bce017d5dc27ea4bc66ae726ad1	84a23955f923539152924b97ccbc15633dd05f73	2026-09-28	Merge pull request #121 from skothr/worktree-arc01-obs-sections-b
+bf015a703c4219db67cac1817ead88375750c1bb	88cc7e5f5f99819632240b1974f258fcfbd06ed9	2026-09-28	Merge pull request #117 from skothr/worktree-arc03-obs-sections
+8f92044b785e844c0504937d091727992710b949	a5a2a0ea23320364f3cf8f98083838e0ba3458de	2026-09-28	Review round 4 low batch: arc 01 opening no longer attributes the checkpoints; note hedges; abstract anchor
+f6f424e11d22383b0d6dd25363270770a5c68ed2	b12a6a93f4adbc863cf25f92e36c832c4a094dd5	2026-09-28	Review round 1 fixes: cite where the paper drops 'general'; carry the contextual-vs-static caveat into the observation; excerpt and glossary precision
+4bc06477e050022d0b83d6cfe85f7689555cb746	cb3b49ff358fe123e9b2789f13053bebd2a7ff3a	2026-09-28	Review round 3 low batch: 5 MiB plain-git threshold, manifest excludes itself, qualified manifest references, str-only filename guard, arc 02 states the audit limitation
+dc1847f4250512d46eb5234cbda5636e00fba6c4	cb8742ddc002af0b26880b29660d284edae5a23f	2026-09-28	Merge pull request #116 from skothr/worktree-probe-hardening
+4c4750c1db326e7cf99e9737d3a6bb00ede7ac0e	ceb4225e6a3d0abb73b99fc2a7c27b9448b4095f	2026-09-28	Review round 1 fixes: H1 test varies only the fitting protocol; dense re-sample settled from data; more qualified pointers
+486ccf3e850d4acde256e17d1ad3fa229c95ea63	e0b6c881a16c45ff68866c128b68e437525c68cd	2026-09-28	Arc 01 2026-05-13 observations: add the missing Evidence, Hypotheses and Follow-ups sections (#95 part A)
+eda42adde3c483760591dff6460e51dcd7f9d8b1	e6bd19189182f3b1719f3737dbef7b4cef4f43f0	2026-09-28	Arc 03 observations: add the missing Evidence, Follow-ups and References sections (#95)
+4ffe6487b626bd1d3ea396a4a22c74c452c3bcf0	e7f741e8866ec85e55a511c92a1a9a513b1567f4	2026-09-28	Review round 2 fixes: step 0 matches L3's narrowed release claim; cite the HF commit history; glossary measure wording; [sic]; F-G1 headline pointer
+8d3dd9ba06cd4230826a513032989450d2b5e031	1266d9145cde2e9c0807da08b72441c670abb98a	2026-09-29	Arc 01 split: keep the owner's merge-gate credit without the dropped quote; name F3's first paragraph in the polarity note (review round 2 low batch)
+72df84890ce0d506dc7cc3917fe3050f040ae184	2a7a9158a0045c78f8b81926aa888c9b38a5783c	2026-09-29	Arc 01 Attribution: restore context and hedges the shortening dropped or strengthened
+e43e7a4dd339d29a6bbd241b0ca0c95ddeb76e14	39949b290277eac46667a78a59dd39ffa1410974	2026-09-29	Arc 04 review round 2 fixes: scope the C4-free list to the wikitext-scan ceiling verdicts and name the held-out C4 figures; date the 41-of-53 count; 1.5B-axes wording for the recompute entry; label 22.85 h as queue wall-clock; date the lens fits from their logs; 0.10828 matches its re-derivation
+49ef62289d55ed99186251d89edc389d5be81f8e	410000ab782ffe8974db3f9403865a0d0c42ad7c	2026-09-29	Arc 01 README: compress Attribution to the basic shape, state the next-paths ranking, fold the F3 polarity note
+567319feac219b22fba4f224694163ae0de0be72	4a0c31a67ecb07423bd13a8752ccf5e7bf4720d9	2026-09-29	Arc 03 status line: date the observation count to the 2026-07-15 close and name the two 2026-07-21 addenda (review round 1 low)
+d29064918fb00b85507747b275687d669a18a75c	4dd070c50f96b280816fe8be27cee6019c603b0a	2026-09-29	Arc 04: restore context the compression dropped (information-loss check)
+7eaac68ad0ad0c45a6f844fb405b99f73bb72bc0	568e27f75a736efd6523a1aa18735428e8f18c5b	2026-09-29	Arc 03: move the degradation-forensics note from sessions/ to observations/ (#98)
+494b0d0334e56e6545873f9eb2e11ce68a0f1976	704fe0bdaa1826d964af4bf4c99edeb6fb3dbcf3	2026-09-29	Merge pull request #129 from skothr/worktree-history-arc03
+f9add30a6ec86b87fb6fb108e1e3519301f00b7c	7f02daf6fae0fa28b6ecebf453f12cde41cd9bb8	2026-09-29	Merge pull request #125 from skothr/worktree-kb-arc-citations
+b3879d93494c9286367caddd20e0b322d9ac372b	80ba48fcada4127bb7a91bd9e181409f27b7db77	2026-09-29	Point the redaction-record links at data/README.md first; the plan stays linked for per-claim status (owner direction)
+adc845e3d7a021b6874fb36cf43520aaf8d3c728	a0ca9e443b288013ddf1e5d886b3c170f9999434	2026-09-29	Arc 04 redaction record: date-neutral Outcome heading, corpus JSONs dated to their 2026-07-29 redaction, both c4en refit times with their source, dated pointers on the cache-only statements, audit paragraph unnested (review round 1 low batch)
+17103759d844026cd71275a92ebc1d347018d4f0	acb8964dde3aff4dabeaff020c58be7b354e4b93	2026-09-29	Merge pull request #127 from skothr/worktree-arc02-manifest
+06dd6143024a37f95d49b219bafa4cef4df2352b	c01663d9802a926f77e07c5b38ca5a71fb82d9ff	2026-09-29	Arc 01 Attribution: restore main's claim strength in three commentaries, name the built static trajectory, state that no audit checks PC1 polarity (review round 1 low batch)
+64316fab01f0737020c1640d3fa158361839eddb	d6573a3752ad6e711f5d89dc5ac1354b392c0ffa	2026-09-29	Arc 04 README: compress data-correction record and observation log to pointers (#98)
+140da0872b384ee1ead1920b1b80b87b0b423921	d9b04c7bdbb9afeb247b0bea986ce9d5d5b22d72	2026-09-29	Arc 04 redaction plan: point § Cost at § Outcome for the run's actual figures
+0a9218f0b0e0c1c6d57bf53d910a08602c506cee	f4509093b041af5a4db2557f5430a06150160d84	2026-09-29	Arc 04 review round 3 low batch: scope the K=58 C4 figure to held-out, state that pre-redaction text remains in git history (#133), per-claim label for the plan link, § Cost note covers the section, four MISSING reports
+64ed4d277ab63ef731b9b2f5341e9f6d0a4eda03	c305638695a7322f783692dbfe3c6bb1aa98e09e	2026-10-02	Merge pull request #130 from skothr/worktree-history-arc01
+624ff36a53cbc5a210a46405b670714002777676	ca92bfb548f09a73cd2a164570850564c4b7cece	2026-10-02	Merge pull request #132 from skothr/worktree-history-arc04
+b8e617d04925215f458526c98b9ca1e9d6ae904f	db8ae85e0ce456a72f2ab47793d82140344ad59f	2026-10-02	Arc 04 review round 4 low batch: say why the 7B lens has refit noise, list every held-out figure as computed on the redacted C4 set, dated pointers for the plan's Step 4 enumeration and exposure-1 premise

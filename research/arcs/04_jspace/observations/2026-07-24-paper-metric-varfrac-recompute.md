@@ -12,7 +12,7 @@
 > (C4 prompts)** at 1.5B and at 7B — were computed on
 > a C4-en corpus that carried third-party PII and was redacted 2026-07-29
 > (`../data/README.md`). Those artifacts were regenerated on the redacted
-> corpus 2026-08-15/16 (commit `a9df3a55`) and re-derived by
+> corpus 2026-08-15/16 (commit `3ea3dcff`) and re-derived by
 > `examples/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`).
 >
@@ -309,7 +309,7 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   structural-block and trace metrics computed the unsquared norm ratio
   ‖x_S‖/‖x‖ (isotropic floor 0.0765, matching the observed ~0.0754
   control) but were published as "energy" (which floors at 0.0059) —
-  renamed across docs, scripts, and figure axes in commit `0c06b197`, with
+  renamed across docs, scripts, and figure axes in commit `c6266e6b`, with
   committed artifact keys deliberately frozen for compatibility.
 
 ## Hypotheses
