@@ -215,7 +215,8 @@ structure scan are regenerated together.
 ## Step 4 — restate prose and re-render
 
 ~30 quoted numbers across the 4 affected observations and the arc README
-(enumerated in the README warning). Re-render
+(enumerated in the README warning) [updated 2026-09-29: the enumeration
+is now in § Outcome below]. Re-render
 `observations/figures/2026-07-21-jspace-corpus-invariance.png` and update
 `INVENTORY.md` + `DATA_PROVENANCE.md`.
 
@@ -252,6 +253,8 @@ read as confirming what we hoped:**
 1. **The `"L21 excess 10.7–11.7%"` range quoted in the arc README has *both*
    endpoints on C4 rows** (10.82% corpus axis, 11.70% held-out axis). That
    literal range must be recomputed regardless of whether anything moves.
+   [updated 2026-08-16: the re-run found the low endpoint is the C4-free
+   n-budget axis at 0.1069; see § Outcome]
 2. **The C4-corpus-axis bootstrap unanimity has a margin of only 0.008** above
    the 10% ceiling (0.1082 vs 0.100). A ~1-point depression flips it to
    fractional, softening "bootstrap-unanimous breach on each axis" to "on three
