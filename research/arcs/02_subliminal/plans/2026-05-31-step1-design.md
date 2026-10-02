@@ -2,7 +2,8 @@
 
 Design workflow `wf_fff920a2` (5 agents): QLoRA-feasibility / influence-estimator /
 reproduce-eval-protocol -> synthesized spec -> adversarial HA-vs-HC critique.
-Preserved verbatim below. **Status: design, NOT yet signed off.** The
+Preserved verbatim below (wording unchanged; hidden `prose-lint: allow`
+markers were added on 2026-10-02, #120). **Status: design, NOT yet signed off.** The
 central conclusion (the adversarial critique found the naive influence
 probe cannot separate HA from HC without a statistical-fingerprint projection)
 and the resulting open decision are tracked in the arc; the runnable plan will
