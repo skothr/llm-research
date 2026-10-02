@@ -1,6 +1,6 @@
 # Session checkpoint — 2026-06-11, tracing phase mid-flight
 
-Operational snapshot (stale-fast; never load-bearing — see ARC_PROCESS
+Operational snapshot (stale-fast; never load-bearing — see ARC_PROCESS <!-- prose-lint: allow -->
 "Sessions are not findings"). Worktree
 `.claude/worktrees/embedding-atlas`, branch `worktree-embedding-atlas`,
 pushed through commit 8a2186e7. Audit 61 PASS / 0 FAIL; manifest 13 files.

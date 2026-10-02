@@ -32,7 +32,7 @@ never separated:
 - **(A)** non-semantic, model-specific statistical patterns — no trait meaning.
 - **(B)** semantic-universal — ruled out by cross-family failure. *[settled]*
 - **(C)** semantic, but in the model's **own learned coordinates** — dies
-  cross-family because the coordinate system differs, yet is genuinely
+  cross-family because the coordinate system differs, yet is
   trait-organized. **Untested.**
 
 Working intuition (user): the trait is a **resultant** — no single number

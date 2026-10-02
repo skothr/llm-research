@@ -20,7 +20,7 @@ vector-across-tokens; dimension sets don't overlap in LLaMA2-7B/13B).
 
 **LLM.int8 outlier features** (Dettmers et al. 2022, arXiv:2208.07339):
 6-7 magnitude-defined dimensions of hidden-state activations entering
-projection layers; causally load-bearing (zeroing them: >20% top-1
+projection layers; causally important (zeroing them: >20% top-1
 attention-mass drop, 600-1000% perplexity degradation). Object of study is
 activations, never W_E. (Caveat: the 6.7B "phase shift" is OPT-family /
 training-recipe contingent — Ahmadian et al. 2023, arXiv:2305.19268.)
@@ -139,7 +139,7 @@ H-SINK has named competition AND contrary evidence.**
   discrepancy + super neurons; and a GPT-2 mechanistic account
   (arXiv:2604.14722) EXPLICITLY RULES OUT the token embedding for the
   GPT-2 BOS sink (zeroing the BOS embedding leaves the sink intact).
-  H-SINK must therefore be framed as a genuine question — the BOS-sink
+  H-SINK must therefore be framed as an open question — the BOS-sink
   result is contrary evidence, though our block concerns DELIMITER tokens
   (model-family-dependent per Sun 2024), not BOS, and no equivalent
   ablation exists for delimiter sinks on Qwen.
@@ -163,7 +163,7 @@ H-SINK has named competition AND contrary evidence.**
 - Strongest near-miss for the block analysis: an Alignment Forum
   exploration of GPT-2's wte (SVD components incl. a leading-space split
   and a frequency-correlated "dimension 138") — tier-B/C source,
-  single-dimension and informal, but honest precedent for
+  single-dimension and informal, but still a precedent for
   frequency-structure inside a static table. Cite as prior signal.
 
 **Net novelty verdict (post-attack):** (1) correlated-dimension BLOCK

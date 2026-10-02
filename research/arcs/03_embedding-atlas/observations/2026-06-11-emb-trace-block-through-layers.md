@@ -106,8 +106,8 @@ regime (iv) re-derives exactly.
 three.** Block dims **2604 and 1395** hold a top-10 carrier slot at all 23
 layers of L4-26. Dim **1122 does not**: it holds one at L4, drops out over
 L5-L16, and returns for L17-L26. Calling all three persistent "throughout"
-overstated 1122's continuity; the two-dim persistence is the load-bearing
-part of the claim and is what the audit now asserts.
+overstated 1122's continuity; the two-dim persistence is the part of the
+claim the finding rests on and is what the audit now asserts.
 
 ## Evidence
 

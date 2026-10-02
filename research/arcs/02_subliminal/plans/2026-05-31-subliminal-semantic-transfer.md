@@ -41,7 +41,7 @@ option it never tests:
 - **(B)** semantic-universal — ruled out by cross-family failure. [SETTLED]
 - **(C)** semantic, but encoded in the model's **own learned representational
   coordinates** — dies cross-family because the coordinate system differs, yet
-  is genuinely about the trait. **Untested.**
+  is about the trait. **Untested.**
 
 `[INTUITION]` (user) The trait may be a **resultant**: no single number carries
 "owl," but the owl-primed persona shifts the *distribution* over emitted numbers,
@@ -120,7 +120,7 @@ transmission but not *general* teacher-mimicry); NLA-decoder readout of the
 streams' activations (uses the model's own semantics — but audit the AV
 format-bias first, cf. NLA arc D3).
 
-## Methodological caveats (first-class, not footnotes)
+## Methodological caveats (primary, not footnotes)
 
 - **Detection-validity gap:** projection onto a *chosen* direction can't separate
   HA from HC — a probe finds structure regardless. Hence the **behavioral** trait

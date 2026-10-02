@@ -68,7 +68,7 @@ versions:
    ![fig4_e_vs_u](observations/figures/fig4_e_vs_u.png)
 
    *Per-token cos(E_i, U_i) over all real rows: mean +0.0017, median +0.0014,
-   no token above 0.5 — the untied input and output matrices sit at chance
+   no token above 0.5 — the untied input and output matrices are at chance
    alignment. Rendered by `emb_global_render.py` from `emb_global_stats.pt`.*
    ([provenance](observations/figures/INVENTORY.md))
 3. **Category-coherence hierarchy.** Paradigm sets (digits +0.428, months
@@ -106,7 +106,7 @@ versions:
    dimensions are near-independent (|r| mean 0.021, kurtosis median 0.32).
    Handles are precise at vocab scale (negative -> ' shitty'/' nasty';
    code -> 'namespace') with conservative recall; the kNN graph yields
-   crisp islands (names, countries, code syntax, a cross-lingual time
+   distinct islands (names, countries, code syntax, a cross-lingual time
    community) over one giant component.
    ([fullvocab-sweep](observations/2026-06-10-emb-fullvocab-sweep.md))
 

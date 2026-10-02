@@ -1,4 +1,4 @@
-# Full-vocabulary sweep: one cross-script "structural" dimension block, precise handles, crisp neighbor islands
+# Full-vocabulary sweep: one cross-script "structural" dimension block, precise handles, distinct neighbor islands
 
 **Date / context:** 2026-06-10, second session phase, per the thorough-data
 discipline — this sweep covers **all 149,706 alive rows** of W_E (151,665
@@ -55,11 +55,11 @@ out-of-battery hits are semantically clean (negative -> ' shitty', ' nasty',
 positive -> ' fantastic', ' lovely' [7]; preposition's top hits include
 '的' and ' de' — cross-lingual again), but hit counts are small: the
 thresholds inherit overfit from directions built on the battery itself.
-Ranking quality is the honest signal; calibrated-recall measurement is a
+Ranking quality is the honest signal; calibrated-recall measurement is a <!-- prose-lint: allow -->
 named follow-up, not a claim.
 
 **F-V4. The k=32 neighbor graph fragments into one giant component (82%)
-plus crisp semantic islands.** Label propagation yields 542 communities:
+plus distinct semantic islands.** Label propagation yields 542 communities:
 largest 122,942 (the undifferentiated bulk at this k), then islands that
 decode cleanly: English suffix fragments (1,007), code syntax (965 + 416 +
 331), given names (908), surnames (329), name fragments (587), countries
