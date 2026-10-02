@@ -45,8 +45,8 @@ Phase 5 brainstorm document committed. KB now 54 draft / 0 stubs._
 
 ## Quality bar status
 
-- **Citation discipline (CLAUDE.md rule):** every load-bearing technical
-  claim either has a `[paper-key §X]` citation or carries an
+- **Citation discipline (CLAUDE.md rule):** every technical claim a
+  conclusion rests on either has a `[paper-key §X]` citation or carries an
   `[INTUITION]` / `[ANALOGY]` / `[CONTRADICTION]` / `[SPECULATION]` tag.
   Tags total: INTUITION=80, ANALOGY=43, CONTRADICTION=73, SPECULATION=11,
   FORUM-SIGNAL=10.
@@ -132,7 +132,7 @@ Cross-paper references throughout the series are inline-text
 ("Paper~2 §RLHF") rather than `\\cref{}` since each paper builds
 independently. Wiring up `xr-hyper` would lift the ~10 cross-paper
 inline mentions to clickable PDF links if ever desired; it is a
-~1-hour follow-up, not load-bearing.
+~1-hour follow-up that nothing depends on.
 
 `\\deepencite` density is moderate: most are on closed-vendor
 system cards (Llama 4, Mistral Large 2, Gemma 3, OpenAI o-series,
@@ -140,8 +140,8 @@ Claude 3.7, Gemini 2.5), HTML-only Anthropic transformer-circuits
 publications (Bricken 2023, Templeton 2024, Lindsey 2025), or
 explicitly forum-tier signals (nostalgebraist 2020 logit-lens,
 Nanda 2023 attribution-patching). All are flagged for an optional
-Phase 2.5 deepening pass; none is load-bearing for a frontier
-claim.
+Phase 2.5 deepening pass; no frontier claim rests on any of
+them.
 
 ## Post-review fix-up (2026-05-06, same session as Phase 5)
 
@@ -166,7 +166,7 @@ Feynman-bar pedagogy). Reports under `theory/reviews/`. Aggregate findings:
 - **M11** — Paper 3 §7 intuition softened around the contested Yue
   RLVR-limit claim.
 - **M5** — re-read showed it was a false positive (GRPO equation
-  honestly dual-cites `shao2024` + `deepseek-r1`).
+  dual-cites `shao2024` + `deepseek-r1`).
 - **M10** — partially closed by M6's tier-B caveat; residual hedge
   deferred.
 

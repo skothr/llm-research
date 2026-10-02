@@ -137,7 +137,7 @@ captured: 2026-05-03
 
 ### Tier 2 — `kb/notes/<area>/<topic>.md` (digested synthesis)
 
-Every load-bearing claim cites either a paper directly or an excerpt anchor.
+Every claim a conclusion rests on cites either a paper directly or an excerpt anchor.
 Analogies and intuitions are tagged so they cannot be retrieved as fact.
 
 Standard note structure (Feynman-aligned):
@@ -213,7 +213,7 @@ A new "Theory KB & citation discipline" section will be added to the project
 When making technical claims about LLM architecture, training, inference, or
 related theory:
 
-1. **Every load-bearing claim cites a source.** Either:
+1. **Every load-bearing claim cites a source.** Either: <!-- prose-lint: allow -->
    - `[paper-key §X]` — pointing to a paper in `theory/kb/index/papers.json`
    - `[kb/notes/<area>/<file>#<anchor>]` — pointing into a synthesis note
 

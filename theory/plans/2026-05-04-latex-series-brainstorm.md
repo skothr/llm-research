@@ -51,12 +51,12 @@ Four papers, each covering ~12-14 leaf topics:
 
 **Cons:** "Aligning" papers tend to bury reasoning; "Understanding" is two distinct fields stitched. Doesn't give cross-cutting themes (scaling crosses Building and Running) a natural home.
 
-### Shape C — "Thesis 5-paper" (each paper has a load-bearing claim) — **recommended**
+### Shape C — "Thesis 5-paper" (each paper argues one central claim) — **recommended**
 
 Five papers, each organized around a *thesis* the KB makes defensible, not around a topic boundary:
 
 1. **The modern Transformer is a small set of choices.** The architectural KV/expert/normalization/positional axes; what choices the frontier converges on (MHA→MLA, dense→fine-grained MoE, LN→RMSNorm/Pre-LN, sinusoidal→RoPE/YaRN, FA1→FA3+NSA) and why. Anchor: `kb/notes/architecture/`.
-2. **Training is now a multi-stage pipeline, not a single objective.** Pre-training-data → mixed-precision → distributed scaffolding → SFT → preference RL → reasoning-RL. Each stage's load-bearing variables (token count, mixture, precision, batch size, KL constraints, verifier signal). Anchors: `kb/notes/training/`, `kb/notes/post-training/`, `kb/notes/scaling/`.
+2. **Training is now a multi-stage pipeline, not a single objective.** Pre-training-data → mixed-precision → distributed scaffolding → SFT → preference RL → reasoning-RL. The variables each stage's outcome depends on (token count, mixture, precision, batch size, KL constraints, verifier signal). Anchors: `kb/notes/training/`, `kb/notes/post-training/`, `kb/notes/scaling/`.
 3. **Reasoning is compute, search, and verification.** Inference-time-compute scaling laws, CoT faithfulness, process-supervision vs outcome-supervision, RLVR/GRPO, search families (BFS/DFS/MCTS) as a parallel scaling axis to training compute. Anchor: `kb/notes/reasoning/` + `kb/notes/scaling/inference-time-compute-scaling.md`.
 4. **The internal computation can be partially read.** Lenses, probes, SAEs, activation patching, circuit tracing — what each method commits to, what cross-method evidence looks like, where the methods disagree. Includes the contradictions surface for interpretability claims. Anchor: `kb/notes/interpretability/`.
 5. **What we measure and what slips through.** Knowledge benchmarks (MMLU lineage, contamination), reasoning benchmarks, agentic benchmarks, safety evaluation, alignment threats (sycophancy, scheming, alignment-faking). Anchor: `kb/notes/evaluation/`, `kb/notes/alignment/`.
@@ -90,7 +90,7 @@ Two-tier deliverable:
 Why C wins:
 1. **Reader has a question, finds the relevant paper.** A reader investigating "is RLVR generalizing or memorizing?" finds Paper 3, not "Aligning" (B) or "Reasoning Survey" (A).
 2. **The KB's contradictions cluster naturally.** Density-leading areas (architecture, reasoning, alignment) become Papers 1, 3, 5 — each gets its open questions concentrated rather than scattered.
-3. **Theses age more honestly than surveys.** "The frontier converged on MLA" can be falsified by a 2027 paper; "A survey of attention" never can.
+3. **Theses are falsifiable; surveys are not.** "The frontier converged on MLA" can be falsified by a 2027 paper; "A survey of attention" never can.
 
 ## Concrete next step: Paper-1 sketch (as illustration)
 

@@ -231,7 +231,7 @@ Per the spec §6, Phase 1 self-review checks:
 - ✓ **Coverage breadth:** All 48 v0 topics had ≥5 candidate papers; 5 net new topics added based on observed shifts.
 - ✓ **No hallucinated paper claims:** Cross-agent corroboration on the most important findings (MLA, RLVR ceiling, alignment faking) reduces confabulation risk.
 - ✓ **Taxonomy gaps surfaced:** 5 splits/renames/additions applied; 5 more held for Phase 2 review.
-- ⚠ **Limitations:** Some Tier-A sources for closed labs (OpenAI, Anthropic on Claude 3.x architecture, Grok) genuinely don't exist. Phase 2 will need explicit `[OPACITY]` markers for these.
+- ⚠ **Limitations:** Some Tier-A sources for closed labs (OpenAI, Anthropic on Claude 3.x architecture, Grok) don't exist. Phase 2 will need explicit `[OPACITY]` markers for these.
 - ⚠ **Time-boxed depth:** Each subagent ran ~30-45 minutes per area; some long-tail papers may have been missed. Phase 2 deep-research per topic will surface them.
 
 **Phase 1 outcome:** Ready to proceed to Phase 2 (per-topic deep research).
