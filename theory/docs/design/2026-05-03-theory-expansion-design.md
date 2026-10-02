@@ -213,7 +213,7 @@ A new "Theory KB & citation discipline" section will be added to the project
 When making technical claims about LLM architecture, training, inference, or
 related theory:
 
-1. **Every load-bearing claim cites a source.** Either: <!-- prose-lint: allow -->
+1. **Every load-bearing claim cites a source.** Either:
    - `[paper-key §X]` — pointing to a paper in `theory/kb/index/papers.json`
    - `[kb/notes/<area>/<file>#<anchor>]` — pointing into a synthesis note
 

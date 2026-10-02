@@ -45,8 +45,8 @@ Phase 5 brainstorm document committed. KB now 54 draft / 0 stubs._
 
 ## Quality bar status
 
-- **Citation discipline (CLAUDE.md rule):** every technical claim a
-  conclusion rests on either has a `[paper-key §X]` citation or carries an
+- **Citation discipline (CLAUDE.md rule):** each technical claim that a
+  conclusion rests on has either a `[paper-key §X]` citation or an
   `[INTUITION]` / `[ANALOGY]` / `[CONTRADICTION]` / `[SPECULATION]` tag.
   Tags total: INTUITION=80, ANALOGY=43, CONTRADICTION=73, SPECULATION=11,
   FORUM-SIGNAL=10.

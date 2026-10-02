@@ -90,7 +90,7 @@ Two-tier deliverable:
 Why C wins:
 1. **Reader has a question, finds the relevant paper.** A reader investigating "is RLVR generalizing or memorizing?" finds Paper 3, not "Aligning" (B) or "Reasoning Survey" (A).
 2. **The KB's contradictions cluster naturally.** Density-leading areas (architecture, reasoning, alignment) become Papers 1, 3, 5 — each gets its open questions concentrated rather than scattered.
-3. **Theses are falsifiable; surveys are not.** "The frontier converged on MLA" can be falsified by a 2027 paper; "A survey of attention" never can.
+3. **Theses can be tested against later work; surveys cannot be.** "The frontier converged on MLA" can be falsified by a 2027 paper; "A survey of attention" never can.
 
 ## Concrete next step: Paper-1 sketch (as illustration)
 
