@@ -240,8 +240,9 @@ exists.
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
   in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
-  params, seed or "none" for a deterministic run), finding, evidence (excerpts), reproducibility (exact commands),
-  hypotheses, follow-ups, references.
+  params, seed or "none" for a deterministic run), finding, evidence
+  (excerpts), reproducibility (exact commands), hypotheses, follow-ups,
+  references.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
 - Fill every field. Specs, plans and observation files carry no `TBD`/`TODO`
