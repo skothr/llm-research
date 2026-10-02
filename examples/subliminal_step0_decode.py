@@ -566,9 +566,9 @@ def _git_info(repo_root: Path) -> dict:
     Both fields degrade to None when git cannot answer -- no binary, a timeout,
     not a checkout, a non-zero exit. `repo_git_dirty` in particular must NOT
     fall back to False: `bool("")` on a failed `git status` is indistinguishable
-    from a genuinely clean tree, so the manifest would assert a clean checkout
-    that was never measured. An unknown provenance field is honest; a fabricated
-    one is not.
+    from a clean tree, so the manifest would assert a clean checkout
+    that was never measured. An unknown provenance field is accurate;
+    a fabricated one is not.
     """
 
     def _run(cmd) -> str | None:
@@ -828,7 +828,7 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(
             args.seed
-        )  # sampling RNG; honest seeding (critique S2)
+        )  # sampling RNG seed (critique S2)
     rng = np.random.default_rng(args.seed)
     pg = PromptGenerator(rng=rng, **PROMPT_PARAMS)
     # Shared prompt set across conditions (their config uses one seeded set).
