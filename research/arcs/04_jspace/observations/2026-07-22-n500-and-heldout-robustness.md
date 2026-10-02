@@ -1,4 +1,4 @@
-# Observation: n-budget (H1) and held-out-sample axes both exonerated — the 7B gap is a scale effect (1.5B controls)
+# Observation: n-budget (H1) and held-out-sample axes both exonerated — the 7B gap is a scale/model property (1.5B controls)
 
 > **2026-08-16 addendum — C4-redaction re-run (read first).** The held-out
 > axis in this observation is evaluated on `heldout_prompts_c4en_n30.json`,
