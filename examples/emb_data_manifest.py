@@ -37,6 +37,13 @@ MANIFEST = DATA_DIR / "MANIFEST.json"
 
 REVISION = "a09a35458c702b33eeacc393d103063234e8bc28"
 
+# The SEED constants of the producing scripts: 20260610 in emb_capture,
+# emb_fullvocab_stats, emb_fullvocab_analyze, emb_pair_directions and
+# emb_structural_block; 20260611 in emb_trace_capture, emb_trace_components and
+# emb_trace_attention. Entries from the other producers carry no seed.
+_SEED_EMB = 20260610
+_SEED_TRACE = 20260611
+
 META: dict[str, dict[str, Any]] = {
     # ---- capture-roots: cut from the pinned model weights in one load -------
     "emb_battery_vectors.pt": {
@@ -51,6 +58,7 @@ META: dict[str, dict[str, Any]] = {
             "fig9",
             "AUDIT 1/4/5",
         ],
+        "seed": _SEED_EMB,
     },
     "emb_global_stats.pt": {
         "class": "capture-root",
@@ -62,6 +70,7 @@ META: dict[str, dict[str, Any]] = {
             "fig1-fig4",
             "AUDIT 1/2/3/4",
         ],
+        "seed": _SEED_EMB,
     },
     "emb_random_baseline.pt": {
         "class": "capture-root",
@@ -69,6 +78,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["(reserved for follow-up baselines; seed-pinned)"],
+        "seed": _SEED_EMB,
     },
     "emb_neighbor_probes.pt": {
         "class": "capture-root",
@@ -76,6 +86,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_neighbors_report.py (text report)", "AUDIT 6"],
+        "seed": _SEED_EMB,
     },
     "emb_fullvocab_stats.pt": {
         "class": "capture-root",
@@ -88,6 +99,7 @@ META: dict[str, dict[str, Any]] = {
             "fig11-fig13",
             "AUDIT 8",
         ],
+        "seed": _SEED_EMB,
     },
     # ---- derived: regenerable from other .pt by a committed script ----------
     "emb_fullvocab_analysis.pt": {
@@ -96,6 +108,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump + cached corr matrix)",
         "consumers": ["fig14", "emb_structural_block.pt", "AUDIT 8"],
+        "seed": _SEED_EMB,
     },
     "emb_structural_block.pt": {
         "class": "derived",
@@ -103,6 +116,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt", "emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
+        "seed": _SEED_EMB,
     },
     "emb_de_cosine_check.pt": {
         "class": "derived",
@@ -121,6 +135,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T1 reader-head findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_layers.pt": {
         "class": "capture-root",
@@ -128,6 +143,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_components.pt": {
         "class": "capture-root",
@@ -135,6 +151,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["fig16", "fig17", "fig18", "AUDIT 9", "T1.5 carrier findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_analysis.pt": {
         "class": "derived",
@@ -160,6 +177,7 @@ META: dict[str, dict[str, Any]] = {
             "fig21",
             "AUDIT 10",
         ],
+        "seed": _SEED_TRACE,
     },
     "emb_category_stats.pt": {
         "class": "derived",
@@ -174,6 +192,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_battery_vectors.pt"],
         "requires_model": "none",
         "consumers": ["fig10", "AUDIT 7"],
+        "seed": _SEED_EMB,
     },
 }
 
@@ -186,6 +205,31 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/emb_category_stats.py", "examples/emb_de_cosine_check.py", "examples/emb_trace_analyze.py"})
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise SystemExit(
+            f"ERROR: {name}: no seed in META and {m['producing_script']} is "
+            "not in NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise SystemExit(
+            f"ERROR: {name}: seed must be an int, \"unseeded\" or None, got {seed!r}"
+        )
+    return seed
+
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     meta = META[name]
     return {
@@ -195,6 +239,8 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": meta["inputs"],
         "requires_model": meta["requires_model"],
         "consumers": meta["consumers"],
+        # The seed the run used; null when the producer draws no random numbers.
+        "seed": _seed(name, meta),
     }
 
 
@@ -268,7 +314,9 @@ def check() -> int:
         )
         return 1
 
-    if committed == doc:
+    # json.dumps, not ==: false == 0 and 42.0 == 42 in Python, but they are
+    # different JSON values (a seed must be an integer).
+    if json.dumps(committed, sort_keys=True) == json.dumps(doc, sort_keys=True):
         print(
             f"MANIFEST CHECK: OK  ({doc['total_files']} files, sha256 + metadata "
             f"match, {total / 1e6:.1f} MB, generated {generated})"

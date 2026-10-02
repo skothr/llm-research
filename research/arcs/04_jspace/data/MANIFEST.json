@@ -29,7 +29,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -47,7 +48,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "entailed_paperverbatim_chat_all_L19_7b.pt",
@@ -64,7 +66,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_paperverbatim_chat_auto_L19_7b.pt",
@@ -81,7 +84,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_paperverbatim_plain_all_L19_7b.pt",
@@ -98,7 +102,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_paperverbatim_plain_auto_L19_7b.pt",
@@ -115,7 +120,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -132,7 +138,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -149,7 +156,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -166,7 +174,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -183,7 +192,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -200,7 +210,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -217,7 +228,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -234,7 +246,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -251,7 +264,8 @@
       "consumers": [
         "obs 2026-07-22-entailed-property-swaps-stage52.md",
         "audit Check L"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "fitting_prompts_c4en_n1000.json",
@@ -265,7 +279,8 @@
       "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); first 1000 records with len(text.strip()) >= 600 in post-shuffle order. Deterministic given the seed. Alternative fitting corpus for the corpus-sensitivity check (broader web-text register than the wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py",
       "consumers": [
         "jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "fitting_prompts_wikitext103_n1000.json",
@@ -279,7 +294,8 @@
       "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, first 1000 records >= 600 chars, frozen by examples/jspace_fit_lens.py corpus step",
       "consumers": [
         "jlens_*.pt (frozen fitting corpus)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "heldout_prompts_c4en_n30.json",
@@ -293,7 +309,8 @@
       "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); skip first 1000 accepted (the n=1000 fitting slice), then records 1001-1030 with len(text.strip()) >= 600 in post-shuffle order; deduped against fitting_prompts_c4en_n1000.json; verified zero overlap with it and with heldout_prompts_wikitext103_n30.json. Diversified (topically un-clustered) held-out control for the held-out-sample-robustness check; frozen by examples/jspace_freeze_c4_corpus.py --offset 1000.",
       "consumers": [
         "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt (diversified held-out evaluation prompts)"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "heldout_prompts_wikitext103_n30.json",
@@ -307,7 +324,8 @@
       "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 under the same >=600-char filter as the fitting corpus; verified zero overlap with fitting_prompts_wikitext103_n1000.json. NOTE: 30 CONSECUTIVE records -> topically clustered; the diversified C4 held-out set below is the robustness control.",
       "consumers": [
         "readout_scan_*.pt (held-out evaluation prompts)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
@@ -323,7 +341,8 @@
       "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (10764.8) is the July fit's; the cache sidecar's is the refit's (7769.1). full_set_location hand-updated for issue #87; re-running the script writes its generic text (issue #92).",
       "consumers": [
         "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt",
@@ -339,7 +358,8 @@
       "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
@@ -355,7 +375,8 @@
       "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (58543.6) is the July fit's; the cache sidecar's is the refit's (41333.8). full_set_location hand-updated for issue #87; re-running the script writes its generic text (issue #92).",
       "consumers": [
         "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt",
@@ -371,7 +392,8 @@
       "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "lens_eval_qwen2.5-1.5b_bf16_n100.pt",
@@ -388,7 +410,8 @@
       "consumers": [
         "obs 2026-07-18-intermediate-concept-evals-h3-confirmed.md",
         "audit Check B"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt",
@@ -405,7 +428,8 @@
       "consumers": [
         "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
         "audit Check J"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "lens_eval_qwen2.5-1.5b_nf4_n100.pt",
@@ -422,7 +446,8 @@
       "consumers": [
         "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
         "audit Check I"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "lens_eval_qwen2.5-7b_nf4_n100.pt",
@@ -439,7 +464,8 @@
       "consumers": [
         "obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md",
         "audit Check B"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -456,7 +482,8 @@
       "consumers": [
         "obs 2026-07-21-nla-crosstie-stage6.md",
         "audit Check G"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -476,7 +503,8 @@
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M",
         "fig 2026-07-24-jspace-paper-metric-excess.png"
-      ]
+      ],
+      "seed": 10000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt",
@@ -495,7 +523,8 @@
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M",
         "fig 2026-07-24-jspace-paper-metric-excess.png"
-      ]
+      ],
+      "seed": 20000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
@@ -513,7 +542,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": 10000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
@@ -531,7 +561,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": 10000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
@@ -549,7 +580,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": 10000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
@@ -567,7 +599,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": 10000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -587,7 +620,8 @@
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M",
         "fig 2026-07-24-jspace-paper-metric-excess.png"
-      ]
+      ],
+      "seed": 30000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
@@ -605,7 +639,8 @@
       "consumers": [
         "obs 2026-07-24-paper-metric-varfrac-recompute.md",
         "audit Check M"
-      ]
+      ],
+      "seed": 30000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt",
@@ -624,7 +659,8 @@
       "consumers": [
         "audit Check P (stage 2, PR #84)",
         "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
-      ]
+      ],
+      "seed": 30000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt",
@@ -643,7 +679,8 @@
       "consumers": [
         "audit Check P (stage 2, PR #84)",
         "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
-      ]
+      ],
+      "seed": 30000
     },
     {
       "filename": "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt",
@@ -662,7 +699,8 @@
       "consumers": [
         "audit Check P (stage 2, PR #84)",
         "fig 2026-09-23-jspace-paper-metric-matched-kd.png (stage 2, PR #84)"
-      ]
+      ],
+      "seed": 30000
     },
     {
       "filename": "paperverbatim_items_n3.json",
@@ -676,7 +714,8 @@
       "provenance": "Hand-written 3-item bank for the 2026-07-22 verbatim-prompt / cue-redundancy probe (stage-5.2 observation addendum): the paper's exact 'animal that spins webs' prompt [gurnee2026-workspace sec 3.3] plus two minimal-cue items. Consumed via jspace_entailed_swap.py --items-json.",
       "consumers": [
         "entailed_paperverbatim_{chat,plain}_{auto,all}_L19_7b.pt (verbatim-prompt probe artifacts)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -694,7 +733,8 @@
       "consumers": [
         "obs 2026-07-18-readout-scan-1p5b-first-pass.md",
         "audit Check C"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
@@ -712,7 +752,8 @@
       "consumers": [
         "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
         "audit Check J"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
@@ -730,7 +771,8 @@
       "consumers": [
         "obs 2026-07-22-n500-and-heldout-robustness.md",
         "audit Check K"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
@@ -748,7 +790,8 @@
       "consumers": [
         "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
         "audit Check I"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -766,7 +809,8 @@
       "consumers": [
         "obs 2026-07-20-scale-comparison-7b-vs-1p5b-h2.md",
         "audit Check C"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
@@ -784,7 +828,8 @@
       "consumers": [
         "obs 2026-07-22-n500-and-heldout-robustness.md",
         "audit Check K"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -802,7 +847,8 @@
       "consumers": [
         "obs 2026-07-20-jspace-structure-stage4.md",
         "audit Check D"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt",
@@ -820,7 +866,8 @@
       "consumers": [
         "obs 2026-07-20-corpus-sensitivity-c4-1p5b.md",
         "audit Check J"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt",
@@ -838,7 +885,8 @@
       "consumers": [
         "obs 2026-07-22-n500-and-heldout-robustness.md",
         "audit Check K"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt",
@@ -856,7 +904,8 @@
       "consumers": [
         "obs 2026-07-21-quantization-exonerated-1p5b-nf4.md",
         "audit Check I"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt",
@@ -874,7 +923,8 @@
       "consumers": [
         "obs 2026-07-22-n500-and-heldout-robustness.md",
         "audit Check H"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -892,7 +942,8 @@
       "consumers": [
         "obs 2026-07-20-jspace-structure-stage4.md",
         "audit Check D"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt",
@@ -910,7 +961,8 @@
       "consumers": [
         "obs 2026-07-22-n500-and-heldout-robustness.md",
         "audit Check K"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -927,7 +979,8 @@
       "consumers": [
         "obs 2026-07-20-verbal-report-swaps-stage5b.md",
         "audit Check F"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -944,7 +997,8 @@
       "consumers": [
         "obs 2026-07-20-verbal-report-swaps-stage5b.md",
         "audit Check F"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "verbal_report_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
@@ -961,7 +1015,8 @@
       "consumers": [
         "obs 2026-07-20-verbal-report-swaps-stage5.md",
         "audit Checks E, F"
-      ]
+      ],
+      "seed": 0
     },
     {
       "filename": "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt",
@@ -978,7 +1033,8 @@
       "consumers": [
         "obs 2026-07-20-verbal-report-swaps-stage5.md",
         "audit Checks E, F"
-      ]
+      ],
+      "seed": 0
     }
   ]
 }

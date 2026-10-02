@@ -7,8 +7,8 @@ routes only `research/**/data/*.pt`. This script writes a checksummed
 `MANIFEST.json` at the top of `data/` that records, per file: sha256, size,
 whether it is a capture-root (written by a run that loads the teacher model)
 or a derived artifact (regenerable without a model), the producing script and
-command, its inputs, what model it needs, its provenance, and who consumes
-it. Entry names are paths relative to `data/`, since the files sit one level
+command, its inputs, what model it needs, its provenance, who consumes it,
+and the run's seed. Entry names are paths relative to `data/`, since the files sit one level
 down.
 
 Every committed data file under `data/` is covered, recursively, except the
@@ -63,12 +63,14 @@ _OBSERVATION = "observations/2026-05-31-step0-protocol-and-filter.md"
 # `generation` block (n_per_condition 120, batch_size 16, max_new_tokens 80,
 # seed 42, CPU bf16, dataset_id). The command line itself was not recorded,
 # and neither was --out-dir.
+_STEP0_SEED = 42
 _STEP0_ARGS = (
-    "--n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 "
+    "--n-per-condition 120 --batch-size 16 --max-new-tokens 80 "
+    f"--seed {_STEP0_SEED} "
     f"--no-4bit --dataset-id {_STEP0}"
 )
 _STEP0_RUN_FACTS = (
-    "Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per "
+    f"Qwen2.5-7B-Instruct teacher, temperature 1.0, seed {_STEP0_SEED}, 120 queries per "
     "condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 "
     "(0aff26c8 before the 2026-06-01 history rewrite)."
 )
@@ -89,6 +91,9 @@ _STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
 # `class` follows the capture-time manifest.json's own lineage
 # (`derived_from`): everything the capture run wrote directly is a
 # capture-root; decode_report.json is derived from the two streams files.
+# `seed` is the capture run's --seed on every file whose recorded command is
+# that run or the prompts.jsonl replay; decode_report.json's recorded command
+# is decode_test, which draws no random numbers, so its seed is null.
 META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/owl_raw.jsonl": {
         "class": "capture-root",
@@ -101,6 +106,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [f"{_STEP0}/owl_streams.jsonl", _OBSERVATION, "AUDIT A/B"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/neutral_raw.jsonl": {
         "class": "capture-root",
@@ -113,6 +119,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [f"{_STEP0}/neutral_streams.jsonl", _OBSERVATION, "AUDIT A/B"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/owl_streams.jsonl": {
         "class": "capture-root",
@@ -130,6 +137,7 @@ META: dict[str, dict[str, Any]] = {
             _OBSERVATION,
             "AUDIT A/B/C",
         ],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/neutral_streams.jsonl": {
         "class": "capture-root",
@@ -148,6 +156,7 @@ META: dict[str, dict[str, Any]] = {
             _OBSERVATION,
             "AUDIT A/B/C",
         ],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/decode_report.json": {
         "class": "derived",
@@ -164,6 +173,8 @@ META: dict[str, dict[str, Any]] = {
             "AUDIT C replays every scheme from the streams without a model"
         ),
         "inputs": [f"{_STEP0}/owl_streams.jsonl", f"{_STEP0}/neutral_streams.jsonl"],
+        # decode_test draws no random numbers.
+        "seed": None,
         "requires_model": "none",
         "consumers": [_OBSERVATION, "AUDIT A/C"],
     },
@@ -173,7 +184,7 @@ META: dict[str, dict[str, Any]] = {
         "producing_command": (
             "no CLI: replay PromptGenerator(PROMPT_PARAMS) from "
             "examples/subliminal_step0_decode.py under "
-            "numpy.random.default_rng(42) for 120 draws (AUDIT D re-runs it)"
+            f"numpy.random.default_rng({_STEP0_SEED}) for 120 draws (AUDIT D re-runs it)"
         ),
         "provenance": (
             "the 120 seeded queries, index-aligned with *_raw.jsonl; re-derived "
@@ -184,6 +195,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "none",
         "consumers": ["Step 1 (prompt, completion) pairs", "AUDIT D"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/pip_freeze.txt": {
         "class": "capture-root",
@@ -198,6 +210,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": ["AUDIT A"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/manifest.json": {
         "class": "capture-root",
@@ -213,6 +226,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [_OBSERVATION, "data/LICENSE-DATA.md", "AUDIT A/B/D"],
+        "seed": _STEP0_SEED,
     },
 }
 
@@ -279,6 +293,31 @@ def _deliverables() -> list[str]:
     return sorted(names)
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset()
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise SystemExit(
+            f"ERROR: {name}: no seed in META and {m['producing_script']} is "
+            "not in NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise SystemExit(
+            f"ERROR: {name}: seed must be an int, \"unseeded\" or None, got {seed!r}"
+        )
+    return seed
+
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the
     manifest records EXCEPT the disk-derived sha256/size_bytes. Shared by the
@@ -301,6 +340,8 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],
         "consumers": m["consumers"],
+        # The seed the run used; null when the producer draws no random numbers.
+        "seed": _seed(name, m),
     }
 
 
@@ -516,10 +557,16 @@ def check_manifest() -> int:
         # committed manifest.
         if name in META:
             for field, expected in _metadata_fields(name).items():
-                if recorded[name].get(field) != expected:
+                # A missing key is drift even where the expected value is
+                # None (a null seed), so .get() alone would not catch it.
+                # json.dumps, not ==: false == 0 and 42.0 == 42 in Python, but
+                # they are different JSON values (a seed must be an integer).
+                if field not in recorded[name] or json.dumps(
+                    recorded[name][field], sort_keys=True
+                ) != json.dumps(expected, sort_keys=True):
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
-                        f"    manifest={recorded[name].get(field)!r}\n"
+                        f"    manifest={recorded[name].get(field, '<missing>')!r}\n"
                         f"    META     ={expected!r}"
                     )
         else:

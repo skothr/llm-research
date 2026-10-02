@@ -2,7 +2,7 @@
   "arc": "embedding-atlas",
   "base_id": "Qwen/Qwen2.5-7B-Instruct",
   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
-  "generated": "2026-08-17",
+  "generated": "2026-10-02",
   "total_files": 15,
   "total_size_bytes": 96269847,
   "files": {
@@ -20,7 +20,8 @@
         "fig8",
         "fig9",
         "AUDIT 1/4/5"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_category_stats.pt": {
       "sha256": "589b1b2b9ce3508d364aeb7bd7d43c608a3e370b1c6800bad376d9199b097b9e",
@@ -39,7 +40,8 @@
         "fig7",
         "fig8",
         "AUDIT 5"
-      ]
+      ],
+      "seed": null
     },
     "emb_de_cosine_check.pt": {
       "sha256": "a8388e2193d49d1ae21de842e90103fd6853397eccd076dc5d228a11986cb380",
@@ -57,7 +59,8 @@
         "AUDIT 11",
         "README finding #6",
         "2026-07-21 observation"
-      ]
+      ],
+      "seed": null
     },
     "emb_fullvocab_analysis.pt": {
       "sha256": "050bd07a2810e842c8e819847b3e484a89ed77a9261190a25d80061a75d957a1",
@@ -73,7 +76,8 @@
         "fig14",
         "emb_structural_block.pt",
         "AUDIT 8"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_fullvocab_stats.pt": {
       "sha256": "574dbd0b56ab4891b8d52f6afa2bef3b401a51c364e499fc8be12a5de2b32105",
@@ -88,7 +92,8 @@
         "emb_structural_block.pt",
         "fig11-fig13",
         "AUDIT 8"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_global_stats.pt": {
       "sha256": "60388ebf1baa0242565d563330592de8b823e70663db5bbf0ef8534fb1453876",
@@ -102,7 +107,8 @@
         "emb_category_stats.pt",
         "fig1-fig4",
         "AUDIT 1/2/3/4"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_neighbor_probes.pt": {
       "sha256": "72b5fbd12a161afe53f8b89d4c591ae73185395266a9a85a5d62f34b9fe3e5c0",
@@ -115,7 +121,8 @@
       "consumers": [
         "emb_neighbors_report.py (text report)",
         "AUDIT 6"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_pair_directions.pt": {
       "sha256": "c7cccb03e5e6cf0a8a7e21f80bf939af986cea095d68660d6da1c4e5d22bb7fe",
@@ -130,7 +137,8 @@
       "consumers": [
         "fig10",
         "AUDIT 7"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_random_baseline.pt": {
       "sha256": "b8d077d847295e7950345f638f4afcad6b1d3889d2c12c75844af4e1291445a2",
@@ -142,7 +150,8 @@
       "requires_model": "qwen-base@a09a3545",
       "consumers": [
         "(reserved for follow-up baselines; seed-pinned)"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_structural_block.pt": {
       "sha256": "5160b351f2cba7a6e84999f85b72b1ba03b74262197d0107e339393eef7181a5",
@@ -158,7 +167,8 @@
       "consumers": [
         "fig15",
         "AUDIT 8"
-      ]
+      ],
+      "seed": 20260610
     },
     "emb_trace_analysis.pt": {
       "sha256": "ca69670f96b4af6996de4fd10493c63ced94b120fd90a8e963b01cdc6e2a5d32",
@@ -176,7 +186,8 @@
         "AUDIT 9",
         "AUDIT 10 (reader cross-ref)",
         "T0/T1/P2 observation"
-      ]
+      ],
+      "seed": null
     },
     "emb_trace_attention.pt": {
       "sha256": "60362e92789e172279164bfda2c709caa6a889bdc13ccd7b8c25fbb5d5039b71",
@@ -194,7 +205,8 @@
         "fig20",
         "fig21",
         "AUDIT 10"
-      ]
+      ],
+      "seed": 20260611
     },
     "emb_trace_components.pt": {
       "sha256": "d4b11deafa0fe6dc16008b94803de7e0b59510eada61ad25f96694babb1c5acd",
@@ -212,7 +224,8 @@
         "fig18",
         "AUDIT 9",
         "T1.5 carrier findings"
-      ]
+      ],
+      "seed": 20260611
     },
     "emb_trace_layers.pt": {
       "sha256": "145dbcc72c48b9713593445a1728c93af9cef83aae244d65dfaf3ac0065987d2",
@@ -227,7 +240,8 @@
       "consumers": [
         "emb_trace_analysis.pt",
         "T0 census / P2 persistence findings"
-      ]
+      ],
+      "seed": 20260611
     },
     "emb_trace_weightmap.pt": {
       "sha256": "c63301b831566a35fe270941c6488597377256fb006be1093bf6e36a73931d92",
@@ -242,7 +256,8 @@
       "consumers": [
         "emb_trace_analysis.pt",
         "T1 reader-head findings"
-      ]
+      ],
+      "seed": 20260611
     }
   }
 }

@@ -330,6 +330,31 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/nla_aggregate_faithfulness.py", "examples/nla_concept_arithmetic_atlas.py", "examples/nla_country_concept_vector.py", "examples/nla_dense_interp_near_pivot.py", "examples/nla_discriminant_stability_capture.py", "examples/nla_faithfulness.py", "examples/nla_forced_continuation.py", "examples/nla_geometric_features.py", "examples/nla_interpolation_flipbook.py", "examples/nla_mid_seq_native_compare.py", "examples/nla_mid_seq_vocab_atlas_capture.py", "examples/nla_mid_seq_vocab_atlas_compare.py", "examples/nla_pairwise_and_hotdims.py", "examples/nla_plateau_attractor_test.py", "examples/nla_sink_removed_atlas.py", "examples/nla_vocab_atlas_capture.py"})
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise SystemExit(
+            f"ERROR: {name}: no seed in META and {m['producing_script']} is "
+            "not in NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise SystemExit(
+            f"ERROR: {name}: seed must be an int, \"unseeded\" or None, got {seed!r}"
+        )
+    return seed
+
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the
     manifest records EXCEPT the disk-derived sha256/size_bytes. Shared by the
@@ -344,6 +369,10 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],
         "consumers": m["consumers"],
+        # The seed the run used; null when the producer draws no random
+        # numbers. Every producer in this arc decodes greedily
+        # (do_sample=False), so no META entry sets one.
+        "seed": _seed(name, m),
     }
 
 
@@ -465,10 +494,16 @@ def check_manifest() -> int:
         # that was never regenerated into the committed manifest.
         if name in META:
             for field, expected in _metadata_fields(name).items():
-                if recorded[name].get(field) != expected:
+                # A missing key is drift even where the expected value is
+                # None (a null seed), so .get() alone would not catch it.
+                # json.dumps, not ==: false == 0 and 42.0 == 42 in Python, but
+                # they are different JSON values (a seed must be an integer).
+                if field not in recorded[name] or json.dumps(
+                    recorded[name][field], sort_keys=True
+                ) != json.dumps(expected, sort_keys=True):
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
-                        f"    manifest={recorded[name].get(field)!r}\n"
+                        f"    manifest={recorded[name].get(field, '<missing>')!r}\n"
                         f"    META     ={expected!r}"
                     )
     if problems:
