@@ -1,7 +1,13 @@
 """Tests for gen_glossary.py — parser, key derivation, JSON emission."""
 from __future__ import annotations
 
-from gen_glossary import parse_entries, is_case_strict, derive_key, short_def
+from gen_glossary import (
+    derive_key,
+    is_case_strict,
+    parse_entries,
+    short_def,
+    strip_html_comments,
+)
 
 
 def test_parse_plain_bullet_entry():
@@ -152,3 +158,9 @@ def test_short_def_long_sentence_truncated_to_140():
     full = "x" * 200
     s = short_def(full)
     assert len(s) <= 140
+
+
+def test_lint_markers_do_not_reach_definitions() -> None:
+    md = "- **Genuine agreement** — the control condition. <!-- prose-lint: allow -->\n"
+    entries = parse_entries(strip_html_comments(md).splitlines())
+    assert entries and "prose-lint" not in str(entries) and "<!--" not in str(entries)

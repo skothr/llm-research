@@ -47,6 +47,18 @@ def _split_def_and_cite(defn: str) -> tuple[str, str | None]:
     return defn[: m.start()].rstrip(), m.group(1).strip()
 
 
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def strip_html_comments(text: str) -> str:
+    """Drop HTML comments (e.g. `<!-- prose-lint: allow -->` markers, #120).
+
+    They are invisible in rendered Markdown and must not reach the LaTeX
+    glossary text.
+    """
+    return HTML_COMMENT_RE.sub("", text)
+
+
 def parse_entries(lines: Sequence[str]) -> list[dict]:
     """Parse the bullet entries from a glossary.md line iterable.
 
@@ -178,7 +190,7 @@ def main() -> int:
     if not GLOSSARY_MD.exists():
         print(f"error: {GLOSSARY_MD} not found", flush=True)
         return 1
-    text = GLOSSARY_MD.read_text(encoding="utf-8")
+    text = strip_html_comments(GLOSSARY_MD.read_text(encoding="utf-8"))
     entries = parse_entries(text.splitlines())
     records = build_records(entries)
     OUT.parent.mkdir(parents=True, exist_ok=True)
