@@ -10,7 +10,7 @@
 The architectural axes catalogued in
 \cref{sec:tokenization-embedding,sec:positional-encoding,sec:kv-sharing,sec:hardware-attention,sec:ffn,sec:normalization-axis,sec:state-space}
 all assume the canonical \glsterm{autoregressive}{autoregressive} decoding loop: one forward pass
-produces one token. That assumption is load-bearing for both training
+produces one token. That assumption underlies both training
 mathematics (the next-token cross-entropy of
 \cref{sec:tokenization-embedding}) and serving cost (the per-step KV /
 weight read of \cref{sec:kv-sharing}). The 2023--2026 literature breaks
@@ -154,7 +154,7 @@ projection plus one \glsterm{transformer}{transformer} block) taking a fused inp
 features $F_{1:i}$ and the \emph{shifted} token sequence $T_{2:i+1}$,
 and predicting $\hat f_{i+1}$ \citep[\S 3.1]{li2024-eagle}\footnote{KB
 excerpt: \nolinkurl{kb/excerpts/li2024-eagle.md#sec-3-1}.}. The shift by
-one is the load-bearing trick: at the time of predicting $f_{i+1}$,
+one is the trick the method depends on: at the time of predicting $f_{i+1}$,
 the token $t_{i+1}$ that branched the actual generation has already
 been sampled and is conditioned on, which resolves the multi-mode
 uncertainty that pure \glsterm{feature}{feature} autoregression cannot commit to.

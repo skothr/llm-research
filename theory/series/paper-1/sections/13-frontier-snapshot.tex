@@ -245,7 +245,7 @@ the version-lineage / API-surface claims, not the architectural cells;
 those cells remain ``ND.''} We retain the 2025-Q1 row labels with
 this date stamp rather than extend them per release: the column-by-
 column architectural cells would still be ``ND'' for every newer
-label, and the row's load-bearing function in the table is the
+label, and the row's main function in the table is the
 disclosure-ceiling, not the version stamp. The convergence claim of
 this section is therefore stable across the closed-row lineage shift
 between 2025-Q1 and 2026-Q2; the lineage shift itself is documented
@@ -282,13 +282,13 @@ form of \citet[Eq.~6]{shazeer2020} is universal; the dense-vs-MoE
 split is on the multiplicity around it, not on the activation.
 
 \item \textbf{KV-sharing: head-count reduction.} No disclosed
-2026-frontier model uses full \glsterm{mha}{MHA}. Every row sits at \glsterm{gqa}{GQA}-8,
+2026-frontier model uses full \glsterm{mha}{MHA}. Every row uses \glsterm{gqa}{GQA}-8,
 \glsterm{gqa}{GQA}-with-windowing, or \glsterm{multi-head-latent-attention}{MLA} --- all reducing $H_{\mathrm{kv}}$ below
 $H_q$. The lab-aligned split between \glsterm{gqa}{GQA} and \glsterm{multi-head-latent-attention}{MLA} persists, but
 \emph{some} form of head-count reduction is universal, and every
 major inference framework (\glsterm{flashattention}{FlashAttention}, vLLM, \glsterm{compressed-fsm-2}{SGLang}) now ships
-first-class \glsterm{gqa}{GQA} and increasingly first-class
-\glsterm{multi-head-latent-attention}{MLA}~\citep{kwon2023,dao2023}.
+native \glsterm{gqa}{GQA} support and increasingly native
+\glsterm{multi-head-latent-attention}{MLA} support~\citep{kwon2023,dao2023}.
 
 \item \textbf{Attention implementation: \glsterm{flashattention}{FlashAttention}-family exact
 attention.} Every disclosed model uses a \glsterm{flashattention}{FlashAttention}-class
@@ -339,7 +339,7 @@ the recipe risk of \glsterm{multi-head-latent-attention}{MLA}'s decoupled-\glste
 non-crossover. \cref{sec:contradictions} returns to this.
 
 \paragraph{Dense versus MoE on the FFN.}
-The dense-versus-MoE split is genuine but tilting further toward MoE
+The dense-versus-MoE split is real but is tilting further toward MoE
 through 2025--26. LLaMA-3 8B and 70B are dense~\citep{meta-llama3};
 Qwen 2.5 base is dense; \glsterm{mistral}{Mistral} Large 2 was dense, but the lab's
 flagship line crossed to MoE with \glsterm{mistral}{Mistral} Large 3 (Dec 2025;
@@ -384,7 +384,7 @@ across all disclosed labs}: \glsterm{rope}{RoPE}-with-extension, \glsterm{rmsnor
 KV-sharing (some form of \glsterm{gqa}{GQA} or \glsterm{multi-head-latent-attention}{MLA}), \glsterm{flashattention}{FlashAttention}-class exact
 attention; \textbf{the residual splits are concentrated in three
 axes}: KV-sharing strategy (\glsterm{gqa}{GQA} vs \glsterm{multi-head-latent-attention}{MLA}, lab-aligned, single-source
-quality claim), dense-vs-MoE on the \glsterm{ffn}{FFN} multiplicity (genuine
+quality claim), dense-vs-MoE on the \glsterm{ffn}{FFN} multiplicity (a real
 quality / serving-cost trade with cross-lab disagreement on
 $E_s > 0$), and multimodal integration pattern (projector vs native,
 no controlled cross-lab study). The undisclosed cluster (\glsterm{claude}{Claude},

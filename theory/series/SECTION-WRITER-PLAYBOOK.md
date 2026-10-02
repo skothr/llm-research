@@ -16,7 +16,7 @@ You produce one `.tex` file at the path above. You do not modify `main.tex`, `pr
 
 The series target is a Feynman-bar monograph series. Every section must hit:
 
-1. **Cite, never assert.** Every load-bearing technical claim cites a paper-key from `theory/kb/index/papers.json` via `\citep{key}` or `\citet{key}` (BibTeX entries are auto-generated in `theory/series/references.bib`). Where the KB has a section-anchored excerpt at `theory/kb/excerpts/<key>.md`, also cite the anchor inline as a footnote: `\footnote{KB excerpt: \texttt{kb/excerpts/key.md\#sec-3}}`. Where the excerpt is still abstract-only, mark with `\deepencite{key §X}` (a yellow margin note).
+1. **Cite, never assert.** Every technical claim a conclusion rests on cites a paper-key from `theory/kb/index/papers.json` via `\citep{key}` or `\citet{key}` (BibTeX entries are auto-generated in `theory/series/references.bib`). Where the KB has a section-anchored excerpt at `theory/kb/excerpts/<key>.md`, also cite the anchor inline as a footnote: `\footnote{KB excerpt: \texttt{kb/excerpts/key.md\#sec-3}}`. Where the excerpt is still abstract-only, mark with `\deepencite{key §X}` (a yellow margin note).
 
 2. **Math is verbatim from the cited paper.** When you transcribe an equation, it must match the paper's equation up to notation choice. Don't paraphrase math. Use the standard tensor-shape notation from `preamble.tex`: `B` (batch), `S` (sequence), `D` (model dim), `H` (heads), `d_h` (head-dim), `V` (vocab), `L` (layers).
 

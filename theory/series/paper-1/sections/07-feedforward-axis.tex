@@ -19,7 +19,7 @@ DeepSeekMoE fine-grained top-$k$ with a shared expert). The frontier
 of 2026 is the Cartesian product: every routed expert is a \glsterm{swiglu}{SwiGLU}
 block, and the layer wraps $E$ such experts with a learned router and
 a load-balancing discipline. This section walks both axes, transcribes
-the load-bearing equations from the primary sources, and surfaces the
+the defining equations from the primary sources, and surfaces the
 single most contested empirical claim --- whether sparse MoE quality
 matches dense quality at matched active-parameter count.
 
@@ -148,7 +148,7 @@ when that \glsterm{feature}{feature} is also active'' patterns the additive form
 \citet[\S 4]{shazeer2020} closes with the well-known disclaimer ---
 ``We offer no explanation as to why these architectures seem to
 work; we attribute their success, as all else, to divine benevolence''
---- so the canonical form Eq.~\eqref{eq:swiglu} is the only honest
+--- so the canonical form Eq.~\eqref{eq:swiglu} is the only defensible
 endpoint of the intuition.
 \end{intuition}
 
@@ -386,8 +386,8 @@ aux-loss-free $\to$ global-batch).
 
 \begin{contradiction}
 The empirical claim that fine-grained MoE matches dense
-quality at \emph{matched active-parameter count} is the most
-load-bearing and least-replicated assertion in this section. \citet{deepseek-v3}
+quality at \emph{matched active-parameter count} is both the assertion
+this section relies on most and its least-replicated one. \citet{deepseek-v3}
 report \glsterm{precision-pinning}{DeepSeek-V3} ($37\mathrm{B}$ active) tracking or exceeding
 LLaMA-3 405B (dense) on benchmark
 suites~\citep[abstract]{deepseek-v3}; \citet{deepseekmoe2024}

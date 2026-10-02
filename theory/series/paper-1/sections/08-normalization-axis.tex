@@ -81,7 +81,7 @@ summarization, and image classification, with runtime savings of
 placement~\citep[\S 4]{zhang2019}; on \glsterm{transformer}{Transformer}-base WMT'14 EN--DE
 the swap costs $0.05$ BLEU and saves 9.4\% of training
 time~\citep[\S 4]{zhang2019}. The shift-invariance that \glsterm{layer-normalization}{LayerNorm}
-afforded turns out not to be load-bearing in
+afforded turns out not to be needed in
 practice~\citep[\S 3.2]{zhang2019}, and every frontier-2026 \glsterm{decoder-only}{decoder-only}
 \glsterm{llm}{LLM} (LLaMA-1/2/3, \glsterm{mistral}{Mistral}, Qwen, DeepSeek-V2/V3, Gemma, OLMo, Phi-4)
 ships \glsterm{rmsnorm}{RMSNorm} rather than
@@ -167,7 +167,7 @@ WMT'14 and BERT-pretraining experiments confirm the prediction:
 the same setting with $T_{\mathrm{warmup}} = 4000$ trains stably; the
 \glsterm{pre-ln}{Pre-LN} counterpart trains stably at $\mathrm{lr}_{\max} = 10^{-3}$ with
 no \glsterm{warmup}{warmup} at all~\citep[\S 5]{xiong2020}. Theorem~\ref{thm:preln} is the
-load-bearing reason every 2020+ \glsterm{decoder-only}{decoder-only} \glsterm{llm}{LLM} is \glsterm{pre-ln}{Pre-LN}.
+main reason every 2020+ \glsterm{decoder-only}{decoder-only} \glsterm{llm}{LLM} is \glsterm{pre-ln}{Pre-LN}.
 
 \subsection{DeepNorm and beyond}
 \label{sec:norm-deepnorm}

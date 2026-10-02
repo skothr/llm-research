@@ -118,7 +118,7 @@ Concentrated discussion of `[CONTRADICTION]` markers: MLA-vs-MHA at scale (singl
 
 - **Math is verbatim from PDFs.** Every equation cited with a `kb/excerpts/<key>#<anchor>` dual-citation.
 - **Tensor shapes everywhere relevant.** B (batch), S (seqlen), D (model), H (heads), d_h (head-dim), V (vocab), L (layers).
-- **Contradictions are first-class.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body.
+- **Contradictions get dedicated treatment.** Each `[CONTRADICTION]` gets explicit treatment in §14, not buried in body.
 - **No analogy laundering.** `[INTUITION]` and `[ANALOGY]` markers preserved from the KB notes; analogy returns to canonical math each time.
 
 ## Sections by writing-pass parallelism

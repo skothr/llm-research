@@ -2,7 +2,7 @@
 
 _2026-05-04. Decision lifted from `theory/plans/2026-05-04-latex-series-brainstorm.md`. See that file for the full A-E comparison and tradeoffs._
 
-Each paper is organized around a **load-bearing thesis** the KB makes defensible. Surveys describe; theses commit. The KB's contradictions cluster naturally — areas with the most contention (architecture, reasoning, alignment) lead the paper-set, with two tighter papers covering training/post-training and interpretability/evaluation.
+Each paper is organized around a **central thesis** the KB makes defensible. Surveys describe; theses commit. The KB's contradictions cluster naturally — areas with the most contention (architecture, reasoning, alignment) lead the paper-set, with two tighter papers covering training/post-training and interpretability/evaluation.
 
 ## The five theses
 
@@ -18,7 +18,7 @@ Each paper is organized around a **load-bearing thesis** the KB makes defensible
 
 ### Paper 2 — *Training is a multi-stage pipeline, not a single objective*
 
-**Thesis:** Modern frontier-LLM training is a six-stage pipeline (pre-training-data → mixed-precision/distributed scaffolding → SFT → preference-RL → reasoning-RL → adaptation/merging). Each stage's load-bearing variables (token count, mixture, precision, batch size, KL constraints, verifier signal, merge geometry) are now well-characterized. The pipeline composes; pretending it is one objective produces persistently confused empirics.
+**Thesis:** Modern frontier-LLM training is a six-stage pipeline (pre-training-data → mixed-precision/distributed scaffolding → SFT → preference-RL → reasoning-RL → adaptation/merging). Each stage's governing variables (token count, mixture, precision, batch size, KL constraints, verifier signal, merge geometry) are now well-characterized. The pipeline composes; pretending it is one objective produces persistently confused empirics.
 
 **KB anchors:** `kb/notes/training/` (6 notes), `kb/notes/post-training/` (5 notes), `kb/notes/scaling/{kaplan-laws,chinchilla,scaling-frontier,mu-transfer}.md`. `kb/excerpts/{kaplan2020,hoffmann2022-chinchilla,yang2022-mup,fineweb2024,data-mixing-laws-2024,micikevicius2017-mixed-precision,kalamkar2019-bfloat16,torchtitan2024,ouyang2022-instructgpt,bai2022-cai,rafailov2023-dpo,meng2024-simpo,burns2023-w2s,phi4,muon-moonlight2025,hu2021-lora,dettmers2023-qlora,wortsman2022-model-soups,ilharco2022-task-vectors,yadav2023-ties-merging}.md`.
 
@@ -42,7 +42,7 @@ Each paper is organized around a **load-bearing thesis** the KB makes defensible
 
 ### Paper 5 — *What we measure and what slips through*
 
-**Thesis:** The eval/alignment landscape is a layered defense: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat (sycophancy, scheming, alignment-faking) detection. Each layer has known failure modes; the field's current bar is honest about which threats it can measure today and which slip through.
+**Thesis:** The eval/alignment landscape is a layered defense: knowledge-benchmark contamination → reasoning-benchmark validity → agentic-benchmark realism → safety-evaluation robustness → alignment-threat (sycophancy, scheming, alignment-faking) detection. Each layer has known failure modes; the field's current bar is accurate about which threats it can measure today and which slip through.
 
 **KB anchors:** `kb/notes/evaluation/` (4 notes), `kb/notes/alignment/` (5 notes). `kb/excerpts/{hendrycks2021-mmlu,wang2024-mmlu-pro,glazer2024-frontiermath,phan2025-hle,rein2023-gpqa,jimenez2024-swebench,xie2024-osworld,mialon2023-gaia,yao2024-tau-bench,liang2022-helm,contamination-survey-2025,mmlu-redux-2024,harmbench2024,chao2024-jailbreakbench,wei2023-jailbroken,russinovich2024-crescendo,kirchenbauer2023-watermark,greenblatt2024-alignment-faking,meinke2024-apollo-scheming,sharma2023-sycophancy,irving2018-debate}.md`.
 
@@ -50,7 +50,7 @@ Each paper is organized around a **load-bearing thesis** the KB makes defensible
 
 ## Cross-paper threads
 
-A few topics legitimately cross paper boundaries; we name the load-bearing home and reference from elsewhere:
+A few topics legitimately cross paper boundaries; we name the primary home and reference from elsewhere:
 
 - **MoE** lives in Paper 1 (architecture); cited from Paper 2 (training: load-balancing, fine-grained experts).
 - **MLA** lives in Paper 1 (KV compression); cited from Paper 4 (interpretability of compressed-KV models).
@@ -80,7 +80,7 @@ Reading order: 1 → 2 → 3 → 4 → 5. Each paper assumes the prior:
 
 ## Citation discipline
 
-Every load-bearing claim cites:
+Every claim a conclusion rests on cites:
 - A paper-key from `kb/index/papers.json` AND
 - An anchor `kb/excerpts/<key>#<heading>` where the excerpt has been deepened to §-anchored.
 

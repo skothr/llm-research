@@ -16,7 +16,7 @@ pretraining where vision and text patches share the \glsterm{residual-stream}{re
 from the first token of pretraining
 \citep{meta-llama4,internvl3-2025,gemini2-5}. The thesis of this
 section is that the projector and the choice of pattern are
-genuinely architectural, while the vision encoder and the
+architectural, while the vision encoder and the
 freeze-versus-tune schedule are training-pipeline choices that we
 defer to Paper~2.
 
@@ -182,7 +182,7 @@ reproduction~\citep{internvl3-2025,meta-llama4}.
 \label{sec:multimodal-arch-vs-not}
 
 The framing of this paper is that the modern \glsterm{transformer}{Transformer} is a small
-set of architectural choices; multimodality adds two genuinely new
+set of architectural choices; multimodality adds two new
 ones and cleanly externalizes a third.
 
 \begin{enumerate}
@@ -192,7 +192,7 @@ prefix-token projection (LLaVA, Eq.~\eqref{eq:llava}), or unified-token
 native pretraining are three architecturally distinct choices. They
 differ in which weights see vision-conditioning gradients and at what
 depth in the network vision can interact with text. This is the
-load-bearing axis.
+central axis.
 
 \item \textbf{The projector design.} Whether $\pi$ is a single linear
 matrix, a 2-layer MLP, a Q-Former, or a Perceiver Resampler determines
