@@ -28,7 +28,7 @@ align with known interpretability phenomena:
    farms, Bulgarian puzzles). Even though our injection step
    normalizes to unit L2, the *direction* of a massive-activation
    vector is dominated by an outlier dimension, so the AV's input is
-   genuinely OOD despite having unit norm.
+   OOD despite having unit norm.
 3. **Token-embedding inputs are OOD relative to layer-20.** Feeding
    the AV the *raw input embedding* of `" Paris"` (token id 12095,
    ‖h‖=0.95 — typical embedding scale) yields a confidently-confabulated
@@ -137,7 +137,7 @@ AV may have rarely seen during training, since training data is
 typically subsampled to avoid pathological positions. Hence
 confabulation.
 
-### H3 — Token embeddings and layer-20 residuals live in genuinely different geometric subspaces
+### H3 — Token embeddings and layer-20 residuals live in different geometric subspaces
 
 ‖embed(" Paris")‖ = 0.95 vs ‖h_20‖ ≈ 110: not just a scale difference.
 After our normalize-to-150 step both vectors have ‖·‖=150, but the

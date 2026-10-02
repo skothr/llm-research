@@ -42,7 +42,7 @@ All 23 categories have intra-category cosine > **+0.84 even after sink removal**
 | emotion | 6 | +0.849 |
 | refusal | 4 | +0.847 |
 
-This wasn't the sink offset (those were removed). There's a separate **category-attractor subspace** that pulls members together to +0.847 to +0.983 cosine (emotion +0.849 and refusal +0.847 sit at the loose end; capital and demonstrative at +0.98+). The h-vector hierarchy now looks like:
+This wasn't the sink offset (those were removed). There's a separate **category-attractor subspace** that pulls members together to +0.847 to +0.983 cosine (emotion +0.849 and refusal +0.847 are at the loose end; capital and demonstrative at +0.98+). The h-vector hierarchy now looks like:
 
 | Attractor level | Effect on cosine |
 |---|---|
@@ -51,7 +51,7 @@ This wasn't the sink offset (those were removed). There's a separate **category-
 | Category-specific attractor | adds +0.4 to +0.6 *within* category |
 | Within-category content modulation | the remaining +0.01 to +0.15 |
 
-The two loosest categories (refusal +0.847, emotion +0.849) span genuinely different semantic dimensions — "refuse" vs "sorry" vs "cannot" have different connotations; "happy" vs "sad" are opposite valences. Tighter categories (capital +0.983) contain near-substitutable concepts.
+The two loosest categories (refusal +0.847, emotion +0.849) span different semantic dimensions — "refuse" vs "sorry" vs "cannot" have different connotations; "happy" vs "sad" are opposite valences. Tighter categories (capital +0.983) contain near-substitutable concepts.
 
 ## Finding 2 — PC1 of the vocab-only atlas is a content-vs-function axis
 
@@ -63,7 +63,7 @@ PCA on the 128-anchor matrix (sink-removed) has:
 
 Much higher concentration than the 167-capture set (top-3 ~28%). Single-position end-of-prompt captures occupy a lower-dimensional manifold.
 
-PC1 cleanly separates **content-bearing** (left, PC1 < 0) from **structural/function** (right, PC1 > 0). PC2 separates valence/format (top: capitals/emotions/wh-words; bottom: codemath/punctuation/numbers). **The model's mid-late residual is organized along a "what is this token about?" vs "what role does it play?" axis as the dominant content direction.**
+PC1 separates **content-bearing** (left, PC1 < 0) from **structural/function** (right, PC1 > 0) by sign. PC2 separates valence/format (top: capitals/emotions/wh-words; bottom: codemath/punctuation/numbers). **The model's mid-late residual is organized along a "what is this token about?" vs "what role does it play?" axis as the dominant content direction.**
 
 Within the labeled atlas (fig19), country and capital clusters overlap — Paris and France are essentially identical at h[20]. The model represents "capital-or-country abstract category" more strongly than token-specific identity at this layer.
 

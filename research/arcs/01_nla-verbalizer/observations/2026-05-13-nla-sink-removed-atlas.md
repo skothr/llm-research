@@ -12,7 +12,7 @@ Test whether removing the 7 sink-classified component indices {277, 458, 1427, 1
 
 ## Finding
 
-The original interpretation in [the geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) was **wrong about causation**. Removing the sinks barely changes the PCA layout. PC1 variance fraction moves from 16.5% to 15.3%; the country cluster stays in the bottom-left, the haiku cluster on the right. **PC1/PC2 are genuinely content-and-position axes that exist independently of the sinks** — the sinks aren't shaping them.
+The original interpretation in [the geometric deep dive](2026-05-13-nla-geometric-deep-dive.md) was **wrong about causation**. Removing the sinks barely changes the PCA layout. PC1 variance fraction moves from 16.5% to 15.3%; the country cluster stays in the bottom-left, the haiku cluster on the right. **PC1/PC2 are content-and-position axes that exist independently of the sinks** — the sinks aren't shaping them.
 
 What sinks DO is add a **constant +0.22 offset to every pairwise cosine** [qualified 2026-09-28: see Evidence], raising mean off-diag cos from +0.179 (sink-removed) to +0.403 (original) and the floor from -0.069 to +0.054. They are the DC component of the residual stream — they make every comparison look more similar than it actually is, without carrying information.
 

@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-13
 **Toolkit:** `nla_audit_findings.py`
-**Result:** **65 PASS / 0 FAIL.** Every load-bearing numerical claim verified from the four raw artifact files [qualified 2026-09-28: the dedup regression fits are unaudited; see Follow-ups] (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
+**Result:** **65 PASS / 0 FAIL.** Every numerical claim the findings rely on verified from the four raw artifact files [qualified 2026-09-28: the dedup regression fits are unaudited; see Follow-ups] (without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates).
 
 > **Write-time snapshot.** 65 was the count on 2026-05-13. The suite was later extended (93 → 129 → **178 PASS** as of 2026-05-31, now covering the faithfulness foundation and concept-arithmetic decode identities). See [`figures/INVENTORY.md`](figures/INVENTORY.md) and the arc README for the current count.
 
@@ -12,7 +12,7 @@ A spot-check of fig15 (counterfactual glyph diff) revealed a position-drift conf
 
 ## Method
 
-`nla_audit_findings.py` loads the four raw `.pt` files (`aggregate_faithfulness.pt`, `rabbit_haiku_gen_trajectory.pt`, `forced_continuation.pt`, `country_concept_vector.pt`) and **re-derives** every load-bearing number from first principles — without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates that downstream scripts used. Each derived value is compared against the published claim with a numerical tolerance (typically 0.005 or 0.01 depending on rounding); each comparison is reported as PASS/FAIL.
+`nla_audit_findings.py` loads the four raw `.pt` files (`aggregate_faithfulness.pt`, `rabbit_haiku_gen_trajectory.pt`, `forced_continuation.pt`, `country_concept_vector.pt`) and **re-derives** every number the findings rely on from first principles — without trusting the cached `pairwise_and_hotdims.pt` or `geometric_features.pt` intermediates that downstream scripts used. Each derived value is compared against the published claim with a numerical tolerance (typically 0.005 or 0.01 depending on rounding); each comparison is reported as PASS/FAIL.
 
 ## Result
 

@@ -22,11 +22,11 @@ regime. Three findings of substance:
    — score cosine +0.845 and +0.804 respectively, *above* the
    trajectory mean. The AV is faithfully reading that h[20] at those
    positions is in a "generic nature poem" state, not a
-   rabbit-specific state. Layer 20 genuinely loses specific entity
+   rabbit-specific state. Layer 20 itself loses specific entity
    binding once attention has moved past the entity token.
 2. **The output haiku stays coherent around "rabbit" not via layer 20
    keeping rabbit pinned, but via *attention retrieval* during
-   generation.** This is a clean separation of two different
+   generation.** This separates two different
    mechanisms: layer-20 residual is one slice of the computation;
    attention-back-to-earlier-positions is what preserves entity
    consistency at the output. The model's haiku "Soft fur leaps
@@ -132,7 +132,7 @@ most trustworthy, not whether any of them are. For future qualitative
 readings on this checkpoint, we can be moderately confident that
 narrative content tracks structural content.
 
-### H2 — Low-cosine steps mark genuinely ambiguous positions
+### H2 — Low-cosine steps mark ambiguous positions, not AV failure
 
 Step 12 (` as`, cos=+0.778) is mid-simile, mid-transition. The AV's
 vague reading there isn't AV failure — it's faithful reporting of a
@@ -182,7 +182,7 @@ must come from attention retrieval, not layer-20 memory.
    7 and 8 both verbalize as "breeze" related and both have high
    fidelity. Is the cosine high because their *texts are similar* (so
    any text near "breeze" would reconstruct similar h's), or because
-   the h's are genuinely close (the AV is reading two semantically
+   the h's themselves are close (the AV is reading two semantically
    neighboring states)? Cosine on `h_pred(step_7)` vs
    `h_pred(step_8)` would tell us.
 4. **Steering experiment.** Edit step 1's AV text from "rabbit's fur"

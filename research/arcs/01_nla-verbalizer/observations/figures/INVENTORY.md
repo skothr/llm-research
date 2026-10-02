@@ -10,7 +10,7 @@ Catalogue of all 36 figures in this directory (fig1-fig11, fig13-fig37 — fig12
 - **Toolkit:** `llm_surgeon.probe.{load_av, load_ar, nla_verbalize, nla_reconstruct, nla_score}` (see `llm_surgeon/probe/_nla.py`).
 - **Sink dims:** {277, 458, 1427, 1627, 2107, 2570, 3110} — identified by the `classify_dim_character` heuristic in `nla_pairwise_and_hotdims.py`. "Sink-removed" preprocessing zeros these 7 component indices.
 - **Feature dims:** {20, 32, 392, 608, 1121, 1790, 2604, 2953} — same heuristic, content-bearing dims.
-- **Audit:** `examples/nla_audit_findings.py` re-derives every load-bearing number from raw `.pt` artifacts. **196 PASS / 0 FAIL** (audits 1-10 base; 11-19, in order: Path B, the vocab atlas, discriminant validation, the stability scan, the mid-seq vocab-atlas null result, the mid-seq native-discriminant lift, concept arithmetic — audit 17, the decode identities — dense interpolation, and the plateau attractor; 20-21 the round-trip faithfulness foundation; 22-23 the fig29 self-validation top-5 hit rates and the fig30 hierarchical re-discrimination null). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
+- **Audit:** `examples/nla_audit_findings.py` re-derives every number the findings rely on from raw `.pt` artifacts. **196 PASS / 0 FAIL** (audits 1-10 base; 11-19, in order: Path B, the vocab atlas, discriminant validation, the stability scan, the mid-seq vocab-atlas null result, the mid-seq native-discriminant lift, concept arithmetic — audit 17, the decode identities — dense interpolation, and the plateau attractor; 20-21 the round-trip faithfulness foundation; 22-23 the fig29 self-validation top-5 hit rates and the fig30 hierarchical re-discrimination null). Runs from a clean clone via the committed `../../data/` fallback. Dataset integrity: `examples/nla_data_manifest.py --check`.
 
 ---
 
@@ -78,7 +78,7 @@ Source scripts: `examples/nla_cav_glyph.py` (fig13), `nla_counterfactual_glyph_d
 ### fig13_cav_glyph.png
 4-panel glyph view of the country CAV direction: country_mean, non_country_mean, CAV-at-scale-150, raw difference-of-means. Tests H3 (CAV is dim-32-aligned). **Result: H3 falsified** — cos(CAV_unit, e_32) = +0.051, not the predicted ≥+0.4.
 
-**Conclusion correction:** the CAV is genuinely distributed across hundreds of dims; top-1 contributor is dim 1803 at only 1.5% variance share.
+**Conclusion correction:** the CAV is distributed across hundreds of dims; top-1 contributor is dim 1803 at only 1.5% variance share.
 
 ### fig15_counterfactual_diff.png
 4-row panel of forced-continuation pairs (factual Paris→Berlin, negation Yes→No, math 4→5, refusal_metaware 4→' refuse'). Per row: natural glyph, forced glyph, diff glyph. Reports `||Δh||_feat` per pair.
@@ -183,7 +183,7 @@ Source script: `examples/nla_hierarchical_classifier.py`. Data: `vocab_atlas.pt`
 ### fig30_hierarchical_accuracy.png
 Bar chart comparing baseline (single discriminant) vs hierarchical (sub-discriminator on sibling pairs) top-1 accuracy per source-mapped category. **Null result**: only 1 of 33 sibling-applicable captures flipped, lifting country 34%→38%, overall 44%→45%.
 
-The diagnostic from MAIN-47's resolution: the 34% baseline was a sum of 3 different failure modes (genuine sibling swap, right-by-other-name, mislabeled tests), only the first of which is fixable by the basis. The hierarchical scheme fixed the only "genuine sibling swap" case in the dataset.
+The diagnostic from MAIN-47's resolution: the 34% baseline was a sum of 3 different failure modes (true sibling swap, right-by-other-name, mislabeled tests), only the first of which is fixable by the basis. The hierarchical scheme fixed the only "true sibling swap" case in the dataset.
 
 ---
 
@@ -220,7 +220,7 @@ Source scripts: `examples/nla_concept_arithmetic_atlas.py`, `nla_concept_arithme
 ### fig35_concept_arithmetic_atlas.png
 Multi-row text-table: 7 arithmetic combinations on layer-20 h vectors (rescaled to ||h||=150 before AV-decoding). Categories color-coded: analogy (blue), subtraction (red), axis (green), compound (purple). Each row pairs the arithmetic expression + prediction with the AV reading. **Headline finding**: word2vec-style specific-identity analogies FAIL (3/3) — `Paris − France + Germany` decodes as London (right category, wrong identity), `Tokyo − Japan + France` decodes as Spain (wrong category), `Berlin − Germany + UK` collapses to UK. **Category-level axis directions DO preserve** — `country_centroid − capital_centroid` decodes as country-flavored content. **Compound (additive) follows the larger-magnitude term** — `country + emotion` decodes as China (country dominates). Pure subtraction of similar-magnitude vectors yields incoherent noise after rescaling. Confirms layer-20 representations are categorically structured but not algebraically composable in the word2vec sense.
 
-CJK glyphs render as boxes in DejaVu Serif (AV occasionally outputs Chinese commentary); English content is clear, which carries the load-bearing decode signal.
+CJK glyphs render as boxes in DejaVu Serif (AV occasionally outputs Chinese commentary); English content is clear, and it carries the decode signal the figure is read for.
 
 ---
 

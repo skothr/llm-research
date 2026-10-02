@@ -12,7 +12,7 @@ Test three quick variants of the signature-glyph primitive against existing arti
 
 ## Finding 1 — fig13 — H3 falsified, sinks ARE content-modulated
 
-H3 from the [sink-removed atlas note](2026-05-13-nla-sink-removed-atlas.md) predicted cos(CAV_unit, e_32) ≥ +0.4. **Result: +0.0510. H3 FAIL.** The country CAV direction is **genuinely distributed across hundreds of dimensions**, not single-dim aligned. The top single contributor is dim **1803** at +0.124 (only **1.5%** of the direction's squared norm), and the top 20 dims combined account for only **~14%** of the variance. [qualified 2026-09-28: see Evidence]
+H3 from the [sink-removed atlas note](2026-05-13-nla-sink-removed-atlas.md) predicted cos(CAV_unit, e_32) ≥ +0.4. **Result: +0.0510. H3 FAIL.** The country CAV direction is **distributed across hundreds of dimensions**, not single-dim aligned. The top single contributor is dim **1803** at +0.124 (only **1.5%** of the direction's squared norm), and the top 20 dims combined account for only **~14%** of the variance. [qualified 2026-09-28: see Evidence]
 
 The structure of the top-20 contributors:
 
@@ -73,7 +73,7 @@ fig16's right column also shows the three refusal_metaware diff glyphs have visu
 
 ## Finding 3 — fig15 — Counterfactual ||Δh||_feat ranks counterfactual surprise (CORRECTED — see Correction section above; the original 35.55 below was position-drift-inflated)
 
-For each of the 4 forced-continuation pairs, computed the glyph difference (forced − natural) in the feature-dim subspace. **The refusal_metaware row's original 35.55 was inflated by Δpos=+10; position-matched correction (fig16) gives 28.06** — the corrected progression is the load-bearing one:
+For each of the 4 forced-continuation pairs, computed the glyph difference (forced − natural) in the feature-dim subspace. **The refusal_metaware row's original 35.55 was inflated by Δpos=+10; position-matched correction (fig16) gives 28.06** — the corrected progression is the one the finding uses:
 
 | pair | prompt | natural → forced | ||Δh||_feat (original fig15) | ||Δh||_feat (corrected fig16) |
 |---|---|---|---|---|

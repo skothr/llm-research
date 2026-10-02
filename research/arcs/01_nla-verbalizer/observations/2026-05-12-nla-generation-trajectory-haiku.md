@@ -136,7 +136,7 @@ position correctly predicts the merger continuation.
 
 "Playful wordplay" and "hops, sips" — the AV simultaneously reads
 "hops" as both the verb of motion (rabbit hops) and the noun (beer
-hops, via "sips"). Whether this is the model genuinely activating both
+hops, via "sips"). Whether this is the model itself activating both
 senses or coincidence in the AV's training distribution is uncertain
 from one example, but the reading is unambiguous.
 
@@ -173,14 +173,14 @@ visible in h[20]. To strengthen this:
   `breezes` (the full target word). If the cosine is high relative to
   random tokens, that's quantitative confirmation of the
   thought-ahead reading.
-- Compare to a counterexample where the partial token is genuinely
+- Compare to a counterexample where the partial token is
   ambiguous (`' ha'` could complete to haiku, happy, have, hand…)
   and see whether one direction dominates h[20].
 
-### H2 — "Hops" wordplay is genuine, not AV confabulation
+### H2 — "Hops" wordplay is in Qwen's h[20], not AV confabulation
 
 The dual-sense reading at step 14 could be:
-- (a) Qwen's h[20] at that position genuinely activates both senses
+- (a) Qwen's h[20] at that position activates both senses
   (rabbit-motion + beer-hops) due to "hops" being lexically polysemous;
   the AV faithfully reports the duality.
 - (b) Qwen activates only the motion sense; the AV happens to mention
