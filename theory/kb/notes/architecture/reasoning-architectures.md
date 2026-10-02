@@ -241,8 +241,8 @@ fixable is open.
 
 [CONTRADICTION] **What the scratchpad actually does.** Two views:
 
-- *Computational view:* the reasoning trace is **new extra
-  compute** — the model is performing serial inference steps it
+- *Computational view:* the reasoning trace is **new
+  computation** — the model is performing serial inference steps it
   couldn't do in a single forward pass. RLVR shapes this compute to
   be useful.
 - *Surface view:* the reasoning trace is **exploration of the policy's

@@ -90,7 +90,7 @@ $$V(s_T, g) = \mathbb{1}\Big[\bigwedge_{t \in \text{F2P}} \mathrm{pass}(t, s_T)\
 The headline metric is `% resolved` over the 2,294 (or 500 in the
 Verified subset) instances. At launch (Oct 2023), Claude 2 resolved
 ~1.96% `[jimenez2024-swebench §sec-headline]`; as of mid-2025 the
-SWE-bench Verified leaderboard reaches >70% for Claude Sonnet 4.5
+SWE-bench Verified leaderboard is at >70% for Claude Sonnet 4.5
 class agents (see Phase 1 sweep, EVAL section).
 
 **SWE-bench Verified** (OpenAI, Aug 2024) is a 500-task subset
