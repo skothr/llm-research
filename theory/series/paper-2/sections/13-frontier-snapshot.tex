@@ -21,7 +21,7 @@ falls out is the section's central claim: every disclosed pipeline since
 2024 contains all six stages, in the same order, with the same
 inputs and outputs at each stage boundary; agreement on the
 architecture of the recipe is broader than agreement on the
-controlling variables; and the disagreements that remain are
+key variables; and the disagreements that remain are
 localized at stage boundaries (token budget, optimizer, \glsterm{tensor-parallel}{TP}-yes-vs-no,
 \glsterm{fp8}{FP8}-vs-BF16-base, \glsterm{dpo}{DPO}-vs-PPO-vs-\glsterm{grpo-2}{GRPO} mix, distill-from-reasoner
 yes/no, merge yes/no) rather than at the
@@ -343,7 +343,7 @@ Llama 3 \citep{meta-llama3}, Tülu 3 \citep{tulu3}, OLMo 2
 \citep{olmo2}, Qwen 2.5 \citep{qwen2-5}, and the Phi-4 line
 \citep{phi4} all ship \glsterm{dpo}{DPO} \citep{rafailov2023-dpo} or its variants
 on the preference-RL leg. DeepMind's Gemma 3 \citep{gemma3} is the
-main exception: PPO with weight-averaged reward models
+first exception: PPO with weight-averaged reward models
 (\glsterm{warm}{WARM} \citep{warm-2024} / \glsterm{warp}{WARP} \citep{warp-2024}) is the disclosed
 choice. Anthropic's \glsterm{claude}{Claude} line is the second exception: \glsterm{rlaif-3}{RLAIF} / \glsterm{constitutional-ai}{CAI}
 \citep{bai2022-cai} (now C3AI \citep{c3ai-2025} / \glsterm{r-cai-2}{R-CAI}
@@ -410,7 +410,7 @@ DeepMind have an unknown number of stages we cannot see). The
 see; the \emph{stage-shape canonicality} is open. The
 \cref{sec:contradictions} reading is that the convergence
 \emph{plus} the boundary-localized disagreements both point to a
-pipeline whose structure is stable but whose controlling variables
+pipeline whose structure is stable but whose key variables
 have not converged.
 \end{contradiction}
 
