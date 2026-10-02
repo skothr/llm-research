@@ -6,10 +6,10 @@ in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges.
 Nothing is committed on `main` directly, `CLAUDE.md` and `.gitignore` edits
 included. A git worktree (`.claude/worktrees/<name>/`, gitignored) is
 optional: use one for work that has to run beside other work, such as a long
-GPU job. If the main checkout is not on `main` with a clean `git status` when
-you start, assume another session is using it: leave it as it is and work in
-a worktree. Remove a worktree with `git worktree remove` when its work is
-merged.
+GPU job or a second session working at the same time. Uncommitted changes you
+find at session start are not yours: `git checkout -b` carries them onto your
+branch, so stage only the files you touched. Remove a worktree with
+`git worktree remove` when its work is merged.
 
 **Keeping this in step with the global workflow.** The workflow above and
 `research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
