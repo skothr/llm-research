@@ -113,7 +113,7 @@ python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-1.5B-Instruct \
   the whole story — the same lens's token-indexed rows work.
 - **Scale hypothesis:** J-space causal structure beyond token steering may
   emerge only above some capability threshold between 7B and Claude-scale.
-  Untestable here; honest bound on the replication scope.
+  Untestable here; a stated limit on the replication scope.
 
 ## Follow-ups
 

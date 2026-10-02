@@ -1,4 +1,4 @@
-# Observation: n-budget (H1) and held-out-sample axes both exonerated — the 7B gap is genuine scale (1.5B controls)
+# Observation: n-budget (H1) and held-out-sample axes both exonerated — the 7B gap is a scale effect (1.5B controls)
 
 > **2026-08-16 addendum — C4-redaction re-run (read first).** The held-out
 > axis in this observation is evaluated on `heldout_prompts_c4en_n30.json`,
@@ -65,8 +65,8 @@ pre-registration; the −1.4% margin is comfortable under any plausible
 threshold.)
 With corpus (C4 check), quantization (nf4 control), and now n-budget all
 individually isolated and individually null at 1.5B, **the 7B ~3× lower
-occupancy and U-shaped depth profile stand as a genuine scale/model
-property.** Residual caveat, stated honestly: these controls test each
+occupancy and U-shaped depth profile stand as a scale/model
+property.** Residual caveat: these controls test each
 axis at 1536² Jacobians; 3584² being data-starved at n=100 in a way
 1536² is not remains logically open, but with zero instability signal on
 any axis, the ~81 h direct 7B n=500 test stays unjustified.
@@ -83,7 +83,7 @@ figure) but not the depth-profile statistics.
 
 **7B held-out (gated runs, landed):** shape and ordering conclusions
 hold — U-profile with late peak, still ~2.6× below the 1.5B level on
-the matched C4 held-out set — but with honestly larger relative shifts
+the matched C4 held-out set — but with larger relative shifts
 than at 1.5B: peak 0.0404@L22 → 0.0518@L23 (+28%, layer ±1), trough
 0.0121@L17 → 0.0166@L16. At 7B's low absolute occupancy, per-sample
 noise is a larger fraction of the signal; 7B varfrac *values* should be

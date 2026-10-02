@@ -106,8 +106,8 @@ a duplicated $W_U$ transpose copy); fixed by per-layer on-demand J loading
 and transposed views, then verified bit-identical on a 1.5B smoke before
 the 7B run (Amendment A satisfied — no CPU fallback). Headline figure:
 `figures/2026-07-20-jspace-structure-depth-map.png`
-(`examples/jspace_render_structure_figures.py`). Load-bearing numbers are
-audit-covered (Check D, `examples/jspace_audit_findings.py`).
+(`examples/jspace_render_structure_figures.py`). The numbers the
+findings rest on are audit-covered (Check D, `examples/jspace_audit_findings.py`).
 
 ## Reproducibility
 
@@ -147,7 +147,7 @@ python examples/jspace_render_structure_figures.py
   *raises* kurtosis without carrying content. Under this reading the
   paper's "near-zero early" may itself be Claude-specific readout
   cleanliness, not workspace absence. [SPECULATION]
-- **7B U-shape vs 1.5B hump:** either a genuine scale difference in where
+- **7B U-shape vs 1.5B hump:** either a scale difference in where
   J-space content lives, or the H1 fit-budget confound depressing 7B
   mid-layer varfrac (n=100 under-determines 3584² per layer). The n=500
   refit (deferred, README list) would discriminate.

@@ -7,7 +7,8 @@ verbalizer's output for the *same* activation, and test whether the NLA
 signal concentrates in the activation's J-space component. Setup:
 Qwen2.5-7B nf4 + lens `jlens_qwen2.5-7b_nf4_n100`; **layer correspondence
 verified empirically: NLA `hidden_states[20]` = jlens `source_layer 19`**
-(off-by-one between conventions — load-bearing, tested in-script); AV
+(off-by-one between conventions — every cross-tie metric depends on it,
+tested in-script); AV
 (`kitft/nla-qwen2.5-7b-L20-av`) is a standalone ~15 GB model run on CPU,
 two-phase after GPU capture. 12 neutral + 12 concept prompts + 12
 decomposition prompts; k=25 gradient-pursuit decomposition (shared helper
@@ -20,7 +21,7 @@ rerun deterministic).
 
 **1. Channel agreement exists, is weak, is concept-conditional, and is
 prompt-specific (null-certified).** On concept-loaded prompts, the AV's
-content words sit at median rank 9,585 of 152,064 in the J-lens readout
+content words have median rank 9,585 of 152,064 in the J-lens readout
 (chance floor 76,032); on neutral prose there is no agreement at all
 (median 103,412 — *worse* than chance; top-50 overlap 0.006). The
 concept-only mismatched null separates: matched pairings 9,585 vs

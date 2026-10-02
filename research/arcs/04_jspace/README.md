@@ -38,8 +38,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    intermediate concepts where the logit lens finds exactly nothing
    (multihop early/mid bands, J-exclusive on two fitting corpora); the
    "unspoken words" trajectories render legibly; depth-of-emergence
-   reverses pro-J-lens at 7B on the median-layer metric. Counterweight,
-   stated honestly: the logit median is still earlier at 1.5B (19 vs 23),
+   reverses pro-J-lens at 7B on the median-layer metric. Counterweight:
+   the logit median is still earlier at 1.5B (19 vs 23),
    and on the companion never-emergence count the J-lens fails to surface
    the token in *more* cells at both scales (1.5B 16/108 vs logit 1/108;
    7B 14/108 vs 8/108) — the 7B median flip is one favorable sub-metric,
@@ -118,11 +118,12 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    the ceiling at every layer and K.*
    ([provenance](observations/figures/INVENTORY.md))
 3. **Relational causality — the arc's strongest positive.** Swapping an
-   unspoken concept along its J-lens vector, at the genuinely
-   J-lens-detected concept positions, moves the concept's *entailed
-   property* (spider→ant ⇒ 8→6-legs direction) far more than an
+   unspoken concept along its J-lens vector, at the concept
+   positions the J-lens itself detected (not the window fallback),
+   moves the concept's *entailed property* (spider→ant ⇒ 8→6-legs
+   direction) far more than an
    equal-magnitude logit-lens token-steering control, which carries no
-   property knowledge. Load-bearing figure — the absolute jlens−logitlens
+   property knowledge. The number this rests on — the absolute jlens−logitlens
    gap: **+5.0 nats** (1.5B L18: jlens +5.17 vs logit +0.15, per-item
    SD 4.9, n=7) / **+1.9 nats** (7B L19: jlens +2.17 vs logit +0.27,
    SD 4.1, n=17) on the auto-detected subset; mixed-scope gaps +2.0 /
@@ -173,7 +174,7 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    *Report-swap success by injected direction (n=78 items, chat prompts): the
    token-indexed J-lens vector replicates the paper's ordering with heavy
    attenuation (0.63 at 1.5B L21, 0.27 at 7B L22, against the paper's 88%), but
-   the J-space component of the concept vector sits at chance (0.18 vs random
+   the J-space component of the concept vector is at chance (0.18 vs random
    0.14 at 1.5B; 0.15 vs 0.15 at 7B) where the paper reports 59%. Plain
    logit-lens token steering reaches 0.56 at 1.5B, the result that shifts
    weight toward the token-steering account; whiskers are Wilson 95%
@@ -195,8 +196,9 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    excess-FVE figure above.*
    ([provenance](observations/figures/INVENTORY.md))
 4. **7B structure diverges from the small-model picture**: ~3× lower
-   occupancy and a U-shaped depth profile — established as genuine
-   scale/model properties after the four-axis exoneration.
+   occupancy and a U-shaped depth profile — established as
+   scale/model properties rather than artefacts after the four-axis
+   exoneration.
 
 **Reconciled picture.** On open models at this scale, the J_ℓ pullback
 is real and useful: it decodes held concepts token-indexed, and it
@@ -224,7 +226,7 @@ the NLA capture layer sits below the 7B J-lens legibility onset — a
 cross-arc architectural fact); the L18/L19-vs-L21/L22 depth split
 between relational and report effects; the kurtosis inversion; the
 four-axis robustness methodology — one axis (the quantization control)
-genuinely pre-registered in the design plan (§1), the others gated on
+pre-registered in the design plan itself (§1), the others gated on
 stability thresholds fixed in the session record before each run; and the
 post-close metric-fidelity pass (issue #26, 2026-07-24): the ceiling
 verdicts restated and confirmed under the paper's actual excess-FVE
@@ -538,7 +540,7 @@ informativeness-per-hour:
 
 1. ~~**n=500 lens refit**~~ — **RESOLVED 2026-07-22**: run at 1.5B nf4
    (~5.1 h); varfrac n-stable 100→500 (peak −1.4%, under the adopted 20%
-   stability threshold) → H1 exonerated, the 7B gap is genuine scale. See
+   stability threshold) → H1 exonerated, the 7B gap is a scale effect. See
    `observations/2026-07-22-n500-and-heldout-robustness.md`. The direct
    7B n=500 (~81 h) remains unjustified absent any instability signal.
 2. ~~**Corpus-sensitivity check (seeded C4-en refit)**~~ — **RESOLVED
@@ -571,7 +573,7 @@ in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf
 
 ## Reproducing
 
-Load-bearing numbers re-derive from artifacts via
+The numbers the findings rest on re-derive from artifacts via
 `examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
 + the four 1.5B robustness axes and the 7B held-out set, swap
@@ -627,7 +629,7 @@ CHECK P added 72 claims that do not read the lens cache — issue #83):
   cache), the 4 being the nf4 `MISSING` reports only.
 
 Neither state's failures are regressions. Any FAIL naming something other
-than a `jlens_*.pt` / `jlens_*.config.json` artifact is a genuine
+than a `jlens_*.pt` / `jlens_*.config.json` artifact is a
 regression. (A pre-2026-08-16 checkout — no committed lenses, pre-re-run
 artifacts — gave `920 PASS | 10 FAIL`, measured 2026-07-29; the historical
 decomposition below still applies to it. An LFS-less clone of the current

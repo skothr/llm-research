@@ -30,7 +30,7 @@ Good and Featured articles on Wikipedia.
 
 - **Licence:** Creative Commons Attribution-ShareAlike —
   <https://creativecommons.org/licenses/by-sa/3.0/>
-- **Version note, stated honestly:** the upstream dataset card is
+- **Version note:** the upstream dataset card is
   self-inconsistent, tagging `cc-by-sa-3.0` + `gfdl` in its metadata while its
   prose cites CC BY-SA 4.0. The corpus derives from a 2016 Wikipedia
   extraction, when Wikipedia text was CC BY-SA 3.0, so **3.0 is assumed here**

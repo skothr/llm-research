@@ -92,7 +92,7 @@ over the baseline-correct subset** — an item the model cannot answer cleanly
 cannot demonstrate a *property* flip. Per-item `baseline_correct` and the full
 baseline top-k are stored so the exclusion is auditable and reversible.
 
-## 4. Swap locus — WHERE, and why (the load-bearing design choice)
+## 4. Swap locus — WHERE, and why (the design choice the result depends on)
 
 The paper swaps "the spider lens vector … at the relevant token positions" where
 the concept is held — **intermediate positions, not the report/answer position**.

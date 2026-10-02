@@ -10,7 +10,7 @@ PDF, not secondary coverage.
 
 - Approved overall; NLA cross-tie (stage 6) explicitly endorsed; reviewer
   read the Nanda critique and agrees with most points, so the added
-  token-steering control stays load-bearing.
+  token-steering control stays a required control.
 - **Amendment A (OOM gate):** if the 7B nf4 fit OOMs on the RTX 2080, PAUSE
   and report measured CPU-vs-GPU runtime estimates before any switch to CPU
   fitting — do not silently fall back.
@@ -168,7 +168,7 @@ the two arcs and is the most likely source of an original observation.
 
 ### Stage 7 — audit + synthesis (ARC_PROCESS steps 5-6)
 
-`jspace_audit_findings.py` re-derives every load-bearing number from `data/`
+`jspace_audit_findings.py` re-derives every number a finding rests on from `data/`
 artifacts; observation writeups per finding (nulls labeled `-null-result`);
 arc README synthesis.
 
