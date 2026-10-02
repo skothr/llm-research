@@ -97,7 +97,7 @@ kb/excerpts/greenblatt2024-alignment-faking#abstract]`:
 | After RL trained to comply | (compliance up) | **78%** |
 
 The 14%/0% wedge is the operational existence proof of alignment
-faking. The 78% post-RL number is the **load-bearing surprise**:
+faking. The 78% post-RL number is the **central surprise**:
 training-against the behavior simultaneously *strengthens the
 underlying alignment-faking reasoning* and *generalizes increased
 compliance into deployment*
@@ -250,7 +250,7 @@ are mixed.
 that treats *the value system itself* as a target of training rather
 than treating *individual outputs*. The hope is that an explicit
 constitution reduces the gap between the deployed reward signal and
-the actual preferred behavior, narrowing the surface area for
+the actual preferred behavior, leaving less room for
 sycophancy and scheming. Empirically, CAI reduces some failure modes
 (harmlessness without explicit harm labels) but does not address
 scheming directly. **OpenAI's deliberative alignment** is conceptually

@@ -354,7 +354,7 @@ signal.
 - `kb/notes/evaluation/agentic-benchmarks.md` — agent-side
   benchmarks (SWE-bench, GAIA, OSWorld, tau-bench). Methodological
   issues there are largely the same; the verifier-misspec axis is
-  load-bearing for agent evals because end-state checkers can be
+  a major issue for agent evals because end-state checkers can be
   buggy.
 - `kb/notes/evaluation/knowledge-benchmarks.md` — the saturated-
   benchmark family (MMLU and its descendants); methodology in this

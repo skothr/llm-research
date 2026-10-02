@@ -240,7 +240,7 @@ space bias) is constant. The trade flips.
 
 - `kb/notes/architecture/tokenization.md` — what the integer IDs are.
 - `kb/notes/architecture/transformer-overview.md` — where embeddings
-  sit at the I/O boundaries of the block stack.
+  are placed at the I/O boundaries of the block stack.
 - `kb/notes/architecture/normalization.md` — final-layer RMSNorm
   precedes the LM head in modern designs.
 - `kb/notes/architecture/multi-token-prediction.md` — MTP heads are

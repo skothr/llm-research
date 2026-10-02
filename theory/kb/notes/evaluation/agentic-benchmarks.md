@@ -90,7 +90,7 @@ $$V(s_T, g) = \mathbb{1}\Big[\bigwedge_{t \in \text{F2P}} \mathrm{pass}(t, s_T)\
 The headline metric is `% resolved` over the 2,294 (or 500 in the
 Verified subset) instances. At launch (Oct 2023), Claude 2 resolved
 ~1.96% `[jimenez2024-swebench §sec-headline]`; as of mid-2025 the
-SWE-bench Verified leaderboard sits at >70% for Claude Sonnet 4.5
+SWE-bench Verified leaderboard reaches >70% for Claude Sonnet 4.5
 class agents (see Phase 1 sweep, EVAL section).
 
 **SWE-bench Verified** (OpenAI, Aug 2024) is a 500-task subset
@@ -226,7 +226,7 @@ Coding evaluation has moved from sandbox tests to real-issue tests:
   augmentation against the original sets; partially restored signal
   but still small-program scope.
 - **LiveCodeBench** (2024) — dynamic-append: post-cutoff competition
-  problems to defeat contamination. The "honest version" of AIME-style
+  problems to defeat contamination. The "honest version" of AIME-style <!-- prose-lint: allow -->
   evaluation for code.
 - **SWE-bench** (2023) → **SWE-bench Verified** (2024) — repo-level,
   real-issue, real-tests. The current leaderboard target.
@@ -241,7 +241,7 @@ file → real repos with real test infrastructure) and the verifier
 more execution-grounded (string match → unit tests → repo regression
 suite). The price is brittleness — repo-level evaluation fails if the
 test environment isn't reproducible, which is why SWE-bench's
-Docker-pinned environments are a load-bearing methodological detail.
+Docker-pinned environments are a methodological detail the results depend on.
 
 ## 4. Intuitions and analogies
 

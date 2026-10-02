@@ -95,7 +95,7 @@ multitasking. Once you have it, the natural follow-on questions —
 KV) and *how to share state across same-prefix sequences* (radix
 trees) — both become obvious.
 
-## 3. vLLM — PagedAttention as the load-bearing primitive
+## 3. vLLM — PagedAttention as the core primitive
 
 vLLM is built around **PagedAttention** `[kwon2023]`, treated in detail
 in `kb/notes/inference/kv-cache-management.md §3`. The system design

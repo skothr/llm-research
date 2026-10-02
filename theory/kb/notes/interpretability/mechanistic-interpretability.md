@@ -28,7 +28,7 @@ the level of *individual circuits* (sub-graphs of components) and
 metrics. Where probing tells you "the model represents X", MI asks
 "by what algorithm, implemented in which weights and activations, does
 the model use X to do Y". Activation patching, sparse autoencoders, and
-circuit tracing are the three load-bearing methodologies.
+circuit tracing are the three core methodologies.
 
 ## 1. Operational definition (working framework)
 
@@ -65,7 +65,7 @@ distinction is fundamental: a circuit can route a feature from one
 position to another without "computing" the feature
 `[wang2022-ioi §2.1; kb/excerpts/wang2022-ioi#sec-2-definition]`.
 
-## 2. Methodology — the three load-bearing techniques
+## 2. Methodology — the three core techniques
 
 ### 2.1 Activation patching
 
@@ -212,7 +212,7 @@ are the labels for the symbols on the bus.
   of the IOI prompt activate slightly different head configurations,
   suggesting circuits are a soft-clustering of model behavior rather
   than rigid modules.
-- **Mech-interp vs. alignment.** MI is increasingly load-bearing for
+- **Mech-interp vs. alignment.** MI is increasingly used to support
   alignment claims (e.g., "the model has a deception feature");
   whether discovered features generalize from in-distribution to
   out-of-distribution adversarial inputs is contested. The Anthropic

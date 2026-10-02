@@ -130,7 +130,7 @@ Marks & Tegmark 2023 argue that despite its simplicity, mass-mean
 directions which are more causally implicated in model outputs"
 `[marks-tegmark-2023-truth §abstract;
 kb/excerpts/marks-tegmark-2023-truth#abstract]`. The causal-fidelity
-property is the load-bearing claim — see §3.
+property is the central claim — see §3.
 
 ## 2. Mechanism — the probing protocol
 
@@ -328,7 +328,7 @@ canonical "patch then probe" pipeline.
    inference-time to *control* model behavior.
 9. **Vennemeyer et al. 2025** — Difference-in-means probing applied
    to sycophancy decomposition; finds three orthogonal directions
-   (agreement / praise / genuine-agreement) that can be steered
+   (agreement / praise / genuine-agreement) that can be steered <!-- prose-lint: allow -->
    independently. See `kb/notes/alignment/sycophancy.md`.
 
 ## 5. Intuitions and analogies
@@ -408,7 +408,7 @@ what alignment-relevant claims require.
 - **Probing for safety-relevant properties.** Behavioral probes for
   deception, refusal-circumvention, sycophancy, and scheming
   (`kb/notes/alignment/safety-evaluation.md`,
-  `kb/notes/alignment/sycophancy.md`) are increasingly load-bearing
+  `kb/notes/alignment/sycophancy.md`) are increasingly relied on
   in alignment evaluation. The question of whether such probes
   generalize from in-distribution evaluation prompts to adversarial
   out-of-distribution behavior is **the** open question for

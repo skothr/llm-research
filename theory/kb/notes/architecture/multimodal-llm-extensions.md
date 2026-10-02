@@ -67,7 +67,7 @@ attention blocks and a Perceiver-style image resampler train.
 ### 1.3 Early-fusion / native multimodal (Llama 4, InternVL3)
 
 The model is trained from scratch on interleaved multimodal sequences.
-Visual patches are first-class tokens at pretraining time; there is
+Visual patches are ordinary input tokens at pretraining time; there is
 no "frozen LLM" to graft. Architecturally this looks like a standard
 decoder-only LLM where the **input embedding is multi-source**: text
 tokens go through $E_{\text{in}}^{\text{text}}$, image patches through

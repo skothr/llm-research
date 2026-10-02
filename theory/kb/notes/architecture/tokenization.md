@@ -24,7 +24,7 @@ related_topics:
 
 The tokenizer maps raw byte/character text to a sequence of integer
 IDs in $\{0, \ldots, |V|-1\}$ that the LLM consumes. It sits between
-the user and the model and is, surprisingly, **load-bearing for
+the user and the model and is, surprisingly, **a major factor in
 quality**: vocabulary choice, byte-fallback strategy, and pre-
 tokenization rules shape what the model can represent compactly.
 Modern frontier LLMs use one of three families: SentencePiece-BPE,

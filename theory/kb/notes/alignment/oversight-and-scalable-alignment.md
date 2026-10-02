@@ -123,7 +123,7 @@ Headline results from the abstract page:
 
 [CONTRADICTION] The 2024 LLM debate result is positive on net but
 modest. Critics argue it falls well short of resolving whether debate
-**scales** to genuinely superhuman debaters. The June 2025
+**scales** to superhuman debaters. The June 2025
 `prover-estimator-debate` (`arxiv 2506.13609`) addresses one specific
 failure mode (obfuscation) but the general scaling question remains
 open.
@@ -245,7 +245,7 @@ model has more capability than the weak supervisor revealed.
 ### 5.3 Why this is the methodology, not the answer
 
 The W2S paper is an **existence proof of an analogy**, not a deployment
-recipe. Its load-bearing claim is methodological: "we can study
+recipe. Its central claim is methodological: "we can study
 super-alignment empirically *now* by substituting the capability gap."
 [CONTRADICTION] Critics
 `[kb/excerpts/burns2023-w2s#sec-implications]` argue that the
@@ -288,7 +288,7 @@ literature.
 
 ## 8. Frontier and open questions
 
-- **Does debate scale to genuinely superhuman debaters?** Kenton 2024
+- **Does debate scale to superhuman debaters?** Kenton 2024
   and Brown-Cohen 2024 show partial wins at LLM scale. The
   obfuscation failure mode (`prover-estimator-debate`, June 2025)
   remains active research.

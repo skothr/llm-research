@@ -62,7 +62,7 @@ is **what kind of $\rho$**:
   given inputs. CoT-vs-direct gap is the diagnostic signal that the
   benchmark is reasoning-heavy.
 
-This is the diagnostic the MMLU-Pro paper makes load-bearing
+This is the diagnostic the MMLU-Pro paper relies on
 `[wang2024-mmlu-pro §sec-cot;
 kb/excerpts/wang2024-mmlu-pro#sec-cot]`:
 
@@ -204,10 +204,11 @@ emphasizes **Google-proofness**:
 - **Non-expert validator with web access (avg 30+ min/question):**
   34% — only marginally above the 25% random baseline.
 
-The 34% non-expert-with-web baseline is the load-bearing methodological
-number — it operationalizes "the question can't be answered just by
-Googling." This pivots the benchmark from "broad-coverage knowledge"
-to "narrow-domain *deep* knowledge with reasoning required."
+The 34% non-expert-with-web baseline is the methodological number
+the benchmark's design rests on — it operationalizes "the question
+can't be answered just by Googling." This pivots the benchmark from
+"broad-coverage knowledge" to "narrow-domain *deep* knowledge with
+reasoning required."
 
 GPQA Diamond (198 items where two experts agree and at least one
 non-expert validator with web access got it wrong) is the canonical

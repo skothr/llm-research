@@ -21,8 +21,8 @@ related_topics:
 
 Attention is permutation-equivariant: with no positional signal, the
 attention output for a sequence $(x_1, \ldots, x_N)$ is invariant under
-any permutation of positions. The model would treat "dog bites man" and
-"man bites dog" identically. Position encoding is the mechanism that
+any permutation of positions. The model would treat "dog bites man" and <!-- prose-lint: allow -->
+"man bites dog" identically. Position encoding is the mechanism that <!-- prose-lint: allow -->
 breaks this symmetry. The space of choices is the topic of this note;
 since 2021 it has converged on **rotary position embedding (RoPE)** for
 decoder-only LLMs, with extension/extrapolation methods (NTK-aware
