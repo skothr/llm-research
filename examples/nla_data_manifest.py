@@ -496,7 +496,11 @@ def check_manifest() -> int:
             for field, expected in _metadata_fields(name).items():
                 # A missing key is drift even where the expected value is
                 # None (a null seed), so .get() alone would not catch it.
-                if field not in recorded[name] or recorded[name][field] != expected:
+                # json.dumps, not ==: false == 0 and 42.0 == 42 in Python, but
+                # they are different JSON values (a seed must be an integer).
+                if field not in recorded[name] or json.dumps(
+                    recorded[name][field], sort_keys=True
+                ) != json.dumps(expected, sort_keys=True):
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
                         f"    manifest={recorded[name].get(field, '<missing>')!r}\n"

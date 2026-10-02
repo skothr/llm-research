@@ -314,7 +314,9 @@ def check() -> int:
         )
         return 1
 
-    if committed == doc:
+    # json.dumps, not ==: false == 0 and 42.0 == 42 in Python, but they are
+    # different JSON values (a seed must be an integer).
+    if json.dumps(committed, sort_keys=True) == json.dumps(doc, sort_keys=True):
         print(
             f"MANIFEST CHECK: OK  ({doc['total_files']} files, sha256 + metadata "
             f"match, {total / 1e6:.1f} MB, generated {generated})"
