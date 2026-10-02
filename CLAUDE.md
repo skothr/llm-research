@@ -4,12 +4,14 @@ Work on a branch cut from an up-to-date `main`, in the main checkout: branch →
 push → PR (`gh pr create`) → review loop (described in § The checkpoint PR
 in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges.
 Nothing is committed on `main` directly, `CLAUDE.md` and `.gitignore` edits
-included. A git worktree
-(`.claude/worktrees/<name>/`, gitignored) is optional: use one for work that
-has to run beside other work, such as a long GPU job, or when another
-session is already working in the main checkout: HEAD is on a branch you did
-not create, or `git status` shows changes you did not make. In that case do
-not switch the main checkout's branch. It is not required.
+included. A git worktree (`.claude/worktrees/<name>/`, gitignored) is
+optional: use one for work that has to run beside other work, such as a long
+GPU job, or when another session is already working in the main checkout.
+Signs of that: HEAD is on a branch other than `main` whose PR is still open
+(`gh pr list --head <branch>`), or `git status` shows changes you did not
+make. In that case do not switch the main checkout's branch. Remove a
+worktree with `git worktree remove` when its work is merged. It is not
+required.
 
 **Keeping this in step with the global workflow.** The workflow above and
 `research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
@@ -17,9 +19,13 @@ not switch the main checkout's branch. It is not required.
 does not silently follow either. It checks whether the global change fits
 this repo's research intent: reproducible runs, raw data as a deliverable,
 citation discipline, and the public-repo privacy rule. If the change fits, it
-proposes a PR updating the local text. If it doesn't fit, the divergence is
-kept and written here with its reason. Until that PR merges, the global SOP
-governs workflow mechanics, and this file governs research-specific rules.
+proposes a PR updating the local text, and the global SOP governs that point
+until the PR merges. If the change conflicts with that intent, the local rule
+stands: the session follows it and proposes a PR recording the divergence
+below with its reason. A recorded divergence overrides the global SOP on that
+point. Research-specific rules in this file always govern.
+
+Recorded divergences: none.
 
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
