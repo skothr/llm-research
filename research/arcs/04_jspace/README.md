@@ -196,9 +196,10 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    excess-FVE figure above.*
    ([provenance](observations/figures/INVENTORY.md))
 4. **7B structure diverges from the small-model picture**: ~3× lower
-   occupancy and a U-shaped depth profile — established as
-   scale/model properties, not artifacts of corpus, quantization, fit
-   budget or held-out sample, after the four-axis exoneration.
+   occupancy and a U-shaped depth profile — read as scale/model
+   properties after the four-axis exoneration, which ran on the 1.5B
+   controls (corpus, quantization, fit budget, held-out sample) plus a 7B
+   held-out check; L3, L4 and L9 state what was not tested at 7B.
 
 **Reconciled picture.** On open models at this scale, the J_ℓ pullback
 is real and useful: it decodes held concepts token-indexed, and it
