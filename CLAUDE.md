@@ -158,15 +158,21 @@ citation.
 
 State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
 "sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
-run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or keep it
+run `python scripts/prose_lint.py <paths>` from the repo's `.venv` (it needs
+`markdown-it-py`, part of `.[dev]`). Reword or cut each hit, or keep it
 where the phrase carries technical meaning or sits inside a verbatim quotation <!-- prose-lint: allow -->
 (a quoted paper, transcript or forum passage). A kept hit gets
 `prose-lint: allow` on its line, inside that file's comment syntax
 (`<!-- -->` in Markdown, `#` in Python, `%` in LaTeX) so it does not render
 (issue #120). The scanner never reports verbatim material (the
-owner's quoted turns, `theory/kb/excerpts/`, `theory/sources/`) or dated
-records (`research/archive/`, `theory/archive/`, `theory/reviews/`); leave
-those as written.
+owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
+`theory/sources/`), dated records (`research/archive/`, `theory/archive/`,
+`theory/reviews/`) or the hash-pinned files listed in the scanner's
+`EXCLUDED_FILES`, whose sha256 an audit checks (today
+`examples/subliminal_step0_decode.py`); leave those as written. When an audit
+pins another file, add it to that list. Fenced blocks also hold authored
+examples; check the comments you write inside one by hand, since the scanner
+skips them.
 
 # Research arcs & observations
 

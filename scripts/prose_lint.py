@@ -12,6 +12,10 @@ Not scanned:
 - dated records: research/archive/, theory/archive/, theory/reviews/;
 - quoted turns in the attribution format, every line from an opening `> *"`
   to its closing `"*`; an unterminated quote ends with its blockquote;
+- in Markdown, fenced code blocks (``` or ~~~), fence lines included, as a
+  CommonMark parser (markdown-it-py) finds them: they hold verbatim material,
+  where a marker would render as text (issue #156);
+- hash-pinned files, whose sha256 an audit checks (issue #157);
 - this script and its test, which list the phrases.
 
 A phrase that a hard wrap splits across two adjacent lines ("tells" at the
@@ -24,8 +28,9 @@ reached without any symlink, in the leaf or a parent directory; symlinks,
 tracked files missing from disk and other non-regular files are never read,
 and each one counts as not scanned.
 
-Known limits: an allow-marked line is never joined with its neighbours, and a
-quoted turn that itself contains `"*` ends the skip at that line.
+Known limits: an allow-marked line is never joined with its neighbours, a
+quoted turn that itself contains `"*` ends the skip at that line, and a `"*`
+on a fenced line inside a quoted turn does not end the turn.
 
 Exit status: 0 when nothing is found, 1 when there are hits, and 2 when any
 path or file could not be scanned (a path outside the repository, a path that
@@ -84,7 +89,14 @@ EXCLUDED_PREFIXES = (
     "theory/archive/",
     "theory/reviews/",
 )
-EXCLUDED_FILES = {"scripts/prose_lint.py", "examples/tests/test_prose_lint.py"}
+EXCLUDED_FILES = {
+    "scripts/prose_lint.py",
+    "examples/tests/test_prose_lint.py",
+    # Pinned by GENERATOR_SHA256 in examples/subliminal_audit_findings.py and
+    # by research/arcs/02_subliminal/data/README.md; any edit, a marker
+    # included, fails the arc-02 audit (#157).
+    "examples/subliminal_step0_decode.py",
+}
 ALLOW_MARKER = "prose-lint: allow"
 QUOTE_LINE = re.compile(r"^\s*>\s*\*\"")
 # Leading markup a wrapped continuation line can start with: a blockquote
@@ -116,13 +128,47 @@ def is_scanned(path: str) -> bool:
     return not path.startswith(EXCLUDED_PREFIXES)
 
 
+def fenced_lines(text: str) -> set[int]:
+    """0-based numbers of the lines inside Markdown fenced code blocks.
+
+    The fence lines themselves are included; a line split by a lone \r counts
+    only when all of its parts are fenced. CommonMark decides where each
+    block ends: at its closing fence, at the end of the blockquote or list
+    item it opened in, or at the end of the file.
+    """
+    try:  # imported here, so a missing package exits 2 through main()
+        from markdown_it import MarkdownIt
+    except ImportError as exc:
+        raise RuntimeError(
+            "markdown-it-py is not installed; pip install -e '.[dev]'"
+        ) from exc
+
+    # markdown-it also breaks lines at a lone \r, as CommonMark renders it;
+    # the scanner splits on \n only. Parse the text as rendered, then map each
+    # markdown-it line back to the scanner line that holds it.
+    source = text.replace("\r\n", "\n")
+    owner: list[int] = []  # markdown-it line -> scanner line
+    for number, line in enumerate(source.split("\n")):
+        owner.extend([number] * (1 + line.count("\r")))
+    fenced: set[int] = set()
+    for token in MarkdownIt("commonmark").parse(source):
+        if token.type == "fence" and token.map is not None:
+            fenced.update(range(token.map[0], min(token.map[1], len(owner))))
+    # A scanner line is skipped only when every markdown-it line in it is
+    # fenced, so prose after a lone \r that ends a fence is still scanned.
+    partly_open = {n for i, n in enumerate(owner) if i not in fenced}
+    return {n for i, n in enumerate(owner) if i in fenced} - partly_open
+
+
 def scan_text(path: str, text: str) -> list[Hit]:
     """Return every phrase hit in `text`, skipping allowed and quoted lines.
 
     A quoted owner turn opens with `> *"` and may continue over further `>`
     lines until the closing `"*`; those lines are skipped, except for any text
-    after the closing `"*` on the last line. A phrase split
-    across two adjacent scanned lines is reported at the first of them.
+    after the closing `"*` on the last line. In a Markdown file, the lines of
+    each fenced code block are skipped, as `fenced_lines` finds them; a fence
+    inside a quoted turn leaves the turn open. A phrase split across two
+    adjacent scanned lines is reported at the first of them.
     """
     def after_close(line: str, start: int) -> str | None:
         """The text after the quote's closing `"*`, or None while still open."""
@@ -131,8 +177,15 @@ def scan_text(path: str, text: str) -> list[Hit]:
 
     scannable: list[str | None] = []
     in_quote = False
+    fenced = fenced_lines(text) if path.endswith(".md") else set()
     # Split on newlines only, so line numbers match editors and git.
-    for line in text.replace("\r\n", "\n").split("\n"):
+    for number, line in enumerate(text.replace("\r\n", "\n").split("\n")):
+        if number in fenced:
+            # Outside a blockquote, a fence line ends any quoted turn.
+            if not line.lstrip().startswith(">"):
+                in_quote = False
+            scannable.append(None)
+            continue
         tail: str | None = None
         if in_quote and line.lstrip().startswith(">"):
             tail = after_close(line, 0)

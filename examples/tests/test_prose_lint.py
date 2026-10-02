@@ -1,6 +1,8 @@
 """Tests for scripts/prose_lint.py (#120)."""
 
+import hashlib
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -85,6 +87,112 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
     assert not prose_lint.is_scanned("scripts/prose_lint.py")
     assert not prose_lint.is_scanned("examples/tests/test_prose_lint.py")
+
+
+def test_hash_pinned_generator_is_excluded_and_still_pinned() -> None:
+    # The exclusion exists because an audit pins the file's bytes (#157).
+    root = Path(__file__).resolve().parents[2]
+    assert not prose_lint.is_scanned("examples/subliminal_step0_decode.py")
+    audit = (root / "examples" / "subliminal_audit_findings.py").read_text(
+        encoding="utf-8"
+    )
+    pin = re.search(
+        r"^\s*GENERATOR_SHA256\s*(?::[^=]*)?=\s*[\"']([0-9a-fA-F]{64})[\"']",
+        audit,
+        re.MULTILINE,
+    )
+    assert pin is not None
+    data = (root / "examples" / "subliminal_step0_decode.py").read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    assert digest == pin.group(1).lower()
+    readme = root / "research" / "arcs" / "02_subliminal" / "data" / "README.md"
+    assert digest in readme.read_text(encoding="utf-8")
+
+
+def test_markdown_fenced_block_is_skipped() -> None:
+    text = "```markdown\nevery load-bearing claim\n```\nan honest baseline\n"
+    hits = prose_lint.scan_text("x.md", text)
+    assert [(h.line, h.phrase) for h in hits] == [(4, "honest(ly)")]
+
+
+def test_tilde_fence_needs_a_matching_close() -> None:
+    # A backtick line does not close a tilde fence; a longer tilde line does.
+    text = "~~~\n```\ngenuinely\n~~~~\ngenuinely\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_fence_with_trailing_text_does_not_close() -> None:
+    text = "```\n``` honest\ngenuinely\n```\ncrisp\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_unclosed_fence_runs_to_end_of_file() -> None:
+    text = "honest\n```\ngenuinely\ncrisp\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [1]
+
+
+def test_fences_in_blockquotes_and_list_items_are_skipped() -> None:
+    text = "> ```\n> genuinely\n> ```\n-  item\n   ```\n   crisp\n   ```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_fence_in_a_blockquote_ends_with_the_blockquote() -> None:
+    text = "> ```\n> genuinely\n\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [4]
+
+
+def test_fence_in_a_list_item_ends_with_the_item() -> None:
+    text = "- item\n\n  ```\n  genuinely\n\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [6]
+
+
+def test_fence_inside_a_quoted_turn_keeps_the_quote_skipped() -> None:
+    text = '> *"we want\n> ```\n> code\n> ```\n> a genuinely clean run"*\nhonest\n'
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [6]
+
+
+def test_blank_line_inside_a_list_item_fence_keeps_it_open() -> None:
+    text = "- item\n\n  ```\n  a\n\n  genuinely\n  ```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_indented_top_level_fence_with_dedented_lines() -> None:
+    # A top-level fence may be indented up to 3 spaces; its content and its
+    # closing fence may sit further left.
+    text = "  ```\ngenuinely\n```\nan honest line\n```\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [4]
+
+
+def test_lone_carriage_return_keeps_fence_lines_aligned() -> None:
+    text = "a\rb\n```\ngenuinely\n```\nan honest line\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
+
+
+def test_lone_carriage_return_after_a_closing_fence_does_not_hide_prose() -> None:
+    # CommonMark ends the fence at the lone \r; the rest of that line and the
+    # lines after it are prose.
+    text = "~~~\ncode\n~~~\rThis is load-bearing.\n\nMore genuinely.\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [3, 5]
+
+
+def test_missing_markdown_parser_exits_2(monkeypatch) -> None:
+    monkeypatch.setitem(sys.modules, "markdown_it", None)  # import now fails
+    assert prose_lint.main(["CLAUDE.md"]) == 2
+
+
+def test_inline_triple_backtick_span_does_not_open_a_fence() -> None:
+    text = "```inline``` span\ngenuinely\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [2]
+
+
+def test_wrap_join_does_not_cross_a_fence() -> None:
+    text = "it tells\n```\nus\n```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_fences_are_only_special_in_markdown() -> None:
+    text = '"""\n```\ngenuinely\n```\n"""\n'
+    assert [h.line for h in prose_lint.scan_text("x.py", text)] == [3]
 
 
 def test_area_groups_by_directory() -> None:
