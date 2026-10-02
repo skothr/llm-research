@@ -188,6 +188,8 @@ META: dict[str, dict[str, Any]] = {
         "class": "raw",
         "producing_script": "examples/jspace_entailed_swap.py",
         "inputs": [],
+        # Hand-written: no producing run.
+        "seed": None,
         "requires_model": "none",
         "provenance": (
             "Hand-written 3-item bank for the 2026-07-22 verbatim-prompt / "
@@ -314,7 +316,7 @@ def _derived(
     from_args = _rand_seed_base(args) if args is not None else None
     if seed is not None and from_args is not None and seed != from_args:
         raise ValueError(f"seed={seed} disagrees with --rand-seed-base in {args!r}")
-    return {
+    entry: dict[str, Any] = {
         "class": "derived",
         "producing_script": script,
         "producing_args": args,
@@ -322,8 +324,12 @@ def _derived(
         "requires_model": model,
         "provenance": provenance,
         "consumers": consumers,
-        "seed": seed if seed is not None else from_args,
     }
+    # No "seed" key when neither gives one: _seed() then requires the script
+    # to be in NO_RNG_PRODUCERS.
+    if seed is not None or from_args is not None:
+        entry["seed"] = seed if seed is not None else from_args
+    return entry
 
 
 _HW = "heldout_prompts_wikitext103_n30.json"
@@ -713,7 +719,6 @@ _DERIVED: dict[str, dict[str, Any]] = {
 }
 
 
-
 # Paper-metric robustness axes (issue #26, 2026-07-24): the four 1.5B axes +
 # the 7B held-out set, each validated bit-exact against its committed
 # structure scan (nf4 axes captured with the model in nf4, matching those
@@ -926,6 +931,28 @@ def _deliverables() -> list[str]:
     return sorted(names)
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/jspace_atom_norm_bias.py", "examples/jspace_fit_lens.py", "examples/jspace_lens_eval.py", "examples/jspace_promote_lens_subset.py", "examples/jspace_readout_scan.py", "examples/jspace_structure_scan.py"})
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise ValueError(
+            f"{name}: no seed in META and {m['producing_script']} is not in "
+            "NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise ValueError(f"{name}: seed must be an int, \"unseeded\" or None, got {seed!r}")
+    return seed
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the
     manifest records EXCEPT the disk-derived sha256/size_bytes. Shared by the
@@ -949,7 +976,7 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "provenance": m["provenance"],
         "consumers": m["consumers"],
         # The seed the run used; null when the producer draws no random numbers.
-        "seed": m.get("seed"),
+        "seed": _seed(name, m),
     }
 
 
@@ -1111,7 +1138,7 @@ def check_manifest() -> int:
                 if field not in recorded[name] or recorded[name][field] != expected:
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
-                        f"    manifest={recorded[name].get(field)!r}\n"
+                        f"    manifest={recorded[name].get(field, '<missing>')!r}\n"
                         f"    META     ={expected!r}"
                     )
     if problems:

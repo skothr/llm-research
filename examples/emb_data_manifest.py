@@ -205,6 +205,28 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/emb_category_stats.py", "examples/emb_de_cosine_check.py", "examples/emb_trace_analyze.py"})
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise ValueError(
+            f"{name}: no seed in META and {m['producing_script']} is not in "
+            "NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise ValueError(f"{name}: seed must be an int, \"unseeded\" or None, got {seed!r}")
+    return seed
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     meta = META[name]
     return {
@@ -215,7 +237,7 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "requires_model": meta["requires_model"],
         "consumers": meta["consumers"],
         # The seed the run used; null when the producer draws no random numbers.
-        "seed": meta.get("seed"),
+        "seed": _seed(name, meta),
     }
 
 

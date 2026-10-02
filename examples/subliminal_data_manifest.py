@@ -7,8 +7,8 @@ routes only `research/**/data/*.pt`. This script writes a checksummed
 `MANIFEST.json` at the top of `data/` that records, per file: sha256, size,
 whether it is a capture-root (written by a run that loads the teacher model)
 or a derived artifact (regenerable without a model), the producing script and
-command, its inputs, what model it needs, its provenance, and who consumes
-it. Entry names are paths relative to `data/`, since the files sit one level
+command, its inputs, what model it needs, its provenance, who consumes it,
+and the run's seed. Entry names are paths relative to `data/`, since the files sit one level
 down.
 
 Every committed data file under `data/` is covered, recursively, except the
@@ -173,6 +173,8 @@ META: dict[str, dict[str, Any]] = {
             "AUDIT C replays every scheme from the streams without a model"
         ),
         "inputs": [f"{_STEP0}/owl_streams.jsonl", f"{_STEP0}/neutral_streams.jsonl"],
+        # decode_test draws no random numbers.
+        "seed": None,
         "requires_model": "none",
         "consumers": [_OBSERVATION, "AUDIT A/C"],
     },
@@ -291,6 +293,28 @@ def _deliverables() -> list[str]:
     return sorted(names)
 
 
+# Producers read to draw no random numbers (#161). A null seed is allowed only
+# for these, or where a META entry sets "seed" itself (a hand-written input, a
+# command that draws nothing); any other entry without a seed is an error, so
+# an unannotated random producer cannot be recorded as deterministic.
+NO_RNG_PRODUCERS: frozenset[str] = frozenset()
+
+
+def _seed(name: str, m: dict[str, Any]) -> int | str | None:
+    """The `seed` field for `name`: an int, "unseeded", or null (see above)."""
+    if "seed" in m:
+        seed = m["seed"]
+    elif m["producing_script"] in NO_RNG_PRODUCERS:
+        seed = None
+    else:
+        raise ValueError(
+            f"{name}: no seed in META and {m['producing_script']} is not in "
+            "NO_RNG_PRODUCERS"
+        )
+    if not (seed is None or seed == "unseeded" or type(seed) is int):
+        raise ValueError(f"{name}: seed must be an int, \"unseeded\" or None, got {seed!r}")
+    return seed
+
 def _metadata_fields(name: str) -> dict[str, Any]:
     """The provenance fields for `name`, derived from META — everything the
     manifest records EXCEPT the disk-derived sha256/size_bytes. Shared by the
@@ -314,7 +338,7 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "requires_model": m["requires_model"],
         "consumers": m["consumers"],
         # The seed the run used; null when the producer draws no random numbers.
-        "seed": m.get("seed"),
+        "seed": _seed(name, m),
     }
 
 
@@ -535,7 +559,7 @@ def check_manifest() -> int:
                 if field not in recorded[name] or recorded[name][field] != expected:
                     problems.append(
                         f"metadata drift: {name}.{field}\n"
-                        f"    manifest={recorded[name].get(field)!r}\n"
+                        f"    manifest={recorded[name].get(field, '<missing>')!r}\n"
                         f"    META     ={expected!r}"
                     )
         else:

@@ -240,9 +240,10 @@ exists.
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
   in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
-  params, the seed of each run it draws on, or "none" for a run that draws no
-  random numbers), finding, evidence (excerpts), reproducibility (exact
-  commands), hypotheses, follow-ups, references.
+  params, the seed of each run it draws on: its value, "unseeded" for a random
+  run with no recorded seed, or "none" for a run that draws no random
+  numbers), finding, evidence (excerpts), reproducibility (exact commands),
+  hypotheses, follow-ups, references.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
 - Fill every field. Specs, plans and observation files carry no `TBD`/`TODO`
@@ -424,9 +425,10 @@ The seed reproduces a run only together with a complete `producing_command`
 (or `producing_args`): every argument that selects the output, the seed flag
 included unless the run used the script's default. Re-running with both, and
 with the recorded seed passed explicitly (a script's default can change after
-the run), reproduces the random number stream. The choices made from that
-stream, such as sampled tokens, and so the output, match only on the same
-hardware, library builds and batch size, as the subliminal arc's
+the run), reproduces the random number stream on the same device type and
+library version (torch's CPU and CUDA generators give different streams for
+one seed). The choices made from that stream, such as sampled tokens, and so
+the output, match only on the same hardware, library builds and batch size, as the subliminal arc's
 capture-time `manifest.json` notes for sampled generation. A non-null seed alone is not a
 reproducibility claim. A run with a different seed is a robustness check and
 is reported as one.
