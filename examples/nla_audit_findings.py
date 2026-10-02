@@ -1,5 +1,6 @@
-"""Rigorous audit: re-derive every load-bearing numerical claim from the
-raw NLA artifacts and compare against what the observation files report.
+"""Rigorous audit: re-derive every numerical claim the findings rely on
+from the raw NLA artifacts and compare against what the observation files
+report.
 
 Reads ONLY the 4 raw source files for AUDITs 1-10:
   * aggregate_faithfulness.pt
@@ -629,8 +630,8 @@ def run_audit() -> None:
         )
 
     # Per-capture ||h[20]|| norms — the table in
-    # 2026-05-13-nla-forced-continuation-detects-named-falsehoods.md. These are
-    # load-bearing for the forced-continuation observation (F4) and were
+    # 2026-05-13-nla-forced-continuation-detects-named-falsehoods.md. The
+    # forced-continuation observation (F4) relies on these, and they were
     # previously un-audited (only the Δh feat-norms above were checked).
     norm_by_key = {
         (c["pair_id"], c["version"], (c.get("actual_token") or "")): float(
@@ -1053,7 +1054,7 @@ def run_audit() -> None:
                     n_rescaled,
                     atol=0.5,
                 )
-            # Decoded-identity check: the load-bearing finding is WHAT
+            # Decoded-identity check: the finding is WHAT
             # each combination decodes to, not just that the decode is
             # non-empty. Match combos by index with a label-sanity guard (so a
             # reordered combo list fails loudly rather than checking the wrong

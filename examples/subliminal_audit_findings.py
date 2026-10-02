@@ -1,6 +1,6 @@
-"""Audit: re-derive every load-bearing numerical claim of the subliminal arc
-(02_subliminal, Step 0) from the committed dataset and compare it against what
-the arc's README / data-README / observation report.
+"""Audit: re-derive every numerical claim the findings of the subliminal arc
+(02_subliminal, Step 0) rely on from the committed dataset and compare it
+against what the arc's README / data-README / observation report.
 
 Reads ONLY the committed dataset at
 `research/arcs/02_subliminal/data/step0-owl-neutral-decode/` and the arc
@@ -212,7 +212,7 @@ def git_commit_exists(commit: str) -> tuple[bool | None, str]:
     answered HERE — no git binary, not a git checkout (a source tarball or a
     vendored copy), or a shallow/partial clone whose history was truncated.
     Those are environment gaps and belong on the UNVERIFIABLE list; only a
-    full checkout that genuinely lacks the object is a FAIL.
+    full checkout that lacks the object is a FAIL.
     """
     probe = _git("rev-parse", "--git-dir")
     if probe is None:
@@ -232,7 +232,7 @@ def git_commit_exists(commit: str) -> tuple[bool | None, str]:
     # Compare the enclosing repo's top level against `_REPO_ROOT` to tell the two
     # apart. They coincide for a normal clone, for a linked worktree (where
     # `.git` is a file, not a directory) and for a shallow clone, so only a
-    # genuine vendored/nested copy is diverted onto the UNVERIFIABLE path.
+    # vendored/nested copy is diverted onto the UNVERIFIABLE path.
     top = _git("rev-parse", "--show-toplevel")
     if top is None or top[0] != 0:
         return None, "cannot resolve the enclosing repository's top level"
@@ -381,7 +381,7 @@ def jsonl_or_fail(b: bytes, label: str) -> list[Any] | None:
 
 def dig(obj: Any, *keys: str) -> Any:
     """Walk a nested manifest path, returning None instead of raising when any
-    key along the way is absent. A field quietly dropped by a later edit is
+    key along the way is absent. A field dropped by a later edit is
     exactly what the claims below exist to catch, so it has to render as a FAIL
     row, not as a KeyError that kills the run before its SUMMARY."""
     for k in keys:
@@ -567,7 +567,7 @@ def audit_a(
 
     # One claim, both SHAs: the resolvable post-rewrite pointer AND the
     # capture-time original it stands in for. Checking them together keeps the
-    # capture-time record from being quietly dropped in a later edit -- so both
+    # capture-time record from being dropped in a later edit -- so both
     # halves are read through `dig`, because a bare index on the half this claim
     # exists to protect would crash on precisely the case it is watching for.
     claim_eq(
@@ -841,7 +841,7 @@ def audit_c(blobs: dict[str, bytes]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# AUDIT D -- prompt-set stability, protocol cross-check, and the honest
+# AUDIT D -- prompt-set stability, protocol cross-check, and the
 #            UNVERIFIABLE register.
 # ---------------------------------------------------------------------------
 def audit_d(manifest: dict[str, Any], prompts_b: bytes | None) -> None:

@@ -12,8 +12,8 @@ This script uses discriminant directions instead:
   d_cat /= ||d_cat||
 
 After this switch, the 23 directions have mean pairwise cosine -0.032
-(essentially uncorrelated) with range [-0.547, +0.939]. Genuine
-anti-correlations appear, and glyph rays will be sparse on real
+(essentially uncorrelated) with range [-0.547, +0.939].
+Anti-correlations appear, and glyph rays will be sparse on real
 data — only categories the h actually fits will fire.
 
 Outputs:

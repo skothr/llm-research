@@ -1,7 +1,7 @@
 """Direct-transplant steering: skip AV+AR, splice layer-20 activations between prompts.
 
-Tests whether layer-20 residual at the prefill-last position is causally
-load-bearing for entity choice during generation. Procedure:
+Tests whether layer-20 residual at the prefill-last position has a causal
+effect on entity choice during generation. Procedure:
 
   1. Run base on a forest prompt; capture h_forest = h[20] at the
      forest-prompt's last position.
@@ -13,8 +13,8 @@ load-bearing for entity choice during generation. Procedure:
      layer-20 residual at the critical position is the forest-prompt
      activation.
 
-If the steered output shifts toward forest content, layer 20 IS load-
-bearing for entity choice. If unchanged, attention from later positions
+If the steered output shifts toward forest content, layer 20 HAS a
+causal effect on entity choice. If unchanged, attention from later positions
 back to the prompt's "ocean" overrides any single-layer intervention.
 
 This is the cleaner causal test than nla_steering.py because the

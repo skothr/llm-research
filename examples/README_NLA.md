@@ -3,7 +3,7 @@
 Scripts in this directory (`nla_*.py`) form the capture / analysis / render
 pipeline for the NLA (Natural Language Autoencoder) research arc on layer 20
 of Qwen2.5-7B-Instruct. The `nla_audit_findings.py` script is the regression
-test that re-derives every load-bearing numerical claim from raw `.pt`
+test that re-derives every numerical claim the findings rely on from raw `.pt`
 artifact files.
 
 ## torch.load(..., weights_only=False) — trust assumption

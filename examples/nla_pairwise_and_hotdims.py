@@ -165,7 +165,7 @@ def classify_dim_character(stats: dict[str, float]) -> str:
                     Same direction every time, but only fires sometimes
                     (3281, 3311, 3206).
 
-      feature     : sign genuinely flips with content (0.15 <= sign_consist
+      feature     : sign flips with content (0.15 <= sign_consist
                     <= 0.85) AND cv_abs >= 0.55. Content-bearing axis;
                     direction depends on what the token is doing (32, 608,
                     2604, 1790, 20).

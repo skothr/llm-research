@@ -1,7 +1,7 @@
 """fig28 setup: capture h[20] for 8 anchor words at 4 prefix-length
 variants each — to measure discriminant-projection stability.
 
-If the discriminant directions encode genuine semantic content, then
+If the discriminant directions encode semantic content, then
 the same anchor word at end-of-prompt should project similarly
 regardless of prefix length. If prefix-length dominates the readout,
 the discriminants are unstable.
