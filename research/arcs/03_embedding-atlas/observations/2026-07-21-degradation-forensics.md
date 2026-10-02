@@ -67,7 +67,7 @@ artifacts and audit.
 - Blinded scores (window vs baseline): coherence 5.0/5.0, correction-
   responsiveness 5.0/4.67, technical care 4.5/4.33, directness 5.0/5.0,
   thoroughness 4.83/4.67 — the window session scored equal or higher.
-- 6 raw window flags → 3 genuine after verification, all minor, all in one
+- 6 raw window flags → 3 confirmed after verification, all minor, all in one
   conversational summary (over-sharpened phrasing: "decays monotonically",
   "~2x the control floor", "FFN ~1.00 at every layer"). None reached
   committed docs — the locked observations state the correct nuanced
@@ -79,7 +79,7 @@ artifacts and audit.
   3.28 values recompute independently from `emb_trace_components.pt`).
 - ML-reluctance detector: zero signals.
 
-**Standing defenses that bounded the exposure:** every load-bearing number
+**Standing defenses that bounded the exposure:** every number the findings rest on
 is re-derived from committed artifacts by `emb_audit_findings.py`
 (94 PASS / 0 FAIL), so silent model-output degradation had no path into the
 numeric layer; only conversational prose was exposed, and its slips were

@@ -41,6 +41,6 @@ consistency with within-kind permutation baseline; (g, stretch) layer-20
 bridge vs arc 1's committed vocab_atlas.pt — not run this session, listed as
 a next path.
 
-**Acceptance:** audit re-derives every load-bearing number from committed
+**Acceptance:** audit re-derives every number a finding rests on from committed
 data and passes from a clean clone; MANIFEST sha256-pins the bytes; figures
 re-render model-free; arc-1's audit unaffected (178 PASS regression).

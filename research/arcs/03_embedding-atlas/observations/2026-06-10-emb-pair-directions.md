@@ -41,7 +41,7 @@ space_twin 397    +0.1968    +0.1577 ±0.0002   +0.039
 not per-pair structure.** Replacing "France->French" with "France->Japanese"
 keeps ~90% of the consistency. So W_E encodes "a direction from
 country-region to language-region" robustly, but the word-specific pairing
-adds only +0.02-0.05 of alignment on top. The word2vec-era picture of crisp
+adds only +0.02-0.05 of alignment on top. The word2vec-era picture of precise
 per-pair analogy arithmetic is, at this table's layer 0, mostly a
 class-offset phenomenon with a thin paired residue. [INTUITION: the handle
 exists, but it is a handle on the *category*, not on the individual word
