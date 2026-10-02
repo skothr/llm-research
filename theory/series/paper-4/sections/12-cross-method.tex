@@ -2,8 +2,8 @@
 % Thesis: across §3-§11 we have five methods (lens, probes, SAEs,
 % activation patching, circuit tracing). This is the paper's central
 % synthesis. When multiple methods converge on the same picture (IOI
-% on GPT-2 small; factual recall on GPT-2 XL), the joint claim is
-% load-bearing in a way no single method's claim is. When methods
+% on GPT-2 small; factual recall on GPT-2 XL), the joint claim can
+% support conclusions in a way no single method's claim can. When methods
 % diverge — truth direction across datasets, SAE feature inventories
 % across widths, lens cross-model unreliability — the divergence is
 % itself diagnostic: either at least one method's assumptions have
@@ -61,7 +61,7 @@ overlapping subgraph by automating the discovery: the ACDC
 algorithm of \S\ref{sec:circuit-acdc} iterates over
 computational-graph edges, KL-thresholds the \glsterm{indirect-effect}{indirect effect} of
 each, and prunes below threshold; the surviving subgraph on GPT-2
-small recovers the Wang \glsterm{circuit}{circuit}'s load-bearing edges without
+small recovers the Wang \glsterm{circuit}{circuit}'s causally important edges without
 human-supplied prior structure. A third method enters from the
 lens side: the tuned-lens prediction trajectory of
 \S\ref{sec:lens-trajectory} on IOI prompts shows the
@@ -220,8 +220,8 @@ This is principled divergence in part. A \glsterm{probe-2}{probe} asks ``what
 direction linearly decodes property $y$ from this dataset's
 activations?''; an \glsterm{sparse-autoencoder}{SAE} asks ``what sparse basis decomposes
 activations under reconstruction-and-sparsity loss?''. Different
-answers need not falsify each other --- but the divergence becomes
-load-bearing once the field makes single-axis truth-\glsterm{probe-2}{probe} claims
+answers need not falsify each other --- but the divergence starts to
+matter once the field makes single-axis truth-\glsterm{probe-2}{probe} claims
 (``ablating $\mathbf{d}_y$ flips the model's TRUE/FALSE behavior''):
 if there is no single $\mathbf{d}_y$, the claim is
 dataset-conditional. The divergence is the diagnostic.
@@ -310,7 +310,7 @@ differently and answer different questions. But the convergence
 cases above show that, for sufficiently constrained behaviors on
 sufficiently small models, the methods \emph{can} be made to
 answer the same question, and when they do, agreement is the
-load-bearing form of evidence. Returning to canonical form: the
+form of evidence conclusions rest on. Returning to canonical form: the
 joint posterior over circuits, given evidence from
 $\{\text{patching}, \text{lens}, \text{SAEs}, \text{ROME-edit}\}$,
 is sharply peaked when all four methods agree (the IOI and

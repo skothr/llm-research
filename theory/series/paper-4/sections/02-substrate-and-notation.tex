@@ -2,7 +2,7 @@
 % Thesis: before any interpretability method can read a model, we must fix
 % what is being read. This section codifies the residual-stream substrate,
 % the QK/OV decomposition of attention, the FFN as candidate associative
-% memory, the LN+W_U readout, and the load-bearing notation
+% memory, the LN+W_U readout, and the notation
 % h^{(l,t)}, d_y, f_i^{(l,t)}, C that the rest of the paper inherits.
 
 \section{What we mean by ``internal computation''}
@@ -15,7 +15,7 @@ This section codifies four pieces of architectural \glsterm{vocabulary}{vocabula
 \glsterm{residual-stream}{residual stream} as a linear additive bus, attention as a
 QK\,$+$\,OV decomposition, the feedforward sublayer as a candidate
 associative memory, and the \glsterm{layer-normalization}{LayerNorm}\,$+$\,unembedding as the canonical
-readout --- and the load-bearing notation
+readout --- and the notation
 $\mathbf{h}^{(\ell,t)}, \mathbf{d}_y, f_i^{(\ell,t)}, C$ that
 \S\S\ref{sec:logit-lens-family}--\ref{sec:circuits} inherit. Where
 Paper~1's architecture chapter establishes the substrate as a design
@@ -52,7 +52,7 @@ additively\footnote{KB excerpt:
 where $F_\ell$ is the residual output of layer $\ell$ --- attention
 followed by a feedforward sublayer, each with its own pre-block
 \glsterm{layer-normalization}{LayerNorm} or \glsterm{rmsnorm}{RMSNorm}. Eq.~\eqref{eq:residual-update} is the
-load-bearing equation of this paper: every component reads
+equation the rest of this paper rests on: every component reads
 $\mathbf{h}^{(\ell, t)}$, computes some function of it, and writes the
 result back into the same \glsterm{residual-stream}{residual stream} by addition. There is no
 gating, no replacement, no nonlinearity at the bus level. Recursing
@@ -130,7 +130,7 @@ $W_O^{(\ell, h)} \in \mathbb{R}^{D \times d_h}$. The QK pair determines
 \emph{where} a head looks; the OV pair determines \emph{what} it
 copies and \emph{which direction} that copy writes into the residual
 stream. \glsterm{multi-head-attention}{Multi-head attention} is a sum over heads of
-Eq.~\eqref{eq:ov}. The decomposition is load-bearing for \glsterm{circuit}{circuit}
+Eq.~\eqref{eq:ov}. The decomposition is central to \glsterm{circuit}{circuit}
 analysis: when \citet{wang2022-ioi} report (\S\ref{sec:circuits})
 that a Name Mover Head ``copies the attended name'', the
 human-interpretable claim is exactly that its OV \glsterm{circuit}{circuit} acts as a

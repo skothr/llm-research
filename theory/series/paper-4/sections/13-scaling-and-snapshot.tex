@@ -91,7 +91,7 @@ not in papers.json} converted the methodology from a strictly internal
 capability into one external groups can in principle exercise on open
 models. As of 2026, no externally-trained attribution-graph result on a
 frontier model has been published; the contradiction this raises about
-reproducibility is the load-bearing one of \S\ref{sec:contradictions}.
+reproducibility is the central one of \S\ref{sec:contradictions}.
 
 \subsection{What does not scale (yet)}
 \label{sec:scaling-no}
@@ -103,7 +103,7 @@ $1.6\%$-of-(head, position)-pairs subgraph on a $124$M-parameter model.
 The same effort would need to scale roughly with the number of heads
 and layers --- $L \cdot H$ on a frontier-2026 model is $\sim 80$--$120$
 times that of GPT-2 small --- and the exhaustive case-by-case behavioral
-testing that gave the IOI claim its load-bearing status does not have an
+testing that gave the IOI claim the standing that later work relies on does not have an
 obvious automated analog. \citet{conmy2023-acdc} automate the
 \emph{discovery} step (iterative path-patching with a KL-divergence
 threshold), but the automation produces larger and less interpretable
@@ -167,8 +167,8 @@ is not narrowing on net: it is widening, because architectural
 innovation outpaces the per-architecture interpretability work needed
 to catch up. The 2025-05-30 Anthropic open release of \glsterm{circuit}{circuit}-tracing
 tooling and the Gemma Scope \glsterm{common-crawl}{CC}-BY-4.0 release are corrective forces;
-whether they correct fast enough is a load-bearing empirical question
-about the field's coverage trajectory.
+whether they correct fast enough is a central empirical question about
+the field's coverage trajectory.
 \end{contradiction}
 
 \subsection{Production interpretability pipelines, 2026}
@@ -183,7 +183,7 @@ the methods above.
 \citet{lindsey2025-circuit-tracing} as its sole canonical reference;
 no external lab has published an independent reproduction at frontier
 scale as of 2026-Q2. The pipeline below is described as a productionised
-tool, but the load-bearing claim that this is the productionised
+tool, but the claim that this is the productionised
 attribution-graph methodology rests on a single tier-B Anthropic source.
 \end{forumsignal}
 
@@ -365,5 +365,5 @@ interpretability evidence --- are taken up alongside the
 \S\ref{sec:contradictions}, where each is paired with the experiment
 that would resolve it. The thesis of the paper holds against this
 scaling picture: ``\emph{partially read}'' is exactly the right
-phrase, and the qualifier is load-bearing across method, scale, and
+phrase, and the qualifier is necessary across method, scale, and
 architecture.

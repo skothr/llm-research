@@ -33,17 +33,17 @@ overcomplete features \citep{gao2024-topk-saes}, a node in a causal
 graph \citep{meng2022-rome}, and a participant in a sparse
 behavior-implementing subgraph \citep{wang2022-ioi}. Each of those is
 a real fact about $\mathbf{h}^{(\ell, t)}$, observable with a
-different instrument, and load-bearing for a different question. The
+different instrument, and bears on a different question. The
 methodological pluralism is principled, not transitional.
 
 This paper is a method-by-method comparison of the five interpretability
 techniques that have stabilized into the field's canon between roughly
 2017 and 2026. Method-pluralism is the throughline, but the
-load-bearing claim is sharper: the underlying \glsterm{transformer}{transformer}'s internal
+central claim is sharper: the underlying \glsterm{transformer}{transformer}'s internal
 computation can be \emph{partially} read --- we can extract
 human-legible structure for \emph{some} behaviors, on \emph{some}
 models, with cross-method agreement on \emph{some} claims --- and the
-field is honest about which behaviors, which models, and which claims.
+field is open about which behaviors, which models, and which claims.
 Complete reverse-engineering of a frontier model is not on the table
 in 2026; partial, locally-faithful, cross-method-validated explanation
 is.
@@ -129,8 +129,8 @@ along (at least) four:
 
 The methods are not strictly ranked. Lenses are the cheapest readout
 ($L \cdot (D^2 + D)$ tuned-lens \glsterm{parameters}{parameters} --- under $10^9$ for
-Pythia~12B \citep{belrose2023-tuned-lens}); probes are next; SAEs sit
-at training-pretraining-fraction compute (Gemma Scope at $\sim20\%$ of
+Pythia~12B \citep{belrose2023-tuned-lens}); probes are next; SAEs need
+training compute that is a fraction of pretraining (Gemma Scope at $\sim20\%$ of
 GPT-3 pretraining \citep{gemma-scope-2024}); \glsterm{activation-patching}{activation patching} costs
 $O(N_{\text{components}})$ forward passes per input pair; \glsterm{circuit}{circuit}
 tracing on production models inherits the \glsterm{sparse-autoencoder}{SAE}/\glsterm{transcoder}{transcoder} training cost
@@ -183,7 +183,7 @@ mechanism --- e.g., \glsterm{activation-patching}{activation patching} and ACDC 
 least one method's assumptions. When two methods answer different
 questions --- e.g., a \glsterm{probe-2}{probe} (decodable?) and patching (used?) --- they
 \emph{can} disagree without either being wrong, and the disagreement
-is principled. Distinguishing the two cases is a load-bearing
+is principled. Distinguishing the two cases is a core
 methodological skill that this paper tries to teach.
 
 \subsection{Roadmap}
