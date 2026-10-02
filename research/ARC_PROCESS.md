@@ -328,24 +328,17 @@ loop.
   sitting splits into staged PRs rather than one mono-diff.
   `git lfs pull` works for reviewers.
 - Run the owner's review loop (private tooling) on each head. The same loop
-  closes every PR in this repo, not only checkpoint PRs. A contributor
-  without that tooling can run `/code-review high` per round, confirm or
-  refute each finding themselves, and follow the same rules:
-  - each round is a multi-agent review whose findings an adjudicator
-    confirms or refutes;
-  - confirmed in-scope findings are fixed, and out-of-scope findings are
-    filed as issues, never fixed in the branch;
+  closes every PR in this repo, not only checkpoint PRs. Its rules (what a
+  round is, which findings block, the fix-round cap) belong to that
+  tooling and are not restated here. What a reader of this repo can rely
+  on:
   - every round ends with a PR comment naming the head reviewed, the
-    counts and the verdict;
-  - the loop ends **Clean** when a full round confirms no in-scope finding
-    at medium severity or above and CI (where configured) is green; a PR
-    the review tooling classifies as elevated or critical (agent
-    configuration such as `CLAUDE.md`, and other sensitive paths) also
-    needs a clean deep-review pass, and without that tooling it ends
-    Escalated for the owner's call. It ends **Escalated** when a finding needs the
-    owner's judgment, or **Capped** at its fix-round cap, with what is
-    still open stated in the PR body; the owner decides whether a Capped
-    PR merges.
+    finding counts and the verdict;
+  - out-of-scope findings are filed as issues, never fixed in the branch;
+  - the loop ends **Clean**, **Escalated** (a question for the owner,
+    named in the PR) or **Capped** (open items stated in the PR body).
+  A contributor without that tooling reviews with `/code-review high` and
+  the owner decides what more the PR needs.
 - The owner merges by hand; nothing is auto-merged.
 - **Verify the content actually landed — don't trust the merged badge.**
   After merge run `git branch -r --no-merged origin/main` (should be empty)

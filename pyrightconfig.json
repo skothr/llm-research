@@ -24,7 +24,7 @@
   // setuptools' editable wheels use an import-hook finder that pyright cannot
   // follow, so its source root is listed explicitly.
   // The `../../../../` entry covers the same sibling as seen from a git
-  // worktree, which Claude Code places at
+  // worktree, which Claude Code's EnterWorktree places at
   // <repo>/.claude/worktrees/<name>/ — four levels below the sibling's parent.
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
