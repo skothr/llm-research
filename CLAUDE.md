@@ -135,8 +135,8 @@ frontier and open questions (`[CONTRADICTION]` where sources disagree). When
 introducing a new technical term, add it to `theory/kb/glossary.md` with a
 citation.
 
-State things literally; stock phrases such as "load-bearing", "genuinely" or
-"sits at" stand in for a direct statement. Before committing prose or comments,
+State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
+"sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
 run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or, where
 the phrase carries technical meaning, keep it and add `prose-lint: allow` on
 that line (issue #120).
