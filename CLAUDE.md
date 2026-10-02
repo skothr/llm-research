@@ -1,11 +1,11 @@
-# Working in this repo — worktree discipline (hard rule)
+# Working in this repo
 
-This repo may run concurrent Claude Code sessions; to keep them from
-clobbering each other's uncommitted work, **each session works in its own git
-worktree** (`.claude/worktrees/<scope>/`, gitignored) on its own branch, never
-on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR →
-`git worktree remove`. Only integration commits (merges, or edits to
-`CLAUDE.md`/`.gitignore`) land directly on the default branch.
+Work on a branch cut from an up-to-date `main`, in the main checkout: branch →
+push → PR (`gh pr create`) → review loop (§ The checkpoint PR in
+`research/ARC_PROCESS.md`) → the owner merges. Nothing is committed on `main`
+directly, `CLAUDE.md` and `.gitignore` edits included. A git worktree
+(`.claude/worktrees/<name>/`, gitignored) is optional, for work that has to
+run beside other work, such as a long GPU job; it is not required.
 
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
@@ -32,10 +32,10 @@ fits is after model load, at the start of a multi-hour GPU run. Model loading
 and the NLA probe are in-repo (`examples/_hf_models.py`,
 `examples/_nla_probe.py`).
 
-**Every checkout needs its own `.venv` — including each worktree.** Pyright
-resolves `venvPath` relative to the config file, so a worktree (the mandated
-way of working here) does not see the main checkout's environment. Link it
-back before type checking, run from the worktree root:
+**Every checkout needs its own `.venv`, including any worktree.** Pyright
+resolves `venvPath` relative to the config file, so a worktree does not see
+the main checkout's environment. If you work in one, link it back before
+type checking, run from the worktree root:
 
 ```bash
 ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/

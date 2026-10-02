@@ -90,9 +90,9 @@ arc may merge checkpoints 3 and 4 into one PR, and its plan must say so.
 
 ### Checkpoint 1: question, research, plan
 
-Produces the research question, the plan, and the worktree the arc runs in.
+Produces the research question, the plan, and the branch the arc runs on.
 
-- Work in a git worktree (project hard rule — see the repo `CLAUDE.md`).
+- Work on a branch cut from an up-to-date `main` (see the repo `CLAUDE.md`).
 - Write down the **research question** in one sentence.
 - Write the **plan** as `plans/YYYY-MM-DD-<slug>.md`. Every arc has one.
   Its length scales with the arc: an exploratory arc with no GPU run over
@@ -326,11 +326,19 @@ loop.
   in one sitting** — each checkpoint is its own PR (a small arc may merge
   checkpoints 3 and 4, see § Lifecycle), and a checkpoint too large for one
   sitting splits into staged PRs rather than one mono-diff.
-  `git lfs pull` works for reviewers. Review with the owner's PR-review
-  swarm (`claudectl review-pr <PR#> --apply`, private tooling) or
-  `/code-review high`; fix in-scope findings, file out-of-scope findings as
-  issues, re-run on the new head until a pass is clean. Merge per the repo's
-  manual-merge SOP.
+  `git lfs pull` works for reviewers.
+- Run the owner's review loop (private tooling) on each head:
+  - each round is a multi-agent review whose findings an adjudicator
+    confirms or refutes;
+  - in-scope findings are fixed, and out-of-scope findings are filed as
+    issues, never fixed in the branch;
+  - every round ends with a PR comment naming the head reviewed, the
+    counts and the verdict;
+  - the loop ends **Clean** when a full round confirms no in-scope finding
+    at medium severity or above, **Escalated** when a finding needs the
+    owner's judgment, or **Capped** at its fix-round cap, with what is
+    still open stated in the PR body.
+- The owner merges by hand; nothing is auto-merged.
 - **Verify the content actually landed — don't trust the merged badge.**
   After merge run `git branch -r --no-merged origin/main` (should be empty)
   and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
@@ -442,7 +450,7 @@ supersede older ones, and the README/INVENTORY/audit carry the durable record.
 
 ```
 Checkpoint 1: question, research, plan
-[ ] worktree created; research question written in one sentence
+[ ] branch created; research question written in one sentence
 [ ] plan in plans/: question, predictions, data vetting, dependencies,
         checkpoint placement (length scales with the arc; every arc has one)
 [ ] checkpoint PR merged (review loop reached its floor first)
