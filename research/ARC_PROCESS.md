@@ -336,7 +336,7 @@ loop.
   and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
   a stack — a GitHub "merged" badge only means the PR merged into *its
   base*, which may be a stale intermediate branch (the arc-03 4-PR stack
-  stranded 22 commits this way; repaired in `2400a95f`). Merged branches are
+  stranded 22 commits this way; repaired in `88a0c63e`). Merged branches are
   the permanent record of merge points and are never deleted, so stacks are
   merged top-down (or each PR retargeted with `gh pr edit N --base main`).
 

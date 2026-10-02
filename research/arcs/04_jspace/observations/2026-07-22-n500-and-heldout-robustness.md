@@ -4,7 +4,7 @@
 > axis in this observation is evaluated on `heldout_prompts_c4en_n30.json`,
 > which carried third-party PII and was redacted 2026-07-29
 > (`../data/README.md`). Its scans were regenerated on the redacted text
-> 2026-08-15/16 (commit `a9df3a55`); the n-budget half of this observation is
+> 2026-08-15/16 (commit `3ea3dcff`); the n-budget half of this observation is
 > C4-free and untouched. Values below re-derive from the regenerated
 > artifacts via `examples/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`).
