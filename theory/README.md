@@ -48,7 +48,8 @@ theory/
 
 Technical claims about LLM architecture, training, inference, or related
 theory must cite either `[paper-key §X]` or
-`[kb/notes/<area>/<file>#<anchor>]`. Analogies and intuitions must be tagged
+`[kb/notes/<area>/<file>#<anchor>]`. A notes anchor points to a digest;
+the paper it cites is canonical (`CLAUDE.md` citation rule 2). Analogies and intuitions must be tagged
 `[ANALOGY]` / `[INTUITION]`. See project `CLAUDE.md` § "Theory KB & citation
 discipline" for the full rule.
 
