@@ -89,7 +89,7 @@ The min-rule (\cref{eq:bf-min}) suppresses the end-of-thinking token's
 probability and appends the literal string \texttt{Wait} to the trace
 when the model tries to stop too early; the max-rule
 (\cref{eq:bf-max}) hard-injects the end-of-thinking delimiter when the
-trace runs too long. The \texttt{Wait} insertion is the load-bearing
+trace runs too long. The \texttt{Wait} insertion is the key
 piece: rather than a benign continuation cue, it is a \emph{prompt} to
 re-examine the work just produced
 \citep[\S 3.1]{s1-2025}.\footnote{KB excerpt:
@@ -205,8 +205,8 @@ training-compute axis.
 
 \glsterm{budget-forcing}{Budget forcing} and R1's cold-start SFT (\cref{sec:r1-family}) are
 \emph{both} mechanisms that shape the same \texttt{<think>} channel,
-but at different stages of the pipeline. The distinction is
-load-bearing for cross-paper bookkeeping:
+but at different stages of the pipeline. The distinction
+matters for cross-paper bookkeeping:
 
 \begin{itemize}
   \item \textbf{\glsterm{budget-forcing}{Budget forcing} is inference-time.}

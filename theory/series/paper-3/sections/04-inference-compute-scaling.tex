@@ -27,8 +27,8 @@ intermediate MATH problems
 inference-time compute from a deployment optimisation to a research-grade
 scaling-law variable.
 
-This section transcribes Snell's compute-optimal definition (the only
-load-bearing equation), walks the proposer/verifier decomposition that
+This section transcribes Snell's compute-optimal definition (the section's
+central equation), walks the proposer/verifier decomposition that
 unifies every other section of this paper, formalises the
 question-difficulty operationalisation that makes the
 prompt-conditional argmax tractable, and presents the FLOPs-matched
@@ -239,7 +239,7 @@ test-time-compute strategies and require \emph{more pretraining}
 \end{itemize}
 
 \begin{intuition}
-Different problems want different test-time strategies because they sit
+Different problems want different test-time strategies because they lie
 at different points on the model's competence curve. A problem the
 model already nearly solves wants \emph{refinement} --- iterate on the
 existing draft. A problem the model occasionally solves wants
@@ -444,8 +444,7 @@ rather than as a transferable constant.
 \subsection{Cross-paper and forward links}
 \label{sec:snell-forward}
 
-The Snell framing is the load-bearing scaffolding for the rest of this
-paper:
+The Snell framing is the structure the rest of this paper builds on:
 \begin{itemize}
 \item \Cref{sec:process-reward-models} deepens the verifier leg of
 \cref{sec:snell-proposer-verifier}: \citet{lightman2023-prm800k}'s \glsterm{process-reward-model}{PRM}

@@ -139,8 +139,8 @@ KL is computed token-wise with Schulman's unbiased estimator,
 $\KL = \pi_\mathrm{ref}/\pi_\theta - \log(\pi_\mathrm{ref}/\pi_\theta) - 1$
 \citep[\S 4.1]{shao2024}.
 
-\paragraph{Operational consequence: no value network.} The single
-load-bearing fact about \glsterm{grpo-2}{GRPO} at \glsterm{llm}{LLM} scale is that
+\paragraph{Operational consequence: no value network.} The central
+fact about \glsterm{grpo-2}{GRPO} at \glsterm{llm}{LLM} scale is that
 \cref{eq:grpo-advantage}'s $\tilde{A}_i$ is a function only of the
 group's empirical rewards $\{R_1, \ldots, R_G\}$ --- there is no
 $V_\phi(s_t)$. PPO with GAE \citep[\S
@@ -281,7 +281,7 @@ R_{\mathrm{length}}(o_i) \;=\; \begin{cases}
 \end{equation}
 \citep[Eq.\ 13]{dapo2025}.\footnote{KB excerpt:
 \nolinkurl{kb/excerpts/dapo2025.md#sec-3-overlong}.} Variance from
-length-truncated samples falls; the genuine signal that overlong
+length-truncated samples falls; the signal that overlong
 reasoning is bad is preserved. The interaction with
 \cref{eq:dapo-tokenloss} is structural: without
 \cref{eq:dapo-tokenloss}'s token-level normalization, the soft penalty

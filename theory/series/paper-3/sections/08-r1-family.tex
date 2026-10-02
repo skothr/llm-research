@@ -42,7 +42,7 @@ and does not contribute, transcribes the long-\glsterm{chain-of-thought}{CoT} co
 that links response length to verifier accuracy, and traces the
 distillation track and the open-weight reasoning ecosystem (Tülu~3,
 Qwen3-thinking, QwQ, OpenR1) that R1 seeded. It closes on the
-AIME-2024 contamination contradiction, the load-bearing open question
+AIME-2024 contamination contradiction, the central open question
 about whether the headline number is the gain it appears to be.
 
 \subsection{The four-stage R1 protocol}
@@ -338,7 +338,7 @@ triangle and at what budgets.
 
 The R1 headline number is the cleanest single piece of empirical
 evidence for the reasoning triangle's composability, which makes its
-contamination status the load-bearing open question of this section.
+contamination status the central open question of this section.
 
 \begin{contradiction}
 \textbf{Was a fraction of AIME-2024-style problems plausibly in
@@ -410,7 +410,7 @@ on a fixed reasoning-trained policy.
 causally drive the answers --- whether the verifier's binary signal
 selects for traces $z$ such that
 $p_\theta(y \mid x, z) \neq p_\theta(y \mid x, z')$ on
-intervention-corrupted $z'$ --- which is the load-bearing question
+intervention-corrupted $z'$ --- which is the deciding question
 for any downstream use of \glsterm{chain-of-thought}{CoT} as a \glsterm{probe-2}{probe} surface (\hyperref[P4-sec:introduction]{Paper~4}
 in toto) or a monitorable channel (\hyperref[P5-sec:alignment-faking]{Paper~5 §alignment-faking}).
 \Cref{sec:prm-survival} re-asks the
