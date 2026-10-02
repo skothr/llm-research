@@ -2,15 +2,16 @@
 
 > **A side project; most readers can skip it.** The knowledge-base notes
 > and the LaTeX series here were written largely by Claude Code subagents
-> working one topic area each, and they are not part of the research
-> findings. The main work is the research arcs under
+> (one topic area per agent for the notes, one section per agent for the
+> series), and they are not part of the research findings. The main work is the research arcs under
 > [`../research/`](../research/README.md).
 
 LLM theoretical-framework workspace. Two-layered:
 
 1. **`kb/`** — knowledge base. Modular, citation-grounded notes plus
-   verbatim source excerpts plus structured indices. Source of truth for
-   technical claims throughout this project.
+   verbatim source excerpts plus structured indices. Technical claims
+   across the project cite into it; the notes are AI-written digests, and
+   the cited papers are canonical.
 2. **`series/`** — a 5-paper LaTeX series (architecture, training,
    reasoning, interpretability, evaluation-alignment) built from the KB
    (design: `docs/design/2026-05-03-theory-expansion-design.md` §11;

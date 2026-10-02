@@ -77,8 +77,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   (torch / numpy / matplotlib).
 - **`theory/`** — **A side project; most readers can skip it.** The
   knowledge-base notes and the LaTeX series were written largely by Claude
-  Code subagents working one topic area each, and they are not part of the
-  research findings. The arc READMEs link into it in a few places, for
+  Code subagents (one topic area per agent for the notes, one section per
+  agent for the series), and they are not part of the research findings. The arc READMEs link into it in a few places, for
   paper metadata and background notes. Contents (v2 layout): `kb/notes/`
   digested synthesis (one file per topic), `kb/excerpts/` verbatim source
   passages, `kb/index/` (`papers.json`, `topics.md`, `timeline.md`),
@@ -179,9 +179,9 @@ by `LLM_RESEARCH_MODEL_CACHE`, or into the HuggingFace default cache when it
 is unset. `examples/README_NLA.md` § Models + cache covers the scripts that
 run offline and fail on a cache miss.
 
-## Building the theory LaTeX series
+## Building the theory LaTeX series (optional)
 
-The current theory deliverable is the 5-paper series under `theory/series/`,
+The theory side project's output is the 5-paper series under `theory/series/`,
 built by a shell script (not a Makefile — the only Makefile lives in the
 archived v1 snapshot at `theory/archive/2026-05-03-pre-expansion/`):
 
@@ -250,8 +250,11 @@ audits depend on, so every figure can be re-rendered and every audit replayed. S
 
 ## Epistemic discipline (carried over from the source workspace)
 
-- Every technical claim a conclusion rests on cites a primary source — a paper-key in
-  `theory/kb/index/papers.json` or an anchor into a KB note/excerpt.
+- Every technical claim a conclusion rests on cites a primary source: a
+  paper-key in `theory/kb/index/papers.json`, often with an anchor into that
+  paper's verbatim excerpt under `theory/kb/excerpts/`. The KB's synthesis
+  notes are AI-written digests that point to sources; the cited paper is
+  canonical.
 - Analogies and intuitions are tagged (`[ANALOGY]`, `[INTUITION]`,
   `[SPECULATION]`, `[CONTRADICTION]`), never asserted as fact.
 - Forum/blog citations are discovery signals only; they never solely back a
