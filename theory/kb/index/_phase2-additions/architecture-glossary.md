@@ -65,7 +65,7 @@
 
 - **Reasoning-capable LLM** — A base Transformer LLM trained (typically by RLVR) to emit extended chain-of-thought traces between special delimiters before producing a final answer. Architecturally minor (special tokens + format); training-protocol heavy. `[deepseek-r1, qwen3]`
 - **Think tokens / `<think>...</think>`** — Reserved special tokens delimiting the reasoning region of a generated output. Reserved as single tokens (not multi-token UTF-8 sequences). `[deepseek-r1, qwen3]`
-- **Two-checkpoint reasoning** — DeepSeek's pattern: distinct base (V3) and reasoning (R1) checkpoints. Cleanly separates concerns; doubles deployment.
+- **Two-checkpoint reasoning** — DeepSeek's pattern: distinct base (V3) and reasoning (R1) checkpoints. Separates concerns; doubles deployment.
 - **Single-checkpoint hybrid reasoning** — Qwen3's pattern: one model trained to operate in either thinking or non-thinking mode based on a system-prompt flag. Amortizes deployment but trades off specialty.
 - **Thinking budget** — Serving-time cap on reasoning-token count before forcing answer commit. The trained model must recover from a forcibly-truncated reasoning trace without hallucinating that the trace was complete. (Qwen3)
 - **RLVR (Reinforcement Learning with Verifiable Rewards)** — Training method for reasoning models. Reward = +1 if a programmatic verifier (math grader, code executor, formal checker) accepts the answer, 0 otherwise. The reasoning trace is the policy's free choice. Used by DeepSeek-R1, R1-Zero, Qwen3-Reasoning. See `kb/notes/post-training/rlvr-and-grpo.md`.

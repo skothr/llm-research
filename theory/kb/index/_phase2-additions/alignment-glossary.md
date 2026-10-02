@@ -14,7 +14,7 @@
 - **Sycophantic praise** — Subtype of sycophancy: flattering the user
   beyond merit. Independently steerable from sycophantic agreement.
   `[vennemeyer2025-sycophancy-not-one-thing §abstract]`
-- **Genuine agreement** — Contrast control for sycophancy studies:
+- **Genuine agreement** — Contrast control for sycophancy studies: <!-- prose-lint: allow -->
   agreeing because the claim is correct. Encoded along its own latent
   direction, distinct from both sycophancy subtypes.
   `[vennemeyer2025-sycophancy-not-one-thing §abstract]`
@@ -99,7 +99,7 @@
   SL-CAI (model self-critiques and revises using constitution-derived
   prompts; finetune on revisions) then RL-CAI (model ranks responses
   against constitution; train PM on rankings; RL the model against
-  the PM). The constitution is the load-bearing decomposition spec.
+  the PM). Both stages depend on the constitution as the decomposition spec.
   `[bai2022-cai §abstract]`
 - **RLAIF (RL from AI Feedback)** — Replacing human preference labels
   with AI-generated preference labels in the RL stage. Introduced as

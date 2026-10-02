@@ -159,7 +159,7 @@ independent dimension on a DTensor mesh and let users compose them.
 ## Intuitions & analogies {#intuitions}
 
 **[ANALOGY] Parallelism axes as a 5-dimensional crystal.** Each
-GPU-worker sits at one cell of a $d \times t \times c \times p \times e$
+GPU-worker occupies one cell of a $d \times t \times c \times p \times e$
 mesh; the "shape" of the crystal determines which collectives fire on
 which axis. Returning to canonical form: this is exactly what
 `DTensor.DeviceMesh` represents in PyTorch

@@ -51,7 +51,7 @@ sub-areas:
 5. **Frankenmerges** — layer-wise interleaving of two models. Widely
    used in OSS practice; limited primary literature. `[FORUM-SIGNAL]`.
 
-This note treats (2) and (3) as the load-bearing scientific topics;
+This note treats (2) and (3) as the main scientific topics;
 (1) cross-references pre-training-data; (4) is in inference; (5) is
 flagged as forum-signal.
 

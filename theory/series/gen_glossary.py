@@ -47,6 +47,26 @@ def _split_def_and_cite(defn: str) -> tuple[str, str | None]:
     return defn[: m.start()].rstrip(), m.group(1).strip()
 
 
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+# A comment that fills its whole line is removed with the line, so stripping
+# never leaves a blank line that would end a multi-line bullet early.
+WHOLE_LINE_COMMENT_RE = re.compile(r"^[ \t]*<!--.*?-->[ \t]*\n", re.DOTALL | re.MULTILINE)
+
+
+def strip_html_comments(text: str) -> str:
+    """Drop HTML comments (e.g. `<!-- prose-lint: allow -->` markers, #120).
+
+    They are invisible in rendered Markdown and must not reach the LaTeX
+    glossary text.
+    """
+    return HTML_COMMENT_RE.sub("", WHOLE_LINE_COMMENT_RE.sub("", text))
+
+
+def load_entries(path: Path) -> list[dict]:
+    """Parse the glossary at `path`, with HTML comments stripped first."""
+    return parse_entries(strip_html_comments(path.read_text(encoding="utf-8")).splitlines())
+
+
 def parse_entries(lines: Sequence[str]) -> list[dict]:
     """Parse the bullet entries from a glossary.md line iterable.
 
@@ -178,8 +198,7 @@ def main() -> int:
     if not GLOSSARY_MD.exists():
         print(f"error: {GLOSSARY_MD} not found", flush=True)
         return 1
-    text = GLOSSARY_MD.read_text(encoding="utf-8")
-    entries = parse_entries(text.splitlines())
+    entries = load_entries(GLOSSARY_MD)
     records = build_records(entries)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(

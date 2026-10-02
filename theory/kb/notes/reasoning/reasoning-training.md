@@ -177,7 +177,7 @@ reconciliations from the 2026 literature:
    unchanged. RL trains the model to *use* TTC, even if the underlying
    problem-solving primitives were already there.
 
-This is the load-bearing open question of 2026 reasoning training: is
+This is the main open question of 2026 reasoning training: is
 RLVR teaching new computation, or just learning to invoke pretrained
 computation under the verifier signal?
 

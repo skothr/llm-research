@@ -143,7 +143,7 @@ super-linearly in budget.
 
 ## 3. The s1 minimum recipe
 
-s1 is the load-bearing 2025 demonstration that "thinking-model"
+s1 is the main 2025 demonstration that "thinking-model"
 behaviour is reachable with very little post-training data
 `[s1-2025 §3, §4]`:
 

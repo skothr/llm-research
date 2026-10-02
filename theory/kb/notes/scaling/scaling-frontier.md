@@ -27,7 +27,7 @@ related_topics:
 
 Where the community thinks the frontier is **right now**, and how that
 diverges from the textbook Kaplan-then-Chinchilla narrative. This is a
-synthesis topic: every load-bearing claim points at a specific
+synthesis topic: every claim the synthesis rests on points at a specific
 training/serving recipe published in a tech report. Treat the citations
 in this note as Tier-A evidence of **what was done**, not necessarily
 of "what is optimal."
@@ -145,8 +145,8 @@ this without dynamic rescaling. See
 
 [CONTRADICTION] On 1-bit / ternary training. BitNet b1.58
 `[ma2024-bitnet]` claims ternary {−1, 0, +1} weights match FP16 at
-scale. Independent reproduction at 7B+ is thin; the claim is
-load-bearing for projected hardware roadmaps but methodologically
+scale. Independent reproduction at 7B+ is thin; projected hardware
+roadmaps depend on the claim, but it is methodologically
 contested as of 2026.
 
 ## 5. The frontier model lineup (as of early 2026)

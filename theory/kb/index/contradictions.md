@@ -39,7 +39,7 @@ _Source: `kb/notes/alignment/oversight-and-scalable-alignment.md`_
 
 [CONTRADICTION] The 2024 LLM debate result is positive on net but
 modest. Critics argue it falls well short of resolving whether debate
-**scales** to genuinely superhuman debaters. The June 2025
+**scales** to superhuman debaters. The June 2025
 `prover-estimator-debate` (`arxiv 2506.13609`) addresses one specific
 failure mode (obfuscation) but the general scaling question remains
 open.
@@ -52,7 +52,7 @@ suffice to anchor the bias-direction? Empirically partial; theoretically
 unsettled.
 
 The W2S paper is an **existence proof of an analogy**, not a deployment
-recipe. Its load-bearing claim is methodological: "we can study
+recipe. Its central claim is methodological: "we can study
 super-alignment empirically *now* by substituting the capability gap."
 [CONTRADICTION] Critics
 `[kb/excerpts/burns2023-w2s#sec-implications]` argue that the
@@ -460,8 +460,8 @@ publicly disclosed architectures.
 - **Native multimodal.** Llama 4, InternVL3, and Gemini 2.5 train
   jointly on image+text from scratch rather than vision-encoder +
   adapter `[meta-llama4 §2; internvl3-2025 §3.1]`. The architectural
-  shift is from "LLM with grafted vision" to "LLM with first-class
-  image tokens." See `kb/notes/architecture/multimodal-llm-extensions.md`.
+  shift is from "LLM with grafted vision" to "LLM whose image
+  tokens share one sequence with text tokens." See `kb/notes/architecture/multimodal-llm-extensions.md`.
 - **Reasoning architectures.** DeepSeek-R1 and Qwen3 expose a
   thinking-mode toggle that switches between long-CoT and direct
   generation `[deepseek-r1 §2; qwen3 §3.2]`. Whether this requires
@@ -761,7 +761,7 @@ _Source: `kb/notes/interpretability/mechanistic-interpretability.md`_
   of the IOI prompt activate slightly different head configurations,
   suggesting circuits are a soft-clustering of model behavior rather
   than rigid modules.
-- **Mech-interp vs. alignment.** MI is increasingly load-bearing for
+- **Mech-interp vs. alignment.** MI is increasingly used to support
   alignment claims (e.g., "the model has a deception feature");
   whether discovered features generalize from in-distribution to
   out-of-distribution adversarial inputs is contested. The Anthropic
@@ -804,7 +804,7 @@ datasets:
 - **Probing for safety-relevant properties.** Behavioral probes for
   deception, refusal-circumvention, sycophancy, and scheming
   (`kb/notes/alignment/safety-evaluation.md`,
-  `kb/notes/alignment/sycophancy.md`) are increasingly load-bearing
+  `kb/notes/alignment/sycophancy.md`) are increasingly relied on
   in alignment evaluation. The question of whether such probes
   generalize from in-distribution evaluation prompts to adversarial
   out-of-distribution behavior is **the** open question for
@@ -918,7 +918,7 @@ _Source: `kb/notes/post-training/dpo-and-offline.md`_
 
 _Source: `kb/notes/post-training/rlaif-and-constitutional.md`_
 
-[CONTRADICTION] **Whether CAI's non-evasion behavior is genuine
+[CONTRADICTION] **Whether CAI's non-evasion behavior is
 internalization or surface mimicry.** The optimistic reading: the
 model has internalized constitutional principles. The skeptical
 reading: the model learned to *output text shaped like
@@ -992,7 +992,7 @@ _Source: `kb/notes/reasoning/chain-of-thought.md`_
 
 [CONTRADICTION] Whether this gap is causally produced by *thinking
 training* (long-CoT SFT + RL), by general scale, or by RLVR
-post-training cannot be cleanly separated by published 2025–2026
+post-training cannot be fully separated by published 2025–2026
 ablations. The 2026 multi-model study controls for many but not all
 factors.
 
@@ -1302,8 +1302,8 @@ _Source: `kb/notes/scaling/scaling-frontier.md`_
 
 [CONTRADICTION] On 1-bit / ternary training. BitNet b1.58
 `[ma2024-bitnet]` claims ternary {−1, 0, +1} weights match FP16 at
-scale. Independent reproduction at 7B+ is thin; the claim is
-load-bearing for projected hardware roadmaps but methodologically
+scale. Independent reproduction at 7B+ is thin; projected hardware
+roadmaps depend on the claim, but it is methodologically
 contested as of 2026.
 
 - **What's the right joint $(C_{\text{train}}, C_{\text{test}})$
