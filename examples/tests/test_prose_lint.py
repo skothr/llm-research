@@ -168,6 +168,13 @@ def test_lone_carriage_return_keeps_fence_lines_aligned() -> None:
     assert [h.line for h in prose_lint.scan_text("x.md", text)] == [5]
 
 
+def test_lone_carriage_return_after_a_closing_fence_does_not_hide_prose() -> None:
+    # CommonMark ends the fence at the lone \r; the rest of that line and the
+    # lines after it are prose.
+    text = "~~~\ncode\n~~~\rThis is load-bearing.\n\nMore genuinely.\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [3, 5]
+
+
 def test_missing_markdown_parser_exits_2(monkeypatch) -> None:
     monkeypatch.setitem(sys.modules, "markdown_it", None)  # import now fails
     assert prose_lint.main(["CLAUDE.md"]) == 2

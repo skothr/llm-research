@@ -131,7 +131,8 @@ def is_scanned(path: str) -> bool:
 def fenced_lines(text: str) -> set[int]:
     """0-based numbers of the lines inside Markdown fenced code blocks.
 
-    The fence lines themselves are included. CommonMark decides where each
+    The fence lines themselves are included; a line split by a lone \r counts
+    only when all of its parts are fenced. CommonMark decides where each
     block ends: at its closing fence, at the end of the blockquote or list
     item it opened in, or at the end of the file.
     """
@@ -142,14 +143,21 @@ def fenced_lines(text: str) -> set[int]:
             "markdown-it-py is not installed; pip install -e '.[dev]'"
         ) from exc
 
-    # markdown-it also breaks lines at a lone \r; the scanner splits on \n
-    # only, so a lone \r becomes a space to keep the line numbers aligned.
-    source = re.sub(r"\r(?!\n)", " ", text).replace("\r\n", "\n")
-    lines: set[int] = set()
+    # markdown-it also breaks lines at a lone \r, as CommonMark renders it;
+    # the scanner splits on \n only. Parse the text as rendered, then map each
+    # markdown-it line back to the scanner line that holds it.
+    source = text.replace("\r\n", "\n")
+    owner: list[int] = []  # markdown-it line -> scanner line
+    for number, line in enumerate(source.split("\n")):
+        owner.extend([number] * (1 + line.count("\r")))
+    fenced: set[int] = set()
     for token in MarkdownIt("commonmark").parse(source):
         if token.type == "fence" and token.map is not None:
-            lines.update(range(*token.map))
-    return lines
+            fenced.update(range(token.map[0], min(token.map[1], len(owner))))
+    # A scanner line is skipped only when every markdown-it line in it is
+    # fenced, so prose after a lone \r that ends a fence is still scanned.
+    partly_open = {n for i, n in enumerate(owner) if i not in fenced}
+    return {n for i, n in enumerate(owner) if i in fenced} - partly_open
 
 
 def scan_text(path: str, text: str) -> list[Hit]:
