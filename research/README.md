@@ -102,7 +102,7 @@ filename. Evidence-first: numbers should be reproducible or audit-locked.
 
 **Sessions** — LLM session checkpoints, *not* research findings. They capture
 the operational state of a Claude Code session at a compaction or hand-off
-boundary (worktree path, branch tip, audit-pass count, "what to do next"
+boundary (branch tip, worktree path if any, audit-pass count, "what to do next"
 pointers). Same `YYYY-MM-DD-<slug>.md` naming, with the slug carrying one of
 `arc-summary` / `arc-resume` / `checkpoint` / `for-compact`. These go **stale
 within hours or days** — read them as a snapshot at write-time, not as

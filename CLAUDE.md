@@ -1,11 +1,13 @@
 # Working in this repo
 
 Work on a branch cut from an up-to-date `main`, in the main checkout: branch →
-push → PR (`gh pr create`) → review loop (§ The checkpoint PR in
-`research/ARC_PROCESS.md`) → the owner merges. Nothing is committed on `main`
+push → PR (`gh pr create`) → review loop (described in § The checkpoint PR
+in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges. Nothing is committed on `main`
 directly, `CLAUDE.md` and `.gitignore` edits included. A git worktree
-(`.claude/worktrees/<name>/`, gitignored) is optional, for work that has to
-run beside other work, such as a long GPU job; it is not required.
+(`.claude/worktrees/<name>/`, gitignored) is optional: use one for work that
+has to run beside other work, such as a long GPU job, or when another
+session is already working in the main checkout (`git status` shows changes
+you did not make). It is not required.
 
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
