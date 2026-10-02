@@ -101,7 +101,8 @@ fitted to the data afterwards. It applies to tests, not to arcs as a whole.
   claim. Write the expected result and the pass/fail criterion (the metric,
   its threshold, the direction) as a dated entry in the arc's plan, committed
   before the run; for a test the long run makes, that is the Checkpoint 2
-  PR, which merges before the run. Report the result against that entry,
+  PR, which merges before the run, unless the Checkpoint 1 plan already
+  registered it. Report the result against that entry,
   pass or fail.
 - **Not pre-registrations:** the audit's assertions
   ([§ Audit](#audit-lock-the-numbers)) and code unit tests. The audit locks
