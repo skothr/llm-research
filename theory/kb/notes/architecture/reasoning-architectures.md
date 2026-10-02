@@ -23,7 +23,7 @@ related_topics:
 
 A "reasoning architecture" in 2025–2026 means an LLM whose **inference-
 time output protocol** allows extended chain-of-thought generation as a
-first-class architectural pattern, plus the training methodology
+built-in architectural pattern, plus the training methodology
 (usually RLVR) that produces useful reasoning traces. The notion is
 simultaneously architectural (special tokens, optional reasoning
 prefix), training-protocol (RLVR with verifiable rewards), and
@@ -48,7 +48,7 @@ least one of**:
    trained to emit reasoning between the delimiters and the final
    answer outside them. The tokenizer reserves these as **single
    tokens** (not multi-token UTF-8 sequences) so they are
-   computationally cheap and serve as crisp parsing landmarks.
+   computationally cheap and serve as unambiguous parsing landmarks.
 
 2. **Mode toggling** between a "thinking" inference mode and a "non-
    thinking" inference mode, controlled by either:
@@ -87,7 +87,7 @@ LLM. What changes is:
 - The serving stack respects the special tokens (e.g., a
   thinking-budget cap or a "hide reasoning from user" flag).
 
-So this topic sits at the boundary between architecture, training
+So this topic spans architecture, training
 (`kb/notes/post-training/rlvr-and-grpo.md`), reasoning protocols
 (`kb/notes/reasoning/chain-of-thought.md`,
 `kb/notes/reasoning/test-time-compute.md`), and inference-time scaling
@@ -241,8 +241,8 @@ fixable is open.
 
 [CONTRADICTION] **What the scratchpad actually does.** Two views:
 
-- *Computational view:* the reasoning trace is **genuine extra
-  compute** — the model is performing serial inference steps it
+- *Computational view:* the reasoning trace is **new
+  computation** — the model is performing serial inference steps it
   couldn't do in a single forward pass. RLVR shapes this compute to
   be useful.
 - *Surface view:* the reasoning trace is **exploration of the policy's
@@ -260,7 +260,7 @@ side.
 ## 5. Frontier and open questions (as of 2026-05)
 
 - **Two vs one checkpoint at matched compute.** No published head-to-
-  head. DeepSeek argues the two-checkpoint cleanly separates concerns
+  head. DeepSeek argues the two-checkpoint separates concerns
   without quality loss; Qwen3 argues the single-checkpoint amortizes.
 - **Reasoning-token efficiency.** RLVR-trained reasoning traces are
   often verbose; "compress reasoning" (s1, "rstar-Math",

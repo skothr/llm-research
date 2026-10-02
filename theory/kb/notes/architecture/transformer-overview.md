@@ -36,8 +36,8 @@ related_topics:
 This note is the **block-diagram orientation** for the architecture/
 area. It defines the original 2017 encoder–decoder Transformer, the
 2018–2020 decoder-only adaptation, and the 2023–2026 frontier template
-(SwiGLU + RMSNorm + RoPE + GQA/MLA + sparse MoE). Every load-bearing
-claim cites a primary source; sublayer details are deferred to the
+(SwiGLU + RMSNorm + RoPE + GQA/MLA + sparse MoE). Every claim a conclusion
+rests on cites a primary source; sublayer details are deferred to the
 per-sublayer notes.
 
 ## 1. Formal definition — the original Vaswani 2017 architecture
@@ -305,8 +305,8 @@ Xiong et al.
 - **Native multimodal.** Llama 4, InternVL3, and Gemini 2.5 train
   jointly on image+text from scratch rather than vision-encoder +
   adapter `[meta-llama4 §2; internvl3-2025 §3.1]`. The architectural
-  shift is from "LLM with grafted vision" to "LLM with first-class
-  image tokens." See `kb/notes/architecture/multimodal-llm-extensions.md`.
+  shift is from "LLM with grafted vision" to "LLM whose image tokens share
+  one sequence with text tokens." See `kb/notes/architecture/multimodal-llm-extensions.md`.
 - **Reasoning architectures.** DeepSeek-R1 and Qwen3 expose a
   thinking-mode toggle that switches between long-CoT and direct
   generation `[deepseek-r1 §2; qwen3 §3.2]`. Whether this requires

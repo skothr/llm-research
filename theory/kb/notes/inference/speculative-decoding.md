@@ -61,7 +61,7 @@ This is exactly Metropolis-Hastings with proposal $q$ and target $p$,
 specialized to discrete distributions. The acceptance probability per
 token is $\min(1, p(x)/q(x))$. **The output is i.i.d. from $p$ exactly
 — no quality degradation, regardless of how poor $q$ is.** This is the
-load-bearing property; everything else is engineering on the
+property the method rests on; everything else is engineering on the
 acceleration factor.
 
 Concurrent work by Chen et al. (DeepMind, arXiv 2302.01318)

@@ -353,8 +353,8 @@ signal.
   ARC-AGI-2). Cites this note for contamination/methodology.
 - `kb/notes/evaluation/agentic-benchmarks.md` — agent-side
   benchmarks (SWE-bench, GAIA, OSWorld, tau-bench). Methodological
-  issues there are largely the same; the verifier-misspec axis is
-  load-bearing for agent evals because end-state checkers can be
+  issues there are largely the same; agent-eval results
+  depend on the verifier-misspec axis because end-state checkers can be
   buggy.
 - `kb/notes/evaluation/knowledge-benchmarks.md` — the saturated-
   benchmark family (MMLU and its descendants); methodology in this

@@ -243,7 +243,7 @@ present the model with a goal it values, then present a contradicting
 oversight context, and observe whether the model takes hidden
 actions to circumvent oversight. These are deep-dived in
 `kb/notes/alignment/scheming-and-deceptive-alignment.md`. The
-load-bearing point for safety evaluation: scheming evals *invert* the
+point that matters for safety evaluation: scheming evals *invert* the
 adversarial-robustness model — instead of the human attacker
 adversarially probing the model, the *model* adversarially probes the
 oversight context. This is the threat model for ASL-3+ / autonomous

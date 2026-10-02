@@ -108,9 +108,9 @@ and chemistry. The "Google-proof" property is operationalized:
 - **Non-expert validator with web access (avg 30+ min/question):**
   34% — only marginally above the 25% random baseline.
 
-`[rein2023-gpqa §abstract]` This 34% is the load-bearing
-methodological number — it's what justifies "the question can't be
-answered just by Googling."
+`[rein2023-gpqa §abstract]` This 34% is the
+methodological number the benchmark's design rests on — it's what
+justifies "the question can't be answered just by Googling."
 
 **GPQA Diamond** is the 198-question subset where (i) both expert
 annotators agree on the gold answer, and (ii) at least one non-expert
@@ -339,7 +339,7 @@ question.
   scalable approach.
 - **HLE saturation curve.** As of Phase 1 sweep, top model on HLE is
   ~65% (Claude Mythos Preview). At MMLU-style trajectories this
-  saturates by 2027. Whether HLE is the genuine ceiling or a way-
+  saturates by 2027. Whether HLE is a lasting ceiling or a way-
   station is not yet clear.
 - **ARC-AGI-2 vs program-synthesis**.
   Refinement-loop systems (54%) outperform pure-LLM systems (~37.6%)

@@ -174,7 +174,7 @@ $J_\ell = \mathbb{E}[\partial h_{\text{final}}/\partial h_\ell]$ and decode.
 not a fixed subspace basis but a sparse cone structure ($\le k$ active
 directions), and its privileged status is established by intervention
 (swaps/ablations change reports and reasoning), not by variance explained —
-which stays under 10%. The load-bearing quantity is causal reach, not size.
+which stays under 10%. The quantity that matters is causal reach, not size.
 
 ## 5. Frontier and open questions
 
@@ -186,7 +186,7 @@ which stays under 10%. The load-bearing quantity is causal reach, not size.
   (`sources/forums/2026-07-06-nanda-workspace-review.md`, tier B).
 - **Feature-composition counter-hypothesis.** [FORUM-SIGNAL] The two-hop
   "intermediate step" result may be additive feature composition ("Frenchness"
-  + "is-capital-city" → Paris) rather than genuine sequential recall (same
+  + "is-capital-city" → Paris) rather than sequential recall (same
   snapshot). [CONTRADICTION] with the paper's §3.3 interpretation; the paper's
   timing evidence (intermediate swaps bind earlier in depth than answer swaps)
   is suggestive but not decisive.

@@ -185,7 +185,7 @@ SmoothQuant), matching the 71.6% FP16 baseline
 [INTUITION] SmoothQuant moves the outlier "shape" from where it
 breaks the GEMM (activations, where you can't per-channel-quantize) to
 where it doesn't (weights, where you can). The mathematical equivalence
-is the load-bearing claim — Eq. (3) is exactly the original linear
+is the central claim — Eq. (3) is exactly the original linear
 layer. There is no model change, no fine-tuning, no extra runtime cost.
 The price is that weights become slightly harder to quantize than they
 were originally, hence the $1-\alpha$ exponent in $s_j$ that splits
