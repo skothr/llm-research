@@ -15,12 +15,13 @@ branch, so stage only the files you touched. Remove a worktree with
 `research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
 (branching, review loop, merge). When a session finds this local text and the
 global SOP disagree, it does not silently follow either. It checks whether the
-global change fits this repo's research intent: reproducible runs, raw data as
-a deliverable, citation discipline, and the public-repo privacy rule. If the
-change fits, it proposes a PR updating the local text, and the global SOP
-governs that point until the PR merges. If the change conflicts with that
-intent, the local rule stands, and the session proposes a PR recording the
-divergence below with its reason.
+global rule fits this repo's research intent: reproducible runs, raw data as a
+deliverable, citation discipline, and the public-repo privacy rule. If it
+fits, the session proposes a PR updating the local text, and the global SOP
+governs that point until the PR merges; if the owner closes the PR instead,
+the local text stands and the divergence is recorded below. If the global
+rule conflicts with that intent, the local rule stands, and the session
+proposes a PR recording the divergence below with its reason.
 
 Recorded divergences: none.
 

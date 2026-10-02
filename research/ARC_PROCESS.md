@@ -327,8 +327,8 @@ loop.
   checkpoints 3 and 4, see § Lifecycle), and a checkpoint too large for one
   sitting splits into staged PRs rather than one mono-diff.
   `git lfs pull` works for reviewers.
-- Run the owner's review loop (private tooling) on each head. The same loop
-  is used for every PR in this repo, not only checkpoint PRs. Its rules (what a
+- Run the owner's review loop (private tooling) on each head. The owner uses
+  the same loop for every PR, not only checkpoint PRs. Its rules (what a
   round is, which findings block, the fix-round cap) belong to that
   tooling and are not restated here. What a reader of this repo can rely
   on:
@@ -337,9 +337,11 @@ loop.
   - out-of-scope findings are filed as issues, never fixed in the branch;
   - the loop ends **Clean**, **Escalated** (a question for the owner,
     named in the PR) or **Capped** (open items stated in the PR body).
-- A contributor without that tooling reviews with `/code-review high`, and
-  the owner decides what more the PR needs.
-- The owner merges by hand; nothing is auto-merged.
+- A contributor without that tooling reviews each head with
+  `/code-review high`, fixes in-scope findings, files out-of-scope ones as
+  issues, and re-runs until a pass is clean; the owner decides what more the
+  PR needs.
+- The owner merges by hand after the loop has ended; nothing is auto-merged.
 - **Verify the content actually landed — don't trust the merged badge.**
   After merge run `git branch -r --no-merged origin/main` (should be empty)
   and `git merge-base --is-ancestor <merge-sha> origin/main` for each PR in
