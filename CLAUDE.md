@@ -1,11 +1,30 @@
-# Working in this repo — worktree discipline (hard rule)
+# Working in this repo
 
-This repo may run concurrent Claude Code sessions; to keep them from
-clobbering each other's uncommitted work, **each session works in its own git
-worktree** (`.claude/worktrees/<scope>/`, gitignored) on its own branch, never
-on the main checkout. Branch → push → PR (`gh pr create`) → merge via PR →
-`git worktree remove`. Only integration commits (merges, or edits to
-`CLAUDE.md`/`.gitignore`) land directly on the default branch.
+Work on a branch cut from an up-to-date `main`, in the main checkout: branch →
+push → PR (`gh pr create`) → review loop (described in § The checkpoint PR
+in `research/ARC_PROCESS.md`; it applies to every PR) → the owner merges.
+Nothing is committed on `main` directly, `CLAUDE.md` and `.gitignore` edits
+included. The owner runs one session at a time in this repo; parallel work
+runs inside that session as subagents or workflows. A git worktree
+(`.claude/worktrees/<name>/`, gitignored) is therefore optional: use one for
+work that has to run beside other work, such as a long GPU job or a parallel
+agent that edits files. Uncommitted changes you find at session start are not
+yours: `git checkout -b` carries them onto your branch, so stage only the
+files you touched. Remove a worktree with `git worktree remove` when its work
+is merged, after checking `git status --ignored`: gitignored outputs such as
+`.cache/` and `research/arcs/*/data/cache/` (fit checkpoints, caches) are
+deleted with it and are not carried by the merge.
+
+**Keeping this in step with the global workflow.** The workflow above and
+`research/ARC_PROCESS.md` § The checkpoint PR restate the owner's global SOP
+(branching, review loop, merge). When a session finds this local text and the
+global SOP disagree, it follows the local text and proposes a PR. If the
+global rule fits this repo's research intent (reproducible runs, raw data as a
+deliverable, citation discipline, and § Third-party data's rights and privacy
+vetting), the PR updates the local text; if it does not, the PR records the
+divergence below with its reason. The owner decides by merging or closing it.
+
+Recorded divergences: none.
 
 **One PR = one scope.** Keep each PR small enough to review in one sitting —
 split an arc into staged PRs (data + capture / analysis + figures / README
@@ -32,10 +51,10 @@ fits is after model load, at the start of a multi-hour GPU run. Model loading
 and the NLA probe are in-repo (`examples/_hf_models.py`,
 `examples/_nla_probe.py`).
 
-**Every checkout needs its own `.venv` — including each worktree.** Pyright
-resolves `venvPath` relative to the config file, so a worktree (the mandated
-way of working here) does not see the main checkout's environment. Link it
-back before type checking, run from the worktree root:
+**Every checkout needs its own `.venv`, including any worktree.** Pyright
+resolves `venvPath` relative to the config file, so a worktree does not see
+the main checkout's environment. If you work in one, link it back before
+type checking, run from the worktree root:
 
 ```bash
 ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/
