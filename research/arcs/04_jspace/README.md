@@ -254,7 +254,8 @@ eval sets; verbal-report stage 5.3 modulation if the arc reopens.
 > 2026-10-02 the pre-redaction text was removed from every branch's
 > history, which gave new SHAs to the commits that followed it. Until
 > GitHub completes a purge (issue #133), the old commits remain reachable
-> on GitHub by their former SHAs. C4 was chosen because it is closer to
+> on GitHub by their former SHAs. A purge does not reach copies made while
+> the data was public, such as existing clones. C4 was chosen because it is closer to
 > pretraining text than Wikipedia is.
 > That same breadth made it likely to contain real people's data, and no
 > privacy check was recorded when it was chosen. The repo's pre-use check for third-party

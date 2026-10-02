@@ -4,10 +4,14 @@
 >
 > `fitting_prompts_c4en_n1000.json` and `heldout_prompts_c4en_n30.json` are
 > **not** byte-identical to the raw upstream text.
-> **120 pieces of third-party personal data were removed** from them,
-> and on 2026-10-02 from every branch's history as well. Until GitHub
-> completes a purge (issue #133), the old commits remain reachable on
-> GitHub by their former SHAs:
+> On 2026-10-02 the personal data counted below was also removed from
+> every branch's history.
+> Until GitHub completes a purge (issue #133), the old commits remain
+> reachable on GitHub by their former SHAs. A purge does not reach copies
+> made while the data was public, such as existing clones.
+>
+> **120 pieces of third-party personal data were removed** from them, by
+> class:
 >
 > | Class | fitting (n=1000) | held-out (n=30) |
 > |---|---|---|
