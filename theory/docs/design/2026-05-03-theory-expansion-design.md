@@ -137,7 +137,7 @@ captured: 2026-05-03
 
 ### Tier 2 — `kb/notes/<area>/<topic>.md` (digested synthesis)
 
-Every load-bearing claim cites either a paper directly or an excerpt anchor.
+Every claim a conclusion rests on cites either a paper directly or an excerpt anchor.
 Analogies and intuitions are tagged so they cannot be retrieved as fact.
 
 Standard note structure (Feynman-aligned):
