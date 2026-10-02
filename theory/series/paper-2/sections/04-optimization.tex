@@ -325,8 +325,8 @@ is the SVD-free numerical recipe for the polar factor.
 \citet[\S 2.2]{muon-moonlight2025} report that vanilla
 \cref{eq:muon-vanilla} converges faster than \glsterm{adamw}{AdamW} at small scale but
 the gain diminishes at \glsterm{llm}{LLM} scale because of two failure modes that
-the original formulation does not address. The gain at
-that scale depends on the fixes.
+the original formulation does not address. The fixes matter at
+that scale.
 
 \textbf{Mandatory weight decay.} Without an explicit decay term,
 ``both the weight and the layer output's RMS keep growing to a large
