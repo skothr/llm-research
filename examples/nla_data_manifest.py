@@ -344,6 +344,10 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],
         "consumers": m["consumers"],
+        # The seed the run used; null when the producer draws no random
+        # numbers. Every producer in this arc decodes greedily
+        # (do_sample=False), so no META entry sets one.
+        "seed": m.get("seed"),
     }
 
 

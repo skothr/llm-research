@@ -37,6 +37,13 @@ MANIFEST = DATA_DIR / "MANIFEST.json"
 
 REVISION = "a09a35458c702b33eeacc393d103063234e8bc28"
 
+# The SEED constants of the producing scripts: 20260610 in emb_capture,
+# emb_fullvocab_stats, emb_fullvocab_analyze, emb_pair_directions and
+# emb_structural_block; 20260611 in emb_trace_capture, emb_trace_components and
+# emb_trace_attention. Entries from the other producers carry no seed.
+_SEED_EMB = 20260610
+_SEED_TRACE = 20260611
+
 META: dict[str, dict[str, Any]] = {
     # ---- capture-roots: cut from the pinned model weights in one load -------
     "emb_battery_vectors.pt": {
@@ -51,6 +58,7 @@ META: dict[str, dict[str, Any]] = {
             "fig9",
             "AUDIT 1/4/5",
         ],
+        "seed": _SEED_EMB,
     },
     "emb_global_stats.pt": {
         "class": "capture-root",
@@ -62,6 +70,7 @@ META: dict[str, dict[str, Any]] = {
             "fig1-fig4",
             "AUDIT 1/2/3/4",
         ],
+        "seed": _SEED_EMB,
     },
     "emb_random_baseline.pt": {
         "class": "capture-root",
@@ -69,6 +78,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["(reserved for follow-up baselines; seed-pinned)"],
+        "seed": _SEED_EMB,
     },
     "emb_neighbor_probes.pt": {
         "class": "capture-root",
@@ -76,6 +86,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_neighbors_report.py (text report)", "AUDIT 6"],
+        "seed": _SEED_EMB,
     },
     "emb_fullvocab_stats.pt": {
         "class": "capture-root",
@@ -88,6 +99,7 @@ META: dict[str, dict[str, Any]] = {
             "fig11-fig13",
             "AUDIT 8",
         ],
+        "seed": _SEED_EMB,
     },
     # ---- derived: regenerable from other .pt by a committed script ----------
     "emb_fullvocab_analysis.pt": {
@@ -96,6 +108,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump + cached corr matrix)",
         "consumers": ["fig14", "emb_structural_block.pt", "AUDIT 8"],
+        "seed": _SEED_EMB,
     },
     "emb_structural_block.pt": {
         "class": "derived",
@@ -103,6 +116,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt", "emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
+        "seed": _SEED_EMB,
     },
     "emb_de_cosine_check.pt": {
         "class": "derived",
@@ -121,6 +135,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T1 reader-head findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_layers.pt": {
         "class": "capture-root",
@@ -128,6 +143,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_components.pt": {
         "class": "capture-root",
@@ -135,6 +151,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["fig16", "fig17", "fig18", "AUDIT 9", "T1.5 carrier findings"],
+        "seed": _SEED_TRACE,
     },
     "emb_trace_analysis.pt": {
         "class": "derived",
@@ -160,6 +177,7 @@ META: dict[str, dict[str, Any]] = {
             "fig21",
             "AUDIT 10",
         ],
+        "seed": _SEED_TRACE,
     },
     "emb_category_stats.pt": {
         "class": "derived",
@@ -174,6 +192,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": ["emb_battery_vectors.pt"],
         "requires_model": "none",
         "consumers": ["fig10", "AUDIT 7"],
+        "seed": _SEED_EMB,
     },
 }
 
@@ -195,6 +214,8 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": meta["inputs"],
         "requires_model": meta["requires_model"],
         "consumers": meta["consumers"],
+        # The seed the run used; null when the producer draws no random numbers.
+        "seed": meta.get("seed"),
     }
 
 

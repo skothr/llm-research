@@ -240,7 +240,7 @@ exists.
 
 - One finding per file, `YYYY-MM-DD-<slug>.md`, evidence-first. Format spec is
   in the repo `CLAUDE.md` § Research arcs & observations: date+context (model,
-  params), finding, evidence (excerpts), reproducibility (exact commands),
+  params, seed or "none" for a deterministic run), finding, evidence (excerpts), reproducibility (exact commands),
   hypotheses, follow-ups, references.
 - Null results are findings — title them as such (`*-null-result.md`) and
   frame them as null, not as buried positives.
@@ -401,8 +401,17 @@ scripts still point at an empty cache.
 `class` (capture-root | derived), `producing_script`, `producing_command`,
 `inputs` (upstream data files), `requires_model` (none | base | +av/+ar/…),
 `provenance` (what the file holds and the run that wrote it), `consumers`
-(figures / downstream artifacts / audit). The generator's `--check`
-mode re-verifies every sha256 — run it in the audit step as a drift detector.
+(figures / downstream artifacts / audit), `seed` (integer, or null). The
+generator's `--check` mode re-verifies every sha256 — run it in the audit
+step as a drift detector.
+
+**Seed.** `seed` is the value the producing run used, and null when the
+producer draws no random numbers (greedy decoding, a fixed slice). Re-running
+the recorded command with that seed reproduces the run's random choices;
+bit-identical output also needs the same hardware, library builds and batch
+size, as the subliminal arc's capture-time `manifest.json` notes for sampled
+generation. A run with a different seed is a robustness check and is reported
+as one.
 
 **Validate before you save.** "Save" includes confirming the data is *correct*
 (protocol sanity, shapes, no NaNs/collapse) and *locked* (audit re-derives the

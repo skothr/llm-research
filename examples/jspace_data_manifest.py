@@ -145,6 +145,7 @@ META: dict[str, dict[str, Any]] = {
             "wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py"
         ),
         "consumers": ["jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"],
+        "seed": 42,
     },
     "heldout_prompts_wikitext103_n30.json": {
         "class": "raw",
@@ -179,6 +180,7 @@ META: dict[str, dict[str, Any]] = {
             "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt "
             "(diversified held-out evaluation prompts)"
         ],
+        "seed": 42,
     },
     "paperverbatim_items_n3.json": {
         "class": "raw",
@@ -293,6 +295,7 @@ def _derived(
     provenance: str,
     consumers: list[str],
     args: str | None = None,
+    seed: int | None = None,
 ) -> dict[str, Any]:
     return {
         "class": "derived",
@@ -302,6 +305,7 @@ def _derived(
         "requires_model": model,
         "provenance": provenance,
         "consumers": consumers,
+        "seed": seed,
     }
 
 
@@ -313,6 +317,9 @@ _STRUCT = "examples/jspace_structure_scan.py"
 _VR = "examples/jspace_verbal_report.py"
 _ENT = "examples/jspace_entailed_swap.py"
 _XTIE = "examples/jspace_nla_crosstie.py"
+# The --seed default (0) of _VR, _ENT and _XTIE; no recorded command passes
+# --seed, and the default has been 0 since each script's first commit.
+_SEED_CLI_DEFAULT = 0
 
 _DERIVED: dict[str, dict[str, Any]] = {
     # -- lens_eval x4 (intermediate-concept top-k readout rates per depth band) --
@@ -454,6 +461,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "Stage-5.1 verbal-report swap suite (4-condition, magnitude-equalized), "
         "1.5B bf16 @L21.",
         ["obs 2026-07-20-verbal-report-swaps-stage5.md", "audit Checks E, F"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "verbal_report_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _VR,
@@ -461,6 +469,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.1 verbal-report swap suite (4-condition), 7B nf4 @L22.",
         ["obs 2026-07-20-verbal-report-swaps-stage5.md", "audit Checks E, F"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _VR,
@@ -468,6 +477,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-1.5b-bf16",
         "Stage-5.1b chat 6-condition verbal-report swap suite, 1.5B bf16 @L21.",
         ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _VR,
@@ -475,6 +485,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.1b chat 6-condition verbal-report swap suite, 7B nf4 @L22.",
         ["obs 2026-07-20-verbal-report-swaps-stage5b.md", "audit Check F"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     # -- entailed_swap x8 (stage-5.2 entailed-property swap bank) -------------
     "entailed_swap_chat_L18_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
@@ -484,6 +495,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "Stage-5.2 entailed-property swap bank (33 items, 3 equalized-L2 "
         "conditions), 1.5B bf16, chat @L18 (property-effect peak layer).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_chat_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
@@ -491,6 +503,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L21 (report layer).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_chat_L24_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
@@ -498,6 +511,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, chat @L24.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_plain_L21_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
         _ENT,
@@ -505,6 +519,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-1.5b-bf16",
         "Stage-5.2 entailed-property swap bank, 1.5B bf16, plain-prompt @L21.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_chat_L18_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
@@ -512,6 +527,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L18.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_chat_L19_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
@@ -519,6 +535,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L19 (property-effect peak).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_chat_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
@@ -526,6 +543,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, chat @L22 (report layer).",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_swap_plain_L22_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         _ENT,
@@ -533,6 +551,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "qwen-7b-nf4",
         "Stage-5.2 entailed-property swap bank, 7B nf4, plain-prompt @L22.",
         ["obs 2026-07-22-entailed-property-swaps-stage52.md", "audit Check L"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     # -- paperverbatim x4 (cue-redundancy control probe, --items-json, n=3) --
     "entailed_paperverbatim_chat_all_L19_7b.pt": _derived(
@@ -545,6 +564,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
             "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
             "audit Check L",
         ],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_paperverbatim_chat_auto_L19_7b.pt": _derived(
         _ENT,
@@ -555,6 +575,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
             "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
             "audit Check L",
         ],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_paperverbatim_plain_all_L19_7b.pt": _derived(
         _ENT,
@@ -565,6 +586,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
             "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
             "audit Check L",
         ],
+        seed=_SEED_CLI_DEFAULT,
     ),
     "entailed_paperverbatim_plain_auto_L19_7b.pt": _derived(
         _ENT,
@@ -575,6 +597,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
             "obs 2026-07-22-entailed-property-swaps-stage52.md (probe addendum)",
             "audit Check L",
         ],
+        seed=_SEED_CLI_DEFAULT,
     ),
     # -- nla_crosstie x1 (stage-6 J-lens x NLA activation-vector cross-tie) ---
     "nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
@@ -585,6 +608,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "hidden_states[20]; rank-median + carrier-decomposition metrics (24 "
         "prompts + 1 control). Excludes its .partial.jsonl / .phase1.pt sidecars.",
         ["obs 2026-07-21-nla-crosstie-stage6.md", "audit Check G"],
+        seed=_SEED_CLI_DEFAULT,
     ),
     # -- paper-metric ceiling recompute x3 + norm-bias x1 (issue #26) ---------
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
@@ -606,6 +630,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--n-rand 8 --rand-seed-base 10000",
+        seed=10000,
     ),
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
@@ -624,6 +649,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         ],
         args="--mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt "
         "--all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
+        seed=20000,
     ),
     "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_paper_metric_varfrac.py",
@@ -642,6 +668,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "--lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt "
         "--scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt "
         "--n-rand 8 --rand-seed-base 30000",
+        seed=30000,
     ),
     "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
         "examples/jspace_atom_norm_bias.py",
@@ -670,6 +697,13 @@ _DERIVED: dict[str, dict[str, Any]] = {
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
     ),
 }
+
+
+def _rand_seed_base(args: str) -> int:
+    """The --rand-seed-base value in a jspace_paper_metric_varfrac.py args string."""
+    return int(args.split("--rand-seed-base ", 1)[1].split()[0])
+
+
 # Paper-metric robustness axes (issue #26, 2026-07-24): the four 1.5B axes +
 # the 7B held-out set, each validated bit-exact against its committed
 # structure scan (nf4 axes captured with the model in nf4, matching those
@@ -745,6 +779,7 @@ for _axis, _fname, _lens, _model, _detail, _args in [
         f"hold the ceiling verdicts (P(boot>10%) unanimous each side).",
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
         args=_args,
+        seed=_rand_seed_base(_args),
     )
 
 
@@ -830,6 +865,7 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
         + f"--scan <data>/{_scan} --prompts <data>/{_prompts} "
         + _K83_TAIL
         + f" --k-fixed {_k}",
+        seed=_rand_seed_base(_K83_TAIL),
     )
 
 META.update(_DERIVED)
@@ -846,6 +882,7 @@ _UNREGISTERED: dict[str, Any] = {
     "requires_model": None,
     "provenance": "UNREGISTERED — add a META entry in examples/jspace_data_manifest.py",
     "consumers": [],
+    "seed": None,
 }
 
 
@@ -903,6 +940,8 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "requires_model": m["requires_model"],
         "provenance": m["provenance"],
         "consumers": m["consumers"],
+        # The seed the run used; null when the producer draws no random numbers.
+        "seed": m.get("seed"),
     }
 
 

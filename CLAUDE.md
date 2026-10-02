@@ -197,8 +197,9 @@ its first commit. Full discipline in `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
 
 Each observation file (`YYYY-MM-DD-<slug>.md`) includes: Date and context
-(experiment, model, params) · Finding · Evidence (output/transcript excerpts) ·
-Reproducibility (exact commands/code) · Hypotheses · Follow-ups · References.
+(experiment, model, params, seed or "none" for a deterministic run) ·
+Finding · Evidence (output/transcript excerpts) · Reproducibility (exact
+commands/code) · Hypotheses · Follow-ups · References.
 
 # Showcase vs history — main is the showcase, commits are the log
 

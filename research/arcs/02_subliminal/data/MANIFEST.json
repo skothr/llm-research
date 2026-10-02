@@ -35,7 +35,8 @@
       "consumers": [
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "AUDIT A/C"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "step0-owl-neutral-decode/manifest.json",
@@ -51,7 +52,8 @@
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "data/LICENSE-DATA.md",
         "AUDIT A/B/D"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/neutral_raw.jsonl",
@@ -67,7 +69,8 @@
         "step0-owl-neutral-decode/neutral_streams.jsonl",
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "AUDIT A/B"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/neutral_streams.jsonl",
@@ -85,7 +88,8 @@
         "step0-owl-neutral-decode/decode_report.json",
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "AUDIT A/B/C"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/owl_raw.jsonl",
@@ -101,7 +105,8 @@
         "step0-owl-neutral-decode/owl_streams.jsonl",
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "AUDIT A/B"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/owl_streams.jsonl",
@@ -119,7 +124,8 @@
         "step0-owl-neutral-decode/decode_report.json",
         "observations/2026-05-31-step0-protocol-and-filter.md",
         "AUDIT A/B/C"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/pip_freeze.txt",
@@ -133,7 +139,8 @@
       "requires_model": "qwen-base",
       "consumers": [
         "AUDIT A"
-      ]
+      ],
+      "seed": 42
     },
     {
       "filename": "step0-owl-neutral-decode/prompts.jsonl",
@@ -148,7 +155,8 @@
       "consumers": [
         "Step 1 (prompt, completion) pairs",
         "AUDIT D"
-      ]
+      ],
+      "seed": 42
     }
   ]
 }

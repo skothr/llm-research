@@ -47,7 +47,8 @@
         "geometric_features.pt",
         "pairwise_and_hotdims.pt",
         "AUDIT 1/20"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "concept_arithmetic_atlas.pt",
@@ -64,7 +65,8 @@
       "consumers": [
         "fig35",
         "AUDIT 17"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "country_concept_vector.pt",
@@ -80,7 +82,8 @@
         "fig13",
         "pairwise_and_hotdims.pt",
         "AUDIT 8"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "dense_interp_near_pivot.pt",
@@ -99,7 +102,8 @@
         "fig37",
         "plateau_attractor_test.pt",
         "AUDIT 18"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "discriminant_stability.pt",
@@ -114,7 +118,8 @@
       "consumers": [
         "fig28",
         "AUDIT 14"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "forced_continuation.pt",
@@ -131,7 +136,8 @@
         "fig16",
         "geometric_features.pt",
         "AUDIT 10"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "geometric_features.pt",
@@ -150,7 +156,8 @@
       "requires_model": "none",
       "consumers": [
         "fig1-fig5"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "interpolation_flipbook.pt",
@@ -168,7 +175,8 @@
         "fig21",
         "dense_interp_near_pivot.pt",
         "AUDIT 11"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "mid_seq_compare.pt",
@@ -187,7 +195,8 @@
       "consumers": [
         "fig31",
         "fig32"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "mid_seq_native_compare.pt",
@@ -206,7 +215,8 @@
       "consumers": [
         "fig33",
         "fig34"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "mid_seq_vocab_atlas.pt",
@@ -222,7 +232,8 @@
         "mid_seq_compare.pt",
         "mid_seq_native_compare.pt",
         "AUDIT 15/16"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "pairwise_and_hotdims.pt",
@@ -241,7 +252,8 @@
       "requires_model": "none",
       "consumers": [
         "fig1-fig4, fig7-fig37 (hub artifact)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "plateau_attractor_test.pt",
@@ -257,7 +269,8 @@
       "requires_model": "ar",
       "consumers": [
         "AUDIT 19 (no figure \u2014 round-trip validation only)"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "rabbit_haiku_gen_trajectory.pt",
@@ -274,7 +287,8 @@
         "fig14",
         "pairwise_and_hotdims.pt",
         "AUDIT 21"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "sink_removed_atlas.pt",
@@ -295,7 +309,8 @@
         "fig9",
         "fig10",
         "fig11"
-      ]
+      ],
+      "seed": null
     },
     {
       "filename": "vocab_atlas.pt",
@@ -310,7 +325,8 @@
       "consumers": [
         "fig19-fig37 (atlas/discriminant figures)",
         "AUDIT 12/13"
-      ]
+      ],
+      "seed": null
     }
   ]
 }

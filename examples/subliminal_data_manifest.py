@@ -63,8 +63,10 @@ _OBSERVATION = "observations/2026-05-31-step0-protocol-and-filter.md"
 # `generation` block (n_per_condition 120, batch_size 16, max_new_tokens 80,
 # seed 42, CPU bf16, dataset_id). The command line itself was not recorded,
 # and neither was --out-dir.
+_STEP0_SEED = 42
 _STEP0_ARGS = (
-    "--n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 "
+    "--n-per-condition 120 --batch-size 16 --max-new-tokens 80 "
+    f"--seed {_STEP0_SEED} "
     f"--no-4bit --dataset-id {_STEP0}"
 )
 _STEP0_RUN_FACTS = (
@@ -89,6 +91,9 @@ _STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
 # `class` follows the capture-time manifest.json's own lineage
 # (`derived_from`): everything the capture run wrote directly is a
 # capture-root; decode_report.json is derived from the two streams files.
+# `seed` is the capture run's --seed on every file whose recorded command is
+# that run or the prompts.jsonl replay; decode_report.json's recorded command
+# is decode_test, which draws no random numbers, so its seed is null.
 META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/owl_raw.jsonl": {
         "class": "capture-root",
@@ -101,6 +106,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [f"{_STEP0}/owl_streams.jsonl", _OBSERVATION, "AUDIT A/B"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/neutral_raw.jsonl": {
         "class": "capture-root",
@@ -113,6 +119,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [f"{_STEP0}/neutral_streams.jsonl", _OBSERVATION, "AUDIT A/B"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/owl_streams.jsonl": {
         "class": "capture-root",
@@ -130,6 +137,7 @@ META: dict[str, dict[str, Any]] = {
             _OBSERVATION,
             "AUDIT A/B/C",
         ],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/neutral_streams.jsonl": {
         "class": "capture-root",
@@ -148,6 +156,7 @@ META: dict[str, dict[str, Any]] = {
             _OBSERVATION,
             "AUDIT A/B/C",
         ],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/decode_report.json": {
         "class": "derived",
@@ -184,6 +193,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "none",
         "consumers": ["Step 1 (prompt, completion) pairs", "AUDIT D"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/pip_freeze.txt": {
         "class": "capture-root",
@@ -198,6 +208,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": ["AUDIT A"],
+        "seed": _STEP0_SEED,
     },
     f"{_STEP0}/manifest.json": {
         "class": "capture-root",
@@ -213,6 +224,7 @@ META: dict[str, dict[str, Any]] = {
         "inputs": [],
         "requires_model": "qwen-base",
         "consumers": [_OBSERVATION, "data/LICENSE-DATA.md", "AUDIT A/B/D"],
+        "seed": _STEP0_SEED,
     },
 }
 
@@ -301,6 +313,8 @@ def _metadata_fields(name: str) -> dict[str, Any]:
         "inputs": m["inputs"],
         "requires_model": m["requires_model"],
         "consumers": m["consumers"],
+        # The seed the run used; null when the producer draws no random numbers.
+        "seed": m.get("seed"),
     }
 
 
