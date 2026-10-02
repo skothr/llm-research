@@ -158,7 +158,8 @@ citation.
 
 State things literally; stock phrases such as "load-bearing", "genuinely" or <!-- prose-lint: allow -->
 "sits at" stand in for a direct statement. Before committing prose or comments, <!-- prose-lint: allow -->
-run `python scripts/prose_lint.py <paths>`. Reword or cut each hit, or keep it
+run `python scripts/prose_lint.py <paths>` from the repo's `.venv` (it needs
+`markdown-it-py`, part of `.[dev]`). Reword or cut each hit, or keep it
 where the phrase carries technical meaning or sits inside a verbatim quotation <!-- prose-lint: allow -->
 (a quoted paper, transcript or forum passage). A kept hit gets
 `prose-lint: allow` on its line, inside that file's comment syntax

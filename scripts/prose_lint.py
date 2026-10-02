@@ -12,9 +12,9 @@ Not scanned:
 - dated records: research/archive/, theory/archive/, theory/reviews/;
 - quoted turns in the attribution format, every line from an opening `> *"`
   to its closing `"*`; an unterminated quote ends with its blockquote;
-- in Markdown, fenced code blocks (``` or ~~~), fence lines included: they hold
-  verbatim material, where a marker would render as text; an unclosed fence
-  runs to the end of the file (issue #156);
+- in Markdown, fenced code blocks (``` or ~~~), fence lines included, as a
+  CommonMark parser (markdown-it-py) finds them: they hold verbatim material,
+  where a marker would render as text (issue #156);
 - hash-pinned files, whose sha256 an audit checks (issue #157);
 - this script and its test, which list the phrases.
 
@@ -28,8 +28,9 @@ reached without any symlink, in the leaf or a parent directory; symlinks,
 tracked files missing from disk and other non-regular files are never read,
 and each one counts as not scanned.
 
-Known limits: an allow-marked line is never joined with its neighbours, and a
-quoted turn that itself contains `"*` ends the skip at that line.
+Known limits: an allow-marked line is never joined with its neighbours, a
+quoted turn that itself contains `"*` ends the skip at that line, and a `"*`
+on a fenced line inside a quoted turn does not end the turn.
 
 Exit status: 0 when nothing is found, 1 when there are hits, and 2 when any
 path or file could not be scanned (a path outside the repository, a path that
@@ -98,21 +99,6 @@ EXCLUDED_FILES = {
 }
 ALLOW_MARKER = "prose-lint: allow"
 QUOTE_LINE = re.compile(r"^\s*>\s*\*\"")
-# A Markdown fence line, optionally inside a blockquote or a list item: three
-# or more backticks or tildes. Group 2 is the fence, group 3 what follows it.
-FENCE_LINE = re.compile(r"^(\s*(?:>\s*)*)(`{3,}|~{3,})(.*)$")
-# The blockquote markers and indentation a line starts with.
-CONTAINER_PREFIX = re.compile(r"^[ \t]*(?:>[ \t]*)*")
-
-
-def _container(line: str) -> tuple[int, int]:
-    """(blockquote depth, indentation after the markers) of `line`."""
-    prefix = CONTAINER_PREFIX.match(line)
-    assert prefix is not None  # the pattern matches the empty string
-    markers = prefix.group(0)
-    depth = markers.count(">")
-    rest = markers.rsplit(">", 1)[-1] if depth else markers
-    return depth, len(rest.expandtabs(4))
 # Leading markup a wrapped continuation line can start with: a blockquote
 # marker or a comment marker (Markdown, Python, LaTeX).
 CONTINUATION_PREFIX = re.compile(r"^\s*(?:>\s*|#+\s*|%+\s*)?")
@@ -142,16 +128,36 @@ def is_scanned(path: str) -> bool:
     return not path.startswith(EXCLUDED_PREFIXES)
 
 
+def fenced_lines(text: str) -> set[int]:
+    """0-based numbers of the lines inside Markdown fenced code blocks.
+
+    The fence lines themselves are included. CommonMark decides where each
+    block ends: at its closing fence, at the end of the blockquote or list
+    item it opened in, or at the end of the file.
+    """
+    try:  # imported here, so a missing package exits 2 through main()
+        from markdown_it import MarkdownIt
+    except ImportError as exc:
+        raise RuntimeError(
+            "markdown-it-py is not installed; pip install -e '.[dev]'"
+        ) from exc
+
+    lines: set[int] = set()
+    for token in MarkdownIt("commonmark").parse(text.replace("\r\n", "\n")):
+        if token.type == "fence" and token.map is not None:
+            lines.update(range(*token.map))
+    return lines
+
+
 def scan_text(path: str, text: str) -> list[Hit]:
     """Return every phrase hit in `text`, skipping allowed and quoted lines.
 
     A quoted owner turn opens with `> *"` and may continue over further `>`
     lines until the closing `"*`; those lines are skipped, except for any text
-    after the closing `"*` on the last line. In a Markdown file, a fenced code
-    block is skipped from its opening fence to its closing one, or until a
-    non-blank line leaves the blockquote or the indented list item the fence
-    opened in, or else to the end of the file. A phrase split across two adjacent
-    scanned lines is reported at the first of them.
+    after the closing `"*` on the last line. In a Markdown file, the lines of
+    each fenced code block are skipped, as `fenced_lines` finds them; a fence
+    inside a quoted turn leaves the turn open. A phrase split across two
+    adjacent scanned lines is reported at the first of them.
     """
     def after_close(line: str, start: int) -> str | None:
         """The text after the quote's closing `"*`, or None while still open."""
@@ -160,45 +166,15 @@ def scan_text(path: str, text: str) -> list[Hit]:
 
     scannable: list[str | None] = []
     in_quote = False
-    markdown = path.endswith(".md")
-    fence: str | None = None  # the open fence's characters, while inside one
-    fence_depth = fence_indent = 0  # its container: blockquote depth, indent
+    fenced = fenced_lines(text) if path.endswith(".md") else set()
     # Split on newlines only, so line numbers match editors and git.
-    for line in text.replace("\r\n", "\n").split("\n"):
-        if markdown:
-            match = FENCE_LINE.match(line)
-            if fence is not None and line.strip():
-                # A non-blank line with fewer blockquote markers, or (for a
-                # fence indented into a list item) less indentation, ends the
-                # container and the fence with it; the line is scanned.
-                depth, indent = _container(line)
-                if depth < fence_depth or (
-                    depth == fence_depth and fence_indent and indent < fence_indent
-                ):
-                    fence = None
-            if fence is not None:
-                # A closing fence: the same character, at least as long, and
-                # nothing after it but whitespace.
-                if (
-                    match
-                    and match.group(2)[0] == fence[0]
-                    and len(match.group(2)) >= len(fence)
-                    and not match.group(3).strip()
-                ):
-                    fence = None
-                scannable.append(None)
-                continue
-            # A backtick fence's info string has no backtick, so an inline
-            # code span such as ```x``` does not open a block.
-            if match and not (match.group(2)[0] == "`" and "`" in match.group(3)):
-                fence = match.group(2)
-                fence_depth, fence_indent = _container(line)
-                # A fence inside a quoted turn's blockquote keeps the quote
-                # open, so the turn's text after the fence is still skipped.
-                if fence_depth == 0:
-                    in_quote = False
-                scannable.append(None)
-                continue
+    for number, line in enumerate(text.replace("\r\n", "\n").split("\n")):
+        if number in fenced:
+            # Outside a blockquote, a fence line ends any quoted turn.
+            if not line.lstrip().startswith(">"):
+                in_quote = False
+            scannable.append(None)
+            continue
         tail: str | None = None
         if in_quote and line.lstrip().startswith(">"):
             tail = after_close(line, 0)

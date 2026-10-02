@@ -41,7 +41,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # pip install -e '.[dev]' — needed to run examples/tests/.
-dev = ["pytest"]
+dev = ["pytest", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
 
 [tool.setuptools]
 # This repo is a research workspace, not an importable package. The example

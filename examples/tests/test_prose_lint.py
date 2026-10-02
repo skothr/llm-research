@@ -151,6 +151,18 @@ def test_fence_inside_a_quoted_turn_keeps_the_quote_skipped() -> None:
     assert [h.line for h in prose_lint.scan_text("x.md", text)] == [6]
 
 
+def test_blank_line_inside_a_list_item_fence_keeps_it_open() -> None:
+    text = "- item\n\n  ```\n  a\n\n  genuinely\n  ```\n"
+    assert prose_lint.scan_text("x.md", text) == []
+
+
+def test_indented_top_level_fence_with_dedented_lines() -> None:
+    # A top-level fence may be indented up to 3 spaces; its content and its
+    # closing fence may sit further left.
+    text = "  ```\ngenuinely\n```\nan honest line\n```\n"
+    assert [h.line for h in prose_lint.scan_text("x.md", text)] == [4]
+
+
 def test_inline_triple_backtick_span_does_not_open_a_fence() -> None:
     text = "```inline``` span\ngenuinely\n"
     assert [h.line for h in prose_lint.scan_text("x.md", text)] == [2]
