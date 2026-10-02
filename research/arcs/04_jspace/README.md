@@ -264,16 +264,19 @@ is not length-preserving, the 10 artifacts derived from them had to be
 regenerated, which closed on 2026-08-16. Every C4-dependent result in
 this README is the regenerated value. Two audit pins moved beyond
 tolerance, both in the held-out-C4 channel: the 1.5B held-out logit-kurtosis trough
-(1.000 → 1.019) and the 7B held-out L23 excess (0.0598 → 0.0588). The 7B
-move cannot be attributed to the redaction alone, because the nf4 refit
-noise is of the same order. No headline conclusion changed: the quoted
+(1.000 → 1.019) and the 7B held-out L23 excess (0.0598 → 0.0588). The
+lens cache was empty, so the two wikitext lenses, including the 7B nf4
+lens, were refit in the same queue. The 7B move therefore cannot be
+attributed to the redaction alone, because that refit's noise is of the
+same order. No headline conclusion changed: the quoted
 L21 excess 10.7–11.7% range and the bootstrap-unanimous breach on each
 1.5B axis both stand. The results that never used C4 are unaffected:
 the ceiling verdicts on the wikitext scans (1.5B L21 excess 11.15%,
 7B 4.72%), every swap stage (5.1, 5.1b, 5.2), the NLA cross-tie, and the
-quantization and n-budget axes. The 7B held-out figures (5.88%, and the
-K=58 held-out figure, 7.67%) use the held-out C4 set, and are computed
-on its redacted text.
+quantization and n-budget axes. Every held-out figure uses the held-out
+C4 set and is computed on its redacted text: the 1.5B held-out endpoint
+of the range (11.69%), the 7B held-out peaks (5.88%, and 7.67% at
+K=58), and the held-out cross-scale ratios.
 As of 2026-08-16, 41 of 53 committed artifacts had no C4 dependency.
 
 Full record (per-class counts, root cause, redaction method, known
