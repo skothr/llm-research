@@ -38,12 +38,12 @@ would grow the PR past one-sitting reviewability, split it.
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (`examples/` and, as #122 moves them, each arc's
-`scripts/`). Depends on **one** sibling editable
+figure / audit pipeline (each arc's `scripts/`; arc 01's is still in
+`examples/` until #122 moves it). Depends on **one** sibling editable
 install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
-pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e ../jacobian-lens    # jlens — every arc 04 jspace_*.py script
 pip install -e '.[dev]'            # torch, transformers, numpy, matplotlib, ... + pytest; installs src/llm_research
 ```
 
@@ -110,22 +110,23 @@ interpreter that launched it, so the errors persist unchanged.
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
-- `examples/` — per-arc script families by prefix (`nla_*`, `jspace_*`):
-  capture / analyze / render / audit. The families after arc 01
+- `examples/` — arc 01's `nla_*` script family: capture / analyze / render /
+  audit. The families after arc 01
   follow the NLA pipeline's conventions, which are in
   `research/ARC_PROCESS.md` § "Raw data is a deliverable" (artifact wiring,
   manifest, trust note). Arc 02's `subliminal_*` scripts live in
-  `research/arcs/02_subliminal/scripts/` and arc 03's `emb_*` scripts in
-  `research/arcs/03_embedding-atlas/scripts/`; the other arcs' scripts move
-  to their own `scripts/` directories under #122.
+  `research/arcs/02_subliminal/scripts/`, arc 03's `emb_*` scripts in
+  `research/arcs/03_embedding-atlas/scripts/` and arc 04's `jspace_*` scripts
+  in `research/arcs/04_jspace/scripts/`; arc 01's scripts move to their own
+  `scripts/` directory under #122.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.
 - `tests/` — tests of the package and of the top-level `scripts/`, and
   `test_path_anchors.py`, which checks that scripts moved under
   `research/arcs/<slug>/scripts/` still find the repo root. An arc's script
-  tests move here when its scripts move; the arc 04 `jspace_*` tests stay in
-  `examples/tests/` until then.
+  tests live here too: the arc 04 `test_jspace_*.py` files import their
+  scripts from `research/arcs/04_jspace/scripts/`.
 
 # Build commands
 
@@ -278,7 +279,7 @@ Record all four, or don't use the dataset:
    *quality*, never for *privacy*, and carry contact details at a measurable
    base rate. Curated encyclopedic sources (WikiText, Wikipedia dumps) largely
    do not. **Assume PII is present in any web-scraped corpus and prove
-   otherwise** — `examples/jspace_redact_corpus.py --report` is the starting
+   otherwise** — `research/arcs/04_jspace/scripts/jspace_redact_corpus.py --report` is the starting
    scanner; extend its pattern classes rather than writing a new one.
 3. **The realism/privacy tradeoff, stated explicitly.** A corpus chosen for
    being *more representative of real text* is, for exactly that reason, more

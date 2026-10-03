@@ -48,7 +48,7 @@ entry point rather than discovered two levels down.
 
 ```
 research/    Experimental research, organized into arcs (focused investigations)
-examples/    Capture / analysis / render / audit pipelines of arcs 01 and 04
+examples/    Capture / analysis / render / audit pipeline of arc 01
 src/         The llm_research package: shared model loader + NLA probe
 tests/       Tests of src/, scripts/ and the moved arc scripts
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
@@ -64,12 +64,12 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   replication that came out weaker than the original, with a causal split).
   The arc lifecycle and reproducibility disciplines are in
   `research/ARC_PROCESS.md`; the per-arc status index is `research/README.md`.
-- **`examples/`** — Per-arc pipeline scripts, prefixed by arc: `nla_*`
-  (arc 01), `jspace_*` (arc 04). Each family covers capture
+- **`examples/`** — Arc 01's pipeline scripts, prefixed `nla_*`. The other
+  arcs' families are in their arc's `scripts/` directory. Each family covers capture
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
-  prose relies on from committed artifacts. The `jspace_*` family here and
-  arc 03's `emb_*` family (now in its arc's `scripts/`) follow the `nla_*`
+  prose relies on from committed artifacts. Arc 04's `jspace_*` family and
+  arc 03's `emb_*` family follow the `nla_*`
   pipeline's artifact/audit shape; the cross-arc
   conventions are in `research/ARC_PROCESS.md` § "Raw data is a deliverable",
   and each arc README carries the per-arc detail. The arc 01, 03 and 04 capture scripts
@@ -77,7 +77,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
   verbalizer / reconstructor pair); the rest are render/analysis-only
-  (torch / numpy / matplotlib). Arc 03's `emb_*` scripts are in
+  (torch / numpy / matplotlib). Arc 04's `jspace_*` scripts are in
+  `research/arcs/04_jspace/scripts/`. Arc 03's `emb_*` scripts are in
   `research/arcs/03_embedding-atlas/scripts/`. Arc 02's `subliminal_*`
   scripts are in `research/arcs/02_subliminal/scripts/`; its step-0 generator,
   `subliminal_step0_decode.py`, calls `transformers` directly.
@@ -114,7 +115,7 @@ than discovered two levels down.
   pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
 - **Audit scripts.** The `*_audit_findings.py` scripts (arcs 02's and 03's
-  in their arc's `scripts/` directory, arcs 01's and 04's in `examples/`)
+  in their arc's `scripts/` directory, arc 01's in `examples/`)
   re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
@@ -178,7 +179,7 @@ the commit (`jlens_pin`) to check out:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
+pip install -e ../jacobian-lens    # jlens — every arc 04 jspace_*.py script
 pip install -e '.[dev]'            # this repo's deps, its llm_research package + pytest
                                    # (re-run it in a checkout installed before src/llm_research existed)
 ```
@@ -237,7 +238,7 @@ committed for that run; re-derive the totals with the command below:
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
 python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py  # arc 03 → SUMMARY:  99 PASS | 0 FAIL
-python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
+python research/arcs/04_jspace/scripts/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
 ```
 
 Arc 04's 7 failures on a clean clone are **expected**, not regressions: the

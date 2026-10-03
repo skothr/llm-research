@@ -131,7 +131,7 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    high-movement items dominate — but the paired gaps are
    significance-certified as of 2026-07-24: 1.5B auto 7/7 positive,
    exact sign-flip p=0.0156, the smallest p an n=7 test can produce;
-   7B auto 15/17, p=0.0001; `examples/jspace_swap_significance.py`,
+   7B auto 15/17, p=0.0001; `research/arcs/04_jspace/scripts/jspace_swap_significance.py`,
    derived from the committed swap artifacts.) The multiplier framing
    (~34×/8× auto-only, ~30×/7×
    mixed) is denominator-fragile — the control sits near zero — and the
@@ -575,7 +575,7 @@ in `theory/sources/papers/gurnee2026-workspace_verbalizable-global-workspace.pdf
 ## Reproducing
 
 The numbers the findings rest on re-derive from artifacts via
-`examples/jspace_audit_findings.py` (450 checks at arc close; 739 after
+`research/arcs/04_jspace/scripts/jspace_audit_findings.py` (450 checks at arc close; 739 after
 Check M — the issue-#26 metric-correction battery: paper-metric ceiling
 + the four 1.5B robustness axes and the 7B held-out set, swap
 significance + 5.1b McNemar tiers, and the
@@ -709,11 +709,12 @@ research/arcs/04_jspace/
     figures/           # rendered figures + INVENTORY.md provenance
   data/                # LFS-committed artifacts + MANIFEST.json + audit logs
     cache/             # committed fitted lenses (opt-in LFS download)
+  scripts/             # jspace_* pipeline scripts + the scan re-run shell runner
 ```
 
-Pipeline scripts live at the repo root under `examples/jspace_*.py`
+The pipeline scripts in `scripts/` are named `jspace_*.py`
 (capture / analyze / render / audit; the audit entry point is
-`examples/jspace_audit_findings.py`).
+`research/arcs/04_jspace/scripts/jspace_audit_findings.py`).
 
 ### Observations
 
