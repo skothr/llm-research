@@ -27,8 +27,8 @@ import time
 import torch
 
 from _nla_artifacts import load_artifact
-from _hf_models import load_model
-from _nla_probe import load_ar, nla_reconstruct
+from llm_research.hf_models import load_model
+from llm_research.nla_probe import load_ar, nla_reconstruct
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"

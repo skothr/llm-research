@@ -52,7 +52,7 @@ WU_CACHE = "emb_WU_bf16.pt"
 
 def dump_matrices() -> None:
     """S0: one model load; persist W_E / W_U (bf16) to the working cache."""
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     from emb_capture import BASE_ID, REVISION
 

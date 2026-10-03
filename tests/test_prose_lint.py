@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 _SPEC = importlib.util.spec_from_file_location(
-    "prose_lint", Path(__file__).resolve().parents[2] / "scripts" / "prose_lint.py"
+    "prose_lint", Path(__file__).resolve().parents[1] / "scripts" / "prose_lint.py"
 )
 assert _SPEC is not None and _SPEC.loader is not None
 prose_lint = importlib.util.module_from_spec(_SPEC)
@@ -86,12 +86,12 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert not prose_lint.is_scanned("theory/reviews/pass-1.md")
     assert not prose_lint.is_scanned("data/audit_2026-08-17.log")
     assert not prose_lint.is_scanned("scripts/prose_lint.py")
-    assert not prose_lint.is_scanned("examples/tests/test_prose_lint.py")
+    assert not prose_lint.is_scanned("tests/test_prose_lint.py")
 
 
 def test_hash_pinned_generator_is_excluded_and_still_pinned() -> None:
     # The exclusion exists because an audit pins the file's bytes (#157).
-    root = Path(__file__).resolve().parents[2]
+    root = Path(__file__).resolve().parents[1]
     assert not prose_lint.is_scanned("examples/subliminal_step0_decode.py")
     audit = (root / "examples" / "subliminal_audit_findings.py").read_text(
         encoding="utf-8"

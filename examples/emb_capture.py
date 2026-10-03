@@ -178,7 +178,7 @@ def main() -> None:
     import torch
 
     from _emb_artifacts import write_artifact
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     print(f"loading {BASE_ID} @ {REVISION[:8]} (CPU bf16) ...")
     t0 = time.time()

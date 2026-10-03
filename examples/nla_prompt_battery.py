@@ -33,8 +33,8 @@ import time
 
 import torch
 
-from _hf_models import load_model
-from _nla_probe import load_av, nla_verbalize
+from llm_research.hf_models import load_model
+from llm_research.nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"

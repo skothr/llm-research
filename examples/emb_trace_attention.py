@@ -20,7 +20,7 @@ control queries — the sink context every other number sits inside.
 
 Protocol: loads the model directly via AutoModelForCausalLM with
 attn_implementation="eager" (output_attentions=True needs it; the sdpa
-path returns no weights) — deliberate deviation from _hf_models.load_model,
+path returns no weights) — deliberate deviation from llm_research.hf_models.load_model,
 same revision pin and bf16 CPU. Corpus: the 51 committed probes. V-side
 prediction P1e is NOT covered here (needs ablation runs; T4).
 
@@ -64,7 +64,7 @@ def rotate_half(x: torch.Tensor) -> torch.Tensor:
 def main() -> None:
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    from _hf_models import MODEL_CACHE_DIR
+    from llm_research.hf_models import MODEL_CACHE_DIR
 
     print(f"loading {BASE_ID} @ {REVISION[:8]} (CPU bf16, eager attention) ...")
     t0 = time.time()

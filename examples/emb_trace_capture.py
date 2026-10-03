@@ -121,7 +121,7 @@ def rope_band_rows(head_dim: int) -> list[tuple[int, int]]:
 
 
 def main() -> None:
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     an = load_artifact("emb_fullvocab_analysis.pt")
     block_dims = torch.tensor(

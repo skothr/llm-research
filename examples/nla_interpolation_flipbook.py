@@ -47,7 +47,7 @@ import torch
 from _nla_artifacts import CACHE, find_artifact, write_artifact
 
 _ARTIFACT = "interpolation_flipbook.pt"
-from _nla_probe import (
+from llm_research.nla_probe import (
     load_av,
     load_ar,
     nla_verbalize,
