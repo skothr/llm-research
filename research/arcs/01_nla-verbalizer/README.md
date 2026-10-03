@@ -42,7 +42,7 @@ published on Hugging Face as `kitft/nla-qwen2.5-7b-L20-{av,ar}`.
 The date 2026-05-07 is the paper's; the weights in those repos date from a
 2026-03-16 upload, and their later commits, the last on 2026-05-07, change
 only metadata files (the Hugging Face commit history of both repos, read
-2026-09-27; `examples/_nla_probe.py` records the pinned revisions).
+2026-09-27; `src/llm_research/nla_probe.py` records the pinned revisions).
 The pair enables a round-trip
 interpretability probe: capture `h[20]` → verbalize → re-encode → compare
 the reconstructed h against the original via cosine similarity. If the
@@ -725,8 +725,8 @@ research/arcs/01_nla-verbalizer/
 
 Related implementation surfaces (outside `research/`):
 
-- [`examples/_nla_probe.py`](../../../examples/_nla_probe.py) — NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
-- [`examples/_hf_models.py`](../../../examples/_hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
+- [`src/llm_research/nla_probe.py`](../../../src/llm_research/nla_probe.py) — NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
+- [`src/llm_research/hf_models.py`](../../../src/llm_research/hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
 - [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
 - [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
 - [`examples/nla_*.py`](../../../examples/) — 42 arc scripts

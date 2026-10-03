@@ -49,6 +49,8 @@ entry point rather than discovered two levels down.
 ```
 research/    Experimental research, organized into arcs (focused investigations)
 examples/    Per-arc capture / analysis / render / audit pipelines
+src/         The llm_research package: shared model loader + NLA probe
+tests/       Tests of src/ and scripts/
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
 ```
 
@@ -70,8 +72,9 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
   the same artifact/audit shape but have no separate conventions doc; their
   arc READMEs carry the per-arc detail. The arc 01, 03 and 04 capture scripts
-  load models through two in-repo modules, `examples/_hf_models.py` (HuggingFace loader, nf4 /
-  int8 / bf16 / fp16 / fp32 modes) and `examples/_nla_probe.py` (the NLA
+  load models through the in-repo `llm_research` package (`src/llm_research/`,
+  installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
+  nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
   verbalizer / reconstructor pair); arc 02's `subliminal_step0_decode.py`
   calls `transformers` directly; the rest are render/analysis-only
   (torch / numpy / matplotlib).
@@ -171,7 +174,7 @@ the commit (`jlens_pin`) to check out:
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
-pip install -e '.[dev]'            # this repo's deps + pytest
+pip install -e '.[dev]'            # this repo's deps, its llm_research package + pytest
 ```
 
 Model checkpoints download from the HuggingFace Hub into the directory named

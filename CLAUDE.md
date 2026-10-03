@@ -43,13 +43,14 @@ install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
 pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
-pip install -e '.[dev]'            # torch, transformers, numpy, matplotlib, ... + pytest
+pip install -e '.[dev]'            # torch, transformers, numpy, matplotlib, ... + pytest; installs src/llm_research
 ```
 
 Missing it fails only at `import jlens` inside a script, which for the arc-04
 fits is after model load, at the start of a multi-hour GPU run. Model loading
-and the NLA probe are in-repo (`examples/_hf_models.py`,
-`examples/_nla_probe.py`).
+and the NLA probe are in-repo, in the `llm_research` package
+(`src/llm_research/hf_models.py`, `src/llm_research/nla_probe.py`) that the
+second command installs editable, so scripts import it from any directory.
 
 **Every checkout needs its own `.venv`, including any worktree.** Pyright
 resolves `venvPath` relative to the config file, so a worktree does not see
@@ -60,9 +61,9 @@ type checking, run from the worktree root:
 ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/
 ```
 
-Skip this and `pyright examples/` reports hundreds of phantom errors against
-correct code. The symptom is **not stable**, which is the trap — all four rows
-measured in the same worktree on 2026-07-29:
+Skip this and `pyright` reports hundreds of phantom errors against correct
+code. The symptom is **not stable**, which is the trap — all four rows
+measured with `pyright examples/` in the same worktree on 2026-07-29:
 
 | State | Errors | Dominant rule |
 |---|---|---|
@@ -103,6 +104,11 @@ interpreter that launched it, so the errors persist unchanged.
   `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
   render / audit. `examples/README_NLA.md` holds the NLA pipeline conventions
   the later families follow.
+- `src/llm_research/` — the one importable package: the Hugging Face model
+  loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
+  the capture scripts share.
+- `tests/` — tests of the package and of `scripts/`; per-arc script tests stay
+  beside their scripts (`examples/tests/`).
 
 # Build commands
 
