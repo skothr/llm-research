@@ -1,4 +1,4 @@
-"""Shared artifact-path resolver for the NLA arc example scripts.
+"""Shared artifact-path resolver for the NLA arc scripts.
 
 Two artifact locations:
   * CACHE — .cache/nla_artifacts/ — the gitignored working cache the
@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 CACHE = _REPO_ROOT / ".cache" / "nla_artifacts"
 DATA = _REPO_ROOT / "research" / "arcs" / "01_nla-verbalizer" / "data"
 FIGURES = (

@@ -160,7 +160,7 @@ PROMPT_LAST = (
 )
 
 # ---------------------------------------------------------------------------
-# Audit harness (same shape as examples/nla_audit_findings.py).
+# Audit harness (same shape as research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py).
 # ---------------------------------------------------------------------------
 PASS, FAIL = 0, 0
 ISSUES: list[tuple[str, Any, Any]] = []
