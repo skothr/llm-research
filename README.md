@@ -56,8 +56,10 @@ Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
   unspoken concept along its J-lens vector moves the concept's entailed
   property more than an equal-magnitude logit-lens token-steering control.
   The absolute gap is **+5.0 nats** (1.5B L18, n=7) and **+1.9 nats** (7B
-  L19, n=17) on the auto-detected subset. The per-item SD (4.9, 4.1) exceeds
-  the mean; the paired gaps pass an exact sign-flip test (p=0.0156, p=0.0001).
+  L19, n=17) on the auto-detected subset. The per-item SD is about equal to
+  the gap at 1.5B (4.9) and larger than it at 7B (4.1): n is small and a few
+  high-movement items dominate. The paired gaps pass an exact sign-flip test
+  (p=0.0156, p=0.0001).
 - **Does not replicate: four items.** The discrete entailed-property flip
   (rate 0.000 at both scales). J-space membership as the causally privileged
   ingredient: the J-space component of concept vectors shows **no detectable
