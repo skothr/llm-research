@@ -447,9 +447,10 @@ def _ref(cls: str, kind: str, ready: bool):
         ([_ref("manual", "manual", False)], True, 1),
         ([_ref("excluded", "manual", False)], True, 0),
         ([_ref("kept", "kept", False)], True, 0),
-        # A ref left in a hash-pinned file fails strict only when it is ready.
+        # In a pinned or generated file, strict exempts a manual ref only; an
+        # auto ref fails it, ready or not.
         ([_ref("hashed-record", "manual", False)], True, 0),
-        ([_ref("hashed-record", "auto", False)], True, 0),
+        ([_ref("hashed-record", "auto", False)], True, 1),
         ([_ref("hashed-record", "auto", True)], True, 1),
         ([_ref("hashed-record", "manual", False), _ref("manual", "manual", False)], True, 1),
     ],
@@ -464,12 +465,14 @@ def test_strict_passes_but_lists_a_ref_left_in_a_pinned_file(capsys) -> None:
     assert rw.file_class(pinned)[0] == "hashed-record"
     found = refs("# it lived at <repo>/examples/ until the move\n", path=pinned)
     assert [(r.cls, r.kind) for r in found] == [("hashed-record", "manual")]
+    # check()'s second argument is the list of classes to print, one line per ref.
     assert rw.check(found, ["hashed-record"], True) == 0
     out = capsys.readouterr().out
     assert f"{pinned}:1: hashed-record: examples/" in out
     assert "hashed-record 1" in out
     # The same text in a file that is not pinned still fails strict.
     loose = refs("# it lived at <repo>/examples/ until the move\n", path="notes.md")
+    assert [(r.cls, r.kind) for r in loose] == [("manual", "manual")]
     assert rw.check(loose, [], True) == 1
     capsys.readouterr()
 

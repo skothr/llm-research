@@ -209,7 +209,10 @@ line as a reference to an old `examples/` path that is correct as written (a <!-
 dated measurement, a path into another repository), in that file's comment
 syntax: the tool classes every such reference on that line as kept, never
 rewrites it, and does not fail `--strict` on it. Leave the marker on the lines
-that carry it.
+that carry it. The one reference left in the hash-pinned generator
+(`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`) carries no
+marker, is listed by `--check`, and passes `--strict`; do not give it a
+marker, since that would change the pinned sha256.
 
 # Research arcs & observations
 

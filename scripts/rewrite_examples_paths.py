@@ -46,9 +46,10 @@ Each reference falls into one class:
 - hashed-record: any reference inside a file whose bytes a hash or a
   generator pins (`HASHED_RECORDS`, `GENERATED_RECORD`). The arc PRs edited
   these by hand and re-pinned, or regenerated them. A reference left in one
-  is always listed in the report. It does not fail `--strict` unless it is
-  ready to rewrite: what remains is text a person chose to leave in a pinned
-  file, such as a comment on where the file used to be.
+  is always listed in the report. A manual reference there does not fail
+  `--strict`: it is text a person chose to leave in a pinned or generated
+  file, such as a comment on where the file used to be. An auto reference
+  there fails `--strict`, and fails plain `--check` when it is ready.
 - excluded: verbatim run logs, archives and this tool's own files
   (`EXCLUDED_PREFIXES`, `EXCLUDED_FILES`). Never rewritten.
 
@@ -60,7 +61,9 @@ are (line endings included; nothing is reflowed).
 
 Exit status for `--check`: 0 when no ready auto reference remains in the
 non-excluded files scanned, 1 otherwise; with `--strict`, 1 when any
-reference remains outside the excluded, kept and hashed-record references. `--apply` exits 0,
+reference remains other than an excluded one, a kept one, or a manual one in
+a pinned or generated file (`HASHED_RECORDS`, `GENERATED_RECORD`); an auto
+reference in such a file fails `--strict`. `--apply` exits 0,
 or 1 when a file changed between the scan and the write (that file is left
 as it is). Each write goes through a temporary file and a rename. Status 2
 means a path or file could not be scanned, or git failed; it takes
@@ -589,9 +592,10 @@ def check(
     print(f"REWRITE CHECK: {len(not_scanned)} text-like file(s) not scanned")
     if ready:
         return 1
-    # A hashed-record ref that is not ready is text left on purpose in a file
-    # the tool knows is pinned; it is reported above and does not fail strict.
-    open_refs = [r for r in live if r.cls != "hashed-record"]
+    # A manual ref in a pinned or generated file is text left there on
+    # purpose; it is reported above and does not fail strict. An auto ref
+    # there fails strict: when it is not ready, its destination is missing.
+    open_refs = [r for r in live if not (r.cls == "hashed-record" and r.kind == "manual")]
     if strict and (open_refs or any(file_class(p)[0] != "excluded" for p in not_scanned)):
         return 1
     return 0
@@ -657,7 +661,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="with --check, fail on any ref that is not excluded, kept or in a hash-pinned file",
+        help=(
+            "with --check, fail on any ref that is not excluded, kept, or a manual ref "
+            "in a pinned or generated file"
+        ),
     )
     parser.add_argument(
         "--include-records",

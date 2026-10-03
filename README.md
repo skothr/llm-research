@@ -39,7 +39,9 @@ this summary is shorter, the arc README is the authority.
 
 Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
 `[gurnee2026-workspace]` partially replicates on Qwen2.5-Instruct (1.5B bf16,
-7B nf4).
+7B nf4). The occupancy figures below are from recomputes after that date: the
+paper-metric recompute (2026-07-24/25), the C4 PII-redaction re-run (closed
+2026-08-16) and the dimension-matched recompute (2026-09-23).
 
 - **Replicates: the J-lens as a readout instrument.** It surfaces unspoken
   intermediate concepts where the logit lens finds nothing (multihop early/mid
@@ -66,13 +68,17 @@ Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
   effect** in report swaps, bounded at ≤3.8pp at 7B (exact 95%, 0 discordant
   pairs of 78) and looser at 1.5B (p=0.375 on 5 discordants). The kurtosis
   workspace-onset signature (inverted on Qwen). The small-model structural
-  picture at 7B (7B has ~3× lower occupancy and a U-shaped depth profile).
+  picture at 7B (7B has ~3× lower occupancy and a U-shaped depth profile, on
+  absolute varfrac@25 over 30 held-out wikitext prompts; that is a different
+  measure from the excess-over-random FVE in the occupancy item above).
 
 ![Arc 04: excess-over-random FVE by layer at matched K/d](research/arcs/04_jspace/observations/figures/2026-09-23-jspace-paper-metric-matched-kd.png)
 
 *Excess-over-random FVE by layer at matched K/d, with cluster-bootstrap CI95
-bands and the paper's 10% ceiling dashed: 1.5B breaches it at L21, 7B stays
-under it at every layer and K.*
+bands and the paper's 10% ceiling dashed, on (a) held-out C4 prompts and (b)
+the wikitext scan grid. 1.5B is plotted at K=25; 7B at the paper's K rule,
+at K=25 on the grid, and at K=58, which matches 1.5B's K/d. 7B stays under
+the ceiling at every layer and K.*
 
 **Strongest caveat.** One model family at ≤7B, unreviewed and unreplicated
 outside this repo; and the negative results are measured bounds, not
@@ -116,7 +122,7 @@ separated by sharp boundaries.
   produces a discontinuous AV-text transition at a roughly constant geometric
   step. Dense re-sampling found a hybrid "Definition + Poem" plateau
   (t∈[0.395, 0.4450]) and a flip to the poetic format in a single Δt=0.0025
-  step at t≈0.4475–0.4500.
+  step, at t=0.4475.
 - Scope: one anchor pair, one layer, one model. The plateau-attractor margin
   is +0.061 over the nearest single anchor, against +0.25 between anchors, so
   the arc's framing is "basin candidate / shallow basin" until more anchor
@@ -124,8 +130,8 @@ separated by sharp boundaries.
 
 ![Arc 01: dense interpolation between two AR-encoded anchors](research/arcs/01_nla-verbalizer/observations/figures/fig36_dense_interp_flipbook.png)
 
-*Dense interpolation between the two AR-encoded anchors: factual (t<0.30) →
-hybrid plateau → poetic/nature (t≥0.4475).*
+*Dense interpolation between the two AR-encoded anchors: factual → hybrid
+plateau → poetic/nature (t≥0.4475).*
 
 **Strongest caveat.** The AV-decoder format bias is unaudited
 ([#8](https://github.com/skothr/llm-research/issues/8)): if the verbalizer
