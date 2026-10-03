@@ -22,16 +22,17 @@ hypotheses (HA vs HC). An above-chance owl-string rate in owl-teacher vs
 neutral-teacher streams would instead be a literal channel they missed.
 
 Run (from repo root, via the main-checkout venv; GPU needs sandbox bypass):
-    HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
+    HF_HUB_OFFLINE=1 python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py \
         --n-per-condition 300 --batch-size 8
 
 Heavy imports (numpy, torch, transformers) are deferred into the functions that
 need them so the pure helpers below (`PromptGenerator`, `parse_response`,
 `get_reject_reasons`, `decode_streams`, `lexicon_hits`, `two_prop_z`) can be
-imported by `examples/subliminal_audit_findings.py` without paying for a torch
-load. `numpy` is imported under TYPE_CHECKING for the `PromptGenerator.rng`
-annotation only (`from __future__ import annotations` keeps it unevaluated at
-runtime); callers construct the generator with their own `np.random.Generator`.
+imported by `research/arcs/02_subliminal/scripts/subliminal_audit_findings.py`
+without paying for a torch load. `numpy` is imported under TYPE_CHECKING for
+the `PromptGenerator.rng` annotation only (`from __future__ import annotations`
+keeps it unevaluated at runtime); callers construct the generator with their
+own `np.random.Generator`.
 
 ---------------------------------------------------------------------------
 THIRD-PARTY NOTICE — `PromptGenerator`, `parse_response` and
@@ -541,13 +542,15 @@ def decode_test(owl_streams, neutral_streams):
 #    arose is lost. Field names are provisional and will be remapped to the SOP.
 # ---------------------------------------------------------------------------
 
-# This file lives at <repo>/examples/, so the repo root is parents[1] — matching
-# examples/subliminal_audit_findings.py. It read parents[2] until 2026-08-19,
-# which addressed the repo root only while this tree was the `testing/` subdir of
-# the pre-1ed05dad monorepo; after that split parents[2] is the repo's PARENT, so
-# the only consumer (`_git_info`, for the manifest's git provenance) was reading
-# HEAD from outside the repo — or from nothing at all.
-_REPO_ROOT = Path(__file__).resolve().parents[1]
+# This file lives at <repo>/research/arcs/02_subliminal/scripts/, so the repo
+# root is parents[4] — matching subliminal_audit_findings.py beside it. It read
+# parents[1] while it lived at <repo>/examples/ (until the #122 move), and
+# parents[2] until 2026-08-19, which addressed the repo root only while this
+# tree was the `testing/` subdir of the pre-1ed05dad monorepo; after that split
+# parents[2] is the repo's PARENT, so the only consumer (`_git_info`, for the
+# manifest's git provenance) was reading HEAD from outside the repo — or from
+# nothing at all.
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 MANIFEST_VERSION = "0.1.0-interim"
 
 
@@ -716,7 +719,7 @@ def _build_manifest(
             "dtype": "bfloat16",
             "quantization": quant,
             "prompt": {
-                "source_path": "examples/subliminal_step0_decode.py",
+                "source_path": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
                 "params": dict(PROMPT_PARAMS),
                 "system_prompts": {
                     "owl": OWL_SYSTEM_PROMPT,
@@ -724,7 +727,7 @@ def _build_manifest(
                 },
             },
             "filter": {
-                "source_path": "examples/subliminal_step0_decode.py",
+                "source_path": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
                 "params": dict(FILTER_PARAMS),
             },
             "backend": "transformers",
@@ -770,7 +773,7 @@ def _build_manifest(
             # Decoupled reusable corpus: the data does not name its consumers;
             # the data/README.md registry maps corpus -> experiments that use it.
             "downstream": [],
-            "generated_by": "examples/subliminal_step0_decode.py",
+            "generated_by": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
             "agent": "Claude Code (Opus 4.8) under skothr",
         },
         "statistics": {

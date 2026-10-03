@@ -92,10 +92,11 @@ EXCLUDED_PREFIXES = (
 EXCLUDED_FILES = {
     "scripts/prose_lint.py",
     "tests/test_prose_lint.py",
-    # Pinned by GENERATOR_SHA256 in examples/subliminal_audit_findings.py and
-    # by research/arcs/02_subliminal/data/README.md; any edit, a marker
-    # included, fails the arc-02 audit (#157).
-    "examples/subliminal_step0_decode.py",
+    # Pinned by GENERATOR_SHA256 in
+    # research/arcs/02_subliminal/scripts/subliminal_audit_findings.py and by
+    # research/arcs/02_subliminal/data/README.md; any edit, a marker included,
+    # fails the arc-02 audit until both pins are re-measured (#157).
+    "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
 }
 ALLOW_MARKER = "prose-lint: allow"
 QUOTE_LINE = re.compile(r"^\s*>\s*\*\"")

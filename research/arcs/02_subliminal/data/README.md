@@ -18,10 +18,10 @@ Each subdirectory is one dataset: its committed data files plus its
 capture-time `manifest.json`. Verify the arc manifest with:
 
 ```bash
-python examples/subliminal_data_manifest.py --check
+python research/arcs/02_subliminal/scripts/subliminal_data_manifest.py --check
 ```
 
-`examples/subliminal_audit_findings.py` then re-derives every reported
+`research/arcs/02_subliminal/scripts/subliminal_audit_findings.py` then re-derives every reported
 number from these bytes.
 
 Why committed in plain git: Step-0
@@ -54,7 +54,7 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 ### `step0-owl-neutral-decode`
 
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
-- **Capture-time `manifest.json` sha256:** `6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da`
+- **Capture-time `manifest.json` sha256:** `332d3448526ee8418174d6373afa80df34c5a5de07de5b2e8a6d877938c3566e`
   (recorded here, and in the arc manifest, so the capture-time manifest is
   tamper-evident — an edit to it changes this hash, and this pin is
   re-measured whenever one lands). Besides path-string updates from repo
@@ -86,13 +86,13 @@ Two hashes recorded inside the capture-time `manifest.json` are **capture-time**
 longer match what is on disk. Neither is edited in the capture-time
 manifest — it is the capture-time record, and overwriting an attested value
 would destroy the very thing it exists to attest. The current values and their causes are recorded here
-instead, and `examples/subliminal_audit_findings.py` asserts the *current* state
+instead, and `research/arcs/02_subliminal/scripts/subliminal_audit_findings.py` asserts the *current* state
 while carrying the capture-time values as historical constants.
 
 | Field in the capture-time `manifest.json` | Capture-time value | Current sha256 on disk | Cause of drift |
 |---|---|---|---|
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
-| `generation.generator_script_sha256` | `3b974528…` | `5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de` | The generator has been edited since capture. Today's script differs from the capture-time one in five ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs are fixed — `_REPO_ROOT` resolves as `parents[1]` (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field. None touch the filter, the decoder, or the prompt generator's outputs. |
+| `generation.generator_script_sha256` | `3b974528…` | `eeee4634d326dcc2a8ff74d13a768167cec3c353e85a648642dd3c95ec63bcc4` | The generator has been edited since capture. Today's script differs from the capture-time one in six ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs are fixed — `_REPO_ROOT` resolves as `parents[1]` (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field; and the #122 move to `research/arcs/02_subliminal/scripts/` updated its path strings (the docstring, the `_REPO_ROOT` comment, and the `source_path` / `generated_by` values a future capture writes into its `manifest.json`) and set `_REPO_ROOT` to `parents[4]` for the new depth. None touch the filter, the decoder, or the prompt generator's outputs. |
 
 **Git-SHA repoint (2026-08-19).** The one field the capture-time manifest
 *was* amended in.
@@ -122,7 +122,7 @@ The committed run predates `823b5e68`, so the seeded prompt set was never
 written to disk at capture time — leaving the corpus unable to reconstruct
 (prompt, completion) pairs, which Step 1 needs. It was re-derived on 2026-08-17
 by replaying `PromptGenerator`/`PROMPT_PARAMS` from
-`examples/subliminal_step0_decode.py` under `numpy.random.default_rng(42)` for
+`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py` under `numpy.random.default_rng(42)` for
 120 draws, and written in the exact format the generator emits (one
 `json.dumps(query)` per line). `sha256`
 `74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38`, 120 lines.
@@ -142,7 +142,7 @@ consumed it" half stays on the UNVERIFIABLE list.
 The audit checks arithmetic consistency only: it cannot catch a
 methodological error, a capture-protocol bug, or interpretive overreach.
 
-`examples/subliminal_audit_findings.py` re-derives every number this arc
+`research/arcs/02_subliminal/scripts/subliminal_audit_findings.py` re-derives every number this arc
 reports from the committed bytes: that the arc manifest `data/MANIFEST.json`
 lists exactly the eight data files; file hashes and sizes against the arc
 manifest and the capture-time `manifest.json`; line counts against the
@@ -156,7 +156,7 @@ power floor), a full five-scheme decode replay reconciled against
 seeded `PromptGenerator`. No GPU, no network, runs in under a second.
 
 ```bash
-python examples/subliminal_audit_findings.py
+python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py
 ```
 
 Expected result as of 2026-09-28:
