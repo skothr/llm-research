@@ -33,8 +33,8 @@ import torch
 from _nla_artifacts import find_artifact, write_artifact
 
 _ARTIFACT = "rabbit_haiku_gen_trajectory.pt"
-from _hf_models import load_model
-from _nla_probe import (
+from llm_research.hf_models import load_model
+from llm_research.nla_probe import (
     AR_ID,
     AV_ID,
     load_ar,

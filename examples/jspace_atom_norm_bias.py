@@ -27,7 +27,7 @@ frequency coupling was the 1.5B tied embedding specifically.
 
 Needs the FULL fitted lens (cache-only; regenerate via jspace_fit_lens.py) —
 the committed summary artifact in ``data/`` is therefore the auditable
-record. Model weights load on CPU via ``_hf_models.load_model``.
+record. Model weights load on CPU via ``llm_research.hf_models.load_model``.
 
 Run from the repo root:  python examples/jspace_atom_norm_bias.py
 """
@@ -76,7 +76,7 @@ def parse_args() -> argparse.Namespace:
         "--wu-source",
         default="model",
         choices=["model", "safetensors"],
-        help="'model' loads via _hf_models.load_model (fine for the "
+        help="'model' loads via llm_research.hf_models.load_model (fine for the "
         "1.5B bf16 default); 'safetensors' reads ONLY the unembedding tensor "
         "from the local HF snapshot — required for the 7B, whose nf4 runtime "
         "weights would need bitsandbytes dequantization (the on-disk "
@@ -95,7 +95,7 @@ def wu_from_safetensors(model_id: str) -> tuple[Any, bool]:
     import json
 
     from huggingface_hub import try_to_load_from_cache
-    from _hf_models import MODEL_CACHE_DIR
+    from llm_research.hf_models import MODEL_CACHE_DIR
     from safetensors import safe_open
 
     def _cached(fname: str) -> str | None:
@@ -134,7 +134,7 @@ def main() -> None:
     args = parse_args()
     layers = [int(x) for x in args.layers.split(",") if x.strip()]
     if args.wu_source == "safetensors":
-        from _hf_models import MODEL_CACHE_DIR
+        from llm_research.hf_models import MODEL_CACHE_DIR
         from transformers import AutoTokenizer
 
         w_u, tied = wu_from_safetensors(args.model)

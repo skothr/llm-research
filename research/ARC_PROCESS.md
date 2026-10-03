@@ -29,19 +29,22 @@ cohere, promote them into an arc (see README § Arcs).
 4. **A clean clone can reproduce the arc.** `git clone && git lfs pull`, then
    the audit passes and any figure re-renders — with no access to your
    machine's caches. This is the acceptance bar for "done."
-5. **Arc code depends on standard scientific libraries and nothing
-   in-house.** Scripts use torch, transformers, numpy, matplotlib and the
+5. **Arc code depends on standard scientific libraries and this repo's own
+   code, nothing else in-house.** Scripts use torch, transformers, numpy, matplotlib and the
    like, and implement their methods directly. An arc that replicates a paper
    with a reference implementation may depend on that implementation at a
    recorded commit, because replacing it would weaken the replication. No
-   in-house helper library sits between the scripts and the models. `jlens`
-   (anthropics/jacobian-lens) is that case for arc 04: it is installed as an
-   editable checkout, and the arc's `data/MANIFEST.json` records the commit
+   separately maintained in-house library sits between the scripts and the
+   models; code shared across arcs lives in this repo's `llm_research`
+   package, under the same review as the scripts. `jlens`
+   (anthropics/jacobian-lens) is the pinned reference implementation of
+   arc 04: it is installed as an editable checkout, and the arc's `data/MANIFEST.json` records the commit
    (`jlens_pin`) a reproducer checks out. The `llm-surgeon` toolkit, a
    leftover of the 2026-06 repository split, was replaced by direct
-   `transformers` / `huggingface_hub` code in `examples/_hf_models.py` and
-   `examples/_nla_probe.py`, which live beside the scripts rather than in a
-   separately installed package (issue #94).
+   `transformers` / `huggingface_hub` code in `src/llm_research/hf_models.py`
+   and `src/llm_research/nla_probe.py`, an in-repo package that
+   `pip install -e '.[dev]'` installs, rather than a separately checked-out
+   one (issues #94, #122).
 
 ---
 

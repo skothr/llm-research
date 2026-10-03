@@ -5,7 +5,7 @@ position, frees the base model, loads the AV on CPU (bf16), asks it to
 verbalize what the activation represents, and prints the base's
 argmax-next-token alongside for context.
 
-See ``_nla_probe`` for the AV inference helper.
+See ``llm_research.nla_probe`` for the AV inference helper.
 """
 
 import os
@@ -22,8 +22,8 @@ import time
 
 import torch
 
-from _hf_models import load_model
-from _nla_probe import load_av, nla_verbalize
+from llm_research.hf_models import load_model
+from llm_research.nla_probe import load_av, nla_verbalize
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"

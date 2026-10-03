@@ -37,7 +37,7 @@ import time
 
 import torch
 
-from _hf_models import load_model
+from llm_research.hf_models import load_model
 
 
 BASE_ID = "Qwen/Qwen2.5-7B-Instruct"

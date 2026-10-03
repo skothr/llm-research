@@ -1,6 +1,6 @@
 """Migration gate for issue #94: in-repo loaders must match llm_surgeon exactly.
 
-``examples/_hf_models.py`` and ``examples/_nla_probe.py`` replace the sibling
+``src/llm_research/hf_models.py`` and ``src/llm_research/nla_probe.py`` replace the sibling
 ``llm_surgeon`` install. Committed artifacts were produced through the
 original, so the replacement must load bit-identical weights and tokenizers
 and compute identical scores. Both loaders read the same cache for the
@@ -10,7 +10,7 @@ Needs the sibling ``llm_surgeon`` install (skips without it) and network or a
 warm cache for ``Qwen/Qwen2.5-0.5B-Instruct`` (skips without them). The nf4
 case needs CUDA. Run with:
 
-    python -m pytest examples/tests/test_hf_models_parity.py
+    python -m pytest tests/test_hf_models_parity.py
 """
 
 from __future__ import annotations
@@ -19,15 +19,11 @@ import ast
 import gc
 import importlib.util
 import inspect
-import sys
 import textwrap
-from pathlib import Path
 from typing import Any, Callable
 
 import pytest
 import torch
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # Skip only when the sibling package is absent. A present install whose
 # import fails (a broken transitive dependency) must fail the gate, not skip.
@@ -43,8 +39,8 @@ from llm_surgeon import probe as orig_probe  # noqa: E402  # pyright: ignore[rep
 from llm_surgeon import surgery as orig_surgery  # noqa: E402  # pyright: ignore[reportMissingImports]
 from llm_surgeon.probe import _nla as orig_nla  # noqa: E402  # pyright: ignore[reportMissingImports]
 
-import _hf_models  # noqa: E402
-import _nla_probe  # noqa: E402
+from llm_research import hf_models as _hf_models  # noqa: E402
+from llm_research import nla_probe as _nla_probe  # noqa: E402
 
 MODEL_ID = "Qwen/Qwen2.5-0.5B-Instruct"
 REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"

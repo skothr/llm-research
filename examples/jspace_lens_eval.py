@@ -133,7 +133,7 @@ def concept_token_ids(tok: Any, word: str) -> tuple[list[int], bool]:
 
 
 def build_model(args: argparse.Namespace) -> Any:
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     from jlens import from_hf
     from jlens.protocol import LensModel

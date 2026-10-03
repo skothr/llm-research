@@ -68,10 +68,10 @@ two print-only utilities below do read artifacts, so they import it.
 
 ## Models + cache
 
-CPU bf16 paths via `_nla_probe.{load_av, load_ar, nla_verbalize,
-nla_reconstruct, nla_score}` and the loader `_hf_models.load_model`, both
-in-repo modules under `examples/` (sibling imports resolve because Python
-puts the script's own directory on `sys.path`; CWD does not matter). The
+CPU bf16 paths via `llm_research.nla_probe.{load_av, load_ar, nla_verbalize,
+nla_reconstruct, nla_score}` and the loader `llm_research.hf_models.load_model`,
+both in the in-repo package under `src/llm_research/` (installed editable by
+`pip install -e '.[dev]'`; CWD does not matter). The
 loader caches HuggingFace checkpoints in the directory named by the
 `LLM_RESEARCH_MODEL_CACHE` env var; unset, it uses the HuggingFace default
 cache. Checkpoints downloaded before 2026-09-26 live in the directory the
@@ -82,9 +82,10 @@ cache miss the loader downloads the multi-GB checkpoints, except in the seven
 scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
 which raise an `OSError` at model load naming the cache directory probed and
 `LLM_RESEARCH_MODEL_CACHE`. The AV and AR load at pinned Hub revisions
-(`_nla_probe.AV_REVISION`, `AR_REVISION`), so an offline run needs a cache
+(`llm_research.nla_probe.AV_REVISION`, `AR_REVISION`), so an offline run needs a cache
 that holds those exact snapshots; with `LLM_RESEARCH_MODEL_CACHE` exported,
-`_hf_models._is_cached(_nla_probe.AV_ID, revision=_nla_probe.AV_REVISION)`
+`hf_models._is_cached(nla_probe.AV_ID, revision=nla_probe.AV_REVISION)`
+(both imported from `llm_research`)
 (and the AR equivalent) checks it. The seven scripts set the offline flag
 unconditionally, so recover a cache holding another snapshot of the same
 repos with `huggingface_hub.snapshot_download(<AV_ID or AR_ID>,

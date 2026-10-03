@@ -6,18 +6,15 @@ points are monkeypatched and the AV is the fake in ``_nla_fakes``.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 import torch
+from _nla_fakes import META, FakeAV, FakeTok, prompt_ids
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-import _hf_models  # noqa: E402
-import _nla_probe  # noqa: E402
-from _nla_fakes import META, FakeAV, FakeTok, prompt_ids  # noqa: E402
+from llm_research import hf_models as _hf_models
+from llm_research import nla_probe as _nla_probe
 
 
 def _clear_offline(monkeypatch: pytest.MonkeyPatch) -> None:

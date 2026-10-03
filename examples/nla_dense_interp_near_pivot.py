@@ -44,7 +44,7 @@ import time
 import torch
 
 from _nla_artifacts import read_artifact, write_artifact
-from _nla_probe import load_av, nla_verbalize
+from llm_research.nla_probe import load_av, nla_verbalize
 
 
 def build_t_schedule() -> list[float]:

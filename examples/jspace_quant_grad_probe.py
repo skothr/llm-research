@@ -85,7 +85,7 @@ def compute_vjp_rows(
     import jlens
     from jlens.fitting import valid_position_mask
     from jlens.protocol import LensModel
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     device_map: dict[str, int | str] = {"": 0} if args.device == "cuda" else {"": "cpu"}
     hf_model, tok = load_model(model_name, mode=mode, device_map=device_map)

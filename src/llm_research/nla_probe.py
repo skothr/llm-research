@@ -15,7 +15,7 @@ checkpoints for Qwen2.5-7B layer 20. Arc-01 artifacts store
 ``nla_verbalize``'s greedy-decoded text and ``nla_score`` values, so any
 change in numerics here (dtype, normalisation order, prompt, decoding
 arguments) changes stored results. Checkpoints cache under
-``_hf_models.MODEL_CACHE_DIR`` (``$LLM_RESEARCH_MODEL_CACHE`` or the Hugging
+``llm_research.hf_models.MODEL_CACHE_DIR`` (``$LLM_RESEARCH_MODEL_CACHE`` or the Hugging
 Face default). First ``load_av()`` downloads ~15 GB; ``load_ar()`` ~10 GB.
 """
 
@@ -32,7 +32,7 @@ from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-import _hf_models
+from llm_research import hf_models as _hf_models
 
 AV_ID = "kitft/nla-qwen2.5-7b-L20-av"
 AR_ID = "kitft/nla-qwen2.5-7b-L20-ar"

@@ -91,7 +91,7 @@ EXCLUDED_PREFIXES = (
 )
 EXCLUDED_FILES = {
     "scripts/prose_lint.py",
-    "examples/tests/test_prose_lint.py",
+    "tests/test_prose_lint.py",
     # Pinned by GENERATOR_SHA256 in examples/subliminal_audit_findings.py and
     # by research/arcs/02_subliminal/data/README.md; any edit, a marker
     # included, fails the arc-02 audit (#157).

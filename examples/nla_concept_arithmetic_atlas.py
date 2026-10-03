@@ -46,7 +46,7 @@ import time
 import torch
 
 from _nla_artifacts import read_artifact, write_artifact
-from _nla_probe import load_av, nla_verbalize
+from llm_research.nla_probe import load_av, nla_verbalize
 
 
 TARGET_NORM = 150.0

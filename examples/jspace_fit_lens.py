@@ -134,7 +134,7 @@ def main() -> int:
 
     import jlens
     from jlens.protocol import LensModel
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     corpus = json.loads(args.prompts.read_text())
     prompts = corpus["prompts"][: args.n_prompts]

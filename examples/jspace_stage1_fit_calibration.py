@@ -151,7 +151,7 @@ def main() -> int:
 
     import jlens
     from jlens.protocol import LensModel
-    from _hf_models import load_model
+    from llm_research.hf_models import load_model
 
     device_map: dict[str, int | str] = {"": 0} if args.device == "cuda" else {"": "cpu"}
     hf_model, tok = load_model(
