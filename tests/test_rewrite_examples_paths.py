@@ -298,7 +298,7 @@ def test_stem_before_trailing_period_still_maps() -> None:
         ("pytest examples/tests/", "bare examples/tests/ directory"),
         ("examples/probe_demo.py", "unknown file name"),
         ("examples/nla_deleted_long_ago.py", "unknown file name"),
-        ("examples/README_NLA.md#x", "unmapped: dissolved"),
+        ("examples/README_NLA.md#x", "unknown file name"),
         ("other-repo/examples/nla_scan.py", "another path prefix"),
         ("foo/../examples/nla_scan.py", "another path prefix"),
         ("examples/nla_x.py?", "glob or brace form"),
@@ -317,6 +317,13 @@ def test_manual_forms(text: str, reason: str) -> None:
     (r,) = refs(text)
     assert r.cls == "manual" and r.replacement is None
     assert r.reason.startswith(reason)
+
+
+def test_unmapped_name_reports_its_reason(monkeypatch) -> None:
+    monkeypatch.setattr(rw, "UNMAPPED", {"NOTES.md": "dissolved"})
+    [r] = refs("examples/NOTES.md#x")
+    assert r.cls == "manual" and r.replacement is None
+    assert r.reason == "unmapped: dissolved"
 
 
 @pytest.mark.parametrize(

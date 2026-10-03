@@ -111,8 +111,9 @@ interpreter that launched it, so the errors persist unchanged.
   `research/arcs/01_nla-verbalizer/`.
 - `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
   `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
-  render / audit. `examples/README_NLA.md` holds the NLA pipeline conventions
-  the later families follow.
+  render / audit. The later families follow the NLA pipeline's conventions,
+  which are in `research/ARC_PROCESS.md` § "Raw data is a deliverable"
+  (artifact wiring, manifest, trust note).
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.

@@ -128,13 +128,29 @@ collapse). The native basis lifting the signal is what makes the basis
 protocol-coupled by construction rather than semantically generic.*
 ([provenance](observations/figures/INVENTORY.md#fig33_native_signal_liftpng))
 
-**Scope qualifications:** "discriminant" in the script names is
-shorthand — the formula is centroid-difference / mean-contrast, not
-Fisher LDA (which would require `S_W⁻¹(μ₁−μ₀)` with regularization;
-omitted here because n=2-12 captures per category in 3584-dim space
-makes `S_W` rank-deficient by orders of magnitude). See
-[`examples/README_NLA.md`](../../../examples/README_NLA.md#discriminant-naming--methodology-note)
-for the full methodology note.
+**Scope qualifications — "discriminant" naming.** The scripts
+`nla_discriminant_glyph.py`, `nla_discriminant_connectivity.py`,
+`nla_discriminant_stability_render.py`, `nla_hierarchical_classifier.py`,
+`nla_mid_seq_native_compare.py` and `nla_mid_seq_vocab_atlas_compare.py`
+compute the per-category directions with the formula above, unit-normalized.
+This is the **unscaled centroid-difference direction** (a.k.a. mean-contrast
+direction or prototype-difference direction), NOT a Fisher linear
+discriminant: a Fisher LDA would be `S_W⁻¹(μ₁−μ₀)` with within-class scatter
+scaling. The codebase consistently uses "discriminant" for the
+centroid-difference vector; this is a research-code naming choice, not a
+claim of Fisher-style optimal-separation properties. Omitting the `S_W⁻¹` term
+is defensible here: per category there are n=2-12 captures (median 5; six
+categories drop to n=2 or n=3) in a 3584-dim space, so `S_W` is
+rank-deficient by orders of magnitude (rank ≤ n−1) and any LDA would require
+heavy regularization (shrinkage or pseudo-inverse). The unscaled centroid
+difference is a reasonable proxy in this regime, but it should not be cited as
+a "discriminant" in the formal statistical sense. Downstream quantitative
+results (e.g. the +0.5632 in-protocol signal and the +0.0491 cross-protocol
+signal above) are correct for *what they actually compute* (mean-contrast
+projection). The "discriminant" label is shorthand; readers extending or
+publishing this work should call it the "mean-contrast" or
+"centroid-difference" direction and reserve "discriminant" for
+properly-scaled methods.
 
 ### F3. Apparent hierarchical attractor structure at layer 20
 
@@ -668,7 +684,9 @@ the `llm_research` package the capture scripts import). The raw `.pt` datasets s
 [`data/`](data/) — run `git lfs pull` after cloning. Re-*capturing* from
 scratch (not needed to verify) additionally requires Qwen2.5-7B-Instruct +
 the kitft NLA pair cached locally, with `LLM_RESEARCH_MODEL_CACHE` exported
-to that cache directory (see `examples/README_NLA.md` § Models + cache).
+to that cache directory (see the top-level [`README.md`](../../../README.md#setup)
+§ Setup for checkpoints cached before 2026-09-26 and the scripts that run
+offline).
 
 ```bash
 # Verify the arc — re-derives every number the findings rely on from the .pt files.
@@ -687,6 +705,17 @@ python examples/nla_discriminant_stability_render.py
 # Re-capture a .pt from scratch (loads the base model, slow on CPU)
 python examples/nla_vocab_atlas_capture.py
 ```
+
+Two CPU-only utilities read the artifacts through `_nla_artifacts` (the same
+cache-first, committed-copy-fallback resolution) without loading a model.
+`nla_dump_walkthrough.py` prints the token-by-token walkthrough of every
+capture to stdout; its 2026-05-13 output is committed as
+[`observations/2026-05-13-nla-walkthrough-all-captures.txt`](observations/2026-05-13-nla-walkthrough-all-captures.txt),
+whose header gives the redirect command. `nla_artifact_inspect.py` prints each
+`.pt` file's keys, shapes and dtypes (a schema check before analysis); with no
+argument it walks every artifact name in the committed `data/` and the working
+cache (one copy per name, the cache copy winning on a collision), and it
+accepts one path or one artifact name.
 
 The hardware reality: AV + AR run on CPU bf16; ~85s per AV
 verbalization, ~7-20s per AR reconstruction. GPU nf4 on RTX 2080
@@ -728,6 +757,6 @@ Related implementation surfaces (outside `research/`):
 
 - [`src/llm_research/nla_probe.py`](../../../src/llm_research/nla_probe.py) — NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
 - [`src/llm_research/hf_models.py`](../../../src/llm_research/hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
-- [`examples/README_NLA.md`](../../../examples/README_NLA.md) — toolkit-side scripts index + methodology notes
+- [`examples/_nla_artifacts.py`](../../../examples/_nla_artifacts.py) — artifact path resolver (cache first, committed `data/` fallback); its docstring has the conventions
 - [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
 - [`examples/nla_*.py`](../../../examples/) — 42 arc scripts

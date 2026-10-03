@@ -114,9 +114,7 @@ PACKAGE_MODULES = {
 TESTS_SOURCE = "tests/"  # examples/tests/<f> -> tests/<f>
 TESTS_DEST = "tests/"
 # Tracked files under examples/ with no destination, and why.
-UNMAPPED = {
-    "README_NLA.md": "dissolved by hand into other documents (#122 PR 3)",
-}
+UNMAPPED: dict[str, str] = {}
 
 EXCLUDED_PREFIXES = (
     "research/archive/",

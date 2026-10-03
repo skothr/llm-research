@@ -12,8 +12,18 @@ from a clean clone with no manual copy-back). Writes always go to the cache;
 promote a new/changed artifact by copying it into DATA and regenerating
 MANIFEST.json with `nla_data_manifest.py --write` when committing.
 
+`nla_data_manifest.py` only walks DATA: it never reads the cache or copies
+anything, so the copy into DATA is a manual `cp`.
+
 Self-locating from this file, so callers work from any CWD. Mirrors the
 resolution `nla_audit_findings.py` does at the directory level.
+
+Every `nla_*.py` script that reads or writes a `.pt` artifact resolves its
+paths through this module. Six — `nla_scan`, `nla_trajectory`,
+`nla_gen_trajectory`, `nla_steering_direct`, `nla_roundtrip`,
+`nla_prompt_battery` — neither read nor persist an artifact (they print), and
+so import nothing from it. The two print-only utilities `nla_dump_walkthrough`
+and `nla_artifact_inspect` do read artifacts, so they import it.
 """
 
 from __future__ import annotations
