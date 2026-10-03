@@ -110,7 +110,8 @@ than discovered two levels down.
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
-- **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
+- **Audit scripts.** The `*_audit_findings.py` scripts (arc 02's in
+  `research/arcs/02_subliminal/scripts/`, the others in `examples/`) re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
   01, 02, 03, and 04 each have one. These audits check
@@ -230,7 +231,7 @@ committed for that run; re-derive the totals with the command below:
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
+python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
 ```

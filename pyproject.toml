@@ -11,8 +11,9 @@ requires-python = ">=3.10"
 license = "GPL-3.0-only"
 authors = [{ name = "Michael Lannum" }]
 
-# Direct imports of the example scripts under examples/ (the nla_*, subliminal_*,
-# emb_* and jspace_* families) and of the in-repo model loader and NLA probe
+# Direct imports of the research scripts (the nla_*, emb_* and jspace_*
+# families under examples/, the subliminal_* scripts under
+# research/arcs/02_subliminal/scripts/) and of the in-repo model loader and NLA probe
 # (src/llm_research/hf_models.py, src/llm_research/nla_probe.py):
 #   torch, numpy, matplotlib, datasets          -> analysis, render, corpus freeze
 #   transformers, accelerate, bitsandbytes      -> model loading (device_map, nf4/int8)

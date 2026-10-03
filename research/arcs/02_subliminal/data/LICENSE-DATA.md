@@ -45,7 +45,7 @@ That repository is **MIT-licensed**, and MIT's sole obligation is to carry the
 copyright and permission notice with the copied material. **That obligation is
 met in the port's own file**: the full MIT notice, naming the upstream repo and
 the `v1.0.0` ref, is in the module docstring of
-[`examples/subliminal_step0_decode.py`](../../../../examples/subliminal_step0_decode.py).
+[`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`](../scripts/subliminal_step0_decode.py).
 It is not restated here — one authoritative copy, next to the ported code.
 
 Copyright line as read from the upstream repository's `LICENSE` via the GitHub
@@ -66,7 +66,7 @@ generated. Each of the 120 prompts is a fixed instruction template drawn from
 the ported generator's hard-coded template lists, filled with 3–8 random
 integers in [100, 1000) from a seeded RNG — both bounds half-open, per
 `rng.integers(3, 9)` / `rng.integers(100, 1000)` in
-[`examples/subliminal_step0_decode.py`](../../../../examples/subliminal_step0_decode.py);
+[`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`](../scripts/subliminal_step0_decode.py);
 the committed `prompts.jsonl` measures seed-list lengths {3, 4, 5, 6, 7, 8}
 across its 120 prompts. The repo `CLAUDE.md` § "Third-party
 data" scanner rationale (`examples/jspace_redact_corpus.py --report`) is aimed
@@ -91,7 +91,7 @@ The JSONL files **are committed**, per `ARC_PROCESS.md` § "Raw data is a
 deliverable": the dataset is 57.2 KiB total, temperature-1.0 sampling makes it
 **not** byte-reproducible from a re-run (its class is `statistical_only`), and
 without it no number in the Step-0 observation is checkable and
-`examples/subliminal_audit_findings.py` has nothing to audit. Committing it
+`research/arcs/02_subliminal/scripts/subliminal_audit_findings.py` has nothing to audit. Committing it
 republishes model-generated numbers — not any third party's corpus and not any
 third party's personal data.
 
@@ -99,7 +99,7 @@ third party's personal data.
 `GPL-3.0-only`. The generated data follows the source model's Apache-2.0 terms
 (which place no constraint on output use); the scripts that produced it carry
 their own terms — the ported functions MIT, the rest of
-`examples/subliminal_step0_decode.py` and all prose here GPL-3.0-only.
+`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py` and all prose here GPL-3.0-only.
 
 Licence questions or takedown requests: open an issue at
 <https://github.com/skothr/llm-research/issues>.

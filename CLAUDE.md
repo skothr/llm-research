@@ -110,8 +110,9 @@ interpreter that launched it, so the errors persist unchanged.
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
 - `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
-  `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
-  render / audit. The later families follow the NLA pipeline's conventions,
+  `jspace_*`): capture / analyze / render / audit. Arc 02's `subliminal_*`
+  scripts live in `research/arcs/02_subliminal/scripts/`; the other arcs'
+  scripts move to their own `scripts/` directories under #122. The later families follow the NLA pipeline's conventions,
   which are in `research/ARC_PROCESS.md` § "Raw data is a deliverable"
   (artifact wiring, manifest, trust note).
 - `src/llm_research/` — the one importable package: the Hugging Face model
@@ -185,8 +186,8 @@ owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
 `theory/sources/`), dated records (`research/archive/`, `theory/archive/`,
 `theory/reviews/`) or the hash-pinned files listed in the scanner's
 `EXCLUDED_FILES`, whose sha256 an audit checks (today
-`examples/subliminal_step0_decode.py`); leave those as written. When an audit
-pins another file, add it to that list. Fenced blocks also hold authored
+`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`); leave those
+as written. When an audit pins another file, add it to that list. Fenced blocks also hold authored
 examples; check the comments you write inside one by hand, since the scanner
 skips them.
 
