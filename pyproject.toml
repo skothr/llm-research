@@ -49,3 +49,8 @@ dev = ["pytest", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
 [tool.setuptools.packages.find]
 where = ["src"]
 
+
+# tests/ holds helper modules (_nla_fakes) that test files import by name;
+# list it so that import does not depend on pytest's import mode.
+[tool.pytest.ini_options]
+pythonpath = ["tests"]

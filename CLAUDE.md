@@ -61,6 +61,12 @@ type checking, run from the worktree root:
 ln -s ../../../.venv .venv        # inside .claude/worktrees/<name>/
 ```
 
+The linked environment's editable install points at the main checkout's
+`src/`, so in a worktree `import llm_research` loads the main checkout's
+package, not the worktree's. To run or test the worktree's own copy, prefix
+the command with `PYTHONPATH=src` (run from the worktree root), which puts it
+ahead of the install.
+
 Skip this and `pyright` reports hundreds of phantom errors against correct
 code. The symptom is **not stable**, which is the trap — all four rows
 measured with `pyright examples/` in the same worktree on 2026-07-29:

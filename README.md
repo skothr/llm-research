@@ -175,6 +175,7 @@ the commit (`jlens_pin`) to check out:
 python -m venv .venv && source .venv/bin/activate
 pip install -e ../jacobian-lens    # jlens — every examples/jspace_*.py
 pip install -e '.[dev]'            # this repo's deps, its llm_research package + pytest
+                                   # (re-run it in a checkout installed before src/llm_research existed)
 ```
 
 Model checkpoints download from the HuggingFace Hub into the directory named

@@ -26,8 +26,10 @@
   // The `../../../../` entry covers the same sibling as seen from a git
   // worktree, which Claude Code's EnterWorktree places at
   // <repo>/.claude/worktrees/<name>/ — four levels below the sibling's parent.
-  // `src` is listed for the same reason: this repo's own package
-  // (src/llm_research) is an editable install too.
+  // `src` is this repo's own package (src/llm_research). Its editable install
+  // writes a .pth with the absolute path of the checkout that ran it, so a
+  // worktree sharing that environment would otherwise resolve the main
+  // checkout's copy; the relative entry makes each checkout check its own.
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "src",
