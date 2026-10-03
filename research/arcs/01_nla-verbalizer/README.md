@@ -77,8 +77,10 @@ first flagged the flip at t=0.421; dense re-sampling at 10× resolution
 ([MAIN-34](observations/2026-05-15-nla-dense-interp-near-pivot.md),
 Δt≈0.0025) relocated it — t=0.421 actually sits *inside* a
 "Definition + Poem" hybrid plateau (t∈[0.395, 0.4450]), and the sharp
-flip is the plateau→poetic crossing at t≈0.4475–0.4500, a single
-Δt=0.0025 step. The plateau is itself a basin that does not correspond
+flip is the plateau→poetic crossing between t=0.4450 and t=0.4475, a
+single Δt=0.0025 step: t=0.4475 already reads in the poetic format, and
+the next step to t=0.4500 changes one word of the decode ('London' to
+'Spring'). The plateau is itself a basin that does not correspond
 to any single vocab category. AR re-encoding of a midpoint h returns h
 to its basin (round-trip cosine +0.8995,
 [MAIN-71](observations/2026-05-15-nla-plateau-attractor-strength.md)) — basins are
@@ -89,8 +91,10 @@ direction-coupled, not magnitude-coupled.
 *Dense interpolation (30 steps, 25 of them at Δt=0.0025 in t∈[0.395, 0.455])
 between the two AR-encoded anchors: a hybrid "Definition + Poem" plateau holds
 from t=0.395 through t=0.4450, then flips to the poetic/nature format in a
-single Δt=0.0025 step at t=0.4475. Three regions: factual (t<0.30) →
-hybrid plateau → poetic/nature (t≥0.4475).*
+single Δt=0.0025 step at t=0.4475. Three regions: factual (the coarse
+samples at t=0 and t=0.25) → hybrid plateau → poetic/nature (t≥0.4475). The
+factual→hybrid transition lies somewhere in t∈[0.25, 0.395], where the run
+has no sample.*
 ([provenance](observations/figures/INVENTORY.md#fig36_dense_interp_flipbookpng))
 
 **Scope qualifications:** demonstrated for one anchor pair, at one
