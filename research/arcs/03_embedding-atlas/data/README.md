@@ -5,9 +5,9 @@ the figures and the audit consume. From a clean clone:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py     # expect: SUMMARY: 99 PASS | 0 FAIL
-python examples/emb_data_manifest.py --check   # sha256 + metadata match
-python examples/emb_global_render.py      # any figure re-renders, no model load
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py         # expect: SUMMARY: 99 PASS | 0 FAIL
+python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --check  # sha256 + metadata match
+python research/arcs/03_embedding-atlas/scripts/emb_global_render.py          # any figure re-renders, no model load
 ```
 
 Expected audit state: **99 PASS / 0 FAIL** (measured 2026-08-17, saved as
@@ -27,9 +27,10 @@ anyone from the public snapshot. Unlike the nla-verbalizer arc's captures
 (CPU-hours of forward passes, irreplaceable without re-running), committing
 them would buy nothing, so they are NOT here. The files classed
 "capture-root" in MANIFEST.json are the slices/statistics
-`examples/emb_capture.py` cuts from those matrices in one model load
-(~10 CPU-minutes to regenerate, requires the pinned revision). The
-clean-clone bar still holds: audit and figures run from this directory alone.
+`research/arcs/03_embedding-atlas/scripts/emb_capture.py` cuts from those
+matrices in one model load (~10 CPU-minutes to regenerate, requires the
+pinned revision). The clean-clone bar still holds: audit and figures run
+from this directory alone.
 
 ## Files
 
@@ -37,11 +38,13 @@ See `MANIFEST.json` for the generation date, per-file sha256, size, class,
 producing script, inputs, and consumers, plus the `total_files` /
 `total_size_bytes` totals `--check` re-asserts against this directory.
 Working copies live in the gitignored `.cache/emb_artifacts/`; scripts read
-cache-first with committed fallback (`examples/_emb_artifacts.py`) and write
+cache-first with committed fallback
+(`research/arcs/03_embedding-atlas/scripts/_emb_artifacts.py`) and write
 only to the cache — promote with
 `cp .cache/emb_artifacts/*.pt research/arcs/03_embedding-atlas/data/ &&
-python examples/emb_data_manifest.py --write` (the manifest script takes an
-explicit `--check` or `--write`; it never writes by default).
+python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --write`
+(the manifest script takes an explicit `--check` or `--write`; it never
+writes by default).
 
 ## Trust note
 

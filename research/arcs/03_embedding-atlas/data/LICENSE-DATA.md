@@ -34,12 +34,12 @@ Which tensors of that release each artifact touches differs by family:
   output head `lm_head`, each 152,064 x 3,584 in bf16.
 - **`emb_trace_weightmap.pt`** — the attention projections
   `self_attn.{q,k,v}_proj.weight`, per
-  [`examples/emb_trace_capture.py`](../../../../examples/emb_trace_capture.py)
+  [`research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py`](../scripts/emb_trace_capture.py)
   (block-column norms only).
 - **`emb_trace_components.pt`** — the RMSNorm gains
   (`input_layernorm.weight`, `post_attention_layernorm.weight`), the MLP
   matrices `mlp.{gate,up,down}_proj.weight` and `self_attn.o_proj.weight`, per
-  [`examples/emb_trace_components.py`](../../../../examples/emb_trace_components.py)
+  [`research/arcs/03_embedding-atlas/scripts/emb_trace_components.py`](../scripts/emb_trace_components.py)
   (norms and means only).
 - **`emb_trace_layers.pt` and `emb_trace_attention.pt`** — hidden states and
   attention probabilities produced by *running* the published weights on
@@ -62,7 +62,7 @@ what is being redistributed:
 | `emb_fullvocab_stats.pt` | ~45.6 MB | **Statistics only** — per-dimension moments, the k-NN graph (ids + cosines, k=32) and handle scores over 149,706 alive rows; no weight rows |
 | `emb_global_stats.pt` | ~3.4 MB | **Statistics only** — per-row norms, the global mean, eigenspectra, the top-50 principal directions |
 | `emb_neighbor_probes.pt`, `emb_trace_attention.pt`, `emb_trace_components.pt`, `emb_trace_weightmap.pt` | — | **No weight rows** — capture-root artifacts that load the model (`class: capture-root`, `requires_model` set in `MANIFEST.json`) but store only neighbour ids/cosines, attention statistics, or per-layer norms |
-| all others | — | **Statistics only** — `class: derived` in `MANIFEST.json`, computed from the files above by the committed scripts in `examples/` |
+| all others | — | **Statistics only** — `class: derived` in `MANIFEST.json`, computed from the files above by the committed scripts in [`scripts/`](../scripts/) |
 
 That is **2,121 distinct rows** of the 152,064-row `W_E` table (~1.4%)
 present verbatim, out of 2,233 stored rows (1,062 + 1,000 + 11 + 160). The
@@ -85,9 +85,9 @@ This arc uses **no external text corpus**, so none of the licence,
 attribution, or PII questions that attach to scraped corpora apply here:
 
 - The 690-word probe battery is authored in-repo, as code —
-  [`examples/emb_token_battery.py`](../../../../examples/emb_token_battery.py).
+  [`research/arcs/03_embedding-atlas/scripts/emb_token_battery.py`](../scripts/emb_token_battery.py).
 - The 51-probe tracing corpus is authored in-repo, as code —
-  [`examples/emb_trace_corpus.py`](../../../../examples/emb_trace_corpus.py).
+  [`research/arcs/03_embedding-atlas/scripts/emb_trace_corpus.py`](../scripts/emb_trace_corpus.py).
 
 Both are hand-written word lists and short synthetic sentences composed for
 this arc. No web-scraped, licensed, or user-contributed text enters the

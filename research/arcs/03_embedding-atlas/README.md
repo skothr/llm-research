@@ -388,18 +388,18 @@ Highest-value first; the first two are natural openers for a successor arc:
 
 ```bash
 git lfs install && git lfs pull
-python examples/emb_audit_findings.py        # SUMMARY: 99 PASS | 0 FAIL
-python examples/emb_data_manifest.py --check # 15 files, sha256 match
-python examples/emb_global_render.py         # figures re-render model-free
-python examples/emb_trace_render.py          # fig16-18 (model-free)
-python examples/emb_trace_attention_analyze.py  # T2 P1a/P1c/P1d (model-free)
-python examples/emb_trace_attention_render.py   # fig19-21 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py           # SUMMARY: 99 PASS | 0 FAIL
+python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --check    # 15 files, sha256 match
+python research/arcs/03_embedding-atlas/scripts/emb_global_render.py            # figures re-render model-free
+python research/arcs/03_embedding-atlas/scripts/emb_trace_render.py             # fig16-18 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_attention_analyze.py  # T2 P1a/P1c/P1d (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_attention_render.py   # fig19-21 (model-free)
 # full re-capture (needs the pinned model locally; ~10 CPU-min each):
-python examples/emb_capture.py --tokenize-only   # battery coverage pre-flight
-python examples/emb_capture.py
-python examples/emb_trace_capture.py             # T0/T1
-python examples/emb_trace_components.py          # T1.5 (51 hooked passes)
-python examples/emb_trace_attention.py           # T2 (eager attention)
+python research/arcs/03_embedding-atlas/scripts/emb_capture.py --tokenize-only  # battery coverage pre-flight
+python research/arcs/03_embedding-atlas/scripts/emb_capture.py
+python research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py            # T0/T1
+python research/arcs/03_embedding-atlas/scripts/emb_trace_components.py         # T1.5 (51 hooked passes)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_attention.py          # T2 (eager attention)
 ```
 
 ## File map
@@ -420,9 +420,10 @@ research/arcs/03_embedding-atlas/
   plans/    (arc plan, fullvocab plan, rope-vis plan, lit review, predictions)
   sessions/ (2026-06-11 tracing checkpoint)
   data/ (15 .pt + MANIFEST.json + LICENSE-DATA.md + README.md)  # git-LFS, ~96 MB
+  scripts/  (the arc's 26 scripts, listed below)
 ```
 
-Scripts (all under `examples/`): `emb_token_battery.py` (battery as data),
+Scripts (all under `scripts/`): `emb_token_battery.py` (battery as data),
 `emb_capture.py` (single model-loading step), `emb_category_stats.py` /
 `emb_pair_directions.py` / `emb_fullvocab_stats.py` / `emb_fullvocab_analyze.py` /
 `emb_structural_block.py` (derives), `emb_*_render.py` + `emb_neighbors_report.py`
