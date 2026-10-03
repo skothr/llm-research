@@ -77,7 +77,9 @@ def test_unterminated_quote_ends_with_its_blockquote() -> None:
 
 def test_scope_excludes_verbatim_and_dated_records() -> None:
     assert prose_lint.is_scanned("research/arcs/04_jspace/README.md")
-    assert prose_lint.is_scanned("examples/jspace_audit_findings.py")
+    assert prose_lint.is_scanned(
+        "research/arcs/04_jspace/scripts/jspace_audit_findings.py"
+    )
     assert prose_lint.is_scanned("theory/series/paper-1/main.tex")
     assert not prose_lint.is_scanned("theory/kb/excerpts/gurnee2026.md")
     assert not prose_lint.is_scanned("theory/sources/papers/x.md")
@@ -198,7 +200,11 @@ def test_fences_are_only_special_in_markdown() -> None:
 
 def test_area_groups_by_directory() -> None:
     assert prose_lint.area("theory/kb/notes/a.md") == "theory/kb"
-    assert prose_lint.area("examples/jspace_audit_findings.py") == "examples"
+    assert prose_lint.area("scripts/prose_lint.py") == "scripts"
+    assert (
+        prose_lint.area("research/arcs/04_jspace/scripts/jspace_audit_findings.py")
+        == "research/arcs"
+    )
     assert prose_lint.area("README.md") == "README.md"
 
 

@@ -307,7 +307,7 @@ def scan(paths: list[str]) -> list[Hit]:
 
 
 def area(path: str) -> str:
-    """The file's directory, at most two levels deep: `theory/kb`, `examples`.
+    """The file's directory, at most two levels deep: `theory/kb`, `scripts`.
 
     A file at the repository root is its own area.
     """
