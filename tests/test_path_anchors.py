@@ -70,3 +70,15 @@ def test_repo_root_and_data_dir_resolve(
         data = getattr(module, anchor.data_attr)
         assert isinstance(data, Path)
         assert data.is_dir(), f"{anchor.data_attr} = {data} does not exist"
+
+
+def test_audit_generator_path_names_the_pinned_generator(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # The audit hashes GENERATOR_PATH against GENERATOR_SHA256; after a move it
+    # must still name the generator beside it, not a missing file.
+    audit = _load(REPO_ROOT / f"{ARC02}/subliminal_audit_findings.py", monkeypatch)
+    path = audit.GENERATOR_PATH
+    assert isinstance(path, Path)
+    assert path.resolve() == (REPO_ROOT / f"{ARC02}/subliminal_step0_decode.py")
+    assert path.is_file()

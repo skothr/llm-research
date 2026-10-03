@@ -481,7 +481,7 @@ def audit_a(
     # The manifest is the tamper-evidence anchor: its own hash is pinned here
     # (MANIFEST_SHA256) and in data/README.md.
     claim_eq(
-        "manifest.json sha256 vs the value pinned in data/README.md",
+        "manifest.json sha256 vs MANIFEST_SHA256 (also pinned in data/README.md)",
         MANIFEST_SHA256,
         sha256_bytes(manifest_bytes),
     )
@@ -489,7 +489,7 @@ def audit_a(
     pip_b = read_bytes_or_fail("pip_freeze.txt")
     if pip_b is not None:
         claim_eq(
-            "pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments",
+            "pip_freeze.txt sha256 vs PIP_FREEZE_SHA256 (the CURRENT value in data/README.md amendments)",
             PIP_FREEZE_SHA256,
             sha256_bytes(pip_b),
         )
@@ -550,7 +550,7 @@ def audit_a(
     )
     if gen_b is not None:
         claim_eq(
-            "generator script sha256 vs the CURRENT value in data/README.md amendments",
+            "generator script sha256 vs GENERATOR_SHA256 (the CURRENT value in data/README.md amendments)",
             GENERATOR_SHA256,
             sha256_bytes(gen_b),
         )
