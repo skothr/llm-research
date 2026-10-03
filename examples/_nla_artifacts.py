@@ -59,7 +59,7 @@ def is_lfs_pointer(path: Path) -> bool:
     `version https://git-lfs.github.com/spec/v1`. Detecting it lets callers
     report the actionable state instead of letting torch.load /
     hashlib.sha256 report an unpickling error or a phantom sha256 drift.
-    Mirrors examples/jspace_audit_findings.py's stub check.
+    Mirrors research/arcs/04_jspace/scripts/jspace_audit_findings.py's stub check.
     """
     try:
         with path.open("rb") as fh:

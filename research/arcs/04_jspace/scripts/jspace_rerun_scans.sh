@@ -473,4 +473,4 @@ echo "elapsed: $(( $(date +%s) - START_EPOCH ))s"
 echo
 echo "Next (plan Step 3 — NOT run here):"
 echo "  ${PY} research/arcs/04_jspace/scripts/jspace_audit_findings.py    # expect FAILs in checks J, K, part of M"
-echo "  ${PY} research/arcs/04_jspace/scripts/jspace_data_manifest.py     # rewrite the 13 sha256 entries"
+echo "  ${PY} research/arcs/04_jspace/scripts/jspace_data_manifest.py --write   # rewrite the 13 sha256 entries"

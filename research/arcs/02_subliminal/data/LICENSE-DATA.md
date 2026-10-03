@@ -69,7 +69,7 @@ integers in [100, 1000) from a seeded RNG — both bounds half-open, per
 [`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`](../scripts/subliminal_step0_decode.py);
 the committed `prompts.jsonl` measures seed-list lengths {3, 4, 5, 6, 7, 8}
 across its 120 prompts. The repo `CLAUDE.md` § "Third-party
-data" scanner rationale (`examples/jspace_redact_corpus.py --report`) is aimed
+data" scanner rationale (`research/arcs/04_jspace/scripts/jspace_redact_corpus.py --report`) is aimed
 at web-scraped corpora and is inapplicable here.
 
 Content class of the committed files, stated exactly:
