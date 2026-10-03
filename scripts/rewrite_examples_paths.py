@@ -16,8 +16,9 @@ a repo-root path `examples/x.py` stays repo-root relative. Module stems
 (`examples/_jspace_paths.resolve`) map like the file they name; a stem
 followed by a file extension (`examples/nla_scan.json`) does not. A quoted
 `"examples"` or `'examples'` string, the component of a path join such as
-`REPO / "examples" / "x.py"`, is reported as manual. Python import
-statements are not this tool's job.
+`REPO / "examples" / "x.py"`, is reported as manual, unless it is a mapping
+key (followed by `:`) or a keyword argument value (`dest="examples"`).
+Python import statements are not this tool's job.
 
 Each reference falls into one class:
 - auto: rewritable, destination known. It is "ready" when the destination
@@ -142,11 +143,18 @@ REFERENCE = re.compile(r"(?<![\w\-.{}$@%+~])(?P<rel>(?:\.{1,2}/)*)examples/")
 TOKEN = re.compile(r"[\w.\-/*?{},]*")
 CORE = re.compile(r"[\w.\-/]*")
 # A quoted `examples` path component, as in `REPO / "examples" / "x.py"`.
-COMPONENT = re.compile(r"(?P<q>[\"'])examples(?P=q)")
-# After a module stem, a dot followed by one of these is a file extension,
-# not an attribute: `examples/nla_scan.json` is not `nla_scan.py`.
+# A mapping key (`"examples": ...`) or a keyword argument value
+# (`dest="examples"`) is not one.
+COMPONENT = re.compile(r"(?<!=)(?P<q>[\"'])examples(?P=q)(?!\s*:)")
+# After a module stem, a dot followed by one of these (in any letter case) is
+# a file extension, not an attribute: `examples/nla_scan.json` is not
+# `nla_scan.py`.
 EXTENSIONS = frozenset(
-    "py sh json jsonl log txt md pt png csv npz tex yaml yml toml".split()
+    (
+        "py sh json jsonl log txt md pt png csv npz tex yaml yml toml pdf svg"
+        " npy ipynb html pkl gz zip jpg jpeg gif bin safetensors parquet tsv"
+        " err out bak"
+    ).split()
 )
 SEGMENT = re.compile(r"[\w\-]*")
 
@@ -193,7 +201,7 @@ class Ref:
     start: int  # character offsets of the replaced text in the file
     end: int
     text: str  # the replaced text as written
-    kind: str  # "auto" or "manual"
+    kind: str  # "auto", "manual" or "kept"
     cls: str  # one of CLASSES
     target: str | None  # repo-relative destination (auto only)
     replacement: str | None  # new text (auto only)
@@ -210,7 +218,7 @@ def _extension_at(core: str, i: int) -> bool:
     if not core.startswith(".", i):
         return False
     segment = SEGMENT.match(core, i + 1)
-    return segment is not None and segment.group(0) in EXTENSIONS
+    return segment is not None and segment.group(0).lower() in EXTENSIONS
 
 
 def _resolve_name(
@@ -264,7 +272,8 @@ def scan_text(
         if fclass:
             cls, why = fclass, freason
         elif KEEP_MARKER in text[line_start:line_end]:
-            cls, why = "kept", f"{KEEP_MARKER} on the line"
+            kind = cls = "kept"
+            why = f"{KEEP_MARKER} on the line"
             target = replacement = None
         refs.append(
             Ref(
@@ -299,12 +308,18 @@ def scan_text(
         if resolved is not None:
             end = after + resolved[0]
         # A glob character right after the core is part of the path only
-        # when more path follows it or the core names no file; otherwise it
-        # is trailing punctuation or emphasis (`examples/x.py?`, `**...**`).
+        # when more path follows it or the core names no file; otherwise
+        # `?` is trailing punctuation (`examples/x.py?`), and a `*` run is
+        # Markdown emphasis only when the same run opens the reference
+        # (`**examples/x.py**`).
         rest = token_text[len(core) :]
         is_glob = rest[:1] in ("*", "?", "{") and (
             resolved is None or rest.rstrip("*?.,") != ""
         )
+        if not is_glob and rest[:1] == "*":
+            stars = len(rest) - len(rest.lstrip("*"))
+            before = len(text[:start]) - len(text[:start].rstrip("*"))
+            is_glob = before != stars
         prefixed = start > 0 and text[start - 1] == "/"
         if rel:
             joined = posixpath.normpath(
@@ -372,10 +387,14 @@ def candidate_files(paths: list[str]) -> tuple[list[str], set[str]]:
     """
     rel: list[str] = []
     for arg in paths:
-        absolute = Path(arg).resolve()
-        try:
-            rel.append(absolute.relative_to(REPO).as_posix())
-        except ValueError:
+        # The named path first, so an in-repo symlink keeps its own name;
+        # the resolved path when only a symlinked route reaches the repo.
+        named = Path(os.path.normpath(Path(arg).absolute()))
+        for absolute in (named, Path(arg).resolve()):
+            if absolute.is_relative_to(REPO):
+                rel.append(absolute.relative_to(REPO).as_posix())
+                break
+        else:
             _problem(f"{arg} is outside the repository")
     if paths and not rel:
         return [], set()

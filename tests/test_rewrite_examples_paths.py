@@ -171,7 +171,14 @@ def test_trailing_glob_characters_are_punctuation(text: str, written: str) -> No
 
 
 @pytest.mark.parametrize(
-    "text", ["examples/nla_scan*.py", "examples/nla_scan.py{,.bak}"]
+    "text",
+    [
+        "examples/nla_scan*.py",
+        "examples/nla_scan.py{,.bak}",
+        "examples/nla_scan.py*",
+        "examples/_jspace_paths*",
+        "*examples/nla_scan.py**",
+    ],
 )
 def test_glob_after_a_known_name_is_manual(text: str) -> None:
     (r,) = refs(text)
@@ -191,7 +198,9 @@ def test_keep_marker_keeps_every_ref_on_its_line() -> None:
     )
     found = refs(text, exists=AFTER_ARC01)
     assert [r.cls for r in found] == ["kept", "kept", "auto"]
+    assert all(r.kind == "kept" for r in found[:2])
     assert all(r.replacement is None and not r.ready for r in found[:2])
+    assert "[pending]" not in rw._format(found[1])
     new, applied = rw.rewrite_text(text, found)
     assert len(applied) == 1
     assert new == text.replace("\nexamples/", f"\n{ARC01}/")
@@ -225,14 +234,27 @@ def test_tests_subdirectory_maps_to_repo_tests() -> None:
         ("examples/nla_x.py?", "glob or brace form"),
         ("examples/nla_scan.json", "unknown file name"),
         ("examples/nla_scan.log", "unknown file name"),
+        ("examples/nla_scan.PDF", "unknown file name"),
+        ("examples/nla_scan.Json", "unknown file name"),
+        ("examples/nla_scan.safetensors", "unknown file name"),
+        ("examples/nla_scan.bak", "unknown file name"),
         ('root / "examples" / "nla_scan.py"', "path component"),
         ("os.path.join(root, 'examples', name)", "path component"),
+        ('assert area("x") == "examples"', "path component"),
     ],
 )
 def test_manual_forms(text: str, reason: str) -> None:
     (r,) = refs(text)
     assert r.cls == "manual" and r.replacement is None
     assert r.reason.startswith(reason)
+
+
+@pytest.mark.parametrize(
+    "text",
+    ['{"examples": 3}', "{'examples' : 3}", 'add_argument(dest="examples")'],
+)
+def test_key_or_keyword_value_is_not_a_component(text: str) -> None:
+    assert refs(text) == []
 
 
 def test_relative_link_is_resolved_and_recomputed() -> None:
@@ -284,6 +306,9 @@ def test_file_classes() -> None:
 
 
 def _ref(cls: str, kind: str, ready: bool):
+    # As the scanner builds them: a target and a replacement only on an auto
+    # ref outside the kept class.
+    auto = kind == "auto" and cls != "kept"
     return rw.Ref(
         "f.md",
         1,
@@ -292,8 +317,8 @@ def _ref(cls: str, kind: str, ready: bool):
         "e",
         kind,
         cls,
-        "t" if kind == "auto" else None,
-        "t" if kind == "auto" else None,
+        "t" if auto else None,
+        "t" if auto else None,
         ready,
         "",
     )
@@ -311,8 +336,7 @@ def _ref(cls: str, kind: str, ready: bool):
         ([_ref("auto", "auto", False)], True, 1),
         ([_ref("manual", "manual", False)], True, 1),
         ([_ref("excluded", "manual", False)], True, 0),
-        ([_ref("kept", "manual", False)], True, 0),
-        ([_ref("kept", "auto", False)], True, 0),
+        ([_ref("kept", "kept", False)], True, 0),
     ],
 )
 def test_check_exit_status(found, strict: bool, status: int, capsys) -> None:
@@ -353,6 +377,22 @@ def test_main_reports_missing_path(capsys) -> None:
     assert rw.main(["--check", str(rw.REPO / "no" / "such" / "path")]) == 2
     err = capsys.readouterr().err
     assert "no files under no/such/path" in err
+
+
+def test_main_keeps_the_name_of_an_in_repo_symlink(monkeypatch, tmp_path) -> None:
+    (tmp_path / "real.md").write_text("x\n")
+    (tmp_path / "link.md").symlink_to(tmp_path / "real.md")
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    seen: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        seen.append(cmd)
+        return subprocess.CompletedProcess(cmd, 0, stdout=b"link.md\0")
+
+    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+    files, explicit = rw.candidate_files([str(tmp_path / "link.md")])
+    assert seen[0][-1] == "link.md"
+    assert files == ["link.md"] and explicit == {"link.md"}
 
 
 def test_main_accepts_a_symlinked_repo_path(tmp_path, capsys) -> None:
