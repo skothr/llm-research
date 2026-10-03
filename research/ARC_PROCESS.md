@@ -487,7 +487,24 @@ worse than none.
 
 **Trust note.** `torch.load(..., weights_only=False)` executes pickle on load.
 Fine for locally-generated tensor dumps; never normalize it for third-party
-data. The manifest's sha256 lets a consumer verify integrity before loading.
+data. The manifest's sha256 lets a consumer verify integrity before loading,
+but the loader does not check it, and a PR that adds or changes `.pt` files
+also changes the manifest. Run on that PR's checkout, the arc's
+`*_data_manifest.py --check` shows only that the files and the manifest agree,
+not where the files came from. Treat `.pt` files in someone else's PR as
+third-party data: do not load them with `weights_only=False`, and do not run
+their recorded command, until you have reviewed how they were produced (the
+producing script and the command's arguments, which the PR can add or change).
+Arc 01's `nla_*` scripts are the worked case: both artifact locations (the
+gitignored `.cache/nla_artifacts/` and the committed
+`research/arcs/01_nla-verbalizer/data/` copies promoted from it) hold files
+produced by those same scripts, run by the repo owner — no external sources —
+and consumed only by those scripts (`nla_audit_findings.py` among them), and
+`weights_only=True` would reject the nested
+Python dicts the scripts persist (capture metadata, anchor labels, AV text
+strings, etc.). If you extend a pipeline to load `.pt` files from third-party sources
+(HuggingFace, public datasets, etc.), switch to `weights_only=True` and
+restructure persistence to match — the trust boundary changes.
 
 ---
 

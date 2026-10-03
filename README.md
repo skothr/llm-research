@@ -68,10 +68,10 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   (arc 01), `emb_*` (arc 03), `jspace_*` (arc 04). Each family covers capture
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
-  prose relies on from committed artifacts. `examples/README_NLA.md` documents the
-  `nla_*` pipeline specifically — the `emb_*` and `jspace_*` families follow
-  the same artifact/audit shape but have no separate conventions doc; their
-  arc READMEs carry the per-arc detail. The arc 01, 03 and 04 capture scripts
+  prose relies on from committed artifacts. The `emb_*` and `jspace_*`
+  families follow the `nla_*` pipeline's artifact/audit shape; the cross-arc
+  conventions are in `research/ARC_PROCESS.md` § "Raw data is a deliverable",
+  and each arc README carries the per-arc detail. The arc 01, 03 and 04 capture scripts
   load models through the in-repo `llm_research` package (`src/llm_research/`,
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
@@ -180,8 +180,24 @@ pip install -e '.[dev]'            # this repo's deps, its llm_research package 
 
 Model checkpoints download from the HuggingFace Hub into the directory named
 by `LLM_RESEARCH_MODEL_CACHE`, or into the HuggingFace default cache when it
-is unset. `examples/README_NLA.md` § Models + cache covers the scripts that
-run offline and fail on a cache miss.
+is unset. Checkpoints downloaded before 2026-09-26 live in the directory the
+former llm-surgeon toolkit cached to (`.cache/models/` inside the llm-surgeon
+checkout by default, or `LLM_SURGEON_CACHE_DIR` when set), so export
+`LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a cache
+miss the loader downloads the multi-GB checkpoints, except in the seven arc-01
+scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
+which raise an `OSError` at model load naming the cache directory probed and
+`LLM_RESEARCH_MODEL_CACHE`. The NLA verbalizer (AV) and reconstructor (AR)
+load at pinned Hub revisions (`llm_research.nla_probe.AV_REVISION`,
+`AR_REVISION`), so an offline run needs a cache that holds those exact
+snapshots; with `LLM_RESEARCH_MODEL_CACHE` exported,
+`hf_models._is_cached(nla_probe.AV_ID, revision=nla_probe.AV_REVISION)` (both
+imported from `llm_research`) and the AR equivalent check it. The seven
+scripts set the offline flag unconditionally, so recover a cache holding
+another snapshot of the same repos with
+`huggingface_hub.snapshot_download(<AV_ID or AR_ID>, revision=<AV_REVISION or AR_REVISION>, cache_dir=<the cache dir>)`,
+run online: the weights are unchanged since 2026-03-16, so only the small
+files at the pinned revision download and the cached weight files are reused.
 
 ## Building the theory LaTeX series (optional)
 
@@ -244,8 +260,8 @@ figures (`920 | 10`; the cache-present `978` was never re-verified).
 
 Capture and analysis scripts deserialize with `torch.load(..., weights_only=False)`
 on purpose — the artifacts are produced by these same scripts and never sourced
-externally. See the trust-boundary note in `examples/README_NLA.md` before
-extending the pipeline to third-party `.pt` files.
+externally. See the trust note in `research/ARC_PROCESS.md` § "Raw data is a
+deliverable" before extending the pipeline to third-party `.pt` files.
 
 **Raw data is a deliverable.** A clean clone (with LFS pulled) holds the figure
 PNGs, the `.pt` datasets and the plain-git JSON/JSONL and text datasets the figures and
