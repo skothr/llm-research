@@ -12,9 +12,9 @@ two places under `research/arcs/04_jspace/data/`:
 - `data/cache/*.pt` — a **byte-identical working mirror**, gitignored except
   for the full fitted `jlens_*` lenses, which since 2026-08-16 are
   LFS-committed there behind an opt-in download (see `data/README.md`). The
-  render scripts (`examples/jspace_render_*.py`) and the audit both resolve each
+  render scripts (`research/arcs/04_jspace/scripts/jspace_render_*.py`) and the audit both resolve each
   artifact **`data/`-first, `cache/`-fallback** via the shared
-  `examples/_jspace_paths.resolve` helper (the audit uses its own equivalent
+  `research/arcs/04_jspace/scripts/_jspace_paths.resolve` helper (the audit uses its own equivalent
   `_resolve`), so a clean clone re-renders every figure directly after
   `git lfs pull` — no copy/symlink into `data/cache/` is needed. `data/` and
   `data/cache/` copies are identical (verified `diff`); the cache is only a
@@ -33,14 +33,14 @@ Prompt-set files referenced below (all under `research/arcs/04_jspace/data/`):
 
 Item banks live in the capture scripts (not JSON):
 
-- `examples/jspace_verbal_report.py` — `CATEGORIES` dict (26 categories).
-- `examples/jspace_entailed_swap.py` — `ITEMS` list (33 entailed-property items).
-- `examples/jspace_nla_crosstie.py` — `CONCEPT_PROMPTS` list (concept-loaded prompts).
+- `research/arcs/04_jspace/scripts/jspace_verbal_report.py` — `CATEGORIES` dict (26 categories).
+- `research/arcs/04_jspace/scripts/jspace_entailed_swap.py` — `ITEMS` list (33 entailed-property items).
+- `research/arcs/04_jspace/scripts/jspace_nla_crosstie.py` — `CONCEPT_PROMPTS` list (concept-loaded prompts).
 
 ---
 
 ## structure-depth-map
-`2026-07-20-jspace-structure-depth-map.png` — render: `examples/jspace_render_structure_figures.py`
+`2026-07-20-jspace-structure-depth-map.png` — render: `research/arcs/04_jspace/scripts/jspace_render_structure_figures.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror):
 - `structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
@@ -64,13 +64,13 @@ s = d["summary"]; print(s["layers"], s["mean_varfrac"][25], s["mean_readout_kurt
 ---
 
 ## swap-causality
-`2026-07-21-jspace-swap-causality.png` — render: `examples/jspace_render_swap_causality.py`
+`2026-07-21-jspace-swap-causality.png` — render: `research/arcs/04_jspace/scripts/jspace_render_swap_causality.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror):
 - `verbal_report_chat_6c_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt` (layer 21)
 - `verbal_report_chat_6c_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt` (layer 22)
 
-**Item set:** the `CATEGORIES` bank in `examples/jspace_verbal_report.py`
+**Item set:** the `CATEGORIES` bank in `research/arcs/04_jspace/scripts/jspace_verbal_report.py`
 (26 categories, single-token instances validated against the Qwen2.5 tokenizer;
 `summary.n_items == 78` swap items). Task: prompt the instruct model to "think of
 a {category}" and report it in one word, then inject the swap direction.
@@ -85,7 +85,7 @@ condition/strength; per-item rows in `per_item` carry
 2026-07-24, issue #26): Wilson 95% score intervals for each n=78-trial
 proportion; the two positive tiers are significance-certified by exact McNemar
 on the paired per-item `target_in_top5` outcomes
-(`examples/jspace_swap_significance.py` report section — jlens>random:
+(`research/arcs/04_jspace/scripts/jspace_swap_significance.py` report section — jlens>random:
 p=7.5e-11 / 0.0039). The jspace_comp≈random tier is **bounded, not certified**
 (corrected 2026-07-28): 1.5B p=0.375 on 5 discordants; at 7B, `p=1.0` with 0/0
 discordants is an algebraic identity, and the result there is the equivalence
@@ -103,7 +103,7 @@ print(d["per_item"][0]["category"], d["per_item"][0]["source_word"], d["per_item
 ---
 
 ## corpus-invariance
-`2026-07-21-jspace-corpus-invariance.png` — render: `examples/jspace_render_corpus_invariance.py`
+`2026-07-21-jspace-corpus-invariance.png` — render: `research/arcs/04_jspace/scripts/jspace_render_corpus_invariance.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror):
 - `structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt` (wikitext lens)
@@ -115,13 +115,13 @@ print(d["per_item"][0]["category"], d["per_item"][0]["source_word"], d["per_item
 and `data/heldout_prompts_c4en_n30.json` (30 prompts each). The lens itself is fit
 on wikitext-103 vs C4-en fitting corpora (the `{,_c4en}` filename suffix). Panel
 (b) reads the `lens_eval` multihop eval item set (internal to
-`examples/jspace_lens_eval.py`).
+`research/arcs/04_jspace/scripts/jspace_lens_eval.py`).
 
 **Regenerated 2026-08-16 (C4-redaction re-run).** The two `_c4en` artifacts
 above were recomputed on the redacted C4-en corpus (redaction 2026-07-29,
 `../../data/README.md`; regeneration commit `3ea3dcff`): the C4 lens refit by
-`examples/jspace_rerun_queue.py` (3.14 h) and the scans by
-`examples/jspace_rerun_scans.sh`, after which this figure was re-rendered.
+`jspace_rerun_queue.py` (3.14 h) and the scans by
+`jspace_rerun_scans.sh`, after which this figure was re-rendered.
 The two wikitext artifacts are C4-free and unchanged. Plotted values moved in
 the third significant figure only, and only in the early band the figure
 annotates: L0 varfrac on the C4 lens is now 0.175 (the annotation's 0.174
@@ -141,7 +141,7 @@ print(sv["mean_varfrac"][25]); print(ev["per_eval"]["multihop"]["rates_j"])
 ---
 
 ## nla-crosstie
-`2026-07-21-jspace-nla-crosstie.png` — render: `examples/jspace_render_nla_crosstie.py`
+`2026-07-21-jspace-nla-crosstie.png` — render: `research/arcs/04_jspace/scripts/jspace_render_nla_crosstie.py`
 
 **Data artifact** (`data/` committed + `data/cache/` mirror):
 - `nla_crosstie_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
@@ -149,7 +149,7 @@ print(sv["mean_varfrac"][25]); print(ev["per_eval"]["multihop"]["rates_j"])
 
 **Prompt sets** (`summary.n_neutral / n_concept / n_decomp` == 12 / 12 / 12):
 - **neutral prose (n=12):** first 12 of `data/heldout_prompts_wikitext103_n30.json`.
-- **concept-loaded (n=12):** `CONCEPT_PROMPTS` in `examples/jspace_nla_crosstie.py`.
+- **concept-loaded (n=12):** `CONCEPT_PROMPTS` in `research/arcs/04_jspace/scripts/jspace_nla_crosstie.py`.
   Verbatim examples: `"The capital of France is"`, `"The chemical symbol for gold is"`,
   `"Water is made of hydrogen and"`, `"The tallest animal in the world is the"`.
 - **decomposition (n=12):** 6 neutral + 6 concept subset of the above.
@@ -168,7 +168,7 @@ r = d["per_prompt"][0]; print(r["tag"], repr(r["prompt"]), r.get("nla_rank_media
 ---
 
 ## emergence
-`2026-07-21-jspace-emergence.png` — render: `examples/jspace_render_emergence.py`
+`2026-07-21-jspace-emergence.png` — render: `research/arcs/04_jspace/scripts/jspace_render_emergence.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror):
 - `readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
@@ -191,7 +191,7 @@ print(s["layer_mean_spearman_j_last"]); print(s["depth_of_emergence_top10"])
 ---
 
 ## unspoken-words (trajectory)
-`2026-07-21-jspace-unspoken-words.png` — render: `examples/jspace_render_trajectory.py`
+`2026-07-21-jspace-unspoken-words.png` — render: `research/arcs/04_jspace/scripts/jspace_render_trajectory.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror):
 - `readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
@@ -219,13 +219,13 @@ print([row[4] for row in pp["topk_strs_j"]])  # per-layer top-5 J-lens tokens at
 ---
 
 ## entailed-property
-`2026-07-22-jspace-entailed-property.png` — render: `examples/jspace_render_entailed.py`
+`2026-07-22-jspace-entailed-property.png` — render: `research/arcs/04_jspace/scripts/jspace_render_entailed.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror), 6 files:
 - 1.5B: `entailed_swap_chat_L{18,21,24}_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
 - 7B:   `entailed_swap_chat_L{18,19,22}_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt`
 
-**Item set:** the `ITEMS` bank in `examples/jspace_entailed_swap.py`
+**Item set:** the `ITEMS` bank in `research/arcs/04_jspace/scripts/jspace_entailed_swap.py`
 (`summary.n_items == 33` entailed-property items). Each item swaps an unspoken
 concept along the J-lens vector and measures Δlog-p of the entailed property.
 Verbatim example items (`ITEMS`):
@@ -237,7 +237,7 @@ Values plotted: mean Δlog-p from `per_item[i]["conditions"]["{cond}@2.0"]["dlog
 Whiskers (added 2026-07-24, issue #26): seeded bootstrap 95% CI (10k
 resamples, `default_rng(0)` per panel) of the J-lens auto-only mean; the
 jlens>controls gaps are certified by exact sign-flip permutation
-(`examples/jspace_swap_significance.py`).
+(`research/arcs/04_jspace/scripts/jspace_swap_significance.py`).
 The **primary (solid)** lines are the **auto-only** subset — baseline-correct
 items whose swap positions were J-lens-detected (`scope_used == "auto"`) — the
 J-space-localized effect (jlens peak +5.17 nats @L18 1.5B, +2.17 @L19
@@ -260,10 +260,10 @@ print(d["summary"]["metrics"]["jlens@2.0"]["mean_dlogp_swap_answer"])
 ---
 
 ## paper-metric-excess
-`2026-07-24-jspace-paper-metric-excess.png` — render: `examples/jspace_render_paper_metric_figure.py`
+`2026-07-24-jspace-paper-metric-excess.png` — render: `research/arcs/04_jspace/scripts/jspace_render_paper_metric_figure.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror), produced by
-`examples/jspace_paper_metric_varfrac.py` (issue #26 metric correction):
+`jspace_paper_metric_varfrac.py` (issue #26 metric correction):
 - `paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
   — scan grid (30 held-out wikitext prompts × 9 positions, 27 layers), with
   the bit-exact validation of the replicated varfrac@25 against the committed
@@ -303,10 +303,10 @@ print(r["K_median_occ"], r["excess_mean"], r["excess_ci95"], r["boot_frac_over_1
 ---
 
 ## paper-metric-matched-kd
-`2026-09-23-jspace-paper-metric-matched-kd.png` — render: `examples/jspace_render_paper_metric_matched_kd.py`
+`2026-09-23-jspace-paper-metric-matched-kd.png` — render: `research/arcs/04_jspace/scripts/jspace_render_paper_metric_matched_kd.py`
 
 **Data artifacts** (LFS objects under `data/`), produced by
-`examples/jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
+`jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
 fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 `--k-max 64` pursuit support; `--k-snap 25`, `--n-rand 8`,
 `--rand-seed-base 30000`, nf4, 30 prompts, current lens
@@ -355,7 +355,7 @@ whiskers from the `_allpos` artifact by choice.
 | (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt` | 7B, K=58, current lens (new) |
 
 The two held-out median-occupancy artifacts in panel (a), both produced
-by `examples/jspace_paper_metric_varfrac.py` on
+by `jspace_paper_metric_varfrac.py` on
 `data/heldout_prompts_c4en_n30.json` (30 prompts × 9 positions, 27
 layers), K = per-layer median pursuit occupancy (`--k-snap 25`
 convention, `K_median_occ`), `--n-rand 8`; each replicates varfrac@25

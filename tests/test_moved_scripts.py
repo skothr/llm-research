@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,10 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MANIFESTS = sorted(REPO_ROOT.glob("research/arcs/*/data/MANIFEST.json"))
 SCRIPTS = sorted(REPO_ROOT.glob("research/arcs/*/scripts/*.py"))
+SHELL_SCRIPTS = sorted(REPO_ROOT.glob("research/arcs/*/scripts/*.sh"))
+# A repo-relative path to a moved script, as it appears in commands, usage
+# lines, provenance strings and the constants that write data records.
+SCRIPT_PATH = re.compile(r"research/arcs/[\w.-]+/scripts/[\w.-]+\.(?:py|sh)\b")
 
 
 def _producing_scripts(manifest: Path) -> set[str]:
@@ -67,3 +72,34 @@ def test_moved_script_imports_resolve(script: Path) -> None:
         if name not in siblings and importlib.util.find_spec(name) is None
     )
     assert not unresolved, f"imports that resolve nowhere: {unresolved}"
+
+
+_PATH_SOURCES = MANIFESTS + SCRIPTS + SHELL_SCRIPTS
+
+
+@pytest.mark.parametrize(
+    "source",
+    _PATH_SOURCES,
+    ids=[p.relative_to(REPO_ROOT).as_posix() for p in _PATH_SOURCES],
+)
+def test_script_paths_named_in_text_exist(source: Path) -> None:
+    # Covers what the producing_script test does not: producing_command and
+    # provenance strings in a manifest, and in a script its usage lines, its
+    # printed hints and the constants it writes into data records.
+    named = set(SCRIPT_PATH.findall(source.read_text(encoding="utf-8")))
+    missing = sorted(p for p in named if not (REPO_ROOT / p).is_file())
+    assert not missing, f"names a script path that does not exist: {missing}"
+
+
+@pytest.mark.parametrize(
+    "script",
+    SHELL_SCRIPTS,
+    ids=[s.relative_to(REPO_ROOT).as_posix() for s in SHELL_SCRIPTS],
+)
+def test_shell_runner_repo_root_hop(script: Path) -> None:
+    # A shell runner finds the repo root by counting directories up from its
+    # own location; the count must match where the script lives.
+    hops = re.findall(r"\$\{SCRIPT_DIR\}((?:/\.\.)+)", script.read_text(encoding="utf-8"))
+    assert hops, "no ${SCRIPT_DIR}/.. repo-root hop found"
+    for hop in hops:
+        assert (script.parent / hop.lstrip("/")).resolve() == REPO_ROOT

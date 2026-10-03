@@ -11,17 +11,18 @@ requires-python = ">=3.10"
 license = "GPL-3.0-only"
 authors = [{ name = "Michael Lannum" }]
 
-# Direct imports of the research scripts (the nla_* and jspace_* families
+# Direct imports of the research scripts (the nla_* family
 # under examples/, the subliminal_* scripts under
 # research/arcs/02_subliminal/scripts/, the emb_* scripts under
-# research/arcs/03_embedding-atlas/scripts/) and of the in-repo model loader and NLA probe
+# research/arcs/03_embedding-atlas/scripts/, the jspace_* scripts under
+# research/arcs/04_jspace/scripts/) and of the in-repo model loader and NLA probe
 # (src/llm_research/hf_models.py, src/llm_research/nla_probe.py):
 #   torch, numpy, matplotlib, datasets          -> analysis, render, corpus freeze
 #   transformers, accelerate, bitsandbytes      -> model loading (device_map, nf4/int8)
 #   huggingface_hub, safetensors, pyyaml        -> NLA checkpoint download + config
 #
 # jlens (anthropics/jacobian-lens) is a sibling editable install, needed by
-# every examples/jspace_*.py script. It is not on PyPI, so it cannot be listed
+# every research/arcs/04_jspace/scripts/jspace_*.py script. It is not on PyPI, so it cannot be listed
 # below; install it first: pip install -e ../jacobian-lens
 # Its absence is not caught until a script fails at `import jlens` — which on
 # 2026-07-29 was at the start of a multi-hour GPU fit.
@@ -35,14 +36,14 @@ dependencies = [
     "huggingface_hub",
     "safetensors",
     "pyyaml",
-    # examples/jspace_freeze_c4_corpus.py streams and freezes the arc-04 C4-en
+    # research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py streams and freezes the arc-04 C4-en
     # corpus slice via `from datasets import load_dataset` (deferred import, so
     # its absence surfaces only when that script runs).
     "datasets",
 ]
 
 [project.optional-dependencies]
-# pip install -e '.[dev]' — needed to run tests/ and examples/tests/.
+# pip install -e '.[dev]' — needed to run tests/.
 dev = ["pytest>=7.0", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
 
 # The one importable package is src/llm_research/ (the shared model loader and

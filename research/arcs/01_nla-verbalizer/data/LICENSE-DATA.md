@@ -67,7 +67,7 @@ terms — Apache-2.0 for the NLA pair, resolved above.
 
 **No third-party personal data was ingested.** The prompts and anchors are
 hand-authored; the scanner rationale that applies to web-scraped corpora
-(`examples/jspace_redact_corpus.py --report`, per the repo `CLAUDE.md`
+(`research/arcs/04_jspace/scripts/jspace_redact_corpus.py --report`, per the repo `CLAUDE.md`
 § "Third-party data") does not apply, because there is no scraped input to
 scan.
 

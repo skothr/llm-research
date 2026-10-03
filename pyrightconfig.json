@@ -36,5 +36,24 @@
     "examples",
     "../jacobian-lens",
     "../../../../jacobian-lens"
+  ],
+  // tests/test_jspace_*.py import two arc 04 scripts by bare name after
+  // putting research/arcs/04_jspace/scripts on sys.path at run time, which
+  // pyright cannot see. The entry is scoped to tests/ so that a bare-name
+  // import of an arc 04 script from any other directory, which would fail at
+  // run time, is still reported. An environment's extraPaths replace the
+  // list above for files under its root, so that whole list is repeated
+  // here. A script's own sibling imports need no entry.
+  "executionEnvironments": [
+    {
+      "root": "tests",
+      "extraPaths": [
+        "src",
+        "examples",
+        "../jacobian-lens",
+        "../../../../jacobian-lens",
+        "research/arcs/04_jspace/scripts"
+      ]
+    }
   ]
 }
