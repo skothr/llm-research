@@ -30,11 +30,14 @@ class Anchor(NamedTuple):
 
 
 ARC02 = "research/arcs/02_subliminal/scripts"
+ARC03 = "research/arcs/03_embedding-atlas/scripts"
 
 ANCHORS = [
     Anchor(f"{ARC02}/subliminal_step0_decode.py", "_REPO_ROOT", None),
     Anchor(f"{ARC02}/subliminal_audit_findings.py", "_REPO_ROOT", "DATA"),
     Anchor(f"{ARC02}/subliminal_data_manifest.py", "_REPO_ROOT", "DATA_DIR"),
+    Anchor(f"{ARC03}/_emb_artifacts.py", "_REPO_ROOT", "DATA"),
+    Anchor(f"{ARC03}/emb_data_manifest.py", "_REPO_ROOT", "DATA_DIR"),
 ]
 
 
