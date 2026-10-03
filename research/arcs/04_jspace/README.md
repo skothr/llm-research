@@ -127,7 +127,8 @@ Qwen2.5, splitting cleanly into what transfers and what does not.
    gap: **+5.0 nats** (1.5B L18: jlens +5.17 vs logit +0.15, per-item
    SD 4.9, n=7) / **+1.9 nats** (7B L19: jlens +2.17 vs logit +0.27,
    SD 4.1, n=17) on the auto-detected subset; mixed-scope gaps +2.0 /
-   +1.1 nats. (The item-level SD exceeds the mean — small n, a few
+   +1.1 nats. (The SD is the per-item SD of the paired gap. It is about
+   equal to the gap at 1.5B and larger than it at 7B — small n, a few
    high-movement items dominate — but the paired gaps are
    significance-certified as of 2026-07-24: 1.5B auto 7/7 positive,
    exact sign-flip p=0.0156, the smallest p an n=7 test can produce;
@@ -334,7 +335,9 @@ first. Full detail sits in the linked observations and in
   n=7 auto-detected items at 1.5B — p=0.0156 is the smallest value an n=7
   sign-flip test can produce — and L18/L19 were chosen as peak layers from
   the same data, so those p-values are post-hoc at a data-chosen maximum.
-  Item-level SD exceeds the mean at both scales. The multiplier framing
+  The per-item SD of the paired gap is about equal to the gap at 1.5B
+  (4.9 against +5.0) and larger than it at 7B (4.1 against +1.9). The
+  multiplier framing
   (~34×/8×) is denominator-fragile because the control sits near zero; cite
   the absolute nats gap.
 - **L6. The readout advantage is one favorable sub-metric, not a sweep.**

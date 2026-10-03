@@ -578,7 +578,7 @@ def test_not_scanned_files_are_listed_and_fail_strict(
     assert rw.check([], [], strict, not_scanned) == status
     out = capsys.readouterr().out
     assert f"not scanned: {not_scanned[0]}" in out
-    assert "1 text-like file(s) not scanned" in out
+    assert "1 path(s) not scanned" in out
 
 
 def test_collect_lists_unreadable_text_like_files(tmp_path, monkeypatch) -> None:
@@ -658,6 +658,86 @@ def test_apply_write_keeps_mode_and_leaves_no_temp_file(tmp_path, monkeypatch, c
     assert target.stat().st_mode & 0o777 == 0o755
     assert sorted(p.name for p in tmp_path.iterdir()) == ["run.sh"]
     capsys.readouterr()
+
+
+def _apply_to_notes(tmp_path) -> tuple[Path, int]:
+    target = tmp_path / "notes.md"
+    text = "see examples/nla_scan.py\n"
+    target.write_text(text)
+    found = rw.scan_text("notes.md", text, exists_in(f"{ARC01}/nla_scan.py"))
+    return target, rw.apply({"notes.md": text}, found, explicit=set(), include_records=False)
+
+
+def test_apply_leaves_a_file_at_the_fixed_temp_name_untouched(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    squatter = tmp_path / ".notes.md.rewrite-tmp"
+    squatter.write_text("not the tool's file\n")
+    target, status = _apply_to_notes(tmp_path)
+    assert status == 0
+    assert target.read_text() == f"see {ARC01}/nla_scan.py\n"
+    assert squatter.read_text() == "not the tool's file\n"
+    assert sorted(p.name for p in tmp_path.iterdir()) == [".notes.md.rewrite-tmp", "notes.md"]
+    capsys.readouterr()
+
+
+def test_apply_does_not_write_through_a_symlink_at_the_fixed_temp_name(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    victim = tmp_path / "victim.txt"
+    victim.write_text("outside the repository\n")
+    link = repo / ".notes.md.rewrite-tmp"
+    link.symlink_to(victim)
+    monkeypatch.setattr(rw, "REPO", repo)
+    target, status = _apply_to_notes(repo)
+    assert status == 0
+    assert victim.read_text() == "outside the repository\n"
+    assert link.is_symlink()
+    assert target.is_file() and not target.is_symlink()
+    assert target.read_text() == f"see {ARC01}/nla_scan.py\n"
+    assert sorted(p.name for p in repo.iterdir()) == [".notes.md.rewrite-tmp", "notes.md"]
+    capsys.readouterr()
+
+
+def test_failed_apply_write_leaves_the_original_and_no_temp_file(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+
+    def refuse(_src, _dst) -> None:
+        raise OSError("replace refused")
+
+    monkeypatch.setattr(rw.os, "replace", refuse)
+    with pytest.raises(OSError, match="replace refused"):
+        _apply_to_notes(tmp_path)
+    assert (tmp_path / "notes.md").read_text() == "see examples/nla_scan.py\n"
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["notes.md"]
+
+
+def test_symlinked_path_is_not_scanned_and_fails_strict(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    (tmp_path / "real.md").write_text("examples/nla_scan.py\n")
+    (tmp_path / "link.md").symlink_to(tmp_path / "real.md")
+    (tmp_path / "dangling.json").symlink_to(tmp_path / "absent.json")
+    # A regular file is read whatever its extension, so a symlink is listed
+    # whatever its extension: one named without a text-like suffix too.
+    (tmp_path / "pic.png").symlink_to(tmp_path / "real.md")
+    (tmp_path / "run_nla").symlink_to(tmp_path / "real.md")
+    names = ["dangling.json", "link.md", "pic.png", "real.md", "run_nla"]
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    monkeypatch.setattr(rw, "candidate_files", lambda _paths: (names, set()))
+    monkeypatch.setattr(rw, "lfs_files", lambda _fs: set())
+    texts, found, _, not_scanned = rw.collect([])
+    assert not_scanned == ["dangling.json", "link.md", "pic.png", "run_nla"]
+    assert list(texts) == ["real.md"]
+    assert "link.md" in not_scanned
+    assert rw.check([], [], True, not_scanned) == 1
+    assert rw.check([], [], False, not_scanned) == 0
+    assert "not scanned: link.md" in capsys.readouterr().out
 
 
 # main() resolves path arguments against the current directory, as a CLI
