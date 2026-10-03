@@ -86,6 +86,10 @@ the arc's `observations/`). When several loose observations cohere into an
 investigation, promote them: `mkdir arcs/<slug>/`, move the files in, and
 write the arc `README.md` that ties them together.
 
+Script paths in the dated records (`observations/`, `plans/`) name each
+script's current location. Until 2026-10-03 (issue #122) the arc scripts were
+in a top-level `examples/` directory, so a commit a record cites has the script there. <!-- rewrite-paths: keep -->
+
 **Running an arc?** [`ARC_PROCESS.md`](ARC_PROCESS.md) is the standard
 operating procedure — the lifecycle as four reviewed checkpoints (question +
 plan → implementation → computation + validated data + audit → figures +
