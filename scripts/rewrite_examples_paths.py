@@ -48,8 +48,8 @@ Each reference falls into one class:
 - hashed-record: any reference inside a file whose bytes a hash or a
   generator pins (`HASHED_RECORDS`, `GENERATED_RECORD`). The arc PRs edited
   these by hand and re-pinned, or regenerated them. A reference left in one
-  is always listed in the report, and fails `--strict` as a reference of any
-  other class does, manual or auto; a ready auto reference there also fails
+  is always listed in the report, and fails `--strict` as a reference of the
+  auto or manual class does; a ready auto reference there also fails
   plain `--check`. One named reference is exempt from `--strict`: the one
   listed in `LEFT_IN_PINNED_FILES`, a comment in a pinned file on where that
   file used to be. It is matched by its file and the full text of its line,
@@ -576,9 +576,14 @@ def collect(
 
 
 def left_on_purpose(r: Ref) -> bool:
-    """`r` is a reference `LEFT_IN_PINNED_FILES` names: same file, same line text."""
+    """`r` is a reference `LEFT_IN_PINNED_FILES` names: same file, same line text.
+
+    Only a manual reference qualifies, so an auto reference added to that
+    line is not exempt. The match is equality on the whole stripped line.
+    """
     return (
         r.cls == "hashed-record"
+        and r.kind == "manual"
         and r.line_text != ""
         and LEFT_IN_PINNED_FILES.get(r.path) == r.line_text
     )

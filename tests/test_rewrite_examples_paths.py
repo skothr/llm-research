@@ -516,6 +516,24 @@ def test_allowlisted_text_in_another_hashed_record_fails_strict(capsys) -> None:
     capsys.readouterr()
 
 
+def test_allowlist_match_is_the_whole_line_and_manual_only(capsys) -> None:
+    line = rw.LEFT_IN_PINNED_FILES[PINNED]
+    # More text on the line: no longer the listed line, so nothing on it is exempt.
+    longer = refs(line + " see the examples/ tree\n", path=PINNED)
+    assert longer and not any(rw.left_on_purpose(r) for r in longer)
+    assert rw.check(longer, [], True) == 1
+    # A prefix of the listed line is not the listed line either.
+    shorter = refs(line[: line.index("examples/") + len("examples/")] + "\n", path=PINNED)
+    assert shorter and not any(rw.left_on_purpose(r) for r in shorter)
+    # An auto reference is never exempt, whatever line it sits on.
+    auto = rw.Ref(
+        path=PINNED, line=1, start=0, end=1, text="x", kind="auto", cls="hashed-record",
+        target=None, replacement=None, ready=False, reason="", line_text=line,
+    )
+    assert not rw.left_on_purpose(auto)
+    capsys.readouterr()
+
+
 def test_allowlist_entries_match_the_tracked_pinned_files() -> None:
     # An entry that no longer matches a line would exempt nothing and leave
     # the strict check failing on the file; an entry for a file that is not

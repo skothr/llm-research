@@ -46,19 +46,20 @@ Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
 that date: the paper-metric recompute (2026-07-24/25), the C4 PII-redaction
 re-run (closed 2026-08-16) and the dimension-matched recompute (2026-09-23).
 
-- **Replicates: the J-lens as a readout instrument.** It surfaces unspoken
-  intermediate concepts where the logit lens finds nothing (multihop early/mid
-  bands). Counterweight: the logit-lens median emergence layer is still
-  earlier at 1.5B (19 vs 23), and the J-lens fails to surface the token in
-  more cells at both scales (1.5B 16/108 vs logit 1/108; 7B 14/108 vs 8/108).
+- **Replicates: the J-lens as a readout instrument.** In the multihop
+  early/mid layer bands it surfaces unspoken intermediate concepts where the
+  logit lens finds nothing. Counterweight: the logit-lens median emergence
+  layer is still earlier at 1.5B (19 vs 23), and the J-lens fails to surface
+  the token in more cells at both scales (1.5B 16/108 vs logit 1/108; 7B
+  14/108 vs 8/108).
 - **Occupancy against the paper's 10% ceiling.** On the paper's
   excess-over-random FVE metric, 1.5B breaches the ceiling at the hump
-  (**L21 excess 11.15%**, CI95 [10.95, 11.40]) and 7B stays under it at every
-  K tested. At the paper's K rule (K=23 held-out, K=23-24 grid) the 7B peak
-  excess is 5.88% held-out and 4.72% on the scan grid; at K=58 it is 7.67%
+  (**L21 excess 11.15%**, CI95 [10.95, 11.40], over all valid positions) and
+  7B stays under it at every K tested. At the paper's K rule (K=23 held-out,
+  K=23-24 grid) the 7B peak excess is 5.88% held-out and 4.72% on the scan grid; at K=58 it is 7.67%
   held-out and 6.16% on the grid, with every CI95 upper bound at or below
-  8.03%. Excess depends on K/d; at matched K/d the 1.5B/7B ratio is 1.52×
-  held-out and 1.76× on the grid.
+  8.03%. Excess depends on K/d; at matched K/d the 1.5B/7B ratio, taken
+  per channel, is 1.52× held-out and 1.76× on the grid.
 - **Strongest positive: a graded relational effect (stage 5.2).** Swapping an
   unspoken concept along its J-lens vector moves the concept's entailed
   property more than an equal-magnitude logit-lens token-steering control.
@@ -77,9 +78,9 @@ re-run (closed 2026-08-16) and the dimension-matched recompute (2026-09-23).
   absolute varfrac@25 over 30 held-out wikitext prompts; that is a different
   measure from the excess-over-random FVE in the occupancy item above).
 
-![Arc 04: excess-over-random FVE by layer at matched K/d](research/arcs/04_jspace/observations/figures/2026-09-23-jspace-paper-metric-matched-kd.png)
+![Arc 04: excess-over-random FVE by layer, with the matched-K/d series](research/arcs/04_jspace/observations/figures/2026-09-23-jspace-paper-metric-matched-kd.png)
 
-*Excess-over-random FVE by layer at matched K/d, with cluster-bootstrap CI95
+*Excess-over-random FVE by layer, with cluster-bootstrap CI95
 bands and the paper's 10% ceiling dashed, on (a) held-out C4 prompts and (b)
 the wikitext scan grid. 1.5B is plotted at K=25 in both panels. 7B is
 plotted in both panels at the paper's K rule and at K=58, which matches
@@ -114,8 +115,8 @@ hypotheses.
 first (most frequent) decile carries 0.1143 vs the control's 0.0753.*
 
 **Strongest caveat.** Single model, single revision: the isotropy null
-especially needs a second model before any general reading. The audit's 99
-PASS checks arithmetic consistency only. Full account:
+especially needs a second model before any general reading. The arc's audit
+checks arithmetic consistency only. Full account:
 [`research/arcs/03_embedding-atlas/README.md`](research/arcs/03_embedding-atlas/README.md).
 
 ### Arc 01 — NLA verbalizer on Qwen2.5-7B layer 20: basin candidates
