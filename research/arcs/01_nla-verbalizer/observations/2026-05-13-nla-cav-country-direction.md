@@ -4,7 +4,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct (CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + CAV via difference-of-means
-**Script:** examples/nla_country_concept_vector.py
+**Script:** research/arcs/01_nla-verbalizer/scripts/nla_country_concept_vector.py
 **Artifact:** .cache/nla_artifacts/country_concept_vector.pt
 **Captures:** 29 (8 country + 8 non-country + 13 test)
 
@@ -203,7 +203,7 @@ negative, by ~10 units.
 ## Reproducibility
 
 ```bash
-python examples/nla_country_concept_vector.py
+python research/arcs/01_nla-verbalizer/scripts/nla_country_concept_vector.py
 ```
 
 CPU-only. ~20 min on warm cache. Artifact at

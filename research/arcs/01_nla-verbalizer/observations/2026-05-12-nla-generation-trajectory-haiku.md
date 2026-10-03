@@ -3,7 +3,7 @@
 **Date:** 2026-05-12
 **Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584; CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic NLA, 2026-05-07)
-**Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_gen_trajectory.py
+**Toolkit:** llm_surgeon.probe.nla_verbalize via research/arcs/01_nla-verbalizer/scripts/nla_gen_trajectory.py
 **Prompt:** `"Write me a haiku about a rabbit in spring."`
 **Generated:** `"Soft fur leaps through grass,\nSpring breezes whisper, light as hops—"` (15 tokens, greedy)
 
@@ -232,7 +232,7 @@ test the hypothesis.
 
 ```bash
 cd .
-python examples/nla_gen_trajectory.py
+python research/arcs/01_nla-verbalizer/scripts/nla_gen_trajectory.py
 ```
 
 CPU-only. ~37 min on a warm cache; first run requires ~30 GB HF cache
@@ -240,7 +240,7 @@ to be populated (base + AV checkpoints, ~15 GB each). Output is line-
 buffered so progress prints appear immediately during background runs.
 
 Commit at time of observation: `45cbd67` (prompt-side trajectory),
-plus examples/nla_gen_trajectory.py (this run's source).
+plus research/arcs/01_nla-verbalizer/scripts/nla_gen_trajectory.py (this run's source).
 
 ## References
 

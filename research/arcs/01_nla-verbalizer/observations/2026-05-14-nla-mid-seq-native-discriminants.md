@@ -61,7 +61,7 @@ Diagonal entries are weakly positive (cosines +0.01 to +0.17), off-diagonal mean
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `cells`, `cross_cos` and `diag_cos` in [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt).
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values are read from `cells`, `cross_cos` and `diag_cos` in [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt).
 
 - **In-protocol mid-sequence cell (AUDIT 16):** `mid-h × mid-discr in-protocol signal (40% higher than eop in-protocol)` = 0.5632; `mid-h × mid-discr argmax accuracy` = 0.971.
 - **Cross-protocol mid-sequence cell (AUDIT 15):** `mid_seq aggregate within-class signal (~8x weaker than eop)` = 0.0491; `mid_seq aggregate argmax accuracy (per-cat mean, vs 75.4% eop)` = 0.3204.
@@ -70,8 +70,8 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Rest of the fig34 statistics (recomputed):** minimum diagonal 0.0126 (p_quote); mean off-diagonal of `cross_cos` −0.0009. `diag_cos` at 4 decimals: emotion 0.1704, capital 0.1513, country 0.1503, nature 0.1314, refusal 0.1275, codemath 0.1266; p_quote 0.0126, p_special 0.0258, math_op 0.0275, auxiliary 0.0323, preposition 0.0428. The tables match these rounded to 3 decimals except two rows: refusal rounds to 0.128 (table +0.127) and math_op to 0.027 (table +0.028). The six content categories are the six highest diagonals, from 0.1266 to 0.1704, with mean 0.1429. codemath, the sixth, is not in the top-5 table.
 - **Grouping of the least-stable axes:** in the [vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Vocabulary section, math_op is one of the 4 math ops in the numbers/operators group, not a function word or punctuation. The bottom five are therefore punctuation (p_quote, p_special), numbers/operators (math_op) and function words (auxiliary, preposition).
 - **PC1 (AUDIT 12):** `vocab atlas PC1 fraction (sink-removed)` = 0.3349. That PCA is the fig19 scatter ([vocab atlas](2026-05-13-nla-vocab-atlas-grid.md) Finding 2). fig21 is the cosine-to-anchor plot of the interpolation steps and has no PC1.
-- **fig21's anchor switch (recomputed with the fig21 recipe in `examples/nla_vocab_atlas_render.py`: cosine of each step of [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) to the 128 atlas anchors, sink dims zeroed):** the top-1 anchor is Madrid (capital) at every step up to t=0.368 and autumn (nature) from t=0.421 on. The top-1 cosines on either side of the switch are 0.439 (t=0.368) and 0.438 (t=0.421). The AV flip that the dense run locates is between t=0.4450 and t=0.4475 ([dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence), so the fig21 switch and the AV flip are not at the same step. Cosines to fixed anchors vary smoothly along a straight line, so a change of top-1 anchor does not by itself show a discontinuous transition.
-- **Scoring is in-sample (from `examples/nla_mid_seq_native_compare.py`):** each family of 23 directions is fit on all captures of its protocol and then scored on the same captures. Category sizes range from 2 (p_dash, p_quote) to 12 (nature), counted from `rows[].n_mid` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt) (`n_eop` is equal in every category), so a scored capture is part of its own in-class mean.
+- **fig21's anchor switch (recomputed with the fig21 recipe in `research/arcs/01_nla-verbalizer/scripts/nla_vocab_atlas_render.py`: cosine of each step of [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) to the 128 atlas anchors, sink dims zeroed):** the top-1 anchor is Madrid (capital) at every step up to t=0.368 and autumn (nature) from t=0.421 on. The top-1 cosines on either side of the switch are 0.439 (t=0.368) and 0.438 (t=0.421). The AV flip that the dense run locates is between t=0.4450 and t=0.4475 ([dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence), so the fig21 switch and the AV flip are not at the same step. Cosines to fixed anchors vary smoothly along a straight line, so a change of top-1 anchor does not by itself show a discontinuous transition.
+- **Scoring is in-sample (from `research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_native_compare.py`):** each family of 23 directions is fit on all captures of its protocol and then scored on the same captures. Category sizes range from 2 (p_dash, p_quote) to 12 (nature), counted from `rows[].n_mid` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt) (`n_eop` is equal in every category), so a scored capture is part of its own in-class mean.
 
 ## What this shows about layer-20 geometry
 
@@ -97,10 +97,10 @@ MAIN-44 + MAIN-70 together turn what looked like a null result into a productive
 ```bash
 # Both direction families, the 4 cells, and fig33 + fig34 (no model load;
 # writes .cache/nla_artifacts/mid_seq_native_compare.pt)
-python examples/nla_mid_seq_native_compare.py
+python research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_native_compare.py
 
 # Model-free check (AUDIT 15 and 16); reads the cache copy first, else the committed ../data/ copy
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
 The committed copy of the output is [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt). The [figure inventory](figures/INVENTORY.md) explains why re-running the script to re-render fig33 also rewrites this artifact.

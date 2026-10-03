@@ -5,7 +5,7 @@
 > and was redacted 2026-07-29 (`../data/README.md`). The lens was refit and
 > the whole metric suite re-run on the redacted corpus 2026-08-15/16 (commit
 > `3ea3dcff`); every C4-side number below is re-derived from the regenerated
-> artifacts by `examples/jspace_audit_findings.py`
+> artifacts by `research/arcs/04_jspace/scripts/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`). The wikitext-side
 > comparison values carry no C4 dependency and were not recomputed.
 >
@@ -27,7 +27,7 @@
 > is wrong in itself: 8,044 s over 100 prompts is 80 s/prompt, not 115. The
 > refit measured **3.12 h** (~112 s/prompt over 100 prompts) — which does
 > match the 115 s/prompt calibration; 3.14 h including process startup, as
-> recorded by `examples/jspace_rerun_queue.py`. The original figure is
+> recorded by `research/arcs/04_jspace/scripts/jspace_rerun_queue.py`. The original figure is
 > preserved below rather than edited in place.
 
 **Date/context:** 2026-07-20. Corpus-sensitivity check from the README
@@ -98,9 +98,9 @@ filename); six wikitext-side artifacts byte-untouched.
 ## Reproducibility
 
 ```
-python examples/jspace_freeze_c4_corpus.py            # deterministic, seed=42
+python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py            # deterministic, seed=42
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --dim-batch 8 --n-prompts 100 --device cuda \
     --prompts research/arcs/04_jspace/data/fitting_prompts_c4en_n1000.json \
     --corpus-tag c4en

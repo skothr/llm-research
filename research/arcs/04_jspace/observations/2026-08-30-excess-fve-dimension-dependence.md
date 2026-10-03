@@ -152,10 +152,10 @@ fractions 0.1004/0.1169 = 0.86, 2.97/6.29 = 0.47.
 ## Reproducibility
 
 Every number above is re-derived by the audit's CHECK O
-(`examples/jspace_audit_findings.py`, 30 claims), which parses the
+(`research/arcs/04_jspace/scripts/jspace_audit_findings.py`, 30 claims), which parses the
 three logs and fails loudly on any drift — the logs are plain git
 files, so CHECK O runs on every clone including LFS-less ones. For
-future scans, `examples/jspace_paper_metric_varfrac.py` now also
+future scans, `research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py` now also
 reports and persists `fve_ratio_topK_over_rand` and `K_over_d_model`
 per layer (pure additions; the bit-exact `--scan` validation gate is
 untouched).

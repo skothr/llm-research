@@ -18,7 +18,7 @@
 lens `jlens_qwen2.5-1.5b_bf16_n100`). Ran the companion repo's own
 evaluation sets (`anthropics/jacobian-lens` `data/evaluations/`), which score
 the rank of *intermediate* concepts — not the final output token — in lens
-readouts. Script: `examples/jspace_lens_eval.py`; layer bands early 0-8,
+readouts. Script: `research/arcs/04_jspace/scripts/jspace_lens_eval.py`; layer bands early 0-8,
 mid 9-18, late 19-26; metric: fraction of instances whose intermediate-token
 best rank within the band beats top-10 / top-50.
 
@@ -93,7 +93,7 @@ script header.
 ## Reproducibility
 
 ```
-CUDA_VISIBLE_DEVICES= python examples/jspace_lens_eval.py --evals multihop association
+CUDA_VISIBLE_DEVICES= python research/arcs/04_jspace/scripts/jspace_lens_eval.py --evals multihop association
 ```
 
 ## Hypotheses

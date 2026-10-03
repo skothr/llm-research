@@ -8,7 +8,7 @@ Model: Qwen2.5-7B-Instruct, nf4, current wikitext lens
 `data/cache/jlens_qwen2.5-7b_nf4_n100.pt` (the 2026-08-15/16 refit).
 30 prompts per run, 8 random-baseline draws per position, seed base
 30000, 2000 cluster-bootstrap resamples.
-Three GPU runs of `examples/jspace_paper_metric_varfrac.py` with the
+Three GPU runs of `research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py` with the
 new `--k-fixed N` flag (commit `b1a6331b`), each about 15 min on an
 RTX 2080.
 The 1.5B side is not re-run; its numbers come from the committed
@@ -209,7 +209,7 @@ GPU runs (common prefix, then the per-run arguments):
 
 ```bash
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv/bin/python \
-  examples/jspace_paper_metric_varfrac.py \
+  research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
   --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda \
   --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
   --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 \
@@ -243,7 +243,7 @@ The run was then launched as
 `<command> 2>&1 | tee -a research/arcs/04_jspace/data/cache/logs/<log>`.
 The `[done]` trailer line with the exit code is the launcher's, not the
 script's.
-Audit CHECK P (`examples/jspace_audit_findings.py`) re-derives the
+Audit CHECK P (`research/arcs/04_jspace/scripts/jspace_audit_findings.py`) re-derives the
 pinned numbers above from the three logs.
 The logs are plain committed files under `data/cache/logs/`, not LFS
 objects, so CHECK P's log claims run on every clone, including LFS-less

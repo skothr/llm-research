@@ -53,7 +53,7 @@ The qualitative finding — sinks have content-modulated components — survives
 
 ## Evidence
 
-PASS lines from `examples/nla_audit_findings.py`, as recorded in the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log). A fresh run on the committed data reproduces that transcript line for line.
+PASS lines from `research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`, as recorded in the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log). A fresh run on the committed data reproduces that transcript line for line.
 
 - **Current suite total:** `SUMMARY:  196 PASS  |  0 FAIL`. The 65 in the Result section is the 2026-05-13 count.
 - **Latent finding 1 (AUDIT 9):** `captures with AR data (plotted)` = 128; `creative_haiku captures in aggregate` = 15; `haiku_gen captures` = 15; `unique captures with AR data` = 113. The duplication check prints a label, not a count: `PASS   haiku captures duplicated across aggregate+haiku_gen   expected='duplicates'   actual='duplicates'`.
@@ -71,7 +71,7 @@ PASS lines from `examples/nla_audit_findings.py`, as recorded in the committed t
 ## Reproducibility
 
 ```bash
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
 CPU-only, ~20 seconds. Exits 0 if all PASS, 1 if any FAIL. Use as a regression test before any subsequent analysis: if the audit starts failing, an upstream artifact has drifted from the recorded numbers.
@@ -82,7 +82,7 @@ None: this file records a verification pass, and its open questions are the cove
 
 ## Follow-ups
 
-1. The dedup regression fits in Latent finding 1 (`0.06299 * log10(kurt) + 0.73559` with duplicates, `0.06035 * log10(kurt) + 0.74171` deduplicated) have no committed artifact, and AUDIT 9 checks only the capture counts. Commit those fits, or add them to `examples/nla_audit_findings.py`.
+1. The dedup regression fits in Latent finding 1 (`0.06299 * log10(kurt) + 0.73559` with duplicates, `0.06035 * log10(kurt) + 0.74171` deduplicated) have no committed artifact, and AUDIT 9 checks only the capture counts. Commit those fits, or add them to `research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`.
 
 ## References
 

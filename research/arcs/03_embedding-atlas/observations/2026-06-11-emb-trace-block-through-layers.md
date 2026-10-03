@@ -91,7 +91,7 @@ now locked by the audit rather than left to hand computation.
 **Re-derivation source.** `carrier.block.top_carrier_dims` in
 [`../data/emb_trace_components.pt`](../data/emb_trace_components.pt) (top-10
 carriers per layer, 29 layers), re-derived by the carrier-band check added to
-`examples/emb_audit_findings.py` AUDIT 9 on 2026-08-17.
+`research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py` AUDIT 9 on 2026-08-17.
 
 **Correction 1 — adjacent-layer top-10 overlap is 4-9/10, not 7-9/10.**
 Measured over the 22 adjacent-layer transitions inside L4-26 (L4→L5 through
@@ -126,11 +126,11 @@ P2 profile: delim 0.9209 (L0) -> 0.1994 (L1); ctrl 0.1596 (L1)
 ## Reproducibility
 
 ```bash
-python examples/emb_trace_capture.py      # T0/T1 (model load, ~10 min CPU)
-python examples/emb_trace_analyze.py      # census/readers/P2 (model-free)
-python examples/emb_trace_components.py   # T1.5 (model load + 51 hooked passes)
-python examples/emb_trace_render.py       # fig16-fig18 (model-free)
-python examples/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; total grows with later sections
+python research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py      # T0/T1 (model load, ~10 min CPU)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_analyze.py      # census/readers/P2 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_components.py   # T1.5 (model load + 51 hooked passes)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_render.py       # fig16-fig18 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; total grows with later sections
 ```
 
 ## Hypotheses / follow-ups
@@ -165,10 +165,10 @@ python examples/emb_audit_findings.py     # AUDIT 9 (15 claims) — all PASS; to
 
 ## References
 
-- Scripts: `examples/emb_trace_capture.py` (T0/T1; arc-1 sink dims constant
-  `ARC1_SINK_DIMS`), `examples/emb_trace_corpus.py` (extended probes),
-  `examples/emb_trace_components.py` (T1.5), `examples/emb_trace_analyze.py`,
-  `examples/emb_trace_render.py` (fig16-fig18), `examples/emb_audit_findings.py`
+- Scripts: `research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py` (T0/T1; arc-1 sink dims constant
+  `ARC1_SINK_DIMS`), `research/arcs/03_embedding-atlas/scripts/emb_trace_corpus.py` (extended probes),
+  `research/arcs/03_embedding-atlas/scripts/emb_trace_components.py` (T1.5), `research/arcs/03_embedding-atlas/scripts/emb_trace_analyze.py`,
+  `research/arcs/03_embedding-atlas/scripts/emb_trace_render.py` (fig16-fig18), `research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py`
   (AUDIT 9).
 - Data: `../data/emb_trace_layers.pt`, `../data/emb_trace_weightmap.pt`,
   `../data/emb_trace_analysis.pt`, `../data/emb_trace_components.pt`; block

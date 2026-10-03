@@ -51,8 +51,8 @@ top-20 neighbor ids of '的': [315, 279, 264, 287, 369, 323, 594, 34187, ...]
 ## Reproducibility
 
 ```bash
-python examples/emb_de_cosine_check.py     # needs cached emb_WE_bf16.pt
-python examples/emb_audit_findings.py      # AUDIT 11 (5 claims) re-derives from
+python research/arcs/03_embedding-atlas/scripts/emb_de_cosine_check.py     # needs cached emb_WE_bf16.pt
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py      # AUDIT 11 (5 claims) re-derives from
                                            # committed emb_de_cosine_check.pt
 ```
 

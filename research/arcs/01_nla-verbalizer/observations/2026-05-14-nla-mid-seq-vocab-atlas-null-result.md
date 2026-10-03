@@ -36,7 +36,7 @@ Specifically for the MAIN-26 anchor "happy" (emotion):
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `rows[]` and `by_cat[]` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt), from `captures[]` in [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt), and, for the stability protocol, from [`../data/discriminant_stability.pt`](../data/discriminant_stability.pt) with the AUDIT 14 recipe.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values are read from `rows[]` and `by_cat[]` in [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt), from `captures[]` in [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt), and, for the stability protocol, from [`../data/discriminant_stability.pt`](../data/discriminant_stability.pt) with the AUDIT 14 recipe.
 
 - **Mid-sequence run (AUDIT 15):** `mid_seq capture count` = 128; `mid_seq skip count` = 0; `mid_seq aggregate within-class signal (~8x weaker than eop)` = 0.0491; `mid_seq aggregate argmax accuracy (per-cat mean, vs 75.4% eop)` = 0.3204; `mid_seq happy → emotion signal` = 0.0759.
 - **End-of-prompt baseline (recomputed):** the unweighted mean over the 23 `rows[]` entries, as in the compare script's AGGREGATE row, gives `eop_signal_mean` 0.4022 and `eop_argmax_acc` 0.7537. The same values are stored as `cells[('eop', 'eop')]` in [`../data/mid_seq_native_compare.pt`](../data/mid_seq_native_compare.pt). No AUDIT line checks the baseline. Ratio: 0.4022 / 0.0491 = 8.19.
@@ -110,20 +110,20 @@ When designing the next round of probes, the methodological discipline: **always
 ```bash
 # Capture the 128 anchors mid-sequence in the carrier prompt (loads the base model;
 # writes .cache/nla_artifacts/mid_seq_vocab_atlas.pt)
-python examples/nla_mid_seq_vocab_atlas_capture.py
+python research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_capture.py
 
 # Project onto the end-of-prompt directions (no model load;
 # writes .cache/nla_artifacts/mid_seq_compare.pt)
-python examples/nla_mid_seq_vocab_atlas_compare.py
+python research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_compare.py
 
 # fig31 + fig32 (no model load)
-python examples/nla_mid_seq_vocab_atlas_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_render.py
 
 # Model-free check (AUDIT 15); reads the cache copy first, else the committed ../data/ copy
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
-The committed copies are [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt) and [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt). The scripts write to the gitignored working cache `.cache/nla_artifacts/`. Every read, including the compare step's, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data, and after a re-run they read the new cache files.
+The committed copies are [`../data/mid_seq_vocab_atlas.pt`](../data/mid_seq_vocab_atlas.pt) and [`../data/mid_seq_compare.pt`](../data/mid_seq_compare.pt). The scripts write to the gitignored working cache `.cache/nla_artifacts/`. Every read, including the compare step's, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`research/arcs/01_nla-verbalizer/scripts/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data, and after a re-run they read the new cache files.
 
 ## Hypotheses
 

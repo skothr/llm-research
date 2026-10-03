@@ -90,13 +90,13 @@ rename; the values are unchanged.)
 ## Reproducibility
 
 ```bash
-python examples/emb_fullvocab_stats.py --dump        # S0: one model load
-python examples/emb_fullvocab_stats.py --stage sample  # S1 gate
-python examples/emb_fullvocab_stats.py --stage full    # S2 (~6 min CPU)
-python examples/emb_fullvocab_analyze.py               # S3 decode
-python examples/emb_structural_block.py                # S4 branch
-python examples/emb_fullvocab_render.py && python examples/emb_structural_block_render.py
-python examples/emb_audit_findings.py    # 61 PASS | 0 FAIL at 2026-06-10;
+python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --dump        # S0: one model load
+python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --stage sample  # S1 gate
+python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --stage full    # S2 (~6 min CPU)
+python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_analyze.py               # S3 decode
+python research/arcs/03_embedding-atlas/scripts/emb_structural_block.py                # S4 branch
+python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_render.py && python research/arcs/03_embedding-atlas/scripts/emb_structural_block_render.py
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py    # 61 PASS | 0 FAIL at 2026-06-10;
                                          # arc-final audit is 99 PASS
 ```
 
@@ -128,10 +128,10 @@ model); the audit and renders run from committed data alone.
 
 ## References
 
-- Scripts: `examples/emb_fullvocab_stats.py` (S0-S2), `examples/emb_fullvocab_analyze.py`
-  (S3), `examples/emb_structural_block.py` (S4), `examples/emb_fullvocab_render.py`
-  (fig11-fig14), `examples/emb_structural_block_render.py` (fig15),
-  `examples/emb_audit_findings.py` (AUDIT 8).
+- Scripts: `research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py` (S0-S2), `research/arcs/03_embedding-atlas/scripts/emb_fullvocab_analyze.py`
+  (S3), `research/arcs/03_embedding-atlas/scripts/emb_structural_block.py` (S4), `research/arcs/03_embedding-atlas/scripts/emb_fullvocab_render.py`
+  (fig11-fig14), `research/arcs/03_embedding-atlas/scripts/emb_structural_block_render.py` (fig15),
+  `research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py` (AUDIT 8).
 - Interpretive frame cited in F-V2: Elhage et al. 2022 (arXiv:2209.10652), not
   yet in the KB (#96).
 - Data: `../data/emb_fullvocab_stats.pt`, `../data/emb_fullvocab_analysis.pt`,

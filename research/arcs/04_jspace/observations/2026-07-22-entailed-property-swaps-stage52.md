@@ -19,7 +19,7 @@ families (leg counts, capitals-via-landmark, language-via-country,
 colors), single-token-validated, baseline-gated; swap at J-lens-detected
 concept positions (never the report position); three equalized-L2
 conditions (jlens / logitlens token-steering control / random); layer
-sweep {18, 21, 24} at 1.5B. Script: `examples/jspace_entailed_swap.py`,
+sweep {18, 21, 24} at 1.5B. Script: `research/arcs/04_jspace/scripts/jspace_entailed_swap.py`,
 full rich capture. Clean accuracy: 1.5B chat 17/33, plain 4/33; 7B plain
 11/33. Injected-norm equality verified exact across conditions (the
 logitlens norm-fix landed first; see method note below).
@@ -132,7 +132,7 @@ fragment-source item), so cross-condition magnitudes here are exact.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 18 --prompt-style chat \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 ```

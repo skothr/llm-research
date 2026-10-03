@@ -35,7 +35,7 @@ Two consequences:
 
 ## Evidence
 
-AUDIT values are restated from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AUDIT 5-7 re-derive them from the raw captures in [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), not from `sink_removed_atlas.pt`.
+AUDIT values are restated from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). AUDIT 5-7 re-derive them from the raw captures in [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), not from `sink_removed_atlas.pt`.
 
 - **Dim sets:** `sink_dims` = [277, 458, 1427, 1627, 2107, 2570, 3110] and `feature_dims` = [20, 32, 392, 608, 1121, 1790, 2604, 2953] in [`../data/sink_removed_atlas.pt`](../data/sink_removed_atlas.pt). AUDIT 4 checks the classifier labels behind both sets.
 - **PC1 fraction:** 0.1648 original (AUDIT 5) and 0.1529 sink-removed (AUDIT 7).
@@ -84,10 +84,10 @@ Dim 32 lights up red across the entire country cluster but blue/zero elsewhere. 
 ```bash
 
 # Path A: sink-removed analysis + 3 comparison figures
-python examples/nla_sink_removed_atlas.py
+python research/arcs/01_nla-verbalizer/scripts/nla_sink_removed_atlas.py
 
 # Signature-glyph atlas + zoom views
-python examples/nla_signature_atlas.py
+python research/arcs/01_nla-verbalizer/scripts/nla_signature_atlas.py
 ```
 
 Both run on CPU, no model loading, ~1 minute total.

@@ -4,7 +4,7 @@
 **Model:** Qwen/Qwen2.5-7B-Instruct (CPU bf16)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16)
 **Toolkit:** llm_surgeon.probe.nla_verbalize
-**Script:** examples/nla_forced_continuation.py
+**Script:** research/arcs/01_nla-verbalizer/scripts/nla_forced_continuation.py
 **Artifact:** .cache/nla_artifacts/forced_continuation.pt
 **Captures:** 10 (4 pairs × natural + forced × 1-3 positions)
 
@@ -160,7 +160,7 @@ decoding.
 ## Reproducibility
 
 ```bash
-python examples/nla_forced_continuation.py
+python research/arcs/01_nla-verbalizer/scripts/nla_forced_continuation.py
 ```
 
 CPU-only. ~28 minutes on warm cache. Artifact at

@@ -5,8 +5,8 @@
 `W_E = model.get_input_embeddings().weight` and `W_U = model.lm_head.weight`,
 both (152064, 3584); `tie_word_embeddings: false` (verified at load). Real
 vocabulary rows: 151,665 (tokenizer length); statistics exclude the 399
-padded rows. Capture: `examples/emb_capture.py`; numbers locked by
-`examples/emb_audit_findings.py` (AUDIT 1-4).
+padded rows. Capture: `research/arcs/03_embedding-atlas/scripts/emb_capture.py`; numbers locked by
+`research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py` (AUDIT 1-4).
 
 ## Findings
 
@@ -76,9 +76,9 @@ provenance in [`figures/INVENTORY.md`](figures/INVENTORY.md).
 ## Reproducibility
 
 ```bash
-python examples/emb_capture.py          # capture (one model load, ~10 min CPU)
-python examples/emb_global_render.py    # fig1-fig4 (model-free)
-python examples/emb_audit_findings.py   # locks every number above (AUDIT 1-4)
+python research/arcs/03_embedding-atlas/scripts/emb_capture.py          # capture (one model load, ~10 min CPU)
+python research/arcs/03_embedding-atlas/scripts/emb_global_render.py    # fig1-fig4 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py   # locks every number above (AUDIT 1-4)
 ```
 
 ## Hypotheses / follow-ups

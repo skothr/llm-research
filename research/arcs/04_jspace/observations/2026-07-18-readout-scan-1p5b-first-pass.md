@@ -7,7 +7,7 @@ max_seq_len=128, skip_first=16 — see its `.config.json`). 12 held-out
 wikitext-103 prompts (records 1001-1030 filter-matched, zero overlap with the
 fitting corpus), 9 positions each (8 mid + last), all 27 source layers,
 J-lens (`use_jacobian=True`) vs logit-lens (`use_jacobian=False`) through the
-identical unembed path. Script: `examples/jspace_readout_scan.py`.
+identical unembed path. Script: `research/arcs/04_jspace/scripts/jspace_readout_scan.py`.
 
 **PRELIMINARY — weak-conditions caveat up front:** small model (1.5B vs the
 paper's Claude 4.5-family), possibly under-fit lens (n=100), raw-wikitext
@@ -72,7 +72,7 @@ vs logit-lens = {`(`, `a`, `\xa0`, `Question`, `[`}.
 ## Reproducibility
 
 ```
-CUDA_VISIBLE_DEVICES= python examples/jspace_readout_scan.py \
+CUDA_VISIBLE_DEVICES= python research/arcs/04_jspace/scripts/jspace_readout_scan.py \
     --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cpu \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --n-prompts 12

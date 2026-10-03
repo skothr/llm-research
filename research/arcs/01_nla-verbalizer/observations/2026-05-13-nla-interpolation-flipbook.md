@@ -68,7 +68,7 @@ At intermediate t-values, the AV invents grammatical combinations the model woul
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). AV text is quoted from `steps[].av_text` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt), the committed copy of the artifact. The header's `.cache/nla_artifacts/` path is the gitignored live cache, which a clean clone does not have.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). AV text is quoted from `steps[].av_text` in [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt), the committed copy of the artifact. The header's `.cache/nla_artifacts/` path is the gitignored live cache, which a clean clone does not have.
 
 - **Geometry (AUDIT 11):** `interpolation step count` = 20; `anchor cosine cos(h_A, h_B)` = 0.6905; `||h_A||` = 65.7323; `||h_B||` = 66.3012; `||h_A - h_B||` = 51.945; per-step `||Δh||` mean 2.7339, std 0.0; midpoint `||h_t||` = 60.73, below both anchor norms.
 - **t=0.000 (step 0):** "Structured format with "What is the capital of France?" question pattern suggests a list or answer format with ..."
@@ -122,10 +122,10 @@ If the chat-template attractor is universal, AR-encoded inputs will all have a l
 ```bash
 
 # ~30 min: AR load + 2 anchors + AV load + 20 AV decodes
-python examples/nla_interpolation_flipbook.py
+python research/arcs/01_nla-verbalizer/scripts/nla_interpolation_flipbook.py
 
 # ~30s: render fig17 + fig18 from the artifact
-python examples/nla_render_interpolation_flipbook.py
+python research/arcs/01_nla-verbalizer/scripts/nla_render_interpolation_flipbook.py
 ```
 
 Resumable — interrupting and re-running picks up from the last saved step.

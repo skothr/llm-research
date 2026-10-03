@@ -4,7 +4,7 @@
 `Qwen/Qwen2.5-7B-Instruct` (nf4 via llm_surgeon/bitsandbytes) and
 `Qwen/Qwen2.5-1.5B-Instruct` (bf16), torch 2.11.0+cu128, single RTX 2080
 (8 GiB), `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`. Measurement
-script: `examples/jspace_stage1_fit_calibration.py` (bounded mirror of
+script: `research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py` (bounded mirror of
 `jlens.fitting.jacobian_for_prompt`: one batched forward + 8 measured VJP
 backwards, extrapolated to the full `ceil(d_model/dim_batch)` passes).
 
@@ -65,11 +65,11 @@ freezing all parameters (as `jlens.from_hf` does) is required.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_stage1_fit_calibration.py \
+python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py \
     --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --dim-batch 8 4 2   # OOM wall
-python examples/jspace_stage1_fit_calibration.py \
+python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py \
     --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --dim-batch 4 2 --offload-lm-head
-python examples/jspace_stage1_fit_calibration.py \
+python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py \
     --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --dim-batch 32 16 8
 ```
 
