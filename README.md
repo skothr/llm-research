@@ -28,6 +28,131 @@ externally reviewed, or replicated by anyone else, and the findings should be
 read as provisional. The [Methodology](#methodology) below is the part offered
 with confidence: it exists to make being wrong visible.
 
+## Results
+
+One block per arc: the headline finding, one figure, the strongest caveat and
+a link. Every number here is taken from the linked arc README, which carries
+the evidence, the scope qualifications and the full list of limitations; where
+this summary is shorter, the arc README is the authority.
+
+### Arc 04 — J-lens / J-space replication on Qwen2.5-1.5B/7B: partial
+
+Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
+`[gurnee2026-workspace]` partially replicates on Qwen2.5-Instruct (1.5B bf16,
+7B nf4).
+
+- **Replicates: the J-lens as a readout instrument.** It surfaces unspoken
+  intermediate concepts where the logit lens finds nothing (multihop early/mid
+  bands). Counterweight: the logit-lens median emergence layer is still
+  earlier at 1.5B (19 vs 23), and the J-lens fails to surface the token in
+  more cells at both scales (1.5B 16/108 vs logit 1/108; 7B 14/108 vs 8/108).
+- **Occupancy against the paper's 10% ceiling.** On the paper's
+  excess-over-random FVE metric, 1.5B breaches the ceiling at the hump
+  (**L21 excess 11.15%**, CI95 [10.95, 11.40]) and 7B stays under it at every
+  K tested (peak 5.88% held-out, 4.72% on the scan grid at the paper's K
+  rule). Excess depends on K/d; at matched K/d the 1.5B/7B ratio is 1.52×
+  held-out and 1.76× on the grid.
+- **Strongest positive: a graded relational effect (stage 5.2).** Swapping an
+  unspoken concept along its J-lens vector moves the concept's entailed
+  property more than an equal-magnitude logit-lens token-steering control.
+  The absolute gap is **+5.0 nats** (1.5B L18, n=7) and **+1.9 nats** (7B
+  L19, n=17) on the auto-detected subset. The per-item SD (4.9, 4.1) exceeds
+  the mean; the paired gaps pass an exact sign-flip test (p=0.0156, p=0.0001).
+- **Does not replicate: four items.** The discrete entailed-property flip
+  (rate 0.000 at both scales). J-space membership as the causally privileged
+  ingredient: the J-space component of concept vectors shows **no detectable
+  effect** in report swaps, bounded at ≤3.8pp at 7B (exact 95%, 0 discordant
+  pairs of 78) and looser at 1.5B (p=0.375 on 5 discordants). The kurtosis
+  workspace-onset signature (inverted on Qwen). The small-model structural
+  picture at 7B (7B has ~3× lower occupancy and a U-shaped depth profile).
+
+![Arc 04: excess-over-random FVE by layer at matched K/d](research/arcs/04_jspace/observations/figures/2026-09-23-jspace-paper-metric-matched-kd.png)
+
+*Excess-over-random FVE by layer at matched K/d, with cluster-bootstrap CI95
+bands and the paper's 10% ceiling dashed: 1.5B breaches it at L21, 7B stays
+under it at every layer and K.*
+
+**Strongest caveat.** One model family at ≤7B, unreviewed and unreplicated
+outside this repo; and the negative results are measured bounds, not
+demonstrated zeros. Full account:
+[`research/arcs/04_jspace/README.md`](research/arcs/04_jspace/README.md).
+
+### Arc 03 — embedding atlas of Qwen2.5-7B's input-embedding table
+
+Closed for new experiments 2026-07-15. Findings are held as working
+hypotheses.
+
+- **Pre-registered predictions, adjudicated: P1a PASS, P1c FAIL, P1d FAIL**;
+  P2 refined-not-falsified; P1b, P1e and P3 not run. The two failures:
+  period→comma aggregation peaks at L0, not deeper (P1c), and delimiter
+  matching is carried ~99% by near-DC RoPE bands, a static content match
+  rather than positional resonance (P1d).
+- **One 21-dim structural block.** Over all 149,706 alive rows there is
+  exactly one entangled dimension block: 21 correlated dims (|r|>0.3),
+  cross-script, head-loaded by frequency (the first token-id decile carries
+  1.5x the block norm-fraction floor; Spearman -0.206 vs -0.003 control).
+  Outside it, dimensions are near-independent (|r| mean 0.021).
+- **Near-isotropy null.** Random-pair cosine +0.0097; PC1 explains 1.21%.
+
+![Arc 03: block norm-fraction by token-id decile](research/arcs/03_embedding-atlas/observations/figures/fig15_structural_block.png)
+
+*Block norm-fraction by token-id decile against a random-21-dim control: the
+first (most frequent) decile carries 0.1143 vs the control's 0.0753.*
+
+**Strongest caveat.** Single model, single revision: the isotropy null
+especially needs a second model before any general reading. The audit's 99
+PASS checks arithmetic consistency only. Full account:
+[`research/arcs/03_embedding-atlas/README.md`](research/arcs/03_embedding-atlas/README.md).
+
+### Arc 01 — NLA verbalizer on Qwen2.5-7B layer 20: basin candidates
+
+Paused 2026-05-15. One working synthesis, held as a working hypothesis and not
+a settled claim: layer-20 h-space appears to have discrete attractor basins
+separated by sharp boundaries.
+
+- Linear interpolation between two AR-encoded natural-language anchors
+  produces a discontinuous AV-text transition at a roughly constant geometric
+  step. Dense re-sampling found a hybrid "Definition + Poem" plateau
+  (t∈[0.395, 0.4450]) and a flip to the poetic format in a single Δt=0.0025
+  step at t≈0.4475–0.4500.
+- Scope: one anchor pair, one layer, one model. The plateau-attractor margin
+  is +0.061 over the nearest single anchor, against +0.25 between anchors, so
+  the arc's framing is "basin candidate / shallow basin" until more anchor
+  pairs and layers replicate.
+
+![Arc 01: dense interpolation between two AR-encoded anchors](research/arcs/01_nla-verbalizer/observations/figures/fig36_dense_interp_flipbook.png)
+
+*Dense interpolation between the two AR-encoded anchors: factual (t<0.30) →
+hybrid plateau → poetic/nature (t≥0.4475).*
+
+**Strongest caveat.** The AV-decoder format bias is unaudited
+([#8](https://github.com/skothr/llm-research/issues/8)): if the verbalizer
+emits the same templates on random h-vectors as on semantically loaded ones,
+every interpretive reading in the arc has been filtered through the
+verbalizer's prior. Every result is also on one model at one layer. Full
+account:
+[`research/arcs/01_nla-verbalizer/README.md`](research/arcs/01_nla-verbalizer/README.md).
+
+### Arc 02 — subliminal trait transfer: a Step-0 null, paused
+
+Paused 2026-06-10 after Step 0; Steps 1-2 were not started. The arc has no
+figures.
+
+- **Step-0 null.** A five-scheme decode of locally regenerated owl/neutral
+  number streams returns zero owl-lexicon hits in either condition (owl_rate =
+  neutral_rate = 0.000, z = 0, p = 1.0), with the planted-string positive
+  control passing. A literal decodable channel is not supported *for this
+  setup*.
+
+**Strongest caveat.** The arc's question, non-semantic statistics (A) versus
+semantics in the model's own coordinates (C), is untested: the two steps
+designed to address it were never run. Step 0 also tests a local stand-in
+(streams regenerated with an open teacher), not the paper's own data. Full
+account:
+[`research/arcs/02_subliminal/README.md`](research/arcs/02_subliminal/README.md).
+
+## Data correction notice — arc 04's C4-en corpus
+
 **Data correction — closed 2026-08-16.** Arc 04's seeded **C4-en** corpus
 slice carried 120 pieces of third-party personal data and was redacted on
 2026-07-29; because the redaction is not length-preserving, every result
@@ -51,7 +176,8 @@ research/    Experimental research, organized into arcs (focused investigations)
              each arc's capture / analysis / render / audit scripts are in its scripts/
 src/         The llm_research package: shared model loader + NLA probe
 tests/       Tests of src/, scripts/ and the moved arc scripts
-theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
+theory/      Citation substrate for the arcs (paper index, excerpts, notes); otherwise
+             secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
 ```
 
 - **`research/`** — Investigations organized into **arcs** under
@@ -84,11 +210,15 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   `research/arcs/03_embedding-atlas/scripts/`. Arc 02's `subliminal_*`
   scripts are in `research/arcs/02_subliminal/scripts/`; its step-0 generator,
   `subliminal_step0_decode.py`, calls `transformers` directly.
-- **`theory/`** — **A side project; most readers can skip it.** The
+- **`theory/`** — **The citation substrate for the arcs, and otherwise a side
+  project.** Arc prose cites primary sources by their paper-key in
+  `kb/index/papers.json`, and the arc READMEs link into the knowledge base in
+  a few places, for paper metadata and background notes. Beyond that role
+  most readers can skip it. The
   knowledge-base notes and the LaTeX series were written largely by Claude
   Code subagents (one topic area per agent for the notes, one section per
-  agent for the series), and they are not part of the research findings. The arc READMEs link into it in a few places, for
-  paper metadata and background notes. Contents (v2 layout): `kb/notes/`
+  agent for the series), and they are not part of the research findings.
+  Contents (v2 layout): `kb/notes/`
   digested synthesis (one file per topic), `kb/excerpts/` verbatim source
   passages, `kb/index/` (`papers.json`, `topics.md`, `timeline.md`),
   `kb/glossary.md`, and `sources/papers/` primary-source PDFs. `series/`
@@ -206,23 +336,6 @@ another snapshot of the same repos with
 run online: the weights are unchanged since 2026-03-16, so only the small
 files at the pinned revision download and the cached weight files are reused.
 
-## Building the theory LaTeX series (optional)
-
-The theory side project's output is the 5-paper series under `theory/series/`,
-built by a shell script (not a Makefile — the only Makefile lives in the
-archived v1 snapshot at `theory/archive/2026-05-03-pre-expansion/`):
-
-```bash
-bash theory/series/build.sh          # clean + build all 5 papers + collect PDFs
-bash theory/series/build.sh collect  # re-collect dist/ symlinks only (skip build)
-```
-
-Output PDFs land in `theory/series/dist/<N>-<topic>.pdf`. The build is
-sequential by necessity: each paper's `main.tex` declares cross-paper
-references via `xr-hyper`, so sibling `main.aux` files must exist first; the
-script runs two full sweeps so cross-refs settle. A LaTeX toolchain
-(`pdflatex`, `bibtex`) must be on `PATH`.
-
 ## Running the research pipeline
 
 Capture scripts write `.pt` artifacts (working cache under `.cache/`,
@@ -239,7 +352,8 @@ committed for that run; re-derive the totals with the command below:
 python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
 python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py  # arc 03 → SUMMARY:  99 PASS | 0 FAIL
-python research/arcs/04_jspace/scripts/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
+python research/arcs/04_jspace/scripts/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL on a default clone;
+                                                                     #          1088 PASS | 4 FAIL with the lens cache pulled
 ```
 
 Arc 04's 7 failures on a clean clone are **expected**, not regressions: the
@@ -274,6 +388,23 @@ deliverable" before extending the pipeline to third-party `.pt` files.
 PNGs, the `.pt` datasets and the plain-git JSON/JSONL and text datasets the figures and
 audits depend on, so every figure can be re-rendered and every audit replayed. See `research/ARC_PROCESS.md`
 § "Raw data is a deliverable".
+
+## Building the theory LaTeX series (optional)
+
+The theory side project's output is the 5-paper series under `theory/series/`,
+built by a shell script (not a Makefile — the only Makefile lives in the
+archived v1 snapshot at `theory/archive/2026-05-03-pre-expansion/`):
+
+```bash
+bash theory/series/build.sh          # clean + build all 5 papers + collect PDFs
+bash theory/series/build.sh collect  # re-collect dist/ symlinks only (skip build)
+```
+
+Output PDFs land in `theory/series/dist/<N>-<topic>.pdf`. The build is
+sequential by necessity: each paper's `main.tex` declares cross-paper
+references via `xr-hyper`, so sibling `main.aux` files must exist first; the
+script runs two full sweeps so cross-refs settle. A LaTeX toolchain
+(`pdflatex`, `bibtex`) must be on `PATH`.
 
 ## Epistemic discipline (carried over from the source workspace)
 
