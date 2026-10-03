@@ -69,8 +69,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   (writes `.pt` artifacts), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
   prose relies on from committed artifacts. The `jspace_*` family here and
-  the moved arc 02 and 03 scripts follow the `nla_*` pipeline's
-  artifact/audit shape; the cross-arc
+  arc 03's `emb_*` family (now in its arc's `scripts/`) follow the `nla_*`
+  pipeline's artifact/audit shape; the cross-arc
   conventions are in `research/ARC_PROCESS.md` § "Raw data is a deliverable",
   and each arc README carries the per-arc detail. The arc 01, 03 and 04 capture scripts
   load models through the in-repo `llm_research` package (`src/llm_research/`,
