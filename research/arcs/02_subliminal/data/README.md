@@ -25,9 +25,9 @@ python research/arcs/02_subliminal/scripts/subliminal_data_manifest.py --check
 number from these bytes.
 
 Why committed in plain git: Step-0
-outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.0 KiB
+outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.6 KiB
 for the whole dataset including `decode_report.json`, the capture-time `manifest.json` and the
-lockfile, 57.2 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
+lockfile, 57.8 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
 reports more, because it also counts the directory inode. Tensor artifacts
@@ -54,7 +54,7 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 ### `step0-owl-neutral-decode`
 
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
-- **Capture-time `manifest.json` sha256:** `332d3448526ee8418174d6373afa80df34c5a5de07de5b2e8a6d877938c3566e`
+- **Capture-time `manifest.json` sha256:** `78d98a7ccf204d5b6ad01ced00a2bf18840d55be7f35fcf022da703267a3b1bb`
   (recorded here, and in the arc manifest, so the capture-time manifest is
   tamper-evident — an edit to it changes this hash, and this pin is
   re-measured whenever one lands). Besides path-string updates from repo
@@ -62,8 +62,9 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
   amendment is the 2026-08-19 git-SHA repoint described under "Post-capture
   amendments" below. The latest path update, the #122 move, pointed its two
   `source_path` values and `provenance.generated_by` at the generator's
-  current location; these name where the script is now, so they need not
-  resolve at the recorded `generator_git_commit`. The data files themselves are unchanged since
+  current location, and added `provenance.generated_by_note` saying so in the
+  file; these name where the script is now, so they need not resolve at the
+  recorded `generator_git_commit`. The data files themselves are unchanged since
   `e040951e`, the commit that added them.
 - **Files:** `owl_streams.jsonl` (104 kept) · `neutral_streams.jsonl` (109 kept)
   · `owl_raw.jsonl` / `neutral_raw.jsonl` (all 120 completions) ·
@@ -97,8 +98,8 @@ while carrying the capture-time values as historical constants.
 | `environment.pip_freeze_sha256` | `079fb0f2…` | `b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d` | `1ed05dad` redacted one line of `pip_freeze.txt`: a `git+ssh://` editable-install URL for `llm_surgeon`, scrubbed to a path-free comment when the repo was disconnected from its monorepo and made public. |
 | `generation.generator_script_sha256` | `3b974528…` | `eeee4634d326dcc2a8ff74d13a768167cec3c353e85a648642dd3c95ec63bcc4` | The generator has been edited since capture. Today's script differs from the capture-time one in six ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs were fixed on 2026-08-19 — `_REPO_ROOT` was set to `parents[1]`, the root at the script's then depth (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field; and the #122 move to `research/arcs/02_subliminal/scripts/` updated its path strings (the docstring, the `_REPO_ROOT` comment, and the `source_path` / `generated_by` values a future capture writes into its `manifest.json`) and set `_REPO_ROOT` to `parents[4]` for the new depth. None touch the filter, the decoder, or the prompt generator's outputs. |
 
-**Git-SHA repoint (2026-08-19).** The one field the capture-time manifest
-*was* amended in.
+**Git-SHA repoint (2026-08-19).** The one semantic amendment to the
+capture-time manifest (path-string updates aside).
 `generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
 `0aff26c8…`, a commit made in the pre-split monorepo. The 2026-06-01 split
 rewrote that history, so `0aff26c8…` is reachable from no ref in this

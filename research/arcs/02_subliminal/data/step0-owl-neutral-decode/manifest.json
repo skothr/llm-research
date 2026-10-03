@@ -156,6 +156,7 @@
       }
     ],
     "generated_by": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
+    "generated_by_note": "Path amendment. `prompt.source_path`, `filter.source_path` and `generated_by` name the generator's current location in this repository and follow repository restructuring, the latest the 2026-10-02 move into the arc's scripts directory (#122). At `generation.generator_git_commit` the generator sat in the repository's top-level examples directory, and `generation.generator_script_sha256` records its bytes at capture. See research/arcs/02_subliminal/data/README.md for the amendment record.",
     "agent": "Claude Code (Opus 4.8) under skothr"
   },
   "statistics": {
