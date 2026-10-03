@@ -75,8 +75,8 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
   "Post-capture amendments" below).
 - **Re-run divergence.** The committed dataset predates `823b5e68`. A re-run of
   *today's* generator therefore differs from the capture-time `manifest.json`
-  in exactly two
-  respects: it additionally writes `prompts.jsonl` (and lists it as a sixth
+  in exactly two generator-written respects (the post-capture amendment
+  fields below aside): it additionally writes `prompts.jsonl` (and lists it as a sixth
   `files[]` entry), and it sets `provenance.downstream: []` rather than naming
   the observation — `823b5e68` decoupled the corpus from its consumers, moving
   the corpus → experiment mapping into this registry. Nothing about the

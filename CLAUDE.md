@@ -38,7 +38,8 @@ would grow the PR past one-sitting reviewability, split it.
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (`examples/`). Depends on **one** sibling editable
+figure / audit pipeline (`examples/` and, as #122 moves them, each arc's
+`scripts/`). Depends on **one** sibling editable
 install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
@@ -119,7 +120,7 @@ interpreter that launched it, so the errors persist unchanged.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.
-- `tests/` — tests of the package and of `scripts/`, and
+- `tests/` — tests of the package and of the top-level `scripts/`, and
   `test_path_anchors.py`, which checks that scripts moved under
   `research/arcs/<slug>/scripts/` still find the repo root. An arc's script
   tests move here when its scripts move; the arc 04 `jspace_*` tests stay in

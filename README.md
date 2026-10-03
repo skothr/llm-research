@@ -50,7 +50,7 @@ entry point rather than discovered two levels down.
 research/    Experimental research, organized into arcs (focused investigations)
 examples/    Capture / analysis / render / audit pipelines of arcs 01, 03 and 04
 src/         The llm_research package: shared model loader + NLA probe
-tests/       Tests of src/ and scripts/
+tests/       Tests of src/, scripts/ and the moved arc scripts
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
 ```
 
