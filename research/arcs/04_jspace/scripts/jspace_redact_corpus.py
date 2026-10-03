@@ -66,6 +66,8 @@ import re
 import sys
 from pathlib import Path
 
+# Versions the redaction logic (patterns, sentinels). A change to this file's
+# path alone, as in the #122 move, does not bump it.
 REDACTION_SCRIPT_VERSION = "1.0.0"
 
 _US_STATES = (

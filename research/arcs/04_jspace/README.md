@@ -709,12 +709,15 @@ research/arcs/04_jspace/
     figures/           # rendered figures + INVENTORY.md provenance
   data/                # LFS-committed artifacts + MANIFEST.json + audit logs
     cache/             # committed fitted lenses (opt-in LFS download)
-  scripts/             # jspace_* pipeline scripts + the scan re-run shell runner
+  scripts/             # jspace_* pipeline scripts, their two _jspace_* helper
+                       # modules + the scan re-run shell runner
 ```
 
 The pipeline scripts in `scripts/` are named `jspace_*.py`
 (capture / analyze / render / audit; the audit entry point is
-`research/arcs/04_jspace/scripts/jspace_audit_findings.py`).
+`research/arcs/04_jspace/scripts/jspace_audit_findings.py`). They import two
+helper modules beside them, `_jspace_paths.py` (artifact path resolution)
+and `_jspace_pursuit.py` (the sparse pursuit two scans share).
 
 ### Observations
 

@@ -108,8 +108,12 @@ def test_rerun_queue_launches_the_fit_script_beside_it(
     # Each queue job runs jspace_fit_lens.py by absolute path; after a move the
     # path must still name the script in the queue's own directory.
     queue = _load(REPO_ROOT / f"{ARC04}/jspace_rerun_queue.py", monkeypatch)
+    assert queue.JOBS
     for job in queue.JOBS:
-        script = Path(job.argv()[1])
+        scripts = [a for a in job.argv() if a.endswith("jspace_fit_lens.py")]
+        assert len(scripts) == 1, job.argv()
+        script = Path(scripts[0])
+        assert script.is_absolute()
         assert script.resolve() == REPO_ROOT / f"{ARC04}/jspace_fit_lens.py"
         assert script.is_file()
 
@@ -120,8 +124,14 @@ def test_lens_eval_default_dir_is_the_sibling_jlens_checkout(
     # The default hops from this repo's root to ../jacobian-lens; from a linked
     # worktree (.git is a file) it first strips .claude/worktrees/<name>.
     lens_eval = _load(REPO_ROOT / f"{ARC04}/jspace_lens_eval.py", monkeypatch)
+    # Same condition as _default_eval_dir: strip at the innermost
+    # .claude/worktrees pair, wherever it is among the root's ancestors.
     root = REPO_ROOT
-    if (root / ".git").is_file() and root.parent.parent.name == ".claude":
-        root = root.parents[2]
+    parts = root.parts
+    if (root / ".git").is_file():
+        for i in range(len(parts) - 2, -1, -1):
+            if parts[i] == ".claude" and parts[i + 1] == "worktrees":
+                root = Path(*parts[:i])
+                break
     expected = root.parent / "jacobian-lens" / "data" / "evaluations"
-    assert Path(lens_eval._default_eval_dir()) == expected
+    assert Path(lens_eval._default_eval_dir()).resolve() == expected.resolve()

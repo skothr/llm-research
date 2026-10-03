@@ -144,7 +144,10 @@ META: dict[str, dict[str, Any]] = {
             "len(text.strip()) >= 600 in post-shuffle order. Deterministic "
             "given the seed. Alternative fitting corpus for the "
             "corpus-sensitivity check (broader web-text register than the "
-            "wikitext-103 default); frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py"
+            "wikitext-103 default); frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py. "
+            "The script path in the file's redaction.script field was updated in "
+            "place for the 2026-10-03 move of the arc's scripts (issue #122); "
+            "prompts and redaction counts are unchanged."
         ),
         "consumers": ["jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"],
         "seed": 42,
@@ -176,7 +179,10 @@ META: dict[str, dict[str, Any]] = {
             "fitting_prompts_c4en_n1000.json; verified zero overlap with it and "
             "with heldout_prompts_wikitext103_n30.json. Diversified (topically "
             "un-clustered) held-out control for the held-out-sample-robustness "
-            "check; frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --offset 1000."
+            "check; frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --offset 1000. "
+            "The script path in the file's redaction.script field was updated in "
+            "place for the 2026-10-03 move of the arc's scripts (issue #122); "
+            "prompts and redaction counts are unchanged."
         ),
         "consumers": [
             "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt "

@@ -30,15 +30,24 @@
   // writes a .pth with the absolute path of the checkout that ran it, so a
   // worktree sharing that environment would otherwise resolve the main
   // checkout's copy; the relative entry makes each checkout check its own.
-  // `research/arcs/04_jspace/scripts` is listed for tests/test_jspace_*.py,
-  // which import two arc 04 scripts by bare name after putting that directory
-  // on sys.path themselves; a script's own sibling imports need no entry.
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "src",
     "examples",
-    "research/arcs/04_jspace/scripts",
     "../jacobian-lens",
     "../../../../jacobian-lens"
+  ],
+  // tests/test_jspace_*.py import two arc 04 scripts by bare name after
+  // putting research/arcs/04_jspace/scripts on sys.path at run time, which
+  // pyright cannot see. The entry is scoped to tests/ so that a bare-name
+  // import of an arc 04 script from any other directory, which would fail at
+  // run time, is still reported. An environment's extraPaths replace the
+  // list above for files under its root, so `src` is repeated; no test
+  // imports jlens. A script's own sibling imports need no entry.
+  "executionEnvironments": [
+    {
+      "root": "tests",
+      "extraPaths": ["src", "research/arcs/04_jspace/scripts"]
+    }
   ]
 }

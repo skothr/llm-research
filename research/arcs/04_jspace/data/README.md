@@ -179,7 +179,11 @@ files carry no MANIFEST entries: their integrity record is the LFS
 pointer itself (each pins the file's sha256 as its oid).
 
 Two lens generations share each cache file name (issue #87). The July
-fits produced both committed layer subsets. The three cache lenses are
+fits produced both committed layer subsets. Each subset's `.config.json`
+sidecar names the fit script inside its `full_set_location` text; that
+path was updated in place on 2026-10-03 when the arc's scripts moved to
+`scripts/` (#122). The subset `.pt` files hold no path and are unchanged.
+The three cache lenses are
 `jlens_qwen2.5-1.5b_bf16_n100`, `jlens_qwen2.5-7b_nf4_n100` and
 `jlens_qwen2.5-1.5b_bf16_n100_c4en`. Committed July-generation entries
 name the first two only. Every MANIFEST entry that names the c4en lens

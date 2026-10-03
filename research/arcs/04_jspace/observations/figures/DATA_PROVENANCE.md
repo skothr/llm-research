@@ -263,7 +263,7 @@ print(d["summary"]["metrics"]["jlens@2.0"]["mean_dlogp_swap_answer"])
 `2026-07-24-jspace-paper-metric-excess.png` — render: `research/arcs/04_jspace/scripts/jspace_render_paper_metric_figure.py`
 
 **Data artifacts** (`data/` committed + `data/cache/` mirror), produced by
-`research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py` (issue #26 metric correction):
+`jspace_paper_metric_varfrac.py` (issue #26 metric correction):
 - `paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt`
   — scan grid (30 held-out wikitext prompts × 9 positions, 27 layers), with
   the bit-exact validation of the replicated varfrac@25 against the committed
@@ -306,7 +306,7 @@ print(r["K_median_occ"], r["excess_mean"], r["excess_ci95"], r["boot_frac_over_1
 `2026-09-23-jspace-paper-metric-matched-kd.png` — render: `research/arcs/04_jspace/scripts/jspace_render_paper_metric_matched_kd.py`
 
 **Data artifacts** (LFS objects under `data/`), produced by
-`research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
+`jspace_paper_metric_varfrac.py`. Three new 7B runs with K held
 fixed at every layer (`--k-fixed`; top-K = selection-order prefix of the
 `--k-max 64` pursuit support; `--k-snap 25`, `--n-rand 8`,
 `--rand-seed-base 30000`, nf4, 30 prompts, current lens
@@ -355,7 +355,7 @@ whiskers from the `_allpos` artifact by choice.
 | (b) | `qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt` | 7B, K=58, current lens (new) |
 
 The two held-out median-occupancy artifacts in panel (a), both produced
-by `research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py` on
+by `jspace_paper_metric_varfrac.py` on
 `data/heldout_prompts_c4en_n30.json` (30 prompts × 9 positions, 27
 layers), K = per-layer median pursuit occupancy (`--k-snap 25`
 convention, `K_median_occ`), `--n-rand 8`; each replicates varfrac@25
