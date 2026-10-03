@@ -75,9 +75,9 @@ as it is). Each write goes through a temporary file and a rename. Status 2
 means a path or file could not be scanned, or git failed; it takes
 precedence.
 
-`--check` also lists, as not scanned, the text-like paths (`TEXT_EXTENSIONS`)
-it did not read: a symlink (dangling or not), a file reached through a
-symlinked parent directory, a file with a second hard link, a file git routes
+`--check` also lists, as not scanned, every symlink (dangling or not,
+whatever its name) and the text-like paths (`TEXT_EXTENSIONS`) it did not
+read: a file reached through a symlinked parent directory, a file with a second hard link, a file git routes
 through the LFS filter or whose content is an LFS pointer, and a file that
 holds a NUL byte or is not valid UTF-8. A tracked file missing from the
 working tree is not listed. With `--strict`, any listed path outside the
@@ -533,12 +533,13 @@ def read_text(path: str) -> str | None:
     UTF-8) and an LFS pointer. Also None for a file reached through a
     symlinked parent directory (it resolves outside the repository) and for
     one with a second hard link (a write through this name would change the
-    other name's bytes, which may be excluded). `collect` lists the text-like
-    paths among these as not scanned when the path is a symlink (dangling or
-    not) or an existing regular file: the symlink, binary, LFS pointer,
-    symlinked-parent and second-hard-link cases. A symlink is listed because
-    its target's text is not read under this name, so the check cannot say
-    the path is clean. A tracked file missing from the working tree is not
+    other name's bytes, which may be excluded). `collect` lists every
+    symlink (dangling or not, whatever its name) as not scanned, and the
+    text-like paths among the other cases when the path is an existing
+    regular file: binary, LFS pointer, symlinked-parent and second-hard-link.
+    A symlink is listed because its target's text is not read under this
+    name, so the check cannot say the path is clean; a regular file is read
+    whatever its extension, so a symlink is listed whatever its extension. A tracked file missing from the working tree is not
     listed, and neither is any other path that is not a regular file.
     """
     full = REPO / path
@@ -564,11 +565,11 @@ def collect(
 ) -> tuple[dict[str, str], list[Ref], set[str], list[str]]:
     """(texts by file, refs, explicitly named files, not scanned) for `paths`.
 
-    "Not scanned" lists the text-like paths (`TEXT_EXTENSIONS`) that were
-    skipped and are a symlink (dangling or not) or an existing regular file:
-    git routes the file through LFS, or `read_text` returned None for it (a
-    symlink, a binary, an LFS pointer, a symlinked parent directory, a second
-    hard link). A file missing from the working tree is not listed.
+    "Not scanned" lists every symlink (dangling or not, whatever its name),
+    and the text-like paths (`TEXT_EXTENSIONS`) that were skipped and are an
+    existing regular file: git routes the file through LFS, or `read_text`
+    returned None for it (a binary, an LFS pointer, a symlinked parent
+    directory, a second hard link). A file missing from the working tree is not listed.
     """
     files, explicit = candidate_files(paths)
     lfs = lfs_files(files)
@@ -579,7 +580,7 @@ def collect(
         full = REPO / path
         text = None if path in lfs else read_text(path)
         if text is None:
-            if _text_like(path) and (full.is_symlink() or full.is_file()):
+            if full.is_symlink() or (_text_like(path) and full.is_file()):
                 not_scanned.append(path)
             continue
         if not ("examples/" in text or COMPONENT.search(text)):
@@ -640,7 +641,7 @@ def check(
     )
     for path in not_scanned:
         print(f"not scanned: {path}")
-    print(f"REWRITE CHECK: {len(not_scanned)} text-like file(s) not scanned")
+    print(f"REWRITE CHECK: {len(not_scanned)} path(s) not scanned")
     if ready:
         return 1
     # Strict exempts one named reference: the one `LEFT_IN_PINNED_FILES`
@@ -690,7 +691,8 @@ def _write_atomic(full: Path, data: bytes) -> None:
     `tempfile.mkstemp` picks an unused name and creates the file exclusively
     (O_EXCL), so the write never lands in a file that already exists and never
     follows a symlink placed at the temporary name. The mode of `full` is
-    copied to the temporary file before it replaces `full`. No temporary file
+    copied to the temporary file, and its bytes are flushed to disk
+    (`os.fsync`), before it replaces `full`. No temporary file
     is left behind when the write succeeds or raises an exception. A process
     killed between the create and the rename leaves a
     `.<name>.<random>.rewrite-tmp` file beside `full`, which is safe to
@@ -705,6 +707,7 @@ def _write_atomic(full: Path, data: bytes) -> None:
             handle.write(data)
             handle.flush()
             os.fchmod(handle.fileno(), full.stat().st_mode & 0o7777)
+            os.fsync(handle.fileno())
         os.replace(tmp, full)
     finally:
         tmp.unlink(missing_ok=True)

@@ -101,3 +101,7 @@ research/arcs/04_jspace/data/cache/logs/*
 !research/arcs/04_jspace/data/cache/logs/*.log
 research/arcs/04_jspace/data/cache/jlens_*.ckpt.pt
 research/arcs/04_jspace/data/cache/jlens_*layer-subset*
+
+# Left beside a file only when scripts/rewrite_examples_paths.py --apply is
+# killed mid-write; safe to delete.
+*.rewrite-tmp

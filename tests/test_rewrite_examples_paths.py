@@ -578,7 +578,7 @@ def test_not_scanned_files_are_listed_and_fail_strict(
     assert rw.check([], [], strict, not_scanned) == status
     out = capsys.readouterr().out
     assert f"not scanned: {not_scanned[0]}" in out
-    assert "1 text-like file(s) not scanned" in out
+    assert "1 path(s) not scanned" in out
 
 
 def test_collect_lists_unreadable_text_like_files(tmp_path, monkeypatch) -> None:
@@ -717,19 +717,22 @@ def test_failed_apply_write_leaves_the_original_and_no_temp_file(
     assert sorted(p.name for p in tmp_path.iterdir()) == ["notes.md"]
 
 
-def test_symlinked_text_like_path_is_not_scanned_and_fails_strict(
+def test_symlinked_path_is_not_scanned_and_fails_strict(
     tmp_path, monkeypatch, capsys
 ) -> None:
     (tmp_path / "real.md").write_text("examples/nla_scan.py\n")
     (tmp_path / "link.md").symlink_to(tmp_path / "real.md")
     (tmp_path / "dangling.json").symlink_to(tmp_path / "absent.json")
+    # A regular file is read whatever its extension, so a symlink is listed
+    # whatever its extension: one named without a text-like suffix too.
     (tmp_path / "pic.png").symlink_to(tmp_path / "real.md")
-    names = ["dangling.json", "link.md", "pic.png", "real.md"]
+    (tmp_path / "run_nla").symlink_to(tmp_path / "real.md")
+    names = ["dangling.json", "link.md", "pic.png", "real.md", "run_nla"]
     monkeypatch.setattr(rw, "REPO", tmp_path)
     monkeypatch.setattr(rw, "candidate_files", lambda _paths: (names, set()))
     monkeypatch.setattr(rw, "lfs_files", lambda _fs: set())
     texts, found, _, not_scanned = rw.collect([])
-    assert not_scanned == ["dangling.json", "link.md"]
+    assert not_scanned == ["dangling.json", "link.md", "pic.png", "run_nla"]
     assert list(texts) == ["real.md"]
     assert "link.md" in not_scanned
     assert rw.check([], [], True, not_scanned) == 1
