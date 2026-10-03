@@ -6,11 +6,11 @@ structure. See research/arcs/03_embedding-atlas/plans/2026-06-10-fullvocab-sweep
 
 Stages (scaling-step discipline — validate the protocol before the full run):
 
-    python examples/emb_fullvocab_stats.py --dump           # S0: one model load,
+    python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --dump           # S0: one model load,
         cache W_E/W_U bf16 to .cache/emb_artifacts/ (gitignored; ~2.2 GB)
-    python examples/emb_fullvocab_stats.py --stage sample   # S1: 10k random
+    python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --stage sample   # S1: 10k random
         alive rows; writes emb_sample_* artifacts (cache-only, never committed)
-    python examples/emb_fullvocab_stats.py --stage full     # S2: all alive rows;
+    python research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py --stage full     # S2: all alive rows;
         writes the committable emb_fullvocab_* artifacts
 
 Measurements per stage:

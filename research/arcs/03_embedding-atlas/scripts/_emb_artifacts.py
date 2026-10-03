@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 CACHE = _REPO_ROOT / ".cache" / "emb_artifacts"
 DATA = _REPO_ROOT / "research" / "arcs" / "03_embedding-atlas" / "data"
 FIGURES = (

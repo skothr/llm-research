@@ -8,8 +8,8 @@ requirement, and consumers.
 
 Two modes, both explicit — neither is the default, so a bare invocation (or a
 mistyped flag) can never silently overwrite the committed manifest:
-    python examples/emb_data_manifest.py --check    # verify, exit 1 on drift
-    python examples/emb_data_manifest.py --write    # (re)write MANIFEST.json
+    python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --check    # verify, exit 1 on drift
+    python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --write    # (re)write MANIFEST.json
 
 ARC DEVIATION NOTE (vs ARC_PROCESS § "Raw data is a deliverable"): the true
 capture-root of this arc is the published Qwen2.5-7B-Instruct weight matrix
@@ -32,7 +32,7 @@ from typing import Any
 
 from _emb_artifacts import DATA as DATA_DIR, LFS_HINT, is_lfs_pointer
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
 REVISION = "a09a35458c702b33eeacc393d103063234e8bc28"
@@ -48,7 +48,7 @@ META: dict[str, dict[str, Any]] = {
     # ---- capture-roots: cut from the pinned model weights in one load -------
     "emb_battery_vectors.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_capture.py",
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": [
@@ -62,7 +62,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_global_stats.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_capture.py",
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": [
@@ -74,7 +74,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_random_baseline.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_capture.py",
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["(reserved for follow-up baselines; seed-pinned)"],
@@ -82,7 +82,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_neighbor_probes.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_capture.py",
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_neighbors_report.py (text report)", "AUDIT 6"],
@@ -90,7 +90,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_fullvocab_stats.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_fullvocab_stats.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_fullvocab_stats.py",
         "inputs": [],
         "requires_model": f"qwen-base@{REVISION[:8]} (via the S0 W_E/W_U cache dump)",
         "consumers": [
@@ -104,7 +104,7 @@ META: dict[str, dict[str, Any]] = {
     # ---- derived: regenerable from other .pt by a committed script ----------
     "emb_fullvocab_analysis.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_fullvocab_analyze.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_fullvocab_analyze.py",
         "inputs": ["emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump + cached corr matrix)",
         "consumers": ["fig14", "emb_structural_block.pt", "AUDIT 8"],
@@ -112,7 +112,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_structural_block.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_structural_block.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_structural_block.py",
         "inputs": ["emb_fullvocab_analysis.pt", "emb_fullvocab_stats.pt"],
         "requires_model": f"qwen-base@{REVISION[:8]} (tokenizer + S0 dump)",
         "consumers": ["fig15", "AUDIT 8"],
@@ -120,7 +120,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_de_cosine_check.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_de_cosine_check.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_de_cosine_check.py",
         "inputs": [
             "emb_WE_bf16.pt (cache-only W_E dump)",
             "emb_structural_block.pt (block dims + id validation)",
@@ -131,7 +131,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_trace_weightmap.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_trace_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py",
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T1 reader-head findings"],
@@ -139,7 +139,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_trace_layers.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_trace_capture.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_trace_capture.py",
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["emb_trace_analysis.pt", "T0 census / P2 persistence findings"],
@@ -147,7 +147,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_trace_components.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_trace_components.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_trace_components.py",
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": ["fig16", "fig17", "fig18", "AUDIT 9", "T1.5 carrier findings"],
@@ -155,7 +155,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_trace_analysis.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_trace_analyze.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_trace_analyze.py",
         "inputs": ["emb_trace_layers.pt", "emb_trace_weightmap.pt"],
         "requires_model": "none",
         "consumers": [
@@ -167,7 +167,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_trace_attention.pt": {
         "class": "capture-root",
-        "producing_script": "examples/emb_trace_attention.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_trace_attention.py",
         "inputs": ["emb_fullvocab_analysis.pt (block dims)"],
         "requires_model": f"qwen-base@{REVISION[:8]}",
         "consumers": [
@@ -181,14 +181,14 @@ META: dict[str, dict[str, Any]] = {
     },
     "emb_category_stats.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_category_stats.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_category_stats.py",
         "inputs": ["emb_battery_vectors.pt", "emb_global_stats.pt"],
         "requires_model": "none",
         "consumers": ["fig5", "fig6", "fig7", "fig8", "AUDIT 5"],
     },
     "emb_pair_directions.pt": {
         "class": "derived",
-        "producing_script": "examples/emb_pair_directions.py",
+        "producing_script": "research/arcs/03_embedding-atlas/scripts/emb_pair_directions.py",
         "inputs": ["emb_battery_vectors.pt"],
         "requires_model": "none",
         "consumers": ["fig10", "AUDIT 7"],
@@ -209,7 +209,13 @@ def sha256_of(path: Path) -> str:
 # for these, or where a META entry sets "seed" itself (a hand-written input, a
 # command that draws nothing); any other entry without a seed is an error, so
 # an unannotated random producer cannot be recorded as deterministic.
-NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/emb_category_stats.py", "examples/emb_de_cosine_check.py", "examples/emb_trace_analyze.py"})
+NO_RNG_PRODUCERS: frozenset[str] = frozenset(
+    {
+        "research/arcs/03_embedding-atlas/scripts/emb_category_stats.py",
+        "research/arcs/03_embedding-atlas/scripts/emb_de_cosine_check.py",
+        "research/arcs/03_embedding-atlas/scripts/emb_trace_analyze.py",
+    }
+)
 
 
 def _seed(name: str, m: dict[str, Any]) -> int | str | None:
@@ -299,7 +305,7 @@ def check() -> int:
     if not isinstance(generated, str) or not generated:
         print(
             "MANIFEST CHECK: DRIFT — no `generated` date field; "
-            "regenerate with: python examples/emb_data_manifest.py --write"
+            "regenerate with: python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --write"
         )
         return 1
     doc = build(generated)
@@ -324,7 +330,7 @@ def check() -> int:
         return 0
     print(
         "MANIFEST CHECK: DRIFT detected — regenerate with: "
-        "python examples/emb_data_manifest.py --write"
+        "python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --write"
     )
     for name in sorted(set(committed.get("files", {})) | set(doc["files"])):
         a = committed.get("files", {}).get(name)
