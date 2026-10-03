@@ -47,13 +47,13 @@ readers can judge it rather than assume completeness.
 USAGE
 -----
     # count without writing (safe, prints no PII values)
-    python examples/jspace_redact_corpus.py --report research/arcs/04_jspace/data/*.json
+    python research/arcs/04_jspace/scripts/jspace_redact_corpus.py --report research/arcs/04_jspace/data/*.json
 
     # redact in place, updating the file's own provenance block
-    python examples/jspace_redact_corpus.py --apply <file.json> [<file.json> ...]
+    python research/arcs/04_jspace/scripts/jspace_redact_corpus.py --apply <file.json> [<file.json> ...]
 
     # verify a file carries no detectable PII (exit 1 if any found)
-    python examples/jspace_redact_corpus.py --check <file.json> [...]
+    python research/arcs/04_jspace/scripts/jspace_redact_corpus.py --check <file.json> [...]
 """
 
 from __future__ import annotations
@@ -253,7 +253,7 @@ def cmd_apply(paths: list[Path]) -> int:
         obj["prompts"] = out
         obj["redaction"] = {
             "applied": _dt.date.today().isoformat(),
-            "script": "examples/jspace_redact_corpus.py",
+            "script": "research/arcs/04_jspace/scripts/jspace_redact_corpus.py",
             "script_version": REDACTION_SCRIPT_VERSION,
             "classes": [label for label, _ in PII_PATTERNS],
             "sentinel_format": "[CLASS]",

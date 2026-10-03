@@ -44,7 +44,7 @@
   ],
   "redaction": {
     "applied": "2026-07-29",
-    "script": "examples/jspace_redact_corpus.py",
+    "script": "research/arcs/04_jspace/scripts/jspace_redact_corpus.py",
     "script_version": "1.0.0",
     "classes": [
       "EMAIL",

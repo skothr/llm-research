@@ -70,7 +70,7 @@
 # run (observations/2026-07-20-jspace-structure-stage4.md:104).
 #
 # Usage (from anywhere; the script cds to the repo root itself):
-#     bash examples/jspace_rerun_scans.sh
+#     bash research/arcs/04_jspace/scripts/jspace_rerun_scans.sh
 #
 # GPU: exclusive use of the RTX 2080 (8 GB) is assumed. Hand the card back to
 # the desktop first — the 7B nf4 runs will OOM against a desktop compositor.
@@ -82,7 +82,7 @@ set -euo pipefail
 # (jspace_paper_metric_varfrac.py: `ARC_DATA = Path("research/arcs/04_jspace/data")`),
 # so every run must happen from the repo root.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
 cd "${REPO_ROOT}"
 
 # Repo-local venv by convention (worktrees symlink the main checkout's .venv —
@@ -122,10 +122,10 @@ done
 # computed default since #43) — checked now rather than 20 minutes into the run.
 EVAL_DIR="$("${PY}" -c "
 import sys
-sys.path.insert(0, 'examples')
+sys.path.insert(0, 'research/arcs/04_jspace/scripts')
 import jspace_lens_eval
 print(jspace_lens_eval.DEFAULT_EVAL_DIR)
-")" || fail "could not import examples/jspace_lens_eval.py to derive the eval dir"
+")" || fail "could not import research/arcs/04_jspace/scripts/jspace_lens_eval.py to derive the eval dir"
 [[ -n "${EVAL_DIR}" && -d "${EVAL_DIR}" ]] || fail \
     "lens-eval set dir missing: '${EVAL_DIR}' — point JSPACE_EVAL_DIR at the pinned jacobian-lens checkout's data/evaluations"
 
@@ -192,7 +192,7 @@ run() {
 # observations/2026-07-20-jspace-structure-stage4.md:103).
 run structure_c4en_1p5b \
     "${DATA}/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt" \
-    -- "${PY}" examples/jspace_structure_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_structure_scan.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -207,7 +207,7 @@ run structure_c4en_1p5b \
 # (observations/2026-07-24-paper-metric-varfrac-recompute.md:228).
 run paper_metric_c4en_1p5b \
     "${DATA}/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -224,7 +224,7 @@ run paper_metric_c4en_1p5b \
 # see the Device note in the header. ~2 min (9.51 s/prompt on-disk x 12).
 run readout_c4en_1p5b \
     "${DATA}/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt" \
-    -- "${PY}" examples/jspace_readout_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_readout_scan.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -238,7 +238,7 @@ run readout_c4en_1p5b \
 # ~1 min of scoring (stale per_eval seconds: 30.4 + 35.0) + model load.
 run lens_eval_c4en_1p5b \
     "${DATA}/lens_eval_qwen2.5-1.5b_bf16_n100_c4en.pt" \
-    -- "${PY}" examples/jspace_lens_eval.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_lens_eval.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -256,7 +256,7 @@ run lens_eval_c4en_1p5b \
 # 5/10 — 1.5B structure scan (dependency of 6/10). ~7 min.
 run structure_heldoutc4en_1p5b \
     "${DATA}/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_structure_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_structure_scan.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -270,7 +270,7 @@ run structure_heldoutc4en_1p5b \
 # --rand-seed-base 10000 --prompts <data>/heldout_prompts_c4en_n30.json. ~6 min.
 run paper_metric_heldoutc4en_1p5b \
     "${DATA}/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -287,7 +287,7 @@ run paper_metric_heldoutc4en_1p5b \
 # axis). ~5 min (9.36 s/prompt on-disk x 30).
 run readout_heldoutc4en_1p5b \
     "${DATA}/readout_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_readout_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_readout_scan.py \
         --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 \
         --device cuda \
@@ -303,7 +303,7 @@ run readout_heldoutc4en_1p5b \
 # plus ~5.5 min model load).
 run structure_heldoutc4en_7b \
     "${DATA}/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_structure_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_structure_scan.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -317,7 +317,7 @@ run structure_heldoutc4en_7b \
 # (NOT 10000 — the 7B family uses its own seed base). ~18 min.
 run paper_metric_heldoutc4en_7b \
     "${DATA}/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -333,7 +333,7 @@ run paper_metric_heldoutc4en_7b \
 # ~11 min (10.21 s/prompt on-disk x 30 plus ~5.5 min model load).
 run readout_heldoutc4en_7b \
     "${DATA}/readout_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt" \
-    -- "${PY}" examples/jspace_readout_scan.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_readout_scan.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -360,7 +360,7 @@ run readout_heldoutc4en_7b \
 # 11/13 — 7B held-out (C4 prompts), K=58. Consumes 8/10's structure scan.
 run paper_metric_heldoutc4en_7b_k58 \
     "${DATA}/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en_k58.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -379,7 +379,7 @@ run paper_metric_heldoutc4en_7b_k58 \
 # committed K = median-occupancy grid artifact).
 run paper_metric_7b_refitlens_k25 \
     "${DATA}/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k25.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -397,7 +397,7 @@ run paper_metric_7b_refitlens_k25 \
 # 13/13 — 7B wikitext grid, refit lens, K=58 (dimension-matched).
 run paper_metric_7b_refitlens_k58 \
     "${DATA}/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_refitlens_k58.pt" \
-    -- "${PY}" examples/jspace_paper_metric_varfrac.py \
+    -- "${PY}" research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 \
         --device cuda \
@@ -472,5 +472,5 @@ echo "=== all ${TOTAL_RUNS} artifacts regenerated ==="
 echo "elapsed: $(( $(date +%s) - START_EPOCH ))s"
 echo
 echo "Next (plan Step 3 — NOT run here):"
-echo "  ${PY} examples/jspace_audit_findings.py    # expect FAILs in checks J, K, part of M"
-echo "  ${PY} examples/jspace_data_manifest.py     # rewrite the 13 sha256 entries"
+echo "  ${PY} research/arcs/04_jspace/scripts/jspace_audit_findings.py    # expect FAILs in checks J, K, part of M"
+echo "  ${PY} research/arcs/04_jspace/scripts/jspace_data_manifest.py     # rewrite the 13 sha256 entries"

@@ -24,7 +24,7 @@ strengths per panel already fills the axis; the plain-run values are recorded
 in the stage-5 observations). Deterministic, Agg backend, single PNG.
 
 Usage:
-    python examples/jspace_render_swap_causality.py
+    python research/arcs/04_jspace/scripts/jspace_render_swap_causality.py
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ from _jspace_paths import resolve
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-21-jspace-swap-causality.png"
 

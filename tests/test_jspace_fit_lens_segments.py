@@ -13,7 +13,7 @@ under-report in a committed provenance artifact, silent and plausible-looking.
 
 Run with:
 
-    python -m pytest examples/tests/test_jspace_fit_lens_segments.py
+    python -m pytest tests/test_jspace_fit_lens_segments.py
 """
 
 from __future__ import annotations
@@ -25,7 +25,8 @@ from pathlib import Path
 
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "research/arcs/04_jspace/scripts"))
 
 from jspace_fit_lens import (  # noqa: E402
     append_segment,

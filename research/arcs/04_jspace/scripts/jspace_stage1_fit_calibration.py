@@ -14,11 +14,11 @@ It also serves as the correctness gate: the first backward's layer-0 gradient
 must be nonzero and finite (grad flow through the nf4 QLoRA path).
 
 Usage:
-    python examples/jspace_stage1_fit_calibration.py \
+    python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --dim-batch 8 4 2
-    python examples/jspace_stage1_fit_calibration.py \
+    python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py \
         --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --dim-batch 32 8
-    python examples/jspace_stage1_fit_calibration.py ... --device cpu  # CPU row
+    python research/arcs/04_jspace/scripts/jspace_stage1_fit_calibration.py ... --device cpu  # CPU row
 
 Per dim_batch prints either a CALIB row (measured s/pass, extrapolated
 s/prompt, VRAM peak, projected hours at n=100/1000) or an OOM row.

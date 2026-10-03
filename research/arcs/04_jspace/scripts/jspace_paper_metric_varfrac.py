@@ -42,17 +42,17 @@ Without ``--out``, the default output name gains a ``_k{N}`` suffix.
 
 Examples (repo root):
     # 1.5B bf16, scan grid + validation against the committed scan
-    python examples/jspace_paper_metric_varfrac.py \
+    python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
         --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt
 
     # 1.5B, all valid positions at the decisive layers (paper population)
-    python examples/jspace_paper_metric_varfrac.py \
+    python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
         --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000
 
     # 7B nf4 counterpart
-    python examples/jspace_paper_metric_varfrac.py \
+    python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt \

@@ -8,9 +8,9 @@ checkpointing for overnight resumability, and a config sidecar recording
 every knob so the audit can tie the lens artifact to its provenance.
 
 Usage:
-    python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-7B-Instruct \
+    python research/arcs/04_jspace/scripts/jspace_fit_lens.py --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 --dim-batch 4 --n-prompts 1000
-    python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
+    python research/arcs/04_jspace/scripts/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
         --mode bf16 --dim-batch 32 --n-prompts 1000
 
 The saved lens (fp16, jlens native format) lands in the arc cache dir with a

@@ -23,7 +23,7 @@ source positions, is (mean_p J_l(p))^T v — one d_model vector per (probe, laye
 Valid positions use jlens's skip_first=16 rule.
 
 Usage:
-    python examples/jspace_quant_grad_probe.py \
+    python research/arcs/04_jspace/scripts/jspace_quant_grad_probe.py \
         --model Qwen/Qwen2.5-1.5B-Instruct --n-prompts 5 --n-probes 8
 
 Sequential load (bf16 then nf4) keeps peak VRAM at one model at a time. Prints a

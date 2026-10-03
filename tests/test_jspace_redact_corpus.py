@@ -9,7 +9,7 @@ Every ``NEGATIVE`` case below is a real false positive found against the
 committed corpora on 2026-07-29, and every ``POSITIVE`` shape is one the first
 draft of the regex missed. Run with:
 
-    python -m pytest examples/tests/test_jspace_redact_corpus.py
+    python -m pytest tests/test_jspace_redact_corpus.py
 """
 
 from __future__ import annotations
@@ -19,7 +19,8 @@ from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "research/arcs/04_jspace/scripts"))
 
 from jspace_redact_corpus import (  # noqa: E402
     REVIEWED_NOT_PII,
@@ -108,7 +109,7 @@ def test_committed_corpora_carry_no_unreviewed_pii() -> None:
     """
     import json
 
-    data_dir = Path(__file__).resolve().parents[2] / "research/arcs/04_jspace/data"
+    data_dir = REPO_ROOT / "research/arcs/04_jspace/data"
     corpora = sorted(data_dir.glob("*prompts*.json"))
     assert corpora, f"no corpora found under {data_dir}"
     offenders: list[str] = []

@@ -22,7 +22,7 @@ printed per panel, derived from the plotted artifacts.
 
 Deterministic, Agg backend, CPU only, no model; writes one PNG to the arc
 figures dir. Run from the repo root:
-    python examples/jspace_render_paper_metric_matched_kd.py
+    python research/arcs/04_jspace/scripts/jspace_render_paper_metric_matched_kd.py
 """
 
 from __future__ import annotations
@@ -248,8 +248,8 @@ def main() -> None:
         "source: data/paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100"
         "{,_heldoutc4en}.pt + data/paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100"
         "{,_heldoutc4en,_heldoutc4en_k58,_refitlens_k25,_refitlens_k58}.pt\n"
-        "(examples/jspace_paper_metric_varfrac.py) | "
-        "render: examples/jspace_render_paper_metric_matched_kd.py",
+        "(jspace_paper_metric_varfrac.py) | "
+        "render: jspace_render_paper_metric_matched_kd.py",
         ha="center",
         fontsize=7,
         color="#9a9a9a",

@@ -1,7 +1,7 @@
 """Paper-metric ceiling figure: excess FVE by depth, both models (issue #26).
 
 Reads the three ``paper_metric_varfrac_*`` artifacts produced by
-``examples/jspace_paper_metric_varfrac.py`` and renders ONE panel:
+``research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py`` and renders ONE panel:
 
 - solid lines: the paper-faithful metric — excess-over-random
   orthogonal-projection FVE at K = median occupancy
@@ -20,7 +20,7 @@ Headline: the 1.5B hump breaches the ceiling under the paper's own metric
 Deterministic, Agg backend; writes one PNG to the arc figures dir.
 
 Usage:
-    python examples/jspace_render_paper_metric_figure.py
+    python research/arcs/04_jspace/scripts/jspace_render_paper_metric_figure.py
 """
 
 from __future__ import annotations
@@ -166,8 +166,8 @@ def main() -> None:
         -0.02,
         "source: paper_metric_varfrac_{qwen2.5-1.5b-instruct_...bf16_n100,"
         "qwen2.5-7b-instruct_...nf4_n100,...bf16_n100_allpos}.pt "
-        "(examples/jspace_paper_metric_varfrac.py) | "
-        "render: examples/jspace_render_paper_metric_figure.py",
+        "(jspace_paper_metric_varfrac.py) | "
+        "render: jspace_render_paper_metric_figure.py",
         ha="center",
         fontsize=7,
         color="#9a9a9a",

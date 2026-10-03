@@ -14,10 +14,10 @@ sessions is how the knobs drift.
 
 PAUSING (the GPU is also the machine's gaming GPU)
 --------------------------------------------------
-    python examples/jspace_rerun_queue.py --pause-at-checkpoint   # cheapest
-    python examples/jspace_rerun_queue.py --pause                 # right now
-    python examples/jspace_rerun_queue.py --status
-    python examples/jspace_rerun_queue.py --resume    # pick up where it left off
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py --pause-at-checkpoint   # cheapest
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py --pause                 # right now
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py --status
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py --resume    # pick up where it left off
 
 Prefer `--pause-at-checkpoint` unless you need the card immediately: it waits
 for the next checkpoint write and pauses straight after, costing ~no rework,
@@ -36,8 +36,8 @@ itself resumes from that checkpoint. Re-invoking after any interruption —
 pause, crash, reboot — is always safe and never redoes finished work.
 
 usage:
-    python examples/jspace_rerun_queue.py [--dry-run] [--only TAG ...]
-    python examples/jspace_rerun_queue.py --pause | --resume | --status
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py [--dry-run] [--only TAG ...]
+    python research/arcs/04_jspace/scripts/jspace_rerun_queue.py --pause | --resume | --status
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent.parent
+REPO = Path(__file__).resolve().parents[4]
 ARC = REPO / "research" / "arcs" / "04_jspace"
 CACHE = ARC / "data" / "cache"
 LOGS = CACHE / "logs"
@@ -95,7 +95,7 @@ class Job:
     def argv(self) -> list[str]:
         argv = [
             sys.executable,
-            str(REPO / "examples" / "jspace_fit_lens.py"),
+            str(ARC / "scripts" / "jspace_fit_lens.py"),
             "--model", self.model,
             "--mode", self.mode,
             "--dim-batch", str(self.dim_batch),

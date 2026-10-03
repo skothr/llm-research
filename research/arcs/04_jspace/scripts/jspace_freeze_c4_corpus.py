@@ -24,8 +24,8 @@ dataset, so re-running reproduces the same 1000 records byte-for-byte. The
 frozen JSON is committed so downstream fits never re-stream.
 
 Usage:
-    python examples/jspace_freeze_c4_corpus.py            # write the JSON
-    python examples/jspace_freeze_c4_corpus.py --force    # overwrite existing
+    python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py            # write the JSON
+    python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --force    # overwrite existing
 
 Network: streaming needs huggingface.co. If the sandbox blocks it, re-run
 with the sandbox disabled (read-only public-dataset download).

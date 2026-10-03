@@ -29,7 +29,7 @@ Needs the FULL fitted lens (cache-only; regenerate via jspace_fit_lens.py) —
 the committed summary artifact in ``data/`` is therefore the auditable
 record. Model weights load on CPU via ``llm_research.hf_models.load_model``.
 
-Run from the repo root:  python examples/jspace_atom_norm_bias.py
+Run from the repo root:  python research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py
 """
 
 from __future__ import annotations

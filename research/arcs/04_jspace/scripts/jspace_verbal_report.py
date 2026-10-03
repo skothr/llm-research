@@ -66,13 +66,13 @@ clobbering the committed plain 4-condition artifacts — this arc had a clobber
 incident).
 
 Usage (full GPU run, stage 5.1b chat + 6 conditions):
-    python examples/jspace_verbal_report.py --device cuda \
+    python research/arcs/04_jspace/scripts/jspace_verbal_report.py --device cuda \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --layer 22 \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --prompt-style chat --contrastive
 
 CPU smoke (no CUDA):
-    python examples/jspace_verbal_report.py --device cpu \
+    python research/arcs/04_jspace/scripts/jspace_verbal_report.py --device cpu \
         --categories sport,fruit --targets-per-category 1 --strengths 1.0 \
         --max-new-tokens 4 --prompt-style chat --contrastive
 """

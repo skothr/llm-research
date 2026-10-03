@@ -19,8 +19,8 @@ lenses are not committed (issue #47). See `_CACHE_LFS` / `_CACHE_UNCOMMITTED`.
 
 Two modes — the mode is always explicit, so no invocation rewrites the
 manifest by accident (a bare run, or `--help`, prints usage and exits):
-    python examples/jspace_data_manifest.py --write    # (re)write MANIFEST.json
-    python examples/jspace_data_manifest.py --check    # verify, exit 1 on drift
+    python research/arcs/04_jspace/scripts/jspace_data_manifest.py --write    # (re)write MANIFEST.json
+    python research/arcs/04_jspace/scripts/jspace_data_manifest.py --check    # verify, exit 1 on drift
 
 The `--check` mode is the drift detector: it recomputes every sha256, AND
 re-derives each registered file's provenance fields from META, AND re-derives
@@ -50,7 +50,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
@@ -124,18 +124,18 @@ META: dict[str, dict[str, Any]] = {
     # ---- raw: external data / model-dependent captures ---------------------
     "fitting_prompts_wikitext103_n1000.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_fit_lens.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_fit_lens.py",
         "inputs": [],
         "requires_model": "none",
         "provenance": (
             "Salesforce/wikitext wikitext-103-raw-v1 train, first 1000 records "
-            ">= 600 chars, frozen by examples/jspace_fit_lens.py corpus step"
+            ">= 600 chars, frozen by research/arcs/04_jspace/scripts/jspace_fit_lens.py corpus step"
         ),
         "consumers": ["jlens_*.pt (frozen fitting corpus)"],
     },
     "fitting_prompts_c4en_n1000.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_freeze_c4_corpus.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
         "inputs": [],
         "requires_model": "none",
         "provenance": (
@@ -144,14 +144,14 @@ META: dict[str, dict[str, Any]] = {
             "len(text.strip()) >= 600 in post-shuffle order. Deterministic "
             "given the seed. Alternative fitting corpus for the "
             "corpus-sensitivity check (broader web-text register than the "
-            "wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py"
+            "wikitext-103 default); frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py"
         ),
         "consumers": ["jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"],
         "seed": 42,
     },
     "heldout_prompts_wikitext103_n30.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_readout_scan.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
         "inputs": [],
         "requires_model": "none",
         "provenance": (
@@ -165,7 +165,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "heldout_prompts_c4en_n30.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_freeze_c4_corpus.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
         "inputs": [],
         "requires_model": "none",
         "provenance": (
@@ -176,7 +176,7 @@ META: dict[str, dict[str, Any]] = {
             "fitting_prompts_c4en_n1000.json; verified zero overlap with it and "
             "with heldout_prompts_wikitext103_n30.json. Diversified (topically "
             "un-clustered) held-out control for the held-out-sample-robustness "
-            "check; frozen by examples/jspace_freeze_c4_corpus.py --offset 1000."
+            "check; frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --offset 1000."
         ),
         "consumers": [
             "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt "
@@ -186,7 +186,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "paperverbatim_items_n3.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_entailed_swap.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
         "inputs": [],
         # Hand-written: no producing run.
         "seed": None,
@@ -205,19 +205,19 @@ META: dict[str, dict[str, Any]] = {
     },
     # ---- lens artifacts (reduced layer subset, design Decision 4) ----------
     # Layers {0,5,10,15,20,25,26} of each full fitted lens, promoted to git-LFS
-    # by examples/jspace_promote_lens_subset.py from the July fits. Those
+    # by research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py from the July fits. Those
     # full 27-layer sets were never committed; the cache files of the same
     # names are later refits (see _L15_JULY / _L7B_JULY above). The
     # .config.json sidecars are top-level *.json deliverables too, so each gets
     # its own META entry.
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt": {
         "class": "raw",
-        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
         "inputs": [_L7B_JULY],
         "requires_model": "qwen-7b-nf4",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
-            "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
+            "research/arcs/04_jspace/scripts/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced "
             "subset promoted per design-plan Decision 4 (trailing layer 27 "
             "clamped to the last valid index 26). The full July set was never "
@@ -227,7 +227,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
         "inputs": [
             "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar (never "
             "committed; its fields survive in this subset sidecar); superseded "
@@ -242,19 +242,20 @@ META: dict[str, dict[str, Any]] = {
             "the July fit's sidecar plus subset_layers + full_set_location. "
             "Its wall_seconds (58543.6) is the July fit's; the cache sidecar's "
             "is the refit's (41333.8). "
-            "full_set_location hand-updated for issue #87; re-running the "
-            "script writes its generic text (issue #92)."
+            "full_set_location hand-updated for issue #87, and the script path "
+            "in it for the 2026-10-03 move of the arc's scripts (issue #122); "
+            "re-running the script writes its generic text (issue #92)."
         ),
         "consumers": ["jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"],
     },
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt": {
         "class": "raw",
-        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
         "inputs": [_L15_JULY],
         "requires_model": "qwen-1.5b-bf16",
         "provenance": (
             "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by "
-            "examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
+            "research/arcs/04_jspace/scripts/jspace_fit_lens.py on the frozen wikitext corpus (n=100, "
             "jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset "
             "promoted per design-plan Decision 4 (trailing layer 27 clamped to "
             "the last valid index 26). The full July set was never committed "
@@ -264,7 +265,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json": {
         "class": "raw",
-        "producing_script": "examples/jspace_promote_lens_subset.py",
+        "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
         "inputs": [
             "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar (never "
             "committed; its fields survive in this subset sidecar); superseded "
@@ -279,13 +280,14 @@ META: dict[str, dict[str, Any]] = {
             "the July fit's sidecar plus subset_layers + full_set_location. "
             "Its wall_seconds (10764.8) is the July fit's; the cache sidecar's "
             "is the refit's (7769.1). "
-            "full_set_location hand-updated for issue #87; re-running the "
-            "script writes its generic text (issue #92)."
+            "full_set_location hand-updated for issue #87, and the script path "
+            "in it for the 2026-10-03 move of the arc's scripts (issue #122); "
+            "re-running the script writes its generic text (issue #92)."
         ),
         "consumers": ["jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"],
     },
     # ---- derived metric/scan/swap artifacts (stage-7 promotion) ------------
-    # The small derived artifacts the audit (examples/jspace_audit_findings.py)
+    # The small derived artifacts the audit (research/arcs/04_jspace/scripts/jspace_audit_findings.py)
     # re-derives from, promoted out of data/cache/ into data/ for clean-clone
     # auditability. Built compactly below via _derived() and merged into META
     # (each entry's lens input names its fit generation, issue #87).
@@ -336,12 +338,12 @@ def _derived(
 
 _HW = "heldout_prompts_wikitext103_n30.json"
 _HC4 = "heldout_prompts_c4en_n30.json"
-_EVAL = "examples/jspace_lens_eval.py"
-_READ = "examples/jspace_readout_scan.py"
-_STRUCT = "examples/jspace_structure_scan.py"
-_VR = "examples/jspace_verbal_report.py"
-_ENT = "examples/jspace_entailed_swap.py"
-_XTIE = "examples/jspace_nla_crosstie.py"
+_EVAL = "research/arcs/04_jspace/scripts/jspace_lens_eval.py"
+_READ = "research/arcs/04_jspace/scripts/jspace_readout_scan.py"
+_STRUCT = "research/arcs/04_jspace/scripts/jspace_structure_scan.py"
+_VR = "research/arcs/04_jspace/scripts/jspace_verbal_report.py"
+_ENT = "research/arcs/04_jspace/scripts/jspace_entailed_swap.py"
+_XTIE = "research/arcs/04_jspace/scripts/jspace_nla_crosstie.py"
 # The --seed default (0) of _VR, _ENT and _XTIE; no recorded command passes
 # --seed, and the default has been 0 since each script's first commit.
 _SEED_CLI_DEFAULT = 0
@@ -637,7 +639,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
     ),
     # -- paper-metric ceiling recompute x3 + norm-bias x1 (issue #26) ---------
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
-        "examples/jspace_paper_metric_varfrac.py",
+        "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
         [_L15_JULY, _HW, "structure_scan_...1.5b...bf16_n100.pt (validation reference)"],
         "qwen-1.5b-bf16",
         "Paper-faithful ceiling metric (excess-over-random orthogonal-projection "
@@ -657,7 +659,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "--n-rand 8 --rand-seed-base 10000",
     ),
     "paper_metric_varfrac_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_allpos.pt": _derived(
-        "examples/jspace_paper_metric_varfrac.py",
+        "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
         [_L15_JULY, _HW],
         "qwen-1.5b-bf16",
         "Paper-metric all-positions sweep (every position in [16, seq_len-2]; "
@@ -675,7 +677,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "--all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
     ),
     "paper_metric_varfrac_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
-        "examples/jspace_paper_metric_varfrac.py",
+        "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
         [_L7B_JULY, _HW, "structure_scan_...7b...nf4_n100.pt (validation reference)"],
         "qwen-7b-nf4",
         "7B counterpart of the paper-metric recompute (scan grid, bit-exact "
@@ -693,7 +695,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         "--n-rand 8 --rand-seed-base 30000",
     ),
     "atom_norm_bias_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt": _derived(
-        "examples/jspace_atom_norm_bias.py",
+        "research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
         [_L7B_JULY, "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"],
         "qwen-7b-nf4",
         "7B counterpart of the norm-bias summary (W_U untied, read from the "
@@ -706,7 +708,7 @@ _DERIVED: dict[str, dict[str, Any]] = {
         ["obs 2026-07-24-paper-metric-varfrac-recompute.md", "audit Check M"],
     ),
     "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt": _derived(
-        "examples/jspace_atom_norm_bias.py",
+        "research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
         [_L15_JULY, "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"],
         "qwen-1.5b-bf16",
         "Pursuit atom-norm selection-bias summary (issue #26): per-layer "
@@ -785,7 +787,7 @@ for _axis, _fname, _lens, _model, _detail, _args in [
     ),
 ]:
     _DERIVED[_fname] = _derived(
-        "examples/jspace_paper_metric_varfrac.py",
+        "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
         [_lens, _HC4 if "heldout" in _fname else _HW],
         _model,
         f"Paper-metric robustness axis — {_axis}: excess-over-random "
@@ -866,7 +868,7 @@ for _fname, _scan, _prompts, _k, _log, _detail in [
     ),
 ]:
     _DERIVED[_fname] = _derived(
-        "examples/jspace_paper_metric_varfrac.py",
+        "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
         [_L7B_REFIT, _prompts, f"{_scan} (validation reference)"],
         "qwen-7b-nf4",
         f"Dimension-matched paper-metric recompute (issue #83): excess-over-"
@@ -895,7 +897,7 @@ _UNREGISTERED: dict[str, Any] = {
     "producing_command": None,
     "inputs": [],
     "requires_model": None,
-    "provenance": "UNREGISTERED — add a META entry in examples/jspace_data_manifest.py",
+    "provenance": "UNREGISTERED — add a META entry in research/arcs/04_jspace/scripts/jspace_data_manifest.py",
     "consumers": [],
     # No "seed": the producer is unknown, so neither null (draws no random
     # numbers) nor a value can be claimed until a META entry exists.
@@ -938,7 +940,16 @@ def _deliverables() -> list[str]:
 # for these, or where a META entry sets "seed" itself (a hand-written input, a
 # command that draws nothing); any other entry without a seed is an error, so
 # an unannotated random producer cannot be recorded as deterministic.
-NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/jspace_atom_norm_bias.py", "examples/jspace_fit_lens.py", "examples/jspace_lens_eval.py", "examples/jspace_promote_lens_subset.py", "examples/jspace_readout_scan.py", "examples/jspace_structure_scan.py"})
+NO_RNG_PRODUCERS: frozenset[str] = frozenset(
+    {
+        "research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
+        "research/arcs/04_jspace/scripts/jspace_fit_lens.py",
+        "research/arcs/04_jspace/scripts/jspace_lens_eval.py",
+        "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
+        "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+        "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+    }
+)
 
 
 def _seed(name: str, m: dict[str, Any]) -> int | str | None:
@@ -1053,7 +1064,7 @@ _JLENS_PIN: dict[str, Any] = {
         "The J-lens fit/readout implementation (jlens.fit, native .pt "
         "format) that produced every lens + derived artifact in this "
         "manifest. The multihop / association intermediate-concept eval "
-        "prompt sets used by examples/jspace_lens_eval.py also live in "
+        "prompt sets used by research/arcs/04_jspace/scripts/jspace_lens_eval.py also live in "
         "that repository, so the eval tables (audit Check B) are "
         "reproducible only against this pinned commit. Check it out at "
         "the commit above and point JSPACE_EVAL_DIR at its "

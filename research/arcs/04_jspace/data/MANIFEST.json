@@ -7,19 +7,19 @@
     "subject": "Initial release",
     "author_date": "2026-07-01",
     "commit_date": "2026-07-02",
-    "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by examples/jspace_lens_eval.py also live in that repository, so the eval tables (audit Check B) are reproducible only against this pinned commit. Check it out at the commit above and point JSPACE_EVAL_DIR at its data/evaluations (the default assumes a sibling checkout at ../jacobian-lens)."
+    "provenance": "The J-lens fit/readout implementation (jlens.fit, native .pt format) that produced every lens + derived artifact in this manifest. The multihop / association intermediate-concept eval prompt sets used by research/arcs/04_jspace/scripts/jspace_lens_eval.py also live in that repository, so the eval tables (audit Check B) are reproducible only against this pinned commit. Check it out at the commit above and point JSPACE_EVAL_DIR at its data/evaluations (the default assumes a sibling checkout at ../jacobian-lens)."
   },
   "trust_note": "Lens .pt files load via jlens / torch.load (pickle). Safe here in the deserialization sense: every .pt is a locally-fitted tensor dump produced by this repo's own scripts, never an externally supplied pickle; the corpora are plain JSON. That is a statement about pickle trust ONLY \u2014 the corpora themselves ARE third-party data (C4 under ODC-BY, WikiText-103 under CC BY-SA; see LICENSE-DATA.md) and the C4 files are PII-redacted (see README.md). Verify sha256 with `--check` before loading on an untrusted copy.",
   "total_files": 56,
-  "total_size_bytes": 273211722,
+  "total_size_bytes": 273211814,
   "files": [
     {
       "filename": "atom_norm_bias_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt",
       "sha256": "d7d8ec9ea9796ddccd3f37f3b623419e6ece85bb11a8688ef6cc479d31722ccd",
       "size_bytes": 4745,
       "class": "derived",
-      "producing_script": "examples/jspace_atom_norm_bias.py",
-      "producing_command": "python examples/jspace_atom_norm_bias.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "structure_scan_...1.5b...bf16_n100.pt (selected top_atoms)"
@@ -37,8 +37,8 @@
       "sha256": "b0eb04102bdde9657fb6c140074d861a82229670b32412faec0dee740ce0d900",
       "size_bytes": 5163,
       "class": "derived",
-      "producing_script": "examples/jspace_atom_norm_bias.py",
-      "producing_command": "python examples/jspace_atom_norm_bias.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "structure_scan_...7b...nf4_n100.pt (selected top_atoms)"
@@ -56,8 +56,8 @@
       "sha256": "fc1d164e7c5ff754e614a9a19b75f1e005040ce97bb3ee499dc5263367c4efd5",
       "size_bytes": 762791,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -74,8 +74,8 @@
       "sha256": "4722e0a8c0fce7010d3e02f6bd8146064d7c4361ce73ca37783d6f1f1dbf5a58",
       "size_bytes": 46701,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -92,8 +92,8 @@
       "sha256": "7d4baafb747651b900e5d4273aef94630cd39435c771d7c4a3aaba1cc3e13c76",
       "size_bytes": 157293,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -110,8 +110,8 @@
       "sha256": "907f41c8bbfd70ec3fa292d7f8da6fcc1079a90daba9860bc26333f225e8b4be",
       "size_bytes": 45235,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -128,8 +128,8 @@
       "sha256": "4034b9c9ece5fa096a00ced7163d42036ef677b20db097af6c37cf96e06d3640",
       "size_bytes": 537977,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -146,8 +146,8 @@
       "sha256": "7b9204b6a830fa6810ff3d62065eadb342d7f18756f4eb76154d1c31c51d02a1",
       "size_bytes": 601819,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -164,8 +164,8 @@
       "sha256": "f63799fbe31a112e534a88cf17cc32aed9062c0aab4ec2980c4a9dfb7d6ac802",
       "size_bytes": 568027,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -182,8 +182,8 @@
       "sha256": "d5a02044d45f36f865430282e16f60f304f0498b5d28e66c7b5eb4d669b316c8",
       "size_bytes": 558457,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -200,8 +200,8 @@
       "sha256": "19fd04cbbf67641c3a40e6147079452451276b1ea7112449214359bbf9a1cb04",
       "size_bytes": 609883,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -218,8 +218,8 @@
       "sha256": "70f26b8d7a14292b25b60afc1ae50074ecc78cce1cfb1a2ad59da797e519dddf",
       "size_bytes": 587513,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -236,8 +236,8 @@
       "sha256": "b3b2b71550595c021c5f5d5af293d56d5524b69f50293cc03988d9aaa85c0ad6",
       "size_bytes": 585087,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -254,8 +254,8 @@
       "sha256": "97bb5786f06717a1fe9284db73b1bb9fac932edb1d33260d2628e62b74e812c8",
       "size_bytes": 551905,
       "class": "derived",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -269,14 +269,14 @@
     },
     {
       "filename": "fitting_prompts_c4en_n1000.json",
-      "sha256": "a9ad43775363f44ad17f411d32d8210d9f9c10915bf8d6f128f495e58c051364",
-      "size_bytes": 3491293,
+      "sha256": "6a82f4e048203c5c46b5826f9f5fcc342835840d3b14f0732d71738734909882",
+      "size_bytes": 3491316,
       "class": "raw",
-      "producing_script": "examples/jspace_freeze_c4_corpus.py",
-      "producing_command": "python examples/jspace_freeze_c4_corpus.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
       "inputs": [],
       "requires_model": "none",
-      "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); first 1000 records with len(text.strip()) >= 600 in post-shuffle order. Deterministic given the seed. Alternative fitting corpus for the corpus-sensitivity check (broader web-text register than the wikitext-103 default); frozen by examples/jspace_freeze_c4_corpus.py",
+      "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); first 1000 records with len(text.strip()) >= 600 in post-shuffle order. Deterministic given the seed. Alternative fitting corpus for the corpus-sensitivity check (broader web-text register than the wikitext-103 default); frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
       "consumers": [
         "jlens_*_c4en.pt (corpus-sensitivity fitting corpus)"
       ],
@@ -287,11 +287,11 @@
       "sha256": "a9a6153f4cb067d4ae4914047d3c52f7d1a5c3530eac7899985c166a7e0700e4",
       "size_bytes": 995236,
       "class": "raw",
-      "producing_script": "examples/jspace_fit_lens.py",
-      "producing_command": "python examples/jspace_fit_lens.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_fit_lens.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_fit_lens.py",
       "inputs": [],
       "requires_model": "none",
-      "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, first 1000 records >= 600 chars, frozen by examples/jspace_fit_lens.py corpus step",
+      "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, first 1000 records >= 600 chars, frozen by research/arcs/04_jspace/scripts/jspace_fit_lens.py corpus step",
       "consumers": [
         "jlens_*.pt (frozen fitting corpus)"
       ],
@@ -299,14 +299,14 @@
     },
     {
       "filename": "heldout_prompts_c4en_n30.json",
-      "sha256": "1e533fdeebda8f69805593cef85240ecb68527f6e405740fcb9a0343ff134c9f",
-      "size_bytes": 67773,
+      "sha256": "a1edfdcde1ad2d7e1e583e2934600133eedd7c2ecbb1618399816b56a64d811b",
+      "size_bytes": 67796,
       "class": "raw",
-      "producing_script": "examples/jspace_freeze_c4_corpus.py",
-      "producing_command": "python examples/jspace_freeze_c4_corpus.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py",
       "inputs": [],
       "requires_model": "none",
-      "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); skip first 1000 accepted (the n=1000 fitting slice), then records 1001-1030 with len(text.strip()) >= 600 in post-shuffle order; deduped against fitting_prompts_c4en_n1000.json; verified zero overlap with it and with heldout_prompts_wikitext103_n30.json. Diversified (topically un-clustered) held-out control for the held-out-sample-robustness check; frozen by examples/jspace_freeze_c4_corpus.py --offset 1000.",
+      "provenance": "allenai/c4 config en, split train, streamed with shuffle(seed=42, buffer_size=10000); skip first 1000 accepted (the n=1000 fitting slice), then records 1001-1030 with len(text.strip()) >= 600 in post-shuffle order; deduped against fitting_prompts_c4en_n1000.json; verified zero overlap with it and with heldout_prompts_wikitext103_n30.json. Diversified (topically un-clustered) held-out control for the held-out-sample-robustness check; frozen by research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --offset 1000.",
       "consumers": [
         "readout_scan_*_heldoutc4en.pt / structure_scan_*_heldoutc4en.pt (diversified held-out evaluation prompts)"
       ],
@@ -317,8 +317,8 @@
       "sha256": "36697cf989c823977df25d42f41875f8540c162e97b67a9a34e3c5246ccbeb5e",
       "size_bytes": 27285,
       "class": "raw",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [],
       "requires_model": "none",
       "provenance": "Salesforce/wikitext wikitext-103-raw-v1 train, records 1001-1030 under the same >=600-char filter as the fitting corpus; verified zero overlap with fitting_prompts_wikitext103_n1000.json. NOTE: 30 CONSECUTIVE records -> topically clustered; the diversified C4 held-out set below is the robustness control.",
@@ -329,16 +329,16 @@
     },
     {
       "filename": "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.config.json",
-      "sha256": "5959d78ac58392c9f52b824fa1f84978aa9d806ef26de74b8064dc6d32aee0e4",
-      "size_bytes": 1291,
+      "sha256": "8ece11c8013b76bf195e205ffc820c8f06dd450bb0c6ceb79edfc9120aeeea73",
+      "size_bytes": 1314,
       "class": "raw",
-      "producing_script": "examples/jspace_promote_lens_subset.py",
-      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.config.json, the July fit's sidecar (never committed; its fields survive in this subset sidecar); superseded in data/cache/ by the refit's sidecar of the same name (data/cache/, committed as a plain blob; present in every default clone); see the jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt entry's inputs and data/README.md (Decision 4 and its 2026-08-16 amendment)"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (10764.8) is the July fit's; the cache sidecar's is the refit's (7769.1). full_set_location hand-updated for issue #87; re-running the script writes its generic text (issue #92).",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (10764.8) is the July fit's; the cache sidecar's is the refit's (7769.1). full_set_location hand-updated for issue #87, and the script path in it for the 2026-10-03 move of the arc's scripts (issue #122); re-running the script writes its generic text (issue #92).",
       "consumers": [
         "jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt (sidecar)"
       ],
@@ -349,13 +349,13 @@
       "sha256": "f96d30f44244787cba4bdd67c618558452ac82e93c26936629a9e9e0220f35c0",
       "size_bytes": 33033931,
       "class": "raw",
-      "producing_script": "examples/jspace_promote_lens_subset.py",
-      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-1.5b-bf16",
-      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by research/arcs/04_jspace/scripts/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 3 h GPU fit completed 2026-07-18. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
       ],
@@ -363,16 +363,16 @@
     },
     {
       "filename": "jlens_qwen2.5-7b_nf4_n100_layer-subset.config.json",
-      "sha256": "90a31284c55863e43bc324c0918553753e0547f4c8be48e93639fdebda3e167e",
-      "size_bytes": 1285,
+      "sha256": "8cd246cfaebfa1e95312b272b828af6f56a37cb0f6e2ab3f3274490ae8765b20",
+      "size_bytes": 1308,
       "class": "raw",
-      "producing_script": "examples/jspace_promote_lens_subset.py",
-      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.config.json, the July fit's sidecar (never committed; its fields survive in this subset sidecar); superseded in data/cache/ by the refit's sidecar of the same name (data/cache/, committed as a plain blob; present in every default clone); see the jlens_qwen2.5-7b_nf4_n100_layer-subset.pt entry's inputs and data/README.md (Decision 4 and its 2026-08-16 amendment)"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (58543.6) is the July fit's; the cache sidecar's is the refit's (41333.8). full_set_location hand-updated for issue #87; re-running the script writes its generic text (issue #92).",
+      "provenance": "Provenance sidecar for jlens_qwen2.5-7b_nf4_n100_layer-subset.pt: the July fit's sidecar plus subset_layers + full_set_location. Its wall_seconds (58543.6) is the July fit's; the cache sidecar's is the refit's (41333.8). full_set_location hand-updated for issue #87, and the script path in it for the 2026-10-03 move of the arc's scripts (issue #122); re-running the script writes its generic text (issue #92).",
       "consumers": [
         "jlens_qwen2.5-7b_nf4_n100_layer-subset.pt (sidecar)"
       ],
@@ -383,13 +383,13 @@
       "sha256": "b81df97ca0aef5717d0a3f36be4db35b09c456cca6f5e02a4d6df0dc677640aa",
       "size_bytes": 179834532,
       "class": "raw",
-      "producing_script": "examples/jspace_promote_lens_subset.py",
-      "producing_command": "python examples/jspace_promote_lens_subset.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
       "requires_model": "qwen-7b-nf4",
-      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by examples/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
+      "provenance": "Layers {0,5,10,15,20,25,26} of the full 27-layer J-lens fitted by research/arcs/04_jspace/scripts/jspace_fit_lens.py on the frozen wikitext corpus (n=100, jlens defaults); 16.26 h GPU fit completed 2026-07-20. Reduced subset promoted per design-plan Decision 4 (trailing layer 27 clamped to the last valid index 26). The full July set was never committed (see inputs).",
       "consumers": [
         "clean-clone lens inspection at representative depths"
       ],
@@ -400,8 +400,8 @@
       "sha256": "b0d4045d8032cf09bae0c3cd160962f621d04bafb00d2bdb6bb066ec8aae2a37",
       "size_bytes": 115203,
       "class": "derived",
-      "producing_script": "examples/jspace_lens_eval.py",
-      "producing_command": "python examples/jspace_lens_eval.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_lens_eval.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_lens_eval.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -418,8 +418,8 @@
       "sha256": "aa092c345e4729d5019781cfc30307fd69a88e8b93b5d4efc3462c86c2d8e84e",
       "size_bytes": 174561,
       "class": "derived",
-      "producing_script": "examples/jspace_lens_eval.py",
-      "producing_command": "python examples/jspace_lens_eval.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_lens_eval.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_lens_eval.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)"
       ],
@@ -436,8 +436,8 @@
       "sha256": "02a5bd9a3ad149dd26daea32610ddbd68d5cf9a5677a79c1e8479c7516fecb64",
       "size_bytes": 176125,
       "class": "derived",
-      "producing_script": "examples/jspace_lens_eval.py",
-      "producing_command": "python examples/jspace_lens_eval.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_lens_eval.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_lens_eval.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, not committed \u2014 issue #47)"
       ],
@@ -454,8 +454,8 @@
       "sha256": "5c3edf23c7e33a2652f68fa74df633fdf21067693410a6933ff0dda368d228a4",
       "size_bytes": 116533,
       "class": "derived",
-      "producing_script": "examples/jspace_lens_eval.py",
-      "producing_command": "python examples/jspace_lens_eval.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_lens_eval.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_lens_eval.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -472,8 +472,8 @@
       "sha256": "92e04c7d7791d6f8e6b900482e96de61a8f5a41bc27ddc6ba719bce8599476a9",
       "size_bytes": 8311941,
       "class": "derived",
-      "producing_script": "examples/jspace_nla_crosstie.py",
-      "producing_command": "python examples/jspace_nla_crosstie.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_nla_crosstie.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_nla_crosstie.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -490,8 +490,8 @@
       "sha256": "f5fdfbb863bd7d2bb0f1e083121853d767cabcf12754c57514a595e8ceb26a2e",
       "size_bytes": 336493,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt --n-rand 8 --rand-seed-base 10000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json",
@@ -511,8 +511,8 @@
       "sha256": "49b143ca411c5c99e29d379761fd5caad99d8a4c8d6689624b4e883c5cf6bb80",
       "size_bytes": 947671,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
@@ -531,8 +531,8 @@
       "sha256": "acbd07d1db6be89deaf679ae8c0074965759a04792e1bba335a1469254b025ac",
       "size_bytes": 336523,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-rand 8 --rand-seed-base 10000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_c4en.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
@@ -550,8 +550,8 @@
       "sha256": "095c302b9f55e5a308f574aa113bd952c216bb576e8edaa6acc2539bbfebbc1b",
       "size_bytes": 336501,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 10000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode bf16 --lens <cache>/jlens_qwen2.5-1.5b_bf16_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 10000",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -569,8 +569,8 @@
       "sha256": "e40a56bf587cb67d9e66ae2131d9dbedccf1a574bf20772bbc5617c6a6ad967d",
       "size_bytes": 336487,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt --n-rand 8 --rand-seed-base 10000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n100.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, not committed \u2014 issue #47)",
         "heldout_prompts_wikitext103_n30.json"
@@ -588,8 +588,8 @@
       "sha256": "c9434d26ec0fc83be55c4bedb53484d4e3afd98fabb737c00fc683d5915bf933",
       "size_bytes": 336807,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n500.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt --n-rand 8 --rand-seed-base 10000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --mode nf4 --lens <cache>/jlens_qwen2.5-1.5b_nf4_n500.pt --scan <data>/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_nf4_n500.pt --n-rand 8 --rand-seed-base 10000",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, not committed \u2014 issue #47)",
         "heldout_prompts_wikitext103_n30.json"
@@ -607,8 +607,8 @@
       "sha256": "304c1310b9e5f9f30e9b8b35dfae741e133f3f0de31be0a831638ed48bcaae97",
       "size_bytes": 334671,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --n-rand 8 --rand-seed-base 30000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --n-rand 8 --rand-seed-base 30000",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json",
@@ -628,8 +628,8 @@
       "sha256": "4cad74d0b1bbe110eb2716b8ce23f0f60a997d85b8f895dc3213586d228163bc",
       "size_bytes": 335831,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 30000",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-rand 8 --rand-seed-base 30000",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -647,8 +647,8 @@
       "sha256": "ad3447c4100cc2c7258823b0c3a3633446ca982d4b1a3fdde370df528c46d769",
       "size_bytes": 337647,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100_heldoutc4en.pt --prompts <data>/heldout_prompts_c4en_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json",
@@ -667,8 +667,8 @@
       "sha256": "2c077b006f2498f6121488a81587a898b394f9bfa06055703c97d4040dbb75f2",
       "size_bytes": 336163,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 25",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 25",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json",
@@ -687,8 +687,8 @@
       "sha256": "b6167f1679c45f7a852b9d458119130a4bb57c6388e10c79ebde94b733e5ab76",
       "size_bytes": 337251,
       "class": "derived",
-      "producing_script": "examples/jspace_paper_metric_varfrac.py",
-      "producing_command": "python examples/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens <cache>/jlens_qwen2.5-7b_nf4_n100.pt --scan <data>/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt --prompts <data>/heldout_prompts_wikitext103_n30.json --n-prompts 30 --n-rand 8 --rand-seed-base 30000 --k-snap 25 --k-max 64 --k-fixed 58",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json",
@@ -707,8 +707,8 @@
       "sha256": "7b790cd5731aff052272383fa7fdfbf241f63a1bc5efc97250889727be18188a",
       "size_bytes": 637,
       "class": "raw",
-      "producing_script": "examples/jspace_entailed_swap.py",
-      "producing_command": "python examples/jspace_entailed_swap.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_entailed_swap.py",
       "inputs": [],
       "requires_model": "none",
       "provenance": "Hand-written 3-item bank for the 2026-07-22 verbatim-prompt / cue-redundancy probe (stage-5.2 observation addendum): the paper's exact 'animal that spins webs' prompt [gurnee2026-workspace sec 3.3] plus two minimal-cue items. Consumed via jspace_entailed_swap.py --items-json.",
@@ -722,8 +722,8 @@
       "sha256": "714799efc2d4dac526761c51b7d53d76bee765946cb51c5c0eeaf2728d1c5f63",
       "size_bytes": 2173693,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
@@ -741,8 +741,8 @@
       "sha256": "7845ffe86a16ba02c4a2276bf9a267be31a228e6b5bc674ecc9a0d5037b446e4",
       "size_bytes": 2175515,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
@@ -760,8 +760,8 @@
       "sha256": "74de6f444823115da2a78db74fcc89d5ee8fd3fb62f5a6dbf5e9f138796eff46",
       "size_bytes": 5460485,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -779,8 +779,8 @@
       "sha256": "264cd790b1511f7bd3cc6d94a96db2d4215b843dd7a9a1da14693fc54639da5c",
       "size_bytes": 2172599,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, not committed \u2014 issue #47)",
         "heldout_prompts_wikitext103_n30.json"
@@ -798,8 +798,8 @@
       "sha256": "f2fd6ab42871d4461c18559993d8a66fa296225c349c557e1c6f5ef706568d01",
       "size_bytes": 2228511,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
@@ -817,8 +817,8 @@
       "sha256": "7b449ff0bcfe13f1cf1e287d35b9579ab34ba323ecb224620e6019a530f18e12",
       "size_bytes": 5577959,
       "class": "derived",
-      "producing_script": "examples/jspace_readout_scan.py",
-      "producing_command": "python examples/jspace_readout_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_readout_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_readout_scan.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -836,8 +836,8 @@
       "sha256": "21e70b0144c65e485e20c17196b0fd8afa5210c754e96fffa6b800295defaef5",
       "size_bytes": 2393801,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
@@ -855,8 +855,8 @@
       "sha256": "d745080c44138981052a8c5a6013e07646b3da461e4448bdf9f4179eb17efe29",
       "size_bytes": 2381351,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100_c4en.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 on the redacted C4 corpus and committed 2026-08-16, sha256 661bb70494acd215d1e2da58b87ebeb440af0ae749953a9f8b4a99a30fdab5a9 (not verified by --check, which skips cache files)",
         "heldout_prompts_wikitext103_n30.json"
@@ -874,8 +874,8 @@
       "sha256": "497b8711ddf4336c7492b8eba7f64b4a1a38cb92076c36f5762258d2a80839b7",
       "size_bytes": 2399057,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the refit completed 2026-07-29 and committed 2026-08-16, sha256 db54f1f0199c238e8efc4a950785af7ad635dd64eb1976c3f61c895f4ea02abe (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -893,8 +893,8 @@
       "sha256": "49bb04c488f2612f4df874ec74aacaca1af719847ec502a97f1297f0849b1e1a",
       "size_bytes": 2391875,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n100.pt (data/cache/, not committed \u2014 issue #47)",
         "heldout_prompts_wikitext103_n30.json"
@@ -912,8 +912,8 @@
       "sha256": "45bcd6bb766f8d79e318fcf50439e27f0d6e1aaa0925309c49021e154dbc7634",
       "size_bytes": 2389571,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_nf4_n500.pt (data/cache/, not committed \u2014 issue #47)",
         "heldout_prompts_wikitext103_n30.json"
@@ -931,8 +931,8 @@
       "sha256": "c9e96f3d0c959162d9911d29aa786b7c2d7c358aadb72741febd085ab2920487",
       "size_bytes": 2311851,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact",
         "heldout_prompts_wikitext103_n30.json"
@@ -950,8 +950,8 @@
       "sha256": "aa81f84a80f4e5a13d6ab45db4db1306d73df8ad80a0a412d99e9c30ed24f6f9",
       "size_bytes": 2317299,
       "class": "derived",
-      "producing_script": "examples/jspace_structure_scan.py",
-      "producing_command": "python examples/jspace_structure_scan.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_structure_scan.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_structure_scan.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt (data/cache/, LFS-committed; excluded from default pulls); the 2026-08-16 refit, sha256 4704ee3b2cd75b35cf83fb288c1bba5d9db3daf7ed3e8e105f6c1b552f1c77db (not verified by --check, which skips cache files)",
         "heldout_prompts_c4en_n30.json"
@@ -969,8 +969,8 @@
       "sha256": "b7f950d6fa83d2c17f25f41a352c4de484fe866bfa46e118395807f563f33177",
       "size_bytes": 164979,
       "class": "derived",
-      "producing_script": "examples/jspace_verbal_report.py",
-      "producing_command": "python examples/jspace_verbal_report.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_verbal_report.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_verbal_report.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -987,8 +987,8 @@
       "sha256": "5afef56487faa7428aecf0c18818e916e9ebabfbd884e660803d71771c0fcb0c",
       "size_bytes": 164117,
       "class": "derived",
-      "producing_script": "examples/jspace_verbal_report.py",
-      "producing_command": "python examples/jspace_verbal_report.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_verbal_report.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_verbal_report.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -1005,8 +1005,8 @@
       "sha256": "49a698b72025b450a1f7e50f7e0fb7523d683a6d0f0247119f93bd5894335691",
       "size_bytes": 113987,
       "class": "derived",
-      "producing_script": "examples/jspace_verbal_report.py",
-      "producing_command": "python examples/jspace_verbal_report.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_verbal_report.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_verbal_report.py",
       "inputs": [
         "jlens_qwen2.5-1.5b_bf16_n100.pt, the July pre-refit lens (fit completed 2026-07-18); never committed in full; the cache file of the same name is the 2026-07-29 refit; its only committed part is the layer subset jlens_qwen2.5-1.5b_bf16_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],
@@ -1023,8 +1023,8 @@
       "sha256": "c29924890da8f4a1949cd5a3dd0b68161734a7335f975d1404249f8dc6579cfc",
       "size_bytes": 112805,
       "class": "derived",
-      "producing_script": "examples/jspace_verbal_report.py",
-      "producing_command": "python examples/jspace_verbal_report.py",
+      "producing_script": "research/arcs/04_jspace/scripts/jspace_verbal_report.py",
+      "producing_command": "python research/arcs/04_jspace/scripts/jspace_verbal_report.py",
       "inputs": [
         "jlens_qwen2.5-7b_nf4_n100.pt, the July pre-refit lens (fit completed 2026-07-20); never committed in full; the cache file of the same name is the 2026-08-16 refit; its only committed part is the layer subset jlens_qwen2.5-7b_nf4_n100_layer-subset.pt; the entry's producing_command names the --lens path that now holds the refit, so it does not reproduce the July artifact"
       ],

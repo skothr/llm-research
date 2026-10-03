@@ -42,7 +42,7 @@ aborts.
 Deterministic, Agg backend, single PNG.
 
 Usage:
-    python examples/jspace_render_entailed.py
+    python research/arcs/04_jspace/scripts/jspace_render_entailed.py
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ from _jspace_paths import resolve
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-22-jspace-entailed-property.png"
 
@@ -223,7 +223,7 @@ def main() -> None:
     axes = cast("list[Axes]", list(axes))
 
     # Precompute the seeded bootstrap 95% CIs for the J-lens auto-only means
-    # (methodology per examples/jspace_swap_significance.py; added 2026-07-24
+    # (methodology per research/arcs/04_jspace/scripts/jspace_swap_significance.py; added 2026-07-24
     # with the significance certification, issue #26) so the y-limit can
     # accommodate the whiskers — a clipped whisker misrepresents the interval.
     ymax = 0.0

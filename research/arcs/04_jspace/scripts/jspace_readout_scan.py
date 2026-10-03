@@ -22,9 +22,9 @@ records index 1001-1030 under the same len>=600 filter as the fitting corpus,
 strictly disjoint from the first-1000 fitting set. No network access at run time.
 
 Usage:
-    python examples/jspace_readout_scan.py --n-prompts 12
-    python examples/jspace_readout_scan.py --n-prompts 12 --layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26
-    python examples/jspace_readout_scan.py --qualitative 2   # top-5 token trajectories
+    python research/arcs/04_jspace/scripts/jspace_readout_scan.py --n-prompts 12
+    python research/arcs/04_jspace/scripts/jspace_readout_scan.py --n-prompts 12 --layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26
+    python research/arcs/04_jspace/scripts/jspace_readout_scan.py --qualitative 2   # top-5 token trajectories
 
 Run CPU-only via CUDA_VISIBLE_DEVICES="" when a GPU job holds the device.
 """

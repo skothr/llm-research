@@ -6,7 +6,7 @@ the paper's layer x top-5 "unspoken words" token grid could not be rendered
 and this figure was the specified fallback. The rich-capture patch later
 that day added per-layer top-k ids/strings/probs to the scan artifacts;
 the trajectory grid is now rendered by
-``examples/jspace_render_trajectory.py``. This figure remains the
+``research/arcs/04_jspace/scripts/jspace_render_trajectory.py``. This figure remains the
 depth-of-emergence comparison plus the per-layer output-predictive
 Spearman curves, from the scan summaries, for both models.
 
@@ -27,7 +27,7 @@ Two panels:
 Deterministic, Agg backend, single PNG.
 
 Usage:
-    python examples/jspace_render_emergence.py
+    python research/arcs/04_jspace/scripts/jspace_render_emergence.py
 """
 
 from __future__ import annotations
@@ -54,7 +54,7 @@ from _jspace_paths import resolve
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"
 OUT = FIGDIR / "2026-07-21-jspace-emergence.png"
 

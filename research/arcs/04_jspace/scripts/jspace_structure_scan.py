@@ -75,8 +75,8 @@ Trajectory: pursuit runs to ``k_max = max(--ks)`` and snapshots
 headline k is 25.
 
 Usage:
-    python examples/jspace_structure_scan.py --n-prompts 30           # 1.5B bf16
-    python examples/jspace_structure_scan.py \
+    python research/arcs/04_jspace/scripts/jspace_structure_scan.py --n-prompts 30           # 1.5B bf16
+    python research/arcs/04_jspace/scripts/jspace_structure_scan.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --n-prompts 30

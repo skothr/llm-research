@@ -5,7 +5,7 @@ Per the signed-off design plan (Decision 4,
 tensor set (27 layers x d_model^2 fp16, ~127 MB at 1.5B / ~694 MB at 7B) lives
 under `data/cache/` (LFS-committed, excluded from default pulls — fetch with
 `git lfs pull --include="research/arcs/04_jspace/data/cache/**" --exclude=""`;
-or regenerate via `examples/jspace_fit_lens.py`), while a reduced layer subset
+or regenerate via `research/arcs/04_jspace/scripts/jspace_fit_lens.py`), while a reduced layer subset
 is committed via
 git-LFS under `research/arcs/04_jspace/data/` so a clean clone can inspect
 representative depths without the multi-GB fit.
@@ -24,9 +24,9 @@ filename) and `"subset_layers"` provenance keys, and writes
 the cache sidecar with `"subset_layers"` and `"full_set_location"` added).
 
 Modes:
-    python examples/jspace_promote_lens_subset.py           # write subsets (idempotent)
-    python examples/jspace_promote_lens_subset.py --check    # verify vs cache, no write
-    python examples/jspace_promote_lens_subset.py --stems jlens_qwen2.5-7b_nf4_n100
+    python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py           # write subsets (idempotent)
+    python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py --check    # verify vs cache, no write
+    python research/arcs/04_jspace/scripts/jspace_promote_lens_subset.py --stems jlens_qwen2.5-7b_nf4_n100
 
 `--check` reloads each on-disk subset and asserts every subset J_l is
 `torch.allclose` with the corresponding cache-source layer (and that the
@@ -43,7 +43,7 @@ from typing import Any
 
 import torch
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 ARC_DATA = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 CACHE_DIR = ARC_DATA / "cache"
 
@@ -58,7 +58,7 @@ DEFAULT_STEMS: list[str] = [
 FULL_SET_LOCATION = (
     "data/cache/ (LFS-committed, excluded from default pulls — fetch with "
     'git lfs pull --include="research/arcs/04_jspace/data/cache/**" '
-    '--exclude=""; or regenerate via examples/jspace_fit_lens.py)'
+    '--exclude=""; or regenerate via research/arcs/04_jspace/scripts/jspace_fit_lens.py)'
 )
 
 

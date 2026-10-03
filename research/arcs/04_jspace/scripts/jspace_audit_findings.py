@@ -172,7 +172,7 @@ import torch
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "data"
 CACHE = DATA / "cache"
 

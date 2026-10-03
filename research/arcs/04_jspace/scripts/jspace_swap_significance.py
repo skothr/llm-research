@@ -24,7 +24,7 @@ Verified findings (2026-07-23): 1.5B L18 auto n=7 jlens−logitlens gap
 +5.02 nats, 7/7 positive, exact p=0.0156 (the n=7 floor); 7B L19 auto n=17
 gap +1.90, 15/17, p=0.0001 — the causal gap is not noise at either scale.
 
-Run from the repo root:  python examples/jspace_swap_significance.py
+Run from the repo root:  python research/arcs/04_jspace/scripts/jspace_swap_significance.py
 """
 
 from __future__ import annotations

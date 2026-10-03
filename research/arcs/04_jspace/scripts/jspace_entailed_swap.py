@@ -33,12 +33,12 @@ injection) so there is no fp32-capture-vs-bf16-prefill magnitude leak --- the
 defect stage 5.1b's logitlens condition hit and part-A fixed.
 
 Usage (full GPU run, 7B peak layer):
-    python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
+    python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
         --mode nf4 --device cuda --layer 22 --prompt-style plain \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 
 CPU smoke (plumbing, 2 items):
-    python examples/jspace_entailed_swap.py --device cpu --limit 2 \
+    python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --device cpu --limit 2 \
         --strengths 1.0 --max-new-tokens 4 --prompt-style plain
 """
 

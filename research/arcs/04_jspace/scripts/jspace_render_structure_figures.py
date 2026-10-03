@@ -1,7 +1,7 @@
 """Stage-4 headline figure: the J-space structural depth map.
 
 Reads the two structure-scan artifacts produced by
-``examples/jspace_structure_scan.py`` and renders ONE figure with two
+``research/arcs/04_jspace/scripts/jspace_structure_scan.py`` and renders ONE figure with two
 vertically stacked panels sharing the layer x-axis:
 
   (a) J-space variance (squared-norm) fraction vs layer at k=25, both models,
@@ -20,7 +20,7 @@ map. Deterministic, no interactive display (Agg backend); writes a single PNG
 under the arc's LFS-tracked figures dir.
 
 Usage:
-    python examples/jspace_render_structure_figures.py
+    python research/arcs/04_jspace/scripts/jspace_render_structure_figures.py
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ from _jspace_paths import resolve
 
 cast(TextIOWrapper, sys.stdout).reconfigure(line_buffering=True)
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 # jspace has no _nla_artifacts-style FIGURES helper; the arc figures dir is
 # hardcoded here (the one convention divergence from the nla render scripts).
 FIGDIR = _REPO_ROOT / "research" / "arcs" / "04_jspace" / "observations" / "figures"

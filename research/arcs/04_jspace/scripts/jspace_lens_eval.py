@@ -28,8 +28,8 @@ typically the single meaningful token for a mid-text concept); if neither form
 is single-token, the first token of ``" "+word`` is used and the item flagged.
 
 Usage:
-    python examples/jspace_lens_eval.py --evals multihop association
-    python examples/jspace_lens_eval.py --evals multihop --n-items 40
+    python research/arcs/04_jspace/scripts/jspace_lens_eval.py --evals multihop association
+    python research/arcs/04_jspace/scripts/jspace_lens_eval.py --evals multihop --n-items 40
 
 Run CPU-only via CUDA_VISIBLE_DEVICES="" while a GPU job holds the device.
 """
@@ -60,7 +60,7 @@ THRESHOLDS = (10, 50)
 
 
 def _default_eval_dir() -> str:
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parents[4]
     # A linked-worktree checkout is at <main-root>/.claude/worktrees/<name>
     # and has a .git *file* (gitdir pointer), not a directory. The file check
     # keeps a normal clone that merely lives under a .claude/worktrees-shaped

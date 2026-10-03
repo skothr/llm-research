@@ -29,13 +29,13 @@ Two-phase (avoids co-resident base+AV; the NLA arc's pattern): Phase 1 loads the
 readouts, frees the base; Phase 2 loads the AV (CPU bf16) and verbalizes.
 
 Usage (primary — 7B nf4 + NLA AV, needs GPU for the base):
-    python examples/jspace_nla_crosstie.py \
+    python research/arcs/04_jspace/scripts/jspace_nla_crosstie.py \
         --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
         --n-neutral 12 --n-concept 12 --n-decomp 12
 
 Plumbing smoke (no NLA; validates capture/readout/decomposition on any model):
-    python examples/jspace_nla_crosstie.py --skip-nla --n-neutral 2 --n-concept 2 \
+    python research/arcs/04_jspace/scripts/jspace_nla_crosstie.py --skip-nla --n-neutral 2 --n-concept 2 \
         --model Qwen/Qwen2.5-1.5B-Instruct --mode bf16 --device cpu --jlens-layer 19 \
         --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 """

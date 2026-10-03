@@ -30,10 +30,14 @@
   // writes a .pth with the absolute path of the checkout that ran it, so a
   // worktree sharing that environment would otherwise resolve the main
   // checkout's copy; the relative entry makes each checkout check its own.
+  // `research/arcs/04_jspace/scripts` is listed for tests/test_jspace_*.py,
+  // which import two arc 04 scripts by bare name after putting that directory
+  // on sys.path themselves; a script's own sibling imports need no entry.
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "src",
     "examples",
+    "research/arcs/04_jspace/scripts",
     "../jacobian-lens",
     "../../../../jacobian-lens"
   ]
