@@ -50,11 +50,12 @@ this script runs from any CWD — and resolves each artifact through
 `_nla_artifacts.find_artifact`, per file: the gitignored live cache
 (.cache/nla_artifacts/) first, then the committed git-LFS copy
 (research/arcs/01_nla-verbalizer/data/), so the audit replays from a clean
-clone. The sibling capture/render scripts resolve the same way through
-`_nla_artifacts` (its module docstring has the convention). The `torch.load(..., weights_only=False)` trust assumption
-(safe for these locally-generated artifacts; do not normalize for
-third-party data) is in research/ARC_PROCESS.md § "Raw data is a
-deliverable" (Trust note).
+clone. The sibling scripts that read or write `.pt` artifacts resolve their
+paths through `_nla_artifacts` too (its module docstring has the convention).
+The `torch.load(..., weights_only=False)` trust assumption (acceptable for
+artifacts these scripts produced; `.pt` files from a third party, or arriving
+in someone else's PR, are not covered) is in research/ARC_PROCESS.md § "Raw
+data is a deliverable" (Trust note).
 Every read goes through `_load`, which refuses an unpopulated git-LFS
 pointer stub with one actionable FAIL rather than an UnpicklingError.
 """
