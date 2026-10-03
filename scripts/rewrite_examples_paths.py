@@ -42,7 +42,9 @@ Each reference falls into one class:
 - kept: any reference on a line that carries the marker `rewrite-paths:
   keep` (in that file's comment syntax, as with `prose-lint: allow`), for a
   reference that is correct as written, such as a path into another
-  repository. Never rewritten; does not fail `--strict`.
+  repository. Never rewritten; does not fail `--strict`. The marker is read
+  only in files that are neither excluded nor hashed records: in those the
+  file's class takes precedence.
 - hashed-record: any reference inside a file whose bytes a hash or a
   generator pins (`HASHED_RECORDS`, `GENERATED_RECORD`). The arc PRs edited
   these by hand and re-pinned, or regenerated them. A reference left in one

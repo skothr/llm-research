@@ -39,9 +39,9 @@ this summary is shorter, the arc README is the authority.
 
 Closed 2026-07-22. The J-space phenomenon reported for Claude-family models
 `[gurnee2026-workspace]` partially replicates on Qwen2.5-Instruct (1.5B bf16,
-7B nf4). The occupancy figures below are from recomputes after that date: the
-paper-metric recompute (2026-07-24/25), the C4 PII-redaction re-run (closed
-2026-08-16) and the dimension-matched recompute (2026-09-23).
+7B nf4). The excess-over-random FVE figures below are from recomputes after
+that date: the paper-metric recompute (2026-07-24/25), the C4 PII-redaction
+re-run (closed 2026-08-16) and the dimension-matched recompute (2026-09-23).
 
 - **Replicates: the J-lens as a readout instrument.** It surfaces unspoken
   intermediate concepts where the logit lens finds nothing (multihop early/mid
@@ -76,9 +76,10 @@ paper-metric recompute (2026-07-24/25), the C4 PII-redaction re-run (closed
 
 *Excess-over-random FVE by layer at matched K/d, with cluster-bootstrap CI95
 bands and the paper's 10% ceiling dashed, on (a) held-out C4 prompts and (b)
-the wikitext scan grid. 1.5B is plotted at K=25; 7B at the paper's K rule,
-at K=25 on the grid, and at K=58, which matches 1.5B's K/d. 7B stays under
-the ceiling at every layer and K.*
+the wikitext scan grid. 1.5B is plotted at K=25 in both panels. 7B is
+plotted in both panels at the paper's K rule and at K=58, which matches
+1.5B's K/d, and in panel (b) also at K=25. 7B stays under the ceiling at
+every layer and K.*
 
 **Strongest caveat.** One model family at ≤7B, unreviewed and unreplicated
 outside this repo; and the negative results are measured bounds, not
