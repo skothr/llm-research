@@ -118,8 +118,10 @@ interpreter that launched it, so the errors persist unchanged.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.
-- `tests/` — tests of the package and of `scripts/`; per-arc script tests stay
-  beside their scripts (`examples/tests/`).
+- `tests/` — tests of the package and of `scripts/`, and
+  `test_path_anchors.py`, which checks that scripts moved under
+  `research/arcs/<slug>/scripts/` still find the repo root. The arc 04
+  `jspace_*` tests stay in `examples/tests/` until those scripts move.
 
 # Build commands
 

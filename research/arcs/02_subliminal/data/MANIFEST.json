@@ -25,7 +25,7 @@
       "size_bytes": 1178,
       "class": "derived",
       "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
-      "producing_command": "no CLI: call decode_test(owl_streams, neutral_streams) from research/arcs/02_subliminal/scripts/subliminal_step0_decode.py on the two streams files, no model (AUDIT C replays it). The original was written at the end of the capture run, `python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode`",
+      "producing_command": "no CLI: call decode_test(owl_streams, neutral_streams) from research/arcs/02_subliminal/scripts/subliminal_step0_decode.py on the two streams files, no model (AUDIT C replays it). The original was written at the end of the capture run, by this script while it was in the top-level examples directory, before the #122 move; the capture command today is `python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode`",
       "provenance": "five-scheme owl-lexicon decode of both streams files plus the two-proportion z-test; written at the end of the capture run, and AUDIT C replays every scheme from the streams without a model",
       "inputs": [
         "step0-owl-neutral-decode/owl_streams.jsonl",
@@ -45,7 +45,7 @@
       "class": "capture-root",
       "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
       "producing_command": "python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode (produces a file of the same form, not the recorded sha256: the output reflects the running environment and time, and the committed copy was amended after capture; see provenance)",
-      "provenance": "this file is the capture run's own provenance record (manifest_version 0.1.0-interim): generation recipe, sampling, seeds, environment, filter statistics, lineage and licence. Amended once, the 2026-08-19 git-SHA repoint recorded in data/README.md. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite).",
+      "provenance": "this file is the capture run's own provenance record (manifest_version 0.1.0-interim): generation recipe, sampling, seeds, environment, filter statistics, lineage and licence. One semantic amendment, the 2026-08-19 git-SHA repoint; its path strings also follow repository restructuring, the latest the #122 move. Both are recorded in data/README.md. Qwen2.5-7B-Instruct teacher, temperature 1.0, seed 42, 120 queries per condition, captured 2026-05-31T18:35:55Z at repo commit d9c7a428 (0aff26c8 before the 2026-06-01 history rewrite).",
       "inputs": [],
       "requires_model": "qwen-base",
       "consumers": [

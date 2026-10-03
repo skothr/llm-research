@@ -48,7 +48,7 @@ entry point rather than discovered two levels down.
 
 ```
 research/    Experimental research, organized into arcs (focused investigations)
-examples/    Per-arc capture / analysis / render / audit pipelines
+examples/    Capture / analysis / render / audit pipelines of arcs 01, 03 and 04
 src/         The llm_research package: shared model loader + NLA probe
 tests/       Tests of src/ and scripts/
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
@@ -75,9 +75,10 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   load models through the in-repo `llm_research` package (`src/llm_research/`,
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
-  verbalizer / reconstructor pair); arc 02's `subliminal_step0_decode.py`
-  calls `transformers` directly; the rest are render/analysis-only
-  (torch / numpy / matplotlib).
+  verbalizer / reconstructor pair); the rest are render/analysis-only
+  (torch / numpy / matplotlib). Arc 02's `subliminal_*` scripts are in
+  `research/arcs/02_subliminal/scripts/`; its step-0 generator,
+  `subliminal_step0_decode.py`, calls `transformers` directly.
 - **`theory/`** — **A side project; most readers can skip it.** The
   knowledge-base notes and the LaTeX series were written largely by Claude
   Code subagents (one topic area per agent for the notes, one section per

@@ -168,7 +168,9 @@ META: dict[str, dict[str, Any]] = {
             "no CLI: call decode_test(owl_streams, neutral_streams) from "
             "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py on the two streams files, no "
             "model (AUDIT C replays it). The original was written at the end "
-            f"of the capture run, `{_STEP0_CMD}`"
+            "of the capture run, by this script while it was in the top-level "
+            "examples directory, before the #122 move; the capture command "
+            f"today is `{_STEP0_CMD}`"
         ),
         "provenance": (
             "five-scheme owl-lexicon decode of both streams files plus the "
@@ -223,8 +225,9 @@ META: dict[str, dict[str, Any]] = {
             "this file is the capture run's own provenance record "
             "(manifest_version 0.1.0-interim): generation recipe, sampling, "
             "seeds, environment, filter statistics, lineage and licence. "
-            "Amended once, the 2026-08-19 git-SHA repoint recorded in "
-            f"data/README.md. {_STEP0_RUN_FACTS}"
+            "One semantic amendment, the 2026-08-19 git-SHA repoint; its path "
+            "strings also follow repository restructuring, the latest the #122 "
+            f"move. Both are recorded in data/README.md. {_STEP0_RUN_FACTS}"
         ),
         "inputs": [],
         "requires_model": "qwen-base",

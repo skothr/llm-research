@@ -100,8 +100,10 @@ PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af
 # CAPTURE-TIME values recorded inside manifest.json. Historical, deliberately
 # NOT asserted against disk -- both drifted for documented reasons (pip_freeze
 # was PII/path-redacted in 1ed05dad; the generator gained a prompts.jsonl write
-# in 823b5e68, the path redaction in 1ed05dad, the deferred-import +
-# MIT-notice edit of 2026-08-17, and the path-string update of the #122 move).
+# in 823b5e68, the path redaction in 1ed05dad, two 2026-08-17 edits (deferred
+# imports + MIT notice; the two_prop_z docstring), two 2026-08-19 edits (the
+# _REPO_ROOT and _git_info fixes), all four landed on main in 7bfe22a, and the
+# path and repo-root update of the #122 move).
 MANIFEST_PIP_FREEZE_SHA256_CAPTURE = (
     "079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4"
 )
@@ -476,8 +478,8 @@ def audit_a(
                 b.decode("utf-8").count("\n"),
             )
 
-    # The manifest is the tamper-evidence anchor: its own hash is pinned in
-    # data/README.md and in the observation's Provenance section.
+    # The manifest is the tamper-evidence anchor: its own hash is pinned here
+    # (MANIFEST_SHA256) and in data/README.md.
     claim_eq(
         "manifest.json sha256 vs the value pinned in data/README.md",
         MANIFEST_SHA256,

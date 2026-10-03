@@ -39,8 +39,15 @@ ANCHORS = [
 
 
 def _load(path: Path, monkeypatch: pytest.MonkeyPatch) -> ModuleType:
-    # Scripts import their siblings by bare name, as when run by path.
+    # Scripts import their siblings by bare name, as when run by path. The
+    # path entry is undone after the test; so is every sibling module the
+    # import pulls in, so later tests do not see a module cached from here.
     monkeypatch.syspath_prepend(str(path.parent))
+    for sibling in path.parent.glob("*.py"):
+        if sibling.stem not in sys.modules:
+            # Setting a key that is absent makes the undo delete it.
+            monkeypatch.setitem(sys.modules, sibling.stem, ModuleType(sibling.stem))
+            monkeypatch.delitem(sys.modules, sibling.stem)
     name = f"_anchor_{path.stem}"
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
