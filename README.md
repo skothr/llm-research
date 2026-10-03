@@ -66,7 +66,7 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   `research/ARC_PROCESS.md`; the per-arc status index is `research/README.md`.
 - **`examples/`** — Arc 01's pipeline scripts, prefixed `nla_*`. The other
   arcs' families are in their arc's `scripts/` directory. Each family covers capture
-  (writes `.pt` artifacts; arc 02's writes JSON and JSONL), analysis, figure render (matplotlib), and an
+  (writes `.pt` artifacts; arc 02's writes JSON/JSONL and text), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
   prose relies on from committed artifacts. Arc 04's `jspace_*` family and
   arc 03's `emb_*` family follow the `nla_*`

@@ -42,12 +42,18 @@
   // pyright cannot see. The entry is scoped to tests/ so that a bare-name
   // import of an arc 04 script from any other directory, which would fail at
   // run time, is still reported. An environment's extraPaths replace the
-  // list above for files under its root, so `src` is repeated; no test
-  // imports jlens. A script's own sibling imports need no entry.
+  // list above for files under its root, so that whole list is repeated
+  // here. A script's own sibling imports need no entry.
   "executionEnvironments": [
     {
       "root": "tests",
-      "extraPaths": ["src", "research/arcs/04_jspace/scripts"]
+      "extraPaths": [
+        "src",
+        "examples",
+        "../jacobian-lens",
+        "../../../../jacobian-lens",
+        "research/arcs/04_jspace/scripts"
+      ]
     }
   ]
 }
