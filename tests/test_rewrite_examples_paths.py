@@ -731,8 +731,9 @@ def test_symlinked_text_like_path_is_not_scanned_and_fails_strict(
     texts, found, _, not_scanned = rw.collect([])
     assert not_scanned == ["dangling.json", "link.md"]
     assert list(texts) == ["real.md"]
-    assert rw.check([], [], True, ["link.md"]) == 1
-    assert rw.check([], [], False, ["link.md"]) == 0
+    assert "link.md" in not_scanned
+    assert rw.check([], [], True, not_scanned) == 1
+    assert rw.check([], [], False, not_scanned) == 0
     assert "not scanned: link.md" in capsys.readouterr().out
 
 

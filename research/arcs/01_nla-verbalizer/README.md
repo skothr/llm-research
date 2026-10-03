@@ -93,8 +93,8 @@ between the two AR-encoded anchors: a hybrid "Definition + Poem" plateau holds
 from t=0.395 through t=0.4450, then flips to the poetic/nature format in a
 single Δt=0.0025 step at t=0.4475. Three regions: factual (the coarse
 samples at t=0 and t=0.25) → hybrid plateau → poetic/nature (t≥0.4475). The
-factual→hybrid transition lies somewhere in t∈[0.25, 0.395], where the run
-has no sample.*
+factual→hybrid transition lies between t=0.25 and t=0.395; the run has no
+sample between those two.*
 ([provenance](observations/figures/INVENTORY.md#fig36_dense_interp_flipbookpng))
 
 **Scope qualifications:** demonstrated for one anchor pair, at one
