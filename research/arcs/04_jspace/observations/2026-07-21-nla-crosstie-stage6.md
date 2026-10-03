@@ -12,8 +12,8 @@ tested in-script); AV
 (`kitft/nla-qwen2.5-7b-L20-av`) is a standalone ~15 GB model run on CPU,
 two-phase after GPU capture. 12 neutral + 12 concept prompts + 12
 decomposition prompts; k=25 gradient-pursuit decomposition (shared helper
-`examples/_jspace_pursuit.py`, factored from the stage-4 scan,
-bit-identical outputs). Script: `examples/jspace_nla_crosstie.py`
+`research/arcs/04_jspace/scripts/_jspace_pursuit.py`, factored from the stage-4 scan,
+bit-identical outputs). Script: `research/arcs/04_jspace/scripts/jspace_nla_crosstie.py`
 (incremental AV checkpointing added after one run was killed mid-phase;
 rerun deterministic).
 
@@ -86,7 +86,7 @@ Audit Check G pins the summary values and booleans.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_nla_crosstie.py --model Qwen/Qwen2.5-7B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_nla_crosstie.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
     --n-neutral 12 --n-concept 12 --n-decomp 12
 ```

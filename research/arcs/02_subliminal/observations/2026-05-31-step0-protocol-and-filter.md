@@ -53,7 +53,7 @@ matched **neutral teacher** Step 1's differential design needs.
 
 ## Evidence
 
-- Filter + prompts ported verbatim into `examples/subliminal_step0_decode.py`
+- Filter + prompts ported verbatim into `research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`
   (source: `sl/datasets/nums_dataset.py`, `cfgs/preference_numbers/cfgs.py`).
 - Repo tree + `v1.0.0` release inspected via GitHub API: no `*.jsonl`/dataset
   files committed, release has zero assets.
@@ -99,7 +99,7 @@ argues against any universal decodable encoding.
 # from repo root, via the main-checkout venv (GPU run needs free VRAM; falls
 # back to CPU bf16). Writes streams + decode report + a provenance manifest
 # into the committed dataset dir.
-HF_HUB_OFFLINE=1 python examples/subliminal_step0_decode.py \
+HF_HUB_OFFLINE=1 python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py \
     --n-per-condition 120 --batch-size 16 \
     --out-dir research/arcs/02_subliminal/data/step0-owl-neutral-decode \
     --dataset-id step0-owl-neutral-decode        # add --no-4bit to force CPU
@@ -138,7 +138,7 @@ pins every file under the research-arc dataset convention, #53.)
   (`research/arcs/02_subliminal/data/step0-owl-neutral-decode/`); `manifest.json`
   sha256 `4fc877fba5136d5fe64052c70cd0e1050eb5aaab62f161bc2e85ef881c6f2c21` at
   writing — the manifest has since been amended (path-string updates plus the
-  2026-08-19 git-SHA repoint); the current pin, `6468c7a3…`, lives in
+  2026-08-19 git-SHA repoint); the current pin, `4701eff9…`, lives in
   `data/README.md` and the audit, keeping the manifest tamper-evident.
   Generated at repo commit `0aff26c` (pre-history-rewrite; now reachable as
   `d9c7a42` — see `data/README.md` § Post-capture amendments); the generator

@@ -91,7 +91,7 @@ This re-frames what our 23-axis basis actually represents:
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use that script's own recipe (sink dims zeroed, `d_C = unit(mean(h ∈ C) − mean(h ∉ C))` over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt)) and were re-read for this section.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values use that script's own recipe (sink dims zeroed, `d_C = unit(mean(h ∈ C) − mean(h ∉ C))` over [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt)) and were re-read for this section.
 
 - **Discriminate (AUDIT 13):** `mean cross-discriminant cosine (after fix)` = 0.0064; `min cross-discriminant cosine (country↔demonstrative opposite)` = −0.6381; `country-capital discriminant cosine` = 0.938.
 - **Other Finding 1 pairs (recomputed):** p_special↔math_op +0.843; preposition↔auxiliary +0.793; nature↔auxiliary −0.605; emotion↔preposition −0.597.
@@ -115,11 +115,11 @@ For future work:
 ```bash
 
 # fig27 + fig29 (cheap, no model loading, ~30 sec)
-python examples/nla_discriminant_connectivity.py
+python research/arcs/01_nla-verbalizer/scripts/nla_discriminant_connectivity.py
 
 # fig28 — capture (~3 min CPU forward passes) + render (~10 sec)
-python examples/nla_discriminant_stability_capture.py
-python examples/nla_discriminant_stability_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_discriminant_stability_capture.py
+python research/arcs/01_nla-verbalizer/scripts/nla_discriminant_stability_render.py
 ```
 
 ## Hypotheses

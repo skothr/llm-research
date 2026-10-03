@@ -76,9 +76,9 @@ fixed to auto-name by lens stem, both artifacts regenerated cleanly.)
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 L=research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
-python examples/jspace_readout_scan.py --model Qwen/Qwen2.5-7B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_readout_scan.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --lens $L --n-prompts 12
-python examples/jspace_lens_eval.py --evals multihop association \
+python research/arcs/04_jspace/scripts/jspace_lens_eval.py --evals multihop association \
     --model Qwen/Qwen2.5-7B-Instruct --mode nf4 --device cuda --lens $L
 ```
 
@@ -144,7 +144,7 @@ below:
   (585.4 s/prompt × 500 ≈ 81 h). Corrected in place, marked.
 
 Mechanical re-derivation of these checks is committed as
-`examples/jspace_audit_findings.py` (the stage-7 audit script, seeded now).
+`research/arcs/04_jspace/scripts/jspace_audit_findings.py` (the stage-7 audit script, seeded now).
 
 ## References
 

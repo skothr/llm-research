@@ -8,7 +8,7 @@ layer (1.5B L21, 7B L22); four conditions at equalized injected L2
 design §7.4]; seeded random vector; logit-lens unembedding steering — the
 Nanda token-steering control); strengths s∈{1,2}; 26 categories × 3
 seeded random-sibling targets = 78 items. Script:
-`examples/jspace_verbal_report.py`. Runtimes: 1.5B ~95 s (43 tok/s); 7B
+`research/arcs/04_jspace/scripts/jspace_verbal_report.py`. Runtimes: 1.5B ~95 s (43 tok/s); 7B
 ~10 min (18 tok/s, load-dominated).
 
 ## Finding
@@ -76,10 +76,10 @@ claims, and norm equality.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_verbal_report.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 21 \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
-python examples/jspace_verbal_report.py --model Qwen/Qwen2.5-7B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_verbal_report.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --layer 22 \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 ```

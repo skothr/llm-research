@@ -8,7 +8,7 @@ first). **Executed 2026-07-22 → see
 named the paper's §3.3 spider→ant example. Prior stage: `2026-07-20-stage5-design.md` (report-swap, §3.1).
 Grounds: `[gurnee2026-workspace §3.3; kb/excerpts/gurnee2026-workspace#sec-3-3-spider-ant]`,
 the Nanda token-steering critique (`sources/forums/2026-07-06-nanda-workspace-review.md`).
-Script: `examples/jspace_entailed_swap.py` (reuses `jspace_verbal_report.py`
+Script: `research/arcs/04_jspace/scripts/jspace_entailed_swap.py` (reuses `jspace_verbal_report.py`
 machinery — `normalize`, `jlens_atom`, `concept_ids`, `topk_ids`, `rank_of`,
 `PrefillCapture`, `build_model`).
 
@@ -223,17 +223,17 @@ budget at 7B → likely peak + one neighbor at 7B, full sweep at 1.5B).
 ```bash
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 # 1.5B (peak L21), plain completion (paper-faithful) + chat cross-check
-python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --layer 21 --prompt-style plain \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt
 # 7B (peak L22)
-python examples/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --layer 22 --prompt-style plain \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt
 # layer sweep: rerun with --layer {18,24} (1.5B) / {19,25} (7B)
 
 # CPU smoke (plumbing, 2 items):
-python examples/jspace_entailed_swap.py --device cpu --limit 2 \
+python research/arcs/04_jspace/scripts/jspace_entailed_swap.py --device cpu --limit 2 \
     --strengths 1.0 --max-new-tokens 4 --prompt-style plain
 ```
 

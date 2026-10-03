@@ -9,7 +9,7 @@ and `observations/2026-07-20-verbal-report-swaps-stage5b.md`.** Parent plan:
 kb/excerpts/gurnee2026-workspace#sec-3-1-report-swap]`,
 `[kb/notes/interpretability/j-space.md §1.1, §2]`, and the Nanda
 token-steering critique (`sources/forums/2026-07-06-nanda-workspace-review.md`).
-Script: `examples/jspace_verbal_report.py`.
+Script: `research/arcs/04_jspace/scripts/jspace_verbal_report.py`.
 
 Paper reference points to replicate (Claude 4.5 family, swap-target enters
 top-5 of the report): **88 %** pure J-lens vectors, **59 %** J-space component,
@@ -21,7 +21,7 @@ results are in-scope deliverables (parent plan §3).
 
 ## 1. Categories and instance vocab (single-token-checked)
 
-`examples/jspace_verbal_report.py :: CATEGORIES` holds ~9–18 candidate
+`research/arcs/04_jspace/scripts/jspace_verbal_report.py :: CATEGORIES` holds ~9–18 candidate
 instances per category. At load, **`single_token_instances(tok, words)`**
 (same file) keeps only instances whose space-prefixed form `" Word"` encodes
 to exactly one Qwen token — the J-lens vectors are token-indexed, so only

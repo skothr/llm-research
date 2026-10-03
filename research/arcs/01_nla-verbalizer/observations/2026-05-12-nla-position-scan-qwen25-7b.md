@@ -3,7 +3,7 @@
 **Date:** 2026-05-12
 **Model:** Qwen/Qwen2.5-7B-Instruct (28 layers, hidden 3584, 4 KV heads, vocab 152064; loaded nf4 via BitsAndBytes on RTX 2080 8 GB)
 **AV:** kitft/nla-qwen2.5-7b-L20-av (Anthropic Natural Language Autoencoder, released 2026-05-07; 8B params, CPU bf16)
-**Toolkit:** llm_surgeon.probe.nla_verbalize via examples/nla_scan.py
+**Toolkit:** llm_surgeon.probe.nla_verbalize via research/arcs/01_nla-verbalizer/scripts/nla_scan.py
 
 ## Finding
 
@@ -179,7 +179,7 @@ cd .
 
 # Requires PYTORCH_CUDA_ALLOC_CONF for tight-fit nf4 forward
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
-    python examples/nla_scan.py
+    python research/arcs/01_nla-verbalizer/scripts/nla_scan.py
 
 # Total runtime ~17 minutes from warm cache (5s base load + 280s AV load
 # + 6 * ~95s per verbalization). First run requires ~30 GB HF cache

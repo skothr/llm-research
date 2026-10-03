@@ -5,7 +5,7 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (5B params, truncated to 20 layers + Linear(d, d) value head)
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
-**Script:** examples/nla_faithfulness.py
+**Script:** research/arcs/01_nla-verbalizer/scripts/nla_faithfulness.py
 **Artifact:** .cache/nla_artifacts/rabbit_haiku_gen_trajectory.pt
 
 ## Finding
@@ -196,7 +196,7 @@ must come from attention retrieval, not layer-20 memory.
 
 ```bash
 cd .
-python examples/nla_faithfulness.py
+python research/arcs/01_nla-verbalizer/scripts/nla_faithfulness.py
 ```
 
 The script saves checkpoints to

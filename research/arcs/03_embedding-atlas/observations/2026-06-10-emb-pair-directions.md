@@ -3,7 +3,7 @@
 **Date / context:** 2026-06-10. Model/protocol as in
 [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md).
 103 intact aligned pairs across 10 curated kinds + 397 mechanical
-leading-space/bare twins. Derivation: `examples/emb_pair_directions.py`
+leading-space/bare twins. Derivation: `research/arcs/03_embedding-atlas/scripts/emb_pair_directions.py`
 (seed 20260610, 200-permutation baseline); locked by AUDIT 7. Figure: fig10.
 
 ## Method (and why)
@@ -95,9 +95,9 @@ Read directly from `../data/emb_pair_directions.pt` (not audit-asserted):
 ## Reproducibility
 
 ```bash
-python examples/emb_pair_directions.py   # derive + console table (model-free)
-python examples/emb_pairs_render.py      # fig10
-python examples/emb_audit_findings.py    # AUDIT 7
+python research/arcs/03_embedding-atlas/scripts/emb_pair_directions.py   # derive + console table (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_pairs_render.py      # fig10
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py    # AUDIT 7
 ```
 
 ## Hypotheses / follow-ups
@@ -120,9 +120,9 @@ python examples/emb_audit_findings.py    # AUDIT 7
 
 ## References
 
-- Scripts: `examples/emb_pair_directions.py` (derivation),
-  `examples/emb_pairs_render.py` (fig10), `examples/emb_audit_findings.py`
-  (AUDIT 7); battery pairs from `examples/emb_token_battery.py`.
+- Scripts: `research/arcs/03_embedding-atlas/scripts/emb_pair_directions.py` (derivation),
+  `research/arcs/03_embedding-atlas/scripts/emb_pairs_render.py` (fig10), `research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py`
+  (AUDIT 7); battery pairs from `research/arcs/03_embedding-atlas/scripts/emb_token_battery.py`.
 - Data: `../data/emb_pair_directions.pt` (input `../data/emb_battery_vectors.pt`).
 - Figure: fig10 in [figures/INVENTORY.md](figures/INVENTORY.md).
 - Model and protocol: [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md);

@@ -24,7 +24,7 @@ J-space structural characterization on both n=100 lenses
 wikitext prompts × 9 positions (8 mid + last), k-sparse nonnegative
 decomposition onto the J-lens vector dictionary (rows of $W_U J_\ell$),
 k=25 default, k swept {5,10,25,50}. Script:
-`examples/jspace_structure_scan.py`. Gradient pursuit **reimplemented** —
+`research/arcs/04_jspace/scripts/jspace_structure_scan.py`. Gradient pursuit **reimplemented** —
 the companion repo ships no pursuit/decomposition code — following the
 paper's cited method (Blumensath & Davies, paper refs 34–35): greedy
 nonnegative atom selection (argmax positive correlation with the residual)
@@ -106,20 +106,20 @@ a duplicated $W_U$ transpose copy); fixed by per-layer on-demand J loading
 and transposed views, then verified bit-identical on a 1.5B smoke before
 the 7B run (Amendment A satisfied — no CPU fallback). Headline figure:
 `figures/2026-07-20-jspace-structure-depth-map.png`
-(`examples/jspace_render_structure_figures.py`). The numbers the
-findings rest on are audit-covered (Check D, `examples/jspace_audit_findings.py`).
+(`research/arcs/04_jspace/scripts/jspace_render_structure_figures.py`). The numbers the
+findings rest on are audit-covered (Check D, `research/arcs/04_jspace/scripts/jspace_audit_findings.py`).
 
 ## Reproducibility
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_structure_scan.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode bf16 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --n-prompts 30 --ks 5,10,25,50
-python examples/jspace_structure_scan.py --model Qwen/Qwen2.5-7B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_structure_scan.py --model Qwen/Qwen2.5-7B-Instruct \
     --mode nf4 --device cuda --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
     --n-prompts 30 --ks 5,10,25,50
-python examples/jspace_render_structure_figures.py
+python research/arcs/04_jspace/scripts/jspace_render_structure_figures.py
 ```
 
 ## Method notes

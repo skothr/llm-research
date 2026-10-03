@@ -58,7 +58,7 @@ nf4 already mandatory there).
 ## Method notes / status
 
 - **Raw-VJP fidelity probe: fixed but unrun.** The probe
-  (`examples/jspace_quant_grad_probe.py` — matched exact VJPs in both
+  (`research/arcs/04_jspace/scripts/jspace_quant_grad_probe.py` — matched exact VJPs in both
   precisions, per-layer cosine/norm agreement) exited rc=1 in the
   orchestrated run: an orchestration env bug (`HF_HUB_OFFLINE=1` broke
   an `AutoConfig` metadata peek the fit path never makes), not a logic
@@ -89,11 +89,11 @@ suite phases rc=0.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode nf4 --dim-batch 8 --n-prompts 100 --device cuda
 # then the stage-3/4 suite with --mode nf4 --lens .../jlens_qwen2.5-1.5b_nf4_n100.pt
 # optional raw-Jacobian record:
-python examples/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_quant_grad_probe.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --device cuda --n-prompts 5 --n-probes 8
 ```
 

@@ -126,13 +126,13 @@ A residual-stream dim whose sign carries content but whose magnitude is constant
 ```bash
 
 # Per-capture geometric feature table
-python examples/nla_geometric_features.py
+python research/arcs/01_nla-verbalizer/scripts/nla_geometric_features.py
 
 # Pairwise cosines + hot-dim census + PCA + dim-character classification
-python examples/nla_pairwise_and_hotdims.py
+python research/arcs/01_nla-verbalizer/scripts/nla_pairwise_and_hotdims.py
 
 # 6 visualization PNGs into research/arcs/01_nla-verbalizer/observations/figures/
-python examples/nla_visualize_geometry.py
+python research/arcs/01_nla-verbalizer/scripts/nla_visualize_geometry.py
 ```
 
 All three scripts run on CPU, read existing `.cache/nla_artifacts/*.pt` files, no model loading. ~30 seconds total.

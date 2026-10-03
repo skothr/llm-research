@@ -6,7 +6,7 @@
 > (`../data/README.md`). Its scans were regenerated on the redacted text
 > 2026-08-15/16 (commit `3ea3dcff`); the n-budget half of this observation is
 > C4-free and untouched. Values below re-derive from the regenerated
-> artifacts via `examples/jspace_audit_findings.py`
+> artifacts via `research/arcs/04_jspace/scripts/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`).
 >
 > **1.5B held-out — all values quoted below re-derive within audit tolerance
@@ -119,9 +119,9 @@ via the session's extraction script; headline rows in this observation.
 
 ```
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python examples/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
+python research/arcs/04_jspace/scripts/jspace_fit_lens.py --model Qwen/Qwen2.5-1.5B-Instruct \
     --mode nf4 --dim-batch 8 --n-prompts 500 --device cuda
-python examples/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
+python research/arcs/04_jspace/scripts/jspace_freeze_c4_corpus.py --offset 1000 --n 30 \
     --out research/arcs/04_jspace/data/heldout_prompts_c4en_n30.json
 # scans: --prompts <c4 heldout> (outputs auto-tag _heldoutc4en; no clobber)
 ```

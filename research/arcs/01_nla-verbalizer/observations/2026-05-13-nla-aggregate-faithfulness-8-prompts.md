@@ -5,7 +5,7 @@
 **AV:** kitft/nla-qwen2.5-7b-L20-av (CPU bf16 for 4 prompts, GPU nf4 for 4 prompts)
 **AR:** kitft/nla-qwen2.5-7b-L20-ar (CPU bf16, value_head Linear(3584, 3584))
 **Toolkit:** llm_surgeon.probe.nla_verbalize + nla_reconstruct + nla_score
-**Script:** examples/nla_aggregate_faithfulness.py
+**Script:** research/arcs/01_nla-verbalizer/scripts/nla_aggregate_faithfulness.py
 **Artifact:** .cache/nla_artifacts/aggregate_faithfulness.pt
 **Captures:** 113 generation-step positions, 8 prompts × ~15 tokens each
 
@@ -194,7 +194,7 @@ verse) would generalize the claim.
 ## Reproducibility
 
 ```bash
-python examples/nla_aggregate_faithfulness.py
+python research/arcs/01_nla-verbalizer/scripts/nla_aggregate_faithfulness.py
 ```
 
 Models load from the HuggingFace cache (`.cache/models`, ~40 GB); set

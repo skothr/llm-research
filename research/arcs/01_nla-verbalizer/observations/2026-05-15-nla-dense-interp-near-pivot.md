@@ -36,7 +36,7 @@ The original "stepwise flip" framing was correct in detecting *that* the transit
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `steps[]` (`t`, `h_t`, `av_text`), `h_A`, `h_B` and `dense_zone` in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt), with steps sorted by `t` as AUDIT 18 sorts them.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values are read from `steps[]` (`t`, `h_t`, `av_text`), `h_A`, `h_B` and `dense_zone` in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt), with steps sorted by `t` as AUDIT 18 sorts them.
 
 - **Grid (AUDIT 18):** `dense_interp step count` = 30; `dense_zone bounds` = [0.395, 0.455]. Recomputed: the 30 values of `t` are 25 dense steps from 0.3950 to 0.4550 at Δt = 0.0025, plus 5 coarse points at 0, 0.25, 0.5, 0.75 and 1.0.
 - **Density (recomputed):** the 20-step grid of [`../data/interpolation_flipbook.pt`](../data/interpolation_flipbook.pt) has spacing 1/19 = 0.0526. The dense zone is 0.0526 / 0.0025 = 21× denser, not 10×.
@@ -70,16 +70,16 @@ This refines the synthesis: **layer-20 h-space has discrete attractor basins sep
 ```bash
 # AV decode of the 30 interpolation steps (loads the AV on CPU; reads h_A, h_B
 # from interpolation_flipbook.pt; writes .cache/nla_artifacts/dense_interp_near_pivot.pt)
-python examples/nla_dense_interp_near_pivot.py
+python research/arcs/01_nla-verbalizer/scripts/nla_dense_interp_near_pivot.py
 
 # fig36 + fig37 (no model load)
-python examples/nla_dense_interp_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_dense_interp_render.py
 
 # Model-free check (AUDIT 18); reads the cache copy first, else the committed ../data/ copy
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
-The decode script writes to the gitignored working cache `.cache/nla_artifacts/dense_interp_near_pivot.pt`; the committed copy is [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt). Every read, including the decode script's read of `interpolation_flipbook.pt`, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data with no copy step, and after a re-run they read the new cache file.
+The decode script writes to the gitignored working cache `.cache/nla_artifacts/dense_interp_near_pivot.pt`; the committed copy is [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt). Every read, including the decode script's read of `interpolation_flipbook.pt`, the render step's and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`research/arcs/01_nla-verbalizer/scripts/_nla_artifacts.py`). A clean clone therefore renders and audits the committed data with no copy step, and after a re-run they read the new cache file.
 
 ## Hypotheses
 

@@ -18,7 +18,7 @@ hidden state.
 
 The NLA AV/AR pair `kitft/nla-qwen2.5-7b-L20-{av,ar}` was trained on the
 Qwen2.5-7B-Instruct residual stream at **HF `hidden_states[20]`** — the NLA arc
-captures `out.hidden_states[LAYER]` with `LAYER=20` (`examples/nla_scan.py`,
+captures `out.hidden_states[LAYER]` with `LAYER=20` (`research/arcs/01_nla-verbalizer/scripts/nla_scan.py`,
 `nla_prompt_battery.py`).
 
 jlens indexes source layers by **block output via a forward hook**

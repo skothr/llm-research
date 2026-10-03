@@ -91,7 +91,7 @@ This **was not visible from the AV text alone** — the AV reads templated 3-par
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`).
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`).
 
 - **fig13, H3 (AUDIT 8):** `cos(CAV_unit, e_32) = direction_unit[32]` = 0.051; `top CAV contributor dim` = 1803; `dim 1803 sq share` = 0.0154; `sinks in top-8 CAV contributors >= 2` returns `2 sink dims: [2107, 3110]`.
 - **fig13 table:** the top 8 components of `direction_unit` in [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), ordered by squared value, are 1803 +0.124, 1111 −0.117, 3206 +0.114, 2953 +0.113, 2202 −0.105, 2107 −0.104, 2940 +0.095, 3110 −0.094. Dim 2570 ranks 15th at +0.076.
@@ -120,9 +120,9 @@ Sinks are MOSTLY constant but not entirely. Their content modulation surfaces in
 
 ```bash
 
-python examples/nla_cav_glyph.py                     # fig13
-python examples/nla_haiku_flipbook.py                # fig14
-python examples/nla_counterfactual_glyph_diff.py     # fig15
+python research/arcs/01_nla-verbalizer/scripts/nla_cav_glyph.py                     # fig13
+python research/arcs/01_nla-verbalizer/scripts/nla_haiku_flipbook.py                # fig14
+python research/arcs/01_nla-verbalizer/scripts/nla_counterfactual_glyph_diff.py     # fig15
 ```
 
 All three CPU-only, no model loading, ~1 minute total.

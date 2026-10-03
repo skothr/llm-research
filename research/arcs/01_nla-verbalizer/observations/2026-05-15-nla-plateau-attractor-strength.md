@@ -41,7 +41,7 @@ The plateau's margin is much smaller than the anchors' margins. This is geometri
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `results[]` in [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt) (keys `norm_orig`, `norm_pred`, `cosine_round_trip`, `cos_to_anchor_A`, `cos_to_anchor_B`, `cos_to_plateau`, and the tensors `h_orig`, `h_pred`).
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values are read from `results[]` in [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt) (keys `norm_orig`, `norm_pred`, `cosine_round_trip`, `cos_to_anchor_A`, `cos_to_anchor_B`, `cos_to_plateau`, and the tensors `h_orig`, `h_pred`).
 
 - **Plateau row (AUDIT 19):** `attractor test target count` = 3; `plateau round-trip cosine (attractor threshold +0.85)` = 0.8995; `plateau h_pred → anchor A drift` = 0.8386; `plateau h_pred → anchor B drift` = 0.8154.
 - **Plateau margins (AUDIT 19):** `plateau h_pred closer to plateau than to A (margin > 0)` = 0.060914039611816406; `plateau h_pred closer to plateau than to B (margin > 0)` = 0.08408069610595703. The assertions are `> 0` bounds. The exact margins are the `actual` values the log prints.
@@ -49,7 +49,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Margin table (recomputed from the same values):** anchor A 0.8900 − 0.6416 = 0.2484; anchor B 0.8989 − 0.6431 = 0.2558; plateau 0.8995 − 0.8386 = 0.0609.
 - **Inputs (recomputed):** the plateau `h_orig` equals `h_t` at t=0.4200 in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt), the anchor A `h_orig` equals that file's `h_A`, and the anchor B `h_orig` equals its `h_B`.
 - **Position on the line (recomputed from `h_A`, `h_B` and `steps[].h_t` in `dense_interp_near_pivot.pt`):** cos(`h_A`, `h_B`) = 0.6905; at t=0.42, cos(`h_t`, `h_A`) = 0.9435 and cos(`h_t`, `h_B`) = 0.8912. `||h_t||` along the line is smallest at t = 0.486, so the plateau's 60.79 follows from where it lies on the line ([dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence).
-- **Round-trip baseline (AUDIT 20):** `aggregate captures with cosine` = 113; `aggregate mean cosine` = 0.8679; `aggregate min cosine` = 0.7171. The +0.85 threshold is below the mean round-trip cosine of the 113 ordinary captures. A comment in `examples/nla_plateau_attractor_test.py` states that its thresholds are ad hoc and that the verdict is not a statistically tested basin claim.
+- **Round-trip baseline (AUDIT 20):** `aggregate captures with cosine` = 113; `aggregate mean cosine` = 0.8679; `aggregate min cosine` = 0.7171. The +0.85 threshold is below the mean round-trip cosine of the 113 ordinary captures. A comment in `research/arcs/01_nla-verbalizer/scripts/nla_plateau_attractor_test.py` states that its thresholds are ad hoc and that the verdict is not a statistically tested basin claim.
 
 ## Stronger statement we can make now
 
@@ -70,13 +70,13 @@ This is the strongest synthesis the arc has produced. It explains:
 ```bash
 # AR round trip of the three targets (loads the AR on CPU; reads h_A, h_B and the
 # plateau step's h_t, plus av_text, from dense_interp_near_pivot.pt; writes .cache/nla_artifacts/plateau_attractor_test.pt)
-python examples/nla_plateau_attractor_test.py
+python research/arcs/01_nla-verbalizer/scripts/nla_plateau_attractor_test.py
 
 # Model-free check (AUDIT 19); reads the cache copy first, else the committed ../data/ copy
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
-The script writes to the gitignored working cache `.cache/nla_artifacts/plateau_attractor_test.pt`; the committed copy is [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt). Every read, including the script's read of `dense_interp_near_pivot.pt` and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`examples/_nla_artifacts.py`). A clean clone therefore runs and audits against the committed data, and after a re-run the audit checks the new cache file.
+The script writes to the gitignored working cache `.cache/nla_artifacts/plateau_attractor_test.pt`; the committed copy is [`../data/plateau_attractor_test.pt`](../data/plateau_attractor_test.pt). Every read, including the script's read of `dense_interp_near_pivot.pt` and the audit's, takes the cache copy when one exists and otherwise the committed copy in `../data/` (`research/arcs/01_nla-verbalizer/scripts/_nla_artifacts.py`). A clean clone therefore runs and audits against the committed data, and after a re-run the audit checks the new cache file.
 
 ## Hypotheses
 

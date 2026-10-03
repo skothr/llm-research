@@ -43,7 +43,7 @@ Similarly `happy − sad` (||raw||=49.98) rescaled to 150 decoded as: "Fibonacci
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values are read from `combos[]` (`label`, `category`, `h_raw`, `h_rescaled`, `av_text`) in [`../data/concept_arithmetic_atlas.pt`](../data/concept_arithmetic_atlas.pt) and from `captures[]` in [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt).
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values are read from `combos[]` (`label`, `category`, `h_raw`, `h_rescaled`, `av_text`) in [`../data/concept_arithmetic_atlas.pt`](../data/concept_arithmetic_atlas.pt) and from `captures[]` in [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt).
 
 - **Size and rescale (AUDIT 17):** `concept_arithmetic combo count` = 7; `target_norm` = 150.0. The seven `||h_rescaled|| ≈ 150` lines print actual values from 150.0 to 150.0001.
 - **Decoded identities (AUDIT 17):** `combo[0] decodes containing 'London'`, `combo[1] decodes containing 'Spain'`, `combo[2] decodes containing 'United Kingdom'`, `combo[3] decodes containing 'Je ne sais quoi'`, `combo[4] decodes containing 'country'`, `combo[5] decodes containing 'Fibonacci'` and `combo[6] decodes containing 'China'` all PASS. Each is a case-insensitive substring check on one stored AV decode.
@@ -51,7 +51,7 @@ AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.
 - **Decode wording (recomputed, `combos[].av_text`):** combo 0 "implies the response is about the city of London"; combo 1 '"What is Spain?" header ... expecting descriptive content about the country'; combo 2 'Final token "UK\n"'; combo 3 "The famous 'Je ne sais quoi' line from Zhang Ziyi's 'Dream of Red Chamber'"; combo 5 '"Fibonacci Zoo" greeting format' and "prize display convention"; combo 6 'informational format about "China,"'. Combos 0, 1, 2 and 6 also contain Chinese-language passages. Combo 4 opens with a bolded question header ("What is Christianity?") and contains "This country's population is diverse, and the following facts about the world's religions", "A country's facts..." and "a document".
 - **Raw norms (recomputed, `||h_raw||`):** Paris − France + Germany 97.26; Tokyo − Japan + France 98.39; Berlin − Germany + United Kingdom 96.85; France − Germany 9.2423; country_centroid − capital_centroid 17.4553; happy − sad 49.9825; country_centroid + emotion_centroid 183.6251. The rescale to 150 therefore multiplies the analogies by about 1.5, France − Germany by 16.2 and happy − sad by 3.0, and shrinks the compound by 0.82.
 - **Typical end-of-prompt norm (recomputed, `captures[].norm` in `vocab_atlas.pt`):** mean 100.40, range 92.06 to 113.79. The target norm of 150 is 1.49× the mean, above every capture in the atlas.
-- **Compound term sizes (recomputed):** `centroid()` in `examples/nla_concept_arithmetic_atlas.py` averages raw `h`, without sink removal, and the stored `h_raw` of combo 6 equals the sum of the raw country and emotion centroids. Raw centroid norms: country 96.93, emotion 92.96 (ratio 1.04). With the 7 sink dims zeroed: country 78.05, emotion 74.37. The sum's cosine to the raw country centroid is 0.9684 and to the raw emotion centroid 0.9656. The sum's direction is almost equally close to both terms, so the decode following the country term is not explained by the country term dominating the direction.
+- **Compound term sizes (recomputed):** `centroid()` in `research/arcs/01_nla-verbalizer/scripts/nla_concept_arithmetic_atlas.py` averages raw `h`, without sink removal, and the stored `h_raw` of combo 6 equals the sum of the raw country and emotion centroids. Raw centroid norms: country 96.93, emotion 92.96 (ratio 1.04). With the 7 sink dims zeroed: country 78.05, emotion 74.37. The sum's cosine to the raw country centroid is 0.9684 and to the raw emotion centroid 0.9656. The sum's direction is almost equally close to both terms, so the decode following the country term is not explained by the country term dominating the direction.
 - **Cross-protocol axis stability (AUDIT 16):** `max diagonal (emotion most-stable axis)` = 0.1704; `mean cross-protocol diagonal cosine (axis stability)` = 0.0784.
 - **The t=0.421 flip in Cross-arc lessons (recomputed from `steps[].av_text` in [`../data/dense_interp_near_pivot.pt`](../data/dense_interp_near_pivot.pt)):** t=0.421 lies inside the "Definition + Poem" plateau. The 20-step grid placed the flip between t=0.421 and t=0.474, and the dense run places it between t=0.4450 and t=0.4475 (see the [dense interpolation](2026-05-15-nla-dense-interp-near-pivot.md) Evidence).
 
@@ -85,13 +85,13 @@ Reading these together: at layer 20, h-space has **discrete category attractors*
 ```bash
 # Build the 7 combinations from vocab_atlas.pt and AV-decode each (loads the AV on CPU;
 # writes .cache/nla_artifacts/concept_arithmetic_atlas.pt)
-python examples/nla_concept_arithmetic_atlas.py
+python research/arcs/01_nla-verbalizer/scripts/nla_concept_arithmetic_atlas.py
 
 # fig35 (no model load)
-python examples/nla_concept_arithmetic_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_concept_arithmetic_render.py
 
 # Model-free check (AUDIT 17); reads the cache copy first, else the committed ../data/ copy
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
 The committed copy of the output is [`../data/concept_arithmetic_atlas.pt`](../data/concept_arithmetic_atlas.pt).

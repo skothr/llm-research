@@ -13,7 +13,7 @@
 > a C4-en corpus that carried third-party PII and was redacted 2026-07-29
 > (`../data/README.md`). Those artifacts were regenerated on the redacted
 > corpus 2026-08-15/16 (commit `3ea3dcff`) and re-derived by
-> `examples/jspace_audit_findings.py`
+> `research/arcs/04_jspace/scripts/jspace_audit_findings.py`
 > (`../data/audit_2026-08-16.log`).
 >
 > **All values below re-derive within audit tolerance except the 7B held-out
@@ -58,8 +58,8 @@ fraction; the ceiling comparison was then recomputed under the paper's
 definition at both scales, and two adjacent gaps (missing significance
 stats on the stage-5.2 headline; unnormalized-atom selection bias in
 pursuit) were quantified. Scripts:
-`examples/jspace_paper_metric_varfrac.py`,
-`examples/jspace_swap_significance.py`, `examples/jspace_atom_norm_bias.py`.
+`research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py`,
+`research/arcs/04_jspace/scripts/jspace_swap_significance.py`, `research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py`.
 
 ## Finding 1 — metric mismatch, but both ceiling verdicts survive
 
@@ -265,28 +265,28 @@ committed scripts):
 Significance stats recompute deterministically from the committed
 `entailed_swap_chat_*` artifacts (no new dataset). Figure:
 `figures/2026-07-24-jspace-paper-metric-excess.png`
-(`examples/jspace_render_paper_metric_figure.py`; INVENTORY +
+(`research/arcs/04_jspace/scripts/jspace_render_paper_metric_figure.py`; INVENTORY +
 DATA_PROVENANCE rows). Audit coverage: Check M blocks in
-`examples/jspace_audit_findings.py`.
+`research/arcs/04_jspace/scripts/jspace_audit_findings.py`.
 
 ## Reproducibility
 
 ```
 # paper-metric recompute (GPU; ~6 min 1.5B grid / ~10 min all-pos / ~18 min 7B)
-python examples/jspace_paper_metric_varfrac.py \
+python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-1.5b-instruct_jlens_qwen2.5-1.5b_bf16_n100.pt
-python examples/jspace_paper_metric_varfrac.py \
+python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-1.5b_bf16_n100.pt \
     --all-positions --layers 0,18,21,22 --n-rand 4 --rand-seed-base 20000
-python examples/jspace_paper_metric_varfrac.py \
+python research/arcs/04_jspace/scripts/jspace_paper_metric_varfrac.py \
     --model Qwen/Qwen2.5-7B-Instruct --mode nf4 \
     --lens research/arcs/04_jspace/data/cache/jlens_qwen2.5-7b_nf4_n100.pt \
     --scan research/arcs/04_jspace/data/structure_scan_qwen2.5-7b-instruct_jlens_qwen2.5-7b_nf4_n100.pt \
     --rand-seed-base 30000
 # CPU-only stats (committed inputs)
-python examples/jspace_swap_significance.py
-python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
+python research/arcs/04_jspace/scripts/jspace_swap_significance.py
+python research/arcs/04_jspace/scripts/jspace_atom_norm_bias.py   # needs the cache-only full lens
 ```
 
 ## Notes / limitations
@@ -358,7 +358,7 @@ python examples/jspace_atom_norm_bias.py   # needs the cache-only full lens
   All three L0 figures are on the wikitext held-out prompts: each
   artifact's stored `config["prompts_file"]` is
   `heldout_prompts_wikitext103_n30.json` (the C4-lens run is
-  `examples/jspace_rerun_scans.sh` run 2/10, which passes no
+  `research/arcs/04_jspace/scripts/jspace_rerun_scans.sh` run 2/10, which passes no
   `--prompts`).
   10.4% is the all-positions sweep with the bf16 wikitext lens.
   9.67% is the scan grid with the same lens: the L0 value under the

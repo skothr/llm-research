@@ -3,10 +3,10 @@
 **Date / context:** 2026-06-10. Model/protocol as in
 [2026-06-10-emb-global-geometry.md](2026-06-10-emb-global-geometry.md).
 Battery: 690 curated words across 70 classes / 10 supergroups
-(`examples/emb_token_battery.py`), resolved to 665 surviving single-token
+(`research/arcs/03_embedding-atlas/scripts/emb_token_battery.py`), resolved to 665 surviving single-token
 words = 1,062 anchor-variant rows (leading-space + bare variants); per-class
 statistics use the 665 primary rows, classes with >= 5 survivors (54 of 70).
-Derivation: `examples/emb_category_stats.py`; locked by AUDIT 5-6.
+Derivation: `research/arcs/03_embedding-atlas/scripts/emb_category_stats.py`; locked by AUDIT 5-6.
 
 ## Findings
 
@@ -70,16 +70,16 @@ Audit-locked: AUDIT 5 re-derives the gaps in F-C1's table from
 `emb_battery_vectors.pt` from first principles (not via the derived
 artifact); AUDIT 6 asserts the neighbor identities quoted above (decoded
 strings, not just non-emptiness). Full neighbor tables:
-`python examples/emb_neighbors_report.py`.
+`python research/arcs/03_embedding-atlas/scripts/emb_neighbors_report.py`.
 
 ## Reproducibility
 
 ```bash
-python examples/emb_category_stats.py     # derive (model-free)
-python examples/emb_category_render.py    # fig5-fig8
-python examples/emb_pca_map_render.py     # fig9
-python examples/emb_neighbors_report.py   # neighbor tables
-python examples/emb_audit_findings.py     # AUDIT 5-6
+python research/arcs/03_embedding-atlas/scripts/emb_category_stats.py     # derive (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_category_render.py    # fig5-fig8
+python research/arcs/03_embedding-atlas/scripts/emb_pca_map_render.py     # fig9
+python research/arcs/03_embedding-atlas/scripts/emb_neighbors_report.py   # neighbor tables
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py     # AUDIT 5-6
 ```
 
 ## Hypotheses / follow-ups
@@ -105,11 +105,11 @@ python examples/emb_audit_findings.py     # AUDIT 5-6
 
 ## References
 
-- Scripts: `examples/emb_token_battery.py` (battery), `examples/emb_capture.py`
-  (battery rows, global stats, neighbor probes), `examples/emb_category_stats.py`
-  (derivation), `examples/emb_category_render.py` (fig5-fig8),
-  `examples/emb_pca_map_render.py` (fig9), `examples/emb_neighbors_report.py`,
-  `examples/emb_audit_findings.py` (AUDIT 5-6).
+- Scripts: `research/arcs/03_embedding-atlas/scripts/emb_token_battery.py` (battery), `research/arcs/03_embedding-atlas/scripts/emb_capture.py`
+  (battery rows, global stats, neighbor probes), `research/arcs/03_embedding-atlas/scripts/emb_category_stats.py`
+  (derivation), `research/arcs/03_embedding-atlas/scripts/emb_category_render.py` (fig5-fig8),
+  `research/arcs/03_embedding-atlas/scripts/emb_pca_map_render.py` (fig9), `research/arcs/03_embedding-atlas/scripts/emb_neighbors_report.py`,
+  `research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py` (AUDIT 5-6).
 - Data: `../data/emb_battery_vectors.pt`, `../data/emb_global_stats.pt`,
   `../data/emb_category_stats.pt`, `../data/emb_neighbor_probes.pt`.
 - Figures: fig5-fig9 in [figures/INVENTORY.md](figures/INVENTORY.md).

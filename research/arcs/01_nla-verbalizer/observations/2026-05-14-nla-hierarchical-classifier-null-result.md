@@ -58,10 +58,10 @@ The discriminant basis built in MAIN-26 is more accurate than the self-validatio
 
 ## Evidence
 
-AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`examples/nla_audit_findings.py`). "Recomputed" values use AUDIT 23's own recipe: the 23 sink-removed mean-contrast directions from [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt), the 167-capture pool AUDIT 22 builds from [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), and its `expected_cat` mapping.
+AUDIT lines are quoted from the committed transcript [`../data/audit_2026-08-17.log`](../data/audit_2026-08-17.log) (`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`). "Recomputed" values use AUDIT 23's own recipe: the 23 sink-removed mean-contrast directions from [`../data/vocab_atlas.pt`](../data/vocab_atlas.pt), the 167-capture pool AUDIT 22 builds from [`../data/aggregate_faithfulness.pt`](../data/aggregate_faithfulness.pt), [`../data/rabbit_haiku_gen_trajectory.pt`](../data/rabbit_haiku_gen_trajectory.pt), [`../data/forced_continuation.pt`](../data/forced_continuation.pt) and [`../data/country_concept_vector.pt`](../data/country_concept_vector.pt), and its `expected_cat` mapping.
 
 - **Null result (AUDIT 23):** `sibling pairs at discriminant cos > 0.80` = 6; `sibling-applicable captures (disambiguator fired)` = 33; `captures whose top-1 flipped (the null result)` = 1; `country scored-capture count (fig30)` = 29; `country baseline top-1 accuracy` = 0.3448; `country hierarchical top-1 accuracy` = 0.3793; `fig30 scored-capture total` = 107; `overall baseline top-1 accuracy` = 0.4393; `overall hierarchical top-1 accuracy` = 0.4486.
-- **Sibling threshold:** `examples/nla_hierarchical_classifier.py` sets `SIBLING_COS_THRESHOLD = 0.80`, and AUDIT 23 lists the 6 pairs above it: country–capital, p_ender–p_internal, p_ender–math_op, p_internal–p_dash, p_dash–math_op, p_special–math_op. Recomputed: only country–capital (0.938) is above +0.85; the next pair is p_special–math_op at 0.843. The script's docstring still says +0.85.
+- **Sibling threshold:** `research/arcs/01_nla-verbalizer/scripts/nla_hierarchical_classifier.py` sets `SIBLING_COS_THRESHOLD = 0.80`, and AUDIT 23 lists the 6 pairs above it: country–capital, p_ender–p_internal, p_ender–math_op, p_internal–p_dash, p_dash–math_op, p_special–math_op. Recomputed: only country–capital (0.938) is above +0.85; the next pair is p_special–math_op at 0.843. The script's docstring still says +0.85.
 - **Where the 33 comes from (recomputed):** the disambiguator fires on 33 of all 167 pool captures, the count AUDIT 23 checks. Within the 107 scored captures it fires on 24.
 - **Per-category table (recomputed):** codemath 16/30 correct before and after; country 10/29 → 11/29; nature 21/45; negation 0/2; refusal 0/1. Country gains 0.3793 − 0.3448 = 0.0345 and overall 0.4486 − 0.4393 = 0.0093. The table's Δ column gives these differences in percentage points (+3.4 and +0.9), not relative percent; the relative gain for country is 0.0345 / 0.3448 = 10%.
 - **The flipped capture (recomputed):** aggregate prompt `factual_easy` ("What is the capital of France?"), generated token `' France'`, top-1 capital → country, expected category country.
@@ -92,12 +92,12 @@ Only (1) is fixable by improving the basis. (2) is a validation-methodology issu
 ## Reproducibility
 
 ```bash
-python examples/nla_hierarchical_classifier.py
+python research/arcs/01_nla-verbalizer/scripts/nla_hierarchical_classifier.py
 ```
 
 CPU only, ~5 seconds, no model loading.
 
-The script scores the 167 captures stored as `H` and `items_meta` in [`../data/pairwise_and_hotdims.pt`](../data/pairwise_and_hotdims.pt), the same pool AUDIT 23 scores. It prints the sibling pairs, the disambiguator count over all 167 captures (33), the per-category baseline and hierarchical percentages, and the expected, baseline and hierarchical labels of the flipped capture. It does not print the count within the 107 scored captures (24), the per-capture identities or the per-prompt top-1 labels in Evidence. Those come from the AUDIT 23 recipe in `examples/nla_audit_findings.py` applied capture by capture; no committed script prints them. `python examples/nla_audit_findings.py` replays the AUDIT 23 lines.
+The script scores the 167 captures stored as `H` and `items_meta` in [`../data/pairwise_and_hotdims.pt`](../data/pairwise_and_hotdims.pt), the same pool AUDIT 23 scores. It prints the sibling pairs, the disambiguator count over all 167 captures (33), the per-category baseline and hierarchical percentages, and the expected, baseline and hierarchical labels of the flipped capture. It does not print the count within the 107 scored captures (24), the per-capture identities or the per-prompt top-1 labels in Evidence. Those come from the AUDIT 23 recipe in `research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py` applied capture by capture; no committed script prints them. `python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py` replays the AUDIT 23 lines.
 
 ## Follow-ups
 

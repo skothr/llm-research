@@ -133,11 +133,11 @@ first token, not the delimiters.
 # capture (loads the model; ~10 min CPU). The model must already be in the cache:
 # LLM_RESEARCH_MODEL_CACHE, or the HuggingFace default cache when unset.
 HF_HUB_OFFLINE=1 \
-  python examples/emb_trace_attention.py       # -> .cache/emb_artifacts/emb_trace_attention.pt
-python examples/emb_trace_attention_analyze.py # model-free adjudication (all numbers above)
-python examples/emb_trace_attention_render.py  # fig19-fig21 (model-free)
-python examples/emb_data_manifest.py --check   # promoted-artifact sha256 + metadata
-python examples/emb_audit_findings.py          # AUDIT section 10 locks every number here
+  python research/arcs/03_embedding-atlas/scripts/emb_trace_attention.py       # -> .cache/emb_artifacts/emb_trace_attention.pt
+python research/arcs/03_embedding-atlas/scripts/emb_trace_attention_analyze.py # model-free adjudication (all numbers above)
+python research/arcs/03_embedding-atlas/scripts/emb_trace_attention_render.py  # fig19-fig21 (model-free)
+python research/arcs/03_embedding-atlas/scripts/emb_data_manifest.py --check   # promoted-artifact sha256 + metadata
+python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py          # AUDIT section 10 locks every number here
 ```
 
 ## Hypotheses / follow-ups
@@ -186,4 +186,4 @@ python examples/emb_audit_findings.py          # AUDIT section 10 locks every nu
 - Prior tracing observation (F-T1..F-T4, block reader heads, carrier subspace,
   sink census): [2026-06-11-emb-trace-block-through-layers.md](2026-06-11-emb-trace-block-through-layers.md).
 - Figures: fig19-fig21 in [figures/INVENTORY.md](figures/INVENTORY.md).
-- Audit: `examples/emb_audit_findings.py` section 10.
+- Audit: `research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py` section 10.
