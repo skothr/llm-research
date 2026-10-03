@@ -7,7 +7,7 @@ checkpoints — so this file records what they depend on and under what terms.
 
 Unlike [arc 04](../../04_jspace/data/LICENSE-DATA.md), **no third-party corpus
 was ingested**. Every prompt and every anchor token in this arc was
-hand-authored in-repo, inside the `examples/nla_*.py` capture scripts. There is
+hand-authored in-repo, inside the `research/arcs/01_nla-verbalizer/scripts/nla_*.py` capture scripts. There is
 no scraped-web input, and therefore no scraped-web PII to redact.
 
 ## Source models
@@ -75,7 +75,7 @@ Two qualifications, stated rather than glossed:
 
 1. **Public figures appear in hand-authored prompts** as ordinary factual
    subject matter — `"Mozart was born in Salzburg."`, `"The band Queen is from
-   England."` in `examples/nla_country_concept_vector.py`. These are published
+   England."` in `research/arcs/01_nla-verbalizer/scripts/nla_country_concept_vector.py`. These are published
    biographical facts about public figures used as country-mention probes, not
    personal data collected about private individuals.
 2. **AV output is model-generated and was not filtered.** The verbalizer

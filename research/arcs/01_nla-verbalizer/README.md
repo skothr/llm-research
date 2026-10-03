@@ -563,7 +563,7 @@ AV format bias, and that the basis-axis figures showed every axis
 active at once (2026-05-14).
 
 **Claude Code.** All experiment scripts (~42 files under
-`examples/nla_*`), figure pipelines, observation drafts, the audit
+`scripts/nla_*`), figure pipelines, observation drafts, the audit
 (`nla_audit_findings.py`), and issue tracking. Continuity across
 context compactions (resume checkpoints, the figure inventory, a record
 of where each claim appeared so corrections reached every copy).
@@ -695,18 +695,18 @@ offline).
 # Verify the arc — re-derives every number the findings rely on from the .pt files.
 # Runs from a clean clone: nla_audit_findings.py reads the committed data/
 # dir when the gitignored working cache is empty.
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 # Expect: SUMMARY:  196 PASS  |  0 FAIL
 
 # Verify dataset integrity (sha256 of every .pt vs data/MANIFEST.json)
-python examples/nla_data_manifest.py --check
+python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --check
 
 # Re-render a figure (~10s, no model load). Inputs resolve from the committed
 # data/ dir when the working cache is empty (shared _nla_artifacts fallback).
-python examples/nla_discriminant_stability_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_discriminant_stability_render.py
 
 # Re-capture a .pt from scratch (loads the base model, slow on CPU)
-python examples/nla_vocab_atlas_capture.py
+python research/arcs/01_nla-verbalizer/scripts/nla_vocab_atlas_capture.py
 ```
 
 Two CPU-only utilities read the artifacts through `_nla_artifacts` (the same
@@ -754,12 +754,16 @@ research/arcs/01_nla-verbalizer/
     MANIFEST.json                               # sha256 + provenance per file
     README.md                                   # usage + copy-back + trust note
     *.pt                                        # 16 capture/derived artifacts (~15 MB)
+  scripts/                                      # The arc's 45 scripts
+    nla_*.py                                    # 43 capture / analysis / render / audit scripts
+    _nla_artifacts.py                           # Artifact path resolver
+    _layer_hooks.py                             # Decoder-block output hook for the two steering scripts
 ```
 
-Related implementation surfaces (outside `research/`):
+Related implementation surfaces:
 
 - [`src/llm_research/nla_probe.py`](../../../src/llm_research/nla_probe.py) — NLA wrapper (CPU bf16 `nla_verbalize`, `nla_reconstruct`, `nla_score`)
 - [`src/llm_research/hf_models.py`](../../../src/llm_research/hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
-- [`examples/_nla_artifacts.py`](../../../examples/_nla_artifacts.py) — artifact path resolver (cache first, committed `data/` fallback); its docstring has the conventions
-- [`examples/nla_audit_findings.py`](../../../examples/nla_audit_findings.py) — the regression audit (196/0)
-- [`examples/nla_*.py`](../../../examples/) — 42 arc scripts
+- [`scripts/_nla_artifacts.py`](scripts/_nla_artifacts.py) — artifact path resolver (cache first, committed `data/` fallback); its docstring has the conventions
+- [`scripts/nla_audit_findings.py`](scripts/nla_audit_findings.py) — the regression audit (196/0)
+- [`scripts/nla_*.py`](scripts/) — 42 arc scripts

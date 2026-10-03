@@ -216,8 +216,8 @@ This is the step most likely to be skipped under time pressure. Don't.
 - **Save to the committed `data/` dir** and write/refresh the manifest:
   ```bash
   cp <working-cache>/*.pt research/arcs/<slug>/data/
-  python examples/nla_data_manifest.py --write # (re)writes MANIFEST.json
-  python examples/nla_data_manifest.py --check # verifies sha256
+  python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --write # (re)writes MANIFEST.json
+  python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --check # verifies sha256
   ```
   (The manifest script is arc-specific; copy it as the template for a new arc.)
 
@@ -437,7 +437,7 @@ the committed `data/` dir is the canonical copy.
 
 **Wiring (so the data is *usable*, not just stored).** Scripts should resolve
 inputs **cache-first, committed-copy-fallback**, and write outputs only to the
-cache. The NLA arc centralizes this in `examples/_nla_artifacts.py`
+cache. The NLA arc centralizes this in `research/arcs/01_nla-verbalizer/scripts/_nla_artifacts.py`
 (`read_artifact`/`find_artifact` for loads, `write_artifact` for saves). That
 one indirection is what lets the *same* script a developer runs locally
 (writing fresh captures to the gitignored cache) also re-render figures and

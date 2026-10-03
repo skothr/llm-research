@@ -14,7 +14,7 @@ git-LFS. Recover with `git lfs install && git lfs pull`; both
 `nla_data_manifest.py --check` and the loaders in `_nla_artifacts.py` detect
 the stub state and say so rather than reporting checksum drift.
 
-These are the canonical copy. The scripts in `examples/` resolve their
+These are the canonical copy. The scripts in `research/arcs/01_nla-verbalizer/scripts/` resolve their
 inputs through the shared `_nla_artifacts` helper — **the gitignored working
 cache `.cache/nla_artifacts/` first, this committed copy as fallback**
 — and write outputs only to the cache. So a clean clone reads straight from
@@ -27,7 +27,7 @@ directory when the working cache is empty:
 
 ```bash
 # From a clean clone (after `git lfs pull`):
-/path/to/venv/bin/python examples/nla_audit_findings.py
+/path/to/venv/bin/python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 # Expect: SUMMARY:  196 PASS  |  0 FAIL
 ```
 
@@ -36,18 +36,18 @@ from this committed dir when the working cache is empty (same `_nla_artifacts`
 fallback), so a clean clone re-renders directly:
 
 ```bash
-python examples/nla_vocab_atlas_render.py
+python research/arcs/01_nla-verbalizer/scripts/nla_vocab_atlas_render.py
 ```
 
 ## Verifying / refreshing
 
 ```bash
 # Drift check — recompute every sha256 against MANIFEST.json:
-python examples/nla_data_manifest.py --check
+python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --check
 
 # Rewrite MANIFEST.json after a deliberate re-capture (then re-commit both).
 # The mode flag is mandatory: a bare invocation prints usage and writes nothing.
-python examples/nla_data_manifest.py --write
+python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --write
 ```
 
 ## Capture-roots vs derived
@@ -65,7 +65,7 @@ reproduce bit-for-bit with zero model load.
 statement.** Artifacts load with `torch.load(..., weights_only=False)`
 (pickle, executes arbitrary code on load). Safe on *this* copy because these
 files were generated locally by the committed capture scripts. On any copy you
-did not produce, run `python examples/nla_data_manifest.py --check` and confirm
+did not produce, run `python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --check` and confirm
 the sha256s before loading.
 
 > Data licensing, model provenance, and the personal-data assessment for these
