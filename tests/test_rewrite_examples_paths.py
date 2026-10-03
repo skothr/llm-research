@@ -60,14 +60,25 @@ def test_destination_rules() -> None:
 
 
 def _tracked() -> list[str]:
-    out = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=rw.REPO,
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout
+    if not (rw.REPO / ".git").exists():
+        pytest.skip("not a git checkout")
+    try:
+        out = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=rw.REPO,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError) as exc:
+        pytest.skip(f"git unavailable: {exc}")
     return [p for p in out.split("\0") if p]
+
+
+def test_tracked_skips_outside_a_git_checkout(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    with pytest.raises(pytest.skip.Exception):
+        _tracked()
 
 
 def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
@@ -95,6 +106,7 @@ def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
         "{examples}/nla_scan.py",
         "--examples/nla_scan.py",
         "my_examples/nla_scan.py",
+        "my__examples/nla_scan.py",
     ],
 )
 def test_non_path_forms_are_untouched(text: str) -> None:
@@ -215,6 +227,64 @@ def test_keep_marker_does_not_override_file_class() -> None:
 def test_tests_subdirectory_maps_to_repo_tests() -> None:
     (r,) = refs("pytest examples/tests/test_prose_lint.py -q")
     assert r.replacement == "tests/test_prose_lint.py"
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        r"\texttt{examples/nla_scan.py}",
+        "~~examples/nla_scan.py~~",
+        "_examples/nla_scan.py_",
+        "__examples/nla_scan.py__",
+        "$examples/nla_scan.py",
+        "@examples/nla_scan.py",
+        "%examples/nla_scan.py",
+        "+examples/nla_scan.py",
+        "}examples/nla_scan.py",
+    ],
+)
+def test_unusual_prefix_is_manual(text: str) -> None:
+    (r,) = refs(text, exists=AFTER_ARC01)
+    assert r.cls == "manual" and r.reason == "unusual prefix"
+    assert rw.rewrite_text(text, [r])[0] == text
+
+
+def test_brace_list_first_item_is_manual() -> None:
+    found = refs("{examples/nla_scan.py,examples/_hf_models.py}")
+    assert [(r.cls, r.reason) for r in found] == [
+        ("manual", "unusual prefix"),
+        ("auto", "repo-root path"),
+    ]
+
+
+@pytest.mark.parametrize(
+    ("text", "exists"),
+    [
+        ("examples/nla_scan.py.bak", BEFORE),
+        ("examples/nla_scan.py.Log", BEFORE),
+        (
+            "examples/jspace_rerun_scans.sh.log",
+            exists_in("examples/jspace_rerun_scans.sh"),
+        ),
+    ],
+)
+def test_file_name_followed_by_another_extension_is_manual(text: str, exists) -> None:
+    (r,) = refs(text, exists=exists)
+    assert r.cls == "manual" and r.reason == "unknown file name"
+    assert r.text == text
+
+
+@pytest.mark.parametrize(
+    "text", ["examples/nla_scan/out.json", "examples/_hf_models/x"]
+)
+def test_stem_followed_by_slash_is_manual(text: str) -> None:
+    (r,) = refs(text)
+    assert r.cls == "manual" and r.reason == "unknown file name"
+
+
+def test_stem_before_trailing_period_still_maps() -> None:
+    (r,) = refs("See examples/_hf_models.")
+    assert r.cls == "auto" and r.text == "examples/_hf_models"
 
 
 @pytest.mark.parametrize(
@@ -344,6 +414,50 @@ def test_check_exit_status(found, strict: bool, status: int, capsys) -> None:
     capsys.readouterr()
 
 
+def test_ready_counts_and_label_only_for_auto_class(capsys) -> None:
+    rec = _ref("hashed-record", "auto", True)
+    assert "[ready]" not in rw._format(rec) and "[pending]" not in rw._format(rec)
+    rw.check([rec], [], False)
+    assert "ready=" not in capsys.readouterr().out
+    rw.check([_ref("auto", "auto", True)], [], False)
+    assert "ready=1" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    ("not_scanned", "strict", "status"),
+    [
+        (["a.json"], False, 0),
+        (["a.json"], True, 1),
+        (["research/archive/a.json"], True, 0),
+    ],
+)
+def test_not_scanned_files_are_listed_and_fail_strict(
+    not_scanned: list[str], strict: bool, status: int, capsys
+) -> None:
+    assert rw.check([], [], strict, not_scanned) == status
+    out = capsys.readouterr().out
+    assert f"not scanned: {not_scanned[0]}" in out
+    assert "1 text-like file(s) not scanned" in out
+
+
+def test_collect_lists_unreadable_text_like_files(tmp_path, monkeypatch) -> None:
+    files = {
+        "bad.json": b"\xff\xfe examples/nla_scan.py",
+        "pic.png": b"\x89PNG\0",
+        "lfs.md": b"version https://git-lfs.github.com/spec/v1\n",
+        "w.pt": b"version https://git-lfs.github.com/spec/v1\n",
+        "ok.md": b"examples/nla_scan.py\n",
+    }
+    for name, data in files.items():
+        (tmp_path / name).write_bytes(data)
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    monkeypatch.setattr(rw, "candidate_files", lambda _paths: (sorted(files), set()))
+    monkeypatch.setattr(rw, "lfs_files", lambda _fs: {"lfs.md", "w.pt"})
+    texts, found, _, not_scanned = rw.collect([])
+    assert not_scanned == ["bad.json", "lfs.md"]
+    assert list(texts) == ["ok.md"] and len(found) == 1
+
+
 def test_apply_skips_records_unless_named_with_flag(
     tmp_path, monkeypatch, capsys
 ) -> None:
@@ -385,7 +499,7 @@ def test_main_keeps_the_name_of_an_in_repo_symlink(monkeypatch, tmp_path) -> Non
     monkeypatch.setattr(rw, "REPO", tmp_path)
     seen: list[list[str]] = []
 
-    def fake_run(cmd, **kwargs):
+    def fake_run(cmd, **_kwargs):
         seen.append(cmd)
         return subprocess.CompletedProcess(cmd, 0, stdout=b"link.md\0")
 

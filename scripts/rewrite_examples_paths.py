@@ -10,12 +10,17 @@ What counts as a reference: `examples/<name>` where `examples/` starts the
 path, preceded by the start of the text or a character that cannot be part
 of an identifier or path (whitespace, a quote, a backtick, `(`, `[`, `=`,
 `:`, ...). `jlens.examples`, `{examples}`, `--examples` and `examples_dir`
-are never matched. A relative link such as `../../../examples/nla_x.py` is
-resolved against the referring file and rewritten to the new relative path;
-a repo-root path `examples/x.py` stays repo-root relative. Module stems
+are never matched. A reference behind one of `UNUSUAL_PREFIX` (LaTeX
+`\\texttt{examples/x.py}`, `~~examples/x.py~~`, `_examples/x.py_`) is
+reported as manual rather than dropped; an underscore counts only when it
+does not continue an identifier (`my_examples/` is not a reference). A
+relative link such as `../../../examples/nla_x.py` is resolved against the
+referring file and rewritten to the new relative path; a repo-root path
+`examples/x.py` stays repo-root relative. Module stems
 (`examples/_jspace_paths.resolve`) map like the file they name; a stem
-followed by a file extension (`examples/nla_scan.json`) does not. A quoted
-`"examples"` or `'examples'` string, the component of a path join such as
+followed by a file extension (`examples/nla_scan.json`) or by `/` does not,
+nor does a file name followed by another extension (`nla_scan.py.bak`). A
+quoted `"examples"` or `'examples'` string, the component of a path join such as
 `REPO / "examples" / "x.py"`, is reported as manual, unless it is a mapping
 key (followed by `:`) or a keyword argument value (`dest="examples"`).
 Python import statements are not this tool's job.
@@ -25,7 +30,8 @@ Each reference falls into one class:
   file exists on disk (the move has happened) and "pending" otherwise.
 - manual: a glob or brace form, a bare `examples/` or `examples/tests/`
   directory, an unknown or unmapped file name, a path with another prefix
-  before `examples/` (or before its `../` chain), a relative path that does
+  before `examples/` (or before its `../` chain) or an unusual character
+  right before it (`UNUSUAL_PREFIX`), a relative path that does
   not resolve to this repo's `examples/`, or a quoted path component. A
   person edits these.
 - kept: any reference on a line that carries the marker `rewrite-paths:
@@ -50,6 +56,10 @@ reference remains outside the excluded and kept references. `--apply` exits 0. S
 means a path or file could not be scanned, or git failed; it takes
 precedence.
 
+`--check` also lists the text-like files (`TEXT_EXTENSIONS`) it could not
+read: LFS-filtered files and files that are not valid UTF-8. With `--strict`,
+any such file outside the excluded areas fails the check.
+
 Usage:
     python scripts/rewrite_examples_paths.py --check [PATHS...]
     python scripts/rewrite_examples_paths.py --check --list manual
@@ -68,7 +78,7 @@ import re
 import subprocess
 import sys
 from collections import Counter
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -135,9 +145,12 @@ CLASSES = ("auto", "manual", "hashed-record", "kept", "excluded")
 KEEP_MARKER = "rewrite-paths: keep"
 
 # `examples/` that starts a path, optionally behind a ./ or ../ chain. The
-# character before it may not be part of an identifier, a flag, a template
-# or a dotted name.
-REFERENCE = re.compile(r"(?<![\w\-.{}$@%+~])(?P<rel>(?:\.{1,2}/)*)examples/")
+# character before it may not be part of an identifier (an underscore is
+# checked in `scan_text`), a flag or a dotted name.
+REFERENCE = re.compile(r"(?<![^\W_]|[\-.])(?P<rel>(?:\.{1,2}/)*)examples/")
+# A reference behind one of these is reported as manual: it may be a template,
+# markup or a variable (`\texttt{examples/x.py}`, `~~examples/x.py~~`).
+UNUSUAL_PREFIX = frozenset("{}$@%+~_")
 # Characters a path token may continue with (globs and braces included, so
 # that they can be recognized as manual).
 TOKEN = re.compile(r"[\w.\-/*?{},]*")
@@ -157,6 +170,11 @@ EXTENSIONS = frozenset(
     ).split()
 )
 SEGMENT = re.compile(r"[\w\-]*")
+# Files skipped as unreadable are reported only when their extension says
+# they should hold text; true binaries (.pt, .png) are expected to be skipped.
+TEXT_EXTENSIONS = frozenset(
+    "json jsonl csv tsv md txt py sh log tex yaml yml toml".split()
+)
 
 _problems: list[str] = []
 
@@ -229,7 +247,8 @@ def _resolve_name(
     Returns (length used in `core`, examples-relative file name, is_stem), or
     None. A name is known when a rule maps it and either its source or its
     destination exists. A stem (no extension) matches `<stem>.py`, unless
-    the text after it is a dot and a file extension (`EXTENSIONS`).
+    the text after it is a dot and a file extension (`EXTENSIONS`) or a `/`.
+    A full file name followed by a dot and another extension is not known.
     """
     for i in range(len(core), 0, -1):
         if i < len(core) and core[i] not in "./":
@@ -240,9 +259,20 @@ def _resolve_name(
         if name in UNMAPPED:
             return i, name, False
         dest = destination(name)
-        if dest is not None and (exists("examples/" + name) or exists(dest)):
+        if (
+            dest is not None
+            and (exists("examples/" + name) or exists(dest))
+            and not _extension_at(core, i)
+        ):
             return i, name, False
-        if "." not in posixpath.basename(name) and not _extension_at(core, i):
+        # A stem ends at the end of the core (trailing dots are punctuation)
+        # or at a dot before an attribute, never at `/`.
+        stem_end = i >= len(core.rstrip(".")) or core[i] == "."
+        if (
+            stem_end
+            and "." not in posixpath.basename(name)
+            and not _extension_at(core, i)
+        ):
             dest = destination(name + ".py")
             if dest is not None and (exists(f"examples/{name}.py") or exists(dest)):
                 return i, name + ".py", True
@@ -321,6 +351,11 @@ def scan_text(
             before = len(text[:start]) - len(text[:start].rstrip("*"))
             is_glob = before != stars
         prefixed = start > 0 and text[start - 1] == "/"
+        unusual = start > 0 and text[start - 1] in UNUSUAL_PREFIX
+        if start > 0 and text[start - 1] == "_":
+            head = text[:start].rstrip("_")
+            if head and (head[-1].isalnum() or head[-1] in "_-."):
+                continue  # an identifier such as `my_examples/`
         if rel:
             joined = posixpath.normpath(
                 posixpath.join(posixpath.dirname(path), rel + "examples")
@@ -332,6 +367,8 @@ def scan_text(
                 resolved = None
         if prefixed:
             reason = "another path prefix before examples/"
+        elif unusual:
+            reason = "unusual prefix"
         elif reason:
             pass
         elif is_glob:
@@ -468,37 +505,53 @@ def read_text(path: str) -> str | None:
         return None
 
 
-def collect(paths: list[str]) -> tuple[dict[str, str], list[Ref], set[str]]:
-    """(texts by file, refs, explicitly named files) for `paths`."""
+def _text_like(path: str) -> bool:
+    return posixpath.splitext(path)[1][1:].lower() in TEXT_EXTENSIONS
+
+
+def collect(
+    paths: list[str],
+) -> tuple[dict[str, str], list[Ref], set[str], list[str]]:
+    """(texts by file, refs, explicitly named files, not scanned) for `paths`.
+
+    "Not scanned" lists the text-like files (`TEXT_EXTENSIONS`) that were
+    skipped because git routes them through LFS or their bytes are not text.
+    """
     files, explicit = candidate_files(paths)
     lfs = lfs_files(files)
     texts: dict[str, str] = {}
     refs: list[Ref] = []
+    not_scanned: list[str] = []
     for path in files:
-        if path in lfs:
+        full = REPO / path
+        text = None if path in lfs else read_text(path)
+        if text is None:
+            if _text_like(path) and full.is_file() and not full.is_symlink():
+                not_scanned.append(path)
             continue
-        text = read_text(path)
-        if text is None or not ("examples/" in text or COMPONENT.search(text)):
+        if not ("examples/" in text or COMPONENT.search(text)):
             continue
         texts[path] = text
         refs.extend(scan_text(path, text))
-    return texts, refs, explicit
+    return texts, refs, explicit, not_scanned
 
 
 def _format(r: Ref) -> str:
     status = ""
-    if r.kind == "auto":
+    if r.cls == "auto":
         status = " [ready]" if r.ready else " [pending]"
     arrow = f" -> {r.replacement}" if r.replacement else ""
     return f"{r.path}:{r.line}: {r.cls}{status}: {r.text}{arrow}  ({r.reason})"
 
 
-def check(refs: list[Ref], listed: list[str], strict: bool) -> int:
+def check(
+    refs: list[Ref], listed: list[str], strict: bool, not_scanned: Sequence[str] = ()
+) -> int:
     per_file: dict[str, Counter[str]] = {}
     for r in refs:
         counts = per_file.setdefault(r.path, Counter())
         counts[r.cls] += 1
-        if r.kind == "auto" and r.ready:
+        if r.cls == "auto" and r.ready:
             counts["ready"] += 1
     for path in sorted(per_file):
         c = per_file[path]
@@ -518,9 +571,12 @@ def check(refs: list[Ref], listed: list[str], strict: bool) -> int:
         + ", ".join(f"{cls} {totals[cls]}" for cls in CLASSES)
         + f"; ready to rewrite {len(ready)}"
     )
+    for path in not_scanned:
+        print(f"not scanned: {path}")
+    print(f"REWRITE CHECK: {len(not_scanned)} text-like file(s) not scanned")
     if ready:
         return 1
-    if strict and live:
+    if strict and (live or any(file_class(p)[0] != "excluded" for p in not_scanned)):
         return 1
     return 0
 
@@ -579,9 +635,9 @@ def main(argv: list[str] | None = None) -> int:
 
     _problems.clear()
     try:
-        texts, refs, explicit = collect(args.paths)
+        texts, refs, explicit, not_scanned = collect(args.paths)
         if args.check:
-            status = check(refs, args.list, args.strict)
+            status = check(refs, args.list, args.strict, not_scanned)
         else:
             status = apply(texts, refs, explicit, args.include_records)
     except Exception as exc:  # a failed run is never reported as clean
