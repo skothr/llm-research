@@ -199,6 +199,13 @@ as written. When an audit pins another file, add it to that list. Fenced blocks 
 examples; check the comments you write inside one by hand, since the scanner
 skips them.
 
+A second line marker, `rewrite-paths: keep`, is read by
+`python scripts/rewrite_examples_paths.py --check` (#122). It goes on the same
+line as a reference to an old `examples/` path that is correct as written (a <!-- rewrite-paths: keep -->
+dated measurement, a path into another repository), in that file's comment
+syntax: the tool classes every such reference on that line as kept, never
+rewrites it, and does not fail `--strict` on it.
+
 # Research arcs & observations
 
 Findings inside a focused investigation go in that arc's

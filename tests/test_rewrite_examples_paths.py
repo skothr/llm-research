@@ -83,9 +83,11 @@ def test_tracked_skips_outside_a_git_checkout(tmp_path, monkeypatch) -> None:
 
 
 def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
-    # Reads the live tree. The arc 01 move emptied examples/, so the first
-    # half holds trivially unless a file is added there again; the second
-    # test below checks the map against where the files are now.
+    # Reads the live tree. The arc 01 move left no tracked file under
+    # examples/ and UNMAPPED is empty, so `names` is empty and every assertion
+    # here compares empty collections. They check something again only if a
+    # file is added under examples/: it must then map or be listed in
+    # UNMAPPED. The test below checks the map against where the files are now.
     tracked = _tracked()
     names = [p[len("examples/") :] for p in tracked if p.startswith("examples/")]
     unmapped = [n for n in names if rw.destination(n) is None]
@@ -97,16 +99,30 @@ def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
 
 
 def test_every_tracked_arc_script_is_where_the_map_sends_it() -> None:
-    # The inverse of the test above, against the tree after the moves: each
-    # tracked file in an arc's scripts/ must be the destination the map gives
-    # for examples/<its name>, so a rewritten reference names a real file.
-    scripts = [
-        p for p in _tracked() if re.fullmatch(r"research/arcs/[^/]+/scripts/[^/]+", p)
-    ]
-    assert len(scripts) > 100  # 45 + 3 + 26 + 30 at the arc 01 move
-    mapped = {p: rw.destination(p.rsplit("/", 1)[1]) for p in scripts}
-    assert {p: d for p, d in mapped.items() if d != p} == {}
+    # The inverse of the test above, against the tree after the moves. It is
+    # a check of the one-time migration, so it covers only what the map knows:
+    # each tracked file directly under an arc's scripts/ whose name the map
+    # gives a destination for (as the old examples/<name>) must be at that
+    # destination, so a rewritten reference names a real file. A file whose
+    # name the map does not know (a script or a README that never lived in
+    # examples/) is skipped.
     tracked = set(_tracked())
+    mapped = {}
+    for p in sorted(tracked):
+        if re.fullmatch(r"research/arcs/[^/]+/scripts/[^/]+", p):
+            dest = rw.destination(p.rsplit("/", 1)[1])
+            if dest is not None:
+                mapped[p] = dest
+    assert {p: d for p, d in mapped.items() if d != p} == {}
+    # Each arc contributes at least one checked file, so the test cannot pass
+    # on an empty or partial selection.
+    slugs = {p.split("/")[2] for p in mapped}
+    assert slugs >= {
+        "01_nla-verbalizer",
+        "02_subliminal",
+        "03_embedding-atlas",
+        "04_jspace",
+    }
     for module, dest in rw.PACKAGE_MODULES.items():
         assert dest in tracked, module
 

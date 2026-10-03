@@ -63,6 +63,7 @@ research/arcs/<slug>/
     MANIFEST.json       # per-file sha256 + provenance + class
     README.md           # usage, copy-back, trust note
     *.pt                # capture + derived artifacts
+  scripts/              # the arc's capture / analysis / render / audit scripts and its manifest generator
   sessions/             # session-resume checkpoints (stale-fast; never evidence for a claim)
   plans/                # the arc plan (every arc) + later design docs
 ```
@@ -233,7 +234,8 @@ you've confirmed the capture protocol is what you intended.
 
 #### Audit (lock the numbers)
 
-Write/extend an arc audit script (template: `nla_audit_findings.py`) that
+Write/extend an arc audit script (template:
+`research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py`) that
 **re-derives every number the arc's findings will rely on from the committed `data/`** and asserts
 it against an expected constant, printing `PASS`/`FAIL` and a final
 `SUMMARY: N PASS | M FAIL`.
@@ -446,7 +448,7 @@ step, no clone-vs-local branching. Without it, committed data is inert: the
 scripts still point at an empty cache.
 
 **Manifest.** A `data/MANIFEST.json` (template generator:
-`nla_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
+`research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py`) records per file: `filename`, `sha256`, `size_bytes`,
 `class` (capture-root | derived), `producing_script`, `producing_command`
 (or `producing_args`, the arguments to `producing_script`, where a generator
 records those), `inputs` (upstream data files), `requires_model` (none |

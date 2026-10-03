@@ -562,8 +562,8 @@ research direction was substantive). Two methodological catches: the
 AV format bias, and that the basis-axis figures showed every axis
 active at once (2026-05-14).
 
-**Claude Code.** All experiment scripts (43 files under
-`scripts/nla_*`), figure pipelines, observation drafts, the audit
+**Claude Code.** All experiment scripts (the 43 `nla_*` files under the
+arc's `scripts/`), figure pipelines, observation drafts, the audit
 (`nla_audit_findings.py`), and issue tracking. Continuity across
 context compactions (resume checkpoints, the figure inventory, a record
 of where each claim appeared so corrections reached every copy).
@@ -713,8 +713,11 @@ Two CPU-only utilities read the artifacts through `_nla_artifacts` (the same
 cache-first, committed-copy-fallback resolution) without loading a model.
 `nla_dump_walkthrough.py` prints the token-by-token walkthrough of every
 capture to stdout; its 2026-05-13 output is committed as
-[`observations/2026-05-13-nla-walkthrough-all-captures.txt`](observations/2026-05-13-nla-walkthrough-all-captures.txt),
-whose header gives the redirect command. `nla_artifact_inspect.py` prints each
+[`observations/2026-05-13-nla-walkthrough-all-captures.txt`](observations/2026-05-13-nla-walkthrough-all-captures.txt)
+(to regenerate it, from the repo root:
+`python research/arcs/01_nla-verbalizer/scripts/nla_dump_walkthrough.py > <file>`;
+the committed file's comment header is prepended by hand and names the
+script at its path before the move). `nla_artifact_inspect.py` prints each
 `.pt` file's keys, shapes and dtypes (a schema check before analysis); with no
 argument it walks every artifact name in the committed `data/` and the working
 cache (one copy per name, the cache copy winning on a collision), and it

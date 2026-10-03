@@ -65,7 +65,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   The arc lifecycle and reproducibility disciplines are in
   `research/ARC_PROCESS.md`; the per-arc status index is `research/README.md`.
 - **`research/arcs/<slug>/scripts/`** — Each arc's pipeline scripts, one family
-  per arc by prefix (`nla_*`, `subliminal_*`, `emb_*`, `jspace_*`). Each family covers capture
+  per arc by prefix (`nla_*`, `subliminal_*`, `emb_*`, `jspace_*`), beside the
+  `_`-prefixed helper modules the arc 01, 03 and 04 families import. Each family covers capture
   (writes `.pt` artifacts; arc 02's writes JSON/JSONL and text), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
   prose relies on from committed artifacts. Arc 04's `jspace_*` family and
@@ -77,7 +78,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
   verbalizer / reconstructor pair); the rest are render/analysis-only
-  (torch / numpy / matplotlib). Arc 04's `jspace_*` scripts are in
+  (torch / numpy / matplotlib). Arc 01's `nla_*` scripts are in
+  `research/arcs/01_nla-verbalizer/scripts/`. Arc 04's `jspace_*` scripts are in
   `research/arcs/04_jspace/scripts/`. Arc 03's `emb_*` scripts are in
   `research/arcs/03_embedding-atlas/scripts/`. Arc 02's `subliminal_*`
   scripts are in `research/arcs/02_subliminal/scripts/`; its step-0 generator,
