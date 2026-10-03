@@ -27,7 +27,7 @@ number from these bytes.
 Why committed in plain git: Step-0
 outputs are small JSONL — 20.2 KiB across the four stream/raw files, 31.6 KiB
 for the whole dataset including `decode_report.json`, the capture-time `manifest.json` and the
-lockfile, 57.8 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
+lockfile, 57.9 KiB with `prompts.jsonl` (added 2026-08-17, below) — so
 committing them makes post-hoc validation work on a fresh clone with no
 re-capture. All figures above are `stat` byte sums on a KiB binary basis; `du`
 reports more, because it also counts the directory inode. Tensor artifacts
@@ -54,11 +54,11 @@ prompt/filter logic is an MIT port, and no third-party corpus is ingested.
 ### `step0-owl-neutral-decode`
 
 - **Backs:** [`../observations/2026-05-31-step0-protocol-and-filter.md`](../observations/2026-05-31-step0-protocol-and-filter.md) (H0 encoding decode-test).
-- **Capture-time `manifest.json` sha256:** `78d98a7ccf204d5b6ad01ced00a2bf18840d55be7f35fcf022da703267a3b1bb`
+- **Capture-time `manifest.json` sha256:** `4701eff9fc6553e344b9e4561f0ee83ccc3018ae70e5c15fa8d117873a43dadf`
   (recorded here, and in the arc manifest, so the capture-time manifest is
   tamper-evident — an edit to it changes this hash, and this pin is
   re-measured whenever one lands). Besides path-string updates from repo
-  restructuring, the capture-time manifest's one semantic
+  restructuring (and the note recording them), the capture-time manifest's one semantic
   amendment is the 2026-08-19 git-SHA repoint described under "Post-capture
   amendments" below. The latest path update, the #122 move, pointed its two
   `source_path` values and `provenance.generated_by` at the generator's
@@ -99,7 +99,7 @@ while carrying the capture-time values as historical constants.
 | `generation.generator_script_sha256` | `3b974528…` | `eeee4634d326dcc2a8ff74d13a768167cec3c353e85a648642dd3c95ec63bcc4` | The generator has been edited since capture. Today's script differs from the capture-time one in six ways: it writes `prompts.jsonl` and leaves `provenance.downstream` empty (`823b5e68`); it carries the path redaction (`1ed05dad`); it defers its numpy/torch imports so the audit can import the pure helpers, and carries the upstream MIT notice; `two_prop_z`'s docstring now states that its (0.0, 1.0) return for the zero-variance case is a placeholder, not a test result; and two provenance bugs were fixed on 2026-08-19 — `_REPO_ROOT` was set to `parents[1]`, the root at the script's then depth (`parents[2]` was correct only while this tree was the `testing/` subdir of the pre-split monorepo, so its one consumer, `_git_info`, was resolving outside the repo), and `_git_info` degrades `repo_git_dirty` to `null` when git is unusable instead of asserting a clean tree it never measured, matching every sibling field; and the #122 move to `research/arcs/02_subliminal/scripts/` updated its path strings (the docstring, the `_REPO_ROOT` comment, and the `source_path` / `generated_by` values a future capture writes into its `manifest.json`) and set `_REPO_ROOT` to `parents[4]` for the new depth. None touch the filter, the decoder, or the prompt generator's outputs. |
 
 **Git-SHA repoint (2026-08-19).** The one semantic amendment to the
-capture-time manifest (path-string updates aside).
+capture-time manifest (path-string updates and their note aside).
 `generation.generator_git_commit` and `timestamps.repo_git_commit` both recorded
 `0aff26c8…`, a commit made in the pre-split monorepo. The 2026-06-01 split
 rewrote that history, so `0aff26c8…` is reachable from no ref in this

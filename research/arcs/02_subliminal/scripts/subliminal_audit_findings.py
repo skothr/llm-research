@@ -92,7 +92,7 @@ ARC_MANIFEST_PATH = DATA.parent / "MANIFEST.json"
 # values documented in `data/README.md` § "Post-capture amendments"; this
 # script asserts the CURRENT state, not the capture-time state.
 # ---------------------------------------------------------------------------
-MANIFEST_SHA256 = "78d98a7ccf204d5b6ad01ced00a2bf18840d55be7f35fcf022da703267a3b1bb"
+MANIFEST_SHA256 = "4701eff9fc6553e344b9e4561f0ee83ccc3018ae70e5c15fa8d117873a43dadf"
 PIP_FREEZE_SHA256 = "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d"
 GENERATOR_SHA256 = "eeee4634d326dcc2a8ff74d13a768167cec3c353e85a648642dd3c95ec63bcc4"
 PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38"

@@ -17,7 +17,7 @@
     ]
   },
   "total_files": 8,
-  "total_size_bytes": 59207,
+  "total_size_bytes": 59240,
   "files": [
     {
       "filename": "step0-owl-neutral-decode/decode_report.json",
@@ -40,8 +40,8 @@
     },
     {
       "filename": "step0-owl-neutral-decode/manifest.json",
-      "sha256": "78d98a7ccf204d5b6ad01ced00a2bf18840d55be7f35fcf022da703267a3b1bb",
-      "size_bytes": 7867,
+      "sha256": "4701eff9fc6553e344b9e4561f0ee83ccc3018ae70e5c15fa8d117873a43dadf",
+      "size_bytes": 7900,
       "class": "capture-root",
       "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
       "producing_command": "python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py --n-per-condition 120 --batch-size 16 --max-new-tokens 80 --seed 42 --no-4bit --dataset-id step0-owl-neutral-decode (produces a file of the same form, not the recorded sha256: the output reflects the running environment and time, and the committed copy was amended after capture; see provenance)",
