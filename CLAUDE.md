@@ -65,7 +65,10 @@ The linked environment's editable install points at the main checkout's
 `src/`, so in a worktree `import llm_research` loads the main checkout's
 package, not the worktree's. To run or test the worktree's own copy, prefix
 the command with `PYTHONPATH=src` (run from the worktree root), which puts it
-ahead of the install.
+ahead of the install. Do not run `pip install -e` inside a worktree: the
+environment is shared, so that repoints the main checkout's install at the
+worktree, and removing the worktree then breaks `import llm_research`. If it
+happened, re-run `pip install -e '.[dev]'` from the main checkout.
 
 Skip the link and `pyright` reports hundreds of phantom errors against correct
 code. The symptom is **not stable**, which is the trap — all four rows
