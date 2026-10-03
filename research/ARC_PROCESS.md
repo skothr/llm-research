@@ -493,7 +493,8 @@ also changes the manifest. Run on that PR's checkout, the arc's
 `*_data_manifest.py --check` shows only that the files and the manifest agree,
 not where the files came from. Treat `.pt` files in someone else's PR as
 third-party data: do not load them with `weights_only=False` until you have
-checked how they were produced, or regenerate them from the recorded command.
+checked how they were produced, or regenerate them from the recorded command
+using the base branch's producing script (the PR can change that script too).
 Arc 01's `nla_*` scripts are the worked case: both artifact locations (the
 gitignored `.cache/nla_artifacts/` and the committed
 `research/arcs/01_nla-verbalizer/data/` copies promoted from it) hold files

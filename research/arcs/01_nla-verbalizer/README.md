@@ -142,7 +142,8 @@ claim of Fisher-style optimal-separation properties. Omitting the `S_W⁻¹` ter
 is defensible here: per category there are n=2-12 captures (median 5; six
 categories drop to n=2 or n=3), and each one-vs-rest direction uses all N=128
 captures of its atlas (the end-of-prompt and mid-sequence vocab atlases each
-hold 128) in a 3584-dim space, so `S_W` has rank ≤ N−2 = 126,
+hold 128; F3's 167 counts every capture the arc made, not only the atlas) in a
+3584-dim space, so `S_W` has rank ≤ N−2 = 126,
 about 1/28 of full rank, and any LDA would require
 heavy regularization (shrinkage or pseudo-inverse). The unscaled centroid
 difference is a reasonable proxy in this regime, but it should not be cited as
