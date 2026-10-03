@@ -1,6 +1,7 @@
 """Tests for scripts/rewrite_examples_paths.py (#122)."""
 
 import importlib.util
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -82,8 +83,9 @@ def test_tracked_skips_outside_a_git_checkout(tmp_path, monkeypatch) -> None:
 
 
 def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
-    # A deliberate tripwire: it reads the live tree. When the final #122 PR
-    # empties examples/, UNMAPPED must be updated in the same PR.
+    # Reads the live tree. The arc 01 move emptied examples/, so the first
+    # half holds trivially unless a file is added there again; the second
+    # test below checks the map against where the files are now.
     tracked = _tracked()
     names = [p[len("examples/") :] for p in tracked if p.startswith("examples/")]
     unmapped = [n for n in names if rw.destination(n) is None]
@@ -92,6 +94,21 @@ def test_every_tracked_example_maps_or_is_listed_unmapped() -> None:
     assert len(dests) == len(set(dests))  # no two files land on one path
     others = {p for p in tracked if not p.startswith("examples/")}
     assert sorted(set(dests) & others) == []  # no move overwrites a file
+
+
+def test_every_tracked_arc_script_is_where_the_map_sends_it() -> None:
+    # The inverse of the test above, against the tree after the moves: each
+    # tracked file in an arc's scripts/ must be the destination the map gives
+    # for examples/<its name>, so a rewritten reference names a real file.
+    scripts = [
+        p for p in _tracked() if re.fullmatch(r"research/arcs/[^/]+/scripts/[^/]+", p)
+    ]
+    assert len(scripts) > 100  # 45 + 3 + 26 + 30 at the arc 01 move
+    mapped = {p: rw.destination(p.rsplit("/", 1)[1]) for p in scripts}
+    assert {p: d for p, d in mapped.items() if d != p} == {}
+    tracked = set(_tracked())
+    for module, dest in rw.PACKAGE_MODULES.items():
+        assert dest in tracked, module
 
 
 @pytest.mark.parametrize(
