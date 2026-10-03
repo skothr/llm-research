@@ -562,7 +562,7 @@ research direction was substantive). Two methodological catches: the
 AV format bias, and that the basis-axis figures showed every axis
 active at once (2026-05-14).
 
-**Claude Code.** All experiment scripts (~42 files under
+**Claude Code.** All experiment scripts (43 files under
 `scripts/nla_*`), figure pipelines, observation drafts, the audit
 (`nla_audit_findings.py`), and issue tracking. Continuity across
 context compactions (resume checkpoints, the figure inventory, a record
@@ -766,4 +766,4 @@ Related implementation surfaces:
 - [`src/llm_research/hf_models.py`](../../../src/llm_research/hf_models.py) — model + tokenizer loader (`load_model`, cache via `LLM_RESEARCH_MODEL_CACHE`)
 - [`scripts/_nla_artifacts.py`](scripts/_nla_artifacts.py) — artifact path resolver (cache first, committed `data/` fallback); its docstring has the conventions
 - [`scripts/nla_audit_findings.py`](scripts/nla_audit_findings.py) — the regression audit (196/0)
-- [`scripts/nla_*.py`](scripts/) — 42 arc scripts
+- [`scripts/nla_*.py`](scripts/) — 43 arc scripts
