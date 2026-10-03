@@ -1,6 +1,11 @@
 """Find and rewrite references to `examples/` paths for the layout move (#122).
 
-The #122 reorganization moves every script out of `examples/`. This tool
+Status: the #122 migration this tool served finished on 2026-10-03. The tool
+is kept as the record of how the paths were rewritten. `--check` still
+reports any reference to the old top-level `examples/` layout, and it is not
+part of the routine pre-commit checks.
+
+The #122 reorganization moved every script out of `examples/`. This tool
 finds each path-shaped reference to a file there and maps it to the file's
 new location. The destination of a file is computed from rules (`RULES`,
 `PACKAGE_MODULES`, the `tests/` rule), not from a copied table, and every
@@ -39,8 +44,11 @@ Each reference falls into one class:
   reference that is correct as written, such as a path into another
   repository. Never rewritten; does not fail `--strict`.
 - hashed-record: any reference inside a file whose bytes a hash or a
-  generator pins (`HASHED_RECORDS`). The arc PRs edit these by hand and
-  re-pin, or regenerate them.
+  generator pins (`HASHED_RECORDS`, `GENERATED_RECORD`). The arc PRs edited
+  these by hand and re-pinned, or regenerated them. A reference left in one
+  is always listed in the report. It does not fail `--strict` unless it is
+  ready to rewrite: what remains is text a person chose to leave in a pinned
+  file, such as a comment on where the file used to be.
 - excluded: verbatim run logs, archives and this tool's own files
   (`EXCLUDED_PREFIXES`, `EXCLUDED_FILES`). Never rewritten.
 
@@ -52,7 +60,7 @@ are (line endings included; nothing is reflowed).
 
 Exit status for `--check`: 0 when no ready auto reference remains in the
 non-excluded files scanned, 1 otherwise; with `--strict`, 1 when any
-reference remains outside the excluded and kept references. `--apply` exits 0,
+reference remains outside the excluded, kept and hashed-record references. `--apply` exits 0,
 or 1 when a file changed between the scan and the write (that file is left
 as it is). Each write goes through a temporary file and a rename. Status 2
 means a path or file could not be scanned, or git failed; it takes
@@ -581,7 +589,10 @@ def check(
     print(f"REWRITE CHECK: {len(not_scanned)} text-like file(s) not scanned")
     if ready:
         return 1
-    if strict and (live or any(file_class(p)[0] != "excluded" for p in not_scanned)):
+    # A hashed-record ref that is not ready is text left on purpose in a file
+    # the tool knows is pinned; it is reported above and does not fail strict.
+    open_refs = [r for r in live if r.cls != "hashed-record"]
+    if strict and (open_refs or any(file_class(p)[0] != "excluded" for p in not_scanned)):
         return 1
     return 0
 
@@ -646,7 +657,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="with --check, fail on any ref that is not excluded or kept",
+        help="with --check, fail on any ref that is not excluded, kept or in a hash-pinned file",
     )
     parser.add_argument(
         "--include-records",

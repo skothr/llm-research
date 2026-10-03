@@ -200,11 +200,16 @@ examples; check the comments you write inside one by hand, since the scanner
 skips them.
 
 A second line marker, `rewrite-paths: keep`, is read by
-`python scripts/rewrite_examples_paths.py --check` (#122). It goes on the same
+`scripts/rewrite_examples_paths.py`, the tool that rewrote paths for the #122
+layout move. That migration finished on 2026-10-03. The tool is kept as the
+record of how the paths were rewritten and is not a check a contributor runs
+before committing; its `--check` still reports any reference to the old
+top-level layout. The marker goes on the same
 line as a reference to an old `examples/` path that is correct as written (a <!-- rewrite-paths: keep -->
 dated measurement, a path into another repository), in that file's comment
 syntax: the tool classes every such reference on that line as kept, never
-rewrites it, and does not fail `--strict` on it.
+rewrites it, and does not fail `--strict` on it. Leave the marker on the lines
+that carry it.
 
 # Research arcs & observations
 
