@@ -19,7 +19,7 @@ Design rules:
   * PAIRS members must exist somewhere in the battery (asserted) but may live
     in any class — pairs are a relation over anchors, not a partition.
 
-Run `python examples/emb_token_battery.py` for a tokenizer-free count report.
+Run `python research/arcs/03_embedding-atlas/scripts/emb_token_battery.py` for a tokenizer-free count report.
 """
 
 from __future__ import annotations

@@ -16,9 +16,9 @@ see research/arcs/03_embedding-atlas/README.md for the stated deviation from
 ARC_PROCESS § "Raw data is a deliverable".
 
 Modes:
-    python examples/emb_capture.py --tokenize-only   # tokenizer pre-flight:
+    python research/arcs/03_embedding-atlas/scripts/emb_capture.py --tokenize-only   # tokenizer pre-flight:
         battery coverage report (single-token survivors / drops), no model load
-    python examples/emb_capture.py                   # full capture
+    python research/arcs/03_embedding-atlas/scripts/emb_capture.py                   # full capture
 
 All reductions are computed in float32 after casting from bf16. Padded rows
 (ids >= len(tokenizer)) are excluded from every global statistic.

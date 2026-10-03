@@ -110,13 +110,14 @@ interpreter that launched it, so the errors persist unchanged.
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
-- `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
-  `jspace_*`): capture / analyze / render / audit. The families after arc 01
+- `examples/` — per-arc script families by prefix (`nla_*`, `jspace_*`):
+  capture / analyze / render / audit. The families after arc 01
   follow the NLA pipeline's conventions, which are in
   `research/ARC_PROCESS.md` § "Raw data is a deliverable" (artifact wiring,
   manifest, trust note). Arc 02's `subliminal_*` scripts live in
-  `research/arcs/02_subliminal/scripts/`; the other arcs' scripts move to
-  their own `scripts/` directories under #122.
+  `research/arcs/02_subliminal/scripts/` and arc 03's `emb_*` scripts in
+  `research/arcs/03_embedding-atlas/scripts/`; the other arcs' scripts move
+  to their own `scripts/` directories under #122.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.

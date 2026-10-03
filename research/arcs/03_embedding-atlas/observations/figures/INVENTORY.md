@@ -4,7 +4,7 @@ Common assumptions (all figures): model Qwen/Qwen2.5-7B-Instruct, HF revision
 `a09a35458c702b33eeacc393d103063234e8bc28`, bf16 weights cast to float32
 before any reduction; "real rows" = token ids < 151,665 (tokenizer length),
 excluding the 399 zero padded rows; "centered" = global mean mu (over real
-rows) subtracted; battery = `examples/emb_token_battery.py` resolved to 1,062
+rows) subtracted; battery = `research/arcs/03_embedding-atlas/scripts/emb_token_battery.py` resolved to 1,062
 anchor-variant rows / 665 primary (see capture coverage report); fixed seed
 20260610 for all sampling. Every figure renders model-free from the committed
 `data/*.pt` (cache-first, committed fallback via `_emb_artifacts`).

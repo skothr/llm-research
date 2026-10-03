@@ -2,7 +2,7 @@
 number that research/arcs/03_embedding-atlas/observations/ relies on
 from the committed .pt artifacts and asserts it against an expected constant.
 
-    python examples/emb_audit_findings.py
+    python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py
     # expect: SUMMARY:  N PASS  |  0 FAIL
 
 Artifacts resolve cache-first then committed-data (via _emb_artifacts), so
