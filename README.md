@@ -30,8 +30,11 @@ with confidence: it exists to make being wrong visible.
 
 ## Results
 
-One block per arc: the headline finding, one figure, the strongest caveat and
-a link. Every number here is taken from the linked arc README, which carries
+One block per arc: the headline finding, one figure where the arc has one
+(arc 02 has none), the strongest caveat and a link. The figures are stored in
+Git LFS, so a clone made without LFS shows them as broken images;
+[§ Prerequisites](#prerequisites--git-lfs-is-required) has the setup and the
+recovery command. Every number here is taken from the linked arc README, which carries
 the evidence, the scope qualifications and the full list of limitations; where
 this summary is shorter, the arc README is the authority.
 
@@ -51,8 +54,10 @@ re-run (closed 2026-08-16) and the dimension-matched recompute (2026-09-23).
 - **Occupancy against the paper's 10% ceiling.** On the paper's
   excess-over-random FVE metric, 1.5B breaches the ceiling at the hump
   (**L21 excess 11.15%**, CI95 [10.95, 11.40]) and 7B stays under it at every
-  K tested (peak 5.88% held-out, 4.72% on the scan grid at the paper's K
-  rule). Excess depends on K/d; at matched K/d the 1.5B/7B ratio is 1.52×
+  K tested. At the paper's K rule (K=23 held-out, K=23-24 grid) the 7B peak
+  excess is 5.88% held-out and 4.72% on the scan grid; at K=58 it is 7.67%
+  held-out and 6.16% on the grid, with every CI95 upper bound at or below
+  8.03%. Excess depends on K/d; at matched K/d the 1.5B/7B ratio is 1.52×
   held-out and 1.76× on the grid.
 - **Strongest positive: a graded relational effect (stage 5.2).** Swapping an
   unspoken concept along its J-lens vector moves the concept's entailed

@@ -48,10 +48,13 @@ Each reference falls into one class:
 - hashed-record: any reference inside a file whose bytes a hash or a
   generator pins (`HASHED_RECORDS`, `GENERATED_RECORD`). The arc PRs edited
   these by hand and re-pinned, or regenerated them. A reference left in one
-  is always listed in the report. A manual reference there does not fail
-  `--strict`: it is text a person chose to leave in a pinned or generated
-  file, such as a comment on where the file used to be. An auto reference
-  there fails `--strict`, and fails plain `--check` when it is ready.
+  is always listed in the report, and fails `--strict` as a reference of any
+  other class does, manual or auto; a ready auto reference there also fails
+  plain `--check`. One named reference is exempt from `--strict`: the one
+  listed in `LEFT_IN_PINNED_FILES`, a comment in a pinned file on where that
+  file used to be. It is matched by its file and the full text of its line,
+  so no other reference in that file, and no reference in any other pinned
+  or generated file, is exempt.
 - excluded: verbatim run logs, archives and this tool's own files
   (`EXCLUDED_PREFIXES`, `EXCLUDED_FILES`). Never rewritten.
 
@@ -63,9 +66,10 @@ are (line endings included; nothing is reflowed).
 
 Exit status for `--check`: 0 when no ready auto reference remains in the
 non-excluded files scanned, 1 otherwise; with `--strict`, 1 when any
-reference remains other than an excluded one, a kept one, or a manual one in
-a pinned or generated file (`HASHED_RECORDS`, `GENERATED_RECORD`); an auto
-reference in such a file fails `--strict`. `--apply` exits 0,
+reference remains other than an excluded one, a kept one, or the one named
+reference in a pinned file that `LEFT_IN_PINNED_FILES` lists; every other
+reference in a pinned or generated file (`HASHED_RECORDS`,
+`GENERATED_RECORD`) fails `--strict`, manual or auto. `--apply` exits 0,
 or 1 when a file changed between the scan and the write (that file is left
 as it is). Each write goes through a temporary file and a rename. Status 2
 means a path or file could not be scanned, or git failed; it takes
@@ -154,6 +158,21 @@ HASHED_RECORDS = {
 # never hand-edited, so they are protected like hashed records.
 GENERATED_RECORD = re.compile(r"research/arcs/[^/]+/data/MANIFEST\.json")
 
+# The references left on purpose in a pinned file: file path -> the stripped
+# source line the reference sits on. `--strict` exempts a hashed-record
+# reference only when its file and its whole line match an entry; every other
+# reference in a pinned or generated file fails `--strict`.
+# The one entry is a comment recording where the generator used to live. The
+# file's sha256 is pinned (`_STEP0_PIN`), so the line cannot take a
+# `rewrite-paths: keep` marker, or be reworded, without re-pinning the hash
+# and the audit that checks it. A new entry needs the same justification: a
+# pinned file, and a reference that is correct as written.
+LEFT_IN_PINNED_FILES: dict[str, str] = {
+    f"{ARC02}/subliminal_step0_decode.py": (
+        "# parents[1] while it lived at <repo>/examples/ (until the #122 move), and"
+    ),
+}
+
 CLASSES = ("auto", "manual", "hashed-record", "kept", "excluded")
 KEEP_MARKER = "rewrite-paths: keep"
 
@@ -238,6 +257,7 @@ class Ref:
     replacement: str | None  # new text (auto only)
     ready: bool  # the destination exists on disk
     reason: str
+    line_text: str = ""  # the source line the reference is on, stripped
 
 
 def _repo_exists(path: str) -> bool:
@@ -331,6 +351,7 @@ def scan_text(
                 replacement=replacement,
                 ready=target is not None and exists(target),
                 reason=why,
+                line_text=text[line_start:line_end].strip(),
             )
         )
 
@@ -554,6 +575,15 @@ def collect(
     return texts, refs, explicit, not_scanned
 
 
+def left_on_purpose(r: Ref) -> bool:
+    """`r` is a reference `LEFT_IN_PINNED_FILES` names: same file, same line text."""
+    return (
+        r.cls == "hashed-record"
+        and r.line_text != ""
+        and LEFT_IN_PINNED_FILES.get(r.path) == r.line_text
+    )
+
+
 def _format(r: Ref) -> str:
     status = ""
     if r.cls == "auto":
@@ -594,10 +624,11 @@ def check(
     print(f"REWRITE CHECK: {len(not_scanned)} text-like file(s) not scanned")
     if ready:
         return 1
-    # A manual ref in a pinned or generated file is text left there on
-    # purpose; it is reported above and does not fail strict. An auto ref
-    # there fails strict: when it is not ready, its destination is missing.
-    open_refs = [r for r in live if not (r.cls == "hashed-record" and r.kind == "manual")]
+    # Strict exempts one named reference: the one `LEFT_IN_PINNED_FILES`
+    # lists, matched by its file and line text. It is reported above. Every
+    # other ref in a pinned or generated file fails strict, manual or auto,
+    # as a ref of any other live class does.
+    open_refs = [r for r in live if not left_on_purpose(r)]
     if strict and (open_refs or any(file_class(p)[0] != "excluded" for p in not_scanned)):
         return 1
     return 0
@@ -664,8 +695,8 @@ def main(argv: list[str] | None = None) -> int:
         "--strict",
         action="store_true",
         help=(
-            "with --check, fail on any ref that is not excluded, kept, or a manual ref "
-            "in a pinned or generated file"
+            "with --check, fail on any ref that is not excluded, kept, or the one "
+            "named ref in a pinned file listed in LEFT_IN_PINNED_FILES"
         ),
     )
     parser.add_argument(
