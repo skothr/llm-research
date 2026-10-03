@@ -9,8 +9,8 @@ and command, its `.pt` inputs, what model it needs, and who consumes it.
 
 Two modes, both explicit — bare invocation prints usage and writes nothing, so
 a typo or `--help` can never silently rewrite the committed manifest:
-    python examples/nla_data_manifest.py --check     # verify, exit 1 on drift
-    python examples/nla_data_manifest.py --write     # (re)write MANIFEST.json
+    python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --check     # verify, exit 1 on drift
+    python research/arcs/01_nla-verbalizer/scripts/nla_data_manifest.py --write     # (re)write MANIFEST.json
 
 The `--check` mode is the drift detector: it recomputes every sha256 AND
 re-derives each file's provenance fields from META, comparing both against the
@@ -37,7 +37,7 @@ from _nla_artifacts import DATA as DATA_DIR
 from _nla_artifacts import LFS_STUB_NOTE as _LFS_STUB_NOTE
 from _nla_artifacts import is_lfs_pointer
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
 # The exact model set every capture-root in this arc was produced against.
@@ -86,7 +86,7 @@ META: dict[str, dict[str, Any]] = {
     # ---- capture-roots: require a model load, expensive (CPU-hours) --------
     "aggregate_faithfulness.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_aggregate_faithfulness.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_aggregate_faithfulness.py",
         "provenance": (
             "113 generation-step captures across 8 hand-authored prompts "
             "(~15 tokens each), each h[20] verbalized by the AV and "
@@ -99,7 +99,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "rabbit_haiku_gen_trajectory.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_faithfulness.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_faithfulness.py",
         "provenance": (
             "per-generated-token h[20] trajectory (15 steps) for the "
             "hand-authored prompt 'Write me a haiku about a rabbit in spring.', "
@@ -112,7 +112,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "forced_continuation.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_forced_continuation.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_forced_continuation.py",
         "provenance": (
             "4 hand-authored natural/forced-completion prompt pairs "
             "(Yes/No, Paris/Berlin, 4/5, factual/refusal), h[20] captured at "
@@ -125,7 +125,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "country_concept_vector.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_country_concept_vector.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_country_concept_vector.py",
         "provenance": (
             "8 hand-authored country prompts vs 8 matched non-country prompts, "
             "h[20] at the last prompt token, their difference-of-means "
@@ -138,7 +138,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "vocab_atlas.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_vocab_atlas_capture.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_vocab_atlas_capture.py",
         "provenance": (
             "128 hand-authored anchor tokens across 23 categories, each "
             "captured as h[20] at end-of-single-token-user-message under the "
@@ -154,7 +154,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "discriminant_stability.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_discriminant_stability_capture.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_discriminant_stability_capture.py",
         "provenance": (
             "8 hand-authored anchor words x 4 prefix-length context variants "
             "(single / short / medium / long), each captured at the "
@@ -168,7 +168,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "interpolation_flipbook.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_interpolation_flipbook.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_interpolation_flipbook.py",
         "provenance": (
             "two hand-authored natural-language anchors (factual/geography vs "
             "poetic/nature) AR-encoded to h_A/h_B, linearly interpolated on a "
@@ -187,7 +187,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "mid_seq_vocab_atlas.pt": {
         "class": "capture-root",
-        "producing_script": "examples/nla_mid_seq_vocab_atlas_capture.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_capture.py",
         "provenance": (
             "the vocab-atlas anchors re-captured mid-sequence (tokenize-then-"
             "locate inside a fixed hand-authored carrier sentence) instead of at "
@@ -201,7 +201,7 @@ META: dict[str, dict[str, Any]] = {
     # ---- derived: regenerable from other .pt by a committed script ---------
     "geometric_features.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_geometric_features.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_geometric_features.py",
         "provenance": (
             "pure tensor math over the four capture-roots — per-capture norms, "
             "sparsity and dim-level features, no model load; recorded in "
@@ -218,7 +218,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "pairwise_and_hotdims.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_pairwise_and_hotdims.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_pairwise_and_hotdims.py",
         "provenance": (
             "pure tensor math over the four capture-roots — the 167-capture "
             "pooled h matrix, pairwise cosines and hot-dimension labels; the "
@@ -236,7 +236,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "sink_removed_atlas.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_sink_removed_atlas.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_sink_removed_atlas.py",
         "provenance": (
             "pure tensor math — the pooled h matrix with the 7 universal-sink "
             "dims zeroed, those dims labelled at runtime by the "
@@ -250,7 +250,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "mid_seq_compare.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_mid_seq_vocab_atlas_compare.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_compare.py",
         "provenance": (
             "pure tensor math — mid-sequence h's projected onto the "
             "end-of-prompt 23-axis mean-contrast basis (the cross-protocol "
@@ -267,7 +267,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "mid_seq_native_compare.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_mid_seq_native_compare.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_native_compare.py",
         "provenance": (
             "pure tensor math — a mid-sequence-NATIVE mean-contrast basis built "
             "by the same recipe, and the in-protocol signal lift against the "
@@ -284,7 +284,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "concept_arithmetic_atlas.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_concept_arithmetic_atlas.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_concept_arithmetic_atlas.py",
         "provenance": (
             "vector-arithmetic combinations of vocab-atlas anchor h's "
             "(a - b + c style), each result AV-decoded to text; recorded in "
@@ -296,7 +296,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "dense_interp_near_pivot.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_dense_interp_near_pivot.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_dense_interp_near_pivot.py",
         "provenance": (
             "the flipbook's cached h_A/h_B re-interpolated at 10x resolution "
             "near the flagged pivot (25 dense steps in t in [0.395, 0.455], "
@@ -309,7 +309,7 @@ META: dict[str, dict[str, Any]] = {
     },
     "plateau_attractor_test.pt": {
         "class": "derived",
-        "producing_script": "examples/nla_plateau_attractor_test.py",
+        "producing_script": "research/arcs/01_nla-verbalizer/scripts/nla_plateau_attractor_test.py",
         "provenance": (
             "AR re-encoding of the dense-interp plateau midpoint's AV text back "
             "to h, with the round-trip cosine and per-anchor margins; recorded "
@@ -334,7 +334,7 @@ def sha256_of(path: Path) -> str:
 # for these, or where a META entry sets "seed" itself (a hand-written input, a
 # command that draws nothing); any other entry without a seed is an error, so
 # an unannotated random producer cannot be recorded as deterministic.
-NO_RNG_PRODUCERS: frozenset[str] = frozenset({"examples/nla_aggregate_faithfulness.py", "examples/nla_concept_arithmetic_atlas.py", "examples/nla_country_concept_vector.py", "examples/nla_dense_interp_near_pivot.py", "examples/nla_discriminant_stability_capture.py", "examples/nla_faithfulness.py", "examples/nla_forced_continuation.py", "examples/nla_geometric_features.py", "examples/nla_interpolation_flipbook.py", "examples/nla_mid_seq_native_compare.py", "examples/nla_mid_seq_vocab_atlas_capture.py", "examples/nla_mid_seq_vocab_atlas_compare.py", "examples/nla_pairwise_and_hotdims.py", "examples/nla_plateau_attractor_test.py", "examples/nla_sink_removed_atlas.py", "examples/nla_vocab_atlas_capture.py"})
+NO_RNG_PRODUCERS: frozenset[str] = frozenset({"research/arcs/01_nla-verbalizer/scripts/nla_aggregate_faithfulness.py", "research/arcs/01_nla-verbalizer/scripts/nla_concept_arithmetic_atlas.py", "research/arcs/01_nla-verbalizer/scripts/nla_country_concept_vector.py", "research/arcs/01_nla-verbalizer/scripts/nla_dense_interp_near_pivot.py", "research/arcs/01_nla-verbalizer/scripts/nla_discriminant_stability_capture.py", "research/arcs/01_nla-verbalizer/scripts/nla_faithfulness.py", "research/arcs/01_nla-verbalizer/scripts/nla_forced_continuation.py", "research/arcs/01_nla-verbalizer/scripts/nla_geometric_features.py", "research/arcs/01_nla-verbalizer/scripts/nla_interpolation_flipbook.py", "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_native_compare.py", "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_capture.py", "research/arcs/01_nla-verbalizer/scripts/nla_mid_seq_vocab_atlas_compare.py", "research/arcs/01_nla-verbalizer/scripts/nla_pairwise_and_hotdims.py", "research/arcs/01_nla-verbalizer/scripts/nla_plateau_attractor_test.py", "research/arcs/01_nla-verbalizer/scripts/nla_sink_removed_atlas.py", "research/arcs/01_nla-verbalizer/scripts/nla_vocab_atlas_capture.py"})
 
 
 def _seed(name: str, m: dict[str, Any]) -> int | str | None:

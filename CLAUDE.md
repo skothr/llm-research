@@ -38,8 +38,7 @@ would grow the PR past one-sitting reviewability, split it.
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (each arc's `scripts/`; arc 01's is still in
-`examples/` until #122 moves it). Depends on **one** sibling editable
+figure / audit pipeline (each arc's `scripts/`). Depends on **one** sibling editable
 install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
@@ -73,7 +72,8 @@ happened, re-run `pip install -e '.[dev]'` from the main checkout.
 
 Skip the link and `pyright` reports hundreds of phantom errors against correct
 code. The symptom is **not stable**, which is the trap — all four rows
-measured with `pyright examples/` in the same worktree on 2026-07-29:
+measured with `pyright examples/` in the same worktree on 2026-07-29, when the <!-- rewrite-paths: keep -->
+scripts were in that directory:
 
 | State | Errors | Dominant rule |
 |---|---|---|
@@ -110,15 +110,16 @@ interpreter that launched it, so the errors persist unchanged.
 - `research/` — Investigations as **arcs** under `research/arcs/<slug>/`, plus
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
-- `examples/` — arc 01's `nla_*` script family: capture / analyze / render /
-  audit. The families after arc 01
+- `research/arcs/<slug>/scripts/` — each arc's script family, by prefix:
+  capture / analyze / render / audit. Arc 01's `nla_*` scripts live in
+  `research/arcs/01_nla-verbalizer/scripts/`, arc 02's `subliminal_*` scripts
+  in `research/arcs/02_subliminal/scripts/`, arc 03's `emb_*` scripts in
+  `research/arcs/03_embedding-atlas/scripts/` and arc 04's `jspace_*` scripts
+  in `research/arcs/04_jspace/scripts/`. The families after arc 01
   follow the NLA pipeline's conventions, which are in
   `research/ARC_PROCESS.md` § "Raw data is a deliverable" (artifact wiring,
-  manifest, trust note). Arc 02's `subliminal_*` scripts live in
-  `research/arcs/02_subliminal/scripts/`, arc 03's `emb_*` scripts in
-  `research/arcs/03_embedding-atlas/scripts/` and arc 04's `jspace_*` scripts
-  in `research/arcs/04_jspace/scripts/`; arc 01's scripts move to their own
-  `scripts/` directory under #122.
+  manifest, trust note). Scripts run by path and import their siblings by
+  bare name.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.
@@ -136,7 +137,7 @@ bash theory/series/build.sh            # clean + build all 5 papers + collect di
 bash theory/series/build.sh collect    # re-collect dist/ symlinks only
 
 # NLA audit — re-derive every numerical claim the prose relies on from .pt artifacts
-python examples/nla_audit_findings.py
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py
 ```
 
 # Theory KB & citation discipline — non-negotiable
@@ -197,6 +198,13 @@ owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
 as written. When an audit pins another file, add it to that list. Fenced blocks also hold authored
 examples; check the comments you write inside one by hand, since the scanner
 skips them.
+
+A second line marker, `rewrite-paths: keep`, is read by
+`python scripts/rewrite_examples_paths.py --check` (#122). It goes on the same
+line as a reference to an old `examples/` path that is correct as written (a <!-- rewrite-paths: keep -->
+dated measurement, a path into another repository), in that file's comment
+syntax: the tool classes every such reference on that line as kept, never
+rewrites it, and does not fail `--strict` on it.
 
 # Research arcs & observations
 

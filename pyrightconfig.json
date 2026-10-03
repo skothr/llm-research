@@ -33,7 +33,6 @@
   // Paths that do not exist in a given checkout are simply unused.
   "extraPaths": [
     "src",
-    "examples",
     "../jacobian-lens",
     "../../../../jacobian-lens"
   ],
@@ -49,7 +48,6 @@
       "root": "tests",
       "extraPaths": [
         "src",
-        "examples",
         "../jacobian-lens",
         "../../../../jacobian-lens",
         "research/arcs/04_jspace/scripts"

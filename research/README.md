@@ -74,6 +74,7 @@ research/
     observations/        ← dated evidence-first writeups
       figures/           ← generated plots + INVENTORY.md provenance
     data/                ← raw .pt datasets (git-LFS) + MANIFEST.json
+    scripts/             ← capture / analysis / render / audit scripts + manifest generator
     sessions/            ← session-resumption checkpoints (stale-fast)
     plans/               ← the arc plan (every arc) + later design docs
   observations/          ← one-off findings not (yet) part of an arc

@@ -4,7 +4,7 @@
 This arc was worked against a private issue tracker that has since been
 retired. Its `MAIN-N` ticket IDs are used as shorthand labels throughout
 the arc README, the observation files, and
-`observations/figures/INVENTORY.md` (the `examples/nla_*.py` docstrings
+`observations/figures/INVENTORY.md` (the `scripts/nla_*.py` docstrings
 that carried them were rewritten to cite observation files instead).
 **A reader cannot look any of them up** — the tracker is gone and was
 never public.

@@ -6,8 +6,8 @@ directory, and every path built from it points nowhere. Each row below loads
 one such script from its file and checks that its repo-root constant is this
 checkout's root and that its data directory exists.
 
-When an arc's scripts move out of `examples/`, add a row per script that
-counts parents. `data_attr` is None for a script with no data-dir constant;
+When a script that counts parents is added to an arc's `scripts/`, add a row
+for it. `data_attr` is None for a script with no data-dir constant;
 for a render script it names the figure directory.
 """
 
@@ -30,11 +30,14 @@ class Anchor(NamedTuple):
     data_attr: str | None  # module attribute holding a data dir, if any
 
 
+ARC01 = "research/arcs/01_nla-verbalizer/scripts"
 ARC02 = "research/arcs/02_subliminal/scripts"
 ARC03 = "research/arcs/03_embedding-atlas/scripts"
 ARC04 = "research/arcs/04_jspace/scripts"
 
 ANCHORS = [
+    Anchor(f"{ARC01}/_nla_artifacts.py", "_REPO_ROOT", "DATA"),
+    Anchor(f"{ARC01}/nla_data_manifest.py", "_REPO_ROOT", "DATA_DIR"),
     Anchor(f"{ARC02}/subliminal_step0_decode.py", "_REPO_ROOT", None),
     Anchor(f"{ARC02}/subliminal_audit_findings.py", "_REPO_ROOT", "DATA"),
     Anchor(f"{ARC02}/subliminal_data_manifest.py", "_REPO_ROOT", "DATA_DIR"),

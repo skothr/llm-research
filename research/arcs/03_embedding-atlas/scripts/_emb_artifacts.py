@@ -15,8 +15,7 @@ when committing.
 Self-locating from this file, so callers work from any CWD.
 
 This module is a deliberate copy of `_nla_artifacts.py` with the three path
-constants swapped and `_REPO_ROOT` set for this file's depth (the repo's
-documented copy-as-template idiom). A third arc
+constants swapped (the repo's documented copy-as-template idiom). A third arc
 needing the same resolver should refactor the pattern into a shared factory
 instead of making a third copy.
 """

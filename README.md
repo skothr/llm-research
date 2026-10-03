@@ -47,8 +47,8 @@ entry point rather than discovered two levels down.
 ## What's here
 
 ```
-research/    Experimental research, organized into arcs (focused investigations)
-examples/    Capture / analysis / render / audit pipeline of arc 01
+research/    Experimental research, organized into arcs (focused investigations);
+             each arc's capture / analysis / render / audit scripts are in its scripts/
 src/         The llm_research package: shared model loader + NLA probe
 tests/       Tests of src/, scripts/ and the moved arc scripts
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
@@ -64,8 +64,9 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   replication that came out weaker than the original, with a causal split).
   The arc lifecycle and reproducibility disciplines are in
   `research/ARC_PROCESS.md`; the per-arc status index is `research/README.md`.
-- **`examples/`** — Arc 01's pipeline scripts, prefixed `nla_*`. The other
-  arcs' families are in their arc's `scripts/` directory. Each family covers capture
+- **`research/arcs/<slug>/scripts/`** — Each arc's pipeline scripts, one family
+  per arc by prefix (`nla_*`, `subliminal_*`, `emb_*`, `jspace_*`), beside the
+  `_`-prefixed helper modules the arc 01, 03 and 04 families import. Each family covers capture
   (writes `.pt` artifacts; arc 02's writes JSON/JSONL and text), analysis, figure render (matplotlib), and an
   `*_audit_findings.py` that re-derives the numerical claims that arc's
   prose relies on from committed artifacts. Arc 04's `jspace_*` family and
@@ -77,7 +78,8 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
   verbalizer / reconstructor pair); the rest are render/analysis-only
-  (torch / numpy / matplotlib). Arc 04's `jspace_*` scripts are in
+  (torch / numpy / matplotlib). Arc 01's `nla_*` scripts are in
+  `research/arcs/01_nla-verbalizer/scripts/`. Arc 04's `jspace_*` scripts are in
   `research/arcs/04_jspace/scripts/`. Arc 03's `emb_*` scripts are in
   `research/arcs/03_embedding-atlas/scripts/`. Arc 02's `subliminal_*`
   scripts are in `research/arcs/02_subliminal/scripts/`; its step-0 generator,
@@ -114,8 +116,7 @@ than discovered two levels down.
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
-- **Audit scripts.** The `*_audit_findings.py` scripts (arcs 02's, 03's and 04's
-  in their arc's `scripts/` directory, arc 01's in `examples/`)
+- **Audit scripts.** The `*_audit_findings.py` scripts (each in its arc's `scripts/` directory)
   re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
@@ -191,7 +192,7 @@ former llm-surgeon toolkit cached to (`.cache/models/` inside the llm-surgeon
 checkout by default, or `LLM_SURGEON_CACHE_DIR` when set), so export
 `LLM_RESEARCH_MODEL_CACHE` to that directory before a capture run. On a cache
 miss the loader downloads the multi-GB checkpoints, except in the seven arc-01
-scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE examples/nla_*.py`),
+scripts that force `HF_HUB_OFFLINE=1` (`grep -l HF_HUB_OFFLINE research/arcs/01_nla-verbalizer/scripts/nla_*.py`),
 which raise an `OSError` at model load naming the cache directory probed and
 `LLM_RESEARCH_MODEL_CACHE`. The NLA verbalizer (AV) and reconstructor (AR)
 load at pinned Hub revisions (`llm_research.nla_probe.AV_REVISION`,
@@ -235,7 +236,7 @@ in-session on 2026-09-24 after its audit gained CHECK P. No audit log was
 committed for that run; re-derive the totals with the command below:
 
 ```bash
-python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
+python research/arcs/01_nla-verbalizer/scripts/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
 python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python research/arcs/03_embedding-atlas/scripts/emb_audit_findings.py  # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python research/arcs/04_jspace/scripts/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL

@@ -11,8 +11,8 @@ requires-python = ">=3.10"
 license = "GPL-3.0-only"
 authors = [{ name = "Michael Lannum" }]
 
-# Direct imports of the research scripts (the nla_* family
-# under examples/, the subliminal_* scripts under
+# Direct imports of the research scripts (the nla_* scripts under
+# research/arcs/01_nla-verbalizer/scripts/, the subliminal_* scripts under
 # research/arcs/02_subliminal/scripts/, the emb_* scripts under
 # research/arcs/03_embedding-atlas/scripts/, the jspace_* scripts under
 # research/arcs/04_jspace/scripts/) and of the in-repo model loader and NLA probe
