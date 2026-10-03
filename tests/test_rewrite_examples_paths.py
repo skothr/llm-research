@@ -478,6 +478,47 @@ def test_apply_skips_records_unless_named_with_flag(
     capsys.readouterr()
 
 
+def test_read_text_skips_symlinked_parent_and_hard_link(tmp_path, monkeypatch) -> None:
+    repo = tmp_path / "repo"
+    outside = tmp_path / "outside"
+    repo.mkdir()
+    outside.mkdir()
+    (outside / "a.md").write_text("examples/nla_scan.py\n")
+    (repo / "d").symlink_to(outside)
+    (repo / "log.md").write_text("examples/nla_scan.py\n")
+    (repo / "draft.md").hardlink_to(repo / "log.md")
+    (repo / "plain.md").write_text("examples/nla_scan.py\n")
+    monkeypatch.setattr(rw, "REPO", repo)
+    assert rw.read_text("d/a.md") is None
+    assert rw.read_text("draft.md") is None
+    assert rw.read_text("plain.md") == "examples/nla_scan.py\n"
+
+
+def test_apply_skips_a_file_changed_since_the_scan(tmp_path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    target = tmp_path / "notes.md"
+    text = "see examples/nla_scan.py\n"
+    found = rw.scan_text("notes.md", text, exists_in(f"{ARC01}/nla_scan.py"))
+    target.write_text("edited after the scan\n")
+    assert rw.apply({"notes.md": text}, found, explicit=set(), include_records=False) == 1
+    assert target.read_text() == "edited after the scan\n"
+    assert "changed since it was scanned" in capsys.readouterr().err
+
+
+def test_apply_write_keeps_mode_and_leaves_no_temp_file(tmp_path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(rw, "REPO", tmp_path)
+    target = tmp_path / "run.sh"
+    text = "python examples/nla_scan.py\n"
+    target.write_text(text)
+    target.chmod(0o755)
+    found = rw.scan_text("run.sh", text, exists_in(f"{ARC01}/nla_scan.py"))
+    assert rw.apply({"run.sh": text}, found, explicit=set(), include_records=False) == 0
+    assert target.read_text() == f"python {ARC01}/nla_scan.py\n"
+    assert target.stat().st_mode & 0o777 == 0o755
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["run.sh"]
+    capsys.readouterr()
+
+
 # main() resolves path arguments against the current directory, as a CLI
 # should; these tests pass absolute paths so they hold from any cwd.
 def test_main_check_on_this_tool_is_excluded(capsys) -> None:

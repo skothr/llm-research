@@ -52,7 +52,9 @@ are (line endings included; nothing is reflowed).
 
 Exit status for `--check`: 0 when no ready auto reference remains in the
 non-excluded files scanned, 1 otherwise; with `--strict`, 1 when any
-reference remains outside the excluded and kept references. `--apply` exits 0. Status 2
+reference remains outside the excluded and kept references. `--apply` exits 0,
+or 1 when a file changed between the scan and the write (that file is left
+as it is). Each write goes through a temporary file and a rename. Status 2
 means a path or file could not be scanned, or git failed; it takes
 precedence.
 
@@ -492,9 +494,14 @@ def read_text(path: str) -> str | None:
 
     Symlinks, missing files, binaries (a NUL byte or invalid UTF-8) and LFS
     pointers are skipped without a problem: they hold no text to rewrite.
+    So is a file reached through a symlinked parent directory (it resolves
+    outside the repository) or one with a second hard link (a write through
+    this name would change the other name's bytes, which may be excluded).
     """
     full = REPO / path
     if full.is_symlink() or not full.is_file():
+        return None
+    if not full.resolve().is_relative_to(REPO.resolve()) or full.stat().st_nlink > 1:
         return None
     data = full.read_bytes()
     if b"\0" in data or data.startswith(b"version https://git-lfs"):
@@ -587,7 +594,7 @@ def apply(
     by_file: dict[str, list[Ref]] = {}
     for r in refs:
         by_file.setdefault(r.path, []).append(r)
-    changed = 0
+    changed = stale = 0
     for path in sorted(by_file):
         fclass, _ = file_class(path)
         if fclass == "excluded":
@@ -597,13 +604,30 @@ def apply(
         new, applied = rewrite_text(texts[path], by_file[path])
         if not applied:
             continue
-        (REPO / path).write_bytes(new.encode("utf-8"))
+        full = REPO / path
+        if full.read_bytes() != texts[path].encode("utf-8"):
+            print(f"REWRITE APPLY: {path} changed since it was scanned; skipped", file=sys.stderr)
+            stale += 1
+            continue
+        _write_atomic(full, new.encode("utf-8"))
         changed += 1
         for r in applied:
             print(f"{path}:{r.line}: {r.text} -> {r.replacement}")
     total = sum(1 for r in refs if r.kind == "auto" and r.ready)
     print(f"REWRITE APPLY: changed {changed} file(s); ready refs seen {total}")
-    return 0
+    return 1 if stale else 0
+
+
+def _write_atomic(full: Path, data: bytes) -> None:
+    """Replace `full` with `data` through a temporary file in the same directory,
+    so an interrupted or failed write leaves the original intact."""
+    tmp = full.with_name(f".{full.name}.rewrite-tmp")
+    try:
+        tmp.write_bytes(data)
+        os.chmod(tmp, full.stat().st_mode & 0o7777)
+        os.replace(tmp, full)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def main(argv: list[str] | None = None) -> int:
