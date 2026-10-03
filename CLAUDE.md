@@ -200,11 +200,24 @@ examples; check the comments you write inside one by hand, since the scanner
 skips them.
 
 A second line marker, `rewrite-paths: keep`, is read by
-`python scripts/rewrite_examples_paths.py --check` (#122). It goes on the same
+`scripts/rewrite_examples_paths.py`, the tool that rewrote paths for the #122
+layout move. That migration finished on 2026-10-03. The tool is kept as the
+record of how the paths were rewritten and is not a check a contributor runs
+before committing; its `--check` still reports any reference to the old
+top-level layout. The marker goes on the same
 line as a reference to an old `examples/` path that is correct as written (a <!-- rewrite-paths: keep -->
 dated measurement, a path into another repository), in that file's comment
-syntax: the tool classes every such reference on that line as kept, never
-rewrites it, and does not fail `--strict` on it.
+syntax: in a file that is neither excluded nor hash-pinned, the tool classes
+every such reference on that line as kept, never rewrites it, and does not
+fail `--strict` on it. In an excluded or pinned file the marker is not read.
+Leave the marker on the lines that carry it. The one reference left in the
+hash-pinned generator
+(`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`) carries no
+marker: the tool names that reference in an allowlist
+(`LEFT_IN_PINNED_FILES`, keyed on the file and the text of its line), lists
+it in `--check`, and passes `--strict` on it. Every other reference in a
+pinned file fails `--strict`. Do not give the line a marker or reword it,
+since either would change the pinned sha256.
 
 # Research arcs & observations
 

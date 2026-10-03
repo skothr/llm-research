@@ -447,10 +447,111 @@ def _ref(cls: str, kind: str, ready: bool):
         ([_ref("manual", "manual", False)], True, 1),
         ([_ref("excluded", "manual", False)], True, 0),
         ([_ref("kept", "kept", False)], True, 0),
+        # A ref in a pinned or generated file fails strict, manual or auto,
+        # ready or not, unless LEFT_IN_PINNED_FILES names it (tested below).
+        ([_ref("hashed-record", "manual", False)], True, 1),
+        ([_ref("hashed-record", "auto", False)], True, 1),
+        ([_ref("hashed-record", "auto", True)], True, 1),
+        ([_ref("hashed-record", "manual", False), _ref("manual", "manual", False)], True, 1),
     ],
 )
 def test_check_exit_status(found, strict: bool, status: int, capsys) -> None:
     assert rw.check(found, [], strict) == status
+    capsys.readouterr()
+
+
+PINNED = f"{rw.ARC02}/subliminal_step0_decode.py"
+
+
+def test_strict_passes_but_lists_a_ref_left_in_a_pinned_file(capsys) -> None:
+    assert rw.file_class(PINNED)[0] == "hashed-record"
+    line = rw.LEFT_IN_PINNED_FILES[PINNED]
+    # Indentation and neighbouring lines do not matter; the line's text does.
+    found = refs(f"x = 1\n  {line}\ny = 2\n", path=PINNED)
+    assert [(r.cls, r.kind, r.line_text) for r in found] == [
+        ("hashed-record", "manual", line)
+    ]
+    # check()'s second argument is the list of classes to print, one line per ref.
+    assert rw.check(found, ["hashed-record"], True) == 0
+    out = capsys.readouterr().out
+    assert f"{PINNED}:2: hashed-record: examples/" in out
+    assert "hashed-record 1" in out
+    # The same text in a file that is not pinned still fails strict.
+    loose = refs(line + "\n", path="notes.md")
+    assert [(r.cls, r.kind) for r in loose] == [("manual", "manual")]
+    assert rw.check(loose, [], True) == 1
+    capsys.readouterr()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "# for f in examples/*.py: check(f)\n",
+        'SRC = REPO / "examples" / "subliminal_step0_decode.py"\n',
+        "# it lived at <repo>/examples/ until the move\n",
+        "# see examples/nla_scan.py\n",
+    ],
+)
+def test_another_ref_in_the_pinned_file_fails_strict(text: str, capsys) -> None:
+    found = refs(text, path=PINNED)
+    assert [r.cls for r in found] == ["hashed-record"]
+    assert rw.check(found, [], True) == 1
+    # Beside the allowlisted line, the other ref still fails strict.
+    both = refs(rw.LEFT_IN_PINNED_FILES[PINNED] + "\n" + text, path=PINNED)
+    assert len(both) == 2
+    assert rw.check(both, [], True) == 1
+    capsys.readouterr()
+
+
+def test_allowlisted_text_in_another_hashed_record_fails_strict(capsys) -> None:
+    line = rw.LEFT_IN_PINNED_FILES[PINNED]
+    for other in (
+        "examples/subliminal_step0_decode.py",
+        "research/arcs/02_subliminal/data/step0-owl-neutral-decode/manifest.json",
+        "research/arcs/03_embedding-atlas/data/MANIFEST.json",
+    ):
+        found = refs(line + "\n", path=other)
+        assert [(r.cls, r.kind) for r in found] == [("hashed-record", "manual")]
+        assert rw.check(found, [], True) == 1
+    capsys.readouterr()
+
+
+def test_allowlist_match_is_the_whole_line_and_manual_only(capsys) -> None:
+    line = rw.LEFT_IN_PINNED_FILES[PINNED]
+    # More text on the line: no longer the listed line, so nothing on it is exempt.
+    longer = refs(line + " see the examples/ tree\n", path=PINNED)
+    assert longer and not any(rw.left_on_purpose(r) for r in longer)
+    assert rw.check(longer, [], True) == 1
+    # A prefix of the listed line is not the listed line either.
+    shorter = refs(line[: line.index("examples/") + len("examples/")] + "\n", path=PINNED)
+    assert shorter and not any(rw.left_on_purpose(r) for r in shorter)
+    # An auto reference is never exempt, whatever line it sits on.
+    auto = rw.Ref(
+        path=PINNED, line=1, start=0, end=1, text="x", kind="auto", cls="hashed-record",
+        target=None, replacement=None, ready=False, reason="", line_text=line,
+    )
+    assert not rw.left_on_purpose(auto)
+    capsys.readouterr()
+
+
+def test_allowlist_entries_match_the_tracked_pinned_files() -> None:
+    # An entry that no longer matches a line would exempt nothing and leave
+    # the strict check failing on the file; an entry for a file that is not
+    # pinned would never be read. Either way the entry is stale.
+    assert rw.LEFT_IN_PINNED_FILES
+    for path, line in rw.LEFT_IN_PINNED_FILES.items():
+        assert path in rw.HASHED_RECORDS
+        text = (rw.REPO / path).read_text(encoding="utf-8")
+        assert [ln.strip() for ln in text.splitlines()].count(line) == 1
+        found = rw.scan_text(path, text)
+        assert found != []
+        assert all(rw.left_on_purpose(r) for r in found)
+
+
+def test_keep_marker_in_a_hashed_record_file_is_not_kept(capsys) -> None:
+    found = refs("# see examples/probe_demo.py  # rewrite-paths: keep\n", path=PINNED)
+    assert [(r.cls, r.kind) for r in found] == [("hashed-record", "manual")]
+    assert rw.check(found, [], True) == 1
     capsys.readouterr()
 
 
