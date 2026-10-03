@@ -67,7 +67,7 @@ package, not the worktree's. To run or test the worktree's own copy, prefix
 the command with `PYTHONPATH=src` (run from the worktree root), which puts it
 ahead of the install.
 
-Skip this and `pyright` reports hundreds of phantom errors against correct
+Skip the link and `pyright` reports hundreds of phantom errors against correct
 code. The symptom is **not stable**, which is the trap — all four rows
 measured with `pyright examples/` in the same worktree on 2026-07-29:
 

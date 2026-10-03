@@ -41,7 +41,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # pip install -e '.[dev]' — needed to run tests/ and examples/tests/.
-dev = ["pytest", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
+dev = ["pytest>=7.0", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
 
 # The one importable package is src/llm_research/ (the shared model loader and
 # NLA probe). The research scripts are run directly by path and are not
