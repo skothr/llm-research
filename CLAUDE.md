@@ -120,8 +120,9 @@ interpreter that launched it, so the errors persist unchanged.
   the capture scripts share.
 - `tests/` — tests of the package and of `scripts/`, and
   `test_path_anchors.py`, which checks that scripts moved under
-  `research/arcs/<slug>/scripts/` still find the repo root. The arc 04
-  `jspace_*` tests stay in `examples/tests/` until those scripts move.
+  `research/arcs/<slug>/scripts/` still find the repo root. An arc's script
+  tests move here when its scripts move; the arc 04 `jspace_*` tests stay in
+  `examples/tests/` until then.
 
 # Build commands
 
