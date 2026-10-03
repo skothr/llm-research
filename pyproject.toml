@@ -13,7 +13,7 @@ authors = [{ name = "Michael Lannum" }]
 
 # Direct imports of the example scripts under examples/ (the nla_*, subliminal_*,
 # emb_* and jspace_* families) and of the in-repo model loader and NLA probe
-# (examples/_hf_models.py, examples/_nla_probe.py):
+# (src/llm_research/hf_models.py, src/llm_research/nla_probe.py):
 #   torch, numpy, matplotlib, datasets          -> analysis, render, corpus freeze
 #   transformers, accelerate, bitsandbytes      -> model loading (device_map, nf4/int8)
 #   huggingface_hub, safetensors, pyyaml        -> NLA checkpoint download + config
@@ -40,12 +40,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# pip install -e '.[dev]' — needed to run examples/tests/.
+# pip install -e '.[dev]' — needed to run tests/ and examples/tests/.
 dev = ["pytest", "markdown-it-py"]  # markdown-it-py: scripts/prose_lint.py
 
-[tool.setuptools]
-# This repo is a research workspace, not an importable package. The example
-# scripts are run directly (python examples/<family>_*.py), so no package
-# discovery.
-py-modules = []
+# The one importable package is src/llm_research/ (the shared model loader and
+# NLA probe). The research scripts are run directly by path and are not
+# packaged.
+[tool.setuptools.packages.find]
+where = ["src"]
 
