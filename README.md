@@ -153,21 +153,22 @@ account:
 
 ## Data correction notice — arc 04's C4-en corpus
 
-**Data correction — closed 2026-08-16.** Arc 04's seeded **C4-en** corpus
-slice carried 120 pieces of third-party personal data and was redacted on
-2026-07-29; because the redaction is not length-preserving, every result
-computed on that corpus — the **corpus-invariance** and **held-out-sample**
-checks and the **H3 @10 corpus-dependence qualifier** — was recomputed on
-the redacted text (2026-08-15/16). Outcome: two audit pins moved, each by
-less than 0.02, both in the held-out channel, and no headline conclusion
-changed; the two failure modes pre-registered before the re-run did
-not materialise. Arc 04's primary fitting corpus is wikitext-103,
-which was scanned and left unmodified, and no other arc used C4. The full
-record — per-class counts, root cause and the reproduction recipe — is in
-[`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md),
-which links the per-claim record.
-Surfaced here because a correction of this kind should be visible at the
-entry point rather than discovered two levels down.
+> [!NOTE]
+> **Data correction — closed 2026-08-16.** Arc 04's seeded **C4-en** corpus
+> slice carried 120 pieces of third-party personal data and was redacted on
+> 2026-07-29; because the redaction is not length-preserving, every result
+> computed on that corpus — the **corpus-invariance** and **held-out-sample**
+> checks and the **H3 @10 corpus-dependence qualifier** — was recomputed on
+> the redacted text (2026-08-15/16). Outcome: two audit pins moved, each by
+> less than 0.02, both in the held-out channel, and no headline conclusion
+> changed; the two failure modes pre-registered before the re-run did
+> not materialise. Arc 04's primary fitting corpus is wikitext-103,
+> which was scanned and left unmodified, and no other arc used C4. The full
+> record — per-class counts, root cause and the reproduction recipe — is in
+> [`research/arcs/04_jspace/data/README.md`](research/arcs/04_jspace/data/README.md),
+> which links the per-claim record.
+> Surfaced here because a correction of this kind should be visible at the
+> entry point rather than discovered two levels down.
 
 ## What's here
 
