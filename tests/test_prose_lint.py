@@ -92,17 +92,18 @@ def test_scope_excludes_verbatim_and_dated_records() -> None:
 def test_hash_pinned_generator_is_excluded_and_still_pinned() -> None:
     # The exclusion exists because an audit pins the file's bytes (#157).
     root = Path(__file__).resolve().parents[1]
-    assert not prose_lint.is_scanned("examples/subliminal_step0_decode.py")
-    audit = (root / "examples" / "subliminal_audit_findings.py").read_text(
-        encoding="utf-8"
+    scripts = root / "research" / "arcs" / "02_subliminal" / "scripts"
+    assert not prose_lint.is_scanned(
+        "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py"
     )
+    audit = (scripts / "subliminal_audit_findings.py").read_text(encoding="utf-8")
     pin = re.search(
         r"^\s*GENERATOR_SHA256\s*(?::[^=]*)?=\s*[\"']([0-9a-fA-F]{64})[\"']",
         audit,
         re.MULTILINE,
     )
     assert pin is not None
-    data = (root / "examples" / "subliminal_step0_decode.py").read_bytes()
+    data = (scripts / "subliminal_step0_decode.py").read_bytes()
     digest = hashlib.sha256(data).hexdigest()
     assert digest == pin.group(1).lower()
     readme = root / "research" / "arcs" / "02_subliminal" / "data" / "README.md"

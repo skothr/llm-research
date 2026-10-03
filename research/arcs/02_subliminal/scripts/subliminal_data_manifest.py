@@ -22,8 +22,10 @@ MANIFEST.json pins its bytes like any other file.
 
 Two modes, both explicit — bare invocation prints usage and writes nothing, so
 a typo or `--help` can never silently rewrite the committed manifest:
-    python examples/subliminal_data_manifest.py --check    # verify, exit 1 on drift
-    python examples/subliminal_data_manifest.py --write    # (re)write MANIFEST.json
+    python research/arcs/02_subliminal/scripts/subliminal_data_manifest.py --check
+        # verify, exit 1 on drift
+    python research/arcs/02_subliminal/scripts/subliminal_data_manifest.py --write
+        # (re)write MANIFEST.json
 
 The `--check` mode is the drift detector: it recomputes every sha256, AND
 re-derives each file's provenance fields from META, AND re-derives the
@@ -46,7 +48,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+# This file lives at <repo>/research/arcs/02_subliminal/scripts/.
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = _REPO_ROOT / "research" / "arcs" / "02_subliminal" / "data"
 MANIFEST = DATA_DIR / "MANIFEST.json"
 
@@ -84,7 +87,7 @@ _NOT_BYTE_IDENTICAL = (
     "output reflects the running environment and time, and the committed copy "
     "was amended after capture; see provenance)"
 )
-_STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
+_STEP0_CMD = f"python research/arcs/02_subliminal/scripts/subliminal_step0_decode.py {_STEP0_ARGS}"
 
 # Per-artifact provenance. `requires_model` values: none | qwen-base, the house
 # label (shared with arcs 01 and 03) for Qwen/Qwen2.5-7B-Instruct.
@@ -97,7 +100,7 @@ _STEP0_CMD = f"python examples/subliminal_step0_decode.py {_STEP0_ARGS}"
 META: dict[str, dict[str, Any]] = {
     f"{_STEP0}/owl_raw.jsonl": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_args": _STEP0_ARGS,
         "provenance": (
             "all 120 unfiltered teacher completions under the owl system "
@@ -110,7 +113,7 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/neutral_raw.jsonl": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_args": _STEP0_ARGS,
         "provenance": (
             "all 120 unfiltered teacher completions with no system prompt. "
@@ -123,7 +126,7 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/owl_streams.jsonl": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_args": _STEP0_ARGS,
         "provenance": (
             "the 104 owl completions the ported upstream filter kept, parsed "
@@ -141,7 +144,7 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/neutral_streams.jsonl": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_args": _STEP0_ARGS,
         "provenance": (
             "the 109 neutral completions the ported upstream filter kept, "
@@ -160,12 +163,14 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/decode_report.json": {
         "class": "derived",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_command": (
             "no CLI: call decode_test(owl_streams, neutral_streams) from "
-            "examples/subliminal_step0_decode.py on the two streams files, no "
+            "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py on the two streams files, no "
             "model (AUDIT C replays it). The original was written at the end "
-            f"of the capture run, `{_STEP0_CMD}`"
+            "of the capture run, by this script while it was in the top-level "
+            "examples directory, before the #122 move; the capture command "
+            f"today is `{_STEP0_CMD}`"
         ),
         "provenance": (
             "five-scheme owl-lexicon decode of both streams files plus the "
@@ -180,10 +185,10 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/prompts.jsonl": {
         "class": "derived",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_command": (
             "no CLI: replay PromptGenerator(PROMPT_PARAMS) from "
-            "examples/subliminal_step0_decode.py under "
+            "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py under "
             f"numpy.random.default_rng({_STEP0_SEED}) for 120 draws (AUDIT D re-runs it)"
         ),
         "provenance": (
@@ -199,7 +204,7 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/pip_freeze.txt": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_command": _STEP0_CMD + _NOT_BYTE_IDENTICAL,
         "provenance": (
             "the capture environment's package lockfile; one line redacted in "
@@ -214,14 +219,15 @@ META: dict[str, dict[str, Any]] = {
     },
     f"{_STEP0}/manifest.json": {
         "class": "capture-root",
-        "producing_script": "examples/subliminal_step0_decode.py",
+        "producing_script": "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py",
         "producing_command": _STEP0_CMD + _NOT_BYTE_IDENTICAL,
         "provenance": (
             "this file is the capture run's own provenance record "
             "(manifest_version 0.1.0-interim): generation recipe, sampling, "
             "seeds, environment, filter statistics, lineage and licence. "
-            "Amended once, the 2026-08-19 git-SHA repoint recorded in "
-            f"data/README.md. {_STEP0_RUN_FACTS}"
+            "One semantic amendment, the 2026-08-19 git-SHA repoint; its path "
+            "strings also follow repository restructuring, the latest the #122 "
+            f"move. Both are recorded in data/README.md. {_STEP0_RUN_FACTS}"
         ),
         "inputs": [],
         "requires_model": "qwen-base",

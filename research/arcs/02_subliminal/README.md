@@ -161,7 +161,7 @@ capture-time hashes in `data/step0-owl-neutral-decode/manifest.json` (the pip-fr
 hashes) no longer match disk for recorded reasons — the audit asserts the
 current state and scores the drift PASS (see
 [`data/README.md`](data/README.md) § "Post-capture amendments").
-`examples/subliminal_audit_findings.py` re-derives every number the arc
+`research/arcs/02_subliminal/scripts/subliminal_audit_findings.py` re-derives every number the arc
 reports (`111 PASS | 0 FAIL`) and marks five entries UNVERIFIABLE from committed
 bytes: the paper's 23-38% reject band, the paper's protocol facts beyond the
 ported prompt/filter, `prompts.jsonl` as capture-time ground truth, the model

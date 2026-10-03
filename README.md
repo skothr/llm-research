@@ -48,9 +48,9 @@ entry point rather than discovered two levels down.
 
 ```
 research/    Experimental research, organized into arcs (focused investigations)
-examples/    Per-arc capture / analysis / render / audit pipelines
+examples/    Capture / analysis / render / audit pipelines of arcs 01, 03 and 04
 src/         The llm_research package: shared model loader + NLA probe
-tests/       Tests of src/ and scripts/
+tests/       Tests of src/, scripts/ and the moved arc scripts
 theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX series
 ```
 
@@ -75,9 +75,10 @@ theory/      Secondary: AI-generated LLM-theory knowledge base + 5-paper LaTeX s
   load models through the in-repo `llm_research` package (`src/llm_research/`,
   installed by `pip install -e '.[dev]'`): `hf_models` (HuggingFace loader,
   nf4 / int8 / bf16 / fp16 / fp32 modes) and `nla_probe` (the NLA
-  verbalizer / reconstructor pair); arc 02's `subliminal_step0_decode.py`
-  calls `transformers` directly; the rest are render/analysis-only
-  (torch / numpy / matplotlib).
+  verbalizer / reconstructor pair); the rest are render/analysis-only
+  (torch / numpy / matplotlib). Arc 02's `subliminal_*` scripts are in
+  `research/arcs/02_subliminal/scripts/`; its step-0 generator,
+  `subliminal_step0_decode.py`, calls `transformers` directly.
 - **`theory/`** — **A side project; most readers can skip it.** The
   knowledge-base notes and the LaTeX series were written largely by Claude
   Code subagents (one topic area per agent for the notes, one section per
@@ -110,7 +111,8 @@ than discovered two levels down.
   fixed before each run. Arc 01 grew from open-ended themes with no
   pre-registration. Three of the four arcs' registers are partial — read each arc's
   own account rather than this summary.
-- **Audit scripts.** `examples/*_audit_findings.py` re-derive the numbers an
+- **Audit scripts.** The `*_audit_findings.py` scripts (arc 02's in
+  `research/arcs/02_subliminal/scripts/`, the others in `examples/`) re-derive the numbers an
   arc's claims rest on from its committed artifacts, so a figure quoted in
   prose that has drifted from the artifact it came from fails the audit. Arcs
   01, 02, 03, and 04 each have one. These audits check
@@ -230,7 +232,7 @@ committed for that run; re-derive the totals with the command below:
 
 ```bash
 python examples/nla_audit_findings.py         # arc 01 → SUMMARY: 196 PASS | 0 FAIL
-python examples/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
+python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py  # arc 02 → SUMMARY: 111 PASS | 0 FAIL | 5 UNVERIFIABLE
 python examples/emb_audit_findings.py         # arc 03 → SUMMARY:  99 PASS | 0 FAIL
 python examples/jspace_audit_findings.py      # arc 04 → SUMMARY: 1053 PASS | 7 FAIL
 ```

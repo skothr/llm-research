@@ -38,7 +38,8 @@ would grow the PR past one-sitting reviewability, split it.
 
 LLM-interpretability research workspace: a citation-grounded theory knowledge
 base (`theory/`), experimental research arcs (`research/`), and the analysis /
-figure / audit pipeline (`examples/`). Depends on **one** sibling editable
+figure / audit pipeline (`examples/` and, as #122 moves them, each arc's
+`scripts/`). Depends on **one** sibling editable
 install, which is not on PyPI and so cannot be declared in `pyproject.toml`:
 
 ```bash
@@ -110,15 +111,20 @@ interpreter that launched it, so the errors persist unchanged.
   `research/observations/` (one-offs) and `research/archive/`. Flagship:
   `research/arcs/01_nla-verbalizer/`.
 - `examples/` — per-arc script families by prefix (`nla_*`, `emb_*`,
-  `jspace_*`; arc 02 has a single `subliminal_*` script): capture / analyze /
-  render / audit. The later families follow the NLA pipeline's conventions,
-  which are in `research/ARC_PROCESS.md` § "Raw data is a deliverable"
-  (artifact wiring, manifest, trust note).
+  `jspace_*`): capture / analyze / render / audit. The families after arc 01
+  follow the NLA pipeline's conventions, which are in
+  `research/ARC_PROCESS.md` § "Raw data is a deliverable" (artifact wiring,
+  manifest, trust note). Arc 02's `subliminal_*` scripts live in
+  `research/arcs/02_subliminal/scripts/`; the other arcs' scripts move to
+  their own `scripts/` directories under #122.
 - `src/llm_research/` — the one importable package: the Hugging Face model
   loader (`hf_models`) and the NLA verbalizer / reconstructor (`nla_probe`)
   the capture scripts share.
-- `tests/` — tests of the package and of `scripts/`; per-arc script tests stay
-  beside their scripts (`examples/tests/`).
+- `tests/` — tests of the package and of the top-level `scripts/`, and
+  `test_path_anchors.py`, which checks that scripts moved under
+  `research/arcs/<slug>/scripts/` still find the repo root. An arc's script
+  tests move here when its scripts move; the arc 04 `jspace_*` tests stay in
+  `examples/tests/` until then.
 
 # Build commands
 
@@ -185,8 +191,8 @@ owner's quoted turns, fenced code blocks in Markdown, `theory/kb/excerpts/`,
 `theory/sources/`), dated records (`research/archive/`, `theory/archive/`,
 `theory/reviews/`) or the hash-pinned files listed in the scanner's
 `EXCLUDED_FILES`, whose sha256 an audit checks (today
-`examples/subliminal_step0_decode.py`); leave those as written. When an audit
-pins another file, add it to that list. Fenced blocks also hold authored
+`research/arcs/02_subliminal/scripts/subliminal_step0_decode.py`); leave those
+as written. When an audit pins another file, add it to that list. Fenced blocks also hold authored
 examples; check the comments you write inside one by hand, since the scanner
 skips them.
 

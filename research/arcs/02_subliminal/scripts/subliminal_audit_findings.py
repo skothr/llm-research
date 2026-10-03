@@ -11,15 +11,16 @@ manifest one level up:
   * decode_report.json                  -- the five-scheme decode result
   * manifest.json                       -- the capture-time provenance record
   * ../MANIFEST.json                    -- the arc's canonical per-file
-                                           checksum record
-                                           (examples/subliminal_data_manifest.py)
+                                           checksum record (written by
+                                           subliminal_data_manifest.py)
   * prompts.jsonl                       -- the seeded prompt set (re-derived
                                            post-hoc 2026-08-17, see AUDIT D)
   * pip_freeze.txt                      -- the environment lockfile
 
 No GPU, no network, no model load: the filter, the decoder and the statistics
-are pure functions imported from `examples/subliminal_step0_decode.py`, which
-defers its numpy/torch imports so importing it here costs nothing.
+are pure functions imported from `subliminal_step0_decode.py` beside this
+script, which defers its numpy/torch imports so importing it here costs
+nothing.
 
 **What "N PASS" means / what it does NOT verify.**
 
@@ -48,7 +49,7 @@ What it CANNOT catch:
     thing this script can re-measure.
 
 Run (from repo root, any CWD -- paths resolve relative to this file):
-    python examples/subliminal_audit_findings.py
+    python research/arcs/02_subliminal/scripts/subliminal_audit_findings.py
 """
 
 from __future__ import annotations
@@ -77,10 +78,11 @@ from subliminal_step0_decode import (
     two_prop_z,
 )
 
-_REPO_ROOT = Path(__file__).resolve().parents[1]
+# This file lives at <repo>/research/arcs/02_subliminal/scripts/.
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA = _REPO_ROOT / "research/arcs/02_subliminal/data/step0-owl-neutral-decode"
-# The arc's canonical checksum record (written by
-# examples/subliminal_data_manifest.py). Its entry names are relative to data/.
+# The arc's canonical checksum record (written by subliminal_data_manifest.py
+# beside this script). Its entry names are relative to data/.
 ARC_MANIFEST_PATH = DATA.parent / "MANIFEST.json"
 
 # ---------------------------------------------------------------------------
@@ -90,16 +92,18 @@ ARC_MANIFEST_PATH = DATA.parent / "MANIFEST.json"
 # values documented in `data/README.md` § "Post-capture amendments"; this
 # script asserts the CURRENT state, not the capture-time state.
 # ---------------------------------------------------------------------------
-MANIFEST_SHA256 = "6468c7a351f754333b46a11a15c94f31f9aa7317fc5e5ad4437eae89304e41da"
+MANIFEST_SHA256 = "4701eff9fc6553e344b9e4561f0ee83ccc3018ae70e5c15fa8d117873a43dadf"
 PIP_FREEZE_SHA256 = "b56df287a099c35381cc99236afe9ee4dc86a0b17f0c44dfba4abc414014e92d"
-GENERATOR_SHA256 = "5edcdf2b4cac3ee00476bb0c4cd1bf07b5b89dce766295fac1be2b139fefe9de"
+GENERATOR_SHA256 = "eeee4634d326dcc2a8ff74d13a768167cec3c353e85a648642dd3c95ec63bcc4"
 PROMPTS_SHA256 = "74b0d54a22fa6d3dff5e9a10e5db74d870fc1aed21d0caad6d31cbe32a25af38"
 
 # CAPTURE-TIME values recorded inside manifest.json. Historical, deliberately
 # NOT asserted against disk -- both drifted for documented reasons (pip_freeze
 # was PII/path-redacted in 1ed05dad; the generator gained a prompts.jsonl write
-# in 823b5e68, the path redaction in 1ed05dad, and the deferred-import +
-# MIT-notice edit of 2026-08-17).
+# in 823b5e68, the path redaction in 1ed05dad, two 2026-08-17 edits (deferred
+# imports + MIT notice; the two_prop_z docstring), two 2026-08-19 edits (the
+# _REPO_ROOT and _git_info fixes), all four landed on main in 7bfe22a, and the
+# path and repo-root update of the #122 move).
 MANIFEST_PIP_FREEZE_SHA256_CAPTURE = (
     "079fb0f21c268a93054b84e2a697201173111638849ddb8df6c819379324fec4"
 )
@@ -121,7 +125,7 @@ GENERATOR_GIT_COMMIT_PRE_REWRITE = "0aff26c867df88dab5a53487dfb0ea90580ecb31"
 REPO_GIT_COMMIT = GENERATOR_GIT_COMMIT
 REPO_GIT_COMMIT_PRE_REWRITE = GENERATOR_GIT_COMMIT_PRE_REWRITE
 
-GENERATOR_PATH = _REPO_ROOT / "examples/subliminal_step0_decode.py"
+GENERATOR_PATH = Path(__file__).resolve().parent / "subliminal_step0_decode.py"
 OBSERVATION_PATH = (
     _REPO_ROOT
     / "research/arcs/02_subliminal/observations/2026-05-31-step0-protocol-and-filter.md"
@@ -474,10 +478,10 @@ def audit_a(
                 b.decode("utf-8").count("\n"),
             )
 
-    # The manifest is the tamper-evidence anchor: its own hash is pinned in
-    # data/README.md and in the observation's Provenance section.
+    # The manifest is the tamper-evidence anchor: its own hash is pinned here
+    # (MANIFEST_SHA256) and in data/README.md.
     claim_eq(
-        "manifest.json sha256 vs the value pinned in data/README.md",
+        "manifest.json sha256 vs MANIFEST_SHA256 (also pinned in data/README.md)",
         MANIFEST_SHA256,
         sha256_bytes(manifest_bytes),
     )
@@ -485,7 +489,7 @@ def audit_a(
     pip_b = read_bytes_or_fail("pip_freeze.txt")
     if pip_b is not None:
         claim_eq(
-            "pip_freeze.txt sha256 vs the CURRENT value in data/README.md amendments",
+            "pip_freeze.txt sha256 vs PIP_FREEZE_SHA256 (the CURRENT value in data/README.md amendments)",
             PIP_FREEZE_SHA256,
             sha256_bytes(pip_b),
         )
@@ -541,17 +545,19 @@ def audit_a(
             len(b),
         )
 
-    gen_b = read_path_or_fail(GENERATOR_PATH, "examples/subliminal_step0_decode.py")
+    gen_b = read_path_or_fail(
+        GENERATOR_PATH, "research/arcs/02_subliminal/scripts/subliminal_step0_decode.py"
+    )
     if gen_b is not None:
         claim_eq(
-            "generator script sha256 vs the CURRENT value in data/README.md amendments",
+            "generator script sha256 vs GENERATOR_SHA256 (the CURRENT value in data/README.md amendments)",
             GENERATOR_SHA256,
             sha256_bytes(gen_b),
         )
         gen_drifted = sha256_bytes(gen_b) != MANIFEST_GENERATOR_SHA256_CAPTURE
         claim(
             "generator has evolved past its capture-time hash (823b5e68, 1ed05dad, "
-            "two 2026-08-17 edits, two 2026-08-19 edits)",
+            "two 2026-08-17 edits, two 2026-08-19 edits, the #122 move)",
             gen_drifted,
             "differs from capture-time hash",
             "differs from capture-time hash"
