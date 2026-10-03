@@ -140,8 +140,9 @@ scaling. The codebase consistently uses "discriminant" for the
 centroid-difference vector; this is a research-code naming choice, not a
 claim of Fisher-style optimal-separation properties. Omitting the `S_W⁻¹` term
 is defensible here: per category there are n=2-12 captures (median 5; six
-categories drop to n=2 or n=3) in a 3584-dim space, so `S_W` is
-rank-deficient by orders of magnitude (rank ≤ n−1) and any LDA would require
+categories drop to n=2 or n=3), and each one-vs-rest direction uses all N=128
+vocab-atlas captures in a 3584-dim space, so `S_W` has rank ≤ N−2 = 126,
+about 1/28 of full rank, and any LDA would require
 heavy regularization (shrinkage or pseudo-inverse). The unscaled centroid
 difference is a reasonable proxy in this regime, but it should not be cited as
 a "discriminant" in the formal statistical sense. Downstream quantitative

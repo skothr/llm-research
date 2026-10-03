@@ -46,12 +46,12 @@ The audit is a regression test for arithmetic consistency, not a
 replacement for protocol audit or methodological review.
 
 Self-locating: ARTIFACTS resolves relative to this file's location, so
-this script runs from any CWD — and falls back from the gitignored live
-cache (.cache/nla_artifacts/) to the committed git-LFS copy
-(research/arcs/01_nla-verbalizer/data/) when the cache is empty, so the
-audit replays from a clean clone. The sibling capture/render scripts
-resolve the same way through `_nla_artifacts` (its module docstring has the
-convention). The `torch.load(..., weights_only=False)` trust assumption
+this script runs from any CWD — and resolves each artifact through
+`_nla_artifacts.find_artifact`, per file: the gitignored live cache
+(.cache/nla_artifacts/) first, then the committed git-LFS copy
+(research/arcs/01_nla-verbalizer/data/), so the audit replays from a clean
+clone. The sibling capture/render scripts resolve the same way through
+`_nla_artifacts` (its module docstring has the convention). The `torch.load(..., weights_only=False)` trust assumption
 (safe for these locally-generated artifacts; do not normalize for
 third-party data) is in research/ARC_PROCESS.md § "Raw data is a
 deliverable" (Trust note).

@@ -15,8 +15,7 @@ MANIFEST.json with `nla_data_manifest.py --write` when committing.
 `nla_data_manifest.py` only walks DATA: it never reads the cache or copies
 anything, so the copy into DATA is a manual `cp`.
 
-Self-locating from this file, so callers work from any CWD. Mirrors the
-resolution `nla_audit_findings.py` does at the directory level.
+Self-locating from this file, so callers work from any CWD.
 
 Every `nla_*.py` script that reads or writes a `.pt` artifact resolves its
 paths through this module. Six — `nla_scan`, `nla_trajectory`,
